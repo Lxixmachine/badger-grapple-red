@@ -1,0 +1,67 @@
+name: Deploy zipped game build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Unzip uploaded build
+        run: |
+          set -euxo pipefail
+          rm -rf _unzipped _site
+          mkdir -p _unzipped _site
+          unzip -q badger-grapple-red-engine-v2-github-ready.zip -d _unzipped
+
+          echo "Unzipped directory structure:"
+          find _unzipped -maxdepth 3 -type d | sort
+
+          if [ -d "_unzipped/dist" ]; then
+            cp -R _unzipped/dist/. _site/
+          elif [ -d "_unzipped/badger-grapple-red-engine-v2-hosted/dist" ]; then
+            cp -R _unzipped/badger-grapple-red-engine-v2-hosted/dist/. _site/
+          elif [ -f "_unzipped/index.html" ]; then
+            cp -R _unzipped/. _site/
+          elif [ -f "_unzipped/badger-grapple-red-engine-v2-hosted/index.html" ]; then
+            cp -R _unzipped/badger-grapple-red-engine-v2-hosted/. _site/
+          else
+            echo "Could not find deployable index.html or dist folder inside uploaded zip."
+            find _unzipped -maxdepth 4 -type f | sort | head -200
+            exit 1
+          fi
+
+          test -f _site/index.html
+          echo "Deploying these top-level files:"
+          find _site -maxdepth 2 -type f | sort | head -100
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
