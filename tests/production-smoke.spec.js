@@ -45,7 +45,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.12-state-tournament');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.12-big-ten-championship');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];
@@ -252,7 +252,7 @@ test('campus tall grass triggers a real scout encounter that reaches a wild batt
   expect(runtimeIssues).toEqual([]);
 });
 
-test('state tournament bracket runs to the championship', async ({page}) => {
+test('big ten championship bracket runs to the title', async ({page}) => {
   test.setTimeout(60000);
   const runtimeIssues = collectRuntimeIssues(page);
   await continueIntoOverworld(page, seededSave({
@@ -297,6 +297,6 @@ test('state tournament bracket runs to the championship', async ({page}) => {
 
   await clearMessageIfOpen();
   await press(page, 'a'); // desk after the title
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('State Champion');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Big Ten Champion');
   expect(runtimeIssues).toEqual([]);
 });

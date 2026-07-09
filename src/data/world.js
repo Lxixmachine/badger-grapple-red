@@ -81,7 +81,7 @@ export const AREAS = {
     bg: 'area_championship',
     start: { x: 1, y: 6 },
     exits: [{ x: 0, y: 6, to: 'river', tx: 26, ty: 6, msg: 'River Trail.' }],
-    captain: { x: 19, y: 6, id: 'topboss', lvl: 17, type: 'gym', badge: 'Top Badge', team: [['lockthrow', 15], ['rideking', 16], ['topboss', 17]], reward: { grit: 34, rep: 26 }, intro: 'The Anchor: Everyone who walks in here gets ridden. Prove me wrong.', beaten: 'The Anchor: Top Badge earned. The State Tournament desk is open - win the bracket and this hall hangs your banner.' }
+    captain: { x: 19, y: 6, id: 'topboss', lvl: 17, type: 'gym', badge: 'Top Badge', team: [['lockthrow', 15], ['rideking', 16], ['topboss', 17]], reward: { grit: 34, rep: 26 }, intro: 'The Anchor: Everyone who walks in here gets ridden. Prove me wrong.', beaten: 'The Anchor: Top Badge earned. The Big Ten Championship desk is open - win the bracket and this hall hangs your banner.' }
   }
 };
 
@@ -96,15 +96,15 @@ export const TRAINERS = {
   river_tavi: { id: 'river_tavi', area: 'river', name: 'Tavi', pos: { x: 22, y: 8 }, facing: 'left', sightRange: 4, team: [['funkflyer', 12], ['riverroller', 12]], reward: { grit: 14, rep: 10 }, line: 'Tavi: The Funk Doctor taught me everything. Well - almost everything.', beaten: 'Tavi: You scramble clean. The Doctor is just up the path. Good luck.', spot: 'Tavi: Heading for the Doctor? You roll through me first.' }
 };
 
-// v21.12 State Tournament - the endgame bracket in Championship Hall.
+// v21.12 Big Ten Championship - the endgame bracket in Championship Hall.
 // Unlocks with all three gym badges. Round 2 pays off Rex's promised dual meet.
 export const TOURNAMENT = {
-  name: 'STATE TOURNAMENT',
+  name: 'BIG TEN CHAMPIONSHIP',
   desk: { area: 'championship', x: 10, y: 6 },
   requires: ['Neutral Badge', 'Scramble Badge', 'Top Badge'],
   rounds: [
     { key: 'quarterfinal', label: 'QUARTERFINAL', trainerName: 'Iron Ivan', team: [['matgeneral', 17], ['lockthrow', 18]], reward: { grit: 20, rep: 14 }, intro: 'Iron Ivan: Quarterfinal. I have pinned everyone in my bracket. You are next.', win: 'Iron Ivan is out of the bracket. Semifinal is set: Rex finally gets his dual meet.' },
-    { key: 'semifinal', label: 'SEMIFINAL', trainerName: 'Rex', team: [['chainmaster', 18], ['funkflyer', 18], ['drillveteran', 19]], reward: { grit: 24, rep: 18 }, intro: 'Rex: I told you I would bring a real team. This is the dual meet you owe me. State semifinal - no walking away.', win: 'Rex: ...That was the match I wanted. You earned the final. Go take it.' },
-    { key: 'final', label: 'STATE FINAL', trainerName: 'The Prodigy', team: [['tilttech', 20], ['pacecommand', 20], ['buckallam', 21]], reward: { grit: 40, rep: 32 }, intro: 'The Prodigy: State final. Undefeated since sixth grade. Nobody remembers second place.', win: 'STATE CHAMPION! The whole hall is on its feet. Your banner goes up in Championship Hall.' }
+    { key: 'semifinal', label: 'SEMIFINAL', trainerName: 'Rex', team: [['chainmaster', 18], ['funkflyer', 18], ['drillveteran', 19]], reward: { grit: 24, rep: 18 }, intro: 'Rex: I told you I would bring a real team. This is the dual meet you owe me. Big Ten semifinal - no walking away.', win: 'Rex: ...That was the match I wanted. You earned the final. Go take it.' },
+    { key: 'final', label: 'BIG TEN FINAL', trainerName: 'The Prodigy', team: [['tilttech', 20], ['pacecommand', 20], ['buckallam', 21]], reward: { grit: 40, rep: 32 }, intro: 'The Prodigy: Big Ten final. Undefeated since sixth grade. Nobody remembers second place.', win: 'BIG TEN CHAMPION! The whole hall is on its feet. Your banner goes up in Championship Hall.' }
   ]
 };

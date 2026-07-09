@@ -63,8 +63,8 @@ export class OverworldScene extends Phaser.Scene{
  tournamentDesk(){
    const t=this.state.tournament||{round:0,champion:false};
    const missing=TOURNAMENT.requires.filter(b=>!this.state.badges.includes(b));
-   if(missing.length)return this.showMessage(`Official: The State Tournament takes conference champions only. Still needed: ${missing.join(' + ')}.`);
-   if(t.champion)return this.showMessage('Official: State Champion! Your banner hangs in this hall. The bracket will be waiting for your title defense next season.');
+   if(missing.length)return this.showMessage(`Official: The Big Ten Championship takes conference champions only. Still needed: ${missing.join(' + ')}.`);
+   if(t.champion)return this.showMessage('Official: Big Ten Champion! Your banner hangs in this hall. The bracket will be waiting for your title defense next season.');
    const round=TOURNAMENT.rounds[t.round];
    if(!round)return this.showMessage('Official: The bracket is being reseeded. Come back soon.');
    this.state.party.forEach(m=>{const st=scaledStats(m.id,m.lvl);m.hp=st.hp;m.gas=st.gas;m.score=0;}); // trainers get treated between tournament matches
@@ -89,7 +89,7 @@ showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0
   this.addNpc(5,5,1,'npc-idle-down','Scout: Tall grass hides recruitable wrestlers.',[[5,5],[6,5],[6,6],[5,6]]);
   this.addNpc(11,8,7,'npc-idle-right','Manager: Save often before scouting.',[[11,8],[12,8],[12,9],[11,9]]);
   this.addNpc(14,10,1,'npc-idle-up','Student: Doors and paths connect the hub.',[[14,10],[15,10],[15,11],[14,11]]);
-}if(this.area==='championship'){this.addNpc(TOURNAMENT.desk.x,TOURNAMENT.desk.y,7,'npc-idle-right','Official: The State Tournament desk.',null);}if(this.area==='studyhall'){this.addNpc(9,8,7,'npc-idle-right','Tutor: Film study helps recruiting.',null);this.addNpc(14,7,4,'npc-idle-left','Student: The Quad has three recruit styles right now.',null);}
+}if(this.area==='championship'){this.addNpc(TOURNAMENT.desk.x,TOURNAMENT.desk.y,7,'npc-idle-right','Official: The Big Ten Championship desk.',null);}if(this.area==='studyhall'){this.addNpc(9,8,7,'npc-idle-right','Tutor: Film study helps recruiting.',null);this.addNpc(14,7,4,'npc-idle-left','Student: The Quad has three recruit styles right now.',null);}
 }
  
  updateNpcPatrols(){if(this.messageOpen||this.moving)return;const now=this.time.now||0;for(const e of this.npcList){if(!e.route||e.route.length<2)continue;if(now-e.t<1600)continue;e.t=now+Phaser.Math.Between(250,900);e.i=(e.i+1)%e.route.length;const [tx,ty]=e.route[e.i];const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);if(this.anims.exists('npc-idle-'+dir))e.npc.play('npc-idle-'+dir,true);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,60),ease:'Sine.easeInOut'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Sine.easeInOut'});}}

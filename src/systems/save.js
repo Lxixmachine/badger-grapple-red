@@ -8,7 +8,7 @@ export function normalizeState(state){
   if(!state||typeof state!=='object')return d;
   state.version=SAVE_VERSION;
   state.expansion=(state.expansion&&typeof state.expansion==='object')?{unlocked:!!state.expansion.unlocked,flags:state.expansion.flags||{}}:{unlocked:false,flags:{}}; // v21.2 Season Two seam
-  state.tournament=(state.tournament&&typeof state.tournament==='object')?{round:Number.isInteger(state.tournament.round)?state.tournament.round:0,champion:!!state.tournament.champion}:{round:0,champion:false}; // v21.12 State Tournament
+  state.tournament=(state.tournament&&typeof state.tournament==='object')?{round:Number.isInteger(state.tournament.round)?state.tournament.round:0,champion:!!state.tournament.champion}:{round:0,champion:false}; // v21.12 Big Ten Championship
   state.playerName=typeof state.playerName==='string'&&state.playerName.trim()?state.playerName:d.playerName;
   state.party=Array.isArray(state.party)?state.party:[];
   state.box=Array.isArray(state.box)?state.box:[];

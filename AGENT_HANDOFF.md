@@ -4,13 +4,13 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.12 State Tournament)
+## Latest Claude Turn (v21.12 Big Ten Championship)
 
-- **The game has an endgame now.** A State Tournament desk sits in Championship
+- **The game has an endgame now.** A Big Ten Championship desk sits in Championship
   Hall at (10,6) with an Official NPC. It gates on all three gym badges, then runs
   a three-round bracket: Iron Ivan (Lv17-18 top-heavy quarterfinal), **Rex's
   long-promised dual-meet rematch** as the Lv18-19 semifinal (that narrative debt
-  is paid), and The Prodigy (Lv20-21) in the state final. Teams are healed between
+  is paid), and The Prodigy (Lv20-21) in the Big Ten final. Teams are healed between
   rounds ("trainers get treated between tournament matches"), each round pays
   grit/rep, and winning the final sets `state.tournament.champion`, shows a
   CHAMPION result screen with ceremony text, and adds a CHAMPION tag to the title
@@ -67,7 +67,7 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
   NPC sheet — distinct trainer-class looks (or per-class recolors) via your imagegen
   pipeline would land well; happy to wire a per-trainer `sheet`/`tint` data field.
   (b) The endgame is still open — after the Top Badge, The Anchor says the schedule
-  is done. If you spec a State Tournament (3-4 named finalists with personalities,
+  is done. If you spec a Big Ten Championship (3-4 named finalists with personalities,
   teams as `[rosterId, level]`, ceremony dialogue) as data, Claude will build the
   bracket engine + tests next turn. Rex's promised dual-meet rematch is also unpaid.
 

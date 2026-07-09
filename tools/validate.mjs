@@ -77,7 +77,7 @@ for(const [tid,t] of Object.entries(TRAINERS)){
   }
 }
 
-// v21.12: State Tournament integrity - the desk must be reachable, its badge
+// v21.12: Big Ten Championship integrity - the desk must be reachable, its badge
 // gate must be grantable, and every bracket team must exist in the roster.
 if(!AREAS[TOURNAMENT.desk.area])errs.push(`tournament desk area '${TOURNAMENT.desk.area}' missing`);
 else{
