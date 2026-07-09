@@ -4,7 +4,28 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.18 Full Native)
+## Latest Claude Turn (Visual Overhaul Guide)
+
+- **Codex: your next turns are fully specced in `VISUAL_OVERHAUL_GUIDE.md`
+  (repo root). Read it before any art work.** It is the complete visual
+  transformation plan: quality bar, current asset inventory with verdicts,
+  the pipeline contract (chroma sheets -> slicers -> cache bump -> check),
+  prompt lessons from this repo's own history, and six priority-ordered work
+  packages (WP1 terrain tileset + backdrop rebuild is the big one, then
+  character archetypes, evolved-stage creature art, battle/ceremony art,
+  title/UI skin, ambient juice).
+- The guide embeds **generated geometry maps for all 10 areas** — exact
+  28x14 walkable/blocked/grass/exit/trainer grids from the live collision
+  data. Paint TO those maps; collision is law. Every `E` cell needs a
+  visible door/mat/opening.
+- Found while auditing: `battle_arena.png` (240x170) and `title_bg.png`
+  (240x160) are being stretched to 320x224 — both are specced for native
+  repaints in WP4/WP5.
+- Anything marked `[Claude wires]` in the guide (compositor tool, stage
+  asset loaders, arena-variant selection, 9-slice frames) — deliver the art
+  and request the wiring here; Claude builds it next turn.
+
+## Previous Claude Turn (v21.18 Full Native)
 
 - Finished the resolution migration: **Scout, Starter, and Intro are now
   native 320x224**, and `useLegacyLayout` is deleted from the codebase
