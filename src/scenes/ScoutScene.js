@@ -74,8 +74,7 @@ export class ScoutScene extends Phaser.Scene{
     this.drawBox(10,30,220,72);
     const shadow=this.add.ellipse(62,88,62,14,0x000000,.28);
     shadow.setDepth(0);
-    const img=this.add.image(62,73,'battle_'+r.asset).setScale(.62);
-    if(r.tint||r.color)img.setTint(r.tint||r.color);
+    this.add.image(62,73,'battle_'+r.asset).setScale(.62);
     this.drawTag(21,34,r.rarity.toUpperCase(),this.styleColor(r.style));
     this.add.text(100,36,r.name,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'});
     this.add.text(100,49,`${r.weight} lb  ${r.style}  Lv ${this.lvl}`,{fontFamily:'monospace',fontSize:6,color:'#333',fontStyle:'bold'});

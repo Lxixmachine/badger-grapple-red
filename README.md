@@ -36,15 +36,27 @@ That runs content validation, balance simulation, a production build, and a brow
 - `src/scenes/`: Phaser scene flow
 - `src/systems/`: save, audio, and shared UI helpers
 - `src/systems/testHooks.js`: gated `?test=1` browser automation hooks
+- `art/imagegen/`: committed ChatGPT image generation source sheets and prompts
 - `public/assets/`: runtime PNG assets copied directly into production builds
 - `public/vendor/`: external Phaser runtime copied directly into production builds
+- `tools/slice_imagegen_creature_assets.py`: slices the imagegen creature sheet into 96x96 runtime sprites and portraits
 - `tools/validate.mjs`: content and reachability validator
 - `tools/balance_sim.mjs`: deterministic-ish campaign balance smoke test
 - `tests/production-smoke.spec.js`: production-build browser smoke test
 
+## Art Pipeline
+
+The current creature battle sprites and portraits are generated from:
+
+```bash
+python tools/slice_imagegen_creature_assets.py
+```
+
+The source sheet and prompt live in `art/imagegen/`. Runtime assets are written into `public/assets/sprites/` and `public/assets/portraits/`. The slicer requires Python Pillow.
+
 ## Production Rules
 
-1. Source changes should happen in `src/`, `public/assets/`, and `tools/`, not inside an uploaded zip.
+1. Source changes should happen in `src/`, `art/`, `public/assets/`, and `tools/`, not inside an uploaded zip.
 2. Every new area needs validation coverage for exits, landing tiles, gates, captains, and trainers.
 3. Collision must keep matching visible art until the Tiled JSON pipeline replaces the code collision rules.
 4. Player-facing text should be ASCII unless the file already intentionally uses UTF-8 text.

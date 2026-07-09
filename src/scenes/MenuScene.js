@@ -51,7 +51,7 @@ export class MenuScene extends Phaser.Scene{
     // right card
     uiBox(this,158,4,74,162);
     const l=lead(this.state),r=l?ROSTER[l.id]:null;
-    if(r&&this.textures.exists('portrait_'+r.asset)){const img=this.add.image(195,32,'portrait_'+r.asset).setScale(.19);if(r.tint||r.color)img.setTint(r.tint||r.color);}
+    if(r&&this.textures.exists('portrait_'+r.asset)){this.add.image(195,32,'portrait_'+r.asset).setScale(.19);}
     this.add.text(195,52,l?r.name.split(' ')[0]:'No lead',{fontFamily:'monospace',fontSize:7,color:'#111',fontStyle:'bold'}).setOrigin(.5);
     if(l)this.add.text(195,61,`Lv ${l.lvl}  ${r.style}`,{fontFamily:'monospace',fontSize:5,color:'#555'}).setOrigin(.5);
     this.add.line(0,0,164,72,226,72,0xa58d65,.6).setOrigin(0);

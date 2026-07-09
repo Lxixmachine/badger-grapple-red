@@ -6,6 +6,16 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 
 ## Latest Codex Turn
 
+- Used ChatGPT image generation for the creature art pass, per user direction.
+- Added the generated source sheet at `art/imagegen/wrestler_creature_sheet_2026-07-09.png` and the exact prompt at `art/imagegen/wrestler_creature_sheet_2026-07-09.prompt.md`.
+- Added `tools/slice_imagegen_creature_assets.py` to remove chroma green, slice the 5x3 imagegen sheet, and emit 96x96 runtime battle sprites, backs, and portraits.
+- Replaced the five base battle/portrait asset families with the sliced generated originals: badger, neutral, top, scramble, and pace.
+- Removed old runtime tinting from battle, scout, starter, and menu image draws so full-color generated assets render correctly.
+- Added a test-only direct battle route for visual QA: `?test=1&scene=battle&starter=buckshot&enemyId=drillpartner&enemyLevel=5&battleType=spar`.
+- Updated smoke coverage to use the direct battle route.
+
+## Previous Codex Turn
+
 - Reworked `ScoutScene` into a more framed, readable Scout Report screen with stronger GBA-style hierarchy: header, prospect card, rarity tag, stats, HP/EP meters, odds card, technique panel, and button-like action choices.
 - Added left/right navigation for the Scout Report options, matching the new horizontal action layout.
 - Added test hooks for direct ScoutScene starts and scene id/level inspection.
@@ -27,13 +37,20 @@ For direct Scout Report visual QA after `npm run build` and `npm run preview`, o
 http://127.0.0.1:5175/?test=1&reset=1&scene=scout&id=buckshot&lvl=5&area=campus
 ```
 
+For direct Battle visual QA after `npm run build` and `npm run preview`, open:
+
+```text
+http://127.0.0.1:5175/?test=1&scene=battle&starter=buckshot&enemyId=drillpartner&enemyLevel=5&battleType=spar
+```
+
 ## Suggested Next Work
 
-- Visually QA the Scout Report in-browser and tune tiny spacing, contrast, and button widths if needed.
-- Continue the sprite overhaul with original, hand-authored or generated source assets that are sharper and more characterful than the current procedural bases.
+- Generate and slice a second imagegen sheet for overworld player/NPC walking sprites. The current battle art is much stronger than overworld art now.
+- Decide whether evolved roster entries need distinct generated art instead of sharing the five base archetypes.
+- Visually tune the battle scene around the richer sprites; the art improved faster than the surrounding mat/UI.
 - Promote route-level smoke coverage from direct ScoutScene starts into the actual Campus Quad grass encounter path.
 - After battle/scout presentation, the next big FireRed-feel gaps are overworld tiles, trainer/NPC portraits, menu polish, and transition animations.
 
 ## Coordination Notes
 
-Keep changes source-first. If assets are generated, commit the source inputs or source notes alongside the exported runtime files so later agents can reproduce and improve them. Prefer small, shippable polish passes with browser screenshots and `npm run check` before handoff.
+Keep changes source-first. If assets are generated, commit the source inputs or source notes alongside the exported runtime files so later agents can reproduce and improve them. Prefer small, shippable polish passes with browser screenshots and `npm run check` before handoff. Use ChatGPT image generation for major art/sprite passes unless the user redirects.

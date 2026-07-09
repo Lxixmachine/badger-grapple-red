@@ -140,14 +140,11 @@ test('coach assignment leads from Field House to Campus Quad', async ({page}) =>
 
 test('battle command screen renders and opens move selection', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
-  await openTestBuild(page);
-  await completeOpeningToOverworld(page);
-
-  await page.evaluate(() => window.__badgerTest.startBattle({
-    enemyId: 'drillpartner',
-    enemyLevel: 5,
-    battleType: 'spar'
-  }));
+  await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
+  await page.goto('/?test=1&scene=battle&starter=buckshot&enemyId=drillpartner&enemyLevel=5&battleType=spar');
+  await expect(page).toHaveTitle(/Badger Grapple Red/);
+  await expect(page.locator('#bootError')).toBeHidden();
+  await expect(page.locator('canvas')).toBeVisible();
 
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').inputLocked)).toBe(false);

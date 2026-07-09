@@ -1,3 +1,4 @@
+import {chooseStarter} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 const Phaser = window.Phaser;
 const V='215';
@@ -27,6 +28,15 @@ export class BootScene extends Phaser.Scene{
         id:params.get('id')||'buckshot',
         lvl:Number(params.get('lvl')||5),
         area:params.get('area')||'campus'
+      });
+      return;
+    }
+    if(params.has('test')&&params.get('scene')==='battle'){
+      chooseStarter(params.get('starter')||'buckshot');
+      this.scene.start('BattleScene',{
+        enemyId:params.get('enemyId')||'drillpartner',
+        enemyLevel:Number(params.get('enemyLevel')||5),
+        battleType:params.get('battleType')||'spar'
       });
       return;
     }
