@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Badger Grapple Red — v21.6 Art Refresh</title>
+<style>
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#050506;color:#f4e9c9;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}#wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 8px calc(env(safe-area-inset-bottom) + 6px);background:linear-gradient(180deg,#15120f 0%,#070708 56%,#050506 100%);gap:7px}#bezel{width:min(100%,740px);display:flex;justify-content:center;padding:10px 10px 12px;border-radius:8px;background:#1b1c21;box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -2px 0 rgba(0,0,0,.55),0 12px 28px rgba(0,0,0,.42)}#game{width:auto;height:auto;max-width:96vw;max-height:70vh;aspect-ratio:240/170;display:flex;align-items:center;justify-content:center;background:#000;margin:0 auto}canvas{width:100%!important;height:100%!important;display:block;image-rendering:pixelated;image-rendering:crisp-edges;border-radius:4px;box-shadow:0 0 0 2px #030303,0 0 0 5px #7e1621,0 0 0 7px #d4a746;aspect-ratio:240/170}.controls{width:min(100%,560px);display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:3px;align-items:center}.dpad{display:grid;grid-template-columns:48px 48px 48px;grid-template-rows:38px 38px 38px;gap:5px;justify-content:center}button{font:inherit;border:0;border-radius:7px;min-height:38px;font-weight:900;text-transform:uppercase;background:#d9bf7c;color:#14100c;box-shadow:inset 0 1px 0 rgba(255,255,255,.32),inset 0 -2px 0 rgba(0,0,0,.22),0 3px 0 rgba(0,0,0,.65);touch-action:manipulation}button:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 1px 0 rgba(0,0,0,.55)}.dark{background:#2e3339;color:#f6f1e2}.red{background:#aa1824;color:white}.gold{background:#d5a338;color:#1a1200}.up{grid-column:2}.left{grid-column:1;grid-row:2}.aMid{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}.down{grid-column:2;grid-row:3}.ab{display:grid;grid-template-columns:1fr 1fr;gap:9px}.ab button{border-radius:999px;min-height:48px}.menu{display:grid;gap:7px}#note{font-size:10px;text-align:center;color:#a79979;margin-top:1px;min-height:12px;text-shadow:0 1px 0 #000}@media(max-width:720px){#bezel{padding:7px;width:min(100%,98vw)}.controls{grid-template-columns:1fr;gap:6px}.menu{grid-template-columns:1fr 1fr}}
+#bootError{display:none;position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 10px);z-index:9999;background:#2b1111;color:#fff;border:2px solid #d6a336;border-radius:10px;padding:10px;font:12px/1.35 monospace;white-space:pre-wrap}</style>
+<script src="./vendor/phaser.min.js?v=216"></script>
+  <script type="module" crossorigin src="./assets/index-Bm2GS1eL.js"></script>
+</head>
+<body>
+<div id="bootError"></div>
+<div id="wrap">
+  <div id="bezel"><div id="game"></div></div>
+  <div class="controls">
+    <div class="dpad"><button class="dark up" data-key="up">▲</button><button class="dark left" data-key="left">◀</button><button class="red aMid" data-key="a">A</button><button class="dark right" data-key="right">▶</button><button class="dark down" data-key="down">▼</button></div>
+    <div class="ab"><button class="red" data-key="a">A</button><button class="gold" data-key="b">B</button></div>
+    <div class="menu"><button class="dark" data-key="menu">Start</button><button class="dark" data-key="save">Save</button></div>
+  </div>
+  <div id="note">v21.6 Art Refresh</div>
+</div>
+</body>
+</html>
