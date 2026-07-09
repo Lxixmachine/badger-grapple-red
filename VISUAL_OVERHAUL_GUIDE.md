@@ -1,5 +1,16 @@
 # Visual Overhaul Guide — Badger Grapple Red
 
+> **READ FIRST — two-document contract:** this guide owns HOW art is
+> produced. **`WORLD_MAP_MANIFESTO.md` (repo root) owns WHAT the world IS** —
+> Madison geography (Bascom Hill hub; Lakeshore Path + Picnic Point west;
+> State Street + Kohl Center east), the golden path, and the six world laws
+> (door law, edge continuity, telegraphing, tall-grass honesty, collision is
+> law, landmark rule). Read the manifesto before any world-facing art turn;
+> WP-WORLD (its §5) is implemented as of v21.26 and the geometry maps in §5
+> below reflect it. Current manifesto art orders: Terrace sunburst chairs
+> (Lakeshore), Capitol dome horizon strip (State Street east edge), Kohl
+> marquee glow-up, locked NATIONALS door (Season Two seam).
+
 **For: Codex (ChatGPT), the project's art lane.** This is a complete, sequenced
 production plan to take the game's visuals to the FireRed bar. It is grounded
 in the live code: every coordinate, size, and file path below is generated
@@ -242,7 +253,7 @@ creature bodies; an evolved wrestler looks identical to its rookie form.
 
 - **Arena backdrop native repaint at 320x224** (currently 240x170
   stretched). Variants worth having: Field House practice mat, Conference
-  Arena, Championship Hall (crowd + banners), outdoor grass circle for wild
+  Arena, the Kohl Center (crowd + banners + gold accents - the only gold in the game), outdoor grass circle for wild
   route scouts. Engine picks by battle type/area `[Claude wires]`.
 - **Persona transformation burst**: 3-5 frame radial flash/silhouette burst
   (96x96, chroma) to replace the plain white `personaFlash` tint.
