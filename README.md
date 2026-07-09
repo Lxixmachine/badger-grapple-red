@@ -54,7 +54,7 @@ That runs content validation, balance simulation, a production build, and a brow
 
 1. Replace the remaining code collision rules with Tiled object layers.
 2. Add a script that imports Tiled JSON into `src/data/world.js` or a generated equivalent.
-3. Expand the browser smoke test from first overworld control into Coach objective -> campus exit -> first trainer/battle.
+3. Expand the browser smoke test from Campus Quad into first scout -> first trainer/battle.
 4. Add save migration fixtures before changing save shape again.
 5. Expand from the current vertical slice only after one 30-45 minute route feels polished end to end.
 
