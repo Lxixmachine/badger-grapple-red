@@ -40,7 +40,24 @@ def trim_alpha(img):
     return img.crop(bbox) if bbox else img
 
 
-def fit_frame(cell):
+def widen_side_frame(frame):
+    alpha = frame.getchannel("A")
+    bbox = alpha.getbbox()
+    if not bbox:
+        return frame
+    body = frame.crop(bbox)
+    target_w = 18
+    if body.width >= target_w:
+        return frame
+    body = body.resize((target_w, body.height), Image.Resampling.NEAREST)
+    widened = Image.new("RGBA", (FRAME_W, FRAME_H), (0, 0, 0, 0))
+    x = (FRAME_W - body.width) // 2
+    y = FRAME_H - body.height
+    widened.alpha_composite(body, (x, y))
+    return widened
+
+
+def fit_frame(cell, row):
     cell = trim_alpha(remove_green(cell))
     cell.thumbnail((FRAME_W, FRAME_H), Image.Resampling.NEAREST)
     cell = trim_alpha(remove_green(cell))
@@ -48,6 +65,8 @@ def fit_frame(cell):
     x = (FRAME_W - cell.width) // 2
     y = FRAME_H - cell.height
     frame.alpha_composite(cell, (x, y))
+    if row in (1, 2):
+        frame = widen_side_frame(frame)
     return frame
 
 
@@ -61,7 +80,7 @@ def slice_sheet(src, dest):
             right = round((col + 1) * source.width / COLS)
             top = round(row * source.height / ROWS)
             bottom = round((row + 1) * source.height / ROWS)
-            frame = fit_frame(source.crop((left, top, right, bottom)))
+            frame = fit_frame(source.crop((left, top, right, bottom)), row)
             result.alpha_composite(frame, (col * FRAME_W, row * FRAME_H))
 
     dest.parent.mkdir(parents=True, exist_ok=True)
