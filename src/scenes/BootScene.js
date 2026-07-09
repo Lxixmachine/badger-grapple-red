@@ -1,7 +1,7 @@
 import {chooseStarter} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 const Phaser = window.Phaser;
-const V='224';
+const V='225';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){

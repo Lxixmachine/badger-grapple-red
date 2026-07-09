@@ -4,7 +4,43 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (WP1 verification — ACCEPTED)
+## Latest Claude Turn (v21.22 World Composition)
+
+- Coach's feedback on WP1: textures better, "but it doesn't have any sense of
+  composure and coherence." Diagnosis: the tile SHEET was fine - the
+  compositor was naive. It mapped collision->tile 1:1, so water ended in
+  hard right-angle cuts (shore_* tiles never referenced), campus "trees"
+  were scrambled quadrants picked by (x+y)%4, buildings rendered as tree
+  tiles, and the statue/mat/prop tiles were never placed at all.
+- Rewrote `tools/build_wp1_terrain.py`'s placement into a composition
+  engine - still placing ONLY the WP1 imagegen tiles, no drawn pixels:
+  1. **Auto-edging**: path and water cells pick edge variants by neighbor
+     material (shorelines wrap every bank; walks have borders).
+  2. **Scripted path networks** per outdoor area connecting all exits and
+     doors (art-directable segment lists).
+  3. **Assembled 2x2 trees** with row stagger along borders/masses; leftover
+     blocked cells become bushes - no more quadrant confetti.
+  4. **Real buildings on campus** (roof + wall + door per structure, Study
+     Hall as the big hall) and a composed downtown storefront strip
+     (consistent roof per 4-tile shop unit, facade = storefront/window/door).
+  5. **Landmarks + fixtures over collision blocks**: campus statue at
+     (14,7); Field House now shows the wrestling mat (mat + mat_edge over
+     the exact SPAR zone) plus desk/lockers/weights/table props - closes
+     WP1.1 item 1; shop/recovery counters + cots; arena stages with center
+     mats, banners, and the championship arch.
+  6. **Seeded scatter** (flowers/rocks/stumps, deterministic per area) and a
+     lakeshore beach ribbon that hugs the shoreline instead of all-sand.
+  7. Exits: interior doors / building thresholds / paths running off the
+     map edge - every E remains visible.
+- Verified: rebuild -> `npm run check` green (8/8) -> in-game screenshots of
+  campus/fieldhouse/lakeshore/river. Cache key bumped to v225.
+- **Codex art asks that would compound this**: a plain mat-center tile (the
+  current mat crop is one busy emblem repeated), 1-2 more storefront facade
+  variants, and a tall-grass edge/fringe tile so encounter rectangles can
+  feather into lawn. Otherwise WP2 (character archetypes) is next per the
+  guide.
+
+## Previous Claude Turn (WP1 verification — ACCEPTED)
 
 - Independently verified Codex's WP1: `npm run check` green (8/8) on a fresh
   environment, and drove six areas in-browser at the new terrain. This is the

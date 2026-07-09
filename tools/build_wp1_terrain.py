@@ -171,58 +171,233 @@ def load_tiles():
     return tiles
 
 
-def tile_name(area, mark, x, y):
-    if mark == "g":
-        return "tall"
-    if mark == "E":
-        return "south_door" if area in {"shop", "recovery", "studyhall"} else "door"
-    if area in INTERIORS:
-        if mark == "#":
-            return "interior_wall" if (x + y) % 3 else "window"
-        return "floor0" if (x + y) % 2 else "floor1"
-    if area in {"lakeshore", "river"} and mark == "#":
-        return "water0" if (x + y) % 2 else "water1"
-    if area == "downtown":
-        if mark == "#":
-            return ("roof_red", "roof_blue", "roof_neutral")[(x + y) % 3]
-        return "pave0" if (x + y) % 2 else "pave1"
+# ---------------------------------------------------------------------------
+# Composition engine (v21.22). Places ONLY the imagegen tiles above - no drawn
+# pixels - but with FireRed composition rules: assembled 2x2 trees, shoreline
+# and path edge tiles at every material boundary, real buildings, landmark
+# props, interior fixtures over their collision blocks, and seeded scatter.
+# Collision is law: walkable/blocked cells never change, only their dressing.
+# ---------------------------------------------------------------------------
+import random
+
+W, H = 28, 14
+OUTDOOR = {"campus", "lakeshore", "river", "downtown"}
+
+def grid(area):
+    return [list(row) for row in MAPS[area]]
+
+def blocked(g, x, y):
+    if x < 0 or x >= W or y < 0 or y >= H:
+        return True
+    return g[y][x] == "#"
+
+def paint(img, tiles, name, x, y):
+    if 0 <= x < W and 0 <= y < H:
+        img.alpha_composite(tiles[name], (x * TILE, y * TILE))
+
+def edge_pick(g, x, y, is_target, center, n, s_, e, w):
+    """Pick an edged variant by which neighbors are NOT the target material."""
+    if not is_target(x, y - 1):
+        return n
+    if not is_target(x, y + 1):
+        return s_
+    if not is_target(x - 1, y):
+        return w
+    if not is_target(x + 1, y):
+        return e
+    return center
+
+# Scripted path masks: main routes connecting exits/doors, art-directable.
+def path_cells(area, g):
+    cells = set()
+    def seg(x0, y0, x1, y1):
+        for x in range(min(x0, x1), max(x0, x1) + 1):
+            for y in range(min(y0, y1), max(y0, y1) + 1):
+                if not blocked(g, x, y):
+                    cells.add((x, y))
     if area == "campus":
-        if mark == "#":
-            return ("tree_tl", "tree_tr", "tree_bl", "tree_br")[(x + y) % 4]
-        if x in {13, 14, 15}:
-            return "path"
-        if y in {6, 7}:
-            return "path_w" if x < 14 else "path_e"
-        return "grass0" if (x + y) % 2 else "grass1"
-    if area in {"lakeshore", "river"}:
-        return "path" if mark in ".STCDE" else "grass0"
-    return "tree_bl" if mark == "#" else ("grass0" if (x + y) % 2 else "grass1")
-
-
-def base_name(area, mark, x, y):
-    if area in INTERIORS:
-        return "floor0" if (x + y) % 2 else "floor1"
+        seg(13, 1, 15, 13)      # north-south main walk
+        seg(1, 6, 27, 8)        # east-west main walk (2-3 wide)
+        seg(9, 3, 9, 6)         # shop door spur
+        seg(18, 3, 18, 6)       # recovery door spur
+        seg(23, 3, 23, 6)       # study hall spur
+    if area == "lakeshore":
+        seg(0, 7, 16, 8)        # campus exit toward the field
+        seg(16, 8, 27, 9)       # on to the river exit
+    if area == "river":
+        seg(0, 9, 21, 9)        # trail along the river bank
+        seg(21, 6, 21, 9)       # climb to the championship gate
+        seg(21, 6, 27, 6)
     if area == "downtown":
-        return "pave0" if (x + y) % 2 else "pave1"
-    if area == "campus":
-        return "grass0" if (x + y) % 2 else "grass1"
-    if area in {"lakeshore", "river"}:
-        return "grass0" if mark == "g" else "path"
-    return "grass0" if (x + y) % 2 else "grass1"
+        seg(0, 6, 27, 8)        # main street
+    return cells
 
+def water_mask(area, g):
+    if area not in {"lakeshore", "river"}:
+        return set()
+    return {(x, y) for y in range(H) for x in range(W) if g[y][x] == "#"}
 
 def compose(area, tiles):
-    image = Image.new("RGBA", SIZE, (0, 0, 0, 255))
-    for y, row in enumerate(MAPS[area]):
-        for x, mark in enumerate(row):
-            pos = (x * TILE, y * TILE)
-            base = base_name(area, mark, x, y)
-            image.alpha_composite(tiles[base], pos)
-            subject = tile_name(area, mark, x, y)
-            if subject != base:
-                image.alpha_composite(tiles[subject], pos)
-    return image.convert("RGB")
+    g = grid(area)
+    rng = random.Random(f"wp1-{area}")
+    img = Image.new("RGBA", SIZE, (0, 0, 0, 255))
+    interior = area in INTERIORS
+    water = water_mask(area, g)
+    paths = path_cells(area, g)
+    in_water = lambda x, y: (x, y) in water or x < 0 or x >= W or (y < 0 or y >= H)
+    in_path = lambda x, y: (x, y) in paths
 
+    # ---- pass 1: ground base everywhere ----
+    for y in range(H):
+        for x in range(W):
+            if interior:
+                paint(img, tiles, "floor0" if (x + y) % 2 else "floor1", x, y)
+            elif area == "downtown":
+                paint(img, tiles, "pave0" if (x + y) % 2 else "pave1", x, y)
+            elif area == "lakeshore":
+                # grassy park with a sand beach ribbon hugging the water
+                near_water = any((x + dx, y + dy) in water for dx in (-1, 0, 1) for dy in (-1, 0, 1))
+                paint(img, tiles, "path" if near_water else ("grass0" if (x + y) % 2 else "grass1"), x, y)
+            else:
+                paint(img, tiles, "grass0" if (x + y) % 2 else "grass1", x, y)
+
+    # ---- pass 2: paths with edge tiles ----
+    for (x, y) in paths:
+        name = edge_pick(g, x, y, in_path, "path", "path_n", "path_s", "path_e", "path_w")
+        paint(img, tiles, name, x, y)
+
+    # ---- pass 3: water with shoreline edges ----
+    for (x, y) in water:
+        name = edge_pick(g, x, y, in_water, "water0" if (x + y) % 2 else "water1",
+                         "shore_n", "shore_s", "shore_e", "shore_w")
+        paint(img, tiles, name, x, y)
+
+    # ---- pass 4: tall grass + seeded scatter on open ground ----
+    for y in range(H):
+        for x in range(W):
+            mark = g[y][x]
+            if mark == "g":
+                paint(img, tiles, "tall", x, y)
+            elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
+                r = rng.random()
+                if area != "downtown":
+                    if r < 0.05:
+                        paint(img, tiles, "flower_cream" if r < 0.025 else "flower_gold", x, y)
+                    elif r < 0.065:
+                        paint(img, tiles, "rock0" if r < 0.06 else "stump", x, y)
+
+    # ---- pass 5: blocked dressing ----
+    if area == "downtown":
+        # storefront strips: 4-tile shop units, consistent roof per unit,
+        # facade row faces the street.
+        for band, facade_row, roof_rows in ((range(1, 5), 4, range(1, 4)), (range(10, 13), 10, range(11, 13))):
+            for y in roof_rows:
+                for x in range(4, 24):
+                    if g[y][x] == "#":
+                        paint(img, tiles, ("roof_red", "roof_blue", "roof_neutral")[(x // 4) % 3], x, y)
+            for x in range(4, 24):
+                if g[facade_row][x] == "#":
+                    unit = x % 4
+                    paint(img, tiles, "storefront" if unit in (0, 3) else ("door" if unit == 2 else "window"), x, facade_row)
+        # curbs where sidewalk meets the vertical map edges
+        for y in range(1, 13):
+            for x in (0, 27):
+                if g[y][x] != "#":
+                    paint(img, tiles, "curb", x, y)
+    elif interior:
+        for y in range(H):
+            for x in range(W):
+                if g[y][x] == "#":
+                    top_wall = y < H - 1 and not blocked(g, x, y + 1)
+                    paint(img, tiles, ("window" if x % 3 == 1 and top_wall else "interior_wall"), x, y)
+    elif area in {"lakeshore", "river"}:
+        pass  # blocked mass is the water, already drawn
+    # campus blocked dressing happens below (buildings + assembled trees)
+
+    if area == "campus":
+        # buildings first: shop (8-10,1-2), recovery (17-19,1-2), study hall (21-27,1-4)
+        for (bx0, bx1, by0, by1, roof) in ((8, 10, 1, 2, "roof_red"), (17, 19, 1, 2, "roof_blue"), (21, 27, 1, 4, "roof_neutral")):
+            for y in range(by0, by1 + 1):
+                for x in range(bx0, bx1 + 1):
+                    if g[y][x] != "#":
+                        continue
+                    paint(img, tiles, roof if y < by1 else "wall", x, y)
+        # doors on the buildings at their true exit-adjacent gaps
+        paint(img, tiles, "door", 9, 2)
+        paint(img, tiles, "door", 18, 2)
+        paint(img, tiles, "door", 23, 4)
+        # statue landmark at (14,7)
+        paint(img, tiles, "statue", 14, 7)
+
+    # assembled 2x2 trees over remaining outdoor blocked cells (staggered rows)
+    if area in {"campus", "downtown"} or (not interior and area not in {"lakeshore", "river"}):
+        claimed = set()
+        for y in range(H - 1):
+            for x in range(W - 1):
+                if area == "campus" and 8 <= x <= 27 and 1 <= y <= 4:
+                    continue  # building zone
+                if area == "downtown":
+                    continue  # storefront zone owns its blocks
+                quad = [(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)]
+                if all(blocked(g, qx, qy) and (qx, qy) not in claimed and 0 <= qx < W and 0 <= qy < H for qx, qy in quad):
+                    stagger = (y // 2) % 2
+                    if (x + stagger) % 2 == 0:
+                        paint(img, tiles, "tree_tl", x, y)
+                        paint(img, tiles, "tree_tr", x + 1, y)
+                        paint(img, tiles, "tree_bl", x, y + 1)
+                        paint(img, tiles, "tree_br", x + 1, y + 1)
+                        claimed.update(quad)
+        # leftover blocked cells become bushes so no bare wall shows
+        for y in range(H):
+            for x in range(W):
+                if blocked(g, x, y) and (x, y) not in claimed and g[y][x] == "#":
+                    if area == "campus" and 8 <= x <= 27 and 1 <= y <= 4:
+                        continue
+                    if area == "downtown" and 4 <= x <= 23:
+                        continue
+                    paint(img, tiles, "bush", x, y)
+
+    # ---- pass 6: fixtures over collision blocks (art matches collision) ----
+    if area == "fieldhouse":
+        for y in range(3, 9):        # the wrestling mat under the SPAR zone
+            for x in range(9, 18):
+                on_edge = x in (9, 17) or y in (3, 8)
+                paint(img, tiles, "mat_edge" if on_edge else "mat", x, y)
+        for x in range(1, 4):        # coach desk
+            paint(img, tiles, "table", x, 2); paint(img, tiles, "table", x, 3)
+        for x in range(21, 25):      # lockers
+            paint(img, tiles, "shelf", x, 2); paint(img, tiles, "shelf", x, 3)
+        for x in range(21, 24):      # weights
+            paint(img, tiles, "counter", x, 9); paint(img, tiles, "counter", x, 10)
+        for x in range(7, 10):       # meeting table
+            paint(img, tiles, "table", x, 11)
+    if area in {"shop", "recovery"}:
+        for x in range(10, 18):
+            paint(img, tiles, "shelf", x, 4)
+            paint(img, tiles, "counter", x, 5)
+            paint(img, tiles, "cot" if area == "recovery" else "counter", x, 6)
+    if area in {"conference", "championship"}:
+        cx = 14 if area == "conference" else 15
+        for y in range(4, 9):        # center stage mat
+            for x in range(cx - 5, cx + 6):
+                on_edge = x in (cx - 5, cx + 5) or y in (4, 8)
+                paint(img, tiles, "mat_edge" if on_edge else "mat", x, y)
+        for x in range(3, 25, 6):    # banners on the back wall
+            paint(img, tiles, "banner", x, 0)
+        if area == "championship":
+            paint(img, tiles, "arch", 19, 4)
+
+    # ---- pass 7: exits always visible ----
+    for y in range(H):
+        for x in range(W):
+            if g[y][x] == "E":
+                if interior:
+                    paint(img, tiles, "south_door", x, y)
+                elif area == "campus" and y in (1, 13):
+                    paint(img, tiles, "door", x, y)  # arena/field-house thresholds
+                else:
+                    paint(img, tiles, "path", x, y)  # the route runs off the map edge
+    return img.convert("RGB")
 
 def save_tilesheet(tiles):
     names = list(CROPS)
