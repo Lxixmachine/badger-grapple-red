@@ -6,6 +6,18 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 
 ## Latest Codex Turn
 
+- Migrated the engine shell from 240x170 to a 320x224 internal canvas for v21.8.
+- Chose 320x224 because it gives substantially more resolution while matching the existing 448x224 overworld map height, avoiding black bands.
+- Added `src/systems/resolution.js` with game dimensions and a temporary `useLegacyLayout()` compatibility zoom for old-layout scenes.
+- Converted `BattleScene` to native 320x224 layout: larger battle sprites, wider arena, larger status panels, wider command/fight/bag/party/result panels, larger text, and full-screen transition masks.
+- Widened the native overworld HUD, message box, prompt chip, area toast, and objective popup to use the extra horizontal space.
+- Temporarily compatibility-scaled Title, Intro, Starter, Scout, and Menu scenes. These are playable but should be migrated natively in later turns.
+- Bumped app/cache label to v21.8 Hi-Res Battle.
+- Full `npm run check` passes.
+- Browser QA at phone viewport confirmed `canvas.width=320`, `canvas.height=224`, battle command/fight screens render cleanly, and overworld renders without console errors.
+
+## Previous Codex Turn
+
 - Confirmed GitHub Pages deployment delay was caused by GitHub Actions/Pages outage, not repo configuration.
 - Started a readability pass after the user reported overworld sprites and HUD text were too small/pixelated on phone.
 - Generated ChatGPT imagegen overworld source sheets for the player wrestler and coach NPC, saved them under `art/imagegen/`.
@@ -16,7 +28,7 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 - Full `npm run check` passes.
 - Browser QA at a phone-sized viewport showed the bigger player/coach sprites and HUD rendering without console errors. The in-app browser DOM snapshot API failed, but screenshot/evaluate/log checks worked.
 
-## Previous Codex Turn
+## Earlier Codex Turn
 
 - Used ChatGPT image generation for the creature art pass, per user direction.
 - Added the generated source sheet at `art/imagegen/wrestler_creature_sheet_2026-07-09.png` and the exact prompt at `art/imagegen/wrestler_creature_sheet_2026-07-09.prompt.md`.

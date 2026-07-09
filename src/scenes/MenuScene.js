@@ -1,4 +1,4 @@
-import {loadState,saveState,lead,resetState,caughtRecruitCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,addXp} from '../data/roster.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';
+import {loadState,saveState,lead,resetState,caughtRecruitCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,addXp} from '../data/roster.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {useLegacyLayout} from '../systems/resolution.js';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['W Badge','Neutral Badge','Scramble Badge','Top Badge'];
 const MAIN_OPTS=[['WRESTLERS','team'],['BAG','bag'],['ROSTERDEX','dex'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
@@ -22,7 +22,7 @@ function icon(scene,x,y,kind,active){
 }
 export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
-  create(data={}){this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.confirmReset=false;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
+  create(data={}){useLegacyLayout(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.confirmReset=false;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='a')this.choose();if(k==='b')this.back();}
   optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='objective')return 1;if(this.tab==='practice')return 5;if(this.tab==='shop')return 5;if(this.tab==='dex')return 1;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){

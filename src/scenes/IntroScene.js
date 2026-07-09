@@ -1,4 +1,4 @@
-import {loadState,saveState} from '../systems/save.js';import {uiBox,setVirtualHandler} from '../systems/ui.js';
+import {loadState,saveState} from '../systems/save.js';import {uiBox,setVirtualHandler} from '../systems/ui.js';import {useLegacyLayout} from '../systems/resolution.js';
 const Phaser=window.Phaser;
 const NAMES=['Coach','Becky','Badger','Grappler'];
 const PAGES=[
@@ -8,7 +8,7 @@ const PAGES=[
 ];
 export class IntroScene extends Phaser.Scene{
   constructor(){super('IntroScene');}
-  create(){this.state=loadState();this.page=0;this.nameSel=0;this.naming=false;this.cameras.main.setBackgroundColor('#1d2634');this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.next());this.input.keyboard.on('keydown-SPACE',()=>this.next());this.input.keyboard.on('keydown-ESC',()=>this.scene.start('TitleScene'));setVirtualHandler(this);this.draw();}
+  create(){useLegacyLayout(this);this.state=loadState();this.page=0;this.nameSel=0;this.naming=false;this.cameras.main.setBackgroundColor('#1d2634');this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.next());this.input.keyboard.on('keydown-SPACE',()=>this.next());this.input.keyboard.on('keydown-ESC',()=>this.scene.start('TitleScene'));setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up')this.move(-1);if(k==='down')this.move(1);if(k==='a')this.next();if(k==='b')this.scene.start('TitleScene');}
   move(d){if(!this.naming)return;this.nameSel=Phaser.Math.Wrap(this.nameSel+d,0,NAMES.length);this.draw();}
   next(){if(this.naming){this.state.playerName=NAMES[this.nameSel];this.state.flags.introDone=true;saveState(this.state);this.scene.start('StarterScene');return;}this.page++;if(this.page>=PAGES.length){this.naming=true;}this.draw();}

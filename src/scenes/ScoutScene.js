@@ -2,6 +2,7 @@ import {ROSTER,scaledStats,makeMon} from '../data/roster.js';
 import {MOVES,ADV} from '../data/moves.js';
 import {loadState,saveState} from '../systems/save.js';
 import {uiBox,setVirtualHandler} from '../systems/ui.js';
+import {useLegacyLayout} from '../systems/resolution.js';
 
 const Phaser = window.Phaser;
 const OPTS=['RECRUIT','SCOUT FURTHER','LEAVE'];
@@ -11,6 +12,7 @@ export class ScoutScene extends Phaser.Scene{
   constructor(){super('ScoutScene');}
 
   create(data={}){
+    useLegacyLayout(this);
     this.id=data.id||'buckshot';
     this.lvl=data.lvl||4;
     this.area=data.area||'campus';

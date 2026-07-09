@@ -68,7 +68,7 @@ export class OverworldScene extends Phaser.Scene{
 coachObjective(){this.state.flags.coachIntro=true;const caught=caughtRecruitCount(this.state);if(caught>=2&&this.state.flags.wonSpar&&!this.state.badges.includes('W Badge')){this.state.badges.push('W Badge');this.state.flags.firstBadge=true;this.state.objective={id:'opening_complete',stage:6,complete:true,log:['Receive Wrestling Badge #1','Return to Coach','Win your first sparring match','Recruit your first wrestler','Scout Campus Quad','Meet the Head Coach']};saveState(this.state);this.showObjectivePopup('BADGE OBTAINED','Wrestling Badge #1 earned. Opening loop complete.');return this.showMessage('Coach: You scouted, recruited, and won. That is how this room grows. Take Wrestling Badge #1.');}if(!this.state.flags.assignment){this.state.flags.assignment=true;this.state.objective={id:'scout_quad',stage:2,complete:false,log:['Scout Campus Quad','Receive your first assignment','Meet the Head Coach']};saveState(this.state);this.showObjectivePopup('NEW OBJECTIVE','Scout Campus Quad and recruit one wrestler.');return this.showMessage('Coach: Go to Campus Quad. Scout tall grass, study the report, then recruit one wrestler for the room.');}if(caught<2)return this.showMessage('Coach: Keep scouting Campus Quad until you recruit one more wrestler.');if(!this.state.flags.wonSpar){this.state.objective={id:'win_spar',stage:4,complete:false,log:['Win your first sparring match','Recruit your first wrestler','Scout Campus Quad','Meet the Head Coach']};saveState(this.state);return this.showMessage('Coach: Good recruit. Now win a sparring match on the Field House mat.');}return this.showMessage('Coach: Return after the sparring win and I will mark your first badge.');}
 rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;saveState(this.state);this.showObjectivePopup('RIVAL','A future dual meet is waiting.');}return this.showMessage('Rival: Build your lineup. When you have depth, I want a dual meet.');}
  hiddenItem(flag,item,msg){this.state.flags.hiddenItems=this.state.flags.hiddenItems||{};if(this.state.flags.hiddenItems[flag])return this.showMessage('Nothing else here.');this.state.flags.hiddenItems[flag]=true;this.state.items[item]=(this.state.items[item]||0)+1;saveState(this.state);this.showObjectivePopup('ITEM FOUND',msg);return this.showMessage(msg);}
- showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0).setDepth(180);const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(23,51,200,38,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(20,48,200,38,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(20,48,200,38,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(24,52,192,30,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(29,80,211,80);const t=this.add.text(120,55,title,{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(120,68,body,{fontFamily:'monospace',fontSize:6,color:'#111',align:'center',wordWrap:{width:176}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
+showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0).setDepth(180);const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(63,51,200,38,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(60,48,200,38,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(60,48,200,38,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(64,52,192,30,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(69,80,251,80);const t=this.add.text(160,55,title,{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(160,68,body,{fontFamily:'monospace',fontSize:6,color:'#111',align:'center',wordWrap:{width:176}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
  promptFor(ch){if(ch==='R')return 'A RECOVER';if(ch==='S')return 'A SHOP';if(ch==='C')return 'A BATTLE';if(ch==='g')return 'A SCOUT';if(ch==='M')return 'A SPAR';if(ch==='N')return 'A TALK';if(ch==='STATUE')return 'A READ';if(ch==='SCOUT_NPC')return 'A TALK';if(ch==='RECRUIT_NPC')return this.state.trainersDefeated?.campus_recruit?'A TALK':'A BATTLE';if(ch==='SAVE_NPC')return 'A TALK';if(ch==='BATTLE_NPC')return 'A TALK';if(ch==='RIVAL_NPC')return this.state.trainersDefeated?.campus_rival?'A TALK':'A BATTLE';if(ch==='STUDY_NPC')return 'A TALK';if(ch==='HIDDEN_TAPE'||ch==='HIDDEN_FILM'||ch==='HIDDEN_DRINK')return 'A CHECK';if(ch==='DOOR')return 'A DOOR';if(['WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(ch))return 'A CHECK';return '';}
  drawDepthDecor(){this.decor.removeAll(true);const add=(obj)=>this.decor.add(obj);if(this.area==='campus'){const g=this.add.graphics().setDepth(8);g.fillStyle(0xffffff,.05);g.fillEllipse(224,104,326,132);g.fillStyle(0x000000,.20);g.fillRect(0,0,448,8);g.fillRect(0,216,448,8);g.fillStyle(0x000000,.16);[[56,42,40,9],[350,42,54,9],[90,178,48,8],[298,176,52,8],[238,48,36,7]].forEach(r=>g.fillRoundedRect(...r,2));g.fillStyle(0xffffff,.055);[[62,44,30,2],[354,44,40,2],[96,180,36,2],[304,178,40,2]].forEach(r=>g.fillRect(...r));add(g);return;}if(this.area!=='fieldhouse')return;const light=this.add.graphics().setDepth(8);light.fillStyle(0xffffff,.045);light.fillEllipse(224,104,360,150);light.fillStyle(0x000000,.10);light.fillRect(0,0,448,8);light.fillRect(0,208,448,16);add(light);}
  addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null){const sx=this.worldX(x),sy=this.worldY(y);const sh=this.add.ellipse(sx,sy-2,17,6,0x000000,.28).setDepth(10);const npc=this.add.sprite(sx,sy,'npc',frame).setOrigin(.5,1).setDepth(20);npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};if(this.anims.exists(anim))npc.play(anim,true);this.actors.add(sh);this.actors.add(npc);this.npcList.push({npc,sh,t:0,route,i:0});return npc;}
@@ -90,11 +90,11 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
   if(this.areaToast){this.areaToast.destroy(true);}
   this.areaToast=this.add.container(0,0).setScrollFactor(0).setDepth(140);
   const g=this.add.graphics().setScrollFactor(0);
-  g.fillStyle(0x000000,.28);g.fillRoundedRect(71,33,104,20,3);
-  g.fillStyle(0x141217,.94);g.fillRoundedRect(68,30,104,20,3);
-  g.lineStyle(1,0xf0d784,1);g.strokeRoundedRect(68,30,104,20,3);
-  g.lineStyle(1,0x7b1d2a,1);g.strokeRoundedRect(71,33,98,14,2);
-  const t=this.add.text(120,36,name,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);
+  g.fillStyle(0x000000,.28);g.fillRoundedRect(111,33,104,20,3);
+  g.fillStyle(0x141217,.94);g.fillRoundedRect(108,30,104,20,3);
+  g.lineStyle(1,0xf0d784,1);g.strokeRoundedRect(108,30,104,20,3);
+  g.lineStyle(1,0x7b1d2a,1);g.strokeRoundedRect(111,33,98,14,2);
+  const t=this.add.text(160,36,name,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);
   this.areaToast.add([g,t]);
   this.tweens.add({targets:this.areaToast,alpha:0,delay:1050,duration:420,onComplete:()=>{this.areaToast?.destroy(true);this.areaToast=null;}});
  }
@@ -102,16 +102,16 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
   this.hud.removeAll(true);
   const l=lead(this.state);
   const top=this.add.graphics().setScrollFactor(0);
-  top.fillStyle(0x000000,.22);top.fillRoundedRect(5,5,232,32,3);
-  top.fillStyle(0x151318,.84);top.fillRoundedRect(3,3,234,32,3);
-  top.fillStyle(0x7b1d2a,.95);top.fillRect(5,5,230,2);
-  top.lineStyle(1,0x070707,1);top.strokeRoundedRect(3,3,234,32,3);
-  top.lineStyle(1,0xd6a336,.9);top.strokeRoundedRect(6,6,228,26,2);
-  top.fillStyle(0xfff2c7,.12);top.fillRect(8,8,224,1);
-  top.fillStyle(0x000000,.2);top.fillRect(7,18,226,1);
+  top.fillStyle(0x000000,.22);top.fillRoundedRect(5,5,312,32,3);
+  top.fillStyle(0x151318,.84);top.fillRoundedRect(3,3,314,32,3);
+  top.fillStyle(0x7b1d2a,.95);top.fillRect(5,5,310,2);
+  top.lineStyle(1,0x070707,1);top.strokeRoundedRect(3,3,314,32,3);
+  top.lineStyle(1,0xd6a336,.9);top.strokeRoundedRect(6,6,308,26,2);
+  top.fillStyle(0xfff2c7,.12);top.fillRect(8,8,304,1);
+  top.fillStyle(0x000000,.2);top.fillRect(7,18,306,1);
   this.hud.add(top);
   this.hud.add(this.add.text(9,7,`${areaFor(this.area).name}`,{fontFamily:'monospace',fontSize:8,color:'#fff2c7',fontStyle:'bold'}).setScrollFactor(0));
-  this.hud.add(this.add.text(230,8,`GR ${this.state.grit}  REP ${this.state.rep}`,{fontFamily:'monospace',fontSize:7,color:'#f8f0d8',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
+  this.hud.add(this.add.text(310,8,`GR ${this.state.grit}  REP ${this.state.rep}  ${this.state.day?.period||'Morning'}`,{fontFamily:'monospace',fontSize:7,color:'#f8f0d8',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
   if(l){
     const s=scaledStats(l.id,l.lvl);
     this.hud.add(this.add.text(9,21,`${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:'monospace',fontSize:7,color:'#ffe28a',fontStyle:'bold'}).setScrollFactor(0));
@@ -120,20 +120,20 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
     this.hud.add(this.add.text(126,21,'EP',{fontFamily:'monospace',fontSize:6,color:'#a8d3ff',fontStyle:'bold'}).setScrollFactor(0));
     this.hud.add(hpBar(this,141,23,38,5,l.gas/s.gas,0x5aa4e6).setScrollFactor(0));
   }
-  this.hud.add(this.add.text(184,21,this.objective(),{fontFamily:'monospace',fontSize:6,color:'#ffe28a',fontStyle:'bold',wordWrap:{width:47}}).setScrollFactor(0));
+  this.hud.add(this.add.text(200,21,this.objective(),{fontFamily:'monospace',fontSize:6,color:'#ffe28a',fontStyle:'bold',wordWrap:{width:106}}).setScrollFactor(0));
   this.updateMarker();
   if(this.messageOpen&&this.message){
-    const box=uiBox(this,5,104,230,62).setScrollFactor(0);
+    const box=uiBox(this,5,154,310,62).setScrollFactor(0);
     this.hud.add(box);
-    this.hud.add(this.add.text(14,113,this.message,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold',wordWrap:{width:210}}).setScrollFactor(0));
-    this.hud.add(this.add.text(211,153,'A',{fontFamily:'monospace',fontSize:9,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(this.add.text(14,163,this.message,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold',wordWrap:{width:290}}).setScrollFactor(0));
+    this.hud.add(this.add.text(291,203,'A',{fontFamily:'monospace',fontSize:9,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
   }else{
     const kind=this.kindHere();
     const prompt=this.promptFor(kind);
     if(prompt){
       const pg=this.add.graphics().setScrollFactor(0);
       const width=Math.max(56,prompt.length*6+16);
-      const x=236-width;
+      const x=316-width;
       pg.fillStyle(0x000000,.24);pg.fillRoundedRect(x+2,40,width,16,2);
       pg.fillStyle(0x151318,.9);pg.fillRoundedRect(x,38,width,16,2);
       pg.lineStyle(1,0xd6a336,.9);pg.strokeRoundedRect(x,38,width,16,2);
