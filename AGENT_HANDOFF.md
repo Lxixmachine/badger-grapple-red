@@ -4,7 +4,27 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.17 Native Menus)
+## Latest Claude Turn (v21.18 Full Native)
+
+- Finished the resolution migration: **Scout, Starter, and Intro are now
+  native 320x224**, and `useLegacyLayout` is deleted from the codebase
+  (resolution.js is just GAME_W/GAME_H now). Every screen in the game renders
+  at true pixel scale - the 1.333x smear is fully gone.
+- ScoutScene kept your design language and logic verbatim (options, odds
+  math, recruit flow untouched) - only geometry moved. The prospect card
+  gained a `RED PANDA PERSONA` line and the recruit-obtained screen now says
+  "The Red Panda spirit wrestles for Wisconsin now."
+- StarterScene is now a proper first-choice moment: bigger cards, persona
+  name under each starter (Badger / Gorilla / Red Panda), and the info panel
+  pitches "takes the mat as the Gorilla" - the persona canon starts at
+  minute one.
+- IntroScene native with the larger badger portrait.
+- `npm run check` green (8/8). If you re-space Scout further, it's all yours -
+  no legacy shim to work around anymore.
+- Open art asks unchanged: terrain tileset repaint (still the #1 visual gap),
+  NPC archetype sheets, evolved-stage creature art, ceremony visuals.
+
+## Previous Claude Turn (v21.17 Native Menus)
 
 - Picked the next biggest impact: **MenuScene and TitleScene were still
   rendering at 240x170 through `useLegacyLayout`'s 1.333x zoom** - a

@@ -1,8 +1,7 @@
-import {ROSTER,scaledStats,makeMon} from '../data/roster.js';
+import {ROSTER,scaledStats,makeMon,personaFor} from '../data/roster.js';
 import {MOVES,ADV} from '../data/moves.js';
 import {loadState,saveState} from '../systems/save.js';
 import {uiBox,setVirtualHandler} from '../systems/ui.js';
-import {useLegacyLayout} from '../systems/resolution.js';
 
 const Phaser = window.Phaser;
 const OPTS=['RECRUIT','SCOUT FURTHER','LEAVE'];
@@ -12,7 +11,6 @@ export class ScoutScene extends Phaser.Scene{
   constructor(){super('ScoutScene');}
 
   create(data={}){
-    useLegacyLayout(this);
     this.id=data.id||'buckshot';
     this.lvl=data.lvl||4;
     this.area=data.area||'campus';
@@ -54,80 +52,81 @@ export class ScoutScene extends Phaser.Scene{
 
   drawBackdrop(r){
     const g=this.add.graphics();
-    g.fillStyle(0x20242a,1);g.fillRect(0,0,240,170);
-    g.fillStyle(0x111015,.55);g.fillRect(0,119,240,51);
-    g.lineStyle(2,this.styleColor(r.style),.85);g.strokeEllipse(65,86,106,30);
-    g.lineStyle(1,0xd6a336,.45);g.strokeEllipse(65,86,80,21);
-    g.fillStyle(0xffffff,.06);g.fillRect(0,0,240,54);
-    for(let y=7;y<53;y+=7){g.lineStyle(1,0xffffff,.04);g.lineBetween(0,y,240,y);}
+    g.fillStyle(0x20242a,1);g.fillRect(0,0,320,224);
+    g.fillStyle(0x111015,.55);g.fillRect(0,158,320,66);
+    g.lineStyle(2,this.styleColor(r.style),.85);g.strokeEllipse(86,114,140,40);
+    g.lineStyle(1,0xd6a336,.45);g.strokeEllipse(86,114,106,28);
+    g.fillStyle(0xffffff,.06);g.fillRect(0,0,320,70);
+    for(let y=9;y<69;y+=9){g.lineStyle(1,0xffffff,.04);g.lineBetween(0,y,320,y);}
   }
 
   drawHeader(r){
     const g=this.add.graphics();
-    g.fillStyle(0x000000,.24);g.fillRoundedRect(10,8,220,18,3);
-    g.fillStyle(0x151318,.95);g.fillRoundedRect(8,6,220,18,3);
-    g.lineStyle(1,0xd6a336,.9);g.strokeRoundedRect(8,6,220,18,3);
-    g.fillStyle(this.styleColor(r.style),1);g.fillRect(11,9,214,2);
-    this.add.text(16,12,'SCOUT REPORT',{fontFamily:'monospace',fontSize:8,color:'#fff2c7',fontStyle:'bold'});
-    this.add.text(224,12,this.area.toUpperCase(),{fontFamily:'monospace',fontSize:6,color:'#d6a336',fontStyle:'bold'}).setOrigin(1,0);
+    g.fillStyle(0x000000,.24);g.fillRoundedRect(12,10,296,24,3);
+    g.fillStyle(0x151318,.95);g.fillRoundedRect(10,8,296,24,3);
+    g.lineStyle(1,0xd6a336,.9);g.strokeRoundedRect(10,8,296,24,3);
+    g.fillStyle(this.styleColor(r.style),1);g.fillRect(14,12,288,3);
+    this.add.text(20,17,'SCOUT REPORT',{fontFamily:'monospace',fontSize:10,color:'#fff2c7',fontStyle:'bold'});
+    this.add.text(300,18,this.area.toUpperCase(),{fontFamily:'monospace',fontSize:8,color:'#d6a336',fontStyle:'bold'}).setOrigin(1,0);
   }
 
   drawProspect(r,s,odds){
-    this.drawBox(10,30,220,72);
-    const shadow=this.add.ellipse(62,88,62,14,0x000000,.28);
+    this.drawBox(12,40,296,96);
+    const shadow=this.add.ellipse(82,118,82,18,0x000000,.28);
     shadow.setDepth(0);
-    this.add.image(62,73,'battle_'+r.asset).setScale(.62);
-    this.drawTag(21,34,r.rarity.toUpperCase(),this.styleColor(r.style));
-    this.add.text(100,36,r.name,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'});
-    this.add.text(100,49,`${r.weight} lb  ${r.style}  Lv ${this.lvl}`,{fontFamily:'monospace',fontSize:6,color:'#333',fontStyle:'bold'});
-    this.add.text(100,60,`POT ${this.potential(r)}  OVR ${this.overall(s)}  INT ${this.tempInterest}%`,{fontFamily:'monospace',fontSize:6,color:'#333'});
-    this.drawMeter(101,73,58,5,s.hp/(s.hp+10),0x55b867,'HP',`${s.hp}`);
-    this.drawMeter(101,84,58,4,s.gas/(s.gas+10),0x5aa4e6,'EP',`${s.gas}`);
-    this.drawOddsCard(173,66,odds);
+    this.add.image(82,98,'battle_'+r.asset).setScale(.82);
+    this.drawTag(28,46,r.rarity.toUpperCase(),this.styleColor(r.style));
+    this.add.text(132,48,r.name,{fontFamily:'monospace',fontSize:11,color:'#111',fontStyle:'bold'});
+    this.add.text(132,64,`${r.weight} lb  ${r.style}  Lv ${this.lvl}`,{fontFamily:'monospace',fontSize:8,color:'#333',fontStyle:'bold'});
+    this.add.text(132,77,`${personaFor(this.id).toUpperCase()} PERSONA`,{fontFamily:'monospace',fontSize:8,color:'#7a4ac9',fontStyle:'bold'});
+    this.add.text(132,90,`POT ${this.potential(r)}  OVR ${this.overall(s)}  INT ${this.tempInterest}%`,{fontFamily:'monospace',fontSize:8,color:'#333'});
+    this.drawMeter(133,106,76,6,s.hp/(s.hp+10),0x55b867,'HP',`${s.hp}`);
+    this.drawMeter(133,120,76,5,s.gas/(s.gas+10),0x5aa4e6,'EP',`${s.gas}`);
+    this.drawOddsCard(238,96,odds);
   }
 
   drawMoves(r){
-    this.drawBox(10,106,220,35);
-    this.add.text(18,111,'TECHNIQUES',{fontFamily:'monospace',fontSize:7,color:'#8a1720',fontStyle:'bold'});
+    this.drawBox(12,142,296,44);
+    this.add.text(22,148,'TECHNIQUES',{fontFamily:'monospace',fontSize:9,color:'#8a1720',fontStyle:'bold'});
     r.moves.slice(0,4).forEach((key,i)=>{
       const m=MOVES[key];
-      const x=19+(i%2)*105,y=122+(i>1?10:0);
-      this.add.text(x,y,`${m.name}`,{fontFamily:'monospace',fontSize:6,color:'#111',fontStyle:'bold'});
-      this.add.text(x+58,y,`${m.style[0]}${m.power}`,{fontFamily:'monospace',fontSize:5,color:'#555'});
+      const x=24+(i%2)*142,y=163+(i>1?12:0);
+      this.add.text(x,y,`${m.name}`,{fontFamily:'monospace',fontSize:8,color:'#111',fontStyle:'bold'});
+      this.add.text(x+80,y,`${m.style[0]}${m.power}`,{fontFamily:'monospace',fontSize:7,color:'#555'});
     });
-    this.add.text(126,111,this.tip(r.style),{fontFamily:'monospace',fontSize:6,color:'#555',fontStyle:'bold'}).setOrigin(0,0);
+    this.add.text(172,148,this.tip(r.style),{fontFamily:'monospace',fontSize:8,color:'#555',fontStyle:'bold'}).setOrigin(0,0);
   }
 
   drawOptions(){
-    const widths=[58,82,46];
-    let x=13;
+    const widths=[78,108,62];
+    let x=18;
     OPTS.forEach((label,i)=>{
       const w=widths[i],active=i===this.sel;
       const g=this.add.graphics();
-      g.fillStyle(0x000000,.2);g.fillRoundedRect(x+2,146,w,15,2);
-      g.fillStyle(active?0x7b1d2a:0xf8f0d8,1);g.fillRoundedRect(x,144,w,15,2);
-      g.lineStyle(1,active?0xd6a336:0x847868,1);g.strokeRoundedRect(x,144,w,15,2);
-      this.add.text(x+w/2,148,`${active?'> ':''}${label}`,{fontFamily:'monospace',fontSize:5,color:active?'#fff2c7':'#111',fontStyle:'bold'}).setOrigin(.5,0);
-      x+=w+8;
+      g.fillStyle(0x000000,.2);g.fillRoundedRect(x+2,196,w,20,2);
+      g.fillStyle(active?0x7b1d2a:0xf8f0d8,1);g.fillRoundedRect(x,194,w,20,2);
+      g.lineStyle(1,active?0xd6a336:0x847868,1);g.strokeRoundedRect(x,194,w,20,2);
+      this.add.text(x+w/2,200,`${active?'> ':''}${label}`,{fontFamily:'monospace',fontSize:7,color:active?'#fff2c7':'#111',fontStyle:'bold'}).setOrigin(.5,0);
+      x+=w+11;
     });
   }
 
   drawOddsCard(x,y,odds){
     const g=this.add.graphics();
-    g.fillStyle(0x151318,.9);g.fillRoundedRect(x,y,45,24,3);
-    g.lineStyle(1,0xd6a336,.9);g.strokeRoundedRect(x,y,45,24,3);
-    this.add.text(x+22,y+4,'ODDS',{fontFamily:'monospace',fontSize:5,color:'#d6a336',fontStyle:'bold'}).setOrigin(.5,0);
-    this.add.text(x+22,y+13,`${odds}%`,{fontFamily:'monospace',fontSize:9,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
+    g.fillStyle(0x151318,.9);g.fillRoundedRect(x,y,60,32,3);
+    g.lineStyle(1,0xd6a336,.9);g.strokeRoundedRect(x,y,60,32,3);
+    this.add.text(x+30,y+5,'ODDS',{fontFamily:'monospace',fontSize:7,color:'#d6a336',fontStyle:'bold'}).setOrigin(.5,0);
+    this.add.text(x+30,y+16,`${odds}%`,{fontFamily:'monospace',fontSize:12,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
   }
 
   drawMeter(x,y,w,h,p,color,label,value){
-    this.add.text(x,y-3,label,{fontFamily:'monospace',fontSize:5,color:'#555',fontStyle:'bold'}).setOrigin(1,0);
+    this.add.text(x,y-4,label,{fontFamily:'monospace',fontSize:7,color:'#555',fontStyle:'bold'}).setOrigin(1,0);
     const g=this.add.graphics();
-    g.fillStyle(0x111111,1);g.fillRoundedRect(x+4,y-1,w+2,h+2,1);
-    g.fillStyle(0x3d3d3d,1);g.fillRect(x+5,y,w,h);
-    g.fillStyle(color,1);g.fillRect(x+5,y,Math.max(1,w*Phaser.Math.Clamp(p,0,1)),h);
-    g.fillStyle(0xffffff,.3);g.fillRect(x+5,y,Math.max(1,w*Phaser.Math.Clamp(p,0,1)),1);
-    this.add.text(x+w+11,y-4,value,{fontFamily:'monospace',fontSize:5,color:'#333',fontStyle:'bold'});
+    g.fillStyle(0x111111,1);g.fillRoundedRect(x+5,y-1,w+2,h+2,1);
+    g.fillStyle(0x3d3d3d,1);g.fillRect(x+6,y,w,h);
+    g.fillStyle(color,1);g.fillRect(x+6,y,Math.max(1,w*Phaser.Math.Clamp(p,0,1)),h);
+    g.fillStyle(0xffffff,.3);g.fillRect(x+6,y,Math.max(1,w*Phaser.Math.Clamp(p,0,1)),1);
+    this.add.text(x+w+14,y-4,value,{fontFamily:'monospace',fontSize:7,color:'#333',fontStyle:'bold'});
   }
 
   drawBox(x,y,w,h){
@@ -142,16 +141,16 @@ export class ScoutScene extends Phaser.Scene{
 
   drawTag(x,y,text,color){
     const g=this.add.graphics();
-    g.fillStyle(color,.95);g.fillRoundedRect(x,y,48,10,2);
-    g.lineStyle(1,0x111111,.7);g.strokeRoundedRect(x,y,48,10,2);
-    this.add.text(x+24,y+2,text,{fontFamily:'monospace',fontSize:5,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
+    g.fillStyle(color,.95);g.fillRoundedRect(x,y,62,13,2);
+    g.lineStyle(1,0x111111,.7);g.strokeRoundedRect(x,y,62,13,2);
+    this.add.text(x+31,y+3,text,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
   }
 
   drawNote(msg){
     const g=this.add.graphics();
-    g.fillStyle(0x111015,.92);g.fillRoundedRect(39,154,162,11,2);
-    g.lineStyle(1,0xd6a336,.7);g.strokeRoundedRect(39,154,162,11,2);
-    this.add.text(120,157,msg,{fontFamily:'monospace',fontSize:5,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
+    g.fillStyle(0x111015,.92);g.fillRoundedRect(56,175,208,14,2);
+    g.lineStyle(1,0xd6a336,.7);g.strokeRoundedRect(56,175,208,14,2);
+    this.add.text(160,178,msg,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
   }
 
   move(d){this.sel=Phaser.Math.Wrap(this.sel+d,0,OPTS.length);this.note='';this.render();}
@@ -175,7 +174,7 @@ export class ScoutScene extends Phaser.Scene{
         this.state.objective={id:'first_recruit_done',stage:2,complete:true};
       }
       saveState(this.state);
-      this.obtainAnim(`${r.name} joined!`);
+      this.obtainAnim(`${r.name} joined! The ${personaFor(this.id)} spirit wrestles for Wisconsin now.`);
     }else{
       this.state.message=`${r.name} wants to see more.`;
       saveState(this.state);
@@ -187,10 +186,10 @@ export class ScoutScene extends Phaser.Scene{
   obtainAnim(msg){
     this.children.removeAll();
     this.cameras.main.flash(160,255,255,255);
-    uiBox(this,18,52,204,62);
-    this.add.text(120,65,'RECRUIT OBTAINED',{fontFamily:'monospace',fontSize:10,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);
-    this.add.text(120,84,msg,{fontFamily:'monospace',fontSize:8,color:'#111',align:'center',wordWrap:{width:174}}).setOrigin(.5);
-    this.add.text(120,105,'A CONTINUE',{fontFamily:'monospace',fontSize:7,color:'#555',fontStyle:'bold'}).setOrigin(.5);
+    uiBox(this,24,68,272,88);
+    this.add.text(160,88,'RECRUIT OBTAINED',{fontFamily:'monospace',fontSize:13,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);
+    this.add.text(160,114,msg,{fontFamily:'monospace',fontSize:9,color:'#111',align:'center',wordWrap:{width:232}}).setOrigin(.5);
+    this.add.text(160,142,'A CONTINUE',{fontFamily:'monospace',fontSize:9,color:'#555',fontStyle:'bold'}).setOrigin(.5);
     this.input.keyboard.once('keydown-ENTER',()=>this.leave());
     this.input.keyboard.once('keydown-SPACE',()=>this.leave());
     this.sel=2;
