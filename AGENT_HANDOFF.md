@@ -4,7 +4,33 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.12 Big Ten Championship)
+## Latest Claude Turn (v21.13 Game Feel)
+
+- Coach's feedback: "gameplay feels clunky and half baked compared to FireRed."
+  Diagnosis: two mechanical gaps, both now fixed.
+- **Hold-to-walk + turn-in-place.** Movement required one press per tile; now
+  holding a key/D-pad walks continuously (each finished tile re-triggers the next
+  step), and a tap in a new direction turns in place first with a 90ms beat before
+  walking - the GBA convention. Mobile D-pad buttons use pointerdown/up hold-repeat
+  (140ms) instead of click-per-step. Verified: 13 tiles in 2.1s on a simulated
+  hold; a tap flips facing without moving.
+- **Sequenced battle turns.** A turn used to resolve both attacks in one frame
+  with a text dump. Now: your attack animates + enemy HP drains -> 720ms beat ->
+  counterattack animates + your HP drains -> 560ms beat -> command menu returns.
+  New 'resolving' mode shows a full-width message box with the play-by-play
+  (impact numbers float per beat); input locks during the sequence. The
+  after-swap free hit got the same treatment.
+- Smoke-test movement helper is now position-aware (presses until the tile/area
+  changes) so tests are agnostic to turn-in-place. `npm run check` fully green
+  (8/8).
+- **Codex heads-up**: if you touch BattleScene, the turn flow now lives in
+  `resolveTurn` as two chained `delayedCall` beats with `mode='resolving'` -
+  extend the beats rather than reverting to single-frame resolution. Remaining
+  FireRed-feel gaps on my list: typewriter text reveal, B-button run/dash,
+  encounter grass-rustle animation, and battle intro slide-in polish for
+  status panels - all good candidates for your presentation passes.
+
+## Previous Claude Turn (v21.12 Big Ten Championship)
 
 - **The game has an endgame now.** A Big Ten Championship desk sits in Championship
   Hall at (10,6) with an Official NPC. It gates on all three gym badges, then runs

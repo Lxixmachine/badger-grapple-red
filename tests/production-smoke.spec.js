@@ -25,8 +25,21 @@ async function press(page, key) {
 }
 
 async function move(page, key) {
-  await press(page, key);
-  await page.waitForTimeout(180);
+  // v21.13: a press in a new direction turns in place first (FireRed feel),
+  // so press until the tile/area actually changes or the overworld is left.
+  const read = () => page.evaluate(() => {
+    const o = window.__badgerTest.sceneState('OverworldScene');
+    return o?.active ? {x: o.tilePos.x, y: o.tilePos.y, area: o.area} : null;
+  });
+  const before = await read();
+  if (!before) { await press(page, key); await page.waitForTimeout(200); return; }
+  for (let i = 0; i < 4; i++) {
+    await press(page, key);
+    await page.waitForTimeout(230);
+    const now = await read();
+    if (!now) return; // a battle or scout encounter took over - that is a completed step
+    if (now.x !== before.x || now.y !== before.y || now.area !== before.area) return;
+  }
 }
 
 async function completeOpeningToOverworld(page) {
@@ -45,7 +58,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.12-big-ten-championship');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.13-game-feel');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];

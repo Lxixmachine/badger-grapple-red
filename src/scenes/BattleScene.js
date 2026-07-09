@@ -96,37 +96,53 @@ export class BattleScene extends Phaser.Scene{
   }
   enemyOnlyStrike(){
     const l=lead(this.state),e=this.enemy();
-    const beforeL=l.hp,beforeG=l.gas,beforeE=e.hp;
+    const beforeL=l.hp,beforeE=e.hp;
+    this.inputLocked=true;this.mode='resolving';
     const ek=Phaser.Utils.Array.GetRandom(ROSTER[e.id]?.moves||['stall']);
     const res=this.resolve(e,l,ek,ROSTER[e.id].name);
     this.moveStyle=MOVES[ek]?.style||'Neutral';
-    if(res.hit)this.attackAnim='player';
-    this.prevMeters=this.captureMeters(beforeL,beforeG,beforeE);
-    this.addLog([res.line,`HP ${beforeL}->${l.hp}`]);
-    this.turn++;
-    if(l.hp<=0)return this.playerDown();
-    saveState(this.state);this.drawBattle();
+    this.impact=res.hit?`-${res.dmg}`:'MISS';this.attackAnim=res.hit?'player':'miss';
+    this.prevMeters=this.captureMeters(beforeL,l.gas,beforeE);
+    this.addLog([res.line]);
+    this.turn++;this.drawBattle();
+    this.time.delayedCall(560,()=>{
+      this.inputLocked=false;
+      if(l.hp<=0)return this.playerDown();
+      this.mode='command';this.sel=0;saveState(this.state);this.drawBattle();
+    });
   }
   resolveTurn(key){
-    const l=lead(this.state),e=this.enemy(),beforeE=e.hp,beforeL=l.hp,beforeG=l.gas;
+    // v21.13: FireRed-style sequenced turn - your attack animates and the enemy
+    // meter drains, a beat passes, THEN the counterattack lands. No more
+    // both-hits-in-one-frame spreadsheet turns.
+    const l=lead(this.state),e=this.enemy(),beforeE=e.hp,beforeG=l.gas;
+    this.inputLocked=true;this.mode='resolving';
     const first=this.resolve(l,e,key,'You');
-    this.prevMeters=this.captureMeters(beforeL,beforeG,beforeE);
+    this.prevMeters=this.captureMeters(l.hp,beforeG,beforeE);
     this.moveStyle=MOVES[key]?.style||'Neutral';
     this.impact=first.hit?`-${first.dmg}`:'MISS';this.attackAnim=first.hit?'enemy':'miss';
-    const lines=[`T${this.turn}: ${first.line}`];
-    if(e.hp<=0){
-      lines.push(`${ROSTER[e.id].name} is out.`);this.addLog(lines);
-      return this.enemyDown();
-    }
-    const ek=Phaser.Utils.Array.GetRandom(ROSTER[e.id]?.moves||['stall']);
-    const beforeL2=l.hp,beforeG2=l.gas;
-    const second=this.resolve(e,l,ek,ROSTER[e.id].name);
-    this.moveStyle=MOVES[ek]?.style||this.moveStyle;
-    if(second.hit)this.attackAnim='player';
-    lines.push(second.line);lines.push(`HP ${beforeL}->${l.hp} / ${beforeE}->${e.hp}`);
-    this.addLog(lines);this.turn++;this.mode='command';this.sel=0;
-    if(l.hp<=0)return this.playerDown();
-    saveState(this.state);this.drawBattle();
+    this.addLog([`T${this.turn}: ${first.line}`]);
+    this.drawBattle();
+    this.time.delayedCall(720,()=>{
+      if(e.hp<=0){
+        this.addLog([`${ROSTER[e.id].name} is out.`]);
+        this.inputLocked=false;
+        return this.enemyDown();
+      }
+      const ek=Phaser.Utils.Array.GetRandom(ROSTER[e.id]?.moves||['stall']);
+      const beforeL2=l.hp;
+      const second=this.resolve(e,l,ek,ROSTER[e.id].name);
+      this.prevMeters=this.captureMeters(beforeL2,l.gas,e.hp);
+      this.moveStyle=MOVES[ek]?.style||this.moveStyle;
+      this.impact=second.hit?`-${second.dmg}`:'MISS';this.attackAnim=second.hit?'player':'miss';
+      this.addLog([second.line]);
+      this.turn++;this.drawBattle();
+      this.time.delayedCall(560,()=>{
+        this.inputLocked=false;
+        if(l.hp<=0)return this.playerDown();
+        this.mode='command';this.sel=0;saveState(this.state);this.drawBattle();
+      });
+    });
   }
   resolve(att,def,key,label){let mv=MOVES[key]||MOVES.stall,as=scaledStats(att.id,att.lvl),ds=scaledStats(def.id,def.lvl);if(mv.gas>0&&att.gas<mv.gas)mv=MOVES.stall;att.gas=Phaser.Math.Clamp(att.gas-Math.max(0,mv.gas),0,as.gas);if(mv.gas<0)att.gas=Phaser.Math.Clamp(att.gas+Math.abs(mv.gas),0,as.gas);let acc=mv.acc;if(att.gas<12)acc-=.12;if(Math.random()>acc){sfx.miss();return {line:`${label} missed ${mv.name}.`,hit:false,dmg:0};}const mult=ADV[mv.style]===ROSTER[def.id]?.style?1.22:ADV[ROSTER[def.id]?.style]===mv.style?.88:1;const dmg=Math.max(3,Math.round((mv.power+as.atk*.8-ds.def*.38)*mult));def.hp=Phaser.Math.Clamp(def.hp-dmg,0,ds.hp);att.score=(att.score||0)+mv.points;sfx.hit();return {line:`${label}: ${mv.name} ${dmg}${mult>1?' EDGE':''}.`,hit:true,dmg};}
   enemyDown(){
@@ -222,12 +238,14 @@ export class BattleScene extends Phaser.Scene{
     this.tweens.add({targets:g,alpha:0,x:'+=12',duration:360,ease:'Sine.Out',onComplete:()=>g.destroy()});
   }
   drawBottom(lr){
+    if(this.mode==='resolving')return this.drawResolving();
     if(this.mode==='command')return this.drawCommand(lr);
     if(this.mode==='fight')return this.drawFight(lr);
     if(this.mode==='party')return this.drawParty();
     if(this.mode==='bag')return this.drawBag();
     return this.drawResult();
   }
+  drawResolving(){this.drawTextBox(7,174,305,44);this.log.slice(0,2).forEach((line,i)=>this.add.text(18,183+i*13,line,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}));}
   drawCommand(lr){this.drawTextBox(7,174,146,44);this.add.text(17,184,'What will',{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold'});this.add.text(17,201,`${lr.name.split(' ')[0]} do?`,{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold'});this.drawCommandBox(159,174,153,44);COMMANDS.forEach((t,i)=>this.add.text(168+(i%2)*72,184+(i>1?18:0),`${i===this.sel?'\u25b6':' '}${t}`,{fontFamily:'monospace',fontSize:10,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'}));this.drawBattleLog(10,148,2);}
   drawFight(r){this.drawCommandBox(7,174,305,44);const leadMon=lead(this.state);const moves=leadMon?.moves||r.moves||[];moves.forEach((key,i)=>{const m=MOVES[key],x=18+(i%2)*146,y=184+(i>1?18:0);this.add.text(x,y,`${i===this.sel?'\u25b6':' '}${m.name}`,{fontFamily:'monospace',fontSize:9,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const mv=MOVES[moves[this.sel]];if(mv)this.drawMoveTag(mv);this.drawBattleLog(10,148,2);}
   drawBag(){this.drawTextBox(7,122,305,96);this.add.text(18,132,'BAG',{fontFamily:'monospace',fontSize:11,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0;this.add.text(18,150+i*14,`${i===this.sel?'\u25b6':' '} ${it.name} x${n}`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(180,132,it.desc,{fontFamily:'monospace',fontSize:8,color:'#111',wordWrap:{width:118}});this.add.text(180,203,'A USE  B BACK',{fontFamily:'monospace',fontSize:8,color:'#555',fontStyle:'bold'});}
