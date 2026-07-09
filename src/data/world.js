@@ -1,5 +1,5 @@
 export const WORLD_META = {
-  version: '21.5',
+  version: '21.6',
   tileSize: 16,
   width: 28,
   height: 14,

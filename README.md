@@ -6,7 +6,7 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ## Current Build
 
-- Version: 21.5 Tile World
+- Version: 21.6 Art Refresh
 - Runtime: Phaser 3 + Vite
 - Canvas: 240x170 logical pixels, pixel-art scaling
 - Content: 10 areas, 23 roster entries, 26 moves, 2 trainer NPCs, 3 captain battles

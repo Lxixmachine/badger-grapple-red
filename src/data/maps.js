@@ -35,7 +35,7 @@ export function isBlocked(area,x,y){
  }
  if(n==='CAMPUS QUAD'){
    if((x===0||x===27||y===0||y===13)&&!((x===14&&y===13)||(x===27&&y===7)||(x===1&&y===7)||(x===14&&y===1)))return true;
-   if(x>=21&&x<=27&&y>=1&&y<=4 && !(x===23&&y>=3&&y<=4))return true; // studyhall door at y3, approach y4 (v21.5 art alignment)
+   if(x>=21&&x<=27&&y>=1&&y<=4 && !(x===23&&y>=3&&y<=4))return true; // studyhall door at y3, approach y4 (v21.6 art alignment)
    if(x>=4&&x<=6&&y>=7&&y<=8)return true;
    if(x>=8&&x<=10&&y>=1&&y<=2 && !(x===9&&y===2))return true; // shop building, door gap at top-of-door tile
    if(x>=17&&x<=19&&y>=1&&y<=2 && !(x===18&&y===2))return true; // recovery building, door gap
