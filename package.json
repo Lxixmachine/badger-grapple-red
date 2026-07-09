@@ -8,14 +8,17 @@
     "dev": "vite --host 0.0.0.0",
     "validate": "node tools/validate.mjs",
     "balance": "node tools/balance_sim.mjs",
-    "check": "npm run validate && npm run balance && npm run build",
+    "smoke": "playwright test",
+    "check": "npm run validate && npm run balance && npm run build && npm run smoke",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "latest",
-    "vite": "latest",
-    "phaser": "^3.90.0"
+    "phaser": "^3.90.0",
+    "vite": "latest"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
 }

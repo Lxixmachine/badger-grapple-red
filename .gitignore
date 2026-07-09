@@ -2,5 +2,7 @@ work/
 node_modules/
 .inspect/
 dist/
+test-results/
+playwright-report/
 *.log
 dist/.vite/

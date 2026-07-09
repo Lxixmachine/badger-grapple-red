@@ -35,6 +35,9 @@ jobs:
       - name: Install
         run: npm ci
 
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+
       - name: Validate and build
         run: npm run check
 

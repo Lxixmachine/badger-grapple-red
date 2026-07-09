@@ -25,7 +25,7 @@ Before shipping a change:
 npm run check
 ```
 
-That runs content validation, balance simulation, and a production build.
+That runs content validation, balance simulation, a production build, and a browser smoke test against the built artifact.
 
 ## Source Layout
 
@@ -39,6 +39,7 @@ That runs content validation, balance simulation, and a production build.
 - `public/vendor/`: external Phaser runtime copied directly into production builds
 - `tools/validate.mjs`: content and reachability validator
 - `tools/balance_sim.mjs`: deterministic-ish campaign balance smoke test
+- `tests/production-smoke.spec.js`: production-build browser smoke test
 
 ## Production Rules
 
@@ -52,7 +53,7 @@ That runs content validation, balance simulation, and a production build.
 
 1. Replace the remaining code collision rules with Tiled object layers.
 2. Add a script that imports Tiled JSON into `src/data/world.js` or a generated equivalent.
-3. Add Playwright smoke tests for title -> new game -> starter -> overworld -> trainer/battle.
+3. Expand the browser smoke test from title -> intro into starter -> overworld -> trainer/battle.
 4. Add save migration fixtures before changing save shape again.
 5. Expand from the current vertical slice only after one 30-45 minute route feels polished end to end.
 
