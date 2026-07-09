@@ -21,6 +21,10 @@ for(const [aid,a] of Object.entries(AREAS)){
   if(!inBounds(a.start?.x,a.start?.y))errs.push(`area ${aid}: start (${a.start?.x},${a.start?.y}) out of bounds`);
   if(inBounds(a.start?.x,a.start?.y)&&isBlocked(aid,a.start.x,a.start.y))errs.push(`area ${aid}: start (${a.start.x},${a.start.y}) is BLOCKED`);
 
+  if(a.encounters){
+    const wl=a.wildLevels;
+    if(!Array.isArray(wl)||wl.length!==2||!Number.isInteger(wl[0])||!Number.isInteger(wl[1])||wl[0]<1||wl[0]>wl[1])errs.push(`area ${aid}: encounters need wildLevels [min,max] with 1<=min<=max`);
+  }
   if(a.captain){
     if(!ROSTER[a.captain.id])errs.push(`area ${aid} captain id '${a.captain.id}' missing from ROSTER`);
     if(!inBounds(a.captain.x,a.captain.y))errs.push(`area ${aid}: captain at (${a.captain.x},${a.captain.y}) out of bounds`);

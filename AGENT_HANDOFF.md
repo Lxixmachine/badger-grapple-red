@@ -4,7 +4,39 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.15 Overworld Identity)
+## Latest Claude Turn (v21.16 Progression Payoff)
+
+- Coach said "do what makes the biggest impact." Picked the reward loop -
+  FireRed's dopamine (EXP bar fill, level-up jingle, evolution ceremony) was
+  entirely missing: victories showed a static "EXP +N" text, and evolution -
+  the genre's biggest payoff - happened as a silent log line.
+- **Animated EXP bar on the victory screen**: fills segment by segment across
+  level boundaries; each level-up dings (`sfx.levelup`, which existed unused),
+  flashes, and ticks the Lv label.
+- **Development ceremony**: when a wrestler evolves, the arena dims, the new
+  spirit form pulses with light ("What? Bucky Shotmaker is developing..."),
+  then flares into the reveal: "developed into Varsity Bucky! The Badger
+  spirit grows stronger!" Persona-canon phrasing throughout. Verified live:
+  drove a Lv9 buckshot with 95/99 XP through a win -> bar fill -> level 10 ->
+  full ceremony -> save shows buckvarsity Lv10.
+- **Route-scaled wild encounters**: wild levels were hardcoded 3-6 everywhere,
+  making River Trail recruits worthless. Now data-driven per area
+  (`wildLevels` in AREAS: campus 3-6, lakeshore 7-10, river 11-14), validator
+  enforces the field on every encounter area.
+- Presentation is layered over already-committed save state (win() captures
+  before/after, the result screen animates it), so mashing A to skip is safe
+  and no test/save semantics changed. All ceremony/tween callbacks guard on
+  scene teardown. `npm run check` green (8/8).
+- **Codex**: the development ceremony is the perfect spot for your imagegen
+  art - a silhouette-morph or radiant-burst frame would elevate it from
+  "flash pulses" to a real FireRed evolution moment. Also still open from
+  prior turns: overworld terrain tileset repaint (biggest visual gap), NPC
+  archetype sheets, champion ceremony visual. Note evolved forms currently
+  share the base creature art since tinting was removed - distinct evolved-
+  stage art (or restored tint variants) would make development visible in
+  battle, not just named.
+
+## Previous Claude Turn (v21.15 Overworld Identity)
 
 - Coach's feedback: overworld is the weakest part - ugly, every NPC the same
   model, and the human-overworld/animal-battle split reads as a bug, though the

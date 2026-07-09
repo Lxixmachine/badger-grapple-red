@@ -22,7 +22,8 @@ export const AREAS = {
       { x: 9, y: 3, to: 'shop', tx: 14, ty: 10, msg: 'Team Shop.' },
       { x: 18, y: 3, to: 'recovery', tx: 14, ty: 10, msg: 'Recovery Center.' }
     ],
-    encounters: true
+    encounters: true,
+    wildLevels: [3, 6]
   },
   studyhall: { name: 'STUDY HALL', bg: 'area_fieldhouse', start: { x: 5, y: 10 }, exits: [{ x: 5, y: 11, to: 'campus', tx: 23, ty: 3, msg: 'Campus Quad.' }], encounters: false },
   shop: {
@@ -55,7 +56,8 @@ export const AREAS = {
       { x: 0, y: 7, to: 'campus', tx: 26, ty: 7, msg: 'Campus Quad.' },
       { x: 27, y: 9, to: 'river', tx: 1, ty: 9, msg: 'River Trail.' }
     ],
-    encounters: true
+    encounters: true,
+    wildLevels: [7, 10]
   },
   downtown: { name: 'DOWNTOWN', bg: 'area_downtown', start: { x: 26, y: 7 }, exits: [{ x: 27, y: 7, to: 'campus', tx: 1, ty: 7, msg: 'Campus Quad.' }], encounters: false },
   river: {
@@ -67,6 +69,7 @@ export const AREAS = {
       { x: 27, y: 6, to: 'championship', tx: 1, ty: 6, msg: 'Championship Hall.', gate: ['Neutral Badge', 'Scramble Badge'] }
     ],
     encounters: true,
+    wildLevels: [11, 14],
     captain: { x: 24, y: 9, id: 'scrambleboss', lvl: 14, type: 'gym', badge: 'Scramble Badge', team: [['funklord', 13], ['scrambleboss', 14]], reward: { grit: 26, rep: 16 }, intro: 'The Funk Doctor: Solve the scramble or get solved.', beaten: 'The Funk Doctor: Scramble Badge earned. The river road to Championship is open.' }
   },
   conference: {

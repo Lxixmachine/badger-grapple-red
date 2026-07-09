@@ -1,4 +1,4 @@
-import {ROSTER,makeMon,scaledStats,addXp,personaFor} from '../data/roster.js';import {MOVES,ADV} from '../data/moves.js';import {loadState,saveState,lead} from '../systems/save.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
+import {ROSTER,makeMon,scaledStats,addXp,xpNeed,personaFor} from '../data/roster.js';import {MOVES,ADV} from '../data/moves.js';import {loadState,saveState,lead} from '../systems/save.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
 const Phaser = window.Phaser;
 const COMMANDS=['FIGHT','BAG','WRESTLER','RUN'];
 const CATCH_BASE={Common:.62,Uncommon:.46,Rare:.32,Elite:0};
@@ -191,7 +191,7 @@ export class BattleScene extends Phaser.Scene{
     const grit=this.reward?.grit??(this.type==='gym'?22:Phaser.Math.Between(6,10));
     const rep=this.reward?.rep??(this.type==='gym'?14:Phaser.Math.Between(2,5));
     this.state.grit+=grit;this.state.rep+=rep;
-    if(l)addXp(l,this.expGain).forEach(x=>this.log.unshift(x));
+    if(l){const before={lvl:l.lvl,xp:l.xp,id:l.id};addXp(l,this.expGain).forEach(x=>this.log.unshift(x));this.progress={before,after:{lvl:l.lvl,xp:l.xp,id:l.id},played:false};}
     const badgeEarned=this.badge&&!this.state.badges.includes(this.badge);
     if(badgeEarned){this.state.badges.push(this.badge);this.log.unshift(`Badge: ${this.badge}.`);}
     stopMusic();sfx[badgeEarned?'badge':'win']();
@@ -269,7 +269,52 @@ export class BattleScene extends Phaser.Scene{
   drawFight(r){this.drawCommandBox(7,174,305,44);const leadMon=lead(this.state);const moves=leadMon?.moves||r.moves||[];moves.forEach((key,i)=>{const m=MOVES[key],x=18+(i%2)*146,y=184+(i>1?18:0);this.add.text(x,y,`${i===this.sel?'\u25b6':' '}${m.name}`,{fontFamily:'monospace',fontSize:9,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const mv=MOVES[moves[this.sel]];if(mv)this.drawMoveTag(mv);this.drawBattleLog(10,148,2);}
   drawBag(){this.drawTextBox(7,122,305,96);this.add.text(18,132,'BAG',{fontFamily:'monospace',fontSize:11,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0;this.add.text(18,150+i*14,`${i===this.sel?'\u25b6':' '} ${it.name} x${n}`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(180,132,it.desc,{fontFamily:'monospace',fontSize:8,color:'#111',wordWrap:{width:118}});this.add.text(180,203,'A USE  B BACK',{fontFamily:'monospace',fontSize:8,color:'#555',fontStyle:'bold'});}
   drawParty(){this.drawTextBox(7,122,305,96);this.add.text(18,132,this.forcedSwap?'Choose next wrestler':'Choose wrestler',{fontFamily:'monospace',fontSize:11,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const r=ROSTER[m.id],s=scaledStats(m.id,m.lvl),tag=m.hp<=0?' OUT':'';this.add.text(18,151+i*13,`${i===this.sel?'\u25b6':' '} ${r.name} L${m.lvl} HP ${m.hp}/${s.hp}${tag}`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#8a1720':m.hp<=0?'#999':'#111',fontStyle:'bold'});});}
-  drawResult(){this.drawTextBox(7,174,305,44);const isWin=this.resultTitle==='VICTORY'||this.resultTitle==='JOINED';const g=this.add.graphics();g.fillStyle(isWin?0x7b1d2a:0x25313a,.92);g.fillRoundedRect(77,179,166,20,3);g.lineStyle(1,0xd6a336,.95);g.strokeRoundedRect(77,179,166,20,3);this.add.text(160,184,this.resultTitle,{fontFamily:'monospace',fontSize:11,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5);const sub=this.resultTitle==='VICTORY'?`EXP +${this.expGain}`:(this.recruit?'A INVITE  B LEAVE':'A/B RETURN');this.add.text(160,204,sub,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(.5);if(this.resultTitle==='VICTORY'){const star=this.add.text(282,187,'\u2605',{fontFamily:'monospace',fontSize:16,color:'#d6a336',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:star,angle:360,scale:1.35,yoyo:true,duration:520,repeat:-1});}this.drawBattleLog(10,148,2);}
+  drawResult(){this.drawTextBox(7,174,305,44);const isWin=this.resultTitle==='VICTORY'||this.resultTitle==='JOINED';const g=this.add.graphics();g.fillStyle(isWin?0x7b1d2a:0x25313a,.92);g.fillRoundedRect(77,179,166,20,3);g.lineStyle(1,0xd6a336,.95);g.strokeRoundedRect(77,179,166,20,3);this.add.text(160,184,this.resultTitle,{fontFamily:'monospace',fontSize:11,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5);const sub=this.resultTitle==='VICTORY'?`EXP +${this.expGain}`:(this.recruit?'A INVITE  B LEAVE':'A/B RETURN');this.add.text(160,204,sub,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(.5);if(this.resultTitle==='VICTORY'){const star=this.add.text(282,187,'\u2605',{fontFamily:'monospace',fontSize:16,color:'#d6a336',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:star,angle:360,scale:1.35,yoyo:true,duration:520,repeat:-1});}
+    if(this.resultTitle==='VICTORY'&&this.progress){this.add.text(44,207,'EXP',{fontFamily:'monospace',fontSize:7,color:'#355f87',fontStyle:'bold'});if(this.progress.played){this.drawExpBar(this.progress.after.xp/xpNeed({lvl:this.progress.after.lvl}),this.progress.after.lvl);}else{this.playProgress();}}
+    this.drawBattleLog(10,148,2);}
+  drawExpBar(p,lvl){const g=this.add.graphics();g.fillStyle(0x111111,1);g.fillRoundedRect(69,206,178,9,2);g.fillStyle(0x3aa5d1,1);g.fillRect(71,208,Math.max(1,174*Math.min(1,p)),5);g.lineStyle(1,0x080808,1);g.strokeRoundedRect(69,206,178,9,2);this.add.text(254,207,`Lv ${lvl}`,{fontFamily:'monospace',fontSize:8,color:'#7b1d2a',fontStyle:'bold'});return g;}
+  // FireRed victory payoff: the EXP bar fills segment by segment, each level
+  // boundary dings + flashes, and a development (evolution) plays as its own
+  // full ceremony afterward.
+  playProgress(){
+    const pr=this.progress;pr.played=true;
+    const segs=[];let lvl=pr.before.lvl,xp=pr.before.xp;
+    while(lvl<pr.after.lvl){segs.push({from:xp/xpNeed({lvl}),to:1,lvlUpTo:lvl+1});xp=0;lvl++;}
+    segs.push({from:xp/xpNeed({lvl}),to:pr.after.xp/xpNeed({lvl}),lvlUpTo:null});
+    const g=this.add.graphics();
+    const lvText=this.add.text(254,207,`Lv ${pr.before.lvl}`,{fontFamily:'monospace',fontSize:8,color:'#7b1d2a',fontStyle:'bold'});
+    const draw=p=>{if(!g.scene)return;g.clear();g.fillStyle(0x111111,1);g.fillRoundedRect(69,206,178,9,2);g.fillStyle(0x3aa5d1,1);g.fillRect(71,208,Math.max(1,174*Math.min(1,p)),5);g.lineStyle(1,0x080808,1);g.strokeRoundedRect(69,206,178,9,2);};
+    const run=i=>{
+      if(this.transitioning||!g.scene)return;
+      if(i>=segs.length){if(pr.before.id!==pr.after.id)this.time.delayedCall(430,()=>this.developmentCeremony(pr));return;}
+      const sgm=segs[i];const value={p:sgm.from};draw(value.p);
+      this.tweens.add({targets:value,p:sgm.to,duration:Math.max(240,520*Math.max(.15,sgm.to-sgm.from)),ease:'Sine.Out',onUpdate:()=>draw(value.p),onComplete:()=>{
+        if(sgm.lvlUpTo){this.playSafe('levelup');if(lvText.scene)lvText.setText(`Lv ${sgm.lvlUpTo}`);this.cameras.main.flash(90,255,240,180);this.time.delayedCall(300,()=>run(i+1));}
+        else run(i+1);
+      }});
+    };
+    run(0);
+  }
+  developmentCeremony(pr){
+    if(this.transitioning)return;
+    const oldR=ROSTER[pr.before.id],newR=ROSTER[pr.after.id];
+    this.playSafe('open');
+    const dim=this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.85).setDepth(500);
+    const img=this.add.image(GAME_W/2,92,'battle_'+newR.asset+'_back').setScale(.82).setDepth(501);
+    const box=this.drawTextBox(7,174,305,44);box.setDepth(502);
+    const txt=this.add.text(18,184,'',{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold',wordWrap:{width:284},lineSpacing:4}).setDepth(503);
+    this.typeText(txt,`What? ${oldR.name} is developing...`);
+    let pulses=0;
+    const pulse=()=>{if(this.transitioning||!img.scene)return;img.setTintFill(0xfff3d0);this.time.delayedCall(150,()=>{if(img.scene)img.clearTint();});pulses++;if(pulses<4)this.time.delayedCall(380,pulse);};
+    pulse();
+    this.tweens.add({targets:img,scale:.94,yoyo:true,repeat:3,duration:360,ease:'Sine.InOut'});
+    this.time.delayedCall(1750,()=>{
+      if(this.transitioning||!txt.scene)return;
+      this.playSafe('badge');this.cameras.main.flash(170,255,243,208);
+      this.tweens.add({targets:img,scale:1.02,duration:260,ease:'Back.Out'});
+      this.typeText(txt,`${oldR.name} developed into ${newR.name}! The ${personaFor(pr.after.id)} spirit grows stronger!`);
+    });
+  }
   drawBattleLog(x,y,n){this.log.slice(0,n).forEach((line,i)=>{const bg=this.add.graphics();bg.fillStyle(0x111015,.78);bg.fillRoundedRect(x-2,y+i*11-1,Math.min(300,line.length*5+10),11,2);this.add.text(x,y+i*11,line,{fontFamily:'monospace',fontSize:7,color:'#f8f0d8'});});}
   captureMeters(playerHp,playerGas,enemyHp){const l=lead(this.state);return {playerHp:l?playerHp/scaledStats(l.id,l.lvl).hp:1,playerGas:l?playerGas/scaledStats(l.id,l.lvl).gas:1,enemyHp:enemyHp/scaledStats(this.enemy().id,this.enemy().lvl).hp};}
   drawAnimatedMeter(x,y,w,h,start,end,color){const g=this.add.graphics();const value={p:Phaser.Math.Clamp(start??end,0,1)};const draw=()=>{const p=Phaser.Math.Clamp(value.p,0,1);g.clear();g.fillStyle(0x111111,1);g.fillRoundedRect(x-1,y-1,w+2,h+2,1);g.fillStyle(0x3d3d3d,1);g.fillRect(x,y,w,h);g.fillStyle(p<.22?0xd84c35:p<.5?0xd6b545:color,1);g.fillRect(x,y,Math.max(1,w*p),h);g.fillStyle(0xffffff,.3);g.fillRect(x,y,Math.max(1,w*p),1);g.lineStyle(1,0x080808,1);g.strokeRect(x-1,y-1,w+2,h+2);};draw();if(start!==undefined&&Math.abs(start-end)>.01){this.tweens.add({targets:value,p:Phaser.Math.Clamp(end,0,1),duration:520,ease:'Sine.Out',onUpdate:draw,onComplete:()=>{this.prevMeters=null;}});}return g;}
