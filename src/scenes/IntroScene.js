@@ -4,6 +4,7 @@ const NAMES=['Coach','Becky','Badger','Grappler'];
 const PAGES=[
   ['HEAD COACH','Welcome to Wisconsin. Around here, wrestling is built one recruit, one practice, and one match at a time.'],
   ['HEAD COACH','Your job is to build a lineup, scout the Quad, and turn raw prospects into Badgers.'],
+  ['HEAD COACH','One more thing, rookie. In this conference, wrestlers take the mat in their SPIRIT FORM. Under the lights, the animal inside comes out.'],
   ['HEAD COACH','First, tell me what the room should call you.']
 ];
 export class IntroScene extends Phaser.Scene{

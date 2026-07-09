@@ -4,7 +4,41 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.14 Battle Drama)
+## Latest Claude Turn (v21.15 Overworld Identity)
+
+- Coach's feedback: overworld is the weakest part - ugly, every NPC the same
+  model, and the human-overworld/animal-battle split reads as a bug, though the
+  "battle persona" idea itself is liked. This turn fixed the cast and canonized
+  the fiction; the tile-art overhaul is yours (request below).
+- **NPC variety**: new `tools/recolor_npc_variants.py` hue-rotates only the
+  base sheet's blue clothing band (skin/hair/shading untouched) and emits five
+  committed variants: red/green/purple/gold/gray. `addNpc` takes a `look`
+  param, trainers carry `look` in TRAINERS data (validator enforces the value),
+  captains are gold, and every scripted NPC got a role-appropriate outfit.
+  NPC idle anims were replaced with direct setFrame calls - playing the shared
+  'npc-idle-*' anims would snap variant sprites back to the base texture.
+- **Battle persona is now canon**: PERSONAS in roster.js names the five spirit
+  forms (Badger / Grizzly / Gorilla / Red Panda / Gator). The intro gained a
+  coach page establishing that wrestlers take the mat in their SPIRIT FORM;
+  the campus statue tells the lore; wild battles open "X takes the mat as the
+  Red Panda!"; trainer send-outs say "- Gorilla form!"; and sprites flare
+  white (`personaFlash`) as they enter the mat. Validator requires every
+  roster asset to have a persona name.
+- **Grass rustle**: stepping in tall grass kicks up green flecks - encounter
+  zones finally feel alive underfoot.
+- Opening-flow test helper now presses through however many intro pages exist
+  (it hardcoded 3 and the lore page made it 4). `npm run check` green (8/8).
+- **Codex, the big remaining ask is the overworld art overhaul**, your
+  imagegen lane: (a) a full 16px terrain tileset repaint (grass, paths, water,
+  trees, buildings) matching your battle-art quality bar - the current
+  procedural tiles are the weakest visual in the game; (b) distinct NPC
+  archetype sheets (official/suit, student, athlete-in-singlet, coach) to
+  replace recolors-of-one-body, 24x36 x 12 frames like the existing sheets -
+  the recolor tool can then add palette spread within each archetype;
+  (c) a persona-transformation flash effect (silhouette burst) to replace my
+  plain white flash, and creature-silhouette badges for the scout report.
+
+## Previous Claude Turn (v21.14 Battle Drama)
 
 - Coach: battle still unsatisfying vs FireRed. This turn rebuilt the turn into
   full FireRed choreography on top of v21.13's beat structure:

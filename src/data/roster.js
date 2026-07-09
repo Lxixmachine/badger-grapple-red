@@ -29,6 +29,9 @@ export const ROSTER={
  scrambleboss:{id:'scrambleboss',name:'The Funk Doctor',weight:'157',style:'Scramble',rarity:'Elite',asset:'scramble',tint:0xffb36b,stats:{hp:100,atk:29,def:22,spd:28,gas:96},moves:['funk','scramble','cradle','reattack'],bio:'River Trail gym leader. Nobody solves the scramble.',strengths:'Transition wrestling',weaknesses:'None obvious',personality:'Unbothered'},
  topboss:{id:'topboss',name:'The Anchor',weight:'197',style:'Top',rarity:'Elite',asset:'top',tint:0x7fb5ff,stats:{hp:112,atk:30,def:28,spd:16,gas:98},moves:['ride','tilt','cradle','pin'],bio:'Championship Hall gym leader. Nobody escapes the ride.',strengths:'Mat control',weaknesses:'None obvious',personality:'Immovable'}
 };
+// The battle-persona canon: on the mat, wrestlers take their spirit form.
+export const PERSONAS={badger:'Badger',neutral:'Grizzly',top:'Gorilla',scramble:'Red Panda',pace:'Gator'};
+export function personaFor(id){return PERSONAS[(ROSTER[id]||ROSTER.buckshot).asset]||'Badger';}
 export const STARTERS=['buckshot','matreturner','fieldflyer'];
 export function scaledStats(id,lvl){const r=ROSTER[id]||ROSTER.buckshot;return {hp:r.stats.hp+lvl*5,atk:r.stats.atk+Math.floor(lvl*1.6),def:r.stats.def+Math.floor(lvl*1.3),spd:r.stats.spd+Math.floor(lvl*1.1),gas:r.stats.gas+lvl*2};}
 export function makeMon(id,lvl){const s=scaledStats(id,lvl),r=ROSTER[id]||ROSTER.buckshot;const seed=Math.floor(Math.random()*7)-3;return {id,lvl,xp:0,hp:s.hp,gas:s.gas,score:0,boost:false,potential:{Common:'C+',Uncommon:'B',Rare:'A-',Elite:'A+'}[r.rarity]||'C',interest:45+Math.floor(Math.random()*38),training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},iv:seed,moves:[...(r.moves||[]).slice(0,4)]};}

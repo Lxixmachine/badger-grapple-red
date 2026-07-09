@@ -1,7 +1,7 @@
 import {chooseStarter} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 const Phaser = window.Phaser;
-const V='220';
+const V='221';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
@@ -9,6 +9,7 @@ export class BootScene extends Phaser.Scene{
     this.load.spritesheet('tiles',`./assets/tiles/fieldhouse_tiles.png?v=${V}`,{frameWidth:16,frameHeight:16});
     this.load.spritesheet('player',`./assets/sprites/player_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});
     this.load.spritesheet('npc',`./assets/sprites/npc_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});
+    ['red','green','purple','gold','gray'].forEach(v=>this.load.spritesheet('npc_'+v,`./assets/sprites/npc_walk_${v}.png?v=${V}`,{frameWidth:24,frameHeight:36}));
     ['badger','neutral','top','scramble','pace'].forEach(k=>{this.load.image('battle_'+k,`./assets/sprites/battle_${k}.png?v=${V}`);this.load.image('battle_'+k+'_back',`./assets/sprites/battle_${k}_back.png?v=${V}`);this.load.image('portrait_'+k,`./assets/portraits/${k}.png?v=${V}`);});
     this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena.png?v=${V}`);
   }

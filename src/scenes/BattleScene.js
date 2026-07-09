@@ -1,4 +1,4 @@
-import {ROSTER,makeMon,scaledStats,addXp} from '../data/roster.js';import {MOVES,ADV} from '../data/moves.js';import {loadState,saveState,lead} from '../systems/save.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
+import {ROSTER,makeMon,scaledStats,addXp,personaFor} from '../data/roster.js';import {MOVES,ADV} from '../data/moves.js';import {loadState,saveState,lead} from '../systems/save.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
 const Phaser = window.Phaser;
 const COMMANDS=['FIGHT','BAG','WRESTLER','RUN'];
 const CATCH_BASE={Common:.62,Uncommon:.46,Rare:.32,Elite:0};
@@ -27,7 +27,7 @@ export class BattleScene extends Phaser.Scene{
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.over=false;this.recruit=false;this.forcedSwap=false;this.impact='';this.resultTitle='';this.messageTimer=0;
     this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.moveStyle='';this.expGain=0;this.lastChooseAt=0;this.inputLocked=true;
-    const openLine=this.type==='wild'?`${ROSTER[this.enemy().id].name} wants to wrestle!`:`${this.trainerName||'Opponent'} sends out ${ROSTER[this.enemy().id].name}!`;
+    const openLine=this.type==='wild'?`${ROSTER[this.enemy().id].name} takes the mat as the ${personaFor(this.enemy().id)}!`:`${this.trainerName||'Opponent'} sends out ${ROSTER[this.enemy().id].name} - ${personaFor(this.enemy().id)} form!`;
     this.log=[openLine];
     const l=lead(this.state);if(l){const s=scaledStats(l.id,l.lvl);if(!Number.isFinite(l.hp)||l.hp<=0)l.hp=s.hp;if(!Number.isFinite(l.gas)||l.gas<=0)l.gas=s.gas;l.score=0;}this.enemyTeam.forEach(e=>e.score=0);
     this.state.stats={scouts:0,battles:0,wins:0,recruits:0,streak:0,...(this.state.stats||{})};this.state.stats.battles++;saveState(this.state);
@@ -146,6 +146,7 @@ export class BattleScene extends Phaser.Scene{
     this.time.delayedCall(840,()=>{if(!this.over)onKO();});
   }
   playSafe(kind){try{if(sfx[kind])sfx[kind]();}catch{}}
+  personaFlash(sprite,delay=0){if(!sprite)return;this.time.delayedCall(delay,()=>{if(!sprite.scene)return;sprite.setTintFill(0xfff3d0);this.time.delayedCall(150,()=>{if(sprite.scene)sprite.clearTint();});});}
   resolveTurn(key){
     const l=lead(this.state),e=this.enemy();
     this.inputLocked=true;this.mode='resolving';this.impact='';this.attackAnim=null;this.prevMeters=null;this.drawBattle();
@@ -164,9 +165,9 @@ export class BattleScene extends Phaser.Scene{
       this.enemyIdx++;const next=this.enemy();
       this.impact='';this.attackAnim=null;this.prevMeters=null;
       this.mode='resolving';this.drawBattle();
-      this.setResolveText(`${this.trainerName||'Opponent'} sends out ${ROSTER[next.id].name}!`);
+      this.setResolveText(`${this.trainerName||'Opponent'} sends out ${ROSTER[next.id].name} - ${personaFor(next.id)} form!`);
       this.addLog([`${this.trainerName||'Opponent'} sends out ${ROSTER[next.id].name}!`]);
-      if(this.enemySprite&&this.enemySprite.scene){this.enemySprite.x=GAME_W+42;this.enemySprite.setAlpha(1);this.tweens.add({targets:this.enemySprite,x:235,duration:420,ease:'Cubic.Out'});}
+      if(this.enemySprite&&this.enemySprite.scene){this.enemySprite.x=GAME_W+42;this.enemySprite.setAlpha(1);this.tweens.add({targets:this.enemySprite,x:235,duration:420,ease:'Cubic.Out'});this.personaFlash(this.enemySprite,430);}
       this.time.delayedCall(980,()=>{if(this.over)return;this.inputLocked=false;this.mode='command';this.sel=0;saveState(this.state);this.drawBattle();});
       return;
     }
@@ -237,7 +238,7 @@ export class BattleScene extends Phaser.Scene{
       this.add.text(x+w-58,y+31,`${gas}/${s.gas}`,{fontFamily:'monospace',fontSize:6,color:'#355f87'});
     }
   }
-  drawWrestlers(lr,er){this.drawBattleBases();const eX=235,eY=88,pX=82,pY=146,eStart=this.firstBattleDraw?GAME_W+42:eX,pStart=this.firstBattleDraw?-54:pX;const eimg=this.add.image(eStart,eY,'battle_'+er.asset).setScale(.58).setFlipX(true);const pimg=this.add.image(pStart,pY,'battle_'+lr.asset+'_back').setScale(.67);this.enemySprite=eimg;this.playerSprite=pimg;if(this.firstBattleDraw){this.tweens.add({targets:eimg,x:eX,duration:420,ease:'Cubic.Out'});this.tweens.add({targets:pimg,x:pX,duration:420,ease:'Cubic.Out',delay:110});}if(this.attackAnim==='enemy'){this.tweens.add({targets:eimg,x:'+=5',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:pimg,x:'+=13',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.flash(82,255,255,255);this.drawImpactBurst(eX,eY,this.moveStyle);}if(this.attackAnim==='player'){this.tweens.add({targets:pimg,x:'-=5',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:eimg,x:'-=11',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.shake(100,.006);this.drawImpactBurst(pX,pY,this.moveStyle);}if(this.attackAnim==='miss'){this.tweens.add({targets:[pimg,eimg],alpha:.65,yoyo:true,duration:55});this.drawMissWhiff(160,98);}if(this.impact){const t=this.add.text(160,78,this.impact,{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5);this.tweens.add({targets:t,y:62,alpha:0,duration:550,ease:'Cubic.Out'});}this.attackAnim=null;}
+  drawWrestlers(lr,er){this.drawBattleBases();const eX=235,eY=88,pX=82,pY=146,eStart=this.firstBattleDraw?GAME_W+42:eX,pStart=this.firstBattleDraw?-54:pX;const eimg=this.add.image(eStart,eY,'battle_'+er.asset).setScale(.58).setFlipX(true);const pimg=this.add.image(pStart,pY,'battle_'+lr.asset+'_back').setScale(.67);this.enemySprite=eimg;this.playerSprite=pimg;if(this.firstBattleDraw){this.tweens.add({targets:eimg,x:eX,duration:420,ease:'Cubic.Out'});this.tweens.add({targets:pimg,x:pX,duration:420,ease:'Cubic.Out',delay:110});this.personaFlash(eimg,430);this.personaFlash(pimg,540);}if(this.attackAnim==='enemy'){this.tweens.add({targets:eimg,x:'+=5',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:pimg,x:'+=13',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.flash(82,255,255,255);this.drawImpactBurst(eX,eY,this.moveStyle);}if(this.attackAnim==='player'){this.tweens.add({targets:pimg,x:'-=5',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:eimg,x:'-=11',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.shake(100,.006);this.drawImpactBurst(pX,pY,this.moveStyle);}if(this.attackAnim==='miss'){this.tweens.add({targets:[pimg,eimg],alpha:.65,yoyo:true,duration:55});this.drawMissWhiff(160,98);}if(this.impact){const t=this.add.text(160,78,this.impact,{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5);this.tweens.add({targets:t,y:62,alpha:0,duration:550,ease:'Cubic.Out'});}this.attackAnim=null;}
   drawBattleBases(){const g=this.add.graphics();g.fillStyle(0x1b1d1f,.22);g.fillEllipse(236,111,116,28);g.fillEllipse(82,169,138,31);g.fillStyle(0xe9e2cd,1);g.fillEllipse(235,106,112,25);g.fillStyle(0xc9d0ca,1);g.fillEllipse(235,106,86,17);g.lineStyle(1,0x8a978f,.85);g.strokeEllipse(235,106,112,25);g.lineStyle(1,0xffffff,.35);g.strokeEllipse(235,102,84,12);g.fillStyle(0xe4d7ba,1);g.fillEllipse(83,163,136,30);g.fillStyle(0xc7b486,1);g.fillEllipse(83,163,103,20);g.lineStyle(1,0x8e7641,.9);g.strokeEllipse(83,163,136,30);g.lineStyle(1,0xffffff,.3);g.strokeEllipse(83,158,101,13);}
   drawImpactBurst(x,y,style='Neutral'){
     const colors={Neutral:0xfff2a4,Top:0xb9a8ff,Scramble:0xffb36b,Pace:0x8fe0a6,Defense:0xbdb6ff,Upperbody:0x8fd0ff};

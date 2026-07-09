@@ -1,4 +1,4 @@
-import {ROSTER,STARTERS} from '../src/data/roster.js';
+import {ROSTER,STARTERS,PERSONAS} from '../src/data/roster.js';
 import {MOVES} from '../src/data/moves.js';
 import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,isBlocked} from '../src/data/maps.js';
 
@@ -64,6 +64,7 @@ for(const [tid,t] of Object.entries(TRAINERS)){
   if(!inBounds(t.pos?.x,t.pos?.y))errs.push(`trainer ${tid}: position (${t.pos?.x},${t.pos?.y}) out of bounds`);
   if(AREAS[t.area]&&inBounds(t.pos?.x,t.pos?.y)&&isBlocked(t.area,t.pos.x,t.pos.y))errs.push(`trainer ${tid}: position (${t.pos.x},${t.pos.y}) is BLOCKED`);
   if(!['up','down','left','right'].includes(t.facing))errs.push(`trainer ${tid}: invalid facing '${t.facing}'`);
+  if(t.look&&!['red','green','purple','gold','gray'].includes(t.look))errs.push(`trainer ${tid}: look '${t.look}' has no generated npc_walk variant`);
   if(!Number.isInteger(t.sightRange)||t.sightRange<1)errs.push(`trainer ${tid}: sightRange must be a positive integer`);
   (t.team||[]).forEach(([id])=>{if(!ROSTER[id])errs.push(`trainer ${tid} team member '${id}' missing from ROSTER`);});
   if(!t.team||!t.team.length)errs.push(`trainer ${tid} has empty team`);
@@ -92,5 +93,6 @@ TOURNAMENT.rounds.forEach((r,i)=>{
   (r.team||[]).forEach(([id])=>{if(!ROSTER[id])errs.push(`tournament round ${i} team member '${id}' missing from ROSTER`);});
   if(!r.trainerName||!r.intro||!r.win)errs.push(`tournament round ${i} is missing trainerName/intro/win text`);
 });
+for(const [id,r] of Object.entries(ROSTER)){if(!PERSONAS[r.asset])errs.push(`roster ${id}: asset '${r.asset}' has no persona name (battle-form fiction breaks)`);}
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. World ${WORLD_META.width}x${WORLD_META.height}@${WORLD_META.tileSize}.`);
 if(errs.length)process.exit(1);

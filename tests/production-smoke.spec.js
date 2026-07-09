@@ -45,10 +45,12 @@ async function move(page, key) {
 async function completeOpeningToOverworld(page) {
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
-  await press(page, 'a');
-  await press(page, 'a');
-  await press(page, 'a');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('IntroScene').naming)).toBe(true);
+  // advance through however many intro pages exist until naming starts
+  await expect.poll(async () => {
+    const naming = await page.evaluate(() => window.__badgerTest.sceneState('IntroScene').naming);
+    if (!naming) { await press(page, 'a'); await page.waitForTimeout(120); }
+    return page.evaluate(() => window.__badgerTest.sceneState('IntroScene').naming);
+  }).toBe(true);
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('StarterScene');
   await press(page, 'a');
@@ -58,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.14-battle-drama');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.15-overworld-identity');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];
