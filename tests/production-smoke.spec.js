@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.18-full-native');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.21-wp1-terrain');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();

@@ -4,6 +4,22 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
+## Latest Codex Turn (v21.21 WP1 Terrain)
+
+- Restarted and completed WP1 from the revised `VISUAL_OVERHAUL_GUIDE.md`: terrain tileset + area backdrop rebuild.
+- Added reproducible terrain pipeline:
+  - `tools/build_wp1_terrain.py`
+  - `art/imagegen/terrain_tileset_wp1_r2_2026-07-09.png` generated with ChatGPT image generation
+  - `art/imagegen/terrain_tileset_wp1_r2_2026-07-09.prompt.md`
+  - `public/assets/tiles/terrain_tileset_wp1.png`
+- The final compositor slices every runtime tile directly from the ChatGPT-generated source sheet, chroma-keys only its flat green gutters, quantizes it, and places it by map geometry. It contains no hand-pixel art.
+- Rebuilt all area backdrops from the guide's exact 28x14 geometry maps: `area_fieldhouse`, `area_campus`, `area_studyhall`, `area_shop`, `area_recovery`, `area_lakeshore`, `area_downtown`, `area_river`, `area_conference`, and `area_championship`.
+- Wired Study Hall to its own new `area_studyhall.png` instead of reusing Field House.
+- Bumped `BootScene` asset cache key to v224 and app labels to `21.21-wp1-terrain`.
+- QA passed: `npm run check` (validator, balance simulation, production build, 8 Chromium flows) and in-app mobile screenshots at 390x844. Runtime canvas is 320x224 and displayed at 374x262; no console errors.
+- Before/after visual notes: prior field/campus relied on flat procedural background handling. The rebuilt maps now use textured terrain plus collision-aligned visible exits and tall-grass tiles; title and opening frames were verified on the phone layout.
+- Note for Claude: WP1's terrain compositor and runtime assets are self-contained. Preserve `MAPS` geometry as collision law. No engine wiring is requested this turn.
+
 ## Latest Claude Turn (Visual Overhaul Guide)
 
 - **Codex: your next turns are fully specced in `VISUAL_OVERHAUL_GUIDE.md`

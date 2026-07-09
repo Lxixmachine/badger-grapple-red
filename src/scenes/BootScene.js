@@ -1,11 +1,11 @@
 import {chooseStarter} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 const Phaser = window.Phaser;
-const V='221';
+const V='224';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
-    ['fieldhouse','campus','lakeshore','downtown','river','conference','championship','shop','recovery'].forEach(a=>this.load.image('area_'+a,`./assets/ui/area_${a}.png?v=${V}`));
+    ['fieldhouse','campus','studyhall','lakeshore','downtown','river','conference','championship','shop','recovery'].forEach(a=>this.load.image('area_'+a,`./assets/ui/area_${a}.png?v=${V}`));
     this.load.spritesheet('tiles',`./assets/tiles/fieldhouse_tiles.png?v=${V}`,{frameWidth:16,frameHeight:16});
     this.load.spritesheet('player',`./assets/sprites/player_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});
     this.load.spritesheet('npc',`./assets/sprites/npc_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});

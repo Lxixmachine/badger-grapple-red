@@ -1,5 +1,5 @@
 export const WORLD_META = {
-  version: '21.10',
+  version: '21.21',
   tileSize: 16,
   width: 28,
   height: 14,
@@ -25,7 +25,7 @@ export const AREAS = {
     encounters: true,
     wildLevels: [3, 6]
   },
-  studyhall: { name: 'STUDY HALL', bg: 'area_fieldhouse', start: { x: 5, y: 10 }, exits: [{ x: 5, y: 11, to: 'campus', tx: 23, ty: 3, msg: 'Campus Quad.' }], encounters: false },
+  studyhall: { name: 'STUDY HALL', bg: 'area_studyhall', start: { x: 5, y: 10 }, exits: [{ x: 5, y: 11, to: 'campus', tx: 23, ty: 3, msg: 'Campus Quad.' }], encounters: false },
   shop: {
     name: 'TEAM SHOP',
     bg: 'area_shop',

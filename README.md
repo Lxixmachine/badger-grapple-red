@@ -6,7 +6,7 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ## Current Build
 
-- Version: 21.10 Control Fix
+- Version: 21.21 WP1 Terrain
 - Runtime: Phaser 3 + Vite
 - Canvas: 320x224 logical pixels, pixel-art scaling
 - Content: 10 areas, 23 roster entries, 26 moves, 2 trainer NPCs, 3 captain battles
