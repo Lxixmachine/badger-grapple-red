@@ -1,6 +1,6 @@
 import {expect, test} from '@playwright/test';
 
-test('production build boots with assets and advances into intro', async ({page}) => {
+function collectRuntimeIssues(page) {
   const runtimeIssues = [];
   page.on('console', msg => {
     const text = msg.text();
@@ -8,12 +8,25 @@ test('production build boots with assets and advances into intro', async ({page}
     if (!browserNoise && ['error', 'warning'].includes(msg.type())) runtimeIssues.push(`${msg.type()}: ${text}`);
   });
   page.on('pageerror', err => runtimeIssues.push(`pageerror: ${err.message}`));
+  return runtimeIssues;
+}
 
-  await page.goto('/');
+async function openTestBuild(page) {
+  await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
+  await page.goto('/?test=1');
   await expect(page).toHaveTitle(/Badger Grapple Red/);
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('canvas')).toBeVisible();
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || [])).toContain('TitleScene');
+}
 
+async function press(page, key) {
+  await page.evaluate(keyName => window.__badgerTest.press(keyName), key);
+}
+
+test('production build boots with runtime assets', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await openTestBuild(page);
   await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.5-tile-world');
 
   const textureReport = await page.evaluate(() => {
@@ -36,14 +49,46 @@ test('production build boots with assets and advances into intro', async ({page}
     expect(texture.height, `texture ${texture.key} height`).toBeGreaterThan(1);
   }
 
-  await page.locator('.ab [data-key="a"]').click();
-  await expect.poll(async () => page.evaluate(() => {
-    const game = window.badgerGame;
-    if (!game) return [];
-    return game.scene.scenes
-      .filter(scene => scene.scene?.isActive?.())
-      .map(scene => scene.scene.key);
-  })).toContain('IntroScene');
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
+  expect(runtimeIssues).toEqual([]);
+});
 
+test('opening flow reaches the first controllable overworld moment', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await openTestBuild(page);
+
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
+
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('IntroScene').page)).toBe(1);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('IntroScene').page)).toBe(2);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('IntroScene').naming)).toBe(true);
+
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('StarterScene');
+
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('OverworldScene');
+
+  const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(overworld).toMatchObject({
+    active: true,
+    area: 'fieldhouse',
+    tilePos: {x: 14, y: 11}
+  });
+
+  const save = await page.evaluate(() => window.__badgerTest.storage());
+  expect(save).toMatchObject({
+    playerName: 'Coach',
+    area: 'fieldhouse',
+    pos: {x: 14, y: 11}
+  });
+  expect(save.party).toHaveLength(1);
+  expect(save.flags.introDone).toBe(true);
+  expect(save.message).toContain('Coach is waiting');
   expect(runtimeIssues).toEqual([]);
 });
