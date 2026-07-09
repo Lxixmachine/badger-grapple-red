@@ -79,7 +79,7 @@ export class MenuScene extends Phaser.Scene{
   }
   drawBadges(){
     this.add.text(24,52,'CONFERENCE BADGES',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
-    const names={'W Badge':'Wrestling Badge — Field House opening loop','Neutral Badge':'Neutral Badge — Conference Arena','Scramble Badge':'Scramble Badge — River Trail','Top Badge':'Top Badge — Championship Hall'};
+    const names={'W Badge':'Wrestling Badge — Field House opening loop','Neutral Badge':'Neutral Badge — Annex Arena','Scramble Badge':'Scramble Badge — Picnic Point','Top Badge':'Top Badge — Kohl Center'};
     BADGE_ORDER.forEach((b,i)=>{const y=78+i*30,got=this.state.badges.includes(b);
       const g=this.add.graphics();g.lineStyle(1,0x8a6a42,1);g.fillStyle(got?0xd6a336:0xe8dcc0,1);g.fillCircle(40,y,10);g.strokeCircle(40,y,10);
       if(got)this.add.text(40,y,'★',{fontFamily:'monospace',fontSize:11,color:'#7d1017'}).setOrigin(.5);

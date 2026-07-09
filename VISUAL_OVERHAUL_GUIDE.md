@@ -274,10 +274,9 @@ creature bodies; an evolved wrestler looks identical to its rookie form.
 
 ## 5. World geometry maps (paint TO these — collision is law)
 
-Legend: `#` blocked · `.` walkable · `g` tall/encounter grass · `E` exit
-(needs a visible door/mat/opening) · `C` gym captain · `T` trainer ·
-`D` tournament desk · `S` area spawn. Grid is 28x14 tiles of 16px
-(448x224 per backdrop). Column header digits repeat 0-9.
+**Geography is governed by WORLD_MAP_MANIFESTO.md** (Madison compass: lake
+west, State Street + Kohl Center east). These maps are regenerated from the
+live collision data after WP-WORLD.
 
 ### FIELD HOUSE (`fieldhouse`)  28x14 tiles
 ```
@@ -299,7 +298,7 @@ Legend: `#` blocked · `.` walkable · `g` tall/encounter grass · `E` exit
 ```
 Exits: (14,1)->campus
 
-### CAMPUS QUAD (`campus`)  28x14 tiles
+### BASCOM HILL (`campus`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
@@ -317,9 +316,9 @@ Exits: (14,1)->campus
 12 #.............S............#
 13 ##############E#############
 ```
-Exits: (14,13)->fieldhouse  (23,3)->studyhall  (27,7)->lakeshore  (1,7)->downtown  (14,1)->conference  (9,3)->shop  (18,3)->recovery  |  Wild Lv 3-6
+Exits: (14,13)->fieldhouse  (23,3)->studyhall  (27,7)->downtown  (1,7)->lakeshore  (14,1)->conference  (9,3)->shop  (18,3)->recovery  |  Wild Lv 3-6
 
-### STUDY HALL (`studyhall`)  28x14 tiles
+### MEMORIAL LIBRARY (`studyhall`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
@@ -379,37 +378,37 @@ Exits: (13,12)->campus  (14,12)->campus  (15,12)->campus
 ```
 Exits: (13,12)->campus  (14,12)->campus  (15,12)->campus
 
-### LAKESHORE (`lakeshore`)  28x14 tiles
+### LAKESHORE PATH (`lakeshore`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
- 1 ............................
- 2 .................###########
- 3 ...ggggggggggg...###########
- 4 ...ggggggggggg...###########
- 5 ...ggggggggggg...###########
- 6 ...ggggggggggg...###########
- 7 ES.ggggggggggg..............
+ 1 ############################
+ 2 ############################
+ 3 ############################
+ 4 ############################
+ 5 ............................
+ 6 ...ggggggggggg..............
+ 7 ...ggggggggggg............SE
  8 ...ggggggggggg..............
- 9 ...ggggggggggg..T..........E
+ 9 E..ggggggggggg..T...........
 10 ...ggggggggggg..............
 11 ....................T.......
 12 ............................
 13 ############################
 ```
-Exits: (0,7)->campus  (27,9)->river  |  Wild Lv 7-10
+Exits: (27,7)->campus  (0,9)->river  |  Wild Lv 7-10
 
-### DOWNTOWN (`downtown`)  28x14 tiles
+### STATE STREET (`downtown`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
  1 ....####################....
  2 ....####################....
  3 ....####################....
- 4 ....####################....
+ 4 ....#################E##....
  5 ............T...............
  6 ............................
- 7 ..........................SE
+ 7 ES..........................
  8 ............................
  9 ............................
 10 ....####################....
@@ -417,29 +416,29 @@ Exits: (0,7)->campus  (27,9)->river  |  Wild Lv 7-10
 12 ....####################....
 13 ############################
 ```
-Exits: (27,7)->campus
+Exits: (0,7)->campus  (21,4)->championship
 
-### RIVER TRAIL (`river`)  28x14 tiles
+### PICNIC POINT (`river`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
- 1 ........#############.......
- 2 ........#############.......
- 3 ........#############.......
- 4 .....T..#############.......
- 5 ....gggg#############.......
- 6 ....gggg#############......E
- 7 ....gggggggg................
- 8 ....gggggggg..........T.....
- 9 ES..gggggggg............C...
-10 ....gggggggg................
-11 ....gggggggg................
-12 ............................
+ 1 ############################
+ 2 ############################
+ 3 #...........................
+ 4 #....T........#######.......
+ 5 #...gggggggg..#######.......
+ 6 #...gggggggg..#######.......
+ 7 #...gggggggg................
+ 8 #...gggggggg..........T.....
+ 9 #...gggggggg............C.SE
+10 #...........................
+11 ############################
+12 ############################
 13 ############################
 ```
-Exits: (0,9)->lakeshore  (27,6)->championship  |  Wild Lv 11-14
+Exits: (27,9)->lakeshore  |  Wild Lv 11-14
 
-### CONFERENCE ARENA (`conference`)  28x14 tiles
+### ANNEX ARENA (`conference`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
@@ -459,7 +458,7 @@ Exits: (0,9)->lakeshore  (27,6)->championship  |  Wild Lv 11-14
 ```
 Exits: (14,13)->campus
 
-### CHAMPIONSHIP HALL (`championship`)  28x14 tiles
+### KOHL CENTER (`championship`)  28x14 tiles
 ```
    0123456789012345678901234567
  0 ############################
@@ -468,17 +467,16 @@ Exits: (14,13)->campus
  3 #..........................#
  4 #..........................#
  5 #..........................#
- 6 ES........D........C.......#
+ 6 #.........D........C.......#
  7 #..........................#
  8 #..........................#
  9 #..........................#
 10 #..........................#
-11 #..........................#
+11 #.............S............#
 12 #..........................#
-13 ############################
+13 ##############E#############
 ```
-Exits: (0,6)->river
-
+Exits: (14,13)->downtown
 
 ---
 

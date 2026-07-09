@@ -34,7 +34,7 @@ export function isBlocked(area,x,y){
    if(x>=7&&x<=9&&y===11)return true; // meeting table
    return false;
  }
- if(n==='CAMPUS QUAD'){
+ if(n==='BASCOM HILL'){
    if((x===0||x===27||y===0||y===13)&&!((x===14&&y===13)||(x===27&&y===7)||(x===1&&y===7)||(x===14&&y===1)))return true;
    if(x>=21&&x<=27&&y>=1&&y<=4 && !(x===23&&y>=3&&y<=4))return true; // studyhall door at y3, approach y4 (v21.6 art alignment)
    if(x>=4&&x<=6&&y>=7&&y<=8)return true;
@@ -42,7 +42,7 @@ export function isBlocked(area,x,y){
    if(x>=17&&x<=19&&y>=1&&y<=2 && !(x===18&&y===2))return true; // recovery building, door gap
    return false;
  }
- if(n==='STUDY HALL')return y===0||x===0||x===27||y===13||((x<4||x>7)&&y===11);
+ if(n==='MEMORIAL LIBRARY')return y===0||x===0||x===27||y===13||((x<4||x>7)&&y===11);
  if(n==='TEAM SHOP'||n==='RECOVERY CENTER'){
    if(x===0||x===27||y===0||y===13)return true;
    if(y===1)return true; // back wall (windows/shelves are decor)
@@ -50,13 +50,15 @@ export function isBlocked(area,x,y){
    if(x>=10&&x<=17&&y>=4&&y<=6)return true; // counter/table block
    return false;
  }
- if(n==='LAKESHORE')return (y>=2&&y<=6&&x>=17)||y===0||y===13;
- if(n==='DOWNTOWN')return y===0||y===13||((y<5||y>9)&&(x>3&&x<24));
- if(n==='RIVER TRAIL')return y===0||y===13||((x>7&&x<21)&&(y<7));
- if(n==='CONFERENCE ARENA'||n==='CHAMPIONSHIP HALL')return y===0||y===13||x===0||x===27;
+ if(n==='LAKESHORE PATH')return y===0||y===13||(y>=1&&y<=4); // Mendota water band spans the whole north shore
+ if(n==='STATE STREET'){if(x===21&&y===4)return false; // Kohl Center marquee door
+   return y===0||y===13||((y<5||y>9)&&(x>3&&x<24));}
+ if(n==='PICNIC POINT')return y===0||y===13||y<=2||y>=11||x===0||(x>=14&&x<=20&&y>=4&&y<=6); // peninsula: Mendota both shores, pine stand mid
+ if(n==='ANNEX ARENA')return y===0||y===13||x===0||x===27;
+ if(n==='KOHL CENTER')return y===0||x===0||x===27||(y===13&&x!==14); // south doors to State Street
  return false;
 }
-export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE'&&x>=3&&x<=13&&y>=3&&y<=10)||(n==='RIVER TRAIL'&&x>=4&&x<=11&&y>=5&&y<=11)||(n==='CAMPUS QUAD'&&((x>=3&&x<=7&&y>=2&&y<=5)||(x>=20&&x<=24&&y>=8&&y<=11)));}
+export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9)||(n==='BASCOM HILL'&&((x>=3&&x<=7&&y>=2&&y<=5)||(x>=20&&x<=24&&y>=8&&y<=11)));}
 export function spotKind(area,x,y){
  if(trainerAt(area,x,y))return 'TRAINER'; // v21.11: all trainers are data-driven, no per-area cases
  const n=areaFor(area).name;
@@ -73,7 +75,7 @@ export function spotKind(area,x,y){
  if((n==='TEAM SHOP'||n==='RECOVERY CENTER')&&x>=13&&x<=15&&y===11)return 'EXIT';
  if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
  if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
- if(n==='CAMPUS QUAD'){
+ if(n==='BASCOM HILL'){
    if(x===14&&y===7)return 'STATUE';
    if(x===5&&y===5)return 'SCOUT_NPC';
    if(x===11&&y===8)return 'SAVE_NPC';
@@ -81,7 +83,7 @@ export function spotKind(area,x,y){
    if(x===23&&y===2)return 'DOOR';
    if(x===18&&y===10)return 'HIDDEN_DRINK';
  }
- if(n==='STUDY HALL'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
+ if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';
  const cap=areaFor(area).captain;if(cap&&cap.x===x&&cap.y===y)return 'C';
  if(isGrass(area,x,y))return 'g';

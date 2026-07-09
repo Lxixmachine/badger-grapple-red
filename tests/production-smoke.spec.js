@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.25-encounter-readability');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.26-world-manifesto');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -112,7 +112,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(runtimeIssues).toEqual([]);
 });
 
-test('coach assignment leads from Field House to Campus Quad', async ({page}) => {
+test('coach assignment leads from Field House to Bascom Hill', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
   await completeOpeningToOverworld(page);
@@ -127,7 +127,7 @@ test('coach assignment leads from Field House to Campus Quad', async ({page}) =>
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 4, y: 4});
 
   await press(page, 'a');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Go to Campus Quad');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Go up Bascom Hill');
   await page.waitForTimeout(120);
 
   const assigned = await page.evaluate(() => window.__badgerTest.storage());

@@ -4,7 +4,44 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.25 — WP1.2 verified + encounter readability fix)
+## Latest Claude Turn (v21.26 — WP-WORLD implemented per the Manifesto)
+
+- **WORLD_MAP_MANIFESTO.md is committed at the repo root and is the standing
+  directive for geography** (companion to VISUAL_OVERHAUL_GUIDE.md). WP-WORLD
+  (its §5 tested spec) is fully implemented on the live tree:
+- **Madison compass**: campus west edge -> Lakeshore Path -> Picnic Point
+  (dead-end peninsula, wilds 11-14); campus east edge -> State Street ->
+  Kohl Center through the badge-gated marquee door at (21,4). Championship
+  exit removed from the old river route.
+- **Renames** (display only, ids/saves untouched): BASCOM HILL, STATE STREET,
+  PICNIC POINT, KOHL CENTER, MEMORIAL LIBRARY, plus LAKESHORE PATH and
+  ANNEX ARENA from §3's identity list.
+- **New collision/grass**: Mendota water band spans Lakeshore's full north
+  edge (y1-4); Picnic Point is a true peninsula (water y0-2 + y11-13 + west
+  tip, pine stand x14-20 y4-6); grass zones per spec. Compositor MAPS are
+  now regenerated from live data (not hand-copied), water is band-based,
+  pines assemble as 2x2 trees, and the landmarks are in: pier over Mendota,
+  fire-circle rocks at the tip, Kohl marquee banner + door.
+- **Consequential work**: all 5 route trainers re-validate on the new
+  layouts (BFS + live cones green); ~20 dialogue strings updated to the new
+  names/compass; Abe Lincoln statue on Bascom Hill now gives per-badge lore
+  (0 through champion); MenuScene badge homes + captain bios updated; coach
+  objective flow says Bascom Hill (smoke test updated to match).
+- **Acceptance run**: npm run check 8/8 - validator BFS green - 7/7
+  deterministic boundary hops (full golden path + returns, incl. gated
+  marquee both ways) - encounter-zone standing screenshots on all three
+  outdoor grass maps - landmarks visible. Guide §5 geometry maps
+  regenerated from the live data.
+- **Flag for Tony/Codex**: manifesto §3 prose implies gym relocations
+  (Badge 2 on State Street, Annex as "Badge 3") but §5's tested spec moves
+  no captains and says keep the bracket as built - implemented §5 exactly;
+  captains stay where they were. If gyms should move, that is a new WP.
+- **Codex art orders from the manifesto**: Terrace sunburst chairs
+  (green/yellow/orange) for Lakeshore, Capitol dome silhouette strip for
+  State Street's east horizon, Kohl marquee glow-up, locked NATIONALS door
+  art for the Kohl seam. Then WP2 archetypes as before.
+
+## Previous Claude Turn (v21.25 — WP1.2 verified + encounter readability fix)
 
 - **WP1.2 verified and ACCEPTED.** Independent `npm run check` green (8/8),
   full-map + in-game QA. Downtown's layered shop facades, the single
