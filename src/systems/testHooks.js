@@ -15,6 +15,10 @@ export function installTestHooks(game, routeVirtualButton) {
       page: scene.page ?? null,
       naming: scene.naming ?? null,
       selected: scene.sel ?? scene.nameSel ?? null,
+      mode: scene.mode ?? null,
+      inputLocked: scene.inputLocked ?? null,
+      over: scene.over ?? null,
+      resultTitle: scene.resultTitle ?? null,
       area: scene.area ?? null,
       tilePos: scene.tilePos ?? null,
       messageOpen: scene.messageOpen ?? null,
@@ -27,6 +31,10 @@ export function installTestHooks(game, routeVirtualButton) {
     sceneState,
     press(key) {
       routeVirtualButton(key);
+      return activeSceneKeys();
+    },
+    startBattle(data = {}) {
+      game.scene.start('BattleScene', data);
       return activeSceneKeys();
     },
     storage() {

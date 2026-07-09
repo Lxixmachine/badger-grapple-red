@@ -137,3 +137,24 @@ test('coach assignment leads from Field House to Campus Quad', async ({page}) =>
   });
   expect(runtimeIssues).toEqual([]);
 });
+
+test('battle command screen renders and opens move selection', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await openTestBuild(page);
+  await completeOpeningToOverworld(page);
+
+  await page.evaluate(() => window.__badgerTest.startBattle({
+    enemyId: 'drillpartner',
+    enemyLevel: 5,
+    battleType: 'spar'
+  }));
+
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').inputLocked)).toBe(false);
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
+
+  expect(runtimeIssues).toEqual([]);
+});
