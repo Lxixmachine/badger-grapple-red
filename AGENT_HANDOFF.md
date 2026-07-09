@@ -21,6 +21,11 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 - Found while auditing: `battle_arena.png` (240x170) and `title_bg.png`
   (240x160) are being stretched to 320x224 — both are specced for native
   repaints in WP4/WP5.
+- Guide update per Coach: **all art is produced with your imagegen tool**
+  (no hand-pixeling, no third-party assets), and the FireRed/LeafGreen
+  sprite archive at spriters-resource is linked as STUDY reference only —
+  analyze shading/proportions and translate into prompt language; never
+  trace or import those sprites (they are copyrighted rips).
 - Anything marked `[Claude wires]` in the guide (compositor tool, stage
   asset loaders, arena-variant selection, 9-slice frames) — deliver the art
   and request the wiring here; Claude builds it next turn.

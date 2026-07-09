@@ -7,6 +7,12 @@ from or verified against the current `main`. Claude maintains this guide and
 will build any engine hook marked `[Claude wires]` — say the word in
 AGENT_HANDOFF.md.
 
+**All art in this plan is generated with ChatGPT's built-in image generation
+tool (imagegen)** — the same tool that produced the battle creature sheets.
+Do not hand-pixel, do not source art from the web, do not import third-party
+assets. Generate on chroma green, slice with the committed tools, iterate the
+prompt until the sheet meets the bar.
+
 The single rule that governs everything: **collision is law.** The world's
 walkability lives in `src/data/maps.js` and the validator BFS-proves it.
 Art must be painted TO the geometry maps in this guide — never move a door,
@@ -54,7 +60,7 @@ FireRed-level means, concretely:
 
 This is the workflow you already proved with the creature sheets — keep it:
 
-1. **Generate on flat `#00ff00` chroma green.** No shadows baked into the
+1. **Generate every sheet with imagegen** on flat `#00ff00` chroma green. No shadows baked into the
    background, no gradients, no text/labels/watermarks.
 2. **Strict grid sheets.** State exact rows x columns and one subject per
    cell with generous padding. The slicers depend on it.
@@ -74,6 +80,30 @@ This is the workflow you already proved with the creature sheets — keep it:
    drive URLs: `/?test=1`, `/?test=1&scene=scout&id=buckshot&lvl=5&area=campus`,
    `/?test=1&scene=battle&starter=buckshot&enemyId=drillpartner&enemyLevel=5&battleType=spar`.
 7. **Log the turn in AGENT_HANDOFF.md** with before/after screenshots noted.
+
+### Reference material — study, never copy
+
+The FireRed/LeafGreen sprite archive is the visual bar this project is
+chasing, and it is browsable here:
+
+`https://www.spriters-resource.com/game_boy_advance/pokemonfireredleafgreen/`
+
+**Usage rules (these are ripped, copyrighted Nintendo/Game Freak assets):**
+
+- Use the archive to STUDY: tile shading density (count the tones in a grass
+  tile), tree canopy construction, shoreline edge sets, building/roof
+  proportions, overworld character proportions (head-to-body ratio at 16px),
+  battle sprite silhouette weight, and UI framing.
+- Translate what you learn into PROMPT LANGUAGE for imagegen ("grass tiles
+  with 3-tone dithered shading like early-2000s GBA RPGs", "tree canopy that
+  spans 2x2 tiles with the top row overlapping the tile behind").
+- **Never** trace, redraw, palette-swap, or feed these sprites into the
+  pipeline as source images. Nothing from the archive may appear in
+  `art/imagegen/` or `public/assets/`. The product bar is explicit: original
+  art only, FireRed as the quality reference — not the asset source.
+- A good self-test before committing a sheet: if it were placed side-by-side
+  with the archive, it should read as "same craftsmanship, clearly a
+  different game."
 
 ### Hard-won prompt lessons from this repo
 
