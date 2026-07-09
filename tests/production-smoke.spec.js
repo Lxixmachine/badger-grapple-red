@@ -165,3 +165,28 @@ test('battle command screen renders and opens move selection', async ({page}) =>
 
   expect(runtimeIssues).toEqual([]);
 });
+
+test('campus scout report can launch a wild battle', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
+  await page.goto('/?test=1&scene=scout&id=buckshot&lvl=5&area=campus');
+  await expect(page).toHaveTitle(/Badger Grapple Red/);
+  await expect(page.locator('#bootError')).toBeHidden();
+  await expect(page.locator('canvas')).toBeVisible();
+
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('ScoutScene');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene'))).toMatchObject({
+    active: true,
+    id: 'buckshot',
+    lvl: 5,
+    selected: 0
+  });
+
+  await press(page, 'down');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected)).toBe(1);
+  await press(page, 'a');
+
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  expect(runtimeIssues).toEqual([]);
+});

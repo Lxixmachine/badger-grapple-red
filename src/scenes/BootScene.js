@@ -20,6 +20,16 @@ export class BootScene extends Phaser.Scene{
     this.anims.create({key:'npc-idle-left',frames:[{key:'npc',frame:4}],frameRate:1,repeat:0});
     this.anims.create({key:'npc-idle-right',frames:[{key:'npc',frame:7}],frameRate:1,repeat:0});
     this.anims.create({key:'npc-idle-up',frames:[{key:'npc',frame:10}],frameRate:1,repeat:0});
-    setVirtualHandler(this);this.scene.start('TitleScene');
+    setVirtualHandler(this);
+    const params=new URLSearchParams(window.location.search);
+    if(params.has('test')&&params.get('scene')==='scout'){
+      this.scene.start('ScoutScene',{
+        id:params.get('id')||'buckshot',
+        lvl:Number(params.get('lvl')||5),
+        area:params.get('area')||'campus'
+      });
+      return;
+    }
+    this.scene.start('TitleScene');
   }
 }

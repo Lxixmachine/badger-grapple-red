@@ -13,6 +13,8 @@ export function installTestHooks(game, routeVirtualButton) {
     return {
       active: scene.scene?.isActive?.() || false,
       visible: scene.scene?.isVisible?.() || false,
+      id: scene.id ?? null,
+      lvl: scene.lvl ?? null,
       page: scene.page ?? null,
       naming: scene.naming ?? null,
       selected: scene.sel ?? scene.nameSel ?? null,
@@ -36,6 +38,10 @@ export function installTestHooks(game, routeVirtualButton) {
     },
     startBattle(data = {}) {
       game.scene.start('BattleScene', data);
+      return activeSceneKeys();
+    },
+    startScout(data = {}) {
+      game.scene.start('ScoutScene', data);
       return activeSceneKeys();
     },
     storage() {
