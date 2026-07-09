@@ -58,7 +58,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.13-game-feel');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.14-battle-drama');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];
@@ -257,8 +257,13 @@ test('campus tall grass triggers a real scout encounter that reaches a wild batt
   expect(scout.id).toBeTruthy();
   expect(scout.lvl).toBeGreaterThanOrEqual(3);
 
-  await press(page, 'down'); // SCOUT FURTHER
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected)).toBe(1);
+  // ScoutScene locks input during its entrance animation - retry the press
+  // until the selection actually moves instead of assuming one press lands.
+  await expect.poll(async () => {
+    const sel = await page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected);
+    if (sel === 0) { await press(page, 'down'); await page.waitForTimeout(140); }
+    return page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected);
+  }).toBe(1); // SCOUT FURTHER
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');

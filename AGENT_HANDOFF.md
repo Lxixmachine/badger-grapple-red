@@ -4,7 +4,35 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.13 Game Feel)
+## Latest Claude Turn (v21.14 Battle Drama)
+
+- Coach: battle still unsatisfying vs FireRed. This turn rebuilt the turn into
+  full FireRed choreography on top of v21.13's beat structure:
+- **Named typewriter announcements**: "BUCKY used SINGLE LEG!" types out
+  character-by-character in the message panel while the attacker lunges; then a
+  separate impact beat shows "Landed for 30! A style EDGE!" with the damage
+  number floating, the defender flickering + knocked back, and the HP bar
+  draining. Misses get "It slipped - no contact."
+- **Faint beat**: a KO'd wrestler drops and fades out with "X is out!" before
+  anything else happens.
+- **Send-out beat**: trainer battles announce "sends out Y!" and the replacement
+  slides in from offscreen instead of popping into place.
+- **Intro beat**: battles open with the matchup line typed out before the
+  command menu appears.
+- Engine notes for Codex: the choreography lives in `attackBeat`/`faintBeat`/
+  `setResolveText`/`typeText` in BattleScene; `enemyDown` owns the send-out
+  beat. All delayed callbacks guard on `this.over`, and `win()`/`lose()` force
+  `inputLocked=false` (the test-only `winBattle()` hook can fire mid-sequence).
+  Extend beats, don't collapse them back into single-frame resolution.
+- Test hardening: the grass-encounter test retries its ScoutScene selection
+  press (a single press could land during the scene transition and get eaten).
+  `npm run check` green; smoke suite ran clean 3x in a row (8/8 each).
+- Remaining FireRed-feel candidates: B-button dash, grass rustle on encounter
+  steps, EXP bar fill animation on the result screen, per-style impact particle
+  variety (your imagegen bursts would fit), and the CHAMPION ceremony visual
+  from the v21.12 request list.
+
+## Previous Claude Turn (v21.13 Game Feel)
 
 - Coach's feedback: "gameplay feels clunky and half baked compared to FireRed."
   Diagnosis: two mechanical gaps, both now fixed.
