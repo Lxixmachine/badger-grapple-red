@@ -23,7 +23,7 @@ export class BattleScene extends Phaser.Scene{
     this.defeatKey=data.defeatKey||null;
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.over=false;this.recruit=false;this.forcedSwap=false;this.impact='';this.resultTitle='';this.messageTimer=0;
-    this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.expGain=0;this.lastChooseAt=0;this.inputLocked=true;
+    this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.moveStyle='';this.expGain=0;this.lastChooseAt=0;this.inputLocked=true;
     const openLine=this.type==='wild'?`${ROSTER[this.enemy().id].name} wants to wrestle!`:`${this.trainerName||'Opponent'} sends out ${ROSTER[this.enemy().id].name}!`;
     this.log=[openLine];
     const l=lead(this.state);if(l){const s=scaledStats(l.id,l.lvl);if(!Number.isFinite(l.hp)||l.hp<=0)l.hp=s.hp;if(!Number.isFinite(l.gas)||l.gas<=0)l.gas=s.gas;l.score=0;}this.enemyTeam.forEach(e=>e.score=0);
@@ -96,6 +96,7 @@ export class BattleScene extends Phaser.Scene{
     const beforeL=l.hp,beforeG=l.gas,beforeE=e.hp;
     const ek=Phaser.Utils.Array.GetRandom(ROSTER[e.id]?.moves||['stall']);
     const res=this.resolve(e,l,ek,ROSTER[e.id].name);
+    this.moveStyle=MOVES[ek]?.style||'Neutral';
     if(res.hit)this.attackAnim='player';
     this.prevMeters=this.captureMeters(beforeL,beforeG,beforeE);
     this.addLog([res.line,`HP ${beforeL}->${l.hp}`]);
@@ -107,6 +108,7 @@ export class BattleScene extends Phaser.Scene{
     const l=lead(this.state),e=this.enemy(),beforeE=e.hp,beforeL=l.hp,beforeG=l.gas;
     const first=this.resolve(l,e,key,'You');
     this.prevMeters=this.captureMeters(beforeL,beforeG,beforeE);
+    this.moveStyle=MOVES[key]?.style||'Neutral';
     this.impact=first.hit?`-${first.dmg}`:'MISS';this.attackAnim=first.hit?'enemy':'miss';
     const lines=[`T${this.turn}: ${first.line}`];
     if(e.hp<=0){
@@ -116,6 +118,7 @@ export class BattleScene extends Phaser.Scene{
     const ek=Phaser.Utils.Array.GetRandom(ROSTER[e.id]?.moves||['stall']);
     const beforeL2=l.hp,beforeG2=l.gas;
     const second=this.resolve(e,l,ek,ROSTER[e.id].name);
+    this.moveStyle=MOVES[ek]?.style||this.moveStyle;
     if(second.hit)this.attackAnim='player';
     lines.push(second.line);lines.push(`HP ${beforeL}->${l.hp} / ${beforeE}->${e.hp}`);
     this.addLog(lines);this.turn++;this.mode='command';this.sel=0;
@@ -191,8 +194,24 @@ export class BattleScene extends Phaser.Scene{
       this.add.text(x+w-51,y+24,`${gas}/${s.gas}`,{fontFamily:'monospace',fontSize:5,color:'#355f87'});
     }
   }
-  drawWrestlers(lr,er){this.drawBattleBases();const eStart=this.firstBattleDraw?262:176,pStart=this.firstBattleDraw?-42:62;const eimg=this.add.image(eStart,63,'battle_'+er.asset).setScale(.43);if(er.tint||er.color)eimg.setTint(er.tint||er.color);const pimg=this.add.image(pStart,102,'battle_'+lr.asset+'_back').setScale(.5);if(lr.tint||lr.color)pimg.setTint(lr.tint||lr.color);this.enemySprite=eimg;this.playerSprite=pimg;if(this.firstBattleDraw){this.tweens.add({targets:eimg,x:176,duration:420,ease:'Cubic.Out'});this.tweens.add({targets:pimg,x:62,duration:420,ease:'Cubic.Out',delay:110});}if(this.attackAnim==='enemy'){this.tweens.add({targets:eimg,x:'+=4',yoyo:true,repeat:3,duration:35});this.cameras.main.flash(82,255,255,255);this.add.rectangle(176,63,42,44,0xffffff,.22).setBlendMode(Phaser.BlendModes.ADD);}if(this.attackAnim==='player'){this.tweens.add({targets:pimg,x:'-=4',yoyo:true,repeat:3,duration:35});this.cameras.main.shake(100,.006);this.add.rectangle(62,102,46,46,0xffffff,.18).setBlendMode(Phaser.BlendModes.ADD);}if(this.attackAnim==='miss'){this.tweens.add({targets:[pimg,eimg],alpha:.65,yoyo:true,duration:55});}if(this.impact){const t=this.add.text(121,60,this.impact,{fontFamily:'monospace',fontSize:11,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:t,y:50,alpha:0,duration:550,ease:'Cubic.Out'});}this.attackAnim=null;}
+  drawWrestlers(lr,er){this.drawBattleBases();const eStart=this.firstBattleDraw?262:176,pStart=this.firstBattleDraw?-42:62;const eimg=this.add.image(eStart,63,'battle_'+er.asset).setScale(.43);if(er.tint||er.color)eimg.setTint(er.tint||er.color);const pimg=this.add.image(pStart,102,'battle_'+lr.asset+'_back').setScale(.5);if(lr.tint||lr.color)pimg.setTint(lr.tint||lr.color);this.enemySprite=eimg;this.playerSprite=pimg;if(this.firstBattleDraw){this.tweens.add({targets:eimg,x:176,duration:420,ease:'Cubic.Out'});this.tweens.add({targets:pimg,x:62,duration:420,ease:'Cubic.Out',delay:110});}if(this.attackAnim==='enemy'){this.tweens.add({targets:eimg,x:'+=4',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:pimg,x:'+=10',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.flash(82,255,255,255);this.drawImpactBurst(176,63,this.moveStyle);this.add.rectangle(176,63,42,44,0xffffff,.18).setBlendMode(Phaser.BlendModes.ADD);}if(this.attackAnim==='player'){this.tweens.add({targets:pimg,x:'-=4',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:eimg,x:'-=8',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.shake(100,.006);this.drawImpactBurst(62,102,this.moveStyle);this.add.rectangle(62,102,46,46,0xffffff,.16).setBlendMode(Phaser.BlendModes.ADD);}if(this.attackAnim==='miss'){this.tweens.add({targets:[pimg,eimg],alpha:.65,yoyo:true,duration:55});this.drawMissWhiff(120,75);}if(this.impact){const t=this.add.text(121,60,this.impact,{fontFamily:'monospace',fontSize:11,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:t,y:50,alpha:0,duration:550,ease:'Cubic.Out'});}this.attackAnim=null;}
   drawBattleBases(){const g=this.add.graphics();g.fillStyle(0x1b1d1f,.22);g.fillEllipse(177,86,88,22);g.fillEllipse(61,124,104,24);g.fillStyle(0xe9e2cd,1);g.fillEllipse(176,82,86,19);g.fillStyle(0xc9d0ca,1);g.fillEllipse(176,82,67,13);g.lineStyle(1,0x8a978f,.85);g.strokeEllipse(176,82,86,19);g.lineStyle(1,0xffffff,.35);g.strokeEllipse(176,79,64,9);g.fillStyle(0xe4d7ba,1);g.fillEllipse(62,119,104,23);g.fillStyle(0xc7b486,1);g.fillEllipse(62,119,80,15);g.lineStyle(1,0x8e7641,.9);g.strokeEllipse(62,119,104,23);g.lineStyle(1,0xffffff,.3);g.strokeEllipse(62,115,78,10);}
+  drawImpactBurst(x,y,style='Neutral'){
+    const colors={Neutral:0xfff2a4,Top:0xb9a8ff,Scramble:0xffb36b,Pace:0x8fe0a6,Defense:0xbdb6ff,Upperbody:0x8fd0ff};
+    const c=colors[style]||0xfff2a4;
+    const g=this.add.graphics().setDepth(70);
+    g.lineStyle(2,c,.95);g.strokeCircle(x,y,10);
+    g.lineStyle(1,0xffffff,.85);g.strokeCircle(x,y,15);
+    g.fillStyle(c,.26);g.fillCircle(x,y,18);
+    for(let i=0;i<8;i++){const a=(Math.PI*2/8)*i,dx=Math.cos(a)*22,dy=Math.sin(a)*15;g.lineStyle(1,i%2?0xffffff:c,.9);g.lineBetween(x+Math.cos(a)*7,y+Math.sin(a)*5,x+dx,y+dy);}
+    this.tweens.add({targets:g,alpha:0,scale:1.35,duration:420,ease:'Cubic.Out',onComplete:()=>g.destroy()});
+  }
+  drawMissWhiff(x,y){
+    const g=this.add.graphics().setDepth(70);
+    g.lineStyle(2,0xffffff,.55);g.beginPath();g.arc(x,y,20,5.1,1.4,false);g.strokePath();
+    g.lineStyle(1,0x8a978f,.7);g.beginPath();g.arc(x+4,y+3,13,5.0,1.2,false);g.strokePath();
+    this.tweens.add({targets:g,alpha:0,x:'+=12',duration:360,ease:'Sine.Out',onComplete:()=>g.destroy()});
+  }
   drawBottom(lr){
     if(this.mode==='command')return this.drawCommand(lr);
     if(this.mode==='fight')return this.drawFight(lr);
@@ -204,7 +223,7 @@ export class BattleScene extends Phaser.Scene{
   drawFight(r){this.drawCommandBox(3,132,234,35);const leadMon=lead(this.state);const moves=leadMon?.moves||r.moves||[];moves.forEach((key,i)=>{const m=MOVES[key],x=12+(i%2)*111,y=139+(i>1?13:0);this.add.text(x,y,`${i===this.sel?'\u25b6':' '}${m.name}`,{fontFamily:'monospace',fontSize:7,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const mv=MOVES[moves[this.sel]];if(mv)this.drawMoveTag(mv);this.drawBattleLog(6,115,2);}
   drawBag(){this.drawTextBox(3,95,234,72);this.add.text(12,103,'BAG',{fontFamily:'monospace',fontSize:8,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0;this.add.text(12,117+i*9,`${i===this.sel?'\u25b6':' '} ${it.name} x${n}`,{fontFamily:'monospace',fontSize:6,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(132,103,it.desc,{fontFamily:'monospace',fontSize:6,color:'#111',wordWrap:{width:92}});this.add.text(126,154,'A USE  B BACK',{fontFamily:'monospace',fontSize:6,color:'#555',fontStyle:'bold'});}
   drawParty(){this.drawTextBox(3,95,234,72);this.add.text(12,103,this.forcedSwap?'Choose next wrestler':'Choose wrestler',{fontFamily:'monospace',fontSize:8,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const r=ROSTER[m.id],s=scaledStats(m.id,m.lvl),tag=m.hp<=0?' OUT':'';this.add.text(12,117+i*9,`${i===this.sel?'\u25b6':' '} ${r.name} L${m.lvl} HP ${m.hp}/${s.hp}${tag}`,{fontFamily:'monospace',fontSize:6,color:i===this.sel?'#8a1720':m.hp<=0?'#999':'#111',fontStyle:'bold'});});}
-  drawResult(){this.drawTextBox(3,132,234,35);this.add.text(120,138,this.resultTitle,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(.5);const sub=this.resultTitle==='VICTORY'?`EXP +${this.expGain}`:(this.recruit?'A INVITE  B LEAVE':'A/B RETURN');this.add.text(120,151,sub,{fontFamily:'monospace',fontSize:8,color:'#111'}).setOrigin(.5);if(this.resultTitle==='VICTORY'){const star=this.add.text(204,140,'\u2605',{fontFamily:'monospace',fontSize:13,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);this.tweens.add({targets:star,angle:360,scale:1.35,yoyo:true,duration:520,repeat:-1});}this.drawBattleLog(6,115,2);}
+  drawResult(){this.drawTextBox(3,132,234,35);const isWin=this.resultTitle==='VICTORY'||this.resultTitle==='JOINED';const g=this.add.graphics();g.fillStyle(isWin?0x7b1d2a:0x25313a,.92);g.fillRoundedRect(47,135,146,17,2);g.lineStyle(1,0xd6a336,.95);g.strokeRoundedRect(47,135,146,17,2);this.add.text(120,139,this.resultTitle,{fontFamily:'monospace',fontSize:9,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5);const sub=this.resultTitle==='VICTORY'?`EXP +${this.expGain}`:(this.recruit?'A INVITE  B LEAVE':'A/B RETURN');this.add.text(120,154,sub,{fontFamily:'monospace',fontSize:7,color:'#111',fontStyle:'bold'}).setOrigin(.5);if(this.resultTitle==='VICTORY'){const star=this.add.text(204,140,'\u2605',{fontFamily:'monospace',fontSize:13,color:'#d6a336',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:star,angle:360,scale:1.35,yoyo:true,duration:520,repeat:-1});}this.drawBattleLog(6,115,2);}
   drawBattleLog(x,y,n){this.log.slice(0,n).forEach((line,i)=>{const bg=this.add.graphics();bg.fillStyle(0x111015,.78);bg.fillRoundedRect(x-2,y+i*8-1,Math.min(226,line.length*4+8),8,1);this.add.text(x,y+i*8,line,{fontFamily:'monospace',fontSize:6,color:'#f8f0d8'});});}
   captureMeters(playerHp,playerGas,enemyHp){const l=lead(this.state);return {playerHp:l?playerHp/scaledStats(l.id,l.lvl).hp:1,playerGas:l?playerGas/scaledStats(l.id,l.lvl).gas:1,enemyHp:enemyHp/scaledStats(this.enemy().id,this.enemy().lvl).hp};}
   drawAnimatedMeter(x,y,w,h,start,end,color){const g=this.add.graphics();const value={p:Phaser.Math.Clamp(start??end,0,1)};const draw=()=>{const p=Phaser.Math.Clamp(value.p,0,1);g.clear();g.fillStyle(0x111111,1);g.fillRoundedRect(x-1,y-1,w+2,h+2,1);g.fillStyle(0x3d3d3d,1);g.fillRect(x,y,w,h);g.fillStyle(p<.22?0xd84c35:p<.5?0xd6b545:color,1);g.fillRect(x,y,Math.max(1,w*p),h);g.fillStyle(0xffffff,.3);g.fillRect(x,y,Math.max(1,w*p),1);g.lineStyle(1,0x080808,1);g.strokeRect(x-1,y-1,w+2,h+2);};draw();if(start!==undefined&&Math.abs(start-end)>.01){this.tweens.add({targets:value,p:Phaser.Math.Clamp(end,0,1),duration:520,ease:'Sine.Out',onUpdate:draw,onComplete:()=>{this.prevMeters=null;}});}return g;}

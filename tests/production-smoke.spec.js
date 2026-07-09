@@ -156,5 +156,12 @@ test('battle command screen renders and opens move selection', async ({page}) =>
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
 
+  await page.waitForTimeout(180);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => {
+    const battle = window.__badgerTest.sceneState('BattleScene');
+    return battle.mode === 'command' || battle.mode === 'party' || battle.mode === 'result';
+  })).toBe(true);
+
   expect(runtimeIssues).toEqual([]);
 });

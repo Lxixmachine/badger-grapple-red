@@ -1,6 +1,7 @@
 export function installTestHooks(game, routeVirtualButton) {
   const params = new URLSearchParams(window.location.search);
   if (!params.has('test')) return;
+  if (params.has('reset')) localStorage.removeItem('badger_grapple_red_engine_v2');
 
   const activeSceneKeys = () => game.scene.scenes
     .filter(scene => scene.scene?.isActive?.())
