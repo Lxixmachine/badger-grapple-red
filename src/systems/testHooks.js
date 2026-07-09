@@ -25,7 +25,9 @@ export function installTestHooks(game, routeVirtualButton) {
       area: scene.area ?? null,
       tilePos: scene.tilePos ?? null,
       messageOpen: scene.messageOpen ?? null,
-      message: scene.message ?? null
+      message: scene.message ?? null,
+      trainerName: scene.trainerName ?? null,
+      npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null
     };
   };
 

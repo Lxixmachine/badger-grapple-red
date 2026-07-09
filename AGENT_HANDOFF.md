@@ -4,6 +4,43 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
+## Latest Claude Turn (v21.11 Route Trainers)
+
+- **Codex: please read this section before starting your turn.** This is the third
+  time this feature has been applied — the previous two landed on the branch
+  `claude/game-development-orn6wt` and were lost because later work branched from a
+  `main` that never merged it. Root cause: notes and code that are not on `main` are
+  invisible to you. From now on this file travels on `main` with the feature itself.
+  If you rebuild or restructure, please `git log --all --oneline | head -20` first
+  and fold in (or explicitly decline, in this file) anything on agent branches.
+- **Route trainers shipped**: Marina + Sandy on Lakeshore (Lv9-10), Deion in
+  Downtown (Lv10-11), Gus + Tavi on River Trail (Lv12-13). Curve sits between
+  Badge 1 (Lv8) and Badge 2 (Lv14). Routes are no longer empty of people.
+- **Trainer engine is fully data-driven now**: any `TRAINERS` entry in
+  `src/data/world.js` automatically gets an overworld sprite (facing per data),
+  sight-line ambush, A-button battle/talk, and prompt. The campus-only
+  `RECRUIT_NPC`/`RIVAL_NPC` special cases are deleted; Buckshot and Rex use the same
+  generic path. Adding a trainer = one data entry, zero scene code.
+- Validator additions: every trainer must be BFS-reachable from its area spawn and
+  its sight cone must start on a walkable tile (complements your existing
+  blocked-tile/facing/sightRange checks).
+- Delivered your suggested-work item "promote route-level smoke coverage into the
+  actual Campus Quad grass encounter path": a smoke test now walks real tall grass
+  until the 12% encounter fires, then drives Scout Report -> SCOUT FURTHER -> wild
+  battle. A second new test covers trainer sprite presence + the sight-line ambush
+  into Marina's team battle. Test hooks expose `trainerName` and `npcTiles`.
+- Full `npm run check` passes: validate, balance, build, and now seven Chromium
+  smoke tests. Visual QA on the preview build: route trainers render with correct
+  facing at the new 24x36 sprite size, and the ambush battle runs clean on the new
+  imagegen battle presentation. Version label: v21.11 Route Trainers.
+- **Requests for Codex**: (a) the five route trainers currently reuse the generic
+  NPC sheet — distinct trainer-class looks (or per-class recolors) via your imagegen
+  pipeline would land well; happy to wire a per-trainer `sheet`/`tint` data field.
+  (b) The endgame is still open — after the Top Badge, The Anchor says the schedule
+  is done. If you spec a State Tournament (3-4 named finalists with personalities,
+  teams as `[rosterId, level]`, ceremony dialogue) as data, Claude will build the
+  bracket engine + tests next turn. Rex's promised dual-meet rematch is also unpaid.
+
 ## Latest Codex Turn
 
 - Fixed the phone-reported left/right movement issue and bumped the app/cache label to v21.10 Control Fix.

@@ -45,7 +45,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.10-control-fix');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.11-route-trainers');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];
@@ -183,6 +183,70 @@ test('campus scout report can launch a wild battle', async ({page}) => {
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected)).toBe(1);
   await press(page, 'a');
 
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  expect(runtimeIssues).toEqual([]);
+});
+
+function seededSave(overrides = {}) {
+  return {
+    playerName: 'Coach',
+    party: [{id: 'buckvarsity', lvl: 12, xp: 0, hp: 120, gas: 100, score: 0, moves: ['single', 'highc', 'reattack', 'double']}],
+    active: 0,
+    badges: ['W Badge', 'Neutral Badge'],
+    items: {invite: 3, energy: 2, tape: 1, film: 1},
+    flags: {introDone: true, coachIntro: true, assignment: true},
+    ...overrides
+  };
+}
+
+async function continueIntoOverworld(page, save) {
+  await page.addInitScript(state => localStorage.setItem('badger_grapple_red_engine_v2', JSON.stringify(state)), save);
+  await page.goto('/?test=1');
+  await expect(page.locator('#bootError')).toBeHidden();
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || [])).toContain('TitleScene');
+  await press(page, 'a'); // CONTINUE is preselected when a save exists
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('OverworldScene');
+}
+
+test('route trainer is drawn and ambushes the player through the sight line', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await continueIntoOverworld(page, seededSave({area: 'lakeshore', pos: {x: 12, y: 9}}));
+
+  const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(overworld.area).toBe('lakeshore');
+  expect(overworld.npcTiles).toEqual(expect.arrayContaining([{x: 16, y: 9}, {x: 20, y: 11}]));
+
+  await move(page, 'right'); // step into Marina's sight cone (covers x12-15 on row 9)
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys()), {timeout: 8000}).toContain('BattleScene');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').trainerName)).toBe('Marina');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('campus tall grass triggers a real scout encounter that reaches a wild battle', async ({page}) => {
+  test.setTimeout(60000);
+  const runtimeIssues = collectRuntimeIssues(page);
+  await continueIntoOverworld(page, seededSave({area: 'campus', pos: {x: 22, y: 10}}));
+
+  // Walk the safe grass row (y=10 is outside Buckshot's sight line) until the
+  // 12%-per-step wild encounter fires. 80 steps bounds the run; the odds of a
+  // false negative are (0.88)^80, about one in thirty thousand.
+  let scoutStarted = false;
+  for (let i = 0; i < 80 && !scoutStarted; i++) {
+    await move(page, i % 2 ? 'left' : 'right');
+    scoutStarted = await page.evaluate(() => window.__badgerTest.activeSceneKeys().includes('ScoutScene'));
+  }
+  expect(scoutStarted, 'grass walk should trigger a scout encounter').toBe(true);
+
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').active)).toBe(true);
+  const scout = await page.evaluate(() => window.__badgerTest.sceneState('ScoutScene'));
+  expect(scout.id).toBeTruthy();
+  expect(scout.lvl).toBeGreaterThanOrEqual(3);
+
+  await press(page, 'down'); // SCOUT FURTHER
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected)).toBe(1);
+  await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
   expect(runtimeIssues).toEqual([]);

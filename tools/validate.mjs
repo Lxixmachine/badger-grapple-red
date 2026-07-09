@@ -67,6 +67,14 @@ for(const [tid,t] of Object.entries(TRAINERS)){
   if(!Number.isInteger(t.sightRange)||t.sightRange<1)errs.push(`trainer ${tid}: sightRange must be a positive integer`);
   (t.team||[]).forEach(([id])=>{if(!ROSTER[id])errs.push(`trainer ${tid} team member '${id}' missing from ROSTER`);});
   if(!t.team||!t.team.length)errs.push(`trainer ${tid} has empty team`);
+  // v21.11: trainers must be BFS-reachable from the area spawn and their
+  // sight cone must start on a walkable tile (a dead cone can never fire).
+  if(AREAS[t.area]&&inBounds(t.pos?.x,t.pos?.y)){
+    const a=AREAS[t.area];
+    if(!bfsReach(t.area,a.start.x,a.start.y,t.pos.x,t.pos.y))errs.push(`trainer ${tid}: UNREACHABLE from '${t.area}' spawn`);
+    const d={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]}[t.facing];
+    if(d&&isBlocked(t.area,t.pos.x+d[0],t.pos.y+d[1]))errs.push(`trainer ${tid}: first sight tile (${t.pos.x+d[0]},${t.pos.y+d[1]}) is blocked - cone is dead`);
+  }
 }
 
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. World ${WORLD_META.width}x${WORLD_META.height}@${WORLD_META.tileSize}.`);

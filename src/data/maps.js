@@ -6,6 +6,7 @@ export const TILE=16;
 export function canUseExit(state,exit){if(!exit.gate)return true;const badges=state.badges||[];return exit.gate.every(b=>badges.includes(b));}
 export function gateMessage(exit){const need=exit.gate||[];return `That route needs: ${need.join(' + ')}.`;}
 export function trainersInArea(area){return Object.values(TRAINERS).filter(t=>t.area===area);}
+export function trainerAt(area,x,y){return Object.values(TRAINERS).find(t=>t.area===area&&t.pos.x===x&&t.pos.y===y)||null;}
 export function trainerSeesTile(tr,x,y){
   const {x:tx,y:ty}=tr.pos;const r=tr.sightRange||4;
   if(tr.facing==='left')return y===ty&&x<tx&&x>=tx-r;
@@ -57,6 +58,7 @@ export function isBlocked(area,x,y){
 }
 export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE'&&x>=3&&x<=13&&y>=3&&y<=10)||(n==='RIVER TRAIL'&&x>=4&&x<=11&&y>=5&&y<=11)||(n==='CAMPUS QUAD'&&((x>=3&&x<=7&&y>=2&&y<=5)||(x>=20&&x<=24&&y>=8&&y<=11)));}
 export function spotKind(area,x,y){
+ if(trainerAt(area,x,y))return 'TRAINER'; // v21.11: all trainers are data-driven, no per-area cases
  const n=areaFor(area).name;
  if(n==='FIELD HOUSE'){
    // v19.5 exact, non-overlapping interaction zones from the approved QA plan.
@@ -74,9 +76,7 @@ export function spotKind(area,x,y){
  if(n==='CAMPUS QUAD'){
    if(x===14&&y===7)return 'STATUE';
    if(x===5&&y===5)return 'SCOUT_NPC';
-   if(x===22&&y===9)return 'RECRUIT_NPC';
    if(x===11&&y===8)return 'SAVE_NPC';
-   if(x===17&&y===5)return 'RIVAL_NPC';
    if(x===8&&y===10)return 'HIDDEN_TAPE';
    if(x===23&&y===2)return 'DOOR';
    if(x===18&&y===10)return 'HIDDEN_DRINK';
