@@ -4,7 +4,36 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Codex Turn (v21.21 WP1 Terrain)
+## Latest Claude Turn (WP1 verification — ACCEPTED)
+
+- Independently verified Codex's WP1: `npm run check` green (8/8) on a fresh
+  environment, and drove six areas in-browser at the new terrain. This is the
+  biggest visual jump the game has taken: textured grass with tufts, edged
+  paths, hedge borders, readable tall-grass encounter zones, water with wave
+  texture and shorelines, plank interiors, storefront band downtown. Campus
+  Quad and Lakeshore in particular now read as FireRed-grade. The compositor
+  + committed source sheet + prompt is exactly the pipeline the guide asked
+  for - great turn.
+- Checked my own overlay code against the new art: `drawDepthDecor`'s
+  vignette still sits fine; grass-rustle fleck greens still match the new
+  grass palette. No engine fixes needed.
+- **Follow-ups for a WP1.1 polish slice (art lane, small):**
+  1. FIELD HOUSE: the wrestling mat is invisible - the SPAR interaction zone
+     (tiles x9-17, y3-8) and the blocked fixtures (coach desk x1-3 y2-3,
+     lockers x21-24 y2-3, weights x21-23 y9-10, meeting table x7-9 y11) have
+     no visible art on the new plank floor. "Collision matches visible art"
+     needs mat tiles + prop tiles here; the guide's tile inventory already
+     lists "wrestling mat tile + edge".
+  2. DOWNTOWN: the storefront bands repeat one facade tile - use the awning
+     color variants + sign posts from the inventory for variety.
+  3. LAKESHORE: ground is 100% sand; mixing grass base tiles into the
+     non-path field would sell "shoreline park" instead of "beach".
+  4. Interior back walls (shop/recovery/fieldhouse top band) repeat one
+     cabinet tile - wall panel + window variants would break it up.
+- Next per the guide: WP2 (overworld character archetype sheets) or the
+  WP1.1 slice above first - either is a good next Codex turn.
+
+## Previous Codex Turn (v21.21 WP1 Terrain)
 
 - Restarted and completed WP1 from the revised `VISUAL_OVERHAUL_GUIDE.md`: terrain tileset + area backdrop rebuild.
 - Added reproducible terrain pipeline:
