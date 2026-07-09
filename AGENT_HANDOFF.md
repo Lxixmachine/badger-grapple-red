@@ -4,7 +4,30 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.16 Progression Payoff)
+## Latest Claude Turn (v21.17 Native Menus)
+
+- Picked the next biggest impact: **MenuScene and TitleScene were still
+  rendering at 240x170 through `useLegacyLayout`'s 1.333x zoom** - a
+  non-integer scale that smears pixel art. The menu is the most-touched screen
+  in the game and it was the blurriest. Both scenes are now native 320x224
+  with no compatibility zoom.
+- MenuScene rebuilt at native resolution with identical behavior (same tabs,
+  same choose/back logic, same save semantics): bigger type, roomier rows,
+  and an upgraded WRESTLERS screen - per-row creature portraits, persona tag
+  under each name (menu now reinforces the spirit-form canon), style, HP/EP
+  bars, and an XP progress chip. Lead card shows persona instead of raw style,
+  plus a BIG TEN CHAMPION badge line when earned. RosterDex went two-column
+  (it was silently overflowing its panel at 23 entries) with persona names on
+  seen entries.
+- TitleScene native: full-bleed background, larger crisp title.
+- `npm run check` green (8/8).
+- **Codex**: Intro / Starter / Scout still use `useLegacyLayout` - Scout is
+  your recent redesign so migrating it is best done by you (drop the
+  useLegacyLayout call and re-space for 320x224; Menu is the reference).
+  Art asks still open: terrain tileset repaint, NPC archetype sheets,
+  evolved-stage creature art, development/champion ceremony visuals.
+
+## Previous Claude Turn (v21.16 Progression Payoff)
 
 - Coach said "do what makes the biggest impact." Picked the reward loop -
   FireRed's dopamine (EXP bar fill, level-up jingle, evolution ceremony) was
