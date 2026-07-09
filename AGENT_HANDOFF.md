@@ -6,6 +6,17 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 
 ## Latest Codex Turn
 
+- Fixed the v21.8 visual regressions reported from phone screenshots and bumped the app/cache label to v21.9 Visual Fix.
+- Recentered `useLegacyLayout()` around the original 240x170 scene center so Title, Intro, Starter, Scout, and Menu no longer crop off the left/top after the 320x224 shell migration.
+- Raised fixed UI overlays above world-depth actors in `OverworldScene`; the player can no longer render over message boxes, area toasts, or objective/HUD overlays.
+- Removed the translucent white square hit flashes from `BattleScene`; battle hits still use shake/flash/impact bursts without covering sprites with block artifacts.
+- Tightened `tools/slice_imagegen_overworld_assets.py` so generated overworld frames are trimmed again after chroma-key cleanup and bottom-anchored. Re-ran the slicer and verified all player/NPC frames reach the bottom row.
+- Normalized `index.html` to ASCII-clean source, cache-bumped Phaser/main scripts to v219, and updated README/test version labels.
+- Full `npm run check` passes.
+- Browser QA passed at 390x844 and 1280x720: title/intro no longer crop, overworld message boxes cover the player correctly, right-facing overworld frames sit on the sprite baseline, battle hit effects no longer draw white square artifacts, and console logs are clean.
+
+## Previous Codex Turn
+
 - Migrated the engine shell from 240x170 to a 320x224 internal canvas for v21.8.
 - Chose 320x224 because it gives substantially more resolution while matching the existing 448x224 overworld map height, avoiding black bands.
 - Added `src/systems/resolution.js` with game dimensions and a temporary `useLegacyLayout()` compatibility zoom for old-layout scenes.
@@ -16,7 +27,7 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 - Full `npm run check` passes.
 - Browser QA at phone viewport confirmed `canvas.width=320`, `canvas.height=224`, battle command/fight screens render cleanly, and overworld renders without console errors.
 
-## Previous Codex Turn
+## Earlier Codex Turn
 
 - Confirmed GitHub Pages deployment delay was caused by GitHub Actions/Pages outage, not repo configuration.
 - Started a readability pass after the user reported overworld sprites and HUD text were too small/pixelated on phone.

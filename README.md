@@ -6,9 +6,9 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ## Current Build
 
-- Version: 21.8 Hi-Res Battle
+- Version: 21.9 Visual Fix
 - Runtime: Phaser 3 + Vite
-- Canvas: 240x170 logical pixels, pixel-art scaling
+- Canvas: 320x224 logical pixels, pixel-art scaling
 - Content: 10 areas, 23 roster entries, 26 moves, 2 trainer NPCs, 3 captain battles
 - Save: browser localStorage with version normalization and an expansion flag seam
 

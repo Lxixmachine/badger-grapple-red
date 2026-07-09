@@ -43,7 +43,7 @@ def trim_alpha(img):
 def fit_frame(cell):
     cell = trim_alpha(remove_green(cell))
     cell.thumbnail((FRAME_W, FRAME_H), Image.Resampling.NEAREST)
-    cell = remove_green(cell)
+    cell = trim_alpha(remove_green(cell))
     frame = Image.new("RGBA", (FRAME_W, FRAME_H), (0, 0, 0, 0))
     x = (FRAME_W - cell.width) // 2
     y = FRAME_H - cell.height
