@@ -2,12 +2,13 @@ import {makeMon} from '../data/roster.js';
 const KEY='badger_grapple_red_engine_v2';
 const SAVE_VERSION='19.0';
 const PERIODS=['Morning','Afternoon','Evening','Night'];
-export function defaultState(){return {version:SAVE_VERSION,playerName:'Coach',party:[],box:[],active:0,dex:{seen:{},caught:{}},grit:12,rep:8,items:{invite:3,energy:2,tape:1,film:1},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},flags:{introDone:false,coachIntro:false,assignment:false,rivalIntro:false,studentIntro:false,wonSpar:false,firstBadge:false,hiddenItems:{},practiceCount:0},training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',expansion:{unlocked:false,flags:{}}};}
+export function defaultState(){return {version:SAVE_VERSION,playerName:'Coach',party:[],box:[],active:0,dex:{seen:{},caught:{}},grit:12,rep:8,items:{invite:3,energy:2,tape:1,film:1},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},flags:{introDone:false,coachIntro:false,assignment:false,rivalIntro:false,studentIntro:false,wonSpar:false,firstBadge:false,hiddenItems:{},practiceCount:0},training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
 export function normalizeState(state){
   const d=defaultState();
   if(!state||typeof state!=='object')return d;
   state.version=SAVE_VERSION;
   state.expansion=(state.expansion&&typeof state.expansion==='object')?{unlocked:!!state.expansion.unlocked,flags:state.expansion.flags||{}}:{unlocked:false,flags:{}}; // v21.2 Season Two seam
+  state.tournament=(state.tournament&&typeof state.tournament==='object')?{round:Number.isInteger(state.tournament.round)?state.tournament.round:0,champion:!!state.tournament.champion}:{round:0,champion:false}; // v21.12 State Tournament
   state.playerName=typeof state.playerName==='string'&&state.playerName.trim()?state.playerName:d.playerName;
   state.party=Array.isArray(state.party)?state.party:[];
   state.box=Array.isArray(state.box)?state.box:[];

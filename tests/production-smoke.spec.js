@@ -45,7 +45,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.11-route-trainers');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.12-state-tournament');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'battle_arena', 'battle_badger'];
@@ -249,5 +249,54 @@ test('campus tall grass triggers a real scout encounter that reaches a wild batt
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('state tournament bracket runs to the championship', async ({page}) => {
+  test.setTimeout(60000);
+  const runtimeIssues = collectRuntimeIssues(page);
+  await continueIntoOverworld(page, seededSave({
+    badges: ['W Badge', 'Neutral Badge', 'Scramble Badge', 'Top Badge'],
+    area: 'championship',
+    pos: {x: 10, y: 7}
+  }));
+
+  await move(page, 'up'); // step onto the tournament desk tile
+  const clearMessageIfOpen = async () => {
+    const open = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene')?.messageOpen);
+    if (open) { await press(page, 'b'); await page.waitForTimeout(150); }
+  };
+
+  const expected = [
+    {name: 'Iron Ivan', round: 1, champion: false},
+    {name: 'Rex', round: 2, champion: false},
+    {name: 'The Prodigy', round: 3, champion: true}
+  ];
+  for (const stage of expected) {
+    await clearMessageIfOpen();
+    await press(page, 'a'); // enter the next bracket round at the desk
+    await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys()), {timeout: 8000}).toContain('BattleScene');
+    await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').trainerName)).toBe(stage.name);
+    await page.evaluate(() => window.__badgerTest.winBattle());
+    await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').over)).toBe(true);
+    const save = await page.evaluate(() => window.__badgerTest.storage());
+    expect(save.tournament).toMatchObject({round: stage.round, champion: stage.champion});
+    if (stage.champion) {
+      await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').resultTitle)).toBe('CHAMPION');
+    }
+    await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').inputLocked)).toBe(false);
+    let backInOverworld = false;
+    for (let i = 0; i < 10 && !backInOverworld; i++) {
+      await press(page, 'a'); // leave the result screen
+      await page.waitForTimeout(350);
+      backInOverworld = await page.evaluate(() => window.__badgerTest.activeSceneKeys().includes('OverworldScene'));
+    }
+    expect(backInOverworld, 'result screen should return to the overworld').toBe(true);
+    await page.waitForTimeout(250);
+  }
+
+  await clearMessageIfOpen();
+  await press(page, 'a'); // desk after the title
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('State Champion');
   expect(runtimeIssues).toEqual([]);
 });

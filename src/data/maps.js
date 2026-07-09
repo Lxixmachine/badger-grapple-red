@@ -1,6 +1,6 @@
-import {AREAS, TRAINERS, WORLD_META} from './world.js';
+import {AREAS, TRAINERS, TOURNAMENT, WORLD_META} from './world.js';
 
-export {AREAS, TRAINERS, WORLD_META};
+export {AREAS, TRAINERS, TOURNAMENT, WORLD_META};
 export const TILE=16;
 
 export function canUseExit(state,exit){if(!exit.gate)return true;const badges=state.badges||[];return exit.gate.every(b=>badges.includes(b));}
@@ -82,6 +82,7 @@ export function spotKind(area,x,y){
    if(x===18&&y===10)return 'HIDDEN_DRINK';
  }
  if(n==='STUDY HALL'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
+ if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';
  const cap=areaFor(area).captain;if(cap&&cap.x===x&&cap.y===y)return 'C';
  if(isGrass(area,x,y))return 'g';
  return '.';

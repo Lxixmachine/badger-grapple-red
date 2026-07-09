@@ -21,6 +21,9 @@ export class BattleScene extends Phaser.Scene{
     this.reward=data.reward||null;
     this.badge=data.badge||null;
     this.defeatKey=data.defeatKey||null;
+    this.tournamentRound=Number.isInteger(data.tournamentRound)?data.tournamentRound:null;
+    this.roundLabel=data.roundLabel||null;
+    this.winMsg=data.winMsg||null;
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.over=false;this.recruit=false;this.forcedSwap=false;this.impact='';this.resultTitle='';this.messageTimer=0;
     this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.moveStyle='';this.expGain=0;this.lastChooseAt=0;this.inputLocked=true;
@@ -158,12 +161,18 @@ export class BattleScene extends Phaser.Scene{
     if(badgeEarned){this.state.badges.push(this.badge);this.log.unshift(`Badge: ${this.badge}.`);}
     stopMusic();sfx[badgeEarned?'badge':'win']();
     if(this.defeatKey){this.state.trainersDefeated=this.state.trainersDefeated||{};this.state.trainersDefeated[this.defeatKey]=true;}
+    if(this.type==='tournament'){
+      this.state.tournament=this.state.tournament||{round:0,champion:false};
+      this.state.tournament.round=Math.max(this.state.tournament.round,(this.tournamentRound??0)+1);
+      if(this.state.tournament.round>=3&&!this.state.tournament.champion){this.state.tournament.champion=true;this.resultTitle='CHAMPION';if(sfx.badge)sfx.badge();}
+      if(this.winMsg)this.log.unshift(this.winMsg);
+    }
     if(this.type==='wild'){this.recruit=true;this.log.unshift('Invite window open.');this.state.flags.scoutedBattle=true;}
     if(this.type==='gym'){this.state.flags.scoutedBattle=true;}
     if(this.enemyTeam.some(e=>e.id==='drillpartner')||this.type==='wild'){this.state.flags.wonSpar=true;}
     if(this.type==='wild'&&this.state.objective?.id==='scout_quad'){this.state.objective={id:'recruit_first',stage:3,complete:false,log:['Recruit your first wrestler',...(this.state.objective?.log||[])]};}
     if(this.state.objective?.id==='win_spar'){this.state.objective={id:'return_coach',stage:5,complete:false,log:['Return to Coach',...(this.state.objective?.log||[])]};}
-    this.state.message=`Won vs ${this.trainerName||ROSTER[this.enemy().id].name}.`;
+    this.state.message=this.type==='tournament'?(this.winMsg||`Won the ${this.roundLabel||'round'}.`):`Won vs ${this.trainerName||ROSTER[this.enemy().id].name}.`;
     saveState(this.state);this.drawBattle();
   }
   lose(){this.over=true;this.recruit=false;this.mode='result';this.resultTitle='LOSS';this.state.stats.streak=0;this.state.grit+=4;this.state.rep+=2;this.state.party.forEach(m=>{const s=scaledStats(m.id,m.lvl);m.hp=s.hp;m.gas=s.gas;m.score=0;});this.addLog(['Team recovered. +4 Grit +2 Rep.']);this.state.message='Loss. Team recovered.';stopMusic();sfx.lose();saveState(this.state);this.drawBattle();}

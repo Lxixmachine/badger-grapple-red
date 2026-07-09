@@ -55,6 +55,12 @@ export function installTestHooks(game, routeVirtualButton) {
     },
     clearSave() {
       localStorage.removeItem('badger_grapple_red_engine_v2');
+    },
+    winBattle() {
+      const scene = game.scene.getScene('BattleScene');
+      if (!scene?.scene?.isActive?.() || scene.over) return false;
+      scene.win();
+      return true;
     }
   };
 }

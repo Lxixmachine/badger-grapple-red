@@ -1,6 +1,6 @@
 import {ROSTER,STARTERS} from '../src/data/roster.js';
 import {MOVES} from '../src/data/moves.js';
-import {AREAS,TRAINERS,WORLD_META,TILE,isBlocked} from '../src/data/maps.js';
+import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,isBlocked} from '../src/data/maps.js';
 
 let errs=[];
 const inBounds=(x,y)=>Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<WORLD_META.width&&y>=0&&y<WORLD_META.height;
@@ -77,5 +77,20 @@ for(const [tid,t] of Object.entries(TRAINERS)){
   }
 }
 
+// v21.12: State Tournament integrity - the desk must be reachable, its badge
+// gate must be grantable, and every bracket team must exist in the roster.
+if(!AREAS[TOURNAMENT.desk.area])errs.push(`tournament desk area '${TOURNAMENT.desk.area}' missing`);
+else{
+  const a=AREAS[TOURNAMENT.desk.area];
+  if(isBlocked(TOURNAMENT.desk.area,TOURNAMENT.desk.x,TOURNAMENT.desk.y))errs.push('tournament desk stands on a BLOCKED tile');
+  if(!bfsReach(TOURNAMENT.desk.area,a.start.x,a.start.y,TOURNAMENT.desk.x,TOURNAMENT.desk.y))errs.push('tournament desk is UNREACHABLE from the hall spawn');
+}
+TOURNAMENT.requires.forEach(b=>{if(!Object.values(AREAS).some(a2=>a2.captain?.badge===b))errs.push(`tournament requires badge '${b}' that no captain grants`);});
+if(TOURNAMENT.rounds.length!==3)errs.push('tournament must have exactly 3 rounds (round counter and champion flag assume it)');
+TOURNAMENT.rounds.forEach((r,i)=>{
+  if(!r.team||!r.team.length)errs.push(`tournament round ${i} has an empty team`);
+  (r.team||[]).forEach(([id])=>{if(!ROSTER[id])errs.push(`tournament round ${i} team member '${id}' missing from ROSTER`);});
+  if(!r.trainerName||!r.intro||!r.win)errs.push(`tournament round ${i} is missing trainerName/intro/win text`);
+});
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. World ${WORLD_META.width}x${WORLD_META.height}@${WORLD_META.tileSize}.`);
 if(errs.length)process.exit(1);

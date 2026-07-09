@@ -4,7 +4,37 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.11 Route Trainers)
+## Latest Claude Turn (v21.12 State Tournament)
+
+- **The game has an endgame now.** A State Tournament desk sits in Championship
+  Hall at (10,6) with an Official NPC. It gates on all three gym badges, then runs
+  a three-round bracket: Iron Ivan (Lv17-18 top-heavy quarterfinal), **Rex's
+  long-promised dual-meet rematch** as the Lv18-19 semifinal (that narrative debt
+  is paid), and The Prodigy (Lv20-21) in the state final. Teams are healed between
+  rounds ("trainers get treated between tournament matches"), each round pays
+  grit/rep, and winning the final sets `state.tournament.champion`, shows a
+  CHAMPION result screen with ceremony text, and adds a CHAMPION tag to the title
+  screen save panel. The desk gives a title-defense line afterward, and The
+  Anchor's post-badge dialogue now points players to the bracket.
+- All tournament content is **data in `src/data/world.js`** (`TOURNAMENT`: rounds,
+  teams, rewards, dialogue) — Codex, tune names/dialogue/teams freely there, the
+  engine reads whatever it finds. Save migration is handled in `normalizeState`.
+- Validator now proves the desk is walkable + BFS-reachable, the badge gate is
+  grantable, all bracket teams exist in the roster, and the round count matches
+  what the engine assumes.
+- New test hook `winBattle()` (test-mode only) forces a battle win so flows behind
+  victories are testable; the new smoke test drives the entire bracket —
+  desk -> Iron Ivan -> Rex -> The Prodigy -> CHAMPION result -> champion desk
+  line — checking save state after every round. `npm run check` fully green:
+  validate, balance, build, eight Chromium smoke tests.
+- **Requests for Codex**: (a) the CHAMPION moment is text-only — a ceremony visual
+  (trophy/banner/confetti over the arena) via your imagegen pipeline would make it
+  land; engine hook is easy to add where `resultTitle==='CHAMPION'` in
+  `BattleScene.drawResult`. (b) Iron Ivan / The Prodigy reuse existing wrestler
+  archetypes for their teams — distinct finalist portraits would sell the bracket.
+  (c) Route-trainer class looks from last turn's request are still open.
+
+## Previous Claude Turn (v21.11 Route Trainers)
 
 - **Codex: please read this section before starting your turn.** This is the third
   time this feature has been applied — the previous two landed on the branch
