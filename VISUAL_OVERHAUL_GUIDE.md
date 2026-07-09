@@ -105,6 +105,39 @@ chasing, and it is browsable here:
   with the archive, it should read as "same craftsmanship, clearly a
   different game."
 
+### Town anatomy vs FireRed (study notes from the archive's town maps)
+
+Compared side-by-side with a FireRed town (e.g. the archive's town map
+sheets), the five structural differences that matter, in order:
+
+1. **Quiet ground.** ~90% of a FireRed town is ONE pale grass tile, almost
+   flat; accents are rare and clustered. Never checkerboard two busy tiles.
+   (The compositor now enforces this: dominant base + ~10% seeded variant.)
+2. **Buildings are multi-tile architecture**, 4x4 to 6x5: roof ridge row,
+   eaves overhang, a shadow line under the eaves, wall row with framed door
+   and windows. Slabs read as crates, not houses.
+3. **Fences, ledges, and signs structure space** — a fence run frames a
+   yard, a signboard sits beside every important door.
+4. **Paths are subtle** sandy patches with soft fringes; never fenced on
+   both sides. (Compositor: single south-side fence line max.)
+5. **Saturation hierarchy**: terrain stays pale so roofs, signs, and
+   characters carry the color. If everything is saturated, nothing is.
+
+### WP1.2 — town-anatomy tile order (small imagegen sheet)
+
+One sheet, same pipeline, closing the gaps the compositor cannot:
+
+- **Quiet grass base** (subtler than current grass0 - barely-visible 2-tone
+  dither) + a pale "worn grass" transition tile
+- **House kit**: roof ridge, roof eaves w/ overhang, under-eave shadow
+  wall, wall+framed door, wall+window, wall corner (x2 roof colors)
+- **Fence** (horizontal run + post end), **ledge** (south-facing drop),
+  **signboard**
+- **Tall-grass fringe** (half-density edge), **plain mat-center** tile,
+  2 more storefront facade variants
+- Overall palette: 10-15% less saturated than the WP1 sheet - terrain
+  should sit BEHIND the characters, not compete with them
+
 ### Hard-won prompt lessons from this repo
 
 - The v21.5 terrain delivery came back 1774x887 with ~95k colors and no

@@ -257,13 +257,18 @@ def compose(area, tiles):
             elif area == "lakeshore":
                 # grassy park with a sand beach ribbon hugging the water
                 near_water = any((x + dx, y + dy) in water for dx in (-1, 0, 1) for dy in (-1, 0, 1))
-                paint(img, tiles, "path" if near_water else ("grass0" if (x + y) % 2 else "grass1"), x, y)
+                paint(img, tiles, "path" if near_water else ("grass1" if rng.random() < 0.10 else "grass0"), x, y)
             else:
-                paint(img, tiles, "grass0" if (x + y) % 2 else "grass1", x, y)
+                # FireRed towns keep ~90% of ground one quiet tile; the variant
+                # is a sparse accent, not a checkerboard.
+                paint(img, tiles, "grass1" if rng.random() < 0.10 else "grass0", x, y)
 
-    # ---- pass 2: paths with edge tiles ----
+    # ---- pass 2: paths, mostly plain; a single fence line on the south edge
+    # of east-west walks (FireRed garden convention), never both sides ----
     for (x, y) in paths:
-        name = edge_pick(g, x, y, in_path, "path", "path_n", "path_s", "path_e", "path_w")
+        south_open = not in_path(x, y + 1) and not blocked(g, x, y + 1)
+        east_west = in_path(x - 1, y) or in_path(x + 1, y)
+        name = "path_s" if (south_open and east_west) else "path"
         paint(img, tiles, name, x, y)
 
     # ---- pass 3: water with shoreline edges ----
@@ -281,10 +286,12 @@ def compose(area, tiles):
             elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
                 r = rng.random()
                 if area != "downtown":
-                    if r < 0.05:
-                        paint(img, tiles, "flower_cream" if r < 0.025 else "flower_gold", x, y)
-                    elif r < 0.065:
-                        paint(img, tiles, "rock0" if r < 0.06 else "stump", x, y)
+                    near_path = any((x + dx, y + dy) in paths for dx in (-1, 0, 1) for dy in (-1, 0, 1))
+                    flower_rate = 0.10 if near_path else 0.02  # blooms cluster along the walks
+                    if r < flower_rate:
+                        paint(img, tiles, "flower_cream" if r < flower_rate / 2 else "flower_gold", x, y)
+                    elif r < flower_rate + 0.008:
+                        paint(img, tiles, "rock0" if r < flower_rate + 0.005 else "stump", x, y)
 
     # ---- pass 5: blocked dressing ----
     if area == "downtown":

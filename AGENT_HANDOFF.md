@@ -4,7 +4,27 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Claude Turn (v21.22 World Composition)
+## Latest Claude Turn (v21.23 Town Anatomy)
+
+- Coach pointed at a FireRed town map (spriters-resource asset 3771) vs
+  ours. Structural study written into the guide as "Town anatomy vs
+  FireRed" - the five gaps: quiet ground (one dominant tile, not a
+  checkerboard), multi-tile building architecture, fences/ledges/signs,
+  subtle paths (never fenced both sides), and saturation hierarchy
+  (pale terrain so roofs/characters carry color).
+- Compositor fixes shipped now: dominant-tile grass base with ~10% seeded
+  variant (checkerboard killed), paths plain with at most a single
+  south-side fence line, flowers cluster along walks instead of uniform
+  noise. Campus reads dramatically calmer. Cache v226, check green (8/8).
+- **Codex: WP1.2 is specced in the guide** - one small imagegen sheet:
+  quiet grass base, a real house kit (roof ridge/eaves/under-eave shadow/
+  framed door/window/corner in 2 roof colors), fence + ledge + signboard,
+  tall-grass fringe, plain mat-center, extra storefronts, and an overall
+  10-15% desaturation so terrain sits behind the characters. Deliver the
+  sheet + crops and I extend the compositor to assemble proper houses,
+  fence yards, and place signs by doors.
+
+## Previous Claude Turn (v21.22 World Composition)
 
 - Coach's feedback on WP1: textures better, "but it doesn't have any sense of
   composure and coherence." Diagnosis: the tile SHEET was fine - the
