@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Badger Grapple Red — v21.5 Tile World</title>
+<style>
+html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#060608;color:#f4e9c9;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}#wrap{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:env(safe-area-inset-top) 6px calc(env(safe-area-inset-bottom) + 4px);background:#0a0b0e;gap:6px}#bezel{padding:0;background:transparent;border-radius:0;box-shadow:none;width:100%;display:flex;justify-content:center}#game{width:auto;height:auto;max-width:98vw;max-height:70vh;aspect-ratio:240/170;display:flex;align-items:center;justify-content:center;background:#000;margin:0 auto}canvas{width:100%!important;height:100%!important;display:block;image-rendering:pixelated;image-rendering:crisp-edges;border-radius:3px;box-shadow:0 0 0 2px #070707,0 0 0 4px #7d1017;aspect-ratio:240/170}.controls{width:min(100%,520px);display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-top:4px;align-items:center}.dpad{display:grid;grid-template-columns:46px 46px 46px;grid-template-rows:38px 38px 38px;gap:4px;justify-content:center}button{font:inherit;border:0;border-radius:8px;min-height:36px;font-weight:900;text-transform:uppercase;background:#d7bd80;color:#14100c;box-shadow:0 3px 0 rgba(0,0,0,.55);touch-action:manipulation}button:active{transform:translateY(2px);box-shadow:0 1px 0 rgba(0,0,0,.55)}.dark{background:#303746;color:white}.red{background:#a91420;color:white}.gold{background:#d6a336;color:#1a1200}.up{grid-column:2}.left{grid-column:1;grid-row:2}.aMid{grid-column:2;grid-row:2}.right{grid-column:3;grid-row:2}.down{grid-column:2;grid-row:3}.ab{display:grid;grid-template-columns:1fr 1fr;gap:8px}.ab button{border-radius:999px;min-height:46px}.menu{display:grid;gap:6px}#note{font-size:10px;text-align:center;color:#7d7364;margin-top:2px;min-height:12px}@media(max-width:720px){.controls{grid-template-columns:1fr;gap:6px}.menu{grid-template-columns:1fr 1fr}}
+#bootError{display:none;position:fixed;left:10px;right:10px;top:calc(env(safe-area-inset-top) + 10px);z-index:9999;background:#2b1111;color:#fff;border:2px solid #d6a336;border-radius:10px;padding:10px;font:12px/1.35 monospace;white-space:pre-wrap}</style>
+<script src="./vendor/phaser.min.js?v=215"></script>
+</head>
+<body>
+<div id="bootError"></div>
+<div id="wrap">
+  <div id="bezel"><div id="game"></div></div>
+  <div class="controls">
+    <div class="dpad"><button class="dark up" data-key="up">▲</button><button class="dark left" data-key="left">◀</button><button class="red aMid" data-key="a">A</button><button class="dark right" data-key="right">▶</button><button class="dark down" data-key="down">▼</button></div>
+    <div class="ab"><button class="red" data-key="a">A</button><button class="gold" data-key="b">B</button></div>
+    <div class="menu"><button class="dark" data-key="menu">Start</button><button class="dark" data-key="save">Save</button></div>
+  </div>
+  <div id="note">v21.5 Tile World</div>
+</div>
+<script type="module" src="./src/main.js?v=215"></script>
+</body>
+</html>

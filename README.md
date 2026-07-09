@@ -1,1 +1,61 @@
-# badger-grapple-red
+# Badger Grapple Red
+
+Badger Grapple Red is a source-first Phaser 3 wrestling RPG targeting a Game Boy Advance-era feel: compact maps, grid movement, visible encounters, trainer sight-lines, scripted captain battles, roster growth, local saves, and mobile-friendly controls.
+
+The source tree is now canonical. The old zip-only workflow was useful for deployment, but it is not a sustainable way to build a FireRed-quality game.
+
+## Current Build
+
+- Version: 21.5 Tile World
+- Runtime: Phaser 3 + Vite
+- Canvas: 240x170 logical pixels, pixel-art scaling
+- Content: 10 areas, 23 roster entries, 26 moves, 2 trainer NPCs, 3 captain battles
+- Save: browser localStorage with version normalization and an expansion flag seam
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+Before shipping a change:
+
+```bash
+npm run check
+```
+
+That runs content validation, balance simulation, and a production build.
+
+## Source Layout
+
+- `src/data/world.js`: authored area, exit, captain, and trainer data
+- `src/data/maps.js`: runtime map helpers, collision, grass, and interaction lookup
+- `src/data/roster.js`: wrestler roster, scaling, starter data, and XP helpers
+- `src/data/moves.js`: move catalog and style advantage rules
+- `src/scenes/`: Phaser scene flow
+- `src/systems/`: save, audio, and shared UI helpers
+- `public/assets/`: runtime PNG assets copied directly into production builds
+- `public/vendor/`: external Phaser runtime copied directly into production builds
+- `tools/validate.mjs`: content and reachability validator
+- `tools/balance_sim.mjs`: deterministic-ish campaign balance smoke test
+
+## Production Rules
+
+1. Source changes should happen in `src/`, `public/assets/`, and `tools/`, not inside an uploaded zip.
+2. Every new area needs validation coverage for exits, landing tiles, gates, captains, and trainers.
+3. Collision must keep matching visible art until the Tiled JSON pipeline replaces the code collision rules.
+4. Player-facing text should be ASCII unless the file already intentionally uses UTF-8 text.
+5. Run `npm run check` before deploying.
+
+## Next Pipeline Milestones
+
+1. Replace the remaining code collision rules with Tiled object layers.
+2. Add a script that imports Tiled JSON into `src/data/world.js` or a generated equivalent.
+3. Add Playwright smoke tests for title -> new game -> starter -> overworld -> trainer/battle.
+4. Add save migration fixtures before changing save shape again.
+5. Expand from the current vertical slice only after one 30-45 minute route feels polished end to end.
+
+## GitHub Pages
+
+The GitHub Actions workflow builds from source and deploys the generated `dist/` folder. Set Pages to GitHub Actions.

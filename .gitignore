@@ -1,1 +1,6 @@
 work/
+node_modules/
+.inspect/
+dist/
+*.log
+dist/.vite/
