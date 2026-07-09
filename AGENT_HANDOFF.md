@@ -6,6 +6,18 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 
 ## Latest Codex Turn
 
+- Confirmed GitHub Pages deployment delay was caused by GitHub Actions/Pages outage, not repo configuration.
+- Started a readability pass after the user reported overworld sprites and HUD text were too small/pixelated on phone.
+- Generated ChatGPT imagegen overworld source sheets for the player wrestler and coach NPC, saved them under `art/imagegen/`.
+- Added `tools/slice_imagegen_overworld_assets.py` to chroma-key and export exact 12-frame overworld sheets.
+- Increased overworld runtime sprite frames from 16x24 to 24x36 and updated `BootScene` spritesheet frame sizes.
+- Enlarged the overworld HUD top bar, lead wrestler text, HP/EP labels, prompt chip, and message box text.
+- Bumped the app/cache label to v21.7 Overworld Art.
+- Full `npm run check` passes.
+- Browser QA at a phone-sized viewport showed the bigger player/coach sprites and HUD rendering without console errors. The in-app browser DOM snapshot API failed, but screenshot/evaluate/log checks worked.
+
+## Previous Codex Turn
+
 - Used ChatGPT image generation for the creature art pass, per user direction.
 - Added the generated source sheet at `art/imagegen/wrestler_creature_sheet_2026-07-09.png` and the exact prompt at `art/imagegen/wrestler_creature_sheet_2026-07-09.prompt.md`.
 - Added `tools/slice_imagegen_creature_assets.py` to remove chroma green, slice the 5x3 imagegen sheet, and emit 96x96 runtime battle sprites, backs, and portraits.
@@ -14,7 +26,7 @@ The target is a FireRed-quality original game: comparable polish, pacing, readab
 - Added a test-only direct battle route for visual QA: `?test=1&scene=battle&starter=buckshot&enemyId=drillpartner&enemyLevel=5&battleType=spar`.
 - Updated smoke coverage to use the direct battle route.
 
-## Previous Codex Turn
+## Earlier Codex Turn
 
 - Reworked `ScoutScene` into a more framed, readable Scout Report screen with stronger GBA-style hierarchy: header, prospect card, rarity tag, stats, HP/EP meters, odds card, technique panel, and button-like action choices.
 - Added left/right navigation for the Scout Report options, matching the new horizontal action layout.

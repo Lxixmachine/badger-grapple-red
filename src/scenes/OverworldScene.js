@@ -9,7 +9,7 @@ const DIRS={down:{dx:0,dy:1,frame:1},left:{dx:-1,dy:0,frame:4},right:{dx:1,dy:0,
 const SOLIDS={};
 export class OverworldScene extends Phaser.Scene{
  constructor(){super('OverworldScene');}
- create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;this.cameras.main.setBackgroundColor('#000');this.bg=this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0);/* keep raw pixel colors; no tint pipeline on mobile */this.decor=this.add.container(0,0).setDepth(13);this.actors=this.add.container(0,0).setDepth(25);this.shadow=this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,13,5,0x000000,.34).setDepth(20);this.player=this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1);this.player.setScale(1);this.marker=this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:8,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80);this.cameras.main.startFollow(this.player,true,.11,.11);this.cameras.main.setBounds(0,0,448,224);this.cameras.main.setDeadzone(28,20);this.cameras.main.roundPixels=true;this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);this.hud=this.add.container(0,0).setScrollFactor(0).setDepth(100);this.drawDepthDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.cameras.main.fadeIn(140,0,0,0);setMuted(this.state.audioMuted);playMusic('overworld');}
+ create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;this.cameras.main.setBackgroundColor('#000');this.bg=this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0);/* keep raw pixel colors; no tint pipeline on mobile */this.decor=this.add.container(0,0).setDepth(13);this.actors=this.add.container(0,0).setDepth(25);this.shadow=this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20);this.player=this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1);this.player.setScale(1);this.marker=this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80);this.cameras.main.startFollow(this.player,true,.11,.11);this.cameras.main.setBounds(0,0,448,224);this.cameras.main.setDeadzone(28,20);this.cameras.main.roundPixels=true;this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);this.hud=this.add.container(0,0).setScrollFactor(0).setDepth(100);this.drawDepthDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.cameras.main.fadeIn(140,0,0,0);setMuted(this.state.audioMuted);playMusic('overworld');}
  okInput(){const now=this.time.now||performance.now();if(now-this.lastInputAt<95)return false;this.lastInputAt=now;return true;}
  handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.clearMessage();if(k==='menu')this.openMenu();if(k==='save')this.savePos('Saved.');}
  update(){this.updateDepths();this.updateMarker();this.updateNpcPatrols();if(this.moving)return;if(Phaser.Input.Keyboard.JustDown(this.cursors.left)||Phaser.Input.Keyboard.JustDown(this.keys.A))this.tryMove(-1,0,'left');if(Phaser.Input.Keyboard.JustDown(this.cursors.right)||Phaser.Input.Keyboard.JustDown(this.keys.D))this.tryMove(1,0,'right');if(Phaser.Input.Keyboard.JustDown(this.cursors.up)||Phaser.Input.Keyboard.JustDown(this.keys.W))this.tryMove(0,-1,'up');if(Phaser.Input.Keyboard.JustDown(this.cursors.down)||Phaser.Input.Keyboard.JustDown(this.keys.S))this.tryMove(0,1,'down');}
@@ -71,7 +71,7 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
  showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0).setDepth(180);const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(23,51,200,38,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(20,48,200,38,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(20,48,200,38,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(24,52,192,30,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(29,80,211,80);const t=this.add.text(120,55,title,{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(120,68,body,{fontFamily:'monospace',fontSize:6,color:'#111',align:'center',wordWrap:{width:176}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
  promptFor(ch){if(ch==='R')return 'A RECOVER';if(ch==='S')return 'A SHOP';if(ch==='C')return 'A BATTLE';if(ch==='g')return 'A SCOUT';if(ch==='M')return 'A SPAR';if(ch==='N')return 'A TALK';if(ch==='STATUE')return 'A READ';if(ch==='SCOUT_NPC')return 'A TALK';if(ch==='RECRUIT_NPC')return this.state.trainersDefeated?.campus_recruit?'A TALK':'A BATTLE';if(ch==='SAVE_NPC')return 'A TALK';if(ch==='BATTLE_NPC')return 'A TALK';if(ch==='RIVAL_NPC')return this.state.trainersDefeated?.campus_rival?'A TALK':'A BATTLE';if(ch==='STUDY_NPC')return 'A TALK';if(ch==='HIDDEN_TAPE'||ch==='HIDDEN_FILM'||ch==='HIDDEN_DRINK')return 'A CHECK';if(ch==='DOOR')return 'A DOOR';if(['WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(ch))return 'A CHECK';return '';}
  drawDepthDecor(){this.decor.removeAll(true);const add=(obj)=>this.decor.add(obj);if(this.area==='campus'){const g=this.add.graphics().setDepth(8);g.fillStyle(0xffffff,.05);g.fillEllipse(224,104,326,132);g.fillStyle(0x000000,.20);g.fillRect(0,0,448,8);g.fillRect(0,216,448,8);g.fillStyle(0x000000,.16);[[56,42,40,9],[350,42,54,9],[90,178,48,8],[298,176,52,8],[238,48,36,7]].forEach(r=>g.fillRoundedRect(...r,2));g.fillStyle(0xffffff,.055);[[62,44,30,2],[354,44,40,2],[96,180,36,2],[304,178,40,2]].forEach(r=>g.fillRect(...r));add(g);return;}if(this.area!=='fieldhouse')return;const light=this.add.graphics().setDepth(8);light.fillStyle(0xffffff,.045);light.fillEllipse(224,104,360,150);light.fillStyle(0x000000,.10);light.fillRect(0,0,448,8);light.fillRect(0,208,448,16);add(light);}
- addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null){const sx=this.worldX(x),sy=this.worldY(y);const sh=this.add.ellipse(sx,sy-2,12,4,0x000000,.28).setDepth(10);const npc=this.add.sprite(sx,sy,'npc',frame).setOrigin(.5,1).setDepth(20);npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};if(this.anims.exists(anim))npc.play(anim,true);this.actors.add(sh);this.actors.add(npc);this.npcList.push({npc,sh,t:0,route,i:0});return npc;}
+ addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null){const sx=this.worldX(x),sy=this.worldY(y);const sh=this.add.ellipse(sx,sy-2,17,6,0x000000,.28).setDepth(10);const npc=this.add.sprite(sx,sy,'npc',frame).setOrigin(.5,1).setDepth(20);npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};if(this.anims.exists(anim))npc.play(anim,true);this.actors.add(sh);this.actors.add(npc);this.npcList.push({npc,sh,t:0,route,i:0});return npc;}
  drawActors(){this.actors.removeAll(true);this.npcList=[];const a=areaFor(this.area);const cap=a.captain;if(cap){this.addNpc(cap.x,cap.y,1,'npc-idle-down','Captain: Prove it on the mat.');}if(this.area==='fieldhouse'){this.addNpc(4,4,1,'npc-idle-left','Coach: Recruit one more wrestler, then win a spar.',null);this.addNpc(19,6,4,'npc-idle-left','Manager: The Team Shop moved into its own building on Campus Quad.',null);this.addNpc(6,9,7,'npc-idle-left','Trainer: The Recovery Center is its own building on Campus Quad now.',null);this.addNpc(14,8,10,'npc-idle-down','Wrestler: Step onto the mat and press A to spar.',null);}if(this.area==='campus'){
   this.addNpc(5,5,1,'npc-idle-down','Scout: Tall grass hides recruitable wrestlers.',[[5,5],[6,5],[6,6],[5,6]]);
   this.addNpc(22,9,4,'npc-idle-left','Buckshot: Want to test yourself?',null);
@@ -84,7 +84,7 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
  updateNpcPatrols(){if(this.messageOpen||this.moving)return;const now=this.time.now||0;for(const e of this.npcList){if(!e.route||e.route.length<2)continue;if(now-e.t<1600)continue;e.t=now+Phaser.Math.Between(250,900);e.i=(e.i+1)%e.route.length;const [tx,ty]=e.route[e.i];const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);if(this.anims.exists('npc-idle-'+dir))e.npc.play('npc-idle-'+dir,true);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,60),ease:'Sine.easeInOut'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Sine.easeInOut'});}}
 
  updateDepths(){const py=this.player.y;this.player.setDepth(py);this.shadow.setDepth(py-1);for(const entry of this.npcList){entry.npc.setDepth(entry.npc.y);entry.sh.setDepth(entry.npc.y-1);}}
- updateMarker(){const kind=this.kindHere();this.marker.setVisible(['EXIT','R','S','C','g','M','N','STATUE','SCOUT_NPC','RECRUIT_NPC','SAVE_NPC','BATTLE_NPC','RIVAL_NPC','STUDY_NPC','HIDDEN_TAPE','HIDDEN_FILM','HIDDEN_DRINK','DOOR','WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(kind)&&!this.messageOpen);if(this.marker.visible){this.marker.setPosition(this.player.x,this.player.y-25+Math.sin((this.time.now||0)/180)*1.2);this.marker.setAlpha(.86+Math.sin((this.time.now||0)/160)*.12);}}
+ updateMarker(){const kind=this.kindHere();this.marker.setVisible(['EXIT','R','S','C','g','M','N','STATUE','SCOUT_NPC','RECRUIT_NPC','SAVE_NPC','BATTLE_NPC','RIVAL_NPC','STUDY_NPC','HIDDEN_TAPE','HIDDEN_FILM','HIDDEN_DRINK','DOOR','WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(kind)&&!this.messageOpen);if(this.marker.visible){this.marker.setPosition(this.player.x,this.player.y-35+Math.sin((this.time.now||0)/180)*1.2);this.marker.setAlpha(.86+Math.sin((this.time.now||0)/160)*.12);}}
 
  showAreaToast(name){
   if(this.areaToast){this.areaToast.destroy(true);}
@@ -102,40 +102,43 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
   this.hud.removeAll(true);
   const l=lead(this.state);
   const top=this.add.graphics().setScrollFactor(0);
-  top.fillStyle(0x000000,.22);top.fillRoundedRect(5,5,232,22,3);
-  top.fillStyle(0x151318,.78);top.fillRoundedRect(3,3,234,22,3);
+  top.fillStyle(0x000000,.22);top.fillRoundedRect(5,5,232,32,3);
+  top.fillStyle(0x151318,.84);top.fillRoundedRect(3,3,234,32,3);
   top.fillStyle(0x7b1d2a,.95);top.fillRect(5,5,230,2);
-  top.lineStyle(1,0x070707,1);top.strokeRoundedRect(3,3,234,22,3);
-  top.lineStyle(1,0xd6a336,.9);top.strokeRoundedRect(6,6,228,16,2);
+  top.lineStyle(1,0x070707,1);top.strokeRoundedRect(3,3,234,32,3);
+  top.lineStyle(1,0xd6a336,.9);top.strokeRoundedRect(6,6,228,26,2);
   top.fillStyle(0xfff2c7,.12);top.fillRect(8,8,224,1);
+  top.fillStyle(0x000000,.2);top.fillRect(7,18,226,1);
   this.hud.add(top);
-  this.hud.add(this.add.text(9,7,`${areaFor(this.area).name}`,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setScrollFactor(0));
-  this.hud.add(this.add.text(130,7,`GR ${this.state.grit} REP ${this.state.rep} ${this.state.day?.period||'Morning'}`,{fontFamily:'monospace',fontSize:6,color:'#f8f0d8'}).setScrollFactor(0));
+  this.hud.add(this.add.text(9,7,`${areaFor(this.area).name}`,{fontFamily:'monospace',fontSize:8,color:'#fff2c7',fontStyle:'bold'}).setScrollFactor(0));
+  this.hud.add(this.add.text(230,8,`GR ${this.state.grit}  REP ${this.state.rep}`,{fontFamily:'monospace',fontSize:7,color:'#f8f0d8',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
   if(l){
     const s=scaledStats(l.id,l.lvl);
-    this.hud.add(this.add.text(9,16,`${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:'monospace',fontSize:5,color:'#ffe28a',fontStyle:'bold'}).setScrollFactor(0));
-    this.hud.add(hpBar(this,63,17,48,4,l.hp/s.hp,0x55b867).setScrollFactor(0));
-    this.hud.add(hpBar(this,116,17,48,4,l.gas/s.gas,0x5aa4e6).setScrollFactor(0));
+    this.hud.add(this.add.text(9,21,`${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:'monospace',fontSize:7,color:'#ffe28a',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(this.add.text(67,21,'HP',{fontFamily:'monospace',fontSize:6,color:'#a8e0a3',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(hpBar(this,82,23,38,5,l.hp/s.hp,0x55b867).setScrollFactor(0));
+    this.hud.add(this.add.text(126,21,'EP',{fontFamily:'monospace',fontSize:6,color:'#a8d3ff',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(hpBar(this,141,23,38,5,l.gas/s.gas,0x5aa4e6).setScrollFactor(0));
   }
-  this.hud.add(this.add.text(171,16,this.objective(),{fontFamily:'monospace',fontSize:5,color:'#ffe28a',fontStyle:'bold',wordWrap:{width:61}}).setScrollFactor(0));
+  this.hud.add(this.add.text(184,21,this.objective(),{fontFamily:'monospace',fontSize:6,color:'#ffe28a',fontStyle:'bold',wordWrap:{width:47}}).setScrollFactor(0));
   this.updateMarker();
   if(this.messageOpen&&this.message){
-    const box=uiBox(this,5,108,230,48).setScrollFactor(0);
+    const box=uiBox(this,5,104,230,62).setScrollFactor(0);
     this.hud.add(box);
-    this.hud.add(this.add.text(14,116,this.message,{fontFamily:'monospace',fontSize:8,color:'#111',wordWrap:{width:210}}).setScrollFactor(0));
-    this.hud.add(this.add.text(207,144,'A',{fontFamily:'monospace',fontSize:8,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(this.add.text(14,113,this.message,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold',wordWrap:{width:210}}).setScrollFactor(0));
+    this.hud.add(this.add.text(211,153,'A',{fontFamily:'monospace',fontSize:9,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
   }else{
     const kind=this.kindHere();
     const prompt=this.promptFor(kind);
     if(prompt){
       const pg=this.add.graphics().setScrollFactor(0);
-      const width=Math.max(48,prompt.length*5+14);
+      const width=Math.max(56,prompt.length*6+16);
       const x=236-width;
-      pg.fillStyle(0x000000,.24);pg.fillRoundedRect(x+2,30,width,14,2);
-      pg.fillStyle(0x151318,.88);pg.fillRoundedRect(x,28,width,14,2);
-      pg.lineStyle(1,0xd6a336,.9);pg.strokeRoundedRect(x,28,width,14,2);
+      pg.fillStyle(0x000000,.24);pg.fillRoundedRect(x+2,40,width,16,2);
+      pg.fillStyle(0x151318,.9);pg.fillRoundedRect(x,38,width,16,2);
+      pg.lineStyle(1,0xd6a336,.9);pg.strokeRoundedRect(x,38,width,16,2);
       this.hud.add(pg);
-      this.hud.add(this.add.text(x+width-5,31,prompt,{fontFamily:'monospace',fontSize:5,color:'#ffe28a',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
+      this.hud.add(this.add.text(x+width-6,42,prompt,{fontFamily:'monospace',fontSize:6,color:'#ffe28a',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
     }
   }
  }
