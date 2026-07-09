@@ -12,6 +12,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "art" / "imagegen" / "terrain_tileset_wp1_r2_2026-07-09.png"
+TOWN_SOURCE = ROOT / "art" / "imagegen" / "terrain_town_anatomy_wp1_2_2026-07-09.png"
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
 TILE = 16
@@ -146,29 +147,74 @@ CROPS = {
     "arch": (781, 1045, 1018, 1190), "banner": (1055, 1045, 1192, 1190),
 }
 
+# WP1.2's compact 5x5 imagegen sheet. These are all deliberately large source
+# cells; the slicer owns the 16px runtime size and removes only chroma green.
+TOWN_CROPS = {
+    "quiet_grass": (40, 40, 247, 247), "worn_grass": (281, 40, 488, 247),
+    "tall_fringe": (523, 40, 730, 247), "fence": (766, 40, 974, 247),
+    "fence_post": (1008, 40, 1216, 247),
+    "ledge": (40, 282, 247, 489), "signboard": (281, 282, 488, 489),
+    "mat_plain": (523, 282, 730, 489), "red_ridge": (766, 282, 974, 489),
+    "red_eave": (1008, 282, 1216, 489),
+    "red_under_eave": (40, 525, 247, 732), "red_door": (281, 525, 488, 732),
+    "red_window": (523, 525, 730, 732), "red_corner": (766, 525, 974, 732),
+    "blue_ridge": (1008, 525, 1216, 732),
+    "blue_eave": (40, 767, 247, 976), "blue_under_eave": (281, 767, 488, 976),
+    "blue_door": (523, 767, 730, 976), "blue_window": (766, 767, 974, 976),
+    "blue_corner": (1008, 767, 1216, 976),
+    "store_red": (40, 1010, 247, 1216), "store_blue": (281, 1010, 488, 1216),
+    "store_neutral": (523, 1010, 730, 1216), "stone_step": (766, 1010, 974, 1216),
+    "quiet_grass_spare": (1008, 1010, 1216, 1216),
+}
+
 
 INTERIORS = {"fieldhouse", "studyhall", "shop", "recovery", "conference", "championship"}
 
 
+def normalize_image(tile):
+    """Chroma-key and quantize an imagegen crop without drawing new art."""
+    if tile.mode != "RGBA":
+        tile = tile.convert("RGBA")
+    # Remove only the source's flat chroma green. This preserves model-made
+    # transparent gutters without replacing or drawing any art pixels.
+    pixels = tile.get_flattened_data() if hasattr(tile, "get_flattened_data") else tile.getdata()
+    keyed = [
+        (r, g, b, 0) if r < 35 and g > 220 and b < 35 else (r, g, b, a)
+        for r, g, b, a in pixels
+    ]
+    tile.putdata(keyed)
+    # The source is already limited pixel art. Re-quantizing removes any
+    # model-introduced fringe colors without drawing or repainting art.
+    rgb = tile.convert("RGB").quantize(colors=32, method=Image.Quantize.MEDIANCUT).convert("RGBA")
+    rgb.putalpha(tile.getchannel("A"))
+    return rgb
+
+
+def load_source_tiles(source_path, crops):
+    source = Image.open(source_path).convert("RGBA")
+    return {
+        name: normalize_image(source.crop(box).resize((TILE, TILE), Image.Resampling.NEAREST))
+        for name, box in crops.items()
+    }
+
+
 def load_tiles():
-    source = Image.open(SOURCE).convert("RGBA")
-    tiles = {}
-    for name, box in CROPS.items():
-        tile = source.crop(box).resize((TILE, TILE), Image.Resampling.NEAREST)
-        # Remove only the source's flat chroma green. This preserves model-made
-        # transparent gutters without replacing or drawing any art pixels.
-        pixels = tile.get_flattened_data() if hasattr(tile, "get_flattened_data") else tile.getdata()
-        keyed = [
-            (r, g, b, 0) if r < 35 and g > 220 and b < 35 else (r, g, b, a)
-            for r, g, b, a in pixels
-        ]
-        tile.putdata(keyed)
-        # The source is already limited pixel art. Re-quantizing removes any
-        # model-introduced fringe colors without drawing or repainting art.
-        rgb = tile.convert("RGB").quantize(colors=32, method=Image.Quantize.MEDIANCUT).convert("RGBA")
-        rgb.putalpha(tile.getchannel("A"))
-        tiles[name] = rgb
+    if not SOURCE.exists() or not TOWN_SOURCE.exists():
+        missing = SOURCE if not SOURCE.exists() else TOWN_SOURCE
+        raise SystemExit(f"Missing imagegen source: {missing}")
+    tiles = load_source_tiles(SOURCE, CROPS)
+    tiles.update(load_source_tiles(TOWN_SOURCE, TOWN_CROPS))
     return tiles
+
+
+def load_props():
+    """Slice large one-off arena mats from the WP1.2 source sheet."""
+    source = Image.open(TOWN_SOURCE).convert("RGBA")
+    mat = TOWN_CROPS["mat_plain"]
+    return {
+        "fieldhouse_mat": normalize_image(source.crop(mat).resize((96, 96), Image.Resampling.NEAREST)),
+        "arena_mat": normalize_image(source.crop(mat).resize((80, 80), Image.Resampling.NEAREST)),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -194,6 +240,10 @@ def blocked(g, x, y):
 def paint(img, tiles, name, x, y):
     if 0 <= x < W and 0 <= y < H:
         img.alpha_composite(tiles[name], (x * TILE, y * TILE))
+
+
+def paint_prop(img, props, name, x, y):
+    img.alpha_composite(props[name], (x * TILE, y * TILE))
 
 def edge_pick(g, x, y, is_target, center, n, s_, e, w):
     """Pick an edged variant by which neighbors are NOT the target material."""
@@ -237,7 +287,7 @@ def water_mask(area, g):
         return set()
     return {(x, y) for y in range(H) for x in range(W) if g[y][x] == "#"}
 
-def compose(area, tiles):
+def compose(area, tiles, props):
     g = grid(area)
     rng = random.Random(f"wp1-{area}")
     img = Image.new("RGBA", SIZE, (0, 0, 0, 255))
@@ -257,19 +307,16 @@ def compose(area, tiles):
             elif area == "lakeshore":
                 # grassy park with a sand beach ribbon hugging the water
                 near_water = any((x + dx, y + dy) in water for dx in (-1, 0, 1) for dy in (-1, 0, 1))
-                paint(img, tiles, "path" if near_water else ("grass1" if rng.random() < 0.10 else "grass0"), x, y)
+                paint(img, tiles, "path" if near_water else ("worn_grass" if rng.random() < 0.10 else "quiet_grass"), x, y)
             else:
                 # FireRed towns keep ~90% of ground one quiet tile; the variant
                 # is a sparse accent, not a checkerboard.
-                paint(img, tiles, "grass1" if rng.random() < 0.10 else "grass0", x, y)
+                paint(img, tiles, "worn_grass" if rng.random() < 0.10 else "quiet_grass", x, y)
 
     # ---- pass 2: paths, mostly plain; a single fence line on the south edge
     # of east-west walks (FireRed garden convention), never both sides ----
     for (x, y) in paths:
-        south_open = not in_path(x, y + 1) and not blocked(g, x, y + 1)
-        east_west = in_path(x - 1, y) or in_path(x + 1, y)
-        name = "path_s" if (south_open and east_west) else "path"
-        paint(img, tiles, name, x, y)
+        paint(img, tiles, "path", x, y)
 
     # ---- pass 3: water with shoreline edges ----
     for (x, y) in water:
@@ -282,7 +329,11 @@ def compose(area, tiles):
         for x in range(W):
             mark = g[y][x]
             if mark == "g":
-                paint(img, tiles, "tall", x, y)
+                # Only g cells receive tall grass. The softer fringe is used on
+                # its perimeter so encounter rectangles read as planted lawns.
+                tall_neighbor = lambda nx, ny: 0 <= nx < W and 0 <= ny < H and g[ny][nx] == "g"
+                edge = any(not tall_neighbor(x + dx, y + dy) for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)))
+                paint(img, tiles, "tall_fringe" if edge else "tall", x, y)
             elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
                 r = rng.random()
                 if area != "downtown":
@@ -295,22 +346,26 @@ def compose(area, tiles):
 
     # ---- pass 5: blocked dressing ----
     if area == "downtown":
-        # storefront strips: 4-tile shop units, consistent roof per unit,
-        # facade row faces the street.
+        # storefront strips: colored multi-tile facades face the street while
+        # layered roof rows keep each shop unit structurally legible.
         for band, facade_row, roof_rows in ((range(1, 5), 4, range(1, 4)), (range(10, 13), 10, range(11, 13))):
             for y in roof_rows:
                 for x in range(4, 24):
                     if g[y][x] == "#":
-                        paint(img, tiles, ("roof_red", "roof_blue", "roof_neutral")[(x // 4) % 3], x, y)
+                        palette = ("red_ridge", "blue_ridge", "roof_neutral")[(x // 4) % 3]
+                        paint(img, tiles, palette, x, y)
             for x in range(4, 24):
                 if g[facade_row][x] == "#":
-                    unit = x % 4
-                    paint(img, tiles, "storefront" if unit in (0, 3) else ("door" if unit == 2 else "window"), x, facade_row)
+                    paint(img, tiles, ("store_red", "store_blue", "store_neutral")[(x // 4) % 3], x, facade_row)
         # curbs where sidewalk meets the vertical map edges
         for y in range(1, 13):
             for x in (0, 27):
                 if g[y][x] != "#":
                     paint(img, tiles, "curb", x, y)
+        # A south-facing ledge contains the north edge of town without adding
+        # a second fence or a new collision rule.
+        for x in range(1, 27):
+            paint(img, tiles, "ledge", x, 0)
     elif interior:
         for y in range(H):
             for x in range(W):
@@ -322,17 +377,39 @@ def compose(area, tiles):
     # campus blocked dressing happens below (buildings + assembled trees)
 
     if area == "campus":
-        # buildings first: shop (8-10,1-2), recovery (17-19,1-2), study hall (21-27,1-4)
-        for (bx0, bx1, by0, by1, roof) in ((8, 10, 1, 2, "roof_red"), (17, 19, 1, 2, "roof_blue"), (21, 27, 1, 4, "roof_neutral")):
+        # Buildings are constrained to their existing collision footprints:
+        # red shop, blue recovery, then the larger blue Study Hall. Doors live
+        # exactly on the prescribed exit cells, never on an invented tile.
+        for (bx0, bx1, by0, by1, ridge, eave, under, window, corner) in ((8, 10, 1, 2, "red_ridge", "red_eave", "red_under_eave", "red_window", "red_corner"), (17, 19, 1, 2, "blue_ridge", "blue_eave", "blue_under_eave", "blue_window", "blue_corner"), (21, 27, 1, 3, "blue_ridge", "blue_eave", "blue_under_eave", "blue_window", "blue_corner")):
             for y in range(by0, by1 + 1):
                 for x in range(bx0, bx1 + 1):
                     if g[y][x] != "#":
                         continue
-                    paint(img, tiles, roof if y < by1 else "wall", x, y)
+                    if y == by0:
+                        paint(img, tiles, ridge if x == (bx0 + bx1) // 2 else eave, x, y)
+                    elif x == bx0 or x == bx1:
+                        paint(img, tiles, corner, x, y)
+                    elif (x + y) % 2:
+                        paint(img, tiles, window, x, y)
+                    else:
+                        paint(img, tiles, under, x, y)
         # doors on the buildings at their true exit-adjacent gaps
-        paint(img, tiles, "door", 9, 2)
-        paint(img, tiles, "door", 18, 2)
-        paint(img, tiles, "door", 23, 4)
+        paint(img, tiles, "red_door", 9, 3)
+        paint(img, tiles, "blue_door", 18, 3)
+        paint(img, tiles, "blue_door", 23, 3)
+        paint(img, tiles, "stone_step", 9, 4)
+        paint(img, tiles, "stone_step", 18, 4)
+        paint(img, tiles, "stone_step", 23, 4)
+        # Signs sit on nearby blocked wall tiles, keeping the new art honest
+        # to collision while giving each important door a readable marker.
+        paint(img, tiles, "signboard", 8, 2)
+        paint(img, tiles, "signboard", 17, 2)
+        paint(img, tiles, "signboard", 22, 3)
+        # One fence frames the campus practice yard and remains on blocked turf.
+        for x in range(4, 7):
+            paint(img, tiles, "fence", x, 7)
+        paint(img, tiles, "fence_post", 3, 7)
+        paint(img, tiles, "fence_post", 7, 7)
         # statue landmark at (14,7)
         paint(img, tiles, "statue", 14, 7)
 
@@ -366,10 +443,9 @@ def compose(area, tiles):
 
     # ---- pass 6: fixtures over collision blocks (art matches collision) ----
     if area == "fieldhouse":
-        for y in range(3, 9):        # the wrestling mat under the SPAR zone
-            for x in range(9, 18):
-                on_edge = x in (9, 17) or y in (3, 8)
-                paint(img, tiles, "mat_edge" if on_edge else "mat", x, y)
+        # One source-derived mat, never a tiled logo. It sits over the
+        # existing SPAR zone, which stays fully walkable by design.
+        paint_prop(img, props, "fieldhouse_mat", 10, 3)
         for x in range(1, 4):        # coach desk
             paint(img, tiles, "table", x, 2); paint(img, tiles, "table", x, 3)
         for x in range(21, 25):      # lockers
@@ -385,10 +461,7 @@ def compose(area, tiles):
             paint(img, tiles, "cot" if area == "recovery" else "counter", x, 6)
     if area in {"conference", "championship"}:
         cx = 14 if area == "conference" else 15
-        for y in range(4, 9):        # center stage mat
-            for x in range(cx - 5, cx + 6):
-                on_edge = x in (cx - 5, cx + 5) or y in (4, 8)
-                paint(img, tiles, "mat_edge" if on_edge else "mat", x, y)
+        paint_prop(img, props, "arena_mat", cx - 2, 4)
         for x in range(3, 25, 6):    # banners on the back wall
             paint(img, tiles, "banner", x, 0)
         if area == "championship":
@@ -407,7 +480,7 @@ def compose(area, tiles):
     return img.convert("RGB")
 
 def save_tilesheet(tiles):
-    names = list(CROPS)
+    names = [*CROPS, *TOWN_CROPS]
     cols = 10
     rows = (len(names) + cols - 1) // cols
     sheet = Image.new("RGBA", (cols * TILE, rows * TILE), (0, 0, 0, 255))
@@ -417,14 +490,13 @@ def save_tilesheet(tiles):
 
 
 def main():
-    if not SOURCE.exists():
-        raise SystemExit(f"Missing imagegen source: {SOURCE}")
     UI_OUT.mkdir(parents=True, exist_ok=True)
     TILES_OUT.parent.mkdir(parents=True, exist_ok=True)
     tiles = load_tiles()
+    props = load_props()
     save_tilesheet(tiles)
     for area in MAPS:
-        compose(area, tiles).save(UI_OUT / f"area_{area}.png")
+        compose(area, tiles, props).save(UI_OUT / f"area_{area}.png")
 
 
 if __name__ == "__main__":

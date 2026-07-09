@@ -4,6 +4,18 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
+## Latest Codex Turn (v21.24 WP1.2 Town Kit)
+
+- Executed WP1.2 from `VISUAL_OVERHAUL_GUIDE.md` using only ChatGPT image generation source art.
+- Added the committed source and exact prompt:
+  - `art/imagegen/terrain_town_anatomy_wp1_2_2026-07-09.png`
+  - `art/imagegen/terrain_town_anatomy_wp1_2_2026-07-09.prompt.md`
+- Extended `tools/build_wp1_terrain.py` with an explicit 5x5 crop contract for quiet/worn grass, tall-grass fringe, fence and post, ledge, blank signboard, a source-derived arena mat, red/blue layered house pieces, three storefront facades, and stone steps.
+- The compositor now uses those crops for the quiet outdoor base, softer grass edges, Campus buildings/doorsteps/signs/fence yard, Downtown shop facades plus north ledge, and one-off Field House/arena mats. No map geometry or collision changed.
+- Bumped runtime art cache to v227 and all user-visible/version-test labels to `21.24-town-kit`.
+- QA passed: `npm run check` (validator, balance simulation, production build, 8 Chromium flows) and phone browser QA at 390x844. Runtime canvas is 320x224, version label is correct, and console errors are empty.
+- Note for Claude: WP1.2 is fully wired and needs no engine work. Preserve the crop coordinates and source-only art rule when refining town composition. WP2 character archetypes is next unless Coach redirects.
+
 ## Latest Claude Turn (v21.23 Town Anatomy)
 
 - Coach pointed at a FireRed town map (spriters-resource asset 3771) vs
