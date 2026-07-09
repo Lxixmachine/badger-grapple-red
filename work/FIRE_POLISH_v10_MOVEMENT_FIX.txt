@@ -1,0 +1,11 @@
+Badger Grapple Red — v10.0 movement fix
+
+Fixes based on phone test screenshots:
+- Player would not reliably face left: rebuilt player_walk.png left row (frames 3-5) from mirrored right row (frames 6-8).
+- NPC walk sheet receives the same row-order correction.
+- Player sometimes appeared to float: OverworldScene now uses origin (0.5, 1) and places feet at tile bottom via y*TILE+32.
+- Pressing into a blocked tile now changes facing direction before showing the blocked message.
+- Cache-busting advanced to ?v=100.
+- Visible proof text: FIELD HOUSE • v10.0 MOVEMENT FIX and Engine v10.0 movement fix live.
+
+Deployment: upload this zip to the repo as badger-grapple-red-engine-v2-github-ready.zip, replacing the previous zip.

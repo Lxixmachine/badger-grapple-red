@@ -1,0 +1,36 @@
+Badger Grapple Red — v20.6 All Areas Repainted
+
+Completes the environment art pass — all 7 painted area backgrounds now
+use the same procedural shading pipeline as Field House/Campus Quad
+(v20.4): multi-tone gradients, dithering, directional texture.
+
+- area_lakeshore.png: a real lake (water shading with wave highlights)
+  placed exactly on the actual blocked water-collision zone (px 272-448,
+  32-112 — checked against isBlocked before painting, not guessed), tall
+  grass matching the real isGrass zone, a small dock/sand edge.
+- area_downtown.png: building facades (shop + apartment style, alternating)
+  lining both sides of a paved street corridor with lane markings and
+  sidewalk texture, matching downtown's actual "buildings top and bottom,
+  walkway through the middle" collision layout exactly.
+- area_river.png: a forest mass (layered tree-cluster shading) placed on
+  the real blocked forest zone, a decorative river placed only in the
+  guaranteed-always-blocked border row (so it can't create a visual/
+  collision mismatch), matching tall grass zone.
+- area_conference.png / area_championship.png: proper arena interiors —
+  bleacher bands top and bottom, a larger shaded ring/mat, and venue
+  banners ("CONFERENCE" / "CHAMPIONSHIP") — these are the first and
+  final gym-badge battle locations, so they're built to feel like a
+  bigger stage than Field House rather than reusing the same room.
+
+Every element in every scene was checked against the actual isBlocked /
+isGrass pixel math from src/data/maps.js before placement — same
+discipline as the Field House mat fix last round, applied proactively
+this time instead of caught after the fact.
+
+VERIFIED: all 5 new files confirmed 448x224 before packaging. Reached
+Lakeshore, River Trail, and Conference Arena by literally clicking
+through the real navigation path in a live headless browser (Field
+House -> door -> Campus Quad -> real exit tiles), not by placing files
+and assuming — zero console errors on every screen.
+
+Cache: ?v=206. Proof: title/note reads "v20.6 All Areas Repainted".

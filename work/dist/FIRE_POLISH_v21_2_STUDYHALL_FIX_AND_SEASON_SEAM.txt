@@ -1,0 +1,36 @@
+Badger Grapple Red — v21.2 Study Hall Fix + Season Two Seam
+
+BUGS FIXED:
+1. STUDY HALL WAS SEALED (regression from the v21.x campus building work).
+   The building collision block (x21-27, y1-4) left a door gap only at the
+   exit tile (23,2) itself — every adjacent tile was solid, so the door was
+   unreachable, and the Study Hall -> Campus warp landed the player INSIDE
+   the wall at (23,3), creating a stuck warp loop. Fix: door column x=23
+   is now open for y=2..4, matching the Shop/Recovery door convention
+   (door gap + walkable approach + walkable landing).
+
+GUARDRAILS ADDED:
+2. tools/validate.mjs now BFS-tests EVERY area: every exit must be
+   reachable from the area spawn, every warp landing tile must be
+   walkable, and every captain must be approachable. A sealed door can
+   no longer pass validation. (This validator would have caught bug #1.)
+
+SEASON TWO SEAM (per ROADMAP_SEASON_ONE.md):
+3. Save schema: defaultState() and normalizeState() now carry
+   expansion:{unlocked:false,flags:{}}. Existing phone saves migrate
+   cleanly (verified: party/badges/area/items preserved, seam added).
+   Season Two content can key off this block with zero future migration.
+
+HOUSEKEEPING:
+4. Repo hygiene: the top-level src/, assets/, vendor/, tools/, index.html
+   were a STALE ~v19 tree while dist/ carried the real game (dist had
+   audio.js, 10 areas, shop/recovery; top-level had 8 areas and old
+   collision). Top-level trees are now an exact mirror of dist/ so no
+   future session can accidentally "mirror" the stale tree over the live
+   game. Rule going forward: dist/ is truth; edit dist/, then mirror out.
+5. window.BADGER_VERSION label updated (was stale '20.0').
+
+No balance, roster, move, or art changes. Sims unaffected.
+
+Cache: ?v=212. Proof: under-canvas note reads "v21.2 Study Hall Fix".
+Deploy: replace repo zip, push, GitHub Action publishes dist/, hard-refresh.

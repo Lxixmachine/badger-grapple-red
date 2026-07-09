@@ -1,0 +1,83 @@
+Badger Grapple Red — v20.0 Campaign Restoration
+
+WHAT CHANGED (systems only — zero new art, zero new map coordinates,
+zero changes to any painted background, existing NPC placement/dialogue
+preserved verbatim except two NPCs now trigger real battles):
+
+1. ROSTER: 8 -> 23 wrestlers. All 8 original entries kept at their exact
+   original stats/moves (no rebalancing of what already existed). Added:
+   evolution chains for the 3 starters and 3 commons (evolve at Lv10-14
+   depending on line), 2 new dedicated gym-boss entries (The Funk Doctor
+   for Scramble, The Anchor for Top), plus wild-variety recruits. All new
+   entries reuse the 5 existing battle sprite sheets via tint, same as
+   the originals — no new art required.
+
+2. MOVES: 15 -> 26, filling out every style with a cheap-accurate,
+   mid-power, and high-risk option.
+
+3. REAL BADGE LADDER: the Championship gym leader was a second copy of
+   Captain Neutral awarding the same badge (a no-op fight). It's now a
+   distinct Top-style boss ("The Anchor") awarding a real Top Badge.
+   River Trail gained its own gym leader ("The Funk Doctor", Scramble
+   style) at a mathematically-verified-safe, previously-empty tile
+   (24,9) — confirmed open and non-grass against the exact isBlocked/
+   isGrass formulas already in the code, so no collision risk. The
+   River -> Championship corridor is now gated: it requires both the
+   Neutral and Scramble badges, so the three gyms form a real sequence
+   (Conference -> River -> Championship) instead of three unconnected
+   fights.
+
+4. MULTI-WRESTLER BATTLES: gym leaders and trainers now field real
+   2-3 wrestler teams (BattleScene supports enemy teams; on KO it
+   announces the next wrestler and continues). Previously every fight,
+   including "gym leaders," was a single wrestler.
+
+5. TRAINER BATTLES: two NPCs on Campus Quad already had challenge
+   dialogue that did nothing ("Buckshot: Want to test yourself?" just
+   triggered a random wild encounter; the Rival NPC only showed flavor
+   text). Both now trigger real one-time trainer battles with their own
+   teams and Grit/Rep rewards, using their EXISTING coordinates — no new
+   interaction zones were added. Defeated trainers persist (state.
+   trainersDefeated) and show a "beaten" line on re-approach instead of
+   refighting.
+
+6. FAINT HANDLING: previously any single loss (lead wrestler's HP hits
+   0) ended the whole battle as a loss, even with 5 healthy wrestlers
+   still in the box. Now: if any party member is still healthy, you're
+   forced into the WRESTLER menu to send in the next one (free, no
+   extra hit taken) and the fight continues. Only a fully-wiped party
+   is a loss. Voluntary mid-battle swaps (not forced by a faint) now
+   correctly cost your turn, matching genre convention.
+
+7. MID-BATTLE RECRUITING: the BAG "RECRUIT FLYER" item was a no-op
+   ("Save flyers for recruiting."). It now actually attempts a catch
+   on the current wild wrestler, with odds that improve as you weaken
+   them — the classic "weaken then catch" loop. Pre-battle scouting
+   (Scout Report screen) and the post-win invite screen both still
+   work exactly as before; this adds a third option rather than
+   replacing anything.
+
+8. SAVES: added state.trainersDefeated (defaults to {}, merges
+   cleanly for existing saves — normalizeState migrates old saves
+   with no data loss).
+
+WHAT DELIBERATELY DIDN'T CHANGE: painted area art, tile/sprite assets,
+collision zones (isBlocked/spotKind) for Field House/Campus Quad/Study
+Hall/Lakeshore/Downtown, the opening objective loop and its dialogue,
+NPC patrol routes, hidden items, the day/period practice system, save
+key, UI look (240x170 canvas, same fonts/box styles).
+
+VERIFIED BEFORE SHIPPING:
+- tools/validate.mjs: every move/roster/area/trainer cross-reference
+  checked programmatically (all valid).
+- tools/balance_sim.mjs: Monte Carlo combat sim (300 trials/scenario)
+  using the exact damage formula from BattleScene. Results: Conference
+  gym is a real wall below Lv9 (~10-25% win rate) and clears reliably
+  right around the first evolution at Lv10 (~83%) — intentional, mirrors
+  genre pacing. River and Championship both require a real party (a
+  solo wrestler underperforms a 2-3 wrestler team by 20-40 points of
+  win rate at the same total level budget), which was the actual goal
+  of restoring multi-wrestler teams and faint-based swapping.
+- node --check on every modified file.
+
+Cache: ?v=200. Proof: title screen reads "CAMPAIGN v20.0".

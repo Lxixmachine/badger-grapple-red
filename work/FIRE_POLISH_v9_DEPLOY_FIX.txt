@@ -1,0 +1,15 @@
+Badger Grapple Red — Fire Polish v9.0 Deploy Fix
+
+What this fixes:
+- The prior GitHub Pages build could still load stale v7 code because dist/index.html pointed to ./src_v7_0/main.js.
+- This package points both root index.html and dist/index.html to ./src/main.js?v=90.
+- dist/src has been replaced with the approved-art source.
+- assets and dist/assets match.
+
+Verification on phone:
+- Title banner should say APPROVED ART PASS v9.0.
+- Bottom note should say Engine v9.0 approved art live.
+- Overworld HUD should say FIELD HOUSE • v9.0 APPROVED ART.
+
+Deploy rule:
+Upload the contents of this folder to the GitHub Pages repo root. Do not upload this folder as a nested folder.

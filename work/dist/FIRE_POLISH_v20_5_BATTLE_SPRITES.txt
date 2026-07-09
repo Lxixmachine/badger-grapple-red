@@ -1,0 +1,39 @@
+Badger Grapple Red — v20.5 Battle Sprites Repaint
+
+Repainted all 10 battle sprite files (5 archetypes x front/back) with the
+same procedural shading pipeline used for the area backgrounds: multi-tone
+value gradients (not flat fills), defined limbs/torso/headgear/hair,
+per-archetype build variation (Top is broader-shouldered, Scramble is
+leaner and more crouched, matching their in-game styles).
+
+TECHNICAL CONSTRAINT HANDLED: this game tints wrestler sprites at runtime
+per roster entry (Phaser's multiplicative setTint — e.g. Bucky Shotmaker
+renders as base art x red, an evolved form renders as the SAME base art x
+a different color). That means the garment region has to be painted
+near-white/gray so the tint produces correct color rather than mud, and
+shading has to be done via VALUE (light/dark), not hue — colored shading
+would fight the tint system. Verified this holds up correctly by rendering
+the same sprite under multiple different real in-game tint values before
+shipping (not just checking it once in isolation).
+
+HONEST ASSESSMENT — this is the category where the procedural approach is
+weakest, and I want to be direct about that rather than oversell it.
+Environment art (tiles, buildings, props) is naturally forgiving of
+geometric abstraction — a shaded rectangle reads fine as "a table."
+Character art has a much higher bar: a set of shaded ellipses needs to
+read as a specific, recognizable athletic pose, and hand/AI-illustrated
+art has an intentionality (exact proportion choices, silhouette read)
+that procedural composition doesn't have. What shipped here is a real,
+verified technical improvement — actual shading gradients and more
+anatomical structure (headgear, hair, defined limbs) where there was
+flat single-tone geometry before — but it's closer to the ceiling of
+what this technique can do than the environment art was. If it doesn't
+clear the bar on review, character sprites are the strongest candidate
+for revisiting with a different approach later.
+
+Verified: all 10 files confirmed 96x96 before packaging, two separate
+live in-battle screenshots (different archetypes, different tint colors)
+via real button-click navigation through the actual boot flow, zero
+console errors both times.
+
+Cache: ?v=205. Proof: title/note reads "v20.5 Battle Sprites Repaint".

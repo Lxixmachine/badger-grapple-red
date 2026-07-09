@@ -1,0 +1,13 @@
+Badger Grapple Red — Fire Polish v4 OBVIOUS SCREEN PASS
+
+This pass intentionally changes the whole screen read, not just individual tiles. Replaced all art in assets/ and dist/assets/ and patched the scenes to display title art and use cache-busted asset URLs.
+
+Key deltas:
+- TitleScene now renders title_bg as a full-screen keyart backdrop instead of flat rectangles.
+- BootScene loads every visual asset with ?v=70 to defeat browser/GitHub Pages image cache.
+- fieldhouse_scene rebuilt as a high-contrast composed arena: wall panels, banners, scout route islands, lockers, benches, large center mat, and station cards.
+- battle_arena rebuilt as a dramatic gym/mat perspective with crowd pixels, scoreboards, spotlights, and higher contrast.
+- battle sprites enlarged slightly inside their exact 96x96 contract for stronger phone readability.
+- Exact sprite/tile contracts preserved: tiles 256x64 / 32x32, walk sheets 96x192 / 32x48, battle sprites 96x96, logo 256x128.
+
+Optional tileFrames proposal remains: {'~':9, 'Y':10, 'B':11, 'b':12, ',':13, 'f':14, 'i':15}

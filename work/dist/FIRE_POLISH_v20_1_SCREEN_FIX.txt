@@ -1,0 +1,49 @@
+Badger Grapple Red — v20.1 Screen Fix
+
+DIAGNOSIS (measured, not guessed — rendered the live site headlessly at
+real phone dimensions and inspected the actual DOM box):
+
+1. Every frame was distorted 6.2% off-square. The Phaser canvas renders
+   at its native 240x170 resolution (aspect 1.4118), but the page CSS
+   forced `aspect-ratio: 3/2` (1.5) onto the canvas element. The browser
+   stretched the pixel-art bitmap non-uniformly to fill that mismatched
+   box, so no tile, sprite, or character was ever displaying at its
+   correct proportions — pixels were rectangles, not squares.
+
+2. The playable game only occupied ~28% of the actual screen on a real
+   phone viewport (measured at 390x844: canvas rendered at 374x250 CSS
+   px). The rest was a decorative "console bezel" — a large radial
+   gradient background, thick rounded-corner shadow frame, and a
+   roomy control pad — that pushed the actual game into a small
+   letterboxed strip. This is very likely why it read as a tech demo
+   rather than a real game: the thing you came to look at was a minority
+   of the screen.
+
+FIX:
+- Canvas sizing now derives from a wrapper (`#game`) with the CORRECT
+  `aspect-ratio:240/170` and both `max-width:98vw` and `max-height:70vh`,
+  so the browser computes true containment with zero distortion — verified
+  programmatically: rendered aspect now matches native exactly (1.4118).
+- Removed the heavy gradient bezel, thick box-shadows, and oversized
+  control pad spacing. Buttons are still comfortably tappable (36-46px
+  targets) but no longer eat a disproportionate share of the screen.
+- Chrome around the canvas is now a plain dark background instead of a
+  faux-console shell, so the game reads as the app rather than a toy
+  floating inside a bigger toy.
+
+HONEST LIMIT: the canvas is natively landscape-shaped (240x170, ~1.41:1).
+On a portrait phone screen (~0.46:1), a huge amount of vertical space is
+unavoidably outside a landscape rectangle no matter how tight the CSS
+gets — this fix took screen coverage from ~28% to ~31%, which is close
+to the ceiling for THIS aspect ratio at THIS screen width. Filling
+meaningfully more of a portrait phone would require redesigning the
+game's native resolution to a taller aspect ratio — a real architecture
+change (camera bounds, area background art dimensions, and HUD layout
+would all need rework), not a CSS fix. Flagging this as a separate,
+bigger decision rather than bundling it into this patch.
+
+Verified via headless Chromium at 390x844 (iPhone-class viewport) before
+and after: distortion eliminated (1.4118 rendered aspect, exact match),
+zero console errors, canvas boots and renders identically otherwise.
+
+Cache: ?v=201. Proof: note reads "v20.1 Screen Fix".

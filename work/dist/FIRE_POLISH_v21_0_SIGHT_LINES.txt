@@ -1,0 +1,44 @@
+Badger Grapple Red — v21.0 Trainer Sight-Lines
+
+The first of two structural gameplay items identified as bigger moves
+toward FireRed comparability than another art pass (the other being
+discrete building interiors, which is a much larger undertaking and
+deliberately not attempted in this pass).
+
+WHAT CHANGED: Campus Quad's two real trainers (Buckshot, Rex) now use
+FireRed's classic sentry convention — a fixed position, a facing
+direction, and a straight-line sight range (5 tiles) that auto-triggers
+a battle the moment you walk into it, with a "!" alert and a distinct
+"spotted" line different from their approach-triggered dialogue. Walking
+up and pressing A still works too, for approaching from outside their
+sight cone. Line-of-sight respects collision (an obstacle between you
+and the trainer blocks detection, same as a real wall would).
+
+This required making the two trainers stationary — they previously
+patrolled a small 4-tile loop, which would have meant their facing
+direction (and therefore sight cone) changed constantly. Kept patrol
+routes on the three flavor-only NPCs (Scout, Manager, Student) since
+those aren't battle triggers and the ambiguity doesn't matter for them.
+
+VERIFICATION — this one actually caught two of my own test mistakes
+before shipping, worth being honest about:
+1. First full click-driven test succeeded (sightLocked became true at
+   the exact right tile, transitioned cleanly to BattleScene).
+2. A follow-up test with slightly different click timing appeared to
+   fail — looked like a real bug. It wasn't: it was click-cadence
+   flakiness against the existing 95ms input throttle, confirmed by
+   re-running the exact same movement sequence with explicit per-step
+   state logging, which reproduced the correct trigger deterministically
+   at (20,9). Chasing a phantom bug here would have wasted time fixing
+   test flakiness as if it were product flakiness.
+2. To get a clean, timing-independent read on the actual logic (spot
+   correctly / correctly skip when already defeated), drove scene state
+   directly rather than trusting click timing: confirmed sightLocked
+   becomes true against an undefeated trainer and stays false against
+   a defeated one, in the same session, isolating the real behavior
+   from any movement-animation timing.
+3. Confirmed the manual walk-up-and-press-A fallback still works,
+   approaching from an angle outside the sight cone.
+Zero console errors across every run.
+
+Cache: ?v=210. Proof: title/note reads "v21.0 Trainer Sight-Lines".

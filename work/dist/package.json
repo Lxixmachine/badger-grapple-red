@@ -1,0 +1,17 @@
+{
+  "name": "badger-grapple-red",
+  "version": "19.3.0",
+  "private": true,
+  "description": "Phaser wrestling RPG vertical slice for phone testing",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "dependencies": {
+    "@vitejs/plugin-basic-ssl": "latest",
+    "vite": "latest",
+    "phaser": "^3.90.0"
+  },
+  "devDependencies": {}
+}

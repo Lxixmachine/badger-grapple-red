@@ -1,0 +1,53 @@
+Badger Grapple Red — v20.4 Repainted Field House + Campus Quad
+
+Built directly, no external art tool — I don't have a generative image AI
+(no DALL-E/Midjourney access in this environment), so this is procedural
+pixel art: real shading algorithms written in Python/PIL implementing the
+specific techniques identified from the FireRed reference screenshots
+(multi-tone gradient fills, dithered tone transitions, directional grass
+texture, wood grain, cylindrical shading on rounded objects like the
+punching bag). Being upfront: this is a real, meaningful step toward that
+bar using an honest technique, not a claim of matching hand/AI-illustrated
+art parity in one pass.
+
+IMPORTANT CORRECTION FIRST: the previous art brief flagged
+`assets/tiles/fieldhouse_tiles.png` as the highest-priority file to
+repaint. That was wrong — I checked, and that file is loaded but never
+actually drawn anywhere in the current engine (the overworld renders
+entirely from the 7 painted `area_*.png` scene files, not tile assembly).
+Repainting it would have been wasted effort. Redirected to the files that
+are actually rendered.
+
+WHAT CHANGED:
+- assets/ui/area_fieldhouse.png: repainted. Wood floor with grain and
+  plank seams, dithered padded walls, a real gradient-shaded wrestling
+  mat, shaded 4-locker bank, coach desk with props, potted plants with
+  layered leaf clusters, a punching bag with cylindrical shading, a
+  weight machine, shop counter, recovery table, meeting table+bench,
+  weight-room floor mats, and two banners with actual readable text
+  ("ON WISCONSIN" / "WORK HARD" — previously blank).
+- assets/ui/area_campus.png: repainted. Multi-tone shaded lawn, a
+  tree-lined perimeter, a real two-story building facade with windows
+  and a door (previously nothing there), a hedge block, a statue, lamp
+  posts, and a stone path connecting all 4 exits.
+
+CAUGHT AND FIXED BEFORE SHIPPING: my first pass drew the Field House mat
+at the wrong size/position — visually it spanned way outside the actual
+walkable "M" interaction zone the game logic uses (checked precisely
+against the isBlocked/spotKind coordinates in maps.js). Fixed to align
+exactly with the real zone before shipping, so the visual mat now matches
+where the game actually treats you as "on the mat."
+
+VERIFICATION (learned from a mistake last round where I screenshotted
+the wrong scene and shipped un-reviewed art): both scenes were rendered
+in a real headless browser, reached via actual button clicks replaying
+the real boot-to-overworld flow (not synthetic keyboard events, which
+silently failed to reach the canvas last time), confirmed zero console
+errors, and visually reviewed before packaging.
+
+Every element was placed against the exact pixel coordinates of its
+real collision/interaction zone from src/data/maps.js — no decoration
+was placed on a walkable tile where it would look solid but not
+actually block movement.
+
+Cache: ?v=204. Proof: title/note reads "v20.4 Repainted Field House + Campus".

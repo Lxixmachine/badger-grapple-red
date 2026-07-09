@@ -1,0 +1,1 @@
+v11 screenshot polish: opaque HUD, compact overworld text, lower A marker, cleaned scout report layout, cleaner battle arena, less crowded battle panels, cache v110.

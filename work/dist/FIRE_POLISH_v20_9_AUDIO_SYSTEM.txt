@@ -1,0 +1,50 @@
+Badger Grapple Red — v20.9 Audio System
+
+ROOT CAUSE FIRST: the game shipped completely silent with `audio:
+{noAudio:true}` hardcoded in the Phaser config, every playSfx() call a
+no-op stub, and — the real tell — a global window error handler that
+explicitly swallowed any error whose message contained "audio device",
+"AudioContext", or "sound". That's not a stylistic choice, that's someone
+hitting a real crash (almost certainly the standard "AudioContext was not
+allowed to start" autoplay-policy error every mobile browser throws) and
+hiding the symptom rather than fixing it. Also found and removed a second
+piece of dead/backwards code from the same abandoned attempt: `unlockSfx()`
+was literally setting a readiness flag to false on "unlock."
+
+WHAT WAS BUILT: a standalone Web Audio system (src/systems/audio.js) that
+deliberately never touches Phaser's own sound manager — `audio:
+{noAudio:true}` stays exactly as it was, correctly, since nothing in the
+engine uses Phaser audio anymore. Instead:
+- The AudioContext is created lazily, only from a real user gesture
+  (every button press already calls unlockAudio() first), and explicitly
+  .resume()'d if suspended — which is the actual fix for the autoplay
+  error that got hidden before, not a workaround for it.
+- Every sound-producing function is individually wrapped so a failure
+  can never crash the game or reach the boot-error screen — defensive
+  at the source, not via a blanket window-level suppression.
+- Because the new system doesn't need that blanket suppression, it's
+  been removed from main.js. This is a real behavior change: audio-
+  related errors are no longer silently hidden. If something does go
+  wrong with sound going forward, it'll surface instead of vanishing
+  the way it did before.
+- All SFX (step, bump, talk, door, menu open/move, hit, miss, win, lose,
+  badge fanfare) and three looping music beds (title/overworld/battle)
+  are synthesized with raw oscillators and noise buffers — no audio
+  files, nothing to fail to load.
+- Real mute toggle in the Options menu, persisted to save state.
+
+VERIFICATION — this one needed real functional proof, not just "no
+console errors," since the whole point is sound actually happening:
+- Instrumented AudioContext.prototype.createOscillator/createBufferSource
+  in a live headless browser to COUNT real sound-node creation, not just
+  check for crashes. Confirmed: title tap produces sound events, walking
+  produces one event per step, a 4-turn battle produces dozens of hit/
+  miss/music events, all with zero thrown errors.
+- Verified the mute toggle actually flips and persists (caught my own
+  test mistake along the way: the coach's welcome message blocks the
+  menu button on first spawn by design — my first test attempt was
+  silently dismissing that dialogue instead of opening the menu, not a
+  real bug. Corrected the test, then confirmed the toggle genuinely
+  works: audioMuted true -> false -> true across repeated toggles).
+
+Cache: ?v=209. Proof: title/note reads "v20.9 Audio System".

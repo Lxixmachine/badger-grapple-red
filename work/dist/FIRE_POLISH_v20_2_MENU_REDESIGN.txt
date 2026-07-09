@@ -1,0 +1,43 @@
+Badger Grapple Red — v20.2 Menu Redesign
+
+Built directly from concept-art reference Tony provided (a marketing/
+feature-showcase mockup, not a literal engine screenshot — see note
+below on that distinction). Rebuilt the Start menu to match its
+structure using only real, existing game data:
+
+- Left panel: icon-prefixed list (Wrestlers / Bag / Rosterdex / Badges /
+  Practice / Objectives / Save / Options), selection highlight, chevron.
+  Icons are small vector glyphs drawn with Phaser Graphics — no new
+  art assets needed.
+- Right panel: lead wrestler portrait (reuses existing portrait_* art),
+  name/level/style, a 4-circle badge tracker (W Badge, Neutral Badge,
+  Scramble Badge, Top Badge — the 4 real badges this game has), Day/
+  Period, and Grit/Rep readouts.
+- Two new tabs that didn't exist before: BAG (lists actual item counts
+  and what each does) and BADGES (each badge's name, source area, and
+  earned/not-earned state).
+- OPTIONS tab now exists and houses the erase-save-data flow (previously
+  a top-level "RESET" button sitting next to "SAVE" — moved somewhere a
+  destructive action shouldn't be one misclick away, which is also just
+  more correct than before).
+
+No new save fields, no gameplay/balance changes. Verified booting clean
+in headless Chromium (zero console/page errors) before shipping, all
+6 tabs screenshotted.
+
+IMPORTANT CONTEXT — read before the next art pass:
+The two images Tony shared as "what I mean by a real game" are concept /
+marketing-collage art (a multi-panel feature-showcase image, styled like
+a store page), not a screenshot of any engine actually running. That
+image's fidelity — readable banner text, a modeled punching bag, painterly
+character shading, a bronze statue — is above what 16-24px GBA-scale tile
+art can produce; it's closer to a higher-resolution illustrated style.
+The ENGINE itself doesn't block that fidelity (it already composites full
+painted per-area background images, not raw tiles — see area_*.png), so
+the gap is specifically in the ART, not the code. This menu redesign
+proves the UI/layout side can already match that reference; closing the
+rest of the gap means getting background/character art redone at that
+quality into the SAME asset slots (documented dimensions/filenames
+unchanged), which is a real, sustained art effort — not a quick pass.
+
+Cache: ?v=202. Proof: Start menu shows icon list + stat card.
