@@ -1,5 +1,29 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.27 - Madison Landmark Pilgrimage)
+
+- Read `WORLD_MAP_MANIFESTO.md`, the read-first contract in
+  `VISUAL_OVERHAUL_GUIDE.md`, and Tony's attached city-design manifesto before
+  implementation. This pass completes the four remaining landmark art orders
+  while preserving the v21.26 geography, route gates, grass, and collision.
+- Added original ChatGPT image-generation source art and its exact prompt at
+  `art/imagegen/madison_landmarks_2026-07-09.*`. No Pokemon assets, official
+  university marks, or copied logos are used.
+- Lakeshore Path now has a source-derived Mendota pier and the recognizable
+  green/yellow/orange Terrace chair trio. State Street gains a Capitol dome
+  horizon and a multi-tile Kohl Center marquee/door. Kohl Center gains a
+  visually distinct locked Nationals door as the Season Two expansion promise.
+- `tools/build_wp1_terrain.py` owns the crop registry and deterministic
+  composition. The chairs remain on blocked pier cells; tall grass and all
+  collision geometry remain mechanically honest.
+- The Nationals door is interactive from the adjacent walkable tile and shows
+  a locked Season Two qualification message. This is deliberately not an exit.
+- Runtime/cache labels are v21.27 / v230. Acceptance: terrain compositor
+  rebuilt successfully; validator, balance simulation, and production build
+  pass; Playwright production smoke is 8/8; 390x844 phone QA shows a 374x262
+  fitted canvas, no horizontal overflow, and no console/page errors. Deployment
+  and live verification follow in the release commit.
+
 ## Current Product Bar
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.

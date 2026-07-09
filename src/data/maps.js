@@ -84,6 +84,7 @@ export function spotKind(area,x,y){
    if(x===18&&y===10)return 'HIDDEN_DRINK';
  }
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
+ if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';
  const cap=areaFor(area).captain;if(cap&&cap.x===x&&cap.y===y)return 'C';
  if(isGrass(area,x,y))return 'g';

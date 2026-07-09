@@ -13,6 +13,7 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "art" / "imagegen" / "terrain_tileset_wp1_r2_2026-07-09.png"
 TOWN_SOURCE = ROOT / "art" / "imagegen" / "terrain_town_anatomy_wp1_2_2026-07-09.png"
+LANDMARK_SOURCE = ROOT / "art" / "imagegen" / "madison_landmarks_2026-07-09.png"
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
 TILE = 16
@@ -237,6 +238,23 @@ TOWN_CROPS = {
     "quiet_grass_spare": (1008, 1010, 1216, 1216),
 }
 
+# World Map Manifesto landmark sheet: 4 equal columns x 3 equal rows. Complex
+# horizon and doorway cells are also sliced as larger props in load_props().
+LANDMARK_CROPS = {
+    "chair_green": (20, 20, 342, 342),
+    "chair_yellow": (382, 20, 704, 342),
+    "chair_orange": (744, 20, 1066, 342),
+    "pier": (1106, 20, 1428, 342),
+    "capitol_left": (20, 382, 342, 704),
+    "capitol_center": (382, 382, 704, 704),
+    "capitol_right": (744, 382, 1066, 704),
+    "street_horizon": (1106, 382, 1428, 704),
+    "marquee_left": (20, 744, 342, 1066),
+    "marquee_center": (382, 744, 704, 1066),
+    "marquee_door": (744, 744, 1066, 1066),
+    "nationals_door": (1106, 744, 1428, 1066),
+}
+
 
 INTERIORS = {"fieldhouse", "studyhall", "shop", "recovery", "conference", "championship"}
 
@@ -269,21 +287,29 @@ def load_source_tiles(source_path, crops):
 
 
 def load_tiles():
-    if not SOURCE.exists() or not TOWN_SOURCE.exists():
-        missing = SOURCE if not SOURCE.exists() else TOWN_SOURCE
+    sources = (SOURCE, TOWN_SOURCE, LANDMARK_SOURCE)
+    if any(not source.exists() for source in sources):
+        missing = next(source for source in sources if not source.exists())
         raise SystemExit(f"Missing imagegen source: {missing}")
     tiles = load_source_tiles(SOURCE, CROPS)
     tiles.update(load_source_tiles(TOWN_SOURCE, TOWN_CROPS))
+    tiles.update(load_source_tiles(LANDMARK_SOURCE, LANDMARK_CROPS))
     return tiles
 
 
 def load_props():
-    """Slice large one-off arena mats from the WP1.2 source sheet."""
+    """Slice large one-off mats and manifesto landmarks from source sheets."""
     source = Image.open(TOWN_SOURCE).convert("RGBA")
+    landmarks = Image.open(LANDMARK_SOURCE).convert("RGBA")
     mat = TOWN_CROPS["mat_plain"]
     return {
         "fieldhouse_mat": normalize_image(source.crop(mat).resize((96, 96), Image.Resampling.NEAREST)),
         "arena_mat": normalize_image(source.crop(mat).resize((80, 80), Image.Resampling.NEAREST)),
+        "capitol_horizon": normalize_image(landmarks.crop(LANDMARK_CROPS["capitol_center"]).resize((80, 32), Image.Resampling.NEAREST)),
+        "marquee_left": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_left"]).resize((32, 32), Image.Resampling.NEAREST)),
+        "marquee_center": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_center"]).resize((48, 32), Image.Resampling.NEAREST)),
+        "marquee_door": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_door"]).resize((16, 32), Image.Resampling.NEAREST)),
+        "nationals_door": normalize_image(landmarks.crop(LANDMARK_CROPS["nationals_door"]).resize((16, 32), Image.Resampling.NEAREST)),
     }
 
 
@@ -528,17 +554,29 @@ def compose(area, tiles, props):
     # ---- manifesto landmarks (decor only; collision unchanged) ----
     if area == "lakeshore":
         for y in range(1, 5):    # the pier runs out over Mendota
-            paint(img, tiles, "floor0", 8, y)
-            paint(img, tiles, "floor1", 9, y)
-        if "steps" in tiles:
-            paint(img, tiles, "steps", 8, 5)
-            paint(img, tiles, "steps", 9, 5)
+            paint(img, tiles, "pier", 8, y)
+            paint(img, tiles, "pier", 9, y)
+        paint(img, tiles, "pier", 10, 4)
+        # The three Terrace chair colors sit on the blocked pier apron, so
+        # their visible solidity agrees with collision and never hides grass.
+        paint(img, tiles, "chair_green", 8, 4)
+        paint(img, tiles, "chair_yellow", 9, 4)
+        paint(img, tiles, "chair_orange", 10, 4)
     if area == "river":
         for (fx, fy, rn) in ((2, 6, "rock0"), (3, 6, "rock1"), (2, 7, "rock1"), (3, 7, "rock0")):
             paint(img, tiles, rn, fx, fy)  # fire circle at the tip
         paint(img, tiles, "stump", 1, 6)
     if area == "downtown":
-        paint(img, tiles, "banner", 21, 3)  # the Kohl Center marquee
+        # Capitol ahead, Kohl Center below it: State Street points east and
+        # the city itself becomes the ceremonial road to the title.
+        paint_prop(img, props, "capitol_horizon", 23, 0)
+        paint_prop(img, props, "marquee_left", 18, 2)
+        paint_prop(img, props, "marquee_center", 20, 2)
+        paint_prop(img, props, "marquee_door", 21, 3)
+    if area == "championship":
+        # Closed, lock-marked and mat-free: a visible Season Two promise that
+        # deliberately does not use the enterable-door visual language.
+        paint_prop(img, props, "nationals_door", 23, 0)
 
     # ---- pass 6: fixtures over collision blocks (art matches collision) ----
     if area == "fieldhouse":
@@ -575,13 +613,13 @@ def compose(area, tiles, props):
                 elif area == "campus" and y in (1, 13):
                     paint(img, tiles, "door", x, y)  # arena/field-house thresholds
                 elif area == "downtown" and y == 4:
-                    paint(img, tiles, "door", x, y)  # the Kohl Center marquee door
+                    pass  # source-derived marquee prop already paints door + red mat
                 else:
                     paint(img, tiles, "path", x, y)  # the route runs off the map edge
     return img.convert("RGB")
 
 def save_tilesheet(tiles):
-    names = [*CROPS, *TOWN_CROPS]
+    names = [*CROPS, *TOWN_CROPS, *LANDMARK_CROPS]
     cols = 10
     rows = (len(names) + cols - 1) // cols
     sheet = Image.new("RGBA", (cols * TILE, rows * TILE), (0, 0, 0, 255))
