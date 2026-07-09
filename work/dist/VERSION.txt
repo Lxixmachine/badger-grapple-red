@@ -1,5 +1,0 @@
-Badger Grapple Red v21.3 Real Rooms
-Cache proof: ?v=213
-Visible proof: the Team Shop and Recovery Center are now real drawn rooms
-with a plank floor, a south wall, and a visible doorway with a red mat.
-Walk onto the doorway (3 tiles wide, bottom center) to exit to campus.
