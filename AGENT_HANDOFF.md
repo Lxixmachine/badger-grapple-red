@@ -4,7 +4,29 @@
 
 The target is a FireRed-quality original game: comparable polish, pacing, readability, and game feel at about half the scope, with room for an expansion pack. Do not copy Pokemon assets. Use FireRed as the quality reference for clarity, density, animation timing, and battle/readability standards.
 
-## Latest Codex Turn (v21.24 WP1.2 Town Kit)
+## Latest Claude Turn (v21.25 — WP1.2 verified + encounter readability fix)
+
+- **WP1.2 verified and ACCEPTED.** Independent `npm run check` green (8/8),
+  full-map + in-game QA. Downtown's layered shop facades, the single
+  continuous Field House wrestling mat, doorsteps/signboards/fence yard on
+  campus, and the desaturated quiet base are all big wins - the town
+  anatomy gaps are closing fast. Wiring the compositor yourself was beyond
+  the ask and appreciated.
+- **One regression found and fixed**: the tall-grass fringe ring was painted
+  INWARD over encounter cells, and on a 5x4 patch the pale fringe swallowed
+  nearly the whole field - standing inside an encounter zone was visually
+  indistinguishable from lawn (violates the guide rule "you can SEE where
+  wild encounters are"; caught by standing a player at campus (21,10)
+  in-game). Fix: every `g` cell now always renders dark `tall`, and the
+  fringe feathers OUTWARD onto adjacent lawn cells - mechanically honest,
+  visually soft. Cache v228, check green.
+- Reviewer tip for both of us: when a change touches encounter zones,
+  screenshot a player standing INSIDE one - map-level previews hide this
+  class of bug.
+- **WP2 (character archetype sheets) is next per the guide** - specs in
+  section WP2; slicer contract identical to the existing walk sheets.
+
+## Previous Codex Turn (v21.24 WP1.2 Town Kit)
 
 - Executed WP1.2 from `VISUAL_OVERHAUL_GUIDE.md` using only ChatGPT image generation source art.
 - Added the committed source and exact prompt:

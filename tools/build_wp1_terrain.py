@@ -329,11 +329,14 @@ def compose(area, tiles, props):
         for x in range(W):
             mark = g[y][x]
             if mark == "g":
-                # Only g cells receive tall grass. The softer fringe is used on
-                # its perimeter so encounter rectangles read as planted lawns.
-                tall_neighbor = lambda nx, ny: 0 <= nx < W and 0 <= ny < H and g[ny][nx] == "g"
-                edge = any(not tall_neighbor(x + dx, y + dy) for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)))
-                paint(img, tiles, "tall_fringe" if edge else "tall", x, y)
+                # Every encounter cell stays unmistakably dark (FireRed rule:
+                # you can SEE where wild encounters are). The soft fringe
+                # feathers OUTWARD onto the neighboring lawn instead.
+                paint(img, tiles, "tall", x, y)
+            elif not interior and mark in ".ST" and (x, y) not in paths and (x, y) not in water:
+                near_tall = any(0 <= x + dx < W and 0 <= y + dy < H and g[y + dy][x + dx] == "g" for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)))
+                if near_tall:
+                    paint(img, tiles, "tall_fringe", x, y)
             elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
                 r = rng.random()
                 if area != "downtown":
