@@ -73,3 +73,33 @@ are facts and numbers; no Nintendo art was viewed, copied, or imported.
   the path, with grass-free shoulders for players who want to sneak.
 - Long routes earn their length with alternating pinches (trees/ledges/
   water) and open bulbs — never a uniform corridor.
+
+## Town composition: what Pewter and Celadon teach (Tony's exercise, studied from reference)
+
+Seven principles observed in the composed city maps, now binding for
+Stage 3 area rebuilds (Bascom Hill especially):
+
+1. **Towns are clearings.** The forest wall is 2-6 rows deep, varies in
+   depth, and intrudes into town (wedges, pockets). The town is a hole
+   in the wilderness, not a rectangle with a tree ring.
+2. **Plaza logic.** Paths swell into aprons at every important door;
+   forecourt size = importance (Pewter Museum gets the largest).
+   Material switches AT the transition: town stone ends where route
+   dirt begins - the exit is told in ground before any sign.
+3. **Building skirts.** Every building gets a green margin dressed with
+   its own framing (hedges, flower clusters, fences, side yards).
+   Nothing sits flush against path on all sides.
+4. **Repetition is semantic.** Identical repeated units read as
+   anonymous background (Celadon's row houses); unique mass/color reads
+   as civic/important. Deliberate sameness is a tool that makes
+   uniqueness legible - the defect is only UNINTENDED repetition.
+5. **Decoration composes into features.** Flowers deploy in rhythmic
+   clusters of 3-4 and in named micro-places (Pewter's fenced flower
+   garden), never confetti scatter. Kill the random scatter rate;
+   place composed groups.
+6. **Cities have density gradients.** Celadon: towers west, row houses
+   east, fountain plaza as the civic hinge, grass surviving as park
+   pockets in pavement. State Street should densify toward the Kohl end.
+7. **Roof color is the wayfinding system.** One glance from map scale
+   gives the full mental map via roof hues and masses alone - hierarchy
+   is spatial and chromatic before it is textual.
