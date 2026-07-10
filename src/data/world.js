@@ -80,6 +80,17 @@ export const AREAS = {
   }
 };
 
+// v21.43 Gen-1 encounter slots (pret/pokered WildMonEncounterSlotChances):
+// 10 slots per area at 51/51/39/25/25/25/13/13/11/3 out of 256. Slots 0-1
+// are the commons you wade through; slot 9 is the 1.2% blue-chip prospect
+// worth the chase. Each slot carries its own level like Route 22's table.
+export const WILD_SLOT_CHANCES = [51, 51, 39, 25, 25, 25, 13, 13, 11, 3];
+export const WILD_SLOTS = {
+  campus: [[3, 'buckshot'], [3, 'matreturner'], [4, 'fieldflyer'], [4, 'buckshot'], [4, 'matreturner'], [5, 'pacesetter'], [5, 'drillpartner'], [5, 'fieldflyer'], [6, 'drillpartner'], [6, 'pacecommand']],
+  lakeshore: [[7, 'lakechain'], [7, 'pacesetter'], [8, 'riverroller'], [8, 'lakechain'], [8, 'whizzkid'], [9, 'pacesetter'], [9, 'whizzkid'], [9, 'drillpartner'], [10, 'lockthrow'], [10, 'chainmaster']],
+  river: [[11, 'riverroller'], [11, 'fieldflyer'], [12, 'funkflyer'], [12, 'riverroller'], [12, 'pacecommand'], [13, 'funkflyer'], [13, 'tilttech'], [13, 'lockthrow'], [14, 'tilttech'], [14, 'funklord']]
+};
+
 export const TRAINERS = {
   campus_recruit: { id: 'campus_recruit', look: 'red', area: 'campus', name: 'Buckshot', pos: { x: 22, y: 16 }, facing: 'left', sightRange: 5, team: [['drillpartner', 6], ['pacesetter', 6]], reward: { grit: 9, rep: 8 }, line: 'Buckshot: Want to test yourself? Two matches, back to back.', beaten: 'Buckshot: Good matches. Come back stronger.', spot: "Buckshot: Hey - you! Let's go!" },
   campus_rival: { id: 'campus_rival', look: 'purple', area: 'campus', name: 'Rex', pos: { x: 18, y: 8 }, facing: 'down', sightRange: 5, team: [['lakechain', 7], ['fieldflyer', 7]], reward: { grit: 12, rep: 10 }, line: 'Rex: Build your lineup all you want. I still want that dual meet. Right now.', beaten: 'Rex: Fine. You earned that one. Next time I bring a real team.', spot: 'Rex: There you are. No walking away this time.' },

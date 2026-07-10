@@ -1,4 +1,17 @@
-import {AREAS, TRAINERS, TOURNAMENT, WORLD_META} from './world.js';
+import {AREAS, TRAINERS, TOURNAMENT, WORLD_META, WILD_SLOTS, WILD_SLOT_CHANCES} from './world.js';
+export {WILD_SLOTS, WILD_SLOT_CHANCES};
+
+// Gen-1 wild roll: one byte of randomness against cumulative slot chances.
+export function rollWild(area, rand = Math.random) {
+  const slots = WILD_SLOTS[area] || WILD_SLOTS.campus;
+  let roll = Math.floor(rand() * 256), slot = 0, acc = 0;
+  for (let i = 0; i < WILD_SLOT_CHANCES.length; i++) {
+    acc += WILD_SLOT_CHANCES[i];
+    if (roll < acc) { slot = i; break; }
+  }
+  const [lvl, id] = slots[slot];
+  return { id, lvl, slot, rare: slot >= 8 };
+}
 import {layeredMap,layeredBlocked,layeredGrass,layeredInteraction,layeredSign} from './layeredMaps.js';
 
 export {AREAS, TRAINERS, TOURNAMENT, WORLD_META};

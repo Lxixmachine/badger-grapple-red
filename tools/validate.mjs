@@ -1,6 +1,6 @@
 import {ROSTER,STARTERS,PERSONAS} from '../src/data/roster.js';
 import {MOVES} from '../src/data/moves.js';
-import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked,worldPlane} from '../src/data/maps.js';
+import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked,worldPlane,WILD_SLOTS,WILD_SLOT_CHANCES} from '../src/data/maps.js';
 import {existsSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
@@ -125,6 +125,21 @@ TOURNAMENT.rounds.forEach((r,i)=>{
   if(!r.trainerName||!r.intro||!r.win)errs.push(`tournament round ${i} is missing trainerName/intro/win text`);
 });
 for(const [id,r] of Object.entries(ROSTER)){if(!PERSONAS[r.asset])errs.push(`roster ${id}: asset '${r.asset}' has no persona name (battle-form fiction breaks)`);}
+
+// v21.43 Gen-1 encounter slots: every encounter area needs a 10-slot table,
+// canonical 256-sum chances, roster-valid ids, and levels inside the band.
+if(WILD_SLOT_CHANCES.reduce((a,b)=>a+b,0)!==256)errs.push('WILD_SLOT_CHANCES must sum to 256 (pokered contract)');
+for(const [aid,a] of Object.entries(AREAS)){
+  if(!a.encounters)continue;
+  const slots=WILD_SLOTS[aid];
+  if(!slots){errs.push(`area ${aid}: encounters enabled but no WILD_SLOTS table`);continue;}
+  if(slots.length!==WILD_SLOT_CHANCES.length)errs.push(`area ${aid}: WILD_SLOTS needs ${WILD_SLOT_CHANCES.length} slots, has ${slots.length}`);
+  slots.forEach(([lvl,id],i)=>{
+    if(!ROSTER[id])errs.push(`area ${aid} slot ${i}: id '${id}' missing from ROSTER`);
+    const [lo,hi]=a.wildLevels||[1,99];
+    if(lvl<lo||lvl>hi)errs.push(`area ${aid} slot ${i}: level ${lvl} outside wild band ${lo}-${hi}`);
+  });
+}
 
 // One-plane law (v21.40): the outdoor world must stitch into a single
 // consistent geography via exit offsets - the Town Map renders from it.

@@ -12,6 +12,7 @@ export class ScoutScene extends Phaser.Scene{
 
   create(data={}){
     this.id=data.id||'buckshot';
+    this.rare=!!data.rare;
     this.lvl=data.lvl||4;
     this.area=data.area||'campus';
     this.state=loadState();
@@ -47,6 +48,7 @@ export class ScoutScene extends Phaser.Scene{
     this.drawProspect(r,s,odds);
     this.drawMoves(r);
     this.drawOptions();
+    if(this.rare){const b=this.add.text(168,19,'★ BLUE-CHIP PROSPECT ★',{fontFamily:'monospace',fontSize:8,color:'#ffd75e',fontStyle:'bold',stroke:'#4a2d00',strokeThickness:3}).setOrigin(.5,0).setDepth(50);this.tweens.add({targets:b,alpha:.55,duration:430,yoyo:true,repeat:-1});}
     if(this.note)this.drawNote(this.note);
   }
 

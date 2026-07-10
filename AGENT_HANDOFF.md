@@ -1,5 +1,31 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.43 — Encounter Slots: Gen 1's rarity engine)
+
+Tony pointed at pret/pokered ("learn how to make a real game"). New
+standing doc **GEN1_SYSTEMS_NOTES.md** — the systems layer under the
+maps/feel studies. First system shipped:
+
+- **Gen-1 wild encounter slots.** pokered's exact table
+  (51/51/39/25/25/25/13/13/11/3 of 256): every encounter area now has a
+  10-slot (level, id) table in world.js; rollWild() in maps.js replaces
+  startScout's uniform pick. Commons ~20%, mids taper, and slot 9 is the
+  **1.2% blue chip**: pacecommand L6 on campus, CHAINMASTER L10 on
+  Lakeshore, FUNKLORD L14 at Picnic Point (the Doctor's own species —
+  the peninsula's chase). Slots 8-9 flag the scout report with a pulsing
+  BLUE-CHIP PROSPECT banner in the header bar.
+- Validator contract: 10 slots per encounter area, roster-valid ids,
+  levels inside the wild band, chances sum to 256. Statistical QA:
+  100k rolls per area match pokered's percentages to a tenth.
+- Rarity meaning changed: funklord/tilttech/chainmaster used to roll at
+  UNIFORM 20-25% from the old flat pools; a Rare is now a story.
+- Queued from the same study (see GEN1_SYSTEMS_NOTES.md): **WP-AI**
+  (pokered's per-class move-choice modifier passes — wild=0 passes,
+  route trainer=1, captain=2, bracket=3) and **WP-POTENTIAL** (makeMon
+  already rolls `iv` but NOTHING reads it — feed it into scaledStats +
+  scout grades, with a balance_sim pass in the same turn).
+- 11/11 check; no art changes (V stays '241').
+
 ## Latest Claude Turn (v21.42 — Town Map: the world proves it's one plane)
 
 Tony shared Mehdi Mulani's "game-size world map of Pokémon Fire Red"

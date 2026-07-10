@@ -1,4 +1,4 @@
-import {AREAS,areaFor,areaDimensions,defaultPos,isBlocked,isGrass,spotKind,signText,TRAINERS,TOURNAMENT,trainersInArea,trainerAt,trainerSeesTile,canUseExit,gateMessage} from '../data/maps.js';
+import {AREAS,areaFor,areaDimensions,defaultPos,isBlocked,isGrass,spotKind,signText,TRAINERS,TOURNAMENT,trainersInArea,trainerAt,trainerSeesTile,canUseExit,gateMessage,rollWild} from '../data/maps.js';
 import {ROSTER,scaledStats} from '../data/roster.js';
 import {loadState,saveState,caughtRecruitCount} from '../systems/save.js';
 import {uiBox,setVirtualHandler} from '../systems/ui.js';
@@ -126,7 +126,7 @@ export class OverworldScene extends Phaser.Scene{
    return 'Abe Lincoln\'s statue crowns Bascom Hill. In this conference, wrestlers take the mat in their spirit form - the animal inside comes out under the lights.';
  }
  recover(){this.state.party.forEach(m=>{const s=scaledStats(m.id,m.lvl);m.hp=s.hp;m.gas=s.gas;m.score=0;});this.savePos('The recovery table restores your team.');}
- startScout(){const byArea={lakeshore:['lakechain','drillpartner','pacesetter','whizzkid'],river:['fieldflyer','tilttech','pacesetter','riverroller','funklord'],campus:['buckshot','matreturner','fieldflyer','drillpartner','pacecommand']};const ids=byArea[this.area]||['buckshot','matreturner','fieldflyer','pacesetter','drillpartner','lakechain','tilttech'];const range=areaFor(this.area).wildLevels||[3,6];const id=Phaser.Utils.Array.GetRandom(ids),lvl=Phaser.Math.Between(range[0],range[1]);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.fadeSceneOut(100);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area}));}
+ startScout(){const {id,lvl,rare}=rollWild(this.area);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.fadeSceneOut(100);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area,rare}));} // Gen-1 slot odds: commons wade, blue chips hide at 1.2%
  battleTransition(cb){this.sightLocked=true;const cam=this.worldCamera;this.playSfx('bump');cam.flash(110,255,255,255);this.time.delayedCall(180,()=>cam.flash(110,255,255,255));this.time.delayedCall(380,()=>this.fadeSceneOut(240));this.time.delayedCall(640,cb);} // FireRed battle entry: double flash, then wipe to black
  startBattle(id,lvl,type){this.savePos();this.battleTransition(()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type}));}
  tournamentDesk(){
