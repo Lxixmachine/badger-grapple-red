@@ -64,9 +64,23 @@ export function isBlocked(area,x,y){
  if(n==='KOHL CENTER')return y===0||x===0||x===27||(y===13&&x!==14); // south doors to State Street
  return false;
 }
+// v21.34 building signs - FireRed density: Pallet Town reads 5 signs in a
+// town this size; every enterable building announces itself at the door.
+export const SIGNS={
+ campus:{
+  '4,5':'TEAM SHOP - Gear, tape, and drinks for the room.',
+  '21,5':'RECOVERY CENTER - Rest and reset between sessions.',
+  '21,12':'MEMORIAL LIBRARY - Film study and scouting reports upstairs.',
+  '13,3':'ANNEX ARENA - Conference duals. The Neutral Badge lives here.',
+  '13,19':'FIELD HOUSE - Home of Badger wrestling.'
+ },
+ downtown:{'20,4':'KOHL CENTER - BIG TEN CHAMPIONSHIP. Badge holders only.'}
+};
+export function signText(area,x,y){return SIGNS[area]?.[x+','+y]||null;}
 export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9)||(n==='BASCOM HILL'&&((x>=3&&x<=8&&y>=14&&y<=17)||(x>=19&&x<=24&&y>=14&&y<=17)));}
 export function spotKind(area,x,y){
  if(trainerAt(area,x,y))return 'TRAINER'; // v21.11: all trainers are data-driven, no per-area cases
+ if(signText(area,x,y))return 'SIGN';
  const n=areaFor(area).name;
  if(n==='FIELD HOUSE'){
    if(x===14&&y===1)return 'EXIT';

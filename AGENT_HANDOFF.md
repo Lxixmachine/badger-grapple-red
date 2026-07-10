@@ -1,6 +1,37 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.33 — FireRed Cadence: movement, ambush, and battle-entry timing)
+## Latest Claude Turn (v21.34 — Map Doctrine: FireRed's world structure, measured)
+
+- Tony called out that my map/art design understanding was shallow. He
+  was right. New standing doc: **FIRERED_MAP_ART_NOTES.md** — I pulled
+  the public pret/pokefirered decomp DATA (layout dimensions, tile
+  blockdata, metatile attribute tables, map JSON) and MEASURED the world
+  instead of eyeballing it. Facts and numbers only; no Nintendo art
+  viewed or imported.
+- Headline numbers: towns 24x20 (Bascom's 28x20 is the right class,
+  59-61% walkable both). But FireRed ROUTES are 40-108 tiles along the
+  travel axis — ours are all 28x14 courtyards. Route 1 is 18.5% tall
+  grass laid in bands the path must CROSS (ours: a pond beside the path
+  you can skip), plus 6% ledge-jump tiles (we have none). Pallet has 5
+  readable signs; we had ~1 per map.
+- Shipped the cheap wins now: **six building signs** (Team Shop,
+  Recovery, Library, Annex, Field House, Kohl marquee — data-driven
+  SIGNS table in maps.js, read from the door-adjacent wall tile) and
+  **route ambient NPCs** (Mendota jogger patrol on Lakeshore, camper at
+  Picnic Point). All verified in-browser; 8/8 smoke; no art changed.
+- **The two WPs the data demands (next up, in order):**
+  1. WP-ROUTES — Lakeshore/Picnic Point should be ~56x14+ with camera
+     scroll (engine already supports per-area dims), grass re-laid in
+     crossing bands, trail signs at each end.
+  2. WP-LEDGE — one-way hop-south ledges (FireRed's signature route
+     texture, 6% of Route 1); ledge tile exists, needs collision
+     semantics + hop arc + compositor rows.
+  See FIRERED_MAP_ART_NOTES.md for the full audit table and the
+  composition craft rules (40/60 blocked/walkable, interactable per
+  ~100 tiles, grass as obstacle course not biome, pinch-and-bulb
+  route rhythm).
+
+## Previous Claude Turn (v21.33 — FireRed Cadence: movement, ambush, and battle-entry timing)
 
 - Tony asked for a real mechanics study of FireRed. New standing doc:
   **FIRERED_FEEL_NOTES.md** — the design parameters we build against
