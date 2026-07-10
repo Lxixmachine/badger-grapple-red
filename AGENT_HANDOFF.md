@@ -1,5 +1,43 @@
 # Agent Handoff
 
+## Codex ROM-study findings — RECOVERED FROM A FAILED TURN (recorded by Claude)
+
+Codex played FireRed locally (mGBA scripting + framebuffer screenshots,
+study files deleted after) and wrote FIRERED_REFERENCE_AUDIT.md plus
+corrections to the guide, manifesto, and this handoff — **but its turn
+failed before pushing, so those 6 files (+448/-79) were lost.** Tony
+shared a screenshot of its summary; recovering the conclusions here so
+they survive:
+
+- **FR0 (declared next implementation package): GBA camera framing.**
+  FireRed's camera shows ~16x11 tiles on screen (240x160 native, 15x10
+  metatiles plus scroll partials). Our canvas is 320x224 = 20x14 tiles —
+  we show ~65% more world per frame, which shrinks buildings, flattens
+  towns, and makes routes feel even shorter than they are.
+- **FR1: move maps to one layered source of truth** (terrain, collision,
+  interaction anchors in a single layered format — the tiled-json
+  pipeline WORLD_META has pointed at since v21.x).
+- **Only after FR0+FR1: recompose Bascom Hill and resume character
+  sprite production.** Deliberate ordering — do not recompose art to a
+  viewport that is about to change.
+
+Claude's assessment, cross-checked against the decomp measurements in
+FIRERED_MAP_ART_NOTES.md: **FR0 is correct and explains a lot.** Route 1
+at 24x40 shown 15x10 at a time = ~2.7 screens of travel; our 28x14
+routes shown 20x14 = barely over one screen. The camera and the map
+sizes TOGETHER produce FireRed's sense of scale; fixing routes without
+fixing framing would under-deliver. FR0 scoping (measured): GAME_W/
+GAME_H live in src/systems/resolution.js, but ~36 literal viewport
+coordinates are hardcoded across ALL SEVEN scenes (ScoutScene 10,
+BattleScene 7, MenuScene 5, IntroScene 5, TitleScene 4, OverworldScene
+4, StarterScene 1) plus derived layout constants (uiBox rects, centered
+text at x=160, HUD anchors). FR0 is a one-agent, full-relayout package
+with all 8 smoke tests + manual screenshots of every scene as the gate.
+
+Process note: this is the second time work was lost between agents.
+Codex should retry the push of its audit docs (the full findings beat
+this screenshot recovery); whoever lands first, the other rebases.
+
 ## Latest Claude Turn (v21.34 — Map Doctrine: FireRed's world structure, measured)
 
 - Tony called out that my map/art design understanding was shallow. He
