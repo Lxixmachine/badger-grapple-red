@@ -35,7 +35,7 @@ async function move(page, key) {
   if (!before) { await press(page, key); await page.waitForTimeout(200); return; }
   for (let i = 0; i < 4; i++) {
     await press(page, key);
-    await page.waitForTimeout(230);
+    await page.waitForTimeout(310); // v21.33: steps are 240ms FireRed cadence now
     const now = await read();
     if (!now) return; // a battle or scout encounter took over - that is a completed step
     if (now.x !== before.x || now.y !== before.y || now.area !== before.area) return;
@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.32-state-street');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.33-firered-cadence');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];

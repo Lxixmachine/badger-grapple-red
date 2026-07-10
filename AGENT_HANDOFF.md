@@ -1,6 +1,38 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.32 — WP-STREET: State Street reads like State Street)
+## Latest Claude Turn (v21.33 — FireRed Cadence: movement, ambush, and battle-entry timing)
+
+- Tony asked for a real mechanics study of FireRed. New standing doc:
+  **FIRERED_FEEL_NOTES.md** — the design parameters we build against
+  (movement frames, spot sequence, transition choreography, encounter
+  rates) with the hard rule restated: mechanics are learnable facts;
+  assets from ROMs/rips NEVER enter the repo or pipeline.
+- **Walk cadence**: steps were 142ms with Sine easing — FireRed's RUN
+  speed with a glide on every tile. Now 240ms LINEAR (FireRed walks 16
+  frames ≈ 267ms, constant speed), turn-in-place 120ms (~8 frames).
+  The Sine ease was the last "floaty" ingredient after the v21.31
+  sprite fix: steps used to accelerate/decelerate every tile.
+- **Trainer ambush is now the full FireRed sequence**: "!" beat, then
+  the trainer WALKS tile-by-tile to the player (updating npc.tile so
+  solidity stays true), the player auto-faces them, challenge text,
+  battle. No more battles teleporting in from 5 tiles away.
+- **Battle entry**: every entry point (wild, route trainer, gym,
+  tournament) now goes through one battleTransition() — double white
+  flash, then 240ms wipe to black, then BattleScene.
+- **Input hardening found by QA**: tryMove never gated on moving/
+  sightLocked (the update loop happened to check moving, but the
+  virtual-button path didn't) — scripted presses could step DURING the
+  ambush freeze. Now gated at the source. Follow-on bug: Phaser reuses
+  scene instances, so battleTransition's sightLocked=true survived into
+  the post-battle overworld and froze the player — create() now resets
+  sightLocked/moving. If you ever add a lock flag, reset it in create().
+- Tests: move() helper waits 310ms/step for the new cadence. 8/8 green.
+  No art changed (V stays '234'); version 21.33-firered-cadence.
+- Next candidates unchanged: Memorial Library interior (no bookshelves),
+  Kohl/Annex interior dressing, WP2 archetypes, door-open animation
+  frames (small art ask — see FIRERED_FEEL_NOTES.md "Doors").
+
+## Previous Claude Turn (v21.32 — WP-STREET: State Street reads like State Street)
 
 - Post-v21.31 survey of every area found State Street the weakest map in
   the game: two identical repeating facade strips, no readable doors (door

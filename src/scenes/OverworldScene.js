@@ -9,7 +9,7 @@ const DIRS={down:{dx:0,dy:1,frame:1},left:{dx:-1,dy:0,frame:4},right:{dx:1,dy:0,
 const SOLIDS={};
 export class OverworldScene extends Phaser.Scene{
  constructor(){super('OverworldScene');}
- create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);if(isBlocked(this.area,this.tilePos.x,this.tilePos.y))this.tilePos=defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;this.cameras.main.setBackgroundColor('#000');this.bg=this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0);/* keep raw pixel colors; no tint pipeline on mobile */this.decor=this.add.container(0,0).setDepth(13);this.actors=this.add.container(0,0).setDepth(25);this.shadow=this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20);this.player=this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1);this.player.setScale(1);this.marker=this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80);this.cameras.main.startFollow(this.player,true,.11,.11);this.applyAreaBounds();this.cameras.main.setDeadzone(28,20);this.cameras.main.roundPixels=true;this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);this.hud=this.add.container(0,0).setScrollFactor(0).setDepth(1000);this.drawDepthDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.cameras.main.fadeIn(140,0,0,0);setMuted(this.state.audioMuted);playMusic('overworld');}
+ create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);if(isBlocked(this.area,this.tilePos.x,this.tilePos.y))this.tilePos=defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.sightLocked=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;this.cameras.main.setBackgroundColor('#000');this.bg=this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0);/* keep raw pixel colors; no tint pipeline on mobile */this.decor=this.add.container(0,0).setDepth(13);this.actors=this.add.container(0,0).setDepth(25);this.shadow=this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20);this.player=this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1);this.player.setScale(1);this.marker=this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80);this.cameras.main.startFollow(this.player,true,.11,.11);this.applyAreaBounds();this.cameras.main.setDeadzone(28,20);this.cameras.main.roundPixels=true;this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);this.hud=this.add.container(0,0).setScrollFactor(0).setDepth(1000);this.drawDepthDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.cameras.main.fadeIn(140,0,0,0);setMuted(this.state.audioMuted);playMusic('overworld');}
  okInput(){const now=this.time.now||performance.now();if(now-this.lastInputAt<95)return false;this.lastInputAt=now;return true;}
  handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.clearMessage();if(k==='menu')this.openMenu();if(k==='save')this.savePos('Saved.');}
  update(){this.updateDepths();this.updateMarker();this.updateNpcPatrols();if(this.moving)return;const c=this.cursors,k=this.keys;
@@ -28,9 +28,10 @@ export class OverworldScene extends Phaser.Scene{
  pass(x,y){if(isBlocked(this.area,x,y))return false;if(this.npcList.some(e=>e.npc.tile&&e.npc.tile.x===x&&e.npc.tile.y===y))return false; // NPCs are solid, FireRed-style
   const blocks=SOLIDS[this.area]||[];return !blocks.some(([x1,y1,x2,y2])=>x>=x1&&x<=x2&&y>=y1&&y<=y2);}
  tryMove(dx,dy,dir){if(this.messageOpen){this.clearMessage();return;}
-  if(this.facing!==dir&&!this.moving){this.face(dir);this.turnPauseUntil=(this.time.now||0)+90;return;} // tap turns in place; holding walks after a short beat
+  if(this.moving||this.sightLocked)return; // one step is atomic; ambush/transition beats own the player
+  if(this.facing!==dir&&!this.moving){this.face(dir);this.turnPauseUntil=(this.time.now||0)+120;return;} // tap turns in place; holding walks after a short beat (FireRed: ~8 frames)
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
-  this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.worldY(ny)-2,duration:142,ease:'Sine.easeInOut'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.worldY(ny),duration:142,ease:'Sine.easeInOut',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
+  this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.worldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.worldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
  findExit(x,y){return (areaFor(this.area).exits||[]).find(e=>e.x===x&&e.y===y);}
  changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.cameras.main.fadeOut(130,0,0,0);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2);this.drawDepthDecor();this.drawActors();this.drawHud();this.cameras.main.fadeIn(180,0,0,0);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
  afterStep(){this.savePos();if(isGrass(this.area,this.tilePos.x,this.tilePos.y))this.grassRustle();this.checkTrainerSight();if(this.sightLocked)return;if(isGrass(this.area,this.tilePos.x,this.tilePos.y)&&Math.random()<.12){this.startScout();return;}this.drawHud();}
@@ -52,16 +53,36 @@ export class OverworldScene extends Phaser.Scene{
    }
  }
  triggerSpot(tr){
+   // FireRed spot sequence: "!" beat, then the trainer WALKS to the player
+   // tile by tile, the player turns to face them, THEN the challenge lands.
    this.sightLocked=true;this.moving=true;
    const wx=this.worldX(tr.pos.x),wy=this.worldY(tr.pos.y);
    const bang=this.add.text(wx,wy-30,'!',{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5).setDepth(90);
    this.tweens.add({targets:bang,y:wy-40,duration:260,yoyo:true,repeat:1});
    this.playSfx('bump');
-   this.cameras.main.flash(90,255,255,255);
-   this.time.delayedCall(520,()=>{
+   const v={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]}[tr.facing]||[0,1];
+   const opp={left:'right',right:'left',up:'down',down:'up'}[tr.facing]||'down';
+   const entry=this.npcList.find(e=>e.npc.tile&&e.npc.tile.x===tr.pos.x&&e.npc.tile.y===tr.pos.y);
+   const target={x:this.tilePos.x-v[0],y:this.tilePos.y-v[1]};
+   const n=entry?Math.abs(target.x-tr.pos.x)+Math.abs(target.y-tr.pos.y):0;
+   this.time.delayedCall(560,()=>{
      bang.destroy();
-     this.sightLocked=false;this.moving=false;
-     this.startTrainerBattle(tr,tr.spot||tr.line);
+     this.face(opp);
+     if(entry&&n>0){
+       entry.npc.setFrame(DIRS[tr.facing]?.frame||1);
+       for(let i=1;i<=n;i++){
+         const step={x:tr.pos.x+v[0]*i,y:tr.pos.y+v[1]*i};
+         this.time.delayedCall((i-1)*240,()=>{
+           entry.npc.tile={...step};
+           this.tweens.add({targets:entry.npc,x:this.worldX(step.x),y:this.worldY(step.y),duration:235,ease:'Linear'});
+           this.tweens.add({targets:entry.sh,x:this.worldX(step.x),y:this.worldY(step.y)-2,duration:235,ease:'Linear'});
+         });
+       }
+     }
+     this.time.delayedCall(n*240+140,()=>{
+       this.sightLocked=false;this.moving=false;
+       this.startTrainerBattle(tr,tr.spot||tr.line);
+     });
    });
  }
  frontTile(){const d=DIRS[this.facing]||DIRS.down;return {x:this.tilePos.x+d.dx,y:this.tilePos.y+d.dy};}
@@ -80,7 +101,8 @@ export class OverworldScene extends Phaser.Scene{
  }
  recover(){this.state.party.forEach(m=>{const s=scaledStats(m.id,m.lvl);m.hp=s.hp;m.gas=s.gas;m.score=0;});this.savePos('The recovery table restores your team.');}
  startScout(){const byArea={lakeshore:['lakechain','drillpartner','pacesetter','whizzkid'],river:['fieldflyer','tilttech','pacesetter','riverroller','funklord'],campus:['buckshot','matreturner','fieldflyer','drillpartner','pacecommand']};const ids=byArea[this.area]||['buckshot','matreturner','fieldflyer','pacesetter','drillpartner','lakechain','tilttech'];const range=areaFor(this.area).wildLevels||[3,6];const id=Phaser.Utils.Array.GetRandom(ids),lvl=Phaser.Math.Between(range[0],range[1]);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.cameras.main.fadeOut(100,0,0,0);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area}));}
- startBattle(id,lvl,type){this.savePos();this.cameras.main.flash(90,255,255,255);this.time.delayedCall(95,()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type}));}
+ battleTransition(cb){this.sightLocked=true;const cam=this.cameras.main;this.playSfx('bump');cam.flash(110,255,255,255);this.time.delayedCall(180,()=>cam.flash(110,255,255,255));this.time.delayedCall(380,()=>cam.fadeOut(240,0,0,0));this.time.delayedCall(640,cb);} // FireRed battle entry: double flash, then wipe to black
+ startBattle(id,lvl,type){this.savePos();this.battleTransition(()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type}));}
  tournamentDesk(){
    const t=this.state.tournament||{round:0,champion:false};
    const missing=TOURNAMENT.requires.filter(b=>!this.state.badges.includes(b));
@@ -91,10 +113,10 @@ export class OverworldScene extends Phaser.Scene{
    this.state.party.forEach(m=>{const st=scaledStats(m.id,m.lvl);m.hp=st.hp;m.gas=st.gas;m.score=0;}); // trainers get treated between tournament matches
    this.showMessage(`${round.label}: ${round.intro}`);
    this.savePos();
-   this.time.delayedCall(700,()=>{this.cameras.main.flash(120,255,255,255);this.time.delayedCall(120,()=>this.scene.start('BattleScene',{team:round.team,battleType:'tournament',trainerName:round.trainerName,reward:round.reward,tournamentRound:t.round,roundLabel:round.label,winMsg:round.win}));});
+   this.time.delayedCall(700,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:round.team,battleType:'tournament',trainerName:round.trainerName,reward:round.reward,tournamentRound:t.round,roundLabel:round.label,winMsg:round.win})));
  }
- startGymBattle(cap){if(!cap)return;if(this.state.badges.includes(cap.badge)){this.showMessage(cap.beaten||'Badge already earned.');return;}this.showMessage(cap.intro||'A gym leader challenges you.');this.savePos();this.time.delayedCall(650,()=>{this.cameras.main.flash(120,255,255,255);this.time.delayedCall(120,()=>this.scene.start('BattleScene',{team:cap.team,battleType:'gym',trainerName:ROSTER[cap.id]?.name,badge:cap.badge,reward:cap.reward}));});}
- startTrainerBattle(tr,msg){if(!tr)return;if(this.state.trainersDefeated?.[tr.id]){this.showMessage(tr.beaten||`${tr.name} has already been beaten.`);return;}this.showMessage(msg||tr.line||`${tr.name} challenges you.`);this.savePos();this.time.delayedCall(550,()=>{this.cameras.main.flash(100,255,255,255);this.time.delayedCall(100,()=>this.scene.start('BattleScene',{team:tr.team,battleType:'trainer',trainerName:tr.name,reward:tr.reward,defeatKey:tr.id}));});}
+ startGymBattle(cap){if(!cap)return;if(this.state.badges.includes(cap.badge)){this.showMessage(cap.beaten||'Badge already earned.');return;}this.showMessage(cap.intro||'A gym leader challenges you.');this.savePos();this.time.delayedCall(650,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:cap.team,battleType:'gym',trainerName:ROSTER[cap.id]?.name,badge:cap.badge,reward:cap.reward})));}
+ startTrainerBattle(tr,msg){if(!tr)return;if(this.state.trainersDefeated?.[tr.id]){this.showMessage(tr.beaten||`${tr.name} has already been beaten.`);return;}this.showMessage(msg||tr.line||`${tr.name} challenges you.`);this.savePos();this.time.delayedCall(550,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:tr.team,battleType:'trainer',trainerName:tr.name,reward:tr.reward,defeatKey:tr.id})));}
  savePos(msg=null){this.state.area=this.area;this.state.pos={...this.tilePos};if(msg)this.state.message=msg;saveState(this.state);if(msg)this.showMessage(msg);}
  showMessage(msg){this.message=msg;this.messageOpen=!!msg;this.drawHud();}
  clearMessage(){this.message='';this.messageOpen=false;this.state.message='';saveState(this.state);this.drawHud();}
@@ -117,7 +139,7 @@ showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0
 }
  
  updateNpcPatrols(){if(this.messageOpen||this.moving)return;const now=this.time.now||0;for(const e of this.npcList){if(!e.route||e.route.length<2)continue;if(now-e.t<1600)continue;e.t=now+Phaser.Math.Between(250,900);const ni=(e.i+1)%e.route.length;const [tx,ty]=e.route[ni];if(isBlocked(this.area,tx,ty)||(this.tilePos.x===tx&&this.tilePos.y===ty)||this.npcList.some(o=>o!==e&&o.npc.tile&&o.npc.tile.x===tx&&o.npc.tile.y===ty))continue; // patrols never enter walls, the player's tile, or another NPC
-  e.i=ni;const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,60),ease:'Sine.easeInOut'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Sine.easeInOut'});}}
+  e.i=ni;const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,40),ease:'Linear'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Linear'});}}
 
  updateDepths(){const py=this.player.y;this.player.setDepth(py);this.shadow.setDepth(py-1);for(const entry of this.npcList){entry.npc.setDepth(entry.npc.y);entry.sh.setDepth(entry.npc.y-1);}}
  updateMarker(){const kind=this.kindHere();this.marker.setVisible(['EXIT','R','S','C','g','M','N','STATUE','SCOUT_NPC','TRAINER','TOURNEY','SAVE_NPC','BATTLE_NPC','STUDY_NPC','HIDDEN_TAPE','HIDDEN_FILM','HIDDEN_DRINK','DOOR','NATIONALS','CAPITOL','WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(kind)&&!this.messageOpen);if(this.marker.visible){this.marker.setPosition(this.player.x,this.player.y-35+Math.sin((this.time.now||0)/180)*1.2);this.marker.setAlpha(.86+Math.sin((this.time.now||0)/160)*.12);}}
