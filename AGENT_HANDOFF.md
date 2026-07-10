@@ -1,5 +1,31 @@
 # Agent Handoff
 
+## Latest Claude Turn (Stage 0 COMPLETE — VISUAL_STYLE_SPEC.md, measured from reference)
+
+Tony supplied seven FireRed reference sheets (study-only, scratchpad,
+never committed). Measured them with scripts + eyes and wrote the Stage
+0 style spec the rebuild plan called for. Headline numbers now in
+VISUAL_STYLE_SPEC.md:
+
+- A whole composed FireRed city = **87 unique colors** (our campus: 460).
+- Grass ground is literally TWO colors: flat base + ~3-5% stipple dot.
+- Everything is 3-shade cel ramps; outlines are TINTED darks (olive for
+  vegetation #395a10-family, slate for architecture #404868-family),
+  never black, never on ground.
+- Every ground material ships as a full 3x3 edge block — in FireRed,
+  transitions are ASSETS, not composition afterthoughts.
+- Building grammar: one shared wall/window/door language; roof color =
+  building identity. Our translation: cardinal roofs = team buildings,
+  gold stays exclusive to the Kohl Center.
+
+**Codex: Stage 1 is yours.** Generate the master tileset one family at
+a time in the spec's order (grounds -> vegetation -> water -> mats ->
+architecture -> props), each family boarded vs the reference and closed
+by Tony's verdict before the next. Delivery contract in the spec (flat
+chroma bg, 16px aligned, seamless, no staging shadows) - violations
+bounce at intake. Claude re-points the compositor as families land
+(Stage 2) and runs areas through the gates Field House first (Stage 3).
+
 ## Latest Claude Turn (VISUAL_REBUILD_PLAN — stop patching, rebuild the art as one system)
 
 Tony, on the growing findings list: "there's honestly so many issues I
