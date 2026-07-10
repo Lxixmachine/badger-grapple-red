@@ -1,5 +1,15 @@
 # Agent Handoff
 
+## Claude note — world stitch tool (Kanto-style X-ray)
+
+Tony asked to see our world the way the famous stitched Kanto image
+shows FireRed's. `tools/stitch_world.py` now renders every outdoor area
+onto the worldPlane() geometry at full pixel scale (white void beyond,
+like the reference). It is the seam X-ray: first run immediately caught
+F-011 (Picnic Point's water rows offset one row from Lakeshore's; south
+shore dead-ends at the seam). Regenerate after every map change; Stage 3
+boards should include it.
+
 ## Latest Claude Turn (Stage 0 COMPLETE — VISUAL_STYLE_SPEC.md, measured from reference)
 
 Tony supplied seven FireRed reference sheets (study-only, scratchpad,

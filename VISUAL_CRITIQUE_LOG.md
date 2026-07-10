@@ -73,6 +73,14 @@ tracker for looks.
   drawn clumps); ours are ONE 2x2 tree stamped in staggered rows — the
   picket-line look. Owner: Codex (forest kit per spec law 6b) + Claude
   (compositor border pass rewritten to compose from the kit).
+- **F-011 [TG-013/edge continuity] route water seams — OPEN.**
+  Found by the world stitch: Picnic Point's north shore sits one row
+  higher than Lakeshore's (water rows 0-2 vs 1-4), so Mendota steps at
+  the seam; the Point's south shore dead-ends into Lakeshore's tree
+  border. FireRed aligns shared-edge water EXACTLY. Owner: Claude -
+  align river water bands to lakeshore's rows during the Stage 3 route
+  recomposition. `tools/stitch_world.py` regenerates the X-ray after
+  any map change.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics
