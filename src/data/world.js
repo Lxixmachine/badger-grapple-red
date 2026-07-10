@@ -57,7 +57,7 @@ export const AREAS = {
     bg: 'area_lakeshore',
     start: { x: 26, y: 7 },
     exits: [
-      { x: 27, y: 7, to: 'campus', tx: 2, ty: 7, msg: 'Bascom Hill.' },
+      { x: 27, y: 7, to: 'campus', tx: 2, ty: 10, msg: 'Bascom Hill.' },
       { x: 0, y: 9, to: 'river', tx: 26, ty: 9, msg: 'Picnic Point.' }
     ],
     encounters: true,
@@ -68,7 +68,7 @@ export const AREAS = {
     bg: 'area_downtown',
     start: { x: 1, y: 7 },
     exits: [
-      { x: 0, y: 7, to: 'campus', tx: 26, ty: 7, msg: 'Bascom Hill.' },
+      { x: 0, y: 7, to: 'campus', tx: 26, ty: 10, msg: 'Bascom Hill.' },
       { x: 21, y: 4, to: 'championship', tx: 14, ty: 12, msg: 'The Kohl Center.', gate: ['Neutral Badge', 'Scramble Badge'] }
     ],
     encounters: false

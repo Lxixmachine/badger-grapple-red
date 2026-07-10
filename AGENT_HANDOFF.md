@@ -1,6 +1,30 @@
 # Agent Handoff
 
-## Latest Codex Turn (v21.28 - WP-TOWN Structure)
+## Latest Claude Turn (v21.29 — WP-TOWN QA: bug found + fixed, both turns ACCEPTED)
+
+- Tony reported bugs after Codex's v21.27/v21.28. Independent QA sweep run
+  on both turns: fresh `npm run check` (8/8), a 12-hop deterministic
+  boundary matrix over the new 28x20 Bascom, opening-flow drive, stale-save
+  resume, encounter tests on the relocated lawns, and landmark/interaction
+  checks (Nationals door answers; pier, Terrace chairs, Capitol, marquee all
+  render). The town work is a massive leap and both turns are accepted.
+- **Bug found + fixed (edge continuity, manifesto law #2): the return
+  landings into Bascom were left at the old row.** Leaving campus exits at
+  row 10 but arriving from Lakeshore landed (2,7) and from State Street
+  (26,7) - three tiles off the doors, facing a border wall. Both landings
+  now (2,10)/(26,10); the 12-hop matrix is green including round trips.
+- Verified non-bugs worth recording: the blocked-pos rescue Codex added in
+  OverworldScene.create correctly snaps pre-21.28 saves out of the new
+  building interiors (tested with a save inside the Recovery mass);
+  drawDepthDecor is dimension-aware; south-lawn encounters fire in the
+  right 3-6 band; no runtime errors beyond the benign favicon 404.
+- QA craft note for both agents: when testing movement by script, remember
+  tap-turns-in-place - alternating direction every press never takes a
+  step. Walk 2-3 steps per direction before reversing.
+- Next: WP2 character archetypes (guide) or the manifesto's remaining §3
+  aspirations (gym relocations) if Tony calls them.
+
+## Previous Codex Turn (v21.28 - WP-TOWN Structure)
 
 - Tony correctly reprioritized the town over WP2 after comparing the opening
   maps with FireRed's Pallet Town/Oak Lab sheet. The problem was composition,
