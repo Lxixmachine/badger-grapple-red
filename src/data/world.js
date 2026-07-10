@@ -20,7 +20,7 @@ export const AREAS = {
     exits: [
       { x: 14, y: 19, to: 'fieldhouse', tx: 14, ty: 2, msg: 'Back inside the Field House.' },
       { x: 22, y: 12, to: 'studyhall', tx: 5, ty: 10, msg: 'Memorial Library.' },
-      { x: 27, y: 10, to: 'downtown', tx: 1, ty: 7, msg: 'State Street.' },
+      { x: 27, y: 6, to: 'downtown', tx: 1, ty: 7, msg: 'State Street.' },
       { x: 1, y: 10, to: 'lakeshore', tx: 26, ty: 7, msg: 'Lakeshore Path.' },
       { x: 14, y: 1, to: 'conference', tx: 14, ty: 12, msg: 'Annex Arena.' },
       { x: 5, y: 5, to: 'shop', tx: 14, ty: 10, msg: 'Team Shop.' },
@@ -68,7 +68,7 @@ export const AREAS = {
     bg: 'area_downtown',
     start: { x: 1, y: 7 },
     exits: [
-      { x: 0, y: 7, to: 'campus', tx: 26, ty: 10, msg: 'Bascom Hill.' },
+      { x: 0, y: 7, to: 'campus', tx: 26, ty: 6, msg: 'Bascom Hill.' },
       { x: 21, y: 4, to: 'championship', tx: 14, ty: 12, msg: 'The Kohl Center.', gate: ['Neutral Badge', 'Scramble Badge'] }
     ],
     encounters: false

@@ -37,7 +37,7 @@ export function isBlocked(area,x,y){
    return false;
  }
  if(n==='BASCOM HILL'){
-   if((x===0||x===27||y===0||y===19)&&!((x===14&&y===19)||(x===27&&y===10)||(x===1&&y===10)||(x===14&&y===1)))return true;
+   if((x===0||x===27||y===0||y===19)&&!((x===14&&y===19)||(x===27&&y===6)||(x===1&&y===10)||(x===14&&y===1)))return true;
    if(x>=2&&x<=8&&y>=1&&y<=5&&!(x===5&&y===5))return true; // Team Shop
    if(x>=19&&x<=25&&y>=1&&y<=5&&!(x===22&&y===5))return true; // Recovery Center
    if(x>=19&&x<=25&&y>=8&&y<=12&&!(x===22&&y===12))return true; // Memorial Library

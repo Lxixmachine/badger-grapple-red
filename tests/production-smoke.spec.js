@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.29-edge-continuity');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.30-town-playable');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -123,9 +123,12 @@ test('coach assignment leads from Field House to Bascom Hill', async ({page}) =>
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').messageOpen)).toBe(false);
   await page.waitForTimeout(120);
 
-  for (let i = 0; i < 6; i++) await move(page, 'up');
-  for (let i = 0; i < 9; i++) await move(page, 'left');
-  await press(page, 'up');
+  // The mat wrestler at (14,8) is solid now - sidestep the mat column first.
+  for (let i = 0; i < 2; i++) await move(page, 'up');
+  await move(page, 'left');
+  for (let i = 0; i < 3; i++) await move(page, 'up');
+  for (let i = 0; i < 8; i++) await move(page, 'left');
+  await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 5, y: 5});
   await page.waitForTimeout(120);
 
@@ -284,7 +287,8 @@ test('big ten championship bracket runs to the title', async ({page}) => {
     pos: {x: 10, y: 7}
   }));
 
-  await move(page, 'up'); // step onto the tournament desk tile
+  await press(page, 'up'); // face the tournament desk (the official is solid now)
+  await page.waitForTimeout(200);
   const clearMessageIfOpen = async () => {
     const open = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene')?.messageOpen);
     if (open) { await press(page, 'b'); await page.waitForTimeout(150); }
@@ -297,6 +301,8 @@ test('big ten championship bracket runs to the title', async ({page}) => {
   ];
   for (const stage of expected) {
     await clearMessageIfOpen();
+    await press(page, 'up'); // re-face the desk (facing resets after battles)
+    await page.waitForTimeout(180);
     await press(page, 'a'); // enter the next bracket round at the desk
     await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys()), {timeout: 8000}).toContain('BattleScene');
     await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').trainerName)).toBe(stage.name);
@@ -319,6 +325,8 @@ test('big ten championship bracket runs to the title', async ({page}) => {
   }
 
   await clearMessageIfOpen();
+  await press(page, 'up'); // face the desk again after the final battle
+  await page.waitForTimeout(180);
   await press(page, 'a'); // desk after the title
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Big Ten Champion');
   expect(runtimeIssues).toEqual([]);

@@ -25,7 +25,8 @@ export class OverworldScene extends Phaser.Scene{
  openMenu(){if(this.messageOpen){this.clearMessage();return;}this.playSfx('open');this.scene.launch('MenuScene',{parent:this});}
  unlockSfx(){unlockAudio();}
  playSfx(kind){if(sfx[kind])sfx[kind]();}
- pass(x,y){if(isBlocked(this.area,x,y))return false;const blocks=SOLIDS[this.area]||[];return !blocks.some(([x1,y1,x2,y2])=>x>=x1&&x<=x2&&y>=y1&&y<=y2);}
+ pass(x,y){if(isBlocked(this.area,x,y))return false;if(this.npcList.some(e=>e.npc.tile&&e.npc.tile.x===x&&e.npc.tile.y===y))return false; // NPCs are solid, FireRed-style
+  const blocks=SOLIDS[this.area]||[];return !blocks.some(([x1,y1,x2,y2])=>x>=x1&&x<=x2&&y>=y1&&y<=y2);}
  tryMove(dx,dy,dir){if(this.messageOpen){this.clearMessage();return;}
   if(this.facing!==dir&&!this.moving){this.face(dir);this.turnPauseUntil=(this.time.now||0)+90;return;} // tap turns in place; holding walks after a short beat
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
@@ -112,7 +113,8 @@ showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0
 }if(this.area==='championship'){this.addNpc(TOURNAMENT.desk.x,TOURNAMENT.desk.y,7,'npc-idle-right','Official: The Big Ten Championship desk.',null,'gray');}if(this.area==='studyhall'){this.addNpc(9,8,7,'npc-idle-right','Tutor: Film study helps recruiting.',null,'purple');this.addNpc(14,7,4,'npc-idle-left','Student: The Hill has three recruit styles right now.',null,'green');}
 }
  
- updateNpcPatrols(){if(this.messageOpen||this.moving)return;const now=this.time.now||0;for(const e of this.npcList){if(!e.route||e.route.length<2)continue;if(now-e.t<1600)continue;e.t=now+Phaser.Math.Between(250,900);e.i=(e.i+1)%e.route.length;const [tx,ty]=e.route[e.i];const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,60),ease:'Sine.easeInOut'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Sine.easeInOut'});}}
+ updateNpcPatrols(){if(this.messageOpen||this.moving)return;const now=this.time.now||0;for(const e of this.npcList){if(!e.route||e.route.length<2)continue;if(now-e.t<1600)continue;e.t=now+Phaser.Math.Between(250,900);const ni=(e.i+1)%e.route.length;const [tx,ty]=e.route[ni];if(isBlocked(this.area,tx,ty)||(this.tilePos.x===tx&&this.tilePos.y===ty)||this.npcList.some(o=>o!==e&&o.npc.tile&&o.npc.tile.x===tx&&o.npc.tile.y===ty))continue; // patrols never enter walls, the player's tile, or another NPC
+  e.i=ni;const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,60),ease:'Sine.easeInOut'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Sine.easeInOut'});}}
 
  updateDepths(){const py=this.player.y;this.player.setDepth(py);this.shadow.setDepth(py-1);for(const entry of this.npcList){entry.npc.setDepth(entry.npc.y);entry.sh.setDepth(entry.npc.y-1);}}
  updateMarker(){const kind=this.kindHere();this.marker.setVisible(['EXIT','R','S','C','g','M','N','STATUE','SCOUT_NPC','TRAINER','TOURNEY','SAVE_NPC','BATTLE_NPC','STUDY_NPC','HIDDEN_TAPE','HIDDEN_FILM','HIDDEN_DRINK','DOOR','NATIONALS','WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(kind)&&!this.messageOpen);if(this.marker.visible){this.marker.setPosition(this.player.x,this.player.y-35+Math.sin((this.time.now||0)/180)*1.2);this.marker.setAlpha(.86+Math.sin((this.time.now||0)/160)*.12);}}

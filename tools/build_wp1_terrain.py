@@ -48,17 +48,17 @@ MAPS = {
         "#.#######...##.##..#######.#",
         "#.#######..........#######.#",
         "#.###E###..........###E###.#",
+        "#..........................E",
         "#..........................#",
-        "#..........................#",
-        "#.........##..#.##.#######.#",
+        "#.........##..#.##T#######.#",
         "#..................#######.#",
-        "#E.................#######.E",
+        "#E.................#######.#",
         "#..................#######.#",
         "#..................###E###.#",
         "#..##.###..................#",
         "#..#gggg#..........gggggg..#",
         "#..gggggg..........gggggg..#",
-        "#..gggggg..........gggggg..#",
+        "#..gggggg..........gggTgg..#",
         "#..gggggg..........gggggg..#",
         "#.............S............#",
         "##############E#############",
@@ -304,12 +304,28 @@ def normalize_image(tile):
     return rgb
 
 
+def key_bush_backing(tile):
+    """The bush crop carries a flat light-green backing from its source sheet;
+    key it so bushes composite onto the local ground instead of stamping
+    bright squares over the pale lawn."""
+    px = tile.load()
+    for by in range(tile.height):
+        for bx in range(tile.width):
+            r, g2, b2, a = px[bx, by]
+            if a and g2 > 140 and g2 > r * 1.12 and g2 > b2 * 1.45:
+                px[bx, by] = (r, g2, b2, 0)
+    return tile
+
+
 def load_source_tiles(source_path, crops):
     source = Image.open(source_path).convert("RGBA")
-    return {
+    tiles = {
         name: normalize_image(source.crop(box).resize((TILE, TILE), Image.Resampling.NEAREST))
         for name, box in crops.items()
     }
+    if "bush" in tiles:
+        tiles["bush"] = key_bush_backing(tiles["bush"])
+    return tiles
 
 
 def load_tiles():

@@ -77,9 +77,13 @@ This exact rewiring was implemented and verified once (validator BFS green, exit
 | championship | exit becomes (14,13)→downtown(21,5); start (14,11) |
 
 **v21.28 WP-TOWN coordinate update:** Bascom Hill is now 28x20 so it can
-scroll vertically like a FireRed town. Its west/east exits moved to (1,10)
-and (27,10), the Field House threshold to (14,19), and the shop/recovery/
-library doors to (5,5), (22,5), and (22,12). External destination landings,
+scroll vertically like a FireRed town. Its west exit is (1,10), the Field
+House threshold (14,19), and the shop/recovery/library doors (5,5), (22,5),
+and (22,12). **v21.30 amendment:** the east exit is (27,6) — the State
+Street artery runs through the open rows 6-7 corridor BETWEEN the Recovery
+Center and Memorial Library masses, not down a 1-tile alley beside the
+library (playtest finding: the alley read as "the building blocks the path"
+and forced the sprite over the roof edge). External destination landings,
 the Madison compass, golden path, wild bands, and every world law remain
 unchanged. `VISUAL_OVERHAUL_GUIDE.md` §5 owns the current collision map.
 
