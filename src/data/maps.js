@@ -1,4 +1,5 @@
 import {AREAS, TRAINERS, TOURNAMENT, WORLD_META} from './world.js';
+import {layeredMap,layeredBlocked,layeredGrass,layeredInteraction,layeredSign} from './layeredMaps.js';
 
 export {AREAS, TRAINERS, TOURNAMENT, WORLD_META};
 export const TILE=16;
@@ -22,32 +23,9 @@ export function areaDimensions(id){const area=areaFor(id);return {width:area.wid
 export function isBlocked(area,x,y){
  const size=areaDimensions(area);
  if(x<0||x>=size.width||y<0||y>=size.height)return true;
+ if(layeredMap(area))return layeredBlocked(area,x,y);
  const n=areaFor(area).name;
  // Collision matches visible art. Open lanes first; decoration never blocks.
- if(n==='FIELD HOUSE'){
-   // v21.28 opening-room rebuild: every large generated fixture is solid;
-   // the mat, floor lines, wall art, doorway mat, and light remain walkable.
-   if(x===0||x===27||y===0||y===13)return true;
-   if(y===1 && x!==14)return true; // top wall; center door only
-   if(x>=1&&x<=4&&y>=2&&y<=4)return true; // coach station
-   if(x>=8&&x<=12&&y===2)return true; // bleachers under the north wall
-   if(x>=22&&x<=26&&y>=2&&y<=4)return true; // lockers
-   if(x>=21&&x<=25&&y>=7&&y<=10)return true; // weight station
-   if(x>=4&&x<=7&&y>=9&&y<=11)return true; // meeting table
-   return false;
- }
- if(n==='BASCOM HILL'){
-   if((x===0||x===27||y===0||y===19)&&!((x===14&&y===19)||(x===27&&y===6)||(x===1&&y===10)||(x===14&&y===1)))return true;
-   if(x>=2&&x<=8&&y>=1&&y<=5&&!(x===5&&y===5))return true; // Team Shop
-   if(x>=19&&x<=25&&y>=1&&y<=5&&!(x===22&&y===5))return true; // Recovery Center
-   if(x>=19&&x<=25&&y>=8&&y<=12&&!(x===22&&y===12))return true; // Memorial Library
-   if(x>=12&&x<=16&&y>=1&&y<=3&&x!==14)return true; // Annex gateway sides
-   if(x===14&&y===8)return true; // Abe statue and plinth
-   if((x===10||x===11||x===16||x===17)&&y===8)return true; // plaza planters
-   if(y===13&&x>=3&&x<=8&&x!==5)return true; // practice-yard fence with gate
-   if((x===3||x===8)&&y===14)return true;
-   return false;
- }
  if(n==='MEMORIAL LIBRARY')return y===0||x===0||x===27||y===13||((x<4||x>7)&&y===11);
  if(n==='TEAM SHOP'||n==='RECOVERY CENTER'){
    if(x===0||x===27||y===0||y===13)return true;
@@ -67,41 +45,18 @@ export function isBlocked(area,x,y){
 // v21.34 building signs - FireRed density: Pallet Town reads 5 signs in a
 // town this size; every enterable building announces itself at the door.
 export const SIGNS={
- campus:{
-  '4,5':'TEAM SHOP - Gear, tape, and drinks for the room.',
-  '21,5':'RECOVERY CENTER - Rest and reset between sessions.',
-  '21,12':'MEMORIAL LIBRARY - Film study and scouting reports upstairs.',
-  '13,3':'ANNEX ARENA - Conference duals. The Neutral Badge lives here.',
-  '13,19':'FIELD HOUSE - Home of Badger wrestling.'
- },
  downtown:{'20,4':'KOHL CENTER - BIG TEN CHAMPIONSHIP. Badge holders only.'}
 };
-export function signText(area,x,y){return SIGNS[area]?.[x+','+y]||null;}
-export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9)||(n==='BASCOM HILL'&&((x>=3&&x<=8&&y>=14&&y<=17)||(x>=19&&x<=24&&y>=14&&y<=17)));}
+export function signText(area,x,y){return layeredSign(area,x,y)||SIGNS[area]?.[x+','+y]||null;}
+export function isGrass(area,x,y){if(layeredMap(area))return layeredGrass(area,x,y);const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9);}
 export function spotKind(area,x,y){
  if(trainerAt(area,x,y))return 'TRAINER'; // v21.11: all trainers are data-driven, no per-area cases
  if(signText(area,x,y))return 'SIGN';
+ const layered=layeredInteraction(area,x,y);if(layered)return layered;
  const n=areaFor(area).name;
- if(n==='FIELD HOUSE'){
-   if(x===14&&y===1)return 'EXIT';
-   if(x===5&&(y===3||y===4))return 'N';
-   if(x>=9&&x<=18&&y>=3&&y<=11)return 'M';
-   if(x>=4&&x<=7&&y===8)return 'MEETING_ROOM';
-   if(x>=22&&x<=26&&y===5)return 'LOCKER_ROOM';
-   if(x===20&&y>=7&&y<=10)return 'WEIGHT_ROOM';
-   if(x===5&&y>=2&&y<=4)return 'COACH_OFFICE';
- }
  if((n==='TEAM SHOP'||n==='RECOVERY CENTER')&&x>=13&&x<=15&&y===11)return 'EXIT';
  if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
  if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
- if(n==='BASCOM HILL'){
-   if(x===14&&y===8)return 'STATUE';
-   if(x===5&&y===15)return 'SCOUT_NPC';
-   if(x===11&&y===14)return 'SAVE_NPC';
-   if(x===8&&y===17)return 'HIDDEN_TAPE';
-   if(x===22&&y===11)return 'DOOR';
-   if(x===18&&y===17)return 'HIDDEN_DRINK';
- }
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
  if(n==='STATE STREET'&&y===4&&x>=24)return 'CAPITOL'; // the dome closes the street's east view
  if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';

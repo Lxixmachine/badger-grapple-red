@@ -63,7 +63,10 @@ Studying the full FireRed overworld against ours exposed three failures:
    walkable route first, then generate visible layers and collision from the
    same map data. Neither a backdrop PNG nor a separate switch statement is
    authoritative by itself. Validator BFS (exits reachable, landings walkable,
-   trainers/captains reachable) must pass every release.
+   trainers/captains reachable) must pass every release. The v21.36 FR1 pilot
+   implements this law in `src/data/layeredMaps.json` for Field House and
+   Bascom Hill; migrate later areas into that format instead of copying the
+   retired collision branches.
 6. **Landmark hierarchy:** each camera region has one primary focal landmark,
    two or three secondary anchors, and quiet connective space. An area may have
    multiple landmarks as the camera reveals them; equal visual weight is the

@@ -28,6 +28,12 @@ export function installTestHooks(game, routeVirtualButton) {
       message: scene.message ?? null,
       trainerName: scene.trainerName ?? null,
       npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
+      layered: scene.layeredMapVersion ? {
+        version: scene.layeredMapVersion,
+        upperCount: scene.upperObjects?.length || 0,
+        directActorDepth: Array.isArray(scene.actors),
+        upperDepths: (scene.upperObjects || []).map(obj => obj.depth)
+      } : null,
       camera: scene.worldCamera && scene.uiCamera ? {
         count: scene.cameras.cameras.length,
         worldZoom: scene.worldCamera.zoom,

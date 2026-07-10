@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.35-fr0-camera');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.36-fr1-layers');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'fr1_campus_tree', 'fr1_campus_red_building', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -108,7 +108,8 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldTilesHigh: 11.2,
       worldIgnoresUi: true,
       uiIgnoresWorld: true
-    }
+    },
+    layered: {version: 1, upperCount: 8, directActorDepth: true}
   });
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
@@ -120,6 +121,23 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(save.party).toHaveLength(1);
   expect(save.flags.introDone).toBe(true);
   expect(save.message).toContain('Coach is waiting');
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('FR1 pilot map renders depth-aware Bascom architecture', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
+  await page.goto('/?test=1&scene=overworld&area=campus&x=9&y=3');
+  await expect(page.locator('#bootError')).toBeHidden();
+  await expect(page.locator('canvas')).toBeVisible();
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').layered)).toMatchObject({
+    version: 1,
+    upperCount: 13,
+    directActorDepth: true
+  });
+  const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(state.tilePos).toEqual({x: 9, y: 3});
+  expect(state.layered.upperDepths).toHaveLength(13);
   expect(runtimeIssues).toEqual([]);
 });
 

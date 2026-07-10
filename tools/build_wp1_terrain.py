@@ -6,9 +6,10 @@ tiles according to the geometry maps in VISUAL_OVERHAUL_GUIDE.md. Areas may
 have different heights; Bascom Hill is 28x20 so it can scroll vertically.
 """
 
+import json
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -18,6 +19,8 @@ LANDMARK_SOURCE = ROOT / "art" / "imagegen" / "madison_landmarks_2026-07-09.png"
 ARCH_SOURCE = ROOT / "art" / "imagegen" / "town_fieldhouse_architecture_2026-07-09.png"
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
+LAYERS_OUT = ROOT / "public" / "assets" / "layers"
+LAYERED_SOURCE = ROOT / "src" / "data" / "layeredMaps.json"
 TILE = 16
 
 
@@ -192,6 +195,10 @@ MAPS = {
         "##############E#############",
     ],
 }
+
+LAYERED_MAPS = json.loads(LAYERED_SOURCE.read_text(encoding="utf-8"))["areas"]
+for area_id, area_source in LAYERED_MAPS.items():
+    MAPS[area_id] = area_source["tiles"]
 
 
 # Crop coordinates target the imagegen sheet's individual enlarged subjects.
@@ -437,7 +444,7 @@ def blocked(g, x, y):
     width = len(g[0])
     if x < 0 or x >= width or y < 0 or y >= height:
         return True
-    return g[y][x] == "#"
+    return g[y][x] in "#X"
 
 def paint(img, tiles, name, x, y):
     if 0 <= x < img.width // TILE and 0 <= y < img.height // TILE:
@@ -467,12 +474,9 @@ def path_cells(area, g):
             for y in range(min(y0, y1), max(y0, y1) + 1):
                 if not blocked(g, x, y):
                     cells.add((x, y))
-    if area == "campus":
-        seg(13, 1, 15, 19)      # Annex-to-Field-House ceremonial walk
-        seg(1, 9, 27, 11)       # Lakeshore-to-State-Street cross-campus walk
-        seg(5, 5, 5, 9)         # Team Shop yard
-        seg(22, 5, 22, 9)       # Recovery Center yard
-        seg(22, 11, 22, 13)     # Memorial Library forecourt
+    if area in LAYERED_MAPS:
+        for x0, y0, x1, y1 in LAYERED_MAPS[area].get("paths", []):
+            seg(x0, y0, x1, y1)
     if area == "lakeshore":
         seg(14, 7, 27, 7)       # from the Bascom Hill gate along the shore
         seg(14, 7, 14, 9)       # down to the shoreline walk
@@ -618,26 +622,13 @@ def compose(area, tiles, props):
         pass  # blocked mass is the water, already drawn
     # campus blocked dressing happens below (buildings + assembled trees)
 
-    if area == "campus":
-        # Pallet-style hierarchy: three full architectural masses and one
-        # ceremonial gateway, each fitted exactly to its collision footprint.
-        paint_prop(img, props, "campus_red_building", 2, 1)
-        paint_prop(img, props, "campus_blue_building", 19, 1)
-        paint_prop(img, props, "campus_blue_building", 19, 8)
-        paint_prop(img, props, "annex_gateway", 12, 0)
-        for door, step, tile in (((5, 5), (5, 6), "red_door"), ((22, 5), (22, 6), "blue_door"), ((22, 12), (22, 13), "blue_door")):
-            paint(img, tiles, tile, *door)
-            paint(img, tiles, "stone_step", *step)
-        # The fenced practice lawn is a separate spatial room with one gate.
-        for x in range(3, 9):
-            if x != 5:
-                paint(img, tiles, "fence", x, 13)
-        paint(img, tiles, "fence_post", 3, 14)
-        paint(img, tiles, "fence_post", 8, 14)
-        # Abe and low planters define the plaza without consuming its paths.
-        paint(img, tiles, "statue", 14, 8)
-        for x in (10, 11, 16, 17):
-            paint(img, tiles, "bush", x, 8)
+    # FR1 pilot areas own their lower decor in layeredMaps.json. Upper props
+    # are deliberately absent here and rendered as depth-aware runtime art.
+    for entry in LAYERED_MAPS.get(area, {}).get("lowerDecor", []):
+        if entry["type"] == "tile":
+            paint(img, tiles, entry["name"], entry["x"], entry["y"])
+        elif entry["type"] == "prop":
+            paint_prop(img, props, entry["name"], entry["x"], entry["y"])
 
     # assembled 2x2 trees over remaining outdoor blocked cells (staggered rows)
     if not interior:
@@ -713,19 +704,6 @@ def compose(area, tiles, props):
         paint_prop(img, props, "nationals_door", 23, 0)
 
     # ---- pass 6: fixtures over collision blocks (art matches collision) ----
-    if area == "fieldhouse":
-        # The opening room now has Pallet/Oak-Lab hierarchy: one dominant mat,
-        # a deep back wall, and four large functional zones instead of tiny
-        # repeated tiles scattered over an empty floor.
-        paint_prop(img, props, "fieldhouse_mat", 9, 2)
-        paint_prop(img, props, "trophy_wall", 1, 0)
-        paint_prop(img, props, "bleachers", 8, 0)
-        paint_prop(img, props, "fieldhouse_exit", 13, 0)
-        paint_prop(img, props, "scoreboard", 16, 0)
-        paint_prop(img, props, "coach_station", 1, 2)
-        paint_prop(img, props, "locker_bank", 22, 1)
-        paint_prop(img, props, "weight_station", 21, 7)
-        paint_prop(img, props, "meeting_table", 4, 9)
     if area in {"shop", "recovery"}:
         for x in range(10, 18):
             paint(img, tiles, "shelf", x, 4)
@@ -762,7 +740,39 @@ def save_tilesheet(tiles):
     sheet = Image.new("RGBA", (cols * TILE, rows * TILE), (0, 0, 0, 255))
     for index, name in enumerate(names):
         sheet.alpha_composite(tiles[name], ((index % cols) * TILE, (index // cols) * TILE))
-    sheet.convert("RGB").save(TILES_OUT)
+    save_if_changed(sheet.convert("RGB"), TILES_OUT)
+
+
+def save_if_changed(image, path):
+    """Keep generated files byte-stable when their rendered pixels match."""
+    if path.exists():
+        current = Image.open(path).convert(image.mode)
+        if current.size == image.size and ImageChops.difference(current, image).getbbox() is None:
+            return
+    image.save(path)
+
+
+def save_layered_textures(tiles, props):
+    """Export each FR1 upper source once; placement stays in layeredMaps.json."""
+    LAYERS_OUT.mkdir(parents=True, exist_ok=True)
+    written = set()
+    for area in LAYERED_MAPS.values():
+        for entry in area.get("upperDecor", []):
+            texture = entry["texture"]
+            if texture in written:
+                continue
+            if entry["source"] == "prop":
+                image = props[entry["name"]]
+            elif entry["source"] == "tile":
+                image = tiles[entry["name"]]
+            elif entry["source"] == "tileQuad":
+                image = Image.new("RGBA", (TILE * 2, TILE * 2), (0, 0, 0, 0))
+                for name, x, y in (("tree_tl", 0, 0), ("tree_tr", 1, 0), ("tree_bl", 0, 1), ("tree_br", 1, 1)):
+                    image.alpha_composite(tiles[name], (x * TILE, y * TILE))
+            else:
+                raise SystemExit(f"Unknown FR1 upper source: {entry['source']}")
+            save_if_changed(image, LAYERS_OUT / f"{texture}.png")
+            written.add(texture)
 
 
 def main():
@@ -771,8 +781,9 @@ def main():
     tiles = load_tiles()
     props = load_props()
     save_tilesheet(tiles)
+    save_layered_textures(tiles, props)
     for area in MAPS:
-        compose(area, tiles, props).save(UI_OUT / f"area_{area}.png")
+        save_if_changed(compose(area, tiles, props), UI_OUT / f"area_{area}.png")
 
 
 if __name__ == "__main__":

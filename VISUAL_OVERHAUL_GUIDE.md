@@ -15,10 +15,10 @@
 > **2026-07-10 correction after direct ROM study:** read
 > `FIRERED_REFERENCE_AUDIT.md` before executing another art package. Phaser is
 > retained. FR0 shipped in v21.35: a separate 1.25x world camera now shows
-> 16x11.2 tiles while the 320x224 UI remains unzoomed. FR1 (one layered map
-> source for art, collision, occlusion, and triggers) now precedes WP2. Do not
-> generate another town or character sheet until that map architecture is
-> corrected.
+> 16x11.2 tiles while the 320x224 UI remains unzoomed. FR1 shipped in v21.36:
+> Field House and Bascom Hill now use one layered source for paths, lower art,
+> collision, upper occlusion, exits, interactions, signs, and NPC anchors.
+> FR2 opening-area recomposition is now the next visual package.
 
 **For: Codex (ChatGPT), the project's art lane.** This is a complete, sequenced
 production plan to take the game's visuals to the FireRed bar. It is grounded
@@ -33,13 +33,11 @@ Do not hand-pixel, do not source art from the web, do not import third-party
 assets. Generate on chroma green, slice with the committed tools, iterate the
 prompt until the sheet meets the bar.
 
-The single rule that governs everything: **navigation is law.** Until FR1,
-walkability still lives in `src/data/maps.js` and the validator BFS-proves it,
-so shipped art must remain consistent with those coordinates. FR1 replaces
-this split ownership with one layered map source that generates art placement,
-collision, occlusion, and triggers together. Do not preserve a weak route only
-because it was hard-coded first; redesign the route and its visible layers as
-one reviewed change.
+The single rule that governs everything: **navigation is law.** The FR1 pilot
+source is `src/data/layeredMaps.json`; the compositor, collision helpers,
+runtime depth renderer, exits, interactions, signs, NPC anchors, validator,
+and tests consume it. Expand this format area by area. Do not reintroduce a
+separate collision switch or bake depth props back into the lower PNG.
 
 ---
 

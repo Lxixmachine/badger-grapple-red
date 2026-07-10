@@ -1,31 +1,22 @@
+import {LAYERED_MAPS,LAYERED_MAP_VERSION} from './layeredMaps.js';
+
 export const WORLD_META = {
-  version: '21.28',
+  version: '21.36',
   tileSize: 16,
   width: 28,
   height: 14,
   maxWidth: 28,
   maxHeight: 20,
-  source: 'code-data',
-  nextPipeline: 'tiled-json'
+  source: `layered-map-v${LAYERED_MAP_VERSION}`,
+  nextPipeline: 'expand-layered-map'
 };
 
 export const AREAS = {
-  fieldhouse: { name: 'FIELD HOUSE', bg: 'area_fieldhouse', start: { x: 14, y: 11 }, exits: [{ x: 14, y: 1, to: 'campus', tx: 14, ty: 18, msg: 'You step out onto campus.' }], encounters: false },
+  fieldhouse: { name: 'FIELD HOUSE', bg: 'area_fieldhouse', ...LAYERED_MAPS.fieldhouse, encounters: false },
   campus: {
     name: 'BASCOM HILL',
     bg: 'area_campus',
-    width: 28,
-    height: 20,
-    start: { x: 14, y: 18 },
-    exits: [
-      { x: 14, y: 19, to: 'fieldhouse', tx: 14, ty: 2, msg: 'Back inside the Field House.' },
-      { x: 22, y: 12, to: 'studyhall', tx: 5, ty: 10, msg: 'Memorial Library.' },
-      { x: 27, y: 6, to: 'downtown', tx: 1, ty: 7, msg: 'State Street.' },
-      { x: 1, y: 10, to: 'lakeshore', tx: 26, ty: 7, msg: 'Lakeshore Path.' },
-      { x: 14, y: 1, to: 'conference', tx: 14, ty: 12, msg: 'Annex Arena.' },
-      { x: 5, y: 5, to: 'shop', tx: 14, ty: 10, msg: 'Team Shop.' },
-      { x: 22, y: 5, to: 'recovery', tx: 14, ty: 10, msg: 'Recovery Center.' }
-    ],
+    ...LAYERED_MAPS.campus,
     encounters: true,
     wildLevels: [3, 6]
   },

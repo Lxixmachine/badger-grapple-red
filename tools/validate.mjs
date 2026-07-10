@@ -1,12 +1,39 @@
 import {ROSTER,STARTERS,PERSONAS} from '../src/data/roster.js';
 import {MOVES} from '../src/data/moves.js';
 import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked} from '../src/data/maps.js';
+import {existsSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
+import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
 
 let errs=[];
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
 
 if(WORLD_META.tileSize!==TILE)errs.push(`WORLD_META.tileSize ${WORLD_META.tileSize} does not match TILE ${TILE}`);
 if(WORLD_META.width!==28||WORLD_META.height!==14||WORLD_META.maxHeight<20)errs.push('WORLD_META must retain 28x14 defaults and support the 20-row Bascom Hill map');
+
+if(LAYERED_MAP_VERSION!==1)errs.push(`layered map version ${LAYERED_MAP_VERSION} is unsupported`);
+for(const [aid,map] of Object.entries(LAYERED_MAPS)){
+  if(!AREAS[aid]){errs.push(`layered area ${aid}: missing from AREAS`);continue;}
+  if(map.tiles.length!==map.height)errs.push(`layered area ${aid}: ${map.tiles.length} rows != height ${map.height}`);
+  map.tiles.forEach((row,y)=>{
+    if(row.length!==map.width)errs.push(`layered area ${aid}: row ${y} width ${row.length} != ${map.width}`);
+    for(let x=0;x<row.length;x++){
+      if(!'.#XgE'.includes(row[x]))errs.push(`layered area ${aid}: unsupported tile '${row[x]}' at (${x},${y})`);
+      if(isBlocked(aid,x,y)!=='#X'.includes(row[x]))errs.push(`layered area ${aid}: collision diverges at (${x},${y})`);
+    }
+  });
+  if(!map.lowerDecor?.length||!map.upperDecor?.length||!map.interactions?.length||!map.npcs?.length)errs.push(`layered area ${aid}: ground/lower/upper/interactions/NPC layers must all be populated`);
+  for(const exit of map.exits||[]){if(map.tiles[exit.y]?.[exit.x]!=='E')errs.push(`layered area ${aid}: exit (${exit.x},${exit.y}) is not marked E`);}
+  for(const upper of map.upperDecor||[]){
+    if(!Number.isFinite(upper.depthY))errs.push(`layered area ${aid}: upper ${upper.texture} has no depthY`);
+    const asset=fileURLToPath(new URL(`../public/assets/layers/${upper.texture}.png`,import.meta.url));
+    if(!existsSync(asset))errs.push(`layered area ${aid}: upper texture ${upper.texture}.png is missing`);
+  }
+  for(let y=0;y<map.height;y++)for(let x=0;x<map.width;x++)if(map.tiles[y][x]==='X'){
+    const covered=(map.upperDecor||[]).some(entry=>entry.source==='tileQuad'&&x>=entry.x&&x<=entry.x+1&&y===entry.y+1);
+    if(!covered)errs.push(`layered area ${aid}: occlusion collision X at (${x},${y}) has no tree canopy owner`);
+  }
+}
 
 for(const [id,r] of Object.entries(ROSTER)){
   (r.moves||[]).forEach(mk=>{if(!MOVES[mk])errs.push(`roster ${id}: move '${mk}' missing from MOVES`);});

@@ -1,6 +1,32 @@
 # Agent Handoff
 
-## Latest Codex Turn (v21.35 - FR0 Presentation Foundation)
+## Latest Codex Turn (v21.36 - FR1 Layered Map Ownership)
+
+- Shipped the FR1 pilot for Field House and Bascom Hill in
+  `src/data/layeredMaps.json`. One source now owns dimensions, ground mode,
+  path rectangles, collision/grass rows, lower decor, upper decor, exits,
+  interactions, signs, ambient NPC anchors, and player start anchors.
+- Removed both pilot areas' hand-written collision and interaction branches
+  from `maps.js`; `world.js`, the Python compositor, runtime, validator, and
+  smoke tests all consume the shared source.
+- Split major architecture out of the flat area PNGs. Buildings, the Annex
+  gateway, Field House fixtures, signs, and four new campus trees load as
+  transparent runtime props with explicit Y-depth thresholds.
+- Refactored NPCs from one fixed-depth container into direct world-layer
+  actors. Characters and props now sort against each other by contact Y.
+  Phone QA proves the player is hidden behind a tree canopy on its rear tile
+  and fully visible in front two rows lower.
+- Added honest tree collision: canopy rows remain walkable while trunk rows
+  are blocked and validator-owned. Bascom's north and south camera regions now
+  gain stronger intermediate anchors without closing the critical routes.
+- Release/cache labels are v21.36 / v236. `npm run check` passes all data,
+  balance, build, and 9/9 Chromium flows, including the new FR1 contract test.
+  Phone QA at 390x844 covers north/south Bascom, rear/front tree depth, and
+  Field House with no browser warnings or errors.
+- FR2 opening-area recomposition is next. Use the new source to redesign
+  camera reveals and landmarks; do not flatten upper props back into PNGs.
+
+## Previous Codex Turn (v21.35 - FR0 Presentation Foundation)
 
 - Rebased onto Claude's v21.29-v21.34 work and preserved all of it: edge
   continuity, grounded side sprites, State Street, FireRed walk/ambush/battle

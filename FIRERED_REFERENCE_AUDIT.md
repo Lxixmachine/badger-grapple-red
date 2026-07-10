@@ -153,7 +153,7 @@ Dialogue, prompts, area labels, and objective popups remain at 320x224 while
 maps, characters, and effects render at the corrected physical scale. Runtime
 test hooks enforce two-camera isolation and the 16x11.2-tile effective view.
 
-### FR1 - Layered map source (next)
+### FR1 - Layered map source (implemented in v21.36)
 
 Move one pilot area (the player's home and Bascom Hill) to a structured map
 format with these layers:
@@ -173,7 +173,14 @@ Acceptance: every visible barrier blocks; every open-looking tile is walkable;
 the player can pass behind upper-layer foliage/building edges; BFS remains
 green.
 
-### FR2 - Opening-area recomposition
+Implemented result: `src/data/layeredMaps.json` owns the Field House and
+Bascom Hill pilot layers. The compositor produces lower maps plus transparent
+upper architecture from it; Phaser renders those props at Y-depth thresholds.
+Campus tree canopies now demonstrate real rear/front traversal, ambient actor
+anchors moved out of scene conditionals, and validation rejects collision or
+layer divergence.
+
+### FR2 - Opening-area recomposition (next)
 
 Recompose the home, Field House, and Bascom Hill at the corrected camera scale.
 Design the critical path and camera reveals first, then architecture, then
