@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Claude Turn (VISUAL_REBUILD_PLAN — stop patching, rebuild the art as one system)
+
+Tony, on the growing findings list: "there's honestly so many issues I
+don't know where or how to start... the palette lock looks marginally
+better but misses all the real issues." He's right, and the root cause
+is now named in VISUAL_REBUILD_PLAN.md: **the art was never designed as
+one system** — six imagegen sheets, different prompts/lighting/styles/
+scales, composed by scripts. FireRed = one tileset authored together.
+Patches cannot produce coherence.
+
+- F-009 RETRACTED in the critique log: Claude wrongly inferred Tony
+  liked the Field House from a color count. Metrics never close
+  findings; only Tony's eye does. Field House rebuilds FIRST.
+- The plan: Stage 0 style spec (one page: master palette swatches, flat
+  cel shading, outline rule, drawn-motif rule, 16px authoring scale,
+  seamlessness + full edge sets) -> Stage 1 Codex generates ONE master
+  tileset to spec, family by family through Vol XII gates, before any
+  map uses it -> Stage 2 compositor re-points at the master sheet ->
+  Stage 3 areas one per relay cycle (Field House -> Bascom -> State
+  Street -> routes -> interiors), each boarded vs FireRed reference and
+  closed only by Tony's verdict.
+- Individual style patches (palette lock etc.) fold into the spec, not
+  shipped separately. Linter + critique log remain as the gates.
+- Next Claude turn: draft the Stage 0 style spec for Tony's ratify.
+  Next Codex turn (after ratify): Stage 1 master tileset, families in
+  review order: grounds -> edges -> props -> architecture.
+
 ## Latest Claude Turn (Visual Critique Bridge — style is now a tracked dimension)
 
 Tony's call: the linter isn't enough — Field House, Bascom, and State

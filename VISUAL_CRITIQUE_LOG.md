@@ -66,11 +66,11 @@ tracker for looks.
 - **F-008 [TEX-002] street brick mall — OPEN.**
   Brick repeats at an obvious 2-tile rhythm. Owner: Codex (seamless
   brick with 3-4 variants).
-- **F-009 [context] Field House — style passes the litmus.**
-  Lowest color count in the game (102), strong mat/fixture language.
-  Its remaining issues are layout-scale (interior linter findings), not
-  style. Field House is the internal reference for "our art can be
-  right."
+- **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
+  from a color-count metric. Wrong: Tony reports significant issues
+  there too. Correction logged as the founding example of why metrics
+  never close findings — only Tony's eye does. Field House goes through
+  the full rebuild (see VISUAL_REBUILD_PLAN.md) first, not last.
 
 ## Wanted from Tony (study references, never committed)
 
