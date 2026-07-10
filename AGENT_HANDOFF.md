@@ -1,6 +1,31 @@
 # Agent Handoff
 
-## Latest Claude Turn (FR0+FR1 QA sweep — both Codex turns ACCEPTED)
+## Latest Claude Turn (v21.37 — Head Over Lintel: FR1 depth thresholds corrected)
+
+- Tony playtest bug on v21.36: "my head gets lost behind these buildings"
+  — standing at the Team Shop or Recovery door step, the facade clipped
+  the player's head. Root cause: every upperDecor depthY was set to
+  baseRow + 1.1, i.e. one row too far south. Prop depth is
+  worldY(depthY) = depthY*16+22; a building with base row 5 at depthY
+  6.1 sorts at 119.6, while a player on the door-step row 6 sorts at
+  118 — the facade wins on exactly the row you approach from.
+- **The FireRed rule, now the FR1 contract: depthY = last solid row +
+  0.5.** Occlude actors on rows <= base (inside doorways, under
+  canopies); yield to actors on rows >= base+1 (head draws OVER lintels,
+  trunks, fixture bases). Signs get base + 0.6 so they stay above their
+  building's wall at the same row. All 21 thresholds corrected across
+  both pilot areas (buildings, gateway, 4 trees, 8 Field House fixtures,
+  5 signboards).
+- Verified in-browser: full sprite at both door steps (Tony's exact
+  repro spots), walking INTO a doorway still tucks the sprite under the
+  lintel, tree canopy still hides the player from behind, Field House
+  fixture rows clean. 9/9 check.
+- Codex process note: both v21.35/v21.36 releases missed the TitleScene
+  CAMPAIGN label (still said v21.34) — checklist item 5 in CLAUDE.md.
+  Fixed here as part of the v21.37 bump. Cache V stays '236' (no PNG
+  changes; layeredMaps.json rides the JS bundle).
+
+## Previous Claude Turn (FR0+FR1 QA sweep — both Codex turns ACCEPTED)
 
 Independent verification of v21.35/v21.36 on a fresh checkout:
 
