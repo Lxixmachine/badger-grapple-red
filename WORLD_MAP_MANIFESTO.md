@@ -47,8 +47,8 @@ Studying the full FireRed overworld against ours exposed three failures:
 - FIELD HOUSE — home of Badger wrestling; coach, mat centerpiece, save anchor.
 - BASCOM HILL (rename from CAMPUS QUAD) — hub; Abe Lincoln statue (lore lines per badge, ties into existing statue-lore canon); every exit telegraphs its destination.
 - MEMORIAL LIBRARY (rename from STUDY HALL) — film-study NPC, coach-weakness hints.
-- LAKESHORE PATH — Mendota across the whole north edge, pier over the water, three Terrace sunburst chairs (green/yellow/orange): the most recognizable props in the game.
-- PICNIC POINT (rename from RIVER TRAIL) — peninsula, water both shores, pine stand, fire circle; single exit east.
+- LAKESHORE PATH — "The Coastal Walk" (56x14 since v21.39): Mendota across the whole north edge, the marina cluster mid-route (pier over the water, three Terrace sunburst chairs, locked boathouse — the route's remembered gate), three open-mat zones the walk crosses.
+- PICNIC POINT (rename from RIVER TRAIL) — "The Peninsula Push" (48x14 since v21.39): water both shores and at the tip, two staggered pine pinches, two mat zones, fire circle + the Funk Doctor at the very tip; single exit east.
 - STATE STREET (rename from DOWNTOWN) — brick pedestrian street, Capitol dome silhouette on the east horizon strip, storefront row obeying the door law; the red-marquee building is the Kohl Center.
 - KOHL CENTER (rename Championship Hall's display name) — gold accents (the ONLY gold in the game), spotlight title mat, Big Ten bracket desk, locked NATIONALS door (Season Two seam).
 - ANNEX ARENA (Conference Arena) — Badge 3, bleachers and banners, north of the quad.
@@ -58,7 +58,7 @@ Studying the full FireRed overworld against ours exposed three failures:
 1. **Door law:** dark opening + lit lintel + red mat = enterable. Drawn shut door, no mat = decoration. No exceptions; this is the game's core readability contract.
 2. **Edge continuity:** terrain at an exit edge continues on the other side (Mendota band spans Picnic Point AND Lakeshore's north edges at the same rows).
 3. **Telegraphing:** from the hub you can see where each exit leads (lake glint west, street east, arena arch north, Field House doors south).
-4. **Tall-grass honesty:** encounter cells always render dark tall grass; decoration never covers them (v21.25's encounter-readability fix is now law — fringe feathers outward only).
+4. **Open-mat honesty (formerly tall-grass honesty):** encounter cells always render as unmistakable worn red mats — you can SEE where scouts happen; decoration never covers them. (v21.39: Tony's call — open mats are the wrestling translation of tall grass, per CITY_DESIGN_MANIFESTO Part X. Mats are laid deliberately, so zones are rectangles with no fringe.)
 5. **Navigation is law; art and collision share one source.** Compose the
    walkable route first, then generate visible layers and collision from the
    same map data. Neither a backdrop PNG nor a separate switch statement is
@@ -101,6 +101,13 @@ blocked Capitol grounds — the dome prop over a hedge row closes the
 street's east view (§3's "Capitol dome silhouette" made literal), with a
 readable CAPITOL sign spot along y4. The street corridor itself is rows
 5-9: sidewalk row 5, brick pedestrian mall rows 6-8, sidewalk row 9.
+**v21.39 amendment (WP-ROUTES):** the routes are journeys now. Lakeshore
+Path is 56x14 (exits: (55,7)→campus(2,10), (0,9)→river(46,9); campus west
+exit lands at (54,7)). Picnic Point is 48x14 (exit (47,9)→lakeshore(1,9);
+the Funk Doctor moved to (4,7) by the fire circle at the tip). Both live
+in the FR1 layered source. Encounter cells render as open mats
+everywhere (law #4). Route trainers re-seated on the new sight lines:
+Marina (40,7)→E, Sandy (17,5)→S, Gus (26,9)→E, Tavi (12,4)→S.
 
 **Renames (display names only — area ids NEVER change, saves stay compatible):** CAMPUS QUAD→BASCOM HILL, DOWNTOWN→STATE STREET, RIVER TRAIL→PICNIC POINT, CHAMPIONSHIP HALL→KOHL CENTER, STUDY HALL→MEMORIAL LIBRARY.
 

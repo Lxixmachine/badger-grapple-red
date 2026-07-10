@@ -250,6 +250,11 @@ TOWN_CROPS = {
     "store_red": (40, 1010, 247, 1216), "store_blue": (281, 1010, 488, 1216),
     "store_neutral": (523, 1010, 730, 1216), "stone_step": (766, 1010, 974, 1216),
     "quiet_grass_spare": (1008, 1010, 1216, 1216),
+    # open-mat encounter tiles: interior patches of the plain practice mat.
+    # Encounter cells render as worn outdoor mats now (Tony's call - the
+    # wrestling translation of tall grass). Codex ask: dedicated outdoor
+    # worn-mat tile set to replace these interior samples.
+    "openmat0": (538, 297, 578, 337), "openmat1": (672, 431, 712, 471),
 }
 
 # World Map Manifesto landmark sheet: 4 equal columns x 3 equal rows. Complex
@@ -477,13 +482,7 @@ def path_cells(area, g):
     if area in LAYERED_MAPS:
         for x0, y0, x1, y1 in LAYERED_MAPS[area].get("paths", []):
             seg(x0, y0, x1, y1)
-    if area == "lakeshore":
-        seg(14, 7, 27, 7)       # from the Bascom Hill gate along the shore
-        seg(14, 7, 14, 9)       # down to the shoreline walk
-        seg(0, 9, 2, 9)         # the last steps out to Picnic Point
-    if area == "river":
-        seg(12, 9, 27, 9)       # the Point's walking trail below the pines
-        seg(1, 8, 3, 8)         # spur to the fire circle at the tip
+    # lakeshore/river paths come from layeredMaps.json like all FR1 areas;
     # downtown has no sand paths: the whole mall corridor is brick (pass 1)
     return cells
 
@@ -548,14 +547,10 @@ def compose(area, tiles, props):
         for x in range(width):
             mark = g[y][x]
             if mark == "g":
-                # Every encounter cell stays unmistakably dark (FireRed rule:
-                # you can SEE where wild encounters are). The soft fringe
-                # feathers OUTWARD onto the neighboring lawn instead.
-                paint(img, tiles, "tall", x, y)
-            elif not interior and mark in ".ST" and (x, y) not in paths and (x, y) not in water:
-                near_tall = any(0 <= x + dx < width and 0 <= y + dy < height and g[y + dy][x + dx] == "g" for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)))
-                if near_tall:
-                    paint(img, tiles, "tall_fringe", x, y)
+                # Open-mat honesty (was tall-grass honesty): every encounter
+                # cell renders as an unmistakable worn mat - you can SEE where
+                # scouts happen. Mats are laid deliberately, so no fringe.
+                paint(img, tiles, "openmat0" if (x + y) % 2 else "openmat1", x, y)
             elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
                 r = rng.random()
                 if area != "downtown":
@@ -633,6 +628,8 @@ def compose(area, tiles, props):
     # assembled 2x2 trees over remaining outdoor blocked cells (staggered rows)
     if not interior:
         claimed = set(water)  # water cells are never tree ground
+        # lowerDecor landmarks (pier, boathouse, fire circle) own their cells
+        claimed.update((e["x"], e["y"]) for e in LAYERED_MAPS.get(area, {}).get("lowerDecor", []) if e["type"] == "tile")
         for y in range(height - 1):
             for x in range(width - 1):
                 if area == "campus" and (
@@ -673,21 +670,7 @@ def compose(area, tiles, props):
                     paint(img, tiles, "bush", x, y)
                     claimed.add((x, y))
 
-    # ---- manifesto landmarks (decor only; collision unchanged) ----
-    if area == "lakeshore":
-        for y in range(1, 5):    # the pier runs out over Mendota
-            paint(img, tiles, "pier", 8, y)
-            paint(img, tiles, "pier", 9, y)
-        paint(img, tiles, "pier", 10, 4)
-        # The three Terrace chair colors sit on the blocked pier apron, so
-        # their visible solidity agrees with collision and never hides grass.
-        paint(img, tiles, "chair_green", 8, 4)
-        paint(img, tiles, "chair_yellow", 9, 4)
-        paint(img, tiles, "chair_orange", 10, 4)
-    if area == "river":
-        for (fx, fy, rn) in ((2, 6, "rock0"), (3, 6, "rock1"), (2, 7, "rock1"), (3, 7, "rock0")):
-            paint(img, tiles, rn, fx, fy)  # fire circle at the tip
-        paint(img, tiles, "stump", 1, 6)
+    # ---- manifesto landmarks: FR1 areas carry theirs in lowerDecor ----
     if area == "downtown":
         # The street's whole east view IS the Capitol: a 4x4-tile dome over
         # its own hedge-fronted grounds. West = campus, east = the Square.

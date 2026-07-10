@@ -34,10 +34,8 @@ export function isBlocked(area,x,y){
    if(x>=10&&x<=17&&y>=4&&y<=6)return true; // counter/table block
    return false;
  }
- if(n==='LAKESHORE PATH')return y===0||y===13||(y>=1&&y<=4); // Mendota water band spans the whole north shore
  if(n==='STATE STREET'){if(x===21&&y===4)return false; // Kohl Center marquee door
    return y===0||y===13||((y<5||y>9)&&(x>3&&x<24))||(y>=1&&y<=4&&x>=24);} // east end: Capitol grounds
- if(n==='PICNIC POINT')return y===0||y===13||y<=2||y>=11||x===0||(x>=14&&x<=20&&y>=4&&y<=6); // peninsula: Mendota both shores, pine stand mid
  if(n==='ANNEX ARENA')return y===0||y===13||x===0||x===27;
  if(n==='KOHL CENTER')return y===0||x===0||x===27||(y===13&&x!==14); // south doors to State Street
  return false;
@@ -48,7 +46,7 @@ export const SIGNS={
  downtown:{'20,4':'KOHL CENTER - BIG TEN CHAMPIONSHIP. Badge holders only.'}
 };
 export function signText(area,x,y){return layeredSign(area,x,y)||SIGNS[area]?.[x+','+y]||null;}
-export function isGrass(area,x,y){if(layeredMap(area))return layeredGrass(area,x,y);const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9);}
+export function isGrass(area,x,y){if(layeredMap(area))return layeredGrass(area,x,y);return false;} // every encounter area is layered now; 'grass' cells render as open mats
 export function spotKind(area,x,y){
  if(trainerAt(area,x,y))return 'TRAINER'; // v21.11: all trainers are data-driven, no per-area cases
  if(signText(area,x,y))return 'SIGN';
@@ -58,8 +56,6 @@ export function spotKind(area,x,y){
  if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
  if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
- if(n==='LAKESHORE PATH'&&x===8&&y===5)return 'HIDDEN_SHORE'; // optional reward under the pier (city-manifesto: every route hides one)
- if(n==='PICNIC POINT'&&x===2&&y===7)return 'HIDDEN_EMBER';
  if(n==='STATE STREET'&&y===4&&x>=24)return 'CAPITOL'; // the dome closes the street's east view
  if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';

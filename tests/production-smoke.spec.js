@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.38-intentional-towns');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.39-routes-are-journeys');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'fr1_campus_tree', 'fr1_campus_red_building', 'battle_arena', 'battle_badger'];
@@ -259,20 +259,23 @@ async function continueIntoOverworld(page, save) {
 
 test('route trainer is drawn and ambushes the player through the sight line', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
-  await continueIntoOverworld(page, seededSave({area: 'lakeshore', pos: {x: 12, y: 9}}));
+  await continueIntoOverworld(page, seededSave({area: 'lakeshore', pos: {x: 41, y: 9}}));
 
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(overworld.area).toBe('lakeshore');
-  expect(overworld.npcTiles).toEqual(expect.arrayContaining([{x: 16, y: 9}, {x: 20, y: 11}]));
+  expect(overworld.npcTiles).toEqual(expect.arrayContaining([{x: 40, y: 7}, {x: 17, y: 5}]));
 
-  await move(page, 'right'); // step into Marina's sight cone (covers x12-15 on row 9)
+  // v21.39: column 41 is the mat-free seam between zone A and Marina, so
+  // this approach can never fire a wild scout before her sight line does.
+  await move(page, 'up');
+  await move(page, 'up'); // (41,7) is inside Marina's sight cone (x41-44 on row 7)
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys()), {timeout: 8000}).toContain('BattleScene');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').trainerName)).toBe('Marina');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
   expect(runtimeIssues).toEqual([]);
 });
 
-test('campus tall grass triggers a real scout encounter that reaches a wild battle', async ({page}) => {
+test('campus open mats trigger a real scout encounter that reaches a wild battle', async ({page}) => {
   test.setTimeout(60000);
   const runtimeIssues = collectRuntimeIssues(page);
   await continueIntoOverworld(page, seededSave({area: 'campus', pos: {x: 22, y: 15}}));

@@ -1,6 +1,49 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.38 — Intentional Towns: doctrine committed, world audited, seeds planted)
+## Latest Claude Turn (v21.39 — WP-ROUTES: Routes Are Journeys)
+
+The big structural build, greenlit by Tony with both directives folded in
+(open mats + the city-design doctrine):
+
+- **Lakeshore Path is now 56x14 ("The Coastal Walk")** and **Picnic Point
+  is 48x14 ("The Peninsula Push")** — FireRed route-class travel, camera
+  scrolling. Both are full FR1 layered-source areas now (tiles, paths,
+  lowerDecor landmarks, upperDecor signboards, exits, interactions,
+  signs, NPCs all in layeredMaps.json). Legacy isBlocked/isGrass branches
+  deleted; ALL encounter areas are layered.
+- **Open mats replace tall grass everywhere** (manifesto law #4 renamed:
+  open-mat honesty). Encounter cells render as worn red mat tiles sampled
+  from the imagegen practice mat; zones are deliberate rectangles the
+  path crosses — Lakeshore 15.3% mats in 3 zones, Picnic 11.6% in 2 —
+  with mat-free shoulders for the sneak-around choice (doctrine rule 6).
+  Chalk puff replaces the green grass rustle. Scout/coach/NPC dialogue
+  updated to open-mat language.
+- **Doctrine structure per route:** safe entrance with trail sign →
+  first mat zone seen before entered → trainer on the crossing line
+  (Marina (40,7)->E, Sandy (17,5)->S / Gus (26,9)->E, Tavi (12,4)->S) →
+  landmark cluster (pier + Terrace chairs + LOCKED BOATHOUSE at x24-26,
+  our first route rule-16 gate, Season Two seam) → denser second zone →
+  safe exit. Picnic: two staggered pine pinches force shoulder swaps;
+  the Funk Doctor moved to (4,7) at the fire circle on the very tip —
+  the peninsula finally ends AT its point.
+- Hidden rewards live on: pier drink (29,5), fire-circle invite (2,7).
+- **Compositor:** lowerDecor tile cells are now excluded from the
+  tree/bush dressing pass (landmarks own their cells); openmat0/1 crops
+  added from mat_plain's clean corners. NOTE the diagonal gold seam look
+  is a placeholder - **Codex ask: dedicated outdoor worn-mat tile set**
+  (sun-faded, scuffed, distinct from the sacred competition mats).
+- Ambush smoke test re-seated: approach Marina along the mat-free x41
+  seam so a wild scout can never race her sight line. Test 8 renamed to
+  open-mat language. 9/9 green; validator green (FR1 contract covers
+  both new areas). Cache V='237' (route PNGs: 896x224 / 768x224).
+- QA walkthrough: campus->lakeshore->picnic landings, trail sign,
+  boathouse sign, tip screenshot with captain at the fire circle. No
+  runtime errors.
+- Next: WP-LEDGE rides on these long routes (one-way hop-south, the
+  fast way back). FR2 (Codex) unaffected — campus/fieldhouse untouched
+  except mat rendering on the two lawns.
+
+## Previous Claude Turn (v21.38 — Intentional Towns: doctrine committed, world audited, seeds planted)
 
 Tony supplied a full map/city design doctrine — now committed verbatim as
 **CITY_DESIGN_MANIFESTO.md** (reading-order #3 in CLAUDE.md). Two calls

@@ -526,7 +526,7 @@
           "x": 1,
           "y": 10,
           "to": "lakeshore",
-          "tx": 26,
+          "tx": 54,
           "ty": 7,
           "msg": "Lakeshore Path."
         },
@@ -624,7 +624,7 @@
           "y": 15,
           "frame": 1,
           "anim": "npc-idle-down",
-          "dialogue": "Scout: Tall grass hides recruitable wrestlers.",
+          "dialogue": "Scout: Open mats draw recruits looking for live wrestling. Step on and see who shows up.",
           "look": "green",
           "route": [
             [
@@ -696,6 +696,363 @@
               18
             ]
           ]
+        }
+      ]
+    },
+    "lakeshore": {
+      "width": 56,
+      "height": 14,
+      "start": {
+        "x": 54,
+        "y": 7
+      },
+      "ground": "quiet-grass",
+      "tiles": [
+        "########################################################",
+        "########################################################",
+        "########################################################",
+        "########################################################",
+        "########################################################",
+        "........................###...............ggggggg.......",
+        "............gggggggggg..###.....ggggg.....ggggggg.......",
+        "............gggggggggg..........ggggg.....ggggggg......E",
+        "...#........gggggggggg..........ggggg.....ggggggg....#..",
+        "E...........gggggggggg..........ggggg.....ggggggg.......",
+        "............gggggggggg..........ggggg...................",
+        "............gggggggggg..................................",
+        "........................................................",
+        "########################################################"
+      ],
+      "paths": [
+        [
+          6,
+          7,
+          55,
+          7
+        ],
+        [
+          1,
+          9,
+          10,
+          9
+        ],
+        [
+          6,
+          7,
+          6,
+          9
+        ]
+      ],
+      "lowerDecor": [
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 28,
+          "y": 1
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 29,
+          "y": 1
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 28,
+          "y": 2
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 29,
+          "y": 2
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 28,
+          "y": 3
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 29,
+          "y": 3
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 28,
+          "y": 4
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 29,
+          "y": 4
+        },
+        {
+          "type": "tile",
+          "name": "pier",
+          "x": 30,
+          "y": 4
+        },
+        {
+          "type": "tile",
+          "name": "chair_green",
+          "x": 28,
+          "y": 4
+        },
+        {
+          "type": "tile",
+          "name": "chair_yellow",
+          "x": 29,
+          "y": 4
+        },
+        {
+          "type": "tile",
+          "name": "chair_orange",
+          "x": 30,
+          "y": 4
+        },
+        {
+          "type": "tile",
+          "name": "roof_neutral",
+          "x": 24,
+          "y": 5
+        },
+        {
+          "type": "tile",
+          "name": "roof_neutral",
+          "x": 25,
+          "y": 5
+        },
+        {
+          "type": "tile",
+          "name": "roof_neutral",
+          "x": 26,
+          "y": 5
+        },
+        {
+          "type": "tile",
+          "name": "wall",
+          "x": 24,
+          "y": 6
+        },
+        {
+          "type": "tile",
+          "name": "door",
+          "x": 25,
+          "y": 6
+        },
+        {
+          "type": "tile",
+          "name": "wall",
+          "x": 26,
+          "y": 6
+        }
+      ],
+      "upperDecor": [
+        {
+          "texture": "fr1_signboard",
+          "source": "tile",
+          "name": "signboard",
+          "x": 53,
+          "y": 8,
+          "depthY": 8.6
+        },
+        {
+          "texture": "fr1_signboard",
+          "source": "tile",
+          "name": "signboard",
+          "x": 3,
+          "y": 8,
+          "depthY": 8.6
+        }
+      ],
+      "exits": [
+        {
+          "x": 55,
+          "y": 7,
+          "to": "campus",
+          "tx": 2,
+          "ty": 10,
+          "msg": "Bascom Hill."
+        },
+        {
+          "x": 0,
+          "y": 9,
+          "to": "river",
+          "tx": 46,
+          "ty": 9,
+          "msg": "Picnic Point."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "HIDDEN_SHORE",
+          "tiles": [
+            [
+              29,
+              5
+            ]
+          ]
+        }
+      ],
+      "signs": {
+        "53,8": "LAKESHORE PATH - Mendota shore trail. PICNIC POINT 1 MI. WEST.",
+        "3,8": "TRAIL END - PICNIC POINT ahead. Strongest recruits wrestle at the tip.",
+        "25,6": "BOATHOUSE - Locked for crew season. Rowers only."
+      },
+      "npcs": [
+        {
+          "x": 22,
+          "y": 8,
+          "frame": 4,
+          "anim": "npc-idle-left",
+          "dialogue": "Jogger: Every morning along Mendota. Watch the open mats - the shore crew loves an ambush.",
+          "look": "red",
+          "route": [
+            [
+              22,
+              8
+            ],
+            [
+              23,
+              8
+            ],
+            [
+              23,
+              9
+            ],
+            [
+              22,
+              9
+            ]
+          ]
+        }
+      ]
+    },
+    "river": {
+      "width": 48,
+      "height": 14,
+      "start": {
+        "x": 46,
+        "y": 9
+      },
+      "ground": "quiet-grass",
+      "tiles": [
+        "################################################",
+        "################################################",
+        "################################################",
+        "#.................#####.........................",
+        "#.................#####.....gggggg..#####.......",
+        "#........ggggggg..#####.....gggggg..#####.......",
+        "#........ggggggg..#####.....gggggg..#####.......",
+        "#........ggggggg..#####.....gggggg..#####.......",
+        "#........ggggggg............gggggg..#####....#..",
+        "#........ggggggg............gggggg.............E",
+        "#........ggggggg................................",
+        "################################################",
+        "################################################",
+        "################################################"
+      ],
+      "paths": [
+        [
+          8,
+          9,
+          47,
+          9
+        ],
+        [
+          4,
+          7,
+          8,
+          7
+        ],
+        [
+          8,
+          7,
+          8,
+          9
+        ]
+      ],
+      "lowerDecor": [
+        {
+          "type": "tile",
+          "name": "rock0",
+          "x": 2,
+          "y": 6
+        },
+        {
+          "type": "tile",
+          "name": "rock1",
+          "x": 3,
+          "y": 6
+        },
+        {
+          "type": "tile",
+          "name": "rock1",
+          "x": 2,
+          "y": 8
+        },
+        {
+          "type": "tile",
+          "name": "rock0",
+          "x": 3,
+          "y": 8
+        },
+        {
+          "type": "tile",
+          "name": "stump",
+          "x": 1,
+          "y": 7
+        }
+      ],
+      "upperDecor": [
+        {
+          "texture": "fr1_signboard",
+          "source": "tile",
+          "name": "signboard",
+          "x": 45,
+          "y": 8,
+          "depthY": 8.6
+        }
+      ],
+      "exits": [
+        {
+          "x": 47,
+          "y": 9,
+          "to": "lakeshore",
+          "tx": 1,
+          "ty": 9,
+          "msg": "Lakeshore Path."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "HIDDEN_EMBER",
+          "tiles": [
+            [
+              2,
+              7
+            ]
+          ]
+        }
+      ],
+      "signs": {
+        "45,8": "PICNIC POINT - Mendota on both sides. Fire circle at the tip."
+      },
+      "npcs": [
+        {
+          "x": 43,
+          "y": 7,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.",
+          "look": "gray",
+          "route": null
         }
       ]
     }

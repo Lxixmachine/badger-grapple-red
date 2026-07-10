@@ -2,7 +2,7 @@ import {chooseStarter,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 const Phaser = window.Phaser;
-const V='236';
+const V='237';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){

@@ -53,7 +53,8 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
   Bucky, no real athlete names/likenesses).
 - Area ids never change (save compatibility); display names may.
 - Collision is law: validator BFS (`npm run validate`) green every release.
-- Tall-grass honesty: encounter cells always render dark tall grass.
+- Open-mat honesty: encounter cells always render as unmistakable worn
+  red mats (the wrestling translation of tall grass).
 
 ## Engine gotchas (earned the hard way)
 
@@ -71,6 +72,7 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
 
 ## Current queue (see handoff for detail)
 
-FR0 (GBA 240x160 camera framing, full UI relayout) → FR1 (single layered
-map source) → recompose Bascom Hill → WP-ROUTES (routes 2-3x longer,
-grass in crossing bands) → WP-LEDGE (one-way hops) → character sprites.
+FR0+FR1 shipped (dual cameras, layered source) · WP-ROUTES shipped
+(routes 2-3x longer, open-mat zones) → FR2 opening-area recomposition
+(Codex) → WP-LEDGE (one-way hops) → character sprites → State Street
+commerce.
