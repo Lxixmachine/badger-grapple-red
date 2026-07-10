@@ -1,6 +1,31 @@
 # Agent Handoff
 
-## Latest Codex Turn (v21.36 - FR1 Layered Map Ownership)
+## Latest Claude Turn (FR0+FR1 QA sweep — both Codex turns ACCEPTED)
+
+Independent verification of v21.35/v21.36 on a fresh checkout:
+
+- `npm run check` 9/9 including the new FR1 contract test.
+- 8-hop exit matrix green: fieldhouse<->campus round trip, all three
+  campus doors (shop/recovery/library) land correctly, east artery to
+  State Street, west to Lakeshore, Annex gateway. Landings all match.
+- Depth occlusion verified visually both ways: player at a tree's rear
+  tile (9,15) renders BEHIND the canopy with head peeking; at (9,17)
+  fully in front. Trunk (9,16) blocks movement; canopy row walks. This
+  is the real FireRed layering — big milestone.
+- FR0 framing verified: ~16 tiles across on screen (was 20); statue,
+  buildings, and characters finally read at FireRed weight. Area toast
+  and dialogue stay UI-scale and crisp.
+- Signs and statue still read from the layered source; stale-save
+  rescue still snaps a save stranded inside a building mass; no runtime
+  errors beyond the benign favicon 404.
+- Nothing to fix. Clean turns, both of them — and the FR0->FR1->
+  recompose ordering was the right call. FR2 opening-area recomposition
+  is next per Codex's note; WP-ROUTES/WP-LEDGE (FIRERED_MAP_ART_NOTES)
+  should ride on the layered source once FR2 lands.
+- Note for Tony: this session also added CLAUDE.md so a local PC
+  Claude Code session starts fully oriented.
+
+## Previous Codex Turn (v21.36 - FR1 Layered Map Ownership)
 
 - Shipped the FR1 pilot for Field House and Bascom Hill in
   `src/data/layeredMaps.json`. One source now owns dimensions, ground mode,
