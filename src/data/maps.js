@@ -58,6 +58,8 @@ export function spotKind(area,x,y){
  if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
  if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
+ if(n==='LAKESHORE PATH'&&x===8&&y===5)return 'HIDDEN_SHORE'; // optional reward under the pier (city-manifesto: every route hides one)
+ if(n==='PICNIC POINT'&&x===2&&y===7)return 'HIDDEN_EMBER';
  if(n==='STATE STREET'&&y===4&&x>=24)return 'CAPITOL'; // the dome closes the street's east view
  if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';

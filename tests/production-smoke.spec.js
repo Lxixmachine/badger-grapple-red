@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.37-head-over-lintel');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.38-intentional-towns');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'fr1_campus_tree', 'fr1_campus_red_building', 'battle_arena', 'battle_badger'];

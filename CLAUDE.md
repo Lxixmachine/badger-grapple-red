@@ -12,9 +12,12 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
    travel with commits — the handoff goes in the SAME commit as the work.
 2. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
    golden path, world laws). "Recognition is the product."
-3. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
+3. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
+   town a thesis, every route a micro-story, gates seen before solved,
+   the first area matters late. Judge all map work against it.
+4. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
    compositor contract, work packages).
-4. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
+5. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
    FireRed design parameters (timing, sequences, map structure) that we
    build against.
 

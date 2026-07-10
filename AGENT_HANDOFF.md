@@ -1,6 +1,66 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.37 — Head Over Lintel: FR1 depth thresholds corrected)
+## Latest Claude Turn (v21.38 — Intentional Towns: doctrine committed, world audited, seeds planted)
+
+Tony supplied a full map/city design doctrine — now committed verbatim as
+**CITY_DESIGN_MANIFESTO.md** (reading-order #3 in CLAUDE.md). Two calls
+from him this turn: encounter surface becomes **open mats** instead of
+tall grass (his Part X table independently confirms: "tall grass = open
+mat"), and every town must pass the intentionality test. Audit of all
+areas against the doctrine:
+
+**Per-area thesis check ("this place exists to make the player feel _"):**
+- FIELD HOUSE (hometown room): "where I came from" — STRONG. Home, coach,
+  starter, one exit. Now also matters late (see trophy case below).
+- BASCOM HILL (campus hub): "opportunity and pressure" — GOOD. Hub with 7
+  exits, statue, signs, lawns. Gap: no visible-but-locked affordance.
+- LAKESHORE PATH (route): "the coastal walk" — micro-story exists (pier +
+  Terrace chairs) but fails rule 6 (holding one direction works) and
+  rule 8 (no pulse). WP-ROUTES fixes.
+- PICNIC POINT (wilderness dead-end): "the peninsula push" — right bones
+  (highest wilds, fire circle, captain at the tip). Needs length/choice.
+- STATE STREET (commercial city): "temptation" — WEAKEST THESIS. It reads
+  right now but sells nothing: no shop, no side economy, no optional
+  reward on the whole street. Needs a storefront you can enter or a
+  street vendor system (art ask for Codex; design ask for Tony).
+- KOHL CENTER (final ceremony): "the place that judges everything" —
+  STRONG. Badge gate, gold, bracket desk, locked NATIONALS door (our one
+  good rule-16 gate). Missing a ceremonial approach (arena tunnel row) —
+  future FR2+ candidate.
+- Interiors (Library/Annex/Shop/Recovery): serviceable, thin identity —
+  already queued behind Codex art.
+
+**Cross-cutting failures (the doctrine's non-negotiables):**
+1. Gates seen before solved: only the marquee badge-check + Nationals
+   door qualify. Routes have zero locked affordances. WP-ROUTES adds one
+   per route (e.g. a locked boathouse on the pier as a Season Two seam).
+2. Shortcuts/loops: none anywhere — the world is two straight lines.
+   WP-LEDGE is the fix (one-way hops = rule 17 payoffs).
+3. First area matters late: SEEDED THIS TURN — the Field House trophy
+   case now reads as decades of banners with one EMPTY SPACE at center;
+   after the Big Ten title it re-reads with YOUR banner front and center.
+4. Optional rewards per route: SEEDED — hidden Sports Drink on the pier
+   planks (8,5 lakeshore), hidden Team Invite under a fire-circle stone
+   (2,7 river). Every route now hides one thing.
+
+**WP-ROUTES spec, revised by both directives (next build, mine):**
+Lakeshore ~56x14 / Picnic Point ~48x14 with camera scroll; encounter
+surface = OPEN MATS (rectangular zones the path must cross, mat-tape
+edges, worn outdoor look — prototype with existing mat_plain/mat_edge
+tiles, Codex refines); pulse rhythm (safe entry, seen danger, trainer,
+reward, dense zone, shortcut, safe exit); each route gets a one-phrase
+micro-story, a trail sign each end, one visible locked gate, one hidden
+reward (done), re-seated trainers; migrate both areas into the FR1
+layered source. WP-LEDGE follows immediately.
+
+**Codex asks queued:** outdoor worn-mat tile set (distinct from sacred
+competition mats); State Street commerce art (enterable storefront or
+vendor stalls) once Tony picks the shape of street commerce.
+
+v21.38: trophy case + 2 hidden items + doctrine + audit. No PNG changes
+(V stays '236'). npm run check green.
+
+## Previous Claude Turn (v21.37 — Head Over Lintel: FR1 depth thresholds corrected)
 
 - Tony playtest bug on v21.36: "my head gets lost behind these buildings"
   — standing at the Team Shop or Recovery door step, the facade clipped
