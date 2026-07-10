@@ -18,7 +18,9 @@
 > 16x11.2 tiles while the 320x224 UI remains unzoomed. FR1 shipped in v21.36:
 > Field House and Bascom Hill now use one layered source for paths, lower art,
 > collision, upper occlusion, exits, interactions, signs, and NPC anchors.
-> FR2 opening-area recomposition is now the next visual package.
+> FR2 shipped in v21.40: Field House, Bascom Hill, and State Street were
+> recomposed around larger image-generated landmark masses, honest depth and
+> collision, and phone-scale focal hierarchy. FR3 character variety is next.
 
 **For: Codex (ChatGPT), the project's art lane.** This is a complete, sequenced
 production plan to take the game's visuals to the FireRed bar. It is grounded

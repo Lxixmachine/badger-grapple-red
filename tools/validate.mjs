@@ -9,7 +9,7 @@ let errs=[];
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
 
 if(WORLD_META.tileSize!==TILE)errs.push(`WORLD_META.tileSize ${WORLD_META.tileSize} does not match TILE ${TILE}`);
-if(WORLD_META.width!==28||WORLD_META.height!==14||WORLD_META.maxHeight<20)errs.push('WORLD_META must retain 28x14 defaults and support the 20-row Bascom Hill map');
+if(WORLD_META.width!==28||WORLD_META.height!==14||WORLD_META.maxWidth<56||WORLD_META.maxHeight<20)errs.push('WORLD_META must retain 28x14 defaults and support 56-wide routes plus the 20-row Bascom Hill map');
 
 if(LAYERED_MAP_VERSION!==1)errs.push(`layered map version ${LAYERED_MAP_VERSION} is unsupported`);
 for(const [aid,map] of Object.entries(LAYERED_MAPS)){

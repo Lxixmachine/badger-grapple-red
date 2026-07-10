@@ -73,6 +73,6 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
 ## Current queue (see handoff for detail)
 
 FR0+FR1 shipped (dual cameras, layered source) · WP-ROUTES shipped
-(routes 2-3x longer, open-mat zones) → FR2 opening-area recomposition
+(routes 2-3x longer, open-mat zones) → FR2 visual recomposition shipped
 (Codex) → WP-LEDGE (one-way hops) → character sprites → State Street
 commerce.

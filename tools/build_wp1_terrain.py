@@ -17,6 +17,8 @@ SOURCE = ROOT / "art" / "imagegen" / "terrain_tileset_wp1_r2_2026-07-09.png"
 TOWN_SOURCE = ROOT / "art" / "imagegen" / "terrain_town_anatomy_wp1_2_2026-07-09.png"
 LANDMARK_SOURCE = ROOT / "art" / "imagegen" / "madison_landmarks_2026-07-09.png"
 ARCH_SOURCE = ROOT / "art" / "imagegen" / "town_fieldhouse_architecture_2026-07-09.png"
+OVERHAUL_SOURCE = ROOT / "art" / "imagegen" / "madison_visual_overhaul_v2140_2026-07-10.png"
+OUTDOOR_MAT_SOURCE = ROOT / "art" / "imagegen" / "outdoor_worn_mat_v2140_2026-07-10.png"
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
 LAYERS_OUT = ROOT / "public" / "assets" / "layers"
@@ -297,6 +299,17 @@ ARCH_CROPS = {
     "annex_gateway": (1106, 744, 1428, 1066),
 }
 
+# v21.40 six-subject 3x2 sheet. Subjects are intentionally cropped tightly
+# here, then fitted into map-owned footprints below.
+OVERHAUL_CROPS = {
+    "campus_red_hall": (18, 105, 558, 450),
+    "campus_blue_hall": (570, 118, 1018, 435),
+    "fieldhouse_wall": (1028, 105, 1514, 448),
+    "state_storefronts": (16, 548, 558, 866),
+    "kohl_center": (566, 535, 1018, 875),
+    "capitol_grand": (1024, 480, 1518, 910),
+}
+
 
 INTERIORS = {"fieldhouse", "studyhall", "shop", "recovery", "conference", "championship"}
 
@@ -407,6 +420,8 @@ def load_props():
     source = Image.open(TOWN_SOURCE).convert("RGBA")
     landmarks = Image.open(LANDMARK_SOURCE).convert("RGBA")
     architecture = Image.open(ARCH_SOURCE).convert("RGBA")
+    overhaul = Image.open(OVERHAUL_SOURCE).convert("RGBA")
+    outdoor_mat = Image.open(OUTDOOR_MAT_SOURCE).convert("RGBA")
     mat = TOWN_CROPS["mat_plain"]
     return {
         "arena_mat": normalize_image(source.crop(mat).resize((80, 80), Image.Resampling.NEAREST)),
@@ -427,6 +442,13 @@ def load_props():
         "campus_red_building": fitted_prop(architecture, ARCH_CROPS["campus_red_building"], (112, 80)),
         "campus_blue_building": fitted_prop(architecture, ARCH_CROPS["campus_blue_building"], (112, 80)),
         "annex_gateway": fitted_prop(architecture, ARCH_CROPS["annex_gateway"], (80, 80)),
+        "campus_red_hall": fitted_prop(overhaul, OVERHAUL_CROPS["campus_red_hall"], (112, 80)),
+        "campus_blue_hall": fitted_prop(overhaul, OVERHAUL_CROPS["campus_blue_hall"], (112, 80)),
+        "fieldhouse_wall": fitted_prop(overhaul, OVERHAUL_CROPS["fieldhouse_wall"], (416, 80)),
+        "state_storefronts": fitted_prop(overhaul, OVERHAUL_CROPS["state_storefronts"], (240, 80)),
+        "kohl_center": fitted_prop(overhaul, OVERHAUL_CROPS["kohl_center"], (128, 96)),
+        "capitol_grand": fitted_prop(overhaul, OVERHAUL_CROPS["capitol_grand"], (96, 96)),
+        "campus_outdoor_mat": fitted_prop(outdoor_mat, (130, 70, 1400, 950), (96, 64)),
     }
 
 
@@ -562,7 +584,7 @@ def compose(area, tiles, props):
                         paint(img, tiles, "rock0" if r < flower_rate + 0.005 else "stump", x, y)
 
     # ---- pass 5: blocked dressing ----
-    if area == "downtown":
+    if area == "downtown" and area not in LAYERED_MAPS:
         # North strip: discrete shop units, each with FireRed building anatomy
         # (ridge / eave / window row / street level). Palette changes at unit
         # boundaries; street level mixes awning storefronts with drawn-shut
@@ -671,7 +693,7 @@ def compose(area, tiles, props):
                     claimed.add((x, y))
 
     # ---- manifesto landmarks: FR1 areas carry theirs in lowerDecor ----
-    if area == "downtown":
+    if area == "downtown" and area not in LAYERED_MAPS:
         # The street's whole east view IS the Capitol: a 4x4-tile dome over
         # its own hedge-fronted grounds. West = campus, east = the Square.
         paint_prop(img, props, "capitol_dome", 24, 0)

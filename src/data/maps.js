@@ -42,9 +42,7 @@ export function isBlocked(area,x,y){
 }
 // v21.34 building signs - FireRed density: Pallet Town reads 5 signs in a
 // town this size; every enterable building announces itself at the door.
-export const SIGNS={
- downtown:{'20,4':'KOHL CENTER - BIG TEN CHAMPIONSHIP. Badge holders only.'}
-};
+export const SIGNS={};
 export function signText(area,x,y){return layeredSign(area,x,y)||SIGNS[area]?.[x+','+y]||null;}
 export function isGrass(area,x,y){if(layeredMap(area))return layeredGrass(area,x,y);return false;} // every encounter area is layered now; 'grass' cells render as open mats
 export function spotKind(area,x,y){
@@ -56,7 +54,6 @@ export function spotKind(area,x,y){
  if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
  if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
- if(n==='STATE STREET'&&y===4&&x>=24)return 'CAPITOL'; // the dome closes the street's east view
  if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';
  const cap=areaFor(area).captain;if(cap&&cap.x===x&&cap.y===y)return 'C';

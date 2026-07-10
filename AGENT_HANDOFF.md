@@ -1,6 +1,30 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.39 — WP-ROUTES: Routes Are Journeys)
+## Latest Codex Turn (v21.40 - Field House / Bascom / State Visual Overhaul)
+
+- Used built-in ChatGPT image generation for a new six-subject Madison
+  architecture sheet and a dedicated weathered outdoor practice mat. Sources
+  and prompt records are committed under `art/imagegen/`.
+- Field House now has one cohesive trophy/scoreboard/banner/bleacher focal
+  wall. Its blocked footprint and center exit corridor live in the layered
+  source, so players cannot walk through the visual installation.
+- Bascom Hill replaced the previous small building props with stronger
+  sandstone academic halls. The two southern encounter lawns now use complete
+  weathered cardinal mats with restrained cream markings instead of repeating
+  diagonal-gold prototype tiles.
+- State Street migrated into `layeredMaps.json`. Full-scale storefronts, a
+  monumental Kohl Center entrance, the Capitol skyline, pedestrian brick,
+  south planters, exits, signs, and ambient NPC anchors now share one source.
+  The old north/south micro-facade strips were removed.
+- Corrected `WORLD_META` to v21.40 / maxWidth 56 and made the validator enforce
+  the long-route bound. Release/cache labels are v21.40 / v240.
+- `npm run check` passes validation, balance, build, and 10/10 Chromium flows,
+  including a new State Street layered-landmark test. Phone QA at 390x844
+  covers all three rebuilt areas with clean browser logs.
+- FR3 character/NPC variety is next. Preserve these landmark masses and the
+  layered source; refine details without shrinking the architecture again.
+
+## Previous Claude Turn (v21.39 — WP-ROUTES: Routes Are Journeys)
 
 The big structural build, greenlit by Tony with both directives folded in
 (open mats + the city-design doctrine):

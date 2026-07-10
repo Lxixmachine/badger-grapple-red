@@ -13,9 +13,9 @@
       "tiles": [
         "############################",
         "##############E#############",
-        "#####...#####.........######",
-        "#####.................######",
-        "#####.................######",
+        "#####...######.#####..######",
+        "#####...######.#####.......#",
+        "#####...######.#####.......#",
         "#..........................#",
         "#..........................#",
         "#....................#####.#",
@@ -37,6 +37,14 @@
       ],
       "upperDecor": [
         {
+          "texture": "fr2_fieldhouse_wall",
+          "source": "prop",
+          "name": "fieldhouse_wall",
+          "x": 1,
+          "y": 0,
+          "depthY": 4.5
+        },
+        {
           "texture": "fr1_trophy_wall",
           "source": "prop",
           "name": "trophy_wall",
@@ -45,28 +53,12 @@
           "depthY": 1.5
         },
         {
-          "texture": "fr1_bleachers",
-          "source": "prop",
-          "name": "bleachers",
-          "x": 8,
-          "y": 0,
-          "depthY": 2.5
-        },
-        {
           "texture": "fr1_fieldhouse_exit",
           "source": "prop",
           "name": "fieldhouse_exit",
           "x": 13,
           "y": 0,
-          "depthY": 1.5
-        },
-        {
-          "texture": "fr1_scoreboard",
-          "source": "prop",
-          "name": "scoreboard",
-          "x": 16,
-          "y": 0,
-          "depthY": 1.5
+          "depthY": 4.6
         },
         {
           "texture": "fr1_coach_station",
@@ -389,29 +381,41 @@
           "name": "bush",
           "x": 17,
           "y": 8
+        },
+        {
+          "type": "prop",
+          "name": "campus_outdoor_mat",
+          "x": 3,
+          "y": 14
+        },
+        {
+          "type": "prop",
+          "name": "campus_outdoor_mat",
+          "x": 19,
+          "y": 14
         }
       ],
       "upperDecor": [
         {
-          "texture": "fr1_campus_red_building",
+          "texture": "fr2_campus_red_hall",
           "source": "prop",
-          "name": "campus_red_building",
+          "name": "campus_red_hall",
           "x": 2,
           "y": 1,
           "depthY": 5.5
         },
         {
-          "texture": "fr1_campus_blue_building",
+          "texture": "fr2_campus_blue_hall",
           "source": "prop",
-          "name": "campus_blue_building",
+          "name": "campus_blue_hall",
           "x": 19,
           "y": 1,
           "depthY": 5.5
         },
         {
-          "texture": "fr1_campus_blue_building",
+          "texture": "fr2_campus_blue_hall",
           "source": "prop",
-          "name": "campus_blue_building",
+          "name": "campus_blue_hall",
           "x": 19,
           "y": 8,
           "depthY": 12.5
@@ -931,6 +935,202 @@
               9
             ]
           ]
+        }
+      ]
+    },
+    "downtown": {
+      "width": 28,
+      "height": 14,
+      "start": {
+        "x": 1,
+        "y": 7
+      },
+      "ground": "city-paving",
+      "tiles": [
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "###################E########",
+        "#..........................#",
+        "E..........................#",
+        "#..........................#",
+        "#..........................#",
+        "#..........................#",
+        "#..##...##...##...##...##..#",
+        "#..........................#",
+        "############################"
+      ],
+      "paths": [],
+      "lowerDecor": [
+        {
+          "type": "tile",
+          "name": "stone_step",
+          "x": 19,
+          "y": 6
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 3,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 4,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 8,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 9,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 13,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 14,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 18,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 19,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 23,
+          "y": 11
+        },
+        {
+          "type": "tile",
+          "name": "bush",
+          "x": 24,
+          "y": 11
+        }
+      ],
+      "upperDecor": [
+        {
+          "texture": "fr2_state_storefronts",
+          "source": "prop",
+          "name": "state_storefronts",
+          "x": 0,
+          "y": 0,
+          "depthY": 5.5
+        },
+        {
+          "texture": "fr2_kohl_center",
+          "source": "prop",
+          "name": "kohl_center",
+          "x": 14,
+          "y": 0,
+          "depthY": 5.5
+        },
+        {
+          "texture": "fr2_capitol_grand",
+          "source": "prop",
+          "name": "capitol_grand",
+          "x": 22,
+          "y": 0,
+          "depthY": 5.5
+        },
+        {
+          "texture": "fr1_signboard",
+          "source": "tile",
+          "name": "signboard",
+          "x": 4,
+          "y": 5,
+          "depthY": 5.6
+        },
+        {
+          "texture": "fr1_signboard",
+          "source": "tile",
+          "name": "signboard",
+          "x": 25,
+          "y": 5,
+          "depthY": 5.6
+        }
+      ],
+      "exits": [
+        {
+          "x": 0,
+          "y": 7,
+          "to": "campus",
+          "tx": 26,
+          "ty": 6,
+          "msg": "Bascom Hill."
+        },
+        {
+          "x": 19,
+          "y": 5,
+          "to": "championship",
+          "tx": 14,
+          "ty": 12,
+          "msg": "The Kohl Center.",
+          "gate": [
+            "Neutral Badge",
+            "Scramble Badge"
+          ]
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "CAPITOL",
+          "tiles": [
+            [25, 4]
+          ]
+        }
+      ],
+      "signs": {
+        "4,5": "STATE STREET - Shops, food, and game-day traditions.",
+        "18,5": "KOHL CENTER - BIG TEN CHAMPIONSHIP. Badge holders only.",
+        "25,5": "CAPITOL SQUARE - State Street ends at the dome."
+      },
+      "npcs": [
+        {
+          "x": 7,
+          "y": 8,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Shopper: Every storefront on State Street is somebody's game-day tradition.",
+          "look": "purple",
+          "route": [
+            [7, 8],
+            [8, 8],
+            [8, 9],
+            [7, 9]
+          ]
+        },
+        {
+          "x": 25,
+          "y": 7,
+          "frame": 10,
+          "anim": "npc-idle-up",
+          "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.",
+          "look": "green",
+          "route": null
         }
       ]
     },

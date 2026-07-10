@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.39-routes-are-journeys');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.40-visual-overhaul');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'fr1_campus_tree', 'fr1_campus_red_building', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_downtown', 'area_studyhall', 'fr1_campus_tree', 'fr2_campus_red_hall', 'fr2_fieldhouse_wall', 'fr2_state_storefronts', 'fr2_kohl_center', 'fr2_capitol_grand', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -109,7 +109,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 8, directActorDepth: true}
+    layered: {version: 1, upperCount: 7, directActorDepth: true}
   });
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
@@ -138,6 +138,20 @@ test('FR1 pilot map renders depth-aware Bascom architecture', async ({page}) => 
   const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(state.tilePos).toEqual({x: 9, y: 3});
   expect(state.layered.upperDepths).toHaveLength(13);
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('v21.40 State Street renders layered shops, arena, and Capitol', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
+  await page.goto('/?test=1&scene=overworld&area=downtown&x=10&y=8');
+  await expect(page.locator('#bootError')).toBeHidden();
+  await expect(page.locator('canvas')).toBeVisible();
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
+    area: 'downtown',
+    tilePos: {x: 10, y: 8},
+    layered: {version: 1, upperCount: 5, directActorDepth: true}
+  });
   expect(runtimeIssues).toEqual([]);
 });
 

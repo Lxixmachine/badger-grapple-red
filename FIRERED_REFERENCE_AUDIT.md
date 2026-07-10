@@ -180,7 +180,7 @@ Campus tree canopies now demonstrate real rear/front traversal, ambient actor
 anchors moved out of scene conditionals, and validation rejects collision or
 layer divergence.
 
-### FR2 - Opening-area recomposition (next)
+### FR2 - Opening-area recomposition (implemented in v21.40)
 
 Recompose the home, Field House, and Bascom Hill at the corrected camera scale.
 Design the critical path and camera reveals first, then architecture, then
@@ -193,6 +193,12 @@ For each camera region require:
 - two or three secondary anchors;
 - at least 50% quiet connective ground;
 - no decorative element that lies about collision or interaction.
+
+Implemented result: Field House now has one cohesive trophy/scoreboard/
+bleacher focal wall with a matching blocked footprint; Bascom Hill uses larger
+generated academic halls plus restrained weathered practice mats; State
+Street migrated into the layered source and now separates its storefront,
+Kohl Center, and Capitol landmarks at phone-readable scale.
 
 ### FR3 - Character and movement polish
 
