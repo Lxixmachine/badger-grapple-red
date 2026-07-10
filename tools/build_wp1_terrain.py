@@ -259,6 +259,17 @@ TOWN_CROPS = {
     "openmat0": (538, 297, 578, 337), "openmat1": (672, 431, 712, 471),
 }
 
+# v21.44: route mat zones use Codex's dedicated outdoor worn-mat sheet
+# (same source as the campus courts) sliced at tile level: two interior
+# patches clear of the center rings, plus tape-edge tiles from each side
+# so any rectangular zone reads as a marked-out court via edge_pick.
+# Subject bbox in the source: x 168-1364, y 92-928; tape band ~36px.
+MAT_CROPS = {
+    "mat_c0": (330, 240, 450, 360), "mat_c1": (1080, 620, 1200, 740),
+    "mat_n": (640, 96, 760, 216), "mat_s": (640, 804, 760, 924),
+    "mat_w": (172, 380, 292, 500), "mat_e": (1240, 380, 1360, 500),
+}
+
 # World Map Manifesto landmark sheet: 4 equal columns x 3 equal rows. Complex
 # horizon and doorway cells are also sliced as larger props in load_props().
 LANDMARK_CROPS = {
@@ -388,6 +399,8 @@ def load_tiles():
     tiles = load_source_tiles(SOURCE, CROPS)
     tiles.update(load_source_tiles(TOWN_SOURCE, TOWN_CROPS))
     tiles.update(load_source_tiles(LANDMARK_SOURCE, LANDMARK_CROPS))
+    if OUTDOOR_MAT_SOURCE.exists():
+        tiles.update(load_source_tiles(OUTDOOR_MAT_SOURCE, MAT_CROPS))
     return tiles
 
 
@@ -558,21 +571,33 @@ def compose(area, tiles, props):
     for (x, y) in paths:
         paint(img, tiles, "path", x, y)
 
-    # ---- pass 3: water with shoreline edges ----
+    # ---- pass 3: water. Routes take plain Mendota (the beach sand row
+    # already reads the boundary); the post-pile shore tiles only ever
+    # worked as dock edging and read as artifacts at 56 tiles wide. ----
     for (x, y) in water:
-        name = edge_pick(g, x, y, in_water, "water0" if (x + y) % 2 else "water1",
-                         "shore_n", "shore_s", "shore_e", "shore_w")
-        paint(img, tiles, name, x, y)
+        if area in {"lakeshore", "river"}:
+            paint(img, tiles, "water0" if (x + y) % 2 else "water1", x, y)
+        else:
+            name = edge_pick(g, x, y, in_water, "water0" if (x + y) % 2 else "water1",
+                             "shore_n", "shore_s", "shore_e", "shore_w")
+            paint(img, tiles, name, x, y)
 
     # ---- pass 4: tall grass + seeded scatter on open ground ----
     for y in range(height):
         for x in range(width):
             mark = g[y][x]
             if mark == "g":
-                # Open-mat honesty (was tall-grass honesty): every encounter
-                # cell renders as an unmistakable worn mat - you can SEE where
-                # scouts happen. Mats are laid deliberately, so no fringe.
-                paint(img, tiles, "openmat0" if (x + y) % 2 else "openmat1", x, y)
+                # Open-mat honesty: every encounter cell renders as an
+                # unmistakable worn mat. Zones read as marked-out courts:
+                # tape-edge tiles from the dedicated outdoor-mat sheet on the
+                # zone border, scuffed interior inside (edge_pick, like water).
+                if "mat_c0" in tiles:
+                    is_mat = lambda mx, my: 0 <= mx < width and 0 <= my < height and g[my][mx] == "g"
+                    name = edge_pick(g, x, y, is_mat, "mat_c0" if (x + y) % 2 else "mat_c1",
+                                     "mat_n", "mat_s", "mat_e", "mat_w")
+                    paint(img, tiles, name, x, y)
+                else:
+                    paint(img, tiles, "openmat0" if (x + y) % 2 else "openmat1", x, y)
             elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
                 r = rng.random()
                 if area != "downtown":

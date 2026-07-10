@@ -1,5 +1,33 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.44 — Route Polish: the two ugliest things on screen)
+
+Tony's priority call: looks first, systems later (WP-AI / WP-POTENTIAL
+stay queued). Fresh full-game visual sweep after FR2. Verdict: Codex's
+FR2 made Field House, State Street, and the campus courts genuinely
+strong — which left exactly two things reading as broken, both mine to
+fix in composition:
+
+1. **Route mat zones were placeholder slabs.** Campus courts got Codex's
+   outdoor worn-mat sheet as a fitted prop, but route g-cells still used
+   my flat crops with gold streaks. Now MAT_CROPS slices that same sheet
+   at TILE level — two scuffed interiors clear of the center rings plus
+   the four tape-edge strips — and g-cells paint through edge_pick, so
+   any rectangular zone reads as a taped-out court at any size. Same
+   sheet as the campus courts = one mat language everywhere.
+2. **The shore colonnade artifacts are gone.** The shore_n/s/e/w post
+   tiles read as glitches along 56 tiles of Mendota. Routes now take
+   plain water; the beach sand row already carries the boundary. (The
+   post tiles remain available for actual dock edging elsewhere.)
+
+- Verified in-game at FR0 zoom: mat-zone standing shot and the marina
+  cluster both read clean. 11/11 check. Cache V='242' (route PNGs).
+- Codex visual asks still open, ranked by what the sweep showed:
+  (1) campus statue reads as a gray smudge at 1.25x - Abe deserves a
+  real sprite; (2) State Street's south plaza is sparse gray slab with
+  planter pairs - could take stalls/benches/life; (3) title screen has
+  not had an art pass since the campaign label era.
+
 ## Latest Claude Turn (v21.43 — Encounter Slots: Gen 1's rarity engine)
 
 Tony pointed at pret/pokered ("learn how to make a real game"). New
