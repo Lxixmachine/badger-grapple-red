@@ -4,7 +4,7 @@ import {loadState,saveState,caughtRecruitCount} from '../systems/save.js';
 import {uiBox,setVirtualHandler} from '../systems/ui.js';
 import {unlockAudio,sfx,playMusic,setMuted} from '../systems/audio.js';
 import {GAME_W,GAME_H,OVERWORLD_ZOOM} from '../systems/resolution.js';
-import {LAYERED_MAP_VERSION,layeredNpcs,layeredUpperDecor} from '../data/layeredMaps.js';
+import {LAYERED_MAP_VERSION,layeredNpcs,layeredUpperDecor,layeredWaterRects} from '../data/layeredMaps.js';
 const Phaser = window.Phaser;
 const DIRS={down:{dx:0,dy:1,frame:1},left:{dx:-1,dy:0,frame:4},right:{dx:1,dy:0,frame:7},up:{dx:0,dy:-1,frame:10}};
 // Collision is controlled by src/data/maps.js so it matches visible map art.
@@ -23,7 +23,8 @@ export class OverworldScene extends Phaser.Scene{
   this.marker=this.addWorld(this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80));
   this.worldCamera.startFollow(this.player,true,1,1);this.applyAreaBounds();this.worldCamera.setDeadzone(0,0);
   this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);
-  this.hud=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1000));this.drawDepthDecor();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.fadeSceneIn(140);setMuted(this.state.audioMuted);playMusic('overworld');}
+  this.waterSprites=[];this.waterClock=null;
+  this.hud=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1000));this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.fadeSceneIn(140);setMuted(this.state.audioMuted);playMusic('overworld');}
  addWorld(obj){this.worldLayer.add(obj);return obj;}
  addUi(obj){this.uiLayer.add(obj);return obj;}
  fadeSceneOut(duration){this.worldCamera.fadeOut(duration,0,0,0);this.uiCamera.fadeOut(duration,0,0,0);}
@@ -51,7 +52,7 @@ export class OverworldScene extends Phaser.Scene{
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
   this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.worldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.worldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
  findExit(x,y){return (areaFor(this.area).exits||[]).find(e=>e.x===x&&e.y===y);}
- changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2);this.drawDepthDecor();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
+ changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2);this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
  afterStep(){this.savePos();if(isGrass(this.area,this.tilePos.x,this.tilePos.y))this.grassRustle();this.checkTrainerSight();if(this.sightLocked)return;if(isGrass(this.area,this.tilePos.x,this.tilePos.y)&&Math.random()<.12){this.startScout();return;}this.drawHud();}
  grassRustle(){const wx=this.worldX(this.tilePos.x),wy=this.worldY(this.tilePos.y);for(let i=0;i<5;i++){const f=this.addWorld(this.add.rectangle(wx-6+Math.random()*12,wy-3,2,3,i%2?0xeee6d5:0xcfc4ae,1).setDepth(this.player.depth+1));this.tweens.add({targets:f,y:wy-12-Math.random()*7,x:f.x+(Math.random()*10-5),alpha:0,angle:Math.random()*180,duration:260+Math.random()*120,ease:'Quad.Out',onComplete:()=>f.destroy()});}} // chalk puff off the open mat
  checkTrainerSight(){
@@ -153,6 +154,18 @@ rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;s
 showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1060));const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(45,47,236,48,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(42,44,236,48,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(42,44,236,48,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(46,48,228,40,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(51,87,269,87);const t=this.add.text(160,51,title,{fontFamily:'monospace',fontSize:10,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(160,68,body,{fontFamily:'monospace',fontSize:8,color:'#111',align:'center',wordWrap:{width:210}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
  promptFor(ch){if(ch==='R')return 'A RECOVER';if(ch==='S')return 'A SHOP';if(ch==='C')return 'A BATTLE';if(ch==='g')return 'A SCOUT';if(ch==='M')return 'A SPAR';if(ch==='N')return 'A TALK';if(ch==='STATUE')return 'A READ';if(ch==='SCOUT_NPC')return 'A TALK';if(ch==='TRAINER'){const tr=this.trainerNearby();return this.state.trainersDefeated?.[tr?.id]?'A TALK':'A BATTLE';}if(ch==='SAVE_NPC')return 'A TALK';if(ch==='BATTLE_NPC')return 'A TALK';if(ch==='STUDY_NPC')return 'A TALK';if(ch==='HIDDEN_TAPE'||ch==='HIDDEN_FILM'||ch==='HIDDEN_DRINK'||ch==='HIDDEN_SHORE'||ch==='HIDDEN_EMBER')return 'A CHECK';if(ch==='TROPHY')return 'A READ';if(ch==='DOOR')return 'A DOOR';if(ch==='NATIONALS')return 'A CHECK';if(ch==='CAPITOL')return 'A READ';if(ch==='SIGN')return 'A READ';if(ch==='TOURNEY')return (this.state.tournament?.champion)?'A TALK':'A ENTER';if(['WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(ch))return 'A CHECK';return '';}
  drawDepthDecor(){this.decor.removeAll(true);const add=(obj)=>this.decor.add(obj);if(this.area==='campus'){const {width,height}=areaDimensions(this.area);const g=this.add.graphics().setDepth(8);g.fillStyle(0x000000,.14);g.fillRect(0,0,width*16,8);g.fillRect(0,height*16-8,width*16,8);add(g);return;}if(this.area!=='fieldhouse')return;const light=this.add.graphics().setDepth(8);light.fillStyle(0xffffff,.045);light.fillEllipse(224,104,360,150);light.fillStyle(0x000000,.10);light.fillRect(0,0,448,8);light.fillRect(0,208,448,16);add(light);}
+ drawWater(){
+  // Gen 1's whole overworld breathes through one animated water tile
+  // (pokered: TILEANIM_WATER on every exterior tileset). Mendota shimmers
+  // the same way: tile-sprites over the layered waterRects, four frames
+  // rolled from the imagegen water tile, one shared clock.
+  for(const w of this.waterSprites||[])w.destroy();
+  this.waterSprites=[];
+  for(const [x1,y1,x2,y2] of layeredWaterRects(this.area)){
+    this.waterSprites.push(this.addWorld(this.add.tileSprite(x1*16,y1*16,(x2-x1+1)*16,(y2-y1+1)*16,'anim_water_0').setOrigin(0).setDepth(1)));
+  }
+  if(!this.waterClock){this.waterFrame=0;this.waterClock=this.time.addEvent({delay:320,loop:true,callback:()=>{this.waterFrame=(this.waterFrame+1)%4;for(const w of this.waterSprites||[])w.setTexture('anim_water_'+this.waterFrame);}});}
+ }
  drawLayeredUpperDecor(){for(const obj of this.upperObjects)obj.destroy();this.upperObjects=[];for(const entry of layeredUpperDecor(this.area)){const obj=this.addWorld(this.add.image(entry.x*16,entry.y*16,entry.texture).setOrigin(0).setDepth(this.worldY(entry.depthY)));obj.setData('fr1Upper',true);this.upperObjects.push(obj);}}
  addActor(obj){this.addWorld(obj);this.actors.push(obj);return obj;}
  addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null,look=null){const sx=this.worldX(x),sy=this.worldY(y);const key=look&&this.textures.exists('npc_'+look)?'npc_'+look:'npc';const sh=this.addActor(this.add.ellipse(sx,sy-2,17,6,0x000000,.28).setDepth(sy-1));const npc=this.addActor(this.add.sprite(sx,sy,key,frame).setOrigin(.5,1).setDepth(sy));npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};this.npcList.push({npc,sh,t:0,route,i:0});return npc;}

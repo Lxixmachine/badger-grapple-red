@@ -34,4 +34,6 @@ export function layeredNpcs(area){return layeredMap(area)?.npcs||[];}
 
 export function layeredUpperDecor(area){return layeredMap(area)?.upperDecor||[];}
 
+export function layeredWaterRects(area){return layeredMap(area)?.waterRects||[];}
+
 export const LAYERED_UPPER_TEXTURES=[...new Set(Object.values(LAYERED_MAPS).flatMap(map=>(map.upperDecor||[]).map(entry=>entry.texture)))];

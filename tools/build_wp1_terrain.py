@@ -789,6 +789,18 @@ def save_if_changed(image, path):
     image.save(path)
 
 
+def save_water_animation(tiles):
+    """Gen 1's whole overworld breathes through two animated tiles (pokered
+    tileset headers: TILEANIM_WATER on every exterior set) - water shifts
+    horizontally a few pixels per beat. Same trick: four frames rolled from
+    our own imagegen water tile, played by the runtime over waterRects."""
+    LAYERS_OUT.mkdir(parents=True, exist_ok=True)
+    base = tiles["water0"].convert("RGBA")
+    for i, shift in enumerate((0, 4, 8, 12)):
+        frame = ImageChops.offset(base, shift, 0)
+        frame.convert("RGB").save(LAYERS_OUT / f"anim_water_{i}.png")
+
+
 def save_layered_textures(tiles, props):
     """Export each FR1 upper source once; placement stays in layeredMaps.json."""
     LAYERS_OUT.mkdir(parents=True, exist_ok=True)
@@ -819,6 +831,7 @@ def main():
     props = load_props()
     save_tilesheet(tiles)
     save_layered_textures(tiles, props)
+    save_water_animation(tiles)
     for area in MAPS:
         save_if_changed(compose(area, tiles, props), UI_OUT / f"area_{area}.png")
 

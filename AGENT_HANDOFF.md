@@ -1,5 +1,26 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.45 — Living Water: Gen 1's animation lesson)
+
+Tony asked how Red ACHIEVED ITS LOOK, from pret/pokered. The answer is in
+the tileset header table: one shared exterior tileset, texture from
+constraint, and **exactly two animated elements — water and flowers —
+running everywhere in VBlank**. Our world was 100% static; that was the
+biggest remaining look-gap. Shipped the water half:
+
+- **Mendota shimmers.** save_water_animation() rolls our imagegen water
+  tile into four frames (a transformation, no new art); waterRects in
+  layeredMaps.json declare the animated bands (pier columns excluded so
+  the baked dock stays put); OverworldScene.drawWater() lays tile-sprites
+  at depth 1 with one shared 320ms clock. Rebuilds on area change; timer
+  is scene-scoped so battle returns are clean.
+- GEN1_SYSTEMS_NOTES.md gains the "How Red achieved its look" section.
+- **Codex ask (queued): flower sway** — the other half of Gen 1's life
+  budget. Needs flower accent positions as data (fixed lowerDecor
+  positions would do) + a 2-frame flower tile pair; runtime clock
+  already exists to drive it.
+- 11/11 check; V='243' (four new anim frame PNGs).
+
 ## Latest Claude Turn (v21.44 — Route Polish: the two ugliest things on screen)
 
 Tony's priority call: looks first, systems later (WP-AI / WP-POTENTIAL

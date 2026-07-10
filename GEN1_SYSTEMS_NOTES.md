@@ -60,3 +60,27 @@ balance_sim pass in the same turn.
   verbs is a Season Two idea.
 - Evolution + learnset tables per species (ours: evolvesTo/evolveLvl -
   already Gen 1 shaped).
+
+## 5. How Red achieved its LOOK (studied for the visual push)
+
+pokered's tileset header table is the whole philosophy in 12 bytes per
+tileset: `tileset Overworld, -1,-1,-1, $52, TILEANIM_WATER_FLOWER` —
+name, counter tiles, THE grass tile, and an animation mode. Facts:
+
+- **One tileset covers all of Kanto's exteriors.** Every town and route
+  shares the Overworld set; texture comes from dither patterns and
+  repetition rhythm (4x4-tile blocks), not asset count. Constraint IS
+  the style (city-manifesto rule 20 confirmed at the source).
+- **Exactly two things animate: water and flowers.** Declared per
+  tileset (TILEANIM_WATER / _WATER_FLOWER / _NONE), driven in VBlank -
+  water pixel-shifts one tile, flowers cycle frames. The entire feeling
+  of a living world costs two tiles of animation, running everywhere.
+- Semantics live in the header (grass tile id, counter tiles) - the
+  Gen 1 ancestor of our layeredMaps contract.
+
+**Applied (v21.45):** Mendota now animates Gen-1 style - four frames
+rolled from our own imagegen water tile, tile-sprites over waterRects in
+the layered source, one shared 320ms clock. **Queued:** flower sway on
+campus (needs flower positions exported from the compositor's seeded
+scatter, or fixed accent positions in lowerDecor - small art-pipeline
+task, big life-per-byte win, see Codex asks).

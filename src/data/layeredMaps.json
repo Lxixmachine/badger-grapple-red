@@ -934,6 +934,26 @@
             ]
           ]
         }
+      ],
+      "waterRects": [
+        [
+          0,
+          0,
+          55,
+          0
+        ],
+        [
+          0,
+          1,
+          27,
+          4
+        ],
+        [
+          31,
+          1,
+          55,
+          4
+        ]
       ]
     },
     "downtown": {
@@ -1097,7 +1117,10 @@
         {
           "kind": "CAPITOL",
           "tiles": [
-            [25, 4]
+            [
+              25,
+              4
+            ]
           ]
         }
       ],
@@ -1115,10 +1138,22 @@
           "dialogue": "Shopper: Every storefront on State Street is somebody's game-day tradition.",
           "look": "purple",
           "route": [
-            [7, 8],
-            [8, 8],
-            [8, 9],
-            [7, 9]
+            [
+              7,
+              8
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              9
+            ],
+            [
+              7,
+              9
+            ]
           ]
         },
         {
@@ -1252,6 +1287,26 @@
           "look": "gray",
           "route": null
         }
+      ],
+      "waterRects": [
+        [
+          0,
+          0,
+          47,
+          2
+        ],
+        [
+          0,
+          11,
+          47,
+          13
+        ],
+        [
+          0,
+          3,
+          0,
+          10
+        ]
       ]
     }
   }
