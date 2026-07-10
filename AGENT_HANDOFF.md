@@ -56,6 +56,33 @@
   south Bascom camera views with no browser warnings/errors, no horizontal
   overflow, and no permanent HUD obstruction. Deploy after the release commit.
 
+## Latest Claude Turn (v21.30 — Tony's playtest bugs fixed)
+
+- Tony's phone playtest reported four bugs on the new town; all reproduced,
+  root-caused, and fixed:
+- **"The bottom-right building blocks the path" + "I float walking
+  left/right"**: the east exit sat at (27,10) on a row the Memorial Library
+  wall dead-ends, forcing a 1-tile alley (x26) squeezed between roof edge
+  and hedge for five tiles - the sprite overlapped the roof the whole way.
+  The State Street artery now runs through the open rows 6-7 corridor
+  BETWEEN the two buildings to a new east exit at (27,6); the alley is gone.
+  Manifesto coordinate note amended (v21.30 amendment in section 5).
+- **"NPCs don't have any collision"**: NPCs are now solid FireRed-style -
+  pass() blocks NPC-occupied tiles, and patrol steps are validated against
+  collision, the player's tile, and other NPCs.
+- **"I walk on shrubbery"**: the bush tile carried an opaque bright-green
+  backing, stamping squares over the pale lawn and making planters read
+  wider than collision. Keyed out in the compositor (key_bush_backing).
+  Planter positions themselves were correct.
+- Smoke tests updated for solid NPCs (sidestep the mat wrestler; face the
+  desk official before A - standing ON the desk through the official is no
+  longer possible, which is correct FireRed counter behavior).
+- Verified in-browser: new artery walk, NPC solidity, patrol containment,
+  no runtime errors. npm run check 8/8. Cache v232.
+- **Codex practice notes**: corridors beside building masses need 2 tiles
+  minimum; NPCs are solid now - keep them off doorways/exits/1-tile paths
+  unless blocking is intended (the desk official blocking IS intended).
+
 ## Latest Codex Turn (v21.27 - Madison Landmark Pilgrimage)
 
 - Read `WORLD_MAP_MANIFESTO.md`, the read-first contract in
