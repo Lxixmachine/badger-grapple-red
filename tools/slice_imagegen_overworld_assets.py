@@ -40,6 +40,40 @@ def trim_alpha(img):
     return img.crop(bbox) if bbox else img
 
 
+def despeck(img, min_frac=0.10):
+    # Drop small disconnected alpha islands (keyed-out ground-shadow residue).
+    # Without this the alpha bbox includes specks far below the character, so
+    # fit_frame scales the body down and bottom-anchors on the junk - which is
+    # exactly the "floating when walking left/right" playtest bug.
+    px = img.load()
+    w, h = img.size
+    opaque = {(x, y) for y in range(h) for x in range(w) if px[x, y][3] > 24}
+    seen = set()
+    comps = []
+    for start in opaque:
+        if start in seen:
+            continue
+        stack = [start]
+        comp = []
+        seen.add(start)
+        while stack:
+            x, y = stack.pop()
+            comp.append((x, y))
+            for nx, ny in ((x-1, y), (x+1, y), (x, y-1), (x, y+1), (x-1, y-1), (x+1, y-1), (x-1, y+1), (x+1, y+1)):
+                if (nx, ny) in opaque and (nx, ny) not in seen:
+                    seen.add((nx, ny))
+                    stack.append((nx, ny))
+        comps.append(comp)
+    if not comps:
+        return img
+    keep = len(max(comps, key=len)) * min_frac
+    for comp in comps:
+        if len(comp) < keep:
+            for x, y in comp:
+                px[x, y] = (0, 0, 0, 0)
+    return img
+
+
 def widen_side_frame(frame):
     alpha = frame.getchannel("A")
     bbox = alpha.getbbox()
@@ -58,7 +92,7 @@ def widen_side_frame(frame):
 
 
 def fit_frame(cell, row):
-    cell = trim_alpha(remove_green(cell))
+    cell = trim_alpha(despeck(remove_green(cell)))
     cell.thumbnail((FRAME_W, FRAME_H), Image.Resampling.NEAREST)
     cell = trim_alpha(remove_green(cell))
     frame = Image.new("RGBA", (FRAME_W, FRAME_H), (0, 0, 0, 0))

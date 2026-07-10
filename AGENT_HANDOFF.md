@@ -1,6 +1,35 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.29 — WP-TOWN QA: bug found + fixed, both turns ACCEPTED)
+## Latest Claude Turn (v21.31 — Grounded Walk: the left/right floating bug, root-caused for real)
+
+- Tony's screenshot confirmed v21.30 was live and he STILL floated walking
+  left/right — so the v21.30 alley rerouting was a real fix but not THIS
+  fix. The true cause was in the sprite sheet itself: in
+  `player_walk.png`, the down/up frames stood a full 36px tall with feet
+  on row 35, but the left frames' body ended at row 27 and the right
+  frames' at row 26 — with a few disconnected junk pixels (green-key
+  residue of the source's ground shadow) sitting at rows 33-35 below them.
+- Why the slicer produced that: `fit_frame` trims each cell to its alpha
+  bbox then thumbnails to 24x36 bottom-anchored. The junk pixels stretched
+  the bbox downward, so the thumbnail SHRANK the character (~28px) and the
+  bottom-anchor landed on the junk instead of the feet. Down/up cells had
+  no junk, so they filled the frame. Result: side frames hovered 8-9px —
+  floating exactly and only when walking left/right.
+- Fix: `despeck()` in `tools/slice_imagegen_overworld_assets.py` — drops
+  connected alpha components smaller than 10% of the largest before the
+  trim. Re-sliced player_walk.png and npc_walk.png, re-ran
+  `recolor_npc_variants.py` so all five tinted NPC variants stay in sync.
+  All 12 player frames + all 12 NPC frames now verified top=0/bottom=35
+  with no internal gaps; in-browser side-walk screenshots show the player
+  full-size with feet planted mid-stride.
+- Craft note for Codex: when generating walk sheets, keep the character's
+  ground shadow OFF the sprite (or solidly attached to the feet). Any
+  detached blob below the feet defeats bottom-anchored slicing; despeck()
+  now defends against it, but it works by discarding those blobs.
+- Cache key bumped V='233' (sprites changed); version 21.31-grounded-walk
+  across the usual six spots; `npm run check` 8/8.
+
+## Previous Claude Turn (v21.29 — WP-TOWN QA: bug found + fixed, both turns ACCEPTED)
 
 - Tony reported bugs after Codex's v21.27/v21.28. Independent QA sweep run
   on both turns: fresh `npm run check` (8/8), a 12-hop deterministic
