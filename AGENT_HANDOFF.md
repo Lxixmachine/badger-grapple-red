@@ -1,6 +1,27 @@
 # Agent Handoff
 
-## Latest Codex Turn (v21.40 - Field House / Bascom / State Visual Overhaul)
+## Latest Codex Turn (v21.41 - Field House Readability Correction)
+
+- Tony's phone screenshot exposed two v21.40 defects that static QA missed:
+  the player could disappear behind the full trophy/bleacher wall, and
+  transparent prop gaps exposed repeated white/brown collision wall tiles.
+- Root cause: `fr2_fieldhouse_wall` was incorrectly in `upperDecor` at
+  depthY 4.5. It is now baked into `lowerDecor`; only the actual entrance
+  lintel remains depth-aware. The player stays visible throughout the center
+  approach and only tucks at the exit tile.
+- Field House interior collision footprints now render the same wood floor as
+  the room beneath transparent fixtures. The wall/window tile is reserved for
+  the one-tile perimeter, removing the incoherent checker blocks.
+- Removed the unused runtime `fr2_fieldhouse_wall` layer texture. Added test
+  hooks for upper texture identities and a regression test that proves the
+  scenic wall can never re-enter the occlusion layer.
+- Phone QA reproduces Tony's exact upper-center corridor at 390x844: full
+  player visible, continuous wood floor, readable entrance, clean logs.
+- Release/cache labels are v21.41 / v241. Smoke suite is 11/11 green.
+- Process correction: every future visual pass must walk all playable rows
+  around every new upper prop; static spawn screenshots are insufficient.
+
+## Previous Codex Turn (v21.40 - Field House / Bascom / State Visual Overhaul)
 
 - Used built-in ChatGPT image generation for a new six-subject Madison
   architecture sheet and a dedicated weathered outdoor practice mat. Sources

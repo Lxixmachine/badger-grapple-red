@@ -32,7 +32,8 @@ export function installTestHooks(game, routeVirtualButton) {
         version: scene.layeredMapVersion,
         upperCount: scene.upperObjects?.length || 0,
         directActorDepth: Array.isArray(scene.actors),
-        upperDepths: (scene.upperObjects || []).map(obj => obj.depth)
+        upperDepths: (scene.upperObjects || []).map(obj => obj.depth),
+        upperTextures: (scene.upperObjects || []).map(obj => obj.texture?.key || null)
       } : null,
       camera: scene.worldCamera && scene.uiCamera ? {
         count: scene.cameras.cameras.length,

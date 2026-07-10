@@ -33,17 +33,15 @@
           "name": "fieldhouse_mat",
           "x": 9,
           "y": 2
+        },
+        {
+          "type": "prop",
+          "name": "fieldhouse_wall",
+          "x": 1,
+          "y": 0
         }
       ],
       "upperDecor": [
-        {
-          "texture": "fr2_fieldhouse_wall",
-          "source": "prop",
-          "name": "fieldhouse_wall",
-          "x": 1,
-          "y": 0,
-          "depthY": 4.5
-        },
         {
           "texture": "fr1_trophy_wall",
           "source": "prop",
@@ -58,7 +56,7 @@
           "name": "fieldhouse_exit",
           "x": 13,
           "y": 0,
-          "depthY": 4.6
+          "depthY": 1.5
         },
         {
           "texture": "fr1_coach_station",

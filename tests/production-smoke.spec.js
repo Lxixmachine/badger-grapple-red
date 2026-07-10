@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.40-visual-overhaul');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.41-fieldhouse-readability');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_downtown', 'area_studyhall', 'fr1_campus_tree', 'fr2_campus_red_hall', 'fr2_fieldhouse_wall', 'fr2_state_storefronts', 'fr2_kohl_center', 'fr2_capitol_grand', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_downtown', 'area_studyhall', 'fr1_campus_tree', 'fr2_campus_red_hall', 'fr2_state_storefronts', 'fr2_kohl_center', 'fr2_capitol_grand', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -109,7 +109,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 7, directActorDepth: true}
+    layered: {version: 1, upperCount: 6, directActorDepth: true}
   });
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
@@ -121,6 +121,22 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(save.party).toHaveLength(1);
   expect(save.flags.introDone).toBe(true);
   expect(save.message).toContain('Coach is waiting');
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('Field House scenic wall never enters the player occlusion layer', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=3');
+  await expect(page.locator('#bootError')).toBeHidden();
+  await expect(page.locator('canvas')).toBeVisible();
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
+    active: true,
+    tilePos: {x: 14, y: 3}
+  });
+  const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(overworld.layered.upperTextures).toContain('fr1_fieldhouse_exit');
+  expect(overworld.layered.upperTextures).not.toContain('fr2_fieldhouse_wall');
   expect(runtimeIssues).toEqual([]);
 });
 

@@ -633,8 +633,15 @@ def compose(area, tiles, props):
         for y in range(height):
             for x in range(width):
                 if g[y][x] == "#":
-                    top_wall = y < height - 1 and not blocked(g, x, y + 1)
-                    paint(img, tiles, ("window" if x % 3 == 1 and top_wall else "interior_wall"), x, y)
+                    if area == "fieldhouse" and 0 < x < width - 1 and 0 < y < height - 1:
+                        # Fixture collision sits over the same wood floor as
+                        # the walkable room. The transparent prop supplies the
+                        # visible object; fake wall/window blocks must not show
+                        # through its gaps.
+                        paint(img, tiles, "floor0" if (x + y) % 2 else "floor1", x, y)
+                    else:
+                        top_wall = y < height - 1 and not blocked(g, x, y + 1)
+                        paint(img, tiles, ("window" if x % 3 == 1 and top_wall else "interior_wall"), x, y)
     elif area in {"lakeshore", "river"}:
         pass  # blocked mass is the water, already drawn
     # campus blocked dressing happens below (buildings + assembled trees)

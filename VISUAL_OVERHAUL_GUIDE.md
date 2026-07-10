@@ -21,6 +21,9 @@
 > FR2 shipped in v21.40: Field House, Bascom Hill, and State Street were
 > recomposed around larger image-generated landmark masses, honest depth and
 > collision, and phone-scale focal hierarchy. FR3 character variety is next.
+> v21.41 correction: scenic architecture belongs in the lower map. Only narrow
+> edges that should genuinely cover a character (door lintels, canopies) may
+> enter `upperDecor`. QA must walk every row around each upper prop.
 
 **For: Codex (ChatGPT), the project's art lane.** This is a complete, sequenced
 production plan to take the game's visuals to the FireRed bar. It is grounded
