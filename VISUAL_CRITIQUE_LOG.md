@@ -81,6 +81,13 @@ tracker for looks.
   align river water bands to lakeshore's rows during the Stage 3 route
   recomposition. `tools/stitch_world.py` regenerates the X-ray after
   any map change.
+- **F-012 [OBJ-007/world identity] the Field House has no exterior — OPEN.**
+  Found by circling the start on the world stitch next to Pallet Town's:
+  Red's home is a visible building; ours is a border-row warp tile. The
+  game's origin has no silhouette on the world plane. Owner: Stage 3
+  Bascom rebuild - the Field House gets a real exterior mass on the
+  south edge (cardinal roof, the biggest door on campus, the map's
+  anchor landmark), with the start emerging from ITS door.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics
