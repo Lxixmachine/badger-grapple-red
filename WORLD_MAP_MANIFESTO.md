@@ -86,6 +86,11 @@ library (playtest finding: the alley read as "the building blocks the path"
 and forced the sprite over the roof edge). External destination landings,
 the Madison compass, golden path, wild bands, and every world law remain
 unchanged. `VISUAL_OVERHAUL_GUIDE.md` §5 owns the current collision map.
+**v21.32 amendment:** State Street's east end (x24-27, y1-4) is now the
+blocked Capitol grounds — the dome prop over a hedge row closes the
+street's east view (§3's "Capitol dome silhouette" made literal), with a
+readable CAPITOL sign spot along y4. The street corridor itself is rows
+5-9: sidewalk row 5, brick pedestrian mall rows 6-8, sidewalk row 9.
 
 **Renames (display names only — area ids NEVER change, saves stay compatible):** CAMPUS QUAD→BASCOM HILL, DOWNTOWN→STATE STREET, RIVER TRAIL→PICNIC POINT, CHAMPIONSHIP HALL→KOHL CENTER, STUDY HALL→MEMORIAL LIBRARY.
 

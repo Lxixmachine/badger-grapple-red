@@ -1,6 +1,42 @@
 # Agent Handoff
 
-## Latest Claude Turn (v21.31 — Grounded Walk: the left/right floating bug, root-caused for real)
+## Latest Claude Turn (v21.32 — WP-STREET: State Street reads like State Street)
+
+- Post-v21.31 survey of every area found State Street the weakest map in
+  the game: two identical repeating facade strips, no readable doors (door
+  law violated wholesale), the marquee barely legible, no Capitol, sand
+  ground. It is the Badge-2 artery AND the road to the finale — highest
+  recognition value in the manifesto — so it got the full rebuild.
+- **Composition (tools/build_wp1_terrain.py):** north strip is now
+  discrete shop units (ridge/eave/window-wall/street-level anatomy,
+  palette changes at unit boundaries, awning storefronts mixed with
+  drawn-shut doors and a signboard — shut door + no mat = decoration,
+  exactly per door law). The Kohl unit (x17-23) keeps the lit marquee +
+  carpet door, now with a stone step at (21,5) (enterable = mat). South
+  strip is honest GBA building backs: ridge/eave/sparse windows/wall base,
+  no fake doors. Ground: sidewalk rows 5+9, red-brick pedestrian mall rows
+  6-8 (new brick0/brick1 crops sampled from the landmark sheet's
+  street_horizon cell). Borders use curbs, not lawn ledges.
+- **The Capitol closes the street.** New blocked Capitol grounds at
+  x24-27 y1-4 (isBlocked change, validator BFS green), capitol_center
+  sliced as a 64x64 dome prop over a bush hedge row, plus a readable
+  CAPITOL spot along y4 with championship lore. Manifesto §5 amended.
+- **Tile craft note for Codex:** the town-anatomy sheet stages every
+  building subject on lawn; a new key_grass_backing() keys that pale
+  yellow-green (g>120, r<g, b<g*0.62) off doors/windows/walls/corners/
+  signboard so the same tiles sit on pavement downtown and real lawn on
+  campus. Same lesson as the bush backing and the sprite ground shadows:
+  anything staged under/behind a subject must be keyable or attached.
+- Two ambient NPCs added (shopper patrol x7-8 y8-9, Capitol fan at 25,6)
+  — State Street had zero life outside Deion. QA verified in-browser:
+  CAPITOL sign reads, grounds solid, marquee gate blocks without badges
+  and enters Kohl Center with them, no runtime errors. npm run check 8/8.
+  Cache V='234', version 21.32-state-street.
+- Next candidates: Memorial Library interior is an empty wood floor (no
+  bookshelves — landmark rule fail); Kohl/Annex interiors sparse vs the
+  Field House; WP2 character archetypes still queued for Codex.
+
+## Previous Claude Turn (v21.31 — Grounded Walk: the left/right floating bug, root-caused for real)
 
 - Tony's screenshot confirmed v21.30 was live and he STILL floated walking
   left/right — so the v21.30 alley rerouting was a real fix but not THIS

@@ -129,10 +129,10 @@ MAPS = {
     ],
     "downtown": [
         "############################",
-        "....####################....",
-        "....####################....",
-        "....####################....",
-        "....#################E##....",
+        "....########################",
+        "....########################",
+        "....########################",
+        "....#################E######",
         "............T...............",
         "............................",
         "ES..........................",
@@ -260,6 +260,10 @@ LANDMARK_CROPS = {
     "marquee_center": (382, 744, 704, 1066),
     "marquee_door": (744, 744, 1066, 1066),
     "nationals_door": (1106, 744, 1428, 1066),
+    # red-brick pavement patches sampled from the street_horizon cell's
+    # sidewalk apron - State Street's pedestrian mall is brick, not sand
+    "brick0": (1150, 598, 1192, 640),
+    "brick1": (1246, 598, 1288, 640),
 }
 
 # Dedicated opening-map architecture. The image generator returned the same
@@ -304,6 +308,27 @@ def normalize_image(tile):
     return rgb
 
 
+# Building tiles from the town anatomy sheet carry a lawn strip under their
+# stone foundations (the sheet staged every subject on grass). Key it so the
+# same wall/door/window tiles sit correctly on pavement downtown AND on real
+# lawn on campus - the local ground shows through instead of a stamped patch.
+GRASS_BACKED_TILES = {
+    "red_door", "blue_door", "red_window", "blue_window",
+    "red_under_eave", "blue_under_eave", "red_eave", "blue_eave",
+    "red_corner", "blue_corner", "signboard",
+}
+
+
+def key_grass_backing(tile):
+    px = tile.load()
+    for by in range(tile.height):
+        for bx in range(tile.width):
+            r, g2, b2, a = px[bx, by]
+            if a and g2 > 120 and r < g2 and b2 < g2 * 0.62:
+                px[bx, by] = (r, g2, b2, 0)
+    return tile
+
+
 def key_bush_backing(tile):
     """The bush crop carries a flat light-green backing from its source sheet;
     key it so bushes composite onto the local ground instead of stamping
@@ -325,6 +350,8 @@ def load_source_tiles(source_path, crops):
     }
     if "bush" in tiles:
         tiles["bush"] = key_bush_backing(tiles["bush"])
+    for name in GRASS_BACKED_TILES & tiles.keys():
+        tiles[name] = key_grass_backing(tiles[name])
     return tiles
 
 
@@ -371,7 +398,7 @@ def load_props():
     mat = TOWN_CROPS["mat_plain"]
     return {
         "arena_mat": normalize_image(source.crop(mat).resize((80, 80), Image.Resampling.NEAREST)),
-        "capitol_horizon": normalize_image(landmarks.crop(LANDMARK_CROPS["capitol_center"]).resize((80, 32), Image.Resampling.NEAREST)),
+        "capitol_dome": normalize_image(landmarks.crop(LANDMARK_CROPS["capitol_center"]).resize((64, 64), Image.Resampling.NEAREST)),
         "marquee_left": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_left"]).resize((32, 32), Image.Resampling.NEAREST)),
         "marquee_center": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_center"]).resize((48, 32), Image.Resampling.NEAREST)),
         "marquee_door": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_door"]).resize((16, 32), Image.Resampling.NEAREST)),
@@ -453,9 +480,7 @@ def path_cells(area, g):
     if area == "river":
         seg(12, 9, 27, 9)       # the Point's walking trail below the pines
         seg(1, 8, 3, 8)         # spur to the fire circle at the tip
-    if area == "downtown":
-        seg(0, 6, 27, 8)        # State Street pedestrian mall
-        seg(21, 5, 21, 6)       # Kohl Center marquee approach
+    # downtown has no sand paths: the whole mall corridor is brick (pass 1)
     return cells
 
 def water_mask(area, g):
@@ -489,7 +514,11 @@ def compose(area, tiles, props):
             if interior:
                 paint(img, tiles, "floor0" if (x + y) % 2 else "floor1", x, y)
             elif area == "downtown":
-                paint(img, tiles, "pave0" if (x + y) % 2 else "pave1", x, y)
+                # rows 6-8 are the brick pedestrian mall between sidewalks
+                if 6 <= y <= 8:
+                    paint(img, tiles, "brick0" if (x + y) % 2 else "brick1", x, y)
+                else:
+                    paint(img, tiles, "pave0" if (x + y) % 2 else "pave1", x, y)
             elif area == "lakeshore":
                 # grassy park with a sand beach ribbon hugging the water
                 near_water = any((x + dx, y + dy) in water for dx in (-1, 0, 1) for dy in (-1, 0, 1))
@@ -535,26 +564,50 @@ def compose(area, tiles, props):
 
     # ---- pass 5: blocked dressing ----
     if area == "downtown":
-        # storefront strips: colored multi-tile facades face the street while
-        # layered roof rows keep each shop unit structurally legible.
-        for band, facade_row, roof_rows in ((range(1, 5), 4, range(1, 4)), (range(10, 13), 10, range(11, 13))):
-            for y in roof_rows:
-                for x in range(4, 24):
-                    if g[y][x] == "#":
-                        palette = ("red_ridge", "blue_ridge", "roof_neutral")[(x // 4) % 3]
-                        paint(img, tiles, palette, x, y)
-            for x in range(4, 24):
-                if g[facade_row][x] == "#":
-                    paint(img, tiles, ("store_red", "store_blue", "store_neutral")[(x // 4) % 3], x, facade_row)
-        # curbs where sidewalk meets the vertical map edges
+        # North strip: discrete shop units, each with FireRed building anatomy
+        # (ridge / eave / window row / street level). Palette changes at unit
+        # boundaries; street level mixes awning storefronts with drawn-shut
+        # doors and a signboard. Door law: shut door + no mat = decoration.
+        awnings = ("store_red", "store_neutral", "store_blue")
+        for x0, x1, pal in ((4, 7, "red"), (8, 12, "blue"), (13, 16, "red")):
+            mid = (x0 + x1) // 2
+            for i, x in enumerate(range(x0, x1 + 1)):
+                paint(img, tiles, f"{pal}_ridge", x, 1)
+                paint(img, tiles, f"{pal}_eave", x, 2)
+                paint(img, tiles, f"{pal}_window" if i % 2 else f"{pal}_under_eave", x, 3)
+                if x == mid:
+                    paint(img, tiles, f"{pal}_door", x, 4)
+                elif x == x1 and pal == "blue":
+                    paint(img, tiles, "signboard", x, 4)
+                else:
+                    paint(img, tiles, awnings[i % 3], x, 4)
+        # Kohl Center unit x17-23: solid dark-red mass under the lit marquee
+        # props (painted in the landmark pass); windows flank the carpet door.
+        for x in range(17, 24):
+            paint(img, tiles, "red_ridge", x, 1)
+            paint(img, tiles, "red_eave", x, 2)
+            paint(img, tiles, "red_window" if x % 2 else "red_under_eave", x, 3)
+            if x != 21:
+                paint(img, tiles, "red_window" if x % 2 else "red_under_eave", x, 4)
+        # South strip: honest GBA building backs - ridge on top, then eave,
+        # sparse back windows, and a wall base on the border row. No doors.
+        for x0, x1, pal in ((4, 9, "blue"), (10, 15, "red"), (16, 23, "blue")):
+            for i, x in enumerate(range(x0, x1 + 1)):
+                paint(img, tiles, f"{pal}_ridge", x, 10)
+                paint(img, tiles, f"{pal}_eave", x, 11)
+                paint(img, tiles, f"{pal}_window" if i % 3 == 1 else f"{pal}_under_eave", x, 12)
+                paint(img, tiles, f"{pal}_under_eave", x, 13)
+        # curbs where sidewalk meets the vertical map edges (never on exits)
         for y in range(1, 13):
             for x in (0, 27):
-                if g[y][x] != "#":
+                if g[y][x] not in "#E":
                     paint(img, tiles, "curb", x, y)
-        # A south-facing ledge contains the north edge of town without adding
-        # a second fence or a new collision rule.
-        for x in range(1, 27):
-            paint(img, tiles, "ledge", x, 0)
+        # Curb strips contain the north edge and the open border corners -
+        # downtown's borders are concrete, not lawn ledges.
+        for x in range(0, 28):
+            paint(img, tiles, "curb", x, 0)
+        for x in (*range(0, 4), *range(24, 28)):
+            paint(img, tiles, "curb", x, 13)
     elif interior:
         for y in range(height):
             for x in range(width):
@@ -600,8 +653,8 @@ def compose(area, tiles, props):
                     or (10 <= x <= 17 and y == 8)
                 ):
                     continue  # generated architecture owns these blocks
-                if area == "downtown" and 4 <= x <= 23:
-                    continue  # storefront zone owns its blocks
+                if area == "downtown":
+                    continue  # every blocked downtown cell is architecture now
                 quad = [(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)]
                 if all(blocked(g, qx, qy) and (qx, qy) not in claimed and 0 <= qx < width and 0 <= qy < height for qx, qy in quad):
                     stagger = (y // 2) % 2
@@ -624,7 +677,7 @@ def compose(area, tiles, props):
                         or (10 <= x <= 17 and y == 8)
                     ):
                         continue
-                    if area == "downtown" and 4 <= x <= 23:
+                    if area == "downtown":
                         continue
                     paint(img, tiles, "bush", x, y)
                     claimed.add((x, y))
@@ -645,12 +698,15 @@ def compose(area, tiles, props):
             paint(img, tiles, rn, fx, fy)  # fire circle at the tip
         paint(img, tiles, "stump", 1, 6)
     if area == "downtown":
-        # Capitol ahead, Kohl Center below it: State Street points east and
-        # the city itself becomes the ceremonial road to the title.
-        paint_prop(img, props, "capitol_horizon", 23, 0)
-        paint_prop(img, props, "marquee_left", 18, 2)
-        paint_prop(img, props, "marquee_center", 20, 2)
+        # The street's whole east view IS the Capitol: a 4x4-tile dome over
+        # its own hedge-fronted grounds. West = campus, east = the Square.
+        paint_prop(img, props, "capitol_dome", 24, 0)
+        for hx in range(24, 28):
+            paint(img, tiles, "bush", hx, 4)  # Capitol grounds hedge
+        paint_prop(img, props, "marquee_left", 17, 2)
+        paint_prop(img, props, "marquee_center", 19, 2)
         paint_prop(img, props, "marquee_door", 21, 3)
+        paint(img, tiles, "stone_step", 21, 5)  # door law: enterable = mat
     if area == "championship":
         # Closed, lock-marked and mat-free: a visible Season Two promise that
         # deliberately does not use the enterable-door visual language.
@@ -693,8 +749,8 @@ def compose(area, tiles, props):
                     pass  # generated facades/gateway already own these doors
                 elif interior:
                     paint(img, tiles, "south_door", x, y)
-                elif area == "downtown" and y == 4:
-                    pass  # source-derived marquee prop already paints door + red mat
+                elif area == "downtown":
+                    pass  # marquee prop owns its door; the west exit is brick already
                 else:
                     paint(img, tiles, "path", x, y)  # the route runs off the map edge
     return img.convert("RGB")

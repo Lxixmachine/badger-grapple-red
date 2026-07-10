@@ -58,7 +58,7 @@ export function isBlocked(area,x,y){
  }
  if(n==='LAKESHORE PATH')return y===0||y===13||(y>=1&&y<=4); // Mendota water band spans the whole north shore
  if(n==='STATE STREET'){if(x===21&&y===4)return false; // Kohl Center marquee door
-   return y===0||y===13||((y<5||y>9)&&(x>3&&x<24));}
+   return y===0||y===13||((y<5||y>9)&&(x>3&&x<24))||(y>=1&&y<=4&&x>=24);} // east end: Capitol grounds
  if(n==='PICNIC POINT')return y===0||y===13||y<=2||y>=11||x===0||(x>=14&&x<=20&&y>=4&&y<=6); // peninsula: Mendota both shores, pine stand mid
  if(n==='ANNEX ARENA')return y===0||y===13||x===0||x===27;
  if(n==='KOHL CENTER')return y===0||x===0||x===27||(y===13&&x!==14); // south doors to State Street
@@ -89,6 +89,7 @@ export function spotKind(area,x,y){
    if(x===18&&y===17)return 'HIDDEN_DRINK';
  }
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
+ if(n==='STATE STREET'&&y===4&&x>=24)return 'CAPITOL'; // the dome closes the street's east view
  if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';
  const cap=areaFor(area).captain;if(cap&&cap.x===x&&cap.y===y)return 'C';
