@@ -141,7 +141,15 @@ for (const id of Object.keys(AREAS)) {
     }
   }
 
-  summary.push({id, gridExposure, variety, deadScreens: deadScreens.length, interest: interest.size});
+  // PAL-040: palette discipline (VISUAL_CRITIQUE_LOG SAT-001). FireRed
+  // screens run ~50 colors; painterly sprawl reads as mud on a phone.
+  const colors = new Set();
+  for (let y = 0; y < png.height; y += 2) for (let x = 0; x < png.width; x += 2) {
+    const o = y * png.stride + x * png.bpp;
+    colors.add((png.pixels[o] << 16) | (png.pixels[o + 1] << 8) | png.pixels[o + 2]);
+  }
+  summary.push({id, gridExposure, variety, deadScreens: deadScreens.length, interest: interest.size, colors: colors.size});
+  if (colors.size > 160) findings.push({rule: 'PAL-040', sev: 'warn', area: id, msg: `palette sprawl: ${colors.size} unique colors (FireRed screen ~50; bar 160)`, fix: 'quantize the tile pipeline to the master palette (F-001)'});
   // FireRed interiors keep deliberately plain floors (Vol IV) - fixtures, not
   // ground, carry interior identity - so interiors get a laxer threshold.
   const gridLimit = OUTDOOR.has(id) ? 35 : 75;
@@ -151,8 +159,8 @@ for (const id of Object.keys(AREAS)) {
 }
 
 console.log('MAP LINT (design_bible Vol XV, phase 1)');
-console.log('area          grid_exposure  variety  interest  dead_screens');
-for (const s of summary) console.log(`${s.id.padEnd(13)} ${String(s.gridExposure).padStart(8)}%      ${String(s.variety).padStart(4)}%  ${String(s.interest).padStart(6)}  ${String(s.deadScreens).padStart(8)}`);
+console.log('area          grid_exposure  variety  interest  dead_screens  colors');
+for (const s of summary) console.log(`${s.id.padEnd(13)} ${String(s.gridExposure).padStart(8)}%      ${String(s.variety).padStart(4)}%  ${String(s.interest).padStart(6)}  ${String(s.deadScreens).padStart(8)}  ${String(s.colors).padStart(6)}`);
 console.log('');
 if (findings.length) {
   for (const f of findings) console.log(`[${f.sev.toUpperCase()}] ${f.rule} ${f.area}: ${f.msg}\n       fix: ${f.fix}`);

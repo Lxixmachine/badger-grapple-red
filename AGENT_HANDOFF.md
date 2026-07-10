@@ -1,5 +1,34 @@
 # Agent Handoff
 
+## Latest Claude Turn (Visual Critique Bridge — style is now a tracked dimension)
+
+Tony's call: the linter isn't enough — Field House, Bascom, and State
+Street still don't compare to FireRed, and we need a bridge between his
+EYE and what the agents work from. Built it:
+
+- **VISUAL_CRITIQUE_LOG.md** — a bug tracker for looks. Protocol: Tony
+  screenshots + one sentence -> numbered finding with evidence crop,
+  style-rubric tag, owner (compositor vs Codex art), status; findings
+  close only when Tony confirms ON DEVICE. Rubric: SAT-001 palette
+  discipline, TEX-002 motif-not-wash, TG-013 transitions, SIL-004
+  silhouette/contact, GRID-011 seamlessness, NOISE-005 meaningful marks.
+- **First style audit filed (F-001..F-009), the headline being F-001:**
+  Bascom renders 584 unique colors vs FireRed's ~50 per screen — the
+  muddy watercolor look, quantified. A palette-lock prototype (48-color
+  quantize + saturation lift) was boarded for Tony and reads
+  dramatically more FireRed; awaiting his ratify to ship game-wide
+  through the tile pipeline.
+- **PAL-040 added to the linter** (unique-color count, bar 160) so
+  palette sprawl is caught mechanically from now on.
+- Owners split: compositor fixes = F-001 palette, F-003 path edge tiles
+  (they exist in the sheet, unused!), F-005 contact shadows, F-006/7
+  seam/artifact re-crops. Codex art asks = F-002 grass motif tiles,
+  F-004 statue sprite, F-008 seamless brick. Field House is the
+  internal style reference (F-009, 102 colors, strong fixtures).
+- Reference calibration: Tony to drop FireRed screenshots from his own
+  play into chat (list in the log); they become the fixed bar on every
+  critique board. Study-only, never committed.
+
 ## Latest Claude Turn (v21.46 — Design Bible canonized + the map linter is live)
 
 Tony delivered a 28-volume Pokémon Environmental Design Bible (+ the
