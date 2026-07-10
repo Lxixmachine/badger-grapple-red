@@ -3,13 +3,30 @@ import {ROSTER,scaledStats} from '../data/roster.js';
 import {loadState,saveState,caughtRecruitCount} from '../systems/save.js';
 import {uiBox,setVirtualHandler} from '../systems/ui.js';
 import {unlockAudio,sfx,playMusic,setMuted} from '../systems/audio.js';
+import {GAME_W,GAME_H,OVERWORLD_ZOOM} from '../systems/resolution.js';
 const Phaser = window.Phaser;
 const DIRS={down:{dx:0,dy:1,frame:1},left:{dx:-1,dy:0,frame:4},right:{dx:1,dy:0,frame:7},up:{dx:0,dy:-1,frame:10}};
 // Collision is controlled by src/data/maps.js so it matches visible map art.
 const SOLIDS={};
 export class OverworldScene extends Phaser.Scene{
  constructor(){super('OverworldScene');}
- create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);if(isBlocked(this.area,this.tilePos.x,this.tilePos.y))this.tilePos=defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.sightLocked=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;this.cameras.main.setBackgroundColor('#000');this.bg=this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0);/* keep raw pixel colors; no tint pipeline on mobile */this.decor=this.add.container(0,0).setDepth(13);this.actors=this.add.container(0,0).setDepth(25);this.shadow=this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20);this.player=this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1);this.player.setScale(1);this.marker=this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80);this.cameras.main.startFollow(this.player,true,.11,.11);this.applyAreaBounds();this.cameras.main.setDeadzone(28,20);this.cameras.main.roundPixels=true;this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);this.hud=this.add.container(0,0).setScrollFactor(0).setDepth(1000);this.drawDepthDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.cameras.main.fadeIn(140,0,0,0);setMuted(this.state.audioMuted);playMusic('overworld');}
+ create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);if(isBlocked(this.area,this.tilePos.x,this.tilePos.y))this.tilePos=defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.sightLocked=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;
+  this.worldLayer=this.add.layer().setDepth(0);this.uiLayer=this.add.layer().setDepth(1000);
+  this.worldCamera=this.cameras.main.setName('world').setBackgroundColor('#000').setZoom(OVERWORLD_ZOOM);this.worldCamera.roundPixels=true;
+  this.uiCamera=this.cameras.add(0,0,GAME_W,GAME_H,false,'ui').setBackgroundColor('rgba(0,0,0,0)').setZoom(1);this.uiCamera.roundPixels=true;
+  this.worldCamera.ignore(this.uiLayer);this.uiCamera.ignore(this.worldLayer);
+  this.bg=this.addWorld(this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0));/* keep raw pixel colors; no tint pipeline on mobile */
+  this.decor=this.addWorld(this.add.container(0,0).setDepth(13));this.actors=this.addWorld(this.add.container(0,0).setDepth(25));
+  this.shadow=this.addWorld(this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20));
+  this.player=this.addWorld(this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1));this.player.setScale(1);
+  this.marker=this.addWorld(this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80));
+  this.worldCamera.startFollow(this.player,true,1,1);this.applyAreaBounds();this.worldCamera.setDeadzone(0,0);
+  this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);
+  this.hud=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1000));this.drawDepthDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.fadeSceneIn(140);setMuted(this.state.audioMuted);playMusic('overworld');}
+ addWorld(obj){this.worldLayer.add(obj);return obj;}
+ addUi(obj){this.uiLayer.add(obj);return obj;}
+ fadeSceneOut(duration){this.worldCamera.fadeOut(duration,0,0,0);this.uiCamera.fadeOut(duration,0,0,0);}
+ fadeSceneIn(duration){this.worldCamera.fadeIn(duration,0,0,0);this.uiCamera.fadeIn(duration,0,0,0);}
  okInput(){const now=this.time.now||performance.now();if(now-this.lastInputAt<95)return false;this.lastInputAt=now;return true;}
  handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.clearMessage();if(k==='menu')this.openMenu();if(k==='save')this.savePos('Saved.');}
  update(){this.updateDepths();this.updateMarker();this.updateNpcPatrols();if(this.moving)return;const c=this.cursors,k=this.keys;
@@ -20,7 +37,7 @@ export class OverworldScene extends Phaser.Scene{
   else if(c.up.isDown||k.W.isDown)this.tryMove(0,-1,'up');
   else if(c.down.isDown||k.S.isDown)this.tryMove(0,1,'down');}
  worldX(x){return x*16+8;} worldY(y){return y*16+22;}
- applyAreaBounds(){const {width,height}=areaDimensions(this.area);this.cameras.main.setBounds(0,0,width*16,height*16);}
+ applyAreaBounds(){const {width,height}=areaDimensions(this.area);this.worldCamera.setBounds(0,0,width*16,height*16);}
  face(dir){this.facing=dir;this.player.stop();this.player.setFlipX(false);this.player.clearTint();this.player.setFrame(DIRS[dir]?.frame||1);}
  openMenu(){if(this.messageOpen){this.clearMessage();return;}this.playSfx('open');this.scene.launch('MenuScene',{parent:this});}
  unlockSfx(){unlockAudio();}
@@ -33,9 +50,9 @@ export class OverworldScene extends Phaser.Scene{
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
   this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.worldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.worldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
  findExit(x,y){return (areaFor(this.area).exits||[]).find(e=>e.x===x&&e.y===y);}
- changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.cameras.main.fadeOut(130,0,0,0);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2);this.drawDepthDecor();this.drawActors();this.drawHud();this.cameras.main.fadeIn(180,0,0,0);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
+ changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2);this.drawDepthDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
  afterStep(){this.savePos();if(isGrass(this.area,this.tilePos.x,this.tilePos.y))this.grassRustle();this.checkTrainerSight();if(this.sightLocked)return;if(isGrass(this.area,this.tilePos.x,this.tilePos.y)&&Math.random()<.12){this.startScout();return;}this.drawHud();}
- grassRustle(){const wx=this.worldX(this.tilePos.x),wy=this.worldY(this.tilePos.y);for(let i=0;i<5;i++){const f=this.add.rectangle(wx-6+Math.random()*12,wy-3,2,3,i%2?0x2e7d3f:0x58a35f,1).setDepth(this.player.depth+1);this.tweens.add({targets:f,y:wy-12-Math.random()*7,x:f.x+(Math.random()*10-5),alpha:0,angle:Math.random()*180,duration:260+Math.random()*120,ease:'Quad.Out',onComplete:()=>f.destroy()});}}
+ grassRustle(){const wx=this.worldX(this.tilePos.x),wy=this.worldY(this.tilePos.y);for(let i=0;i<5;i++){const f=this.addWorld(this.add.rectangle(wx-6+Math.random()*12,wy-3,2,3,i%2?0x2e7d3f:0x58a35f,1).setDepth(this.player.depth+1));this.tweens.add({targets:f,y:wy-12-Math.random()*7,x:f.x+(Math.random()*10-5),alpha:0,angle:Math.random()*180,duration:260+Math.random()*120,ease:'Quad.Out',onComplete:()=>f.destroy()});}}
  checkTrainerSight(){
    if(this.sightLocked||this.messageOpen)return;
    for(const tr of trainersInArea(this.area)){
@@ -57,7 +74,7 @@ export class OverworldScene extends Phaser.Scene{
    // tile by tile, the player turns to face them, THEN the challenge lands.
    this.sightLocked=true;this.moving=true;
    const wx=this.worldX(tr.pos.x),wy=this.worldY(tr.pos.y);
-   const bang=this.add.text(wx,wy-30,'!',{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5).setDepth(90);
+   const bang=this.addWorld(this.add.text(wx,wy-30,'!',{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5).setDepth(90));
    this.tweens.add({targets:bang,y:wy-40,duration:260,yoyo:true,repeat:1});
    this.playSfx('bump');
    const v={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]}[tr.facing]||[0,1];
@@ -100,8 +117,8 @@ export class OverworldScene extends Phaser.Scene{
    return 'Abe Lincoln\'s statue crowns Bascom Hill. In this conference, wrestlers take the mat in their spirit form - the animal inside comes out under the lights.';
  }
  recover(){this.state.party.forEach(m=>{const s=scaledStats(m.id,m.lvl);m.hp=s.hp;m.gas=s.gas;m.score=0;});this.savePos('The recovery table restores your team.');}
- startScout(){const byArea={lakeshore:['lakechain','drillpartner','pacesetter','whizzkid'],river:['fieldflyer','tilttech','pacesetter','riverroller','funklord'],campus:['buckshot','matreturner','fieldflyer','drillpartner','pacecommand']};const ids=byArea[this.area]||['buckshot','matreturner','fieldflyer','pacesetter','drillpartner','lakechain','tilttech'];const range=areaFor(this.area).wildLevels||[3,6];const id=Phaser.Utils.Array.GetRandom(ids),lvl=Phaser.Math.Between(range[0],range[1]);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.cameras.main.fadeOut(100,0,0,0);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area}));}
- battleTransition(cb){this.sightLocked=true;const cam=this.cameras.main;this.playSfx('bump');cam.flash(110,255,255,255);this.time.delayedCall(180,()=>cam.flash(110,255,255,255));this.time.delayedCall(380,()=>cam.fadeOut(240,0,0,0));this.time.delayedCall(640,cb);} // FireRed battle entry: double flash, then wipe to black
+ startScout(){const byArea={lakeshore:['lakechain','drillpartner','pacesetter','whizzkid'],river:['fieldflyer','tilttech','pacesetter','riverroller','funklord'],campus:['buckshot','matreturner','fieldflyer','drillpartner','pacecommand']};const ids=byArea[this.area]||['buckshot','matreturner','fieldflyer','pacesetter','drillpartner','lakechain','tilttech'];const range=areaFor(this.area).wildLevels||[3,6];const id=Phaser.Utils.Array.GetRandom(ids),lvl=Phaser.Math.Between(range[0],range[1]);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.fadeSceneOut(100);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area}));}
+ battleTransition(cb){this.sightLocked=true;const cam=this.worldCamera;this.playSfx('bump');cam.flash(110,255,255,255);this.time.delayedCall(180,()=>cam.flash(110,255,255,255));this.time.delayedCall(380,()=>this.fadeSceneOut(240));this.time.delayedCall(640,cb);} // FireRed battle entry: double flash, then wipe to black
  startBattle(id,lvl,type){this.savePos();this.battleTransition(()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type}));}
  tournamentDesk(){
    const t=this.state.tournament||{round:0,champion:false};
@@ -124,7 +141,7 @@ export class OverworldScene extends Phaser.Scene{
 coachObjective(){this.state.flags.coachIntro=true;const caught=caughtRecruitCount(this.state);if(caught>=2&&this.state.flags.wonSpar&&!this.state.badges.includes('W Badge')){this.state.badges.push('W Badge');this.state.flags.firstBadge=true;this.state.objective={id:'opening_complete',stage:6,complete:true,log:['Receive Wrestling Badge #1','Return to Coach','Win your first sparring match','Recruit your first wrestler','Scout Bascom Hill','Meet the Head Coach']};saveState(this.state);this.showObjectivePopup('BADGE OBTAINED','Wrestling Badge #1 earned. Opening loop complete.');return this.showMessage('Coach: You scouted, recruited, and won. That is how this room grows. Take Wrestling Badge #1.');}if(!this.state.flags.assignment){this.state.flags.assignment=true;this.state.objective={id:'scout_quad',stage:2,complete:false,log:['Scout Bascom Hill','Receive your first assignment','Meet the Head Coach']};saveState(this.state);this.showObjectivePopup('NEW OBJECTIVE','Scout Bascom Hill and recruit one wrestler.');return this.showMessage('Coach: Go up Bascom Hill. Scout tall grass, study the report, then recruit one wrestler for the room.');}if(caught<2)return this.showMessage('Coach: Keep scouting Bascom Hill until you recruit one more wrestler.');if(!this.state.flags.wonSpar){this.state.objective={id:'win_spar',stage:4,complete:false,log:['Win your first sparring match','Recruit your first wrestler','Scout Bascom Hill','Meet the Head Coach']};saveState(this.state);return this.showMessage('Coach: Good recruit. Now win a sparring match on the Field House mat.');}return this.showMessage('Coach: Return after the sparring win and I will mark your first badge.');}
 rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;saveState(this.state);this.showObjectivePopup('RIVAL','A future dual meet is waiting.');}return this.showMessage('Rival: Build your lineup. When you have depth, I want a dual meet.');}
  hiddenItem(flag,item,msg){this.state.flags.hiddenItems=this.state.flags.hiddenItems||{};if(this.state.flags.hiddenItems[flag])return this.showMessage('Nothing else here.');this.state.flags.hiddenItems[flag]=true;this.state.items[item]=(this.state.items[item]||0)+1;saveState(this.state);this.showObjectivePopup('ITEM FOUND',msg);return this.showMessage(msg);}
-showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0).setDepth(1060);const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(63,51,200,38,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(60,48,200,38,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(60,48,200,38,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(64,52,192,30,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(69,80,251,80);const t=this.add.text(160,55,title,{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(160,68,body,{fontFamily:'monospace',fontSize:6,color:'#111',align:'center',wordWrap:{width:176}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
+showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1060));const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(45,47,236,48,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(42,44,236,48,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(42,44,236,48,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(46,48,228,40,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(51,87,269,87);const t=this.add.text(160,51,title,{fontFamily:'monospace',fontSize:10,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(160,68,body,{fontFamily:'monospace',fontSize:8,color:'#111',align:'center',wordWrap:{width:210}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
  promptFor(ch){if(ch==='R')return 'A RECOVER';if(ch==='S')return 'A SHOP';if(ch==='C')return 'A BATTLE';if(ch==='g')return 'A SCOUT';if(ch==='M')return 'A SPAR';if(ch==='N')return 'A TALK';if(ch==='STATUE')return 'A READ';if(ch==='SCOUT_NPC')return 'A TALK';if(ch==='TRAINER'){const tr=this.trainerNearby();return this.state.trainersDefeated?.[tr?.id]?'A TALK':'A BATTLE';}if(ch==='SAVE_NPC')return 'A TALK';if(ch==='BATTLE_NPC')return 'A TALK';if(ch==='STUDY_NPC')return 'A TALK';if(ch==='HIDDEN_TAPE'||ch==='HIDDEN_FILM'||ch==='HIDDEN_DRINK')return 'A CHECK';if(ch==='DOOR')return 'A DOOR';if(ch==='NATIONALS')return 'A CHECK';if(ch==='CAPITOL')return 'A READ';if(ch==='SIGN')return 'A READ';if(ch==='TOURNEY')return (this.state.tournament?.champion)?'A TALK':'A ENTER';if(['WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(ch))return 'A CHECK';return '';}
  drawDepthDecor(){this.decor.removeAll(true);const add=(obj)=>this.decor.add(obj);if(this.area==='campus'){const {width,height}=areaDimensions(this.area);const g=this.add.graphics().setDepth(8);g.fillStyle(0x000000,.14);g.fillRect(0,0,width*16,8);g.fillRect(0,height*16-8,width*16,8);add(g);return;}if(this.area!=='fieldhouse')return;const light=this.add.graphics().setDepth(8);light.fillStyle(0xffffff,.045);light.fillEllipse(224,104,360,150);light.fillStyle(0x000000,.10);light.fillRect(0,0,448,8);light.fillRect(0,208,448,16);add(light);}
  addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null,look=null){const sx=this.worldX(x),sy=this.worldY(y);const key=look&&this.textures.exists('npc_'+look)?'npc_'+look:'npc';const sh=this.add.ellipse(sx,sy-2,17,6,0x000000,.28).setDepth(10);const npc=this.add.sprite(sx,sy,key,frame).setOrigin(.5,1).setDepth(20);npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};this.actors.add(sh);this.actors.add(npc);this.npcList.push({npc,sh,t:0,route,i:0});return npc;}
@@ -150,13 +167,13 @@ showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0
 
  showAreaToast(name){
   if(this.areaToast){this.areaToast.destroy(true);}
-  this.areaToast=this.add.container(0,0).setScrollFactor(0).setDepth(1040);
+  this.areaToast=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1040));
   const g=this.add.graphics().setScrollFactor(0);
-  g.fillStyle(0x000000,.28);g.fillRoundedRect(111,9,104,20,3);
-  g.fillStyle(0x141217,.94);g.fillRoundedRect(108,6,104,20,3);
-  g.lineStyle(1,0xf0d784,1);g.strokeRoundedRect(108,6,104,20,3);
-  g.lineStyle(1,0x7b1d2a,1);g.strokeRoundedRect(111,9,98,14,2);
-  const t=this.add.text(160,12,name,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);
+  g.fillStyle(0x000000,.28);g.fillRoundedRect(97,9,132,24,3);
+  g.fillStyle(0x141217,.94);g.fillRoundedRect(94,6,132,24,3);
+  g.lineStyle(1,0xf0d784,1);g.strokeRoundedRect(94,6,132,24,3);
+  g.lineStyle(1,0x7b1d2a,1);g.strokeRoundedRect(97,9,126,18,2);
+  const t=this.add.text(160,11,name,{fontFamily:'monospace',fontSize:9,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);
   this.areaToast.add([g,t]);
   this.tweens.add({targets:this.areaToast,alpha:0,delay:1050,duration:420,onComplete:()=>{this.areaToast?.destroy(true);this.areaToast=null;}});
  }
@@ -164,22 +181,22 @@ showObjectivePopup(title,body){const c=this.add.container(0,0).setScrollFactor(0
   this.hud.removeAll(true);
   this.updateMarker();
   if(this.messageOpen&&this.message){
-    const box=uiBox(this,5,154,310,62).setScrollFactor(0);
+    const box=uiBox(this,5,150,310,68).setScrollFactor(0);
     this.hud.add(box);
-    this.hud.add(this.add.text(14,163,this.message,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold',wordWrap:{width:290}}).setScrollFactor(0));
-    this.hud.add(this.add.text(291,203,'A',{fontFamily:'monospace',fontSize:9,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(this.add.text(14,158,this.message,{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold',lineSpacing:2,wordWrap:{width:286}}).setScrollFactor(0));
+    this.hud.add(this.add.text(291,203,'A',{fontFamily:'monospace',fontSize:10,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
   }else{
     const kind=this.kindHere();
     const prompt=this.promptFor(kind);
     if(prompt){
       const pg=this.add.graphics().setScrollFactor(0);
-      const width=Math.max(56,prompt.length*6+16);
+      const width=Math.max(68,prompt.length*6+18);
       const x=316-width;
-      pg.fillStyle(0x000000,.24);pg.fillRoundedRect(x+2,6,width,16,2);
-      pg.fillStyle(0x151318,.9);pg.fillRoundedRect(x,4,width,16,2);
-      pg.lineStyle(1,0xd6a336,.9);pg.strokeRoundedRect(x,4,width,16,2);
+      pg.fillStyle(0x000000,.24);pg.fillRoundedRect(x+2,6,width,20,2);
+      pg.fillStyle(0x151318,.9);pg.fillRoundedRect(x,4,width,20,2);
+      pg.lineStyle(1,0xd6a336,.9);pg.strokeRoundedRect(x,4,width,20,2);
       this.hud.add(pg);
-      this.hud.add(this.add.text(x+width-6,8,prompt,{fontFamily:'monospace',fontSize:6,color:'#ffe28a',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
+      this.hud.add(this.add.text(x+width-7,8,prompt,{fontFamily:'monospace',fontSize:8,color:'#ffe28a',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
     }
   }
  }

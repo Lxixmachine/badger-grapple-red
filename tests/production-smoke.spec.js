@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.34-map-doctrine');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.35-fr0-camera');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -99,7 +99,16 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(overworld).toMatchObject({
     active: true,
     area: 'fieldhouse',
-    tilePos: {x: 14, y: 11}
+    tilePos: {x: 14, y: 11},
+    camera: {
+      count: 2,
+      worldZoom: 1.25,
+      uiZoom: 1,
+      worldTilesWide: 16,
+      worldTilesHigh: 11.2,
+      worldIgnoresUi: true,
+      uiIgnoresWorld: true
+    }
   });
 
   const save = await page.evaluate(() => window.__badgerTest.storage());

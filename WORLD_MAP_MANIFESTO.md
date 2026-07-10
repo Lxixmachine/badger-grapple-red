@@ -59,8 +59,15 @@ Studying the full FireRed overworld against ours exposed three failures:
 2. **Edge continuity:** terrain at an exit edge continues on the other side (Mendota band spans Picnic Point AND Lakeshore's north edges at the same rows).
 3. **Telegraphing:** from the hub you can see where each exit leads (lake glint west, street east, arena arch north, Field House doors south).
 4. **Tall-grass honesty:** encounter cells always render dark tall grass; decoration never covers them (v21.25's encounter-readability fix is now law — fringe feathers outward only).
-5. **Collision is law; art paints to collision.** Never the reverse. Validator BFS (exits reachable, landings walkable, trainers/captains reachable) must pass every release.
-6. **Landmark rule:** every area has exactly one screenshot-worthy landmark; if you can't name it, the area isn't done.
+5. **Navigation is law; art and collision share one source.** Compose the
+   walkable route first, then generate visible layers and collision from the
+   same map data. Neither a backdrop PNG nor a separate switch statement is
+   authoritative by itself. Validator BFS (exits reachable, landings walkable,
+   trainers/captains reachable) must pass every release.
+6. **Landmark hierarchy:** each camera region has one primary focal landmark,
+   two or three secondary anchors, and quiet connective space. An area may have
+   multiple landmarks as the camera reveals them; equal visual weight is the
+   failure to avoid.
 
 ## 5. WP-WORLD: the migration work package (tested spec)
 

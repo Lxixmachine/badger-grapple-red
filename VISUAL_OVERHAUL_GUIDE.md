@@ -12,6 +12,14 @@
 > bounds, and rebuilds the opening Field House/Bascom compositions around large
 > generated architectural masses. Preserve those dimensions and collision maps.
 
+> **2026-07-10 correction after direct ROM study:** read
+> `FIRERED_REFERENCE_AUDIT.md` before executing another art package. Phaser is
+> retained. FR0 shipped in v21.35: a separate 1.25x world camera now shows
+> 16x11.2 tiles while the 320x224 UI remains unzoomed. FR1 (one layered map
+> source for art, collision, occlusion, and triggers) now precedes WP2. Do not
+> generate another town or character sheet until that map architecture is
+> corrected.
+
 **For: Codex (ChatGPT), the project's art lane.** This is a complete, sequenced
 production plan to take the game's visuals to the FireRed bar. It is grounded
 in the live code: every coordinate, size, and file path below is generated
@@ -25,12 +33,13 @@ Do not hand-pixel, do not source art from the web, do not import third-party
 assets. Generate on chroma green, slice with the committed tools, iterate the
 prompt until the sheet meets the bar.
 
-The single rule that governs everything: **collision is law.** The world's
-walkability lives in `src/data/maps.js` and the validator BFS-proves it.
-Art must be painted TO the geometry maps in this guide — never move a door,
-path, or grass zone to make a composition nicer. If art and data disagree,
-players walk through walls or get sealed in rooms (see FIRE_POLISH_v21_2
-history).
+The single rule that governs everything: **navigation is law.** Until FR1,
+walkability still lives in `src/data/maps.js` and the validator BFS-proves it,
+so shipped art must remain consistent with those coordinates. FR1 replaces
+this split ownership with one layered map source that generates art placement,
+collision, occlusion, and triggers together. Do not preserve a weak route only
+because it was hard-coded first; redesign the route and its visible layers as
+one reviewed change.
 
 ---
 
@@ -38,10 +47,13 @@ history).
 
 FireRed-level means, concretely:
 
-- **Zero flat fills.** Every ground tile has 2-4 value tones, texture noise,
-  or pattern. FireRed grass is never one green.
-- **Readable at 16px.** A tile must communicate its function (walkable path /
-  blocking tree / encounter grass / door) in one glance at native scale.
+- **No accidental emptiness.** Quiet ground may be nearly flat when it creates
+  hierarchy. Use restrained 2-tone material cues and sparse clustered accents;
+  never add uniform noise merely to prove that a tile is textured.
+- **Readable at its physical phone size.** A tile must communicate its function
+  (walkable path / blocking tree / encounter grass / door) in one glance. FR0
+  targets about 16x11 visible world tiles so a 16px tile is not miniaturized by
+  the 320px canvas.
 - **One palette family.** All terrain shares a master ramp so areas feel like
   one world. Wisconsin identity anchors: cardinal red `#b41820`, gold
   `#d6a336`, cream `#f8f0d8`, plus natural greens/browns/blues around them.
@@ -284,7 +296,7 @@ creature bodies; an evolved wrestler looks identical to its rookie form.
 
 ---
 
-## 5. World geometry maps (paint TO these — collision is law)
+## 5. Interim world geometry maps (pre-FR1 compatibility)
 
 **Geography is governed by WORLD_MAP_MANIFESTO.md** (Madison compass: lake
 west, State Street + Kohl Center east). These maps are regenerated from the

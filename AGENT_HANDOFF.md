@@ -1,5 +1,31 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.35 - FR0 Presentation Foundation)
+
+- Rebased onto Claude's v21.29-v21.34 work and preserved all of it: edge
+  continuity, grounded side sprites, State Street, FireRed walk/ambush/battle
+  cadence, signs, ambient NPCs, and the new map/feel doctrine documents.
+- Put the direct FireRed ROM audit into the runtime. Phaser stays; the
+  overworld now uses explicit world and UI layers with separate cameras.
+- The world camera renders at 1.25x, reducing the effective view from 20x14
+  tiles to 16x11.2 while retaining the 320x224 canvas. Buildings, characters,
+  doors, and landmarks now carry FireRed-like physical weight on a phone.
+- The world camera follows at locked pixel-rounded speed with no broad
+  deadzone. Claude's 240ms linear step and 120ms turn cadence remain intact.
+- The UI camera remains at 1x, so dialogue, prompts, area labels, and objective
+  popups do not enlarge or drift. Dialogue is now 10px, prompts 8px, area
+  labels 9px, and objective copy 8-10px.
+- Dynamic grass effects and trainer alerts are world-layered. Objective/area
+  UI is UI-layered. Area, scout, and Claude's double-flash battle transitions
+  now fade both cameras without leaving overlays over a black world.
+- Added runtime assertions for camera count, zooms, reciprocal layer isolation,
+  and the effective tile viewport. Release/cache labels are v21.35 / v235.
+- Integrated acceptance is green: `npm run check`, 8/8 Chromium, including
+  Claude's slower walk/ambush/championship flows. 390x844 phone QA covers
+  north/south Bascom, Field House prompts/dialogue/objective popup, and the
+  rebuilt State Street; no overflow or browser warnings/errors.
+- FR1 layered map ownership remains next before more town or character art.
+
 ## Codex ROM-study findings — RECOVERED FROM A FAILED TURN (recorded by Claude)
 
 Codex played FireRed locally (mGBA scripting + framebuffer screenshots,

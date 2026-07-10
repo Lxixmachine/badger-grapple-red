@@ -27,7 +27,16 @@ export function installTestHooks(game, routeVirtualButton) {
       messageOpen: scene.messageOpen ?? null,
       message: scene.message ?? null,
       trainerName: scene.trainerName ?? null,
-      npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null
+      npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
+      camera: scene.worldCamera && scene.uiCamera ? {
+        count: scene.cameras.cameras.length,
+        worldZoom: scene.worldCamera.zoom,
+        uiZoom: scene.uiCamera.zoom,
+        worldTilesWide: scene.worldCamera.width / scene.worldCamera.zoom / 16,
+        worldTilesHigh: scene.worldCamera.height / scene.worldCamera.zoom / 16,
+        worldIgnoresUi: (scene.uiLayer.cameraFilter & scene.worldCamera.id) !== 0,
+        uiIgnoresWorld: (scene.worldLayer.cameraFilter & scene.uiCamera.id) !== 0
+      } : null
     };
   };
 
