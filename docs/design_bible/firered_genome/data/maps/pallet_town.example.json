@@ -1,0 +1,42 @@
+{
+  "map_id": "PalletTown",
+  "name": "Pallet Town",
+  "source": {
+    "project": "pret/pokefirered",
+    "relative_path": "data/maps/PalletTown",
+    "commit": null
+  },
+  "files": [],
+  "dimensions": {
+    "width": null,
+    "height": null,
+    "unit": "tiles"
+  },
+  "connections": [],
+  "metrics": {
+    "traversable_ratio": null,
+    "average_path_width": null,
+    "open_space_ratio": null,
+    "landmark_visibility": null,
+    "grid_exposure_index": null,
+    "decision_node_count": null
+  },
+  "annotations": {
+    "map_type": "introductory_settlement",
+    "biome": "temperate_grassland",
+    "primary_purpose": "tutorial orientation and narrative origin",
+    "primary_landmark": "Professor Oak's laboratory",
+    "patterns": [
+      "PAT-002"
+    ],
+    "rule_refs": [
+      "NAV-001",
+      "COMP-001",
+      "ARCH-001"
+    ],
+    "notes": [
+      "Starter annotation only; measurements pending extraction."
+    ]
+  },
+  "analysis_status": "inventory_only"
+}

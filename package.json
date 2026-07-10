@@ -1,6 +1,6 @@
 {
   "name": "badger-grapple-red",
-  "version": "21.45.0",
+  "version": "21.46.0",
   "private": true,
   "type": "module",
   "description": "Source-first Phaser wrestling RPG built toward FireRed-style production quality",
@@ -9,9 +9,10 @@
     "validate": "node tools/validate.mjs",
     "balance": "node tools/balance_sim.mjs",
     "smoke": "playwright test",
-    "check": "npm run validate && npm run balance && npm run build && npm run smoke",
+    "check": "npm run validate && npm run balance && npm run lint-maps && npm run build && npm run smoke",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "lint-maps": "node tools/lint_maps.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-basic-ssl": "latest",

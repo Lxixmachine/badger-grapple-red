@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Rule Record",
+  "type": "object",
+  "required": [
+    "rule_id",
+    "title",
+    "severity"
+  ],
+  "additionalProperties": true
+}

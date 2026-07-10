@@ -1,0 +1,31 @@
+rules:
+  - rule_id: NAV-001
+    title: Primary route readability
+    category: navigation
+    severity: critical
+    detection: human_or_vision
+    pass_condition: intended route is inferable without UI
+  - rule_id: COLL-001
+    title: Collision honesty
+    category: collision
+    severity: critical
+    detection: map_and_render_comparison
+    pass_condition: visually passable spaces are traversable
+  - rule_id: GRID-001
+    title: Grid concealment
+    category: composition
+    severity: high
+    detection: vision
+    pass_condition: repeated square or staircase structure is not dominant
+  - rule_id: ARCH-001
+    title: Building-ground integration
+    category: architecture
+    severity: high
+    detection: human_or_vision
+    pass_condition: building has a resolved foundation and approach
+  - rule_id: COMP-001
+    title: Single primary read
+    category: composition
+    severity: critical
+    detection: human_or_vision
+    pass_condition: one dominant focal hierarchy is present

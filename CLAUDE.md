@@ -15,6 +15,9 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
 3. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
    town a thesis, every route a micro-story, gates seen before solved,
    the first area matters late. Judge all map work against it.
+   **docs/design_bible/** (28 volumes) is its deep companion: tile
+   grammar, anti-patterns, the staged production pipeline (Vol XII), and
+   the map-linter spec (Vol XV) that `npm run lint-maps` implements.
 4. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
    compositor contract, work packages).
 5. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
@@ -24,9 +27,12 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
 ## Commands
 
 - `npm run dev` — dev server
-- `npm run check` — validator + balance sim + build + 8 Playwright smoke
-  tests. **Must be 8/8 green before every push.** Needs Node 18+ and
-  Playwright Chromium (`npx playwright install chromium` once).
+- `npm run check` — validator + balance sim + map linter + build +
+  Playwright smoke tests. **Must be green before every push.** Needs
+  Node 18+ and Playwright Chromium (`npx playwright install chromium`).
+- `npm run lint-maps` — design-bible Vol XV linter over the rendered
+  maps (grid exposure, ground variety, dead screens). Warn-mode today;
+  add `--strict` to fail on findings. New maps should lint clean.
 - Compositor: `python3 tools/build_wp1_terrain.py` (needs Pillow).
   Regenerates `public/assets/ui/area_*.png` from imagegen sources +
   live collision data. Art paints to collision, never the reverse.

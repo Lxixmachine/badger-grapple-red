@@ -1,0 +1,21 @@
+{
+  "screen_id": "MAP_PALLET_TOWN__r00_c01",
+  "map_id": "MAP_PALLET_TOWN",
+  "bounds": {
+    "x": 15,
+    "y": 0,
+    "width": 9,
+    "height": 10
+  },
+  "segmentation_type": "logical_analysis_window",
+  "warning": "This is not asserted to equal the game's exact moving camera viewport.",
+  "events": [
+    {
+      "category": "warp_events",
+      "x": 15,
+      "y": 7,
+      "destination": "MAP_PALLET_TOWN_RIVALS_HOUSE",
+      "dest_warp_id": 0
+    }
+  ]
+}

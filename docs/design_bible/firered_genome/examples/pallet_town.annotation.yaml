@@ -1,0 +1,15 @@
+map_id: PalletTown
+annotations:
+  map_type: introductory_settlement
+  biome: temperate_grassland
+  primary_purpose: tutorial orientation and narrative origin
+  primary_landmark: Professor Oak's laboratory
+  patterns:
+    - PAT-002
+  rule_refs:
+    - NAV-001
+    - COMP-001
+    - ARCH-001
+  notes:
+    - Measurements must be populated from the local decompilation.
+    - Do not infer exact values from screenshots.

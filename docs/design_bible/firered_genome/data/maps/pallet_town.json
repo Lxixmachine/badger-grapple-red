@@ -1,0 +1,186 @@
+{
+  "map_id": "MAP_PALLET_TOWN",
+  "name": "Pallet Town",
+  "source": {
+    "project": "pret/pokefirered",
+    "map_file": "data/maps/PalletTown/map.json",
+    "layout_registry": "data/layouts/layouts.json",
+    "map_blob": "data/layouts/PalletTown/map.bin",
+    "map_file_sha": "802d32dc6de7688fe2de8c833d4e040d9137f6c1",
+    "layout_registry_sha": "41d0eb1b5e51fa75d535b5a098bae2bd650f710d",
+    "map_blob_sha": "f2113394f22d6f0180f364071301b5ed06588773"
+  },
+  "engine_properties": {
+    "layout_id": "LAYOUT_PALLET_TOWN",
+    "music": "MUS_PALLET",
+    "region_map_section": "MAPSEC_PALLET_TOWN",
+    "weather": "WEATHER_SUNNY",
+    "map_type": "MAP_TYPE_TOWN",
+    "allow_cycling": true,
+    "allow_running": true,
+    "requires_flash": false,
+    "battle_scene": "MAP_BATTLE_SCENE_NORMAL"
+  },
+  "layout": {
+    "width": 24,
+    "height": 20,
+    "area_tiles": 480,
+    "border_width": 2,
+    "border_height": 2,
+    "primary_tileset": "gTileset_General",
+    "secondary_tileset": "gTileset_PalletTown",
+    "blockdata_filepath": "data/layouts/PalletTown/map.bin",
+    "border_filepath": "data/layouts/PalletTown/border.bin"
+  },
+  "connections": [
+    {
+      "direction": "up",
+      "map": "MAP_ROUTE1",
+      "offset": 0
+    },
+    {
+      "direction": "down",
+      "map": "MAP_ROUTE21_NORTH",
+      "offset": 0
+    }
+  ],
+  "object_events": [
+    {
+      "local_id": "LOCALID_PALLET_SIGN_LADY",
+      "graphics_id": "OBJ_EVENT_GFX_WOMAN_1",
+      "x": 3,
+      "y": 10,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 1,
+      "movement_range_y": 4,
+      "script": "PalletTown_EventScript_SignLady"
+    },
+    {
+      "local_id": "LOCALID_PALLET_FAT_MAN",
+      "graphics_id": "OBJ_EVENT_GFX_FAT_MAN",
+      "x": 13,
+      "y": 17,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_WANDER_AROUND",
+      "movement_range_x": 6,
+      "movement_range_y": 2,
+      "script": "PalletTown_EventScript_FatMan"
+    },
+    {
+      "local_id": "LOCALID_PALLET_PROF_OAK",
+      "graphics_id": "OBJ_EVENT_GFX_PROF_OAK",
+      "x": 10,
+      "y": 8,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "script": "0x0",
+      "flag": "FLAG_HIDE_OAK_IN_PALLET_TOWN"
+    }
+  ],
+  "warp_events": [
+    {
+      "x": 6,
+      "y": 7,
+      "destination": "MAP_PALLET_TOWN_PLAYERS_HOUSE_1F",
+      "dest_warp_id": 1
+    },
+    {
+      "x": 15,
+      "y": 7,
+      "destination": "MAP_PALLET_TOWN_RIVALS_HOUSE",
+      "dest_warp_id": 0
+    },
+    {
+      "x": 16,
+      "y": 13,
+      "destination": "MAP_PALLET_TOWN_PROFESSOR_OAKS_LAB",
+      "dest_warp_id": 0
+    }
+  ],
+  "coord_events": [
+    {
+      "x": 12,
+      "y": 1,
+      "script": "PalletTown_EventScript_OakTriggerLeft"
+    },
+    {
+      "x": 13,
+      "y": 1,
+      "script": "PalletTown_EventScript_OakTriggerRight"
+    },
+    {
+      "x": 13,
+      "y": 2,
+      "script": "PalletTown_EventScript_SignLadyTrigger"
+    }
+  ],
+  "background_events": [
+    {
+      "x": 16,
+      "y": 16,
+      "script": "PalletTown_EventScript_OaksLabSign"
+    },
+    {
+      "x": 4,
+      "y": 7,
+      "script": "PalletTown_EventScript_PlayersHouseSign"
+    },
+    {
+      "x": 13,
+      "y": 7,
+      "script": "PalletTown_EventScript_RivalsHouseSign"
+    },
+    {
+      "x": 9,
+      "y": 11,
+      "script": "PalletTown_EventScript_TownSign"
+    },
+    {
+      "x": 5,
+      "y": 14,
+      "script": "PalletTown_EventScript_TrainerTips"
+    }
+  ],
+  "derived_metrics": {
+    "overworld_connection_count": 2,
+    "interior_warp_count": 3,
+    "object_event_count": 3,
+    "coordinate_trigger_count": 3,
+    "background_event_count": 5,
+    "total_declared_event_count": 14,
+    "event_density_per_100_tiles": 2.917,
+    "interior_destination_count": 3,
+    "cardinal_connection_directions": [
+      "up",
+      "down"
+    ],
+    "lateral_overworld_connection_count": 0,
+    "logical_screen_count_15x10": 4
+  },
+  "unresolved_metrics": {
+    "traversable_ratio": {
+      "value": null,
+      "reason": "Requires byte-accurate block and metatile collision decoding."
+    },
+    "average_path_width": {
+      "value": null,
+      "reason": "Requires a semantic navigation graph."
+    },
+    "open_space_ratio": {
+      "value": null,
+      "reason": "Requires collision and building-footprint classification."
+    },
+    "grid_exposure_index": {
+      "value": null,
+      "reason": "Requires rendered-map analysis."
+    },
+    "landmark_visibility": {
+      "value": null,
+      "reason": "Requires rendered screen geometry and landmark masks."
+    }
+  },
+  "analysis_status": "source_inventory_verified"
+}

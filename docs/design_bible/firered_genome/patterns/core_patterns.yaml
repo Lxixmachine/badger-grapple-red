@@ -1,0 +1,16 @@
+patterns:
+  - pattern_id: PAT-001
+    name: Forest Entrance
+    purpose: Transition from open or settled space into enclosed wilderness
+  - pattern_id: PAT-002
+    name: Village Square
+    purpose: Provide orientation and a central landmark
+  - pattern_id: PAT-003
+    name: Bridge Approach
+    purpose: Compress movement before a meaningful crossing
+  - pattern_id: PAT-004
+    name: Safe Clearing
+    purpose: Provide visual and mechanical relief after density or challenge
+  - pattern_id: PAT-005
+    name: Vista Reveal
+    purpose: Show a destination before it becomes reachable

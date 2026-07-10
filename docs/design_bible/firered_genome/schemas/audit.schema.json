@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Audit Record",
+  "type": "object",
+  "required": [
+    "audit_id",
+    "target_id",
+    "violations"
+  ],
+  "additionalProperties": true
+}

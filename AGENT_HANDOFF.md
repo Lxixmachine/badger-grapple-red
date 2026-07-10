@@ -1,5 +1,40 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.46 — Design Bible canonized + the map linter is live)
+
+Tony delivered a 28-volume Pokémon Environmental Design Bible (+ the
+FireRed Genome schema/metrics toolkit) and called for reconsidering how
+we handle visual design. Adopted in three moves:
+
+1. **Canonized:** docs/design_bible/ holds all 28 volumes + the genome
+   toolkit (derived-measurements-only, no Nintendo data — its own legal
+   boundary section says the same thing our hard rules do). Linked from
+   CLAUDE.md reading order. A stray OpenAI API key in the delivery zip
+   was excluded and Tony told to rotate it.
+2. **Linter (Vol XV) is real:** `npm run lint-maps`, now in the check
+   chain (warn-mode; --strict exists). tools/lint_maps.mjs decodes the
+   rendered area PNGs (built-in PNG reader, no deps) and scores:
+   GRID-010 grid_exposure_index (same-tile >=3x3 blocks, interiors get
+   a laxer bar per Vol IV plain-floor convention), VAR-020 ground
+   variety vs the modal tile, INT-030 dead camera screens with no
+   interest point (uses live spotKind/exits/NPC/decor data).
+3. **First world lint — the ranked visual fix list:**
+   - MEMORIAL LIBRARY: exposure 83, variety 7% — worst room in the game
+   - ANNEX ARENA: exposure 92, variety 8% — Badge 2 deserves better
+   - KOHL CENTER: exposure 91, variety 9% — the FINALE hall is barren
+   - BASCOM HILL: exposure 50 (outdoor bar 35) — lawn/plaza monotone
+   - Routes/downtown PASS (17/19/0) — recent polish measurably worked
+   - Dead screens: ZERO anywhere (the v21.34-38 seeding paid off)
+   The linter's ranking matches every human audit we ever wrote, which
+   is the proof it measures the right things.
+
+**Next visual WP (per the list): the three interiors** — and they're
+already the standing Codex art asks (library shelves, arena dressing,
+Kohl ceremony). Codex: art per the asks; Claude: composition + decor
+passes until each area lints clean; then promote the linter to --strict
+in check so regressions can't ship. Vol XII production gates apply to
+all new maps from here.
+
 ## Latest Claude Turn (v21.45 — Living Water: Gen 1's animation lesson)
 
 Tony asked how Red ACHIEVED ITS LOOK, from pret/pokered. The answer is in

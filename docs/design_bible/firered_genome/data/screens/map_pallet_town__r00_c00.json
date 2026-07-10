@@ -1,0 +1,64 @@
+{
+  "screen_id": "MAP_PALLET_TOWN__r00_c00",
+  "map_id": "MAP_PALLET_TOWN",
+  "bounds": {
+    "x": 0,
+    "y": 0,
+    "width": 15,
+    "height": 10
+  },
+  "segmentation_type": "logical_analysis_window",
+  "warning": "This is not asserted to equal the game's exact moving camera viewport.",
+  "events": [
+    {
+      "category": "object_events",
+      "local_id": "LOCALID_PALLET_PROF_OAK",
+      "graphics_id": "OBJ_EVENT_GFX_PROF_OAK",
+      "x": 10,
+      "y": 8,
+      "elevation": 3,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 1,
+      "movement_range_y": 1,
+      "script": "0x0",
+      "flag": "FLAG_HIDE_OAK_IN_PALLET_TOWN"
+    },
+    {
+      "category": "warp_events",
+      "x": 6,
+      "y": 7,
+      "destination": "MAP_PALLET_TOWN_PLAYERS_HOUSE_1F",
+      "dest_warp_id": 1
+    },
+    {
+      "category": "coord_events",
+      "x": 12,
+      "y": 1,
+      "script": "PalletTown_EventScript_OakTriggerLeft"
+    },
+    {
+      "category": "coord_events",
+      "x": 13,
+      "y": 1,
+      "script": "PalletTown_EventScript_OakTriggerRight"
+    },
+    {
+      "category": "coord_events",
+      "x": 13,
+      "y": 2,
+      "script": "PalletTown_EventScript_SignLadyTrigger"
+    },
+    {
+      "category": "background_events",
+      "x": 4,
+      "y": 7,
+      "script": "PalletTown_EventScript_PlayersHouseSign"
+    },
+    {
+      "category": "background_events",
+      "x": 13,
+      "y": 7,
+      "script": "PalletTown_EventScript_RivalsHouseSign"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FireRed Design Map Record",
+  "type": "object",
+  "required": [
+    "map_id",
+    "name",
+    "source",
+    "files",
+    "dimensions",
+    "analysis_status"
+  ],
+  "properties": {
+    "map_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": [
+        "project",
+        "relative_path"
+      ],
+      "properties": {
+        "project": {
+          "type": "string"
+        },
+        "relative_path": {
+          "type": "string"
+        },
+        "commit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "path",
+          "kind"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "size_bytes": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "dimensions": {
+      "type": "object",
+      "required": [
+        "width",
+        "height"
+      ],
+      "properties": {
+        "width": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "height": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "unit": {
+          "const": "tiles"
+        }
+      }
+    },
+    "connections": {
+      "type": "array"
+    },
+    "metrics": {
+      "type": "object"
+    },
+    "annotations": {
+      "type": "object"
+    },
+    "analysis_status": {
+      "enum": [
+        "inventory_only",
+        "partially_measured",
+        "measured",
+        "audited"
+      ]
+    }
+  }
+}

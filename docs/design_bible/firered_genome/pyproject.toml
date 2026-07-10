@@ -1,0 +1,9 @@
+[project]
+name = "firered-design-database"
+version = "0.1.0"
+description = "Derived map-analysis pipeline for the Pokémon Environmental Design Bible"
+requires-python = ">=3.10"
+dependencies = []
+
+[tool.ruff]
+line-length = 100

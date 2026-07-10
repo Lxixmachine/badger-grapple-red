@@ -1,0 +1,27 @@
+{
+  "screen_id": "MAP_PALLET_TOWN__r01_c01",
+  "map_id": "MAP_PALLET_TOWN",
+  "bounds": {
+    "x": 15,
+    "y": 10,
+    "width": 9,
+    "height": 10
+  },
+  "segmentation_type": "logical_analysis_window",
+  "warning": "This is not asserted to equal the game's exact moving camera viewport.",
+  "events": [
+    {
+      "category": "warp_events",
+      "x": 16,
+      "y": 13,
+      "destination": "MAP_PALLET_TOWN_PROFESSOR_OAKS_LAB",
+      "dest_warp_id": 0
+    },
+    {
+      "category": "background_events",
+      "x": 16,
+      "y": 16,
+      "script": "PalletTown_EventScript_OaksLabSign"
+    }
+  ]
+}

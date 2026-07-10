@@ -1,0 +1,7 @@
+{
+  "blocked_behaviors": [],
+  "conditional_behaviors": [],
+  "passable_behaviors": [],
+  "_status": "intentionally empty until behavior IDs are reviewed against engine predicates",
+  "_instruction": "Unknown behavior IDs remain unknown; never populate by visual guess."
+}

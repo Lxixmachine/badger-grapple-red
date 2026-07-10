@@ -1,0 +1,23 @@
+metrics:
+  - metric_id: traversable_ratio
+    unit: ratio
+    range: [0, 1]
+    requires: semantic_collision
+  - metric_id: average_path_width
+    unit: tiles
+    requires: navigation_graph
+  - metric_id: open_space_ratio
+    unit: ratio
+    range: [0, 1]
+    requires: semantic_collision
+  - metric_id: landmark_visibility
+    unit: screens
+    requires: screen_graph_and_annotations
+  - metric_id: grid_exposure_index
+    unit: score
+    range: [0, 100]
+    lower_is_better: true
+    requires: rendered_map
+  - metric_id: decision_node_count
+    unit: count
+    requires: navigation_graph
