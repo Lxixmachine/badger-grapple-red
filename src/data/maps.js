@@ -16,6 +16,30 @@ export function trainerSeesTile(tr,x,y){
   if(tr.facing==='down')return x===tx&&y>ty&&y<=ty+r;
   return false;
 }
+// v21.40: the outdoor world must stitch onto ONE plane (the FireRed map-
+// connection insight): walk the exit graph from campus placing each outdoor
+// area by exit/landing offsets. Conflicts mean the geography contradicts
+// itself; the validator fails on any. The Town Map renders from this.
+export function worldPlane(){
+ const OUT=['campus','lakeshore','river','downtown'];
+ const pos={campus:{x:0,y:0}};const q=['campus'];const conflicts=[];
+ while(q.length){
+  const id=q.shift();const b=pos[id];const {width,height}=areaDimensions(id);
+  for(const e of (areaFor(id).exits||[])){
+   if(!OUT.includes(e.to))continue;
+   const t=areaDimensions(e.to);
+   const dW=e.x,dE=width-1-e.x,dN=e.y,dS=height-1-e.y;
+   const m=Math.min(dW,dE,dN,dS);let ox,oy;
+   if(m===dW){ox=b.x-t.width;oy=b.y+e.y-e.ty;}
+   else if(m===dE){ox=b.x+width;oy=b.y+e.y-e.ty;}
+   else if(m===dN){oy=b.y-t.height;ox=b.x+e.x-e.tx;}
+   else{oy=b.y+height;ox=b.x+e.x-e.tx;}
+   if(pos[e.to]){if(pos[e.to].x!==ox||pos[e.to].y!==oy)conflicts.push(`${id}->${e.to}: computed (${ox},${oy}) vs placed (${pos[e.to].x},${pos[e.to].y})`);}
+   else{pos[e.to]={x:ox,y:oy};q.push(e.to);}
+  }
+ }
+ return {pos,conflicts};
+}
 export function startArea(){return 'fieldhouse';}
 export function defaultPos(area='fieldhouse'){return {...(AREAS[area]?.start||AREAS.fieldhouse.start)};}
 export function areaFor(id){return AREAS[id]||AREAS.fieldhouse;}

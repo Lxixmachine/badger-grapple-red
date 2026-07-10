@@ -1,6 +1,6 @@
 import {ROSTER,STARTERS,PERSONAS} from '../src/data/roster.js';
 import {MOVES} from '../src/data/moves.js';
-import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked} from '../src/data/maps.js';
+import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked,worldPlane} from '../src/data/maps.js';
 import {existsSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
@@ -125,5 +125,11 @@ TOURNAMENT.rounds.forEach((r,i)=>{
   if(!r.trainerName||!r.intro||!r.win)errs.push(`tournament round ${i} is missing trainerName/intro/win text`);
 });
 for(const [id,r] of Object.entries(ROSTER)){if(!PERSONAS[r.asset])errs.push(`roster ${id}: asset '${r.asset}' has no persona name (battle-form fiction breaks)`);}
+
+// One-plane law (v21.40): the outdoor world must stitch into a single
+// consistent geography via exit offsets - the Town Map renders from it.
+const plane=worldPlane();
+plane.conflicts.forEach(c=>errs.push(`world plane contradiction: ${c}`));
+for(const id of ['campus','lakeshore','river','downtown'])if(!plane.pos[id])errs.push(`world plane: outdoor area '${id}' is unreachable from campus via outdoor exits`);
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Bascom ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}.`);
 if(errs.length)process.exit(1);

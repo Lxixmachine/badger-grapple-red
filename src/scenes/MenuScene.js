@@ -1,9 +1,9 @@
-import {loadState,saveState,lead,resetState,caughtRecruitCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,addXp,xpNeed,personaFor} from '../data/roster.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';
+import {loadState,saveState,lead,resetState,caughtRecruitCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,addXp,xpNeed,personaFor} from '../data/roster.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['W Badge','Neutral Badge','Scramble Badge','Top Badge'];
-const MAIN_OPTS=[['WRESTLERS','team'],['BAG','bag'],['ROSTERDEX','dex'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
+const MAIN_OPTS=[['WRESTLERS','team'],['BAG','bag'],['ROSTERDEX','dex'],['TOWN MAP','map'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
 const BAG_ROWS=[['energy','SPORTS DRINK','+24 EP'],['tape','ATHLETIC TAPE','+20 HP'],['film','FILM STUDY','Recruit odds'],['invite','RECRUIT FLYER','Sign a recruit']];
-const ICON_COLOR={team:0x3a6ea8,bag:0x3a8a52,dex:0x7a4ac9,badges:0xc9962e,practice:0xc9622e,objective:0x2e9a95,save:0x555f6e,options:0x7d1017};
+const ICON_COLOR={team:0x3a6ea8,bag:0x3a8a52,dex:0x7a4ac9,map:0x4a8a9a,badges:0xc9962e,practice:0xc9622e,objective:0x2e9a95,save:0x555f6e,options:0x7d1017};
 function icon(scene,x,y,kind,active){
   const bg=ICON_COLOR[kind]||0x555;const g=scene.add.graphics();
   g.fillStyle(0x000000,.25);g.fillRoundedRect(x-7,y-6,19,19,4);
@@ -18,22 +18,58 @@ function icon(scene,x,y,kind,active){
   else if(kind==='objective'){g.lineStyle(1.8,0xffffff,1);g.lineBetween(cx-3.8,cy-5.4,cx-3.8,cy+5.4);g.fillTriangle(cx-3.8,cy-5.4,cx+4.4,cy-2.6,cx-3.8,cy+.2);}
   else if(kind==='save'){g.fillRoundedRect(cx-5,cy-5.5,10,11,1);g.fillStyle(bg,1);g.fillRect(cx-2.8,cy-5.5,5.6,4);}
   else if(kind==='options'){g.fillCircle(cx,cy,3.7);for(let a=0;a<6;a++){const ang=a*Math.PI/3;g.fillRect(cx+Math.cos(ang)*5.4-.9,cy+Math.sin(ang)*5.4-.9,1.8,1.8);}}
+  else if(kind==='map'){g.fillRoundedRect(cx-5.5,cy-4.5,11,9,1);g.lineStyle(1.2,bg,1);g.lineBetween(cx-1.8,cy-4.5,cx-1.8,cy+4.5);g.lineBetween(cx+1.8,cy-4.5,cx+1.8,cy+4.5);g.fillStyle(0xb41820,1);g.fillCircle(cx+3.4,cy-2,1.4);}
   return g;
 }
 export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
   create(data={}){this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.confirmReset=false;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='a')this.choose();if(k==='b')this.back();}
-  optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='objective')return 1;if(this.tab==='practice')return 5;if(this.tab==='shop')return 5;if(this.tab==='dex')return 1;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
+  optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 5;if(this.tab==='shop')return 5;if(this.tab==='dex')return 1;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
     this.children.removeAll();
     if(this.tab==='main')return this.drawMainScreen();
     uiBox(this,10,10,300,204);
-    const titles={shop:'SHOP',dex:'ROSTERDEX',team:'WRESTLERS',practice:'PRACTICE',objective:'OBJECTIVES',bag:'BAG',badges:'BADGES',options:'OPTIONS'};
+    const titles={shop:'SHOP',dex:'ROSTERDEX',team:'WRESTLERS',practice:'PRACTICE',objective:'OBJECTIVES',bag:'BAG',badges:'BADGES',options:'OPTIONS',map:'TOWN MAP'};
     this.add.text(160,22,titles[this.tab]||'MENU',{fontFamily:'monospace',fontSize:12,color:'#111',fontStyle:'bold'}).setOrigin(.5);
     this.add.text(22,36,`GR ${this.state.grit}  REP ${this.state.rep}  INV ${this.state.items.invite}  ${this.state.day?.period||'Morning'}`,{fontFamily:'monospace',fontSize:8,color:'#333'});
-    if(this.tab==='shop')this.drawShop();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();
+    if(this.tab==='shop')this.drawShop();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawMap();
     this.add.text(160,202,this.note||'A SELECT  B BACK',{fontFamily:'monospace',fontSize:8,color:'#555'}).setOrigin(.5);
+  }
+  drawMap(){
+    // The Town Map renders the validator-checked world plane: every outdoor
+    // area stitched by its exit offsets onto ONE geography (FireRed's map-
+    // connection insight). West grows the team; east wins the title.
+    const {pos}=worldPlane();
+    const COLORS={campus:0xb44a3f,lakeshore:0x74a85c,river:0x5d9450,downtown:0x9a6a52};
+    const LABELS={campus:'BASCOM HILL',lakeshore:'LAKESHORE PATH',river:'PICNIC POINT',downtown:'STATE STREET'};
+    let minX=1e9,minY=1e9,maxX=-1e9,maxY=-1e9;
+    for(const [id,p] of Object.entries(pos)){const d=areaDimensions(id);minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x+d.width);maxY=Math.max(maxY,p.y+d.height);}
+    const s=Math.min(284/(maxX-minX),90/(maxY-minY));
+    const ox=160-((minX+maxX)/2)*s,oy=104-((minY+maxY)/2)*s;
+    const g=this.add.graphics();
+    for(const [id,p] of Object.entries(pos)){
+      const d=areaDimensions(id);const rx=ox+p.x*s,ry=oy+p.y*s,rw=d.width*s,rh=d.height*s;
+      g.fillStyle(COLORS[id]||0x777,1);g.fillRect(rx,ry,rw,rh);
+      if(id==='lakeshore'||id==='river'){g.fillStyle(0x3a6ea8,1);g.fillRect(rx,ry,rw,Math.max(3,4*s));}
+      g.lineStyle(1,0x111111,.8);g.strokeRect(rx,ry,rw,rh);
+      const above=id==='downtown';
+      this.add.text(rx+rw/2,above?ry-8:ry+rh+3,LABELS[id],{fontFamily:'monospace',fontSize:7,color:'#333',fontStyle:'bold'}).setOrigin(.5,0);
+    }
+    const mark=(aid,tx,ty,ch,color)=>{const p=pos[aid];if(!p)return;this.add.text(ox+(p.x+tx)*s,oy+(p.y+ty)*s,ch,{fontFamily:'monospace',fontSize:8,color,fontStyle:'bold'}).setOrigin(.5);};
+    mark('downtown',21,4,'★','#d6a336');   // the Kohl Center marquee
+    mark('campus',14,19,'▪','#7d1017');    // Field House
+    // you-are-here: interiors anchor to the door they entered through
+    const ANCHOR={fieldhouse:['campus',14,19],shop:['campus',5,5],recovery:['campus',22,5],studyhall:['campus',22,12],conference:['campus',14,1],championship:['downtown',21,4]};
+    let here=null;const area=this.state.area||'fieldhouse';
+    if(pos[area]&&this.state.pos)here=[area,this.state.pos.x,this.state.pos.y];else if(ANCHOR[area])here=ANCHOR[area];
+    if(here&&pos[here[0]]){
+      const hp=pos[here[0]];const hx=ox+(hp.x+here[1])*s,hy=oy+(hp.y+here[2])*s;
+      const dotO=this.add.circle(hx,hy,3.4,0xb41820,1);const dot=this.add.circle(hx,hy,2,0xffffff,1);
+      this.tweens.add({targets:[dot,dotO],alpha:.25,duration:420,yoyo:true,repeat:-1});
+    }
+    this.add.text(24,178,'WEST: GROW THE TEAM',{fontFamily:'monospace',fontSize:7,color:'#555',fontStyle:'bold'});
+    this.add.text(296,178,'EAST: WIN THE TITLE',{fontFamily:'monospace',fontSize:7,color:'#555',fontStyle:'bold'}).setOrigin(1,0);
   }
   drawMainScreen(){
     // left: icon list panel. right: lead-wrestler card. Native 320x224 layout.
@@ -41,9 +77,9 @@ export class MenuScene extends Phaser.Scene{
     this.add.text(16,14,'MENU',{fontFamily:'monospace',fontSize:11,color:'#b41820',fontStyle:'bold'});
     this.add.line(0,0,16,30,182,30,0xa58d65,.7).setOrigin(0);
     MAIN_OPTS.forEach(([label],i)=>{
-      const y=44+i*21,active=i===this.sel;
-      if(i%2===0){const band=this.add.graphics();band.fillStyle(0x000000,.035);band.fillRect(12,y-8,180,21);}
-      if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.14);hi.fillRoundedRect(12,y-8,180,21,3);hi.lineStyle(1,0xb41820,.5);hi.strokeRoundedRect(12,y-8,180,21,3);}
+      const y=42+i*19,active=i===this.sel;
+      if(i%2===0){const band=this.add.graphics();band.fillStyle(0x000000,.035);band.fillRect(12,y-8,180,19);}
+      if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.14);hi.fillRoundedRect(12,y-8,180,19,3);hi.lineStyle(1,0xb41820,.5);hi.strokeRoundedRect(12,y-8,180,19,3);}
       icon(this,32,y+2,MAIN_OPTS[i][1],active);
       this.add.text(52,y-3,label,{fontFamily:'monospace',fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});
       this.add.text(188,y-3,'>',{fontFamily:'monospace',fontSize:9,color:active?'#b41820':'#999'}).setOrigin(1,0);
@@ -132,6 +168,7 @@ export class MenuScene extends Phaser.Scene{
   choose(){
     if(this.tab==='main'){const key=MAIN_OPTS[this.sel][1];if(key==='save'){saveState(this.state);this.note='SAVED.';return this.draw();}this.tab=key;this.sel=0;return this.draw();}
     if(this.tab==='objective')return this.back();
+    if(this.tab==='map')return this.back();
     if(this.tab==='practice')return this.doPractice();
     if(this.tab==='shop')return this.chooseShop();
     if(this.tab==='team')return this.chooseTeam();

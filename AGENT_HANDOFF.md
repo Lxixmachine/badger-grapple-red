@@ -1,5 +1,31 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.42 — Town Map: the world proves it's one plane)
+
+Tony shared Mehdi Mulani's "game-size world map of Pokémon Fire Red"
+article — Kanto stitched into one image by walking the ROM's map-
+connection graph. The insight: FireRed's region is ONE globally
+consistent geography, which is what makes the Town Map item meaningful.
+Applied both halves (rebased onto Codex's v21.40/41 FR2 turns; version
+restamped 21.42):
+
+- **One-plane law (validator-enforced):** new `worldPlane()` in maps.js
+  walks the exit graph from campus and places every outdoor area on a
+  single plane via exit/landing offsets. Any contradiction or
+  unreachable outdoor area fails `npm run validate`. Current plane:
+  river x[-104..-57], lakeshore x[-56..-1], campus x[0..27], downtown
+  x[28..55] — Madison stitches clean, west to east.
+- **TOWN MAP menu screen:** new main-menu entry (9 items now, 19px rows).
+  Renders the plane at runtime from worldPlane() — no baked image, always
+  true to the exits: area rects, Mendota band across the routes, gold ★
+  on the Kohl marquee, ▪ Field House, blinking you-are-here dot
+  (interiors anchor to their entry door). Footer: WEST: GROW THE TEAM /
+  EAST: WIN THE TITLE.
+- Generated means future re-wiring (WP-LEDGE etc.) shows on the map for
+  free, and the validator catches any exit change that breaks geography.
+- Rebase note: Codex's FR2 turns landed mid-build — no code conflicts
+  beyond version stamps and this handoff; MenuScene changes merged clean.
+
 ## Latest Codex Turn (v21.41 - Field House Readability Correction)
 
 - Tony's phone screenshot exposed two v21.40 defects that static QA missed:
