@@ -1,7 +1,7 @@
-import {chooseStarter} from '../systems/save.js';
+import {chooseStarter,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 const Phaser = window.Phaser;
-const V='230';
+const V='231';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
@@ -39,6 +39,17 @@ export class BootScene extends Phaser.Scene{
         enemyLevel:Number(params.get('enemyLevel')||5),
         battleType:params.get('battleType')||'spar'
       });
+      return;
+    }
+    if(params.has('test')&&params.get('scene')==='overworld'){
+      const allowed=['fieldhouse','campus','studyhall','lakeshore','downtown','river','conference','championship','shop','recovery'];
+      const state=chooseStarter(params.get('starter')||'buckshot');
+      const area=allowed.includes(params.get('area'))?params.get('area'):'fieldhouse';
+      state.area=area;
+      state.pos={x:Number(params.get('x')||14),y:Number(params.get('y')||(area==='campus'?18:11))};
+      state.message='';
+      saveState(state);
+      this.scene.start('OverworldScene');
       return;
     }
     this.scene.start('TitleScene');

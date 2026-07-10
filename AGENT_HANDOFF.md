@@ -1,5 +1,37 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.28 - WP-TOWN Structure)
+
+- Tony correctly reprioritized the town over WP2 after comparing the opening
+  maps with FireRed's Pallet Town/Oak Lab sheet. The problem was composition,
+  not raw resolution: Bascom was exactly one viewport tall, its buildings were
+  tiny roof fragments, and the Field House was mostly repeated floor.
+- Added per-area dimensions and camera bounds. Bascom Hill is now 28x20
+  (448x320) while all other maps retain 28x14. Existing ids, saves, compass,
+  route destinations, wild bands, and golden-path meaning remain intact.
+- Rebuilt Bascom around three full generated building masses, the Annex gate,
+  an Abe plaza, separate practice/recruit lawns, quieter ground, and north/
+  south camera travel. Collision, exits, doors, trainer positions, grass, NPC
+  patrols, and interaction coordinates moved together and validator BFS is
+  green.
+- Rebuilt the Field House around a 9x9 hero mat, trophy wall, bleachers,
+  scoreboard, real double doors, coach station, lockers, weight rack, and team
+  table. Every large floor fixture now has matching collision.
+- Added the original ChatGPT image-generation source and exact prompt at
+  `art/imagegen/town_fieldhouse_architecture_2026-07-09.*`; the compositor
+  tightly crops, chroma-cleans, quantizes, and fits every prop deterministically.
+- Removed the permanent overworld status panel because it obscured the top
+  three tile rows and made every town screenshot weaker. Status remains in the
+  menu; area names are short entrance toasts, prompts contextual, dialogue at
+  the bottom.
+- Added `/?test=1&scene=overworld&area=<id>&x=<x>&y=<y>` for deterministic map
+  QA. Phone screenshots at Field House, south Bascom, and north Bascom show the
+  full architecture with no persistent HUD obstruction or browser errors.
+- Acceptance: `npm run check` is green (validator, balance, production build,
+  8/8 Chromium flows). Phone QA at 390x844 covers Field House plus north and
+  south Bascom camera views with no browser warnings/errors, no horizontal
+  overflow, and no permanent HUD obstruction. Deploy after the release commit.
+
 ## Latest Codex Turn (v21.27 - Madison Landmark Pilgrimage)
 
 - Read `WORLD_MAP_MANIFESTO.md`, the read-first contract in

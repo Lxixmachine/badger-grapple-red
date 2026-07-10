@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.27-madison-landmarks');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.28-town-structure');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -81,6 +81,8 @@ test('production build boots with runtime assets', async ({page}) => {
     expect(texture.width, `texture ${texture.key} width`).toBeGreaterThan(1);
     expect(texture.height, `texture ${texture.key} height`).toBeGreaterThan(1);
   }
+  const campusTexture = textureReport.find(texture => texture.key === 'area_campus');
+  expect(campusTexture).toMatchObject({width: 448, height: 320});
 
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
@@ -121,10 +123,11 @@ test('coach assignment leads from Field House to Bascom Hill', async ({page}) =>
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').messageOpen)).toBe(false);
   await page.waitForTimeout(120);
 
-  await move(page, 'up');
-  for (let i = 0; i < 10; i++) await move(page, 'left');
   for (let i = 0; i < 6; i++) await move(page, 'up');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 4, y: 4});
+  for (let i = 0; i < 9; i++) await move(page, 'left');
+  await press(page, 'up');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 5, y: 5});
+  await page.waitForTimeout(120);
 
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Go up Bascom Hill');
@@ -139,16 +142,16 @@ test('coach assignment leads from Field House to Bascom Hill', async ({page}) =>
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').messageOpen)).toBe(false);
   await page.waitForTimeout(120);
 
-  for (let i = 0; i < 10; i++) await move(page, 'right');
-  for (let i = 0; i < 3; i++) await move(page, 'up');
+  for (let i = 0; i < 9; i++) await move(page, 'right');
+  for (let i = 0; i < 4; i++) await move(page, 'up');
 
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('campus');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 12});
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 18});
 
   const campusSave = await page.evaluate(() => window.__badgerTest.storage());
   expect(campusSave).toMatchObject({
     area: 'campus',
-    pos: {x: 14, y: 12}
+    pos: {x: 14, y: 18}
   });
   expect(runtimeIssues).toEqual([]);
 });
@@ -242,9 +245,9 @@ test('route trainer is drawn and ambushes the player through the sight line', as
 test('campus tall grass triggers a real scout encounter that reaches a wild battle', async ({page}) => {
   test.setTimeout(60000);
   const runtimeIssues = collectRuntimeIssues(page);
-  await continueIntoOverworld(page, seededSave({area: 'campus', pos: {x: 22, y: 10}}));
+  await continueIntoOverworld(page, seededSave({area: 'campus', pos: {x: 22, y: 15}}));
 
-  // Walk the safe grass row (y=10 is outside Buckshot's sight line) until the
+  // Walk the safe grass row (y=15 is outside Buckshot's sight line) until the
   // 12%-per-step wild encounter fires. 80 steps bounds the run; the odds of a
   // false negative are (0.88)^80, about one in thirty thousand.
   let scoutStarted = false;

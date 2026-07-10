@@ -7,9 +7,10 @@
 > (door law, edge continuity, telegraphing, tall-grass honesty, collision is
 > law, landmark rule). Read the manifesto before any world-facing art turn;
 > WP-WORLD (its §5) is implemented as of v21.26 and the geometry maps in §5
-> below reflect it. Current manifesto art orders: Terrace sunburst chairs
-> (Lakeshore), Capitol dome horizon strip (State Street east edge), Kohl
-> marquee glow-up, locked NATIONALS door (Season Two seam).
+> below reflect it. The manifesto landmark orders shipped in v21.27. v21.28's
+> WP-TOWN structural pass expands Bascom Hill to 28x20, adds per-area camera
+> bounds, and rebuilds the opening Field House/Bascom compositions around large
+> generated architectural masses. Preserve those dimensions and collision maps.
 
 **For: Codex (ChatGPT), the project's art lane.** This is a complete, sequenced
 production plan to take the game's visuals to the FireRed bar. It is grounded
@@ -294,40 +295,46 @@ live collision data after WP-WORLD.
    0123456789012345678901234567
  0 ############################
  1 ##############E#############
- 2 ####.................####..#
- 3 ####.................####..#
- 4 #..........................#
+ 2 #####...#####.........######
+ 3 #####.................######
+ 4 #####.................######
  5 #..........................#
  6 #..........................#
- 7 #..........................#
- 8 #..........................#
- 9 #....................###...#
-10 #....................###...#
-11 #......###....S............#
+ 7 #....................#####.#
+ 8 #....................#####.#
+ 9 #...####.............#####.#
+10 #...####.............#####.#
+11 #...####......S............#
 12 #..........................#
 13 ############################
 ```
 Exits: (14,1)->campus
 
-### BASCOM HILL (`campus`)  28x14 tiles
+### BASCOM HILL (`campus`)  28x20 tiles
 ```
    0123456789012345678901234567
  0 ############################
- 1 #.......###...E..###.#######
- 2 #..ggggg#.#......#.#.#######
- 3 #..ggggg.E........E..##E####
- 4 #..ggggg.............##.####
- 5 #..ggggg.........T.........#
+ 1 #.#######...##E##..#######.#
+ 2 #.#######...##.##..#######.#
+ 3 #.#######...##.##..#######.#
+ 4 #.#######..........#######.#
+ 5 #.###E###..........###E###.#
  6 #..........................#
- 7 #E..###....................E
- 8 #...###.............ggggg..#
- 9 #...................ggTgg..#
-10 #...................ggggg..#
-11 #...................ggggg..#
-12 #.............S............#
-13 ##############E#############
+ 7 #..........................#
+ 8 #.........##..#.##.#######.#
+ 9 #..................#######.#
+10 #E.................#######.E
+11 #..................#######.#
+12 #..................###E###.#
+13 #..##.###..................#
+14 #..#gggg#..........gggggg..#
+15 #..gggggg..........gggggg..#
+16 #..gggggg..........gggggg..#
+17 #..gggggg..........gggggg..#
+18 #.............S............#
+19 ##############E#############
 ```
-Exits: (14,13)->fieldhouse  (23,3)->studyhall  (27,7)->downtown  (1,7)->lakeshore  (14,1)->conference  (9,3)->shop  (18,3)->recovery  |  Wild Lv 3-6
+Exits: (14,19)->fieldhouse  (22,12)->studyhall  (27,10)->downtown  (1,10)->lakeshore  (14,1)->conference  (5,5)->shop  (22,5)->recovery  |  Wild Lv 3-6
 
 ### MEMORIAL LIBRARY (`studyhall`)  28x14 tiles
 ```

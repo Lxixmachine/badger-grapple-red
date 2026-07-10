@@ -2,7 +2,8 @@
 
 The source sheet is the only art source. This tool deliberately does not draw
 pixels: it crops, nearest-neighbor downsizes, quantizes, and places imagegen
-tiles according to the 28x14 geometry maps in VISUAL_OVERHAUL_GUIDE.md.
+tiles according to the geometry maps in VISUAL_OVERHAUL_GUIDE.md. Areas may
+have different heights; Bascom Hill is 28x20 so it can scroll vertically.
 """
 
 from pathlib import Path
@@ -14,10 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "art" / "imagegen" / "terrain_tileset_wp1_r2_2026-07-09.png"
 TOWN_SOURCE = ROOT / "art" / "imagegen" / "terrain_town_anatomy_wp1_2_2026-07-09.png"
 LANDMARK_SOURCE = ROOT / "art" / "imagegen" / "madison_landmarks_2026-07-09.png"
+ARCH_SOURCE = ROOT / "art" / "imagegen" / "town_fieldhouse_architecture_2026-07-09.png"
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
 TILE = 16
-SIZE = (28 * TILE, 14 * TILE)
 
 
 # These maps are copied from the guide. Collision is law: do not adjust this
@@ -27,32 +28,38 @@ MAPS = {
     "fieldhouse": [
         "############################",
         "##############E#############",
-        "####.................####..#",
-        "####.................####..#",
+        "#####...#####.........######",
+        "#####.................######",
+        "#####.................######",
         "#..........................#",
         "#..........................#",
-        "#..........................#",
-        "#..........................#",
-        "#..........................#",
-        "#....................###...#",
-        "#....................###...#",
-        "#......###....S............#",
+        "#....................#####.#",
+        "#....................#####.#",
+        "#...####.............#####.#",
+        "#...####.............#####.#",
+        "#...####......S............#",
         "#..........................#",
         "############################",
     ],
     "campus": [
         "############################",
-        "#.......###...E..###.#######",
-        "#..ggggg#.#......#.#.#######",
-        "#..ggggg.E........E..##E####",
-        "#..ggggg.............##.####",
-        "#..ggggg.........T.........#",
+        "#.#######...##E##..#######.#",
+        "#.#######...##.##..#######.#",
+        "#.#######...##.##..#######.#",
+        "#.#######..........#######.#",
+        "#.###E###..........###E###.#",
         "#..........................#",
-        "#E..###....................E",
-        "#...###.............ggggg..#",
-        "#...................ggTgg..#",
-        "#...................ggggg..#",
-        "#...................ggggg..#",
+        "#..........................#",
+        "#.........##..#.##.#######.#",
+        "#..................#######.#",
+        "#E.................#######.E",
+        "#..................#######.#",
+        "#..................###E###.#",
+        "#..##.###..................#",
+        "#..#gggg#..........gggggg..#",
+        "#..gggggg..........gggggg..#",
+        "#..gggggg..........gggggg..#",
+        "#..gggggg..........gggggg..#",
         "#.............S............#",
         "##############E#############",
     ],
@@ -255,6 +262,25 @@ LANDMARK_CROPS = {
     "nationals_door": (1106, 744, 1428, 1066),
 }
 
+# Dedicated opening-map architecture. The image generator returned the same
+# 1448x1086 4x3 canvas as the landmark sheet, with 322px subjects separated by
+# 40px gutters. These cells stay as large props rather than being crushed into
+# generic 16px tiles.
+ARCH_CROPS = {
+    "trophy_wall": (20, 20, 342, 342),
+    "scoreboard": (382, 20, 704, 342),
+    "bleachers": (744, 20, 1066, 342),
+    "fieldhouse_exit": (1106, 20, 1428, 342),
+    "coach_station": (20, 382, 342, 704),
+    "locker_bank": (382, 382, 704, 704),
+    "weight_station": (744, 382, 1066, 704),
+    "meeting_table": (1106, 382, 1428, 704),
+    "hero_mat": (20, 744, 342, 1066),
+    "campus_red_building": (382, 744, 704, 1066),
+    "campus_blue_building": (744, 744, 1066, 1066),
+    "annex_gateway": (1106, 744, 1428, 1066),
+}
+
 
 INTERIORS = {"fieldhouse", "studyhall", "shop", "recovery", "conference", "championship"}
 
@@ -287,7 +313,7 @@ def load_source_tiles(source_path, crops):
 
 
 def load_tiles():
-    sources = (SOURCE, TOWN_SOURCE, LANDMARK_SOURCE)
+    sources = (SOURCE, TOWN_SOURCE, LANDMARK_SOURCE, ARCH_SOURCE)
     if any(not source.exists() for source in sources):
         missing = next(source for source in sources if not source.exists())
         raise SystemExit(f"Missing imagegen source: {missing}")
@@ -297,19 +323,55 @@ def load_tiles():
     return tiles
 
 
+def fitted_prop(source, crop, size):
+    """Chroma-key, tightly crop, and fit one generated subject bottom-center."""
+    subject = normalize_image(source.crop(crop))
+    # The architecture sheet includes model-made green contact shadows despite
+    # the flat-background prompt. Remove only strongly green-dominant spill;
+    # this stricter key is intentionally isolated from natural terrain tiles.
+    pixels = subject.get_flattened_data() if hasattr(subject, "get_flattened_data") else subject.getdata()
+    cleaned = []
+    for r, g, b, a in pixels:
+        if a and g > 65 and g > r * 1.32 and g > b * 1.32:
+            cleaned.append((r, g, b, 0))
+        else:
+            cleaned.append((r, g, b, a))
+    subject.putdata(cleaned)
+    bounds = subject.getbbox()
+    if not bounds:
+        raise SystemExit(f"Empty architecture crop: {crop}")
+    subject = subject.crop(bounds)
+    subject.thumbnail(size, Image.Resampling.NEAREST)
+    canvas = Image.new("RGBA", size, (0, 0, 0, 0))
+    canvas.alpha_composite(subject, ((size[0] - subject.width) // 2, size[1] - subject.height))
+    return canvas
+
+
 def load_props():
     """Slice large one-off mats and manifesto landmarks from source sheets."""
     source = Image.open(TOWN_SOURCE).convert("RGBA")
     landmarks = Image.open(LANDMARK_SOURCE).convert("RGBA")
+    architecture = Image.open(ARCH_SOURCE).convert("RGBA")
     mat = TOWN_CROPS["mat_plain"]
     return {
-        "fieldhouse_mat": normalize_image(source.crop(mat).resize((96, 96), Image.Resampling.NEAREST)),
         "arena_mat": normalize_image(source.crop(mat).resize((80, 80), Image.Resampling.NEAREST)),
         "capitol_horizon": normalize_image(landmarks.crop(LANDMARK_CROPS["capitol_center"]).resize((80, 32), Image.Resampling.NEAREST)),
         "marquee_left": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_left"]).resize((32, 32), Image.Resampling.NEAREST)),
         "marquee_center": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_center"]).resize((48, 32), Image.Resampling.NEAREST)),
         "marquee_door": normalize_image(landmarks.crop(LANDMARK_CROPS["marquee_door"]).resize((16, 32), Image.Resampling.NEAREST)),
         "nationals_door": normalize_image(landmarks.crop(LANDMARK_CROPS["nationals_door"]).resize((16, 32), Image.Resampling.NEAREST)),
+        "trophy_wall": fitted_prop(architecture, ARCH_CROPS["trophy_wall"], (96, 48)),
+        "scoreboard": fitted_prop(architecture, ARCH_CROPS["scoreboard"], (80, 32)),
+        "bleachers": fitted_prop(architecture, ARCH_CROPS["bleachers"], (80, 48)),
+        "fieldhouse_exit": fitted_prop(architecture, ARCH_CROPS["fieldhouse_exit"], (32, 48)),
+        "coach_station": fitted_prop(architecture, ARCH_CROPS["coach_station"], (64, 48)),
+        "locker_bank": fitted_prop(architecture, ARCH_CROPS["locker_bank"], (80, 64)),
+        "weight_station": fitted_prop(architecture, ARCH_CROPS["weight_station"], (80, 64)),
+        "meeting_table": fitted_prop(architecture, ARCH_CROPS["meeting_table"], (64, 48)),
+        "fieldhouse_mat": fitted_prop(architecture, ARCH_CROPS["hero_mat"], (144, 144)),
+        "campus_red_building": fitted_prop(architecture, ARCH_CROPS["campus_red_building"], (112, 80)),
+        "campus_blue_building": fitted_prop(architecture, ARCH_CROPS["campus_blue_building"], (112, 80)),
+        "annex_gateway": fitted_prop(architecture, ARCH_CROPS["annex_gateway"], (80, 80)),
     }
 
 
@@ -322,19 +384,20 @@ def load_props():
 # ---------------------------------------------------------------------------
 import random
 
-W, H = 28, 14
 OUTDOOR = {"campus", "lakeshore", "river", "downtown"}
 
 def grid(area):
     return [list(row) for row in MAPS[area]]
 
 def blocked(g, x, y):
-    if x < 0 or x >= W or y < 0 or y >= H:
+    height = len(g)
+    width = len(g[0])
+    if x < 0 or x >= width or y < 0 or y >= height:
         return True
     return g[y][x] == "#"
 
 def paint(img, tiles, name, x, y):
-    if 0 <= x < W and 0 <= y < H:
+    if 0 <= x < img.width // TILE and 0 <= y < img.height // TILE:
         img.alpha_composite(tiles[name], (x * TILE, y * TILE))
 
 
@@ -362,11 +425,11 @@ def path_cells(area, g):
                 if not blocked(g, x, y):
                     cells.add((x, y))
     if area == "campus":
-        seg(13, 1, 15, 13)      # north-south main walk
-        seg(1, 6, 27, 8)        # east-west main walk (2-3 wide)
-        seg(9, 3, 9, 6)         # shop door spur
-        seg(18, 3, 18, 6)       # recovery door spur
-        seg(23, 3, 23, 6)       # study hall spur
+        seg(13, 1, 15, 19)      # Annex-to-Field-House ceremonial walk
+        seg(1, 9, 27, 11)       # Lakeshore-to-State-Street cross-campus walk
+        seg(5, 5, 5, 9)         # Team Shop yard
+        seg(22, 5, 22, 9)       # Recovery Center yard
+        seg(22, 11, 22, 13)     # Memorial Library forecourt
     if area == "lakeshore":
         seg(14, 7, 27, 7)       # from the Bascom Hill gate along the shore
         seg(14, 7, 14, 9)       # down to the shoreline walk
@@ -383,8 +446,8 @@ def water_mask(area, g):
     """Mendota per the manifesto: full north band on Lakeshore Path; both
     shores + west tip on Picnic Point. Other blocked cells are land (trees)."""
     cells = set()
-    for y in range(H):
-        for x in range(W):
+    for y in range(len(g)):
+        for x in range(len(g[0])):
             if g[y][x] != "#":
                 continue
             if area == "lakeshore" and y <= 4:
@@ -395,17 +458,18 @@ def water_mask(area, g):
 
 def compose(area, tiles, props):
     g = grid(area)
+    width, height = len(g[0]), len(g)
     rng = random.Random(f"wp1-{area}")
-    img = Image.new("RGBA", SIZE, (0, 0, 0, 255))
+    img = Image.new("RGBA", (width * TILE, height * TILE), (0, 0, 0, 255))
     interior = area in INTERIORS
     water = water_mask(area, g)
     paths = path_cells(area, g)
-    in_water = lambda x, y: (x, y) in water or x < 0 or x >= W or (y < 0 or y >= H)
+    in_water = lambda x, y: (x, y) in water or x < 0 or x >= width or (y < 0 or y >= height)
     in_path = lambda x, y: (x, y) in paths
 
     # ---- pass 1: ground base everywhere ----
-    for y in range(H):
-        for x in range(W):
+    for y in range(height):
+        for x in range(width):
             if interior:
                 paint(img, tiles, "floor0" if (x + y) % 2 else "floor1", x, y)
             elif area == "downtown":
@@ -431,8 +495,8 @@ def compose(area, tiles, props):
         paint(img, tiles, name, x, y)
 
     # ---- pass 4: tall grass + seeded scatter on open ground ----
-    for y in range(H):
-        for x in range(W):
+    for y in range(height):
+        for x in range(width):
             mark = g[y][x]
             if mark == "g":
                 # Every encounter cell stays unmistakably dark (FireRed rule:
@@ -440,7 +504,7 @@ def compose(area, tiles, props):
                 # feathers OUTWARD onto the neighboring lawn instead.
                 paint(img, tiles, "tall", x, y)
             elif not interior and mark in ".ST" and (x, y) not in paths and (x, y) not in water:
-                near_tall = any(0 <= x + dx < W and 0 <= y + dy < H and g[y + dy][x + dx] == "g" for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)))
+                near_tall = any(0 <= x + dx < width and 0 <= y + dy < height and g[y + dy][x + dx] == "g" for dx, dy in ((0, -1), (0, 1), (-1, 0), (1, 0)))
                 if near_tall:
                     paint(img, tiles, "tall_fringe", x, y)
             elif not interior and mark in ".S" and (x, y) not in paths and (x, y) not in water:
@@ -476,63 +540,54 @@ def compose(area, tiles, props):
         for x in range(1, 27):
             paint(img, tiles, "ledge", x, 0)
     elif interior:
-        for y in range(H):
-            for x in range(W):
+        for y in range(height):
+            for x in range(width):
                 if g[y][x] == "#":
-                    top_wall = y < H - 1 and not blocked(g, x, y + 1)
+                    top_wall = y < height - 1 and not blocked(g, x, y + 1)
                     paint(img, tiles, ("window" if x % 3 == 1 and top_wall else "interior_wall"), x, y)
     elif area in {"lakeshore", "river"}:
         pass  # blocked mass is the water, already drawn
     # campus blocked dressing happens below (buildings + assembled trees)
 
     if area == "campus":
-        # Buildings are constrained to their existing collision footprints:
-        # red shop, blue recovery, then the larger blue Study Hall. Doors live
-        # exactly on the prescribed exit cells, never on an invented tile.
-        for (bx0, bx1, by0, by1, ridge, eave, under, window, corner) in ((8, 10, 1, 2, "red_ridge", "red_eave", "red_under_eave", "red_window", "red_corner"), (17, 19, 1, 2, "blue_ridge", "blue_eave", "blue_under_eave", "blue_window", "blue_corner"), (21, 27, 1, 3, "blue_ridge", "blue_eave", "blue_under_eave", "blue_window", "blue_corner")):
-            for y in range(by0, by1 + 1):
-                for x in range(bx0, bx1 + 1):
-                    if g[y][x] != "#":
-                        continue
-                    if y == by0:
-                        paint(img, tiles, ridge if x == (bx0 + bx1) // 2 else eave, x, y)
-                    elif x == bx0 or x == bx1:
-                        paint(img, tiles, corner, x, y)
-                    elif (x + y) % 2:
-                        paint(img, tiles, window, x, y)
-                    else:
-                        paint(img, tiles, under, x, y)
-        # doors on the buildings at their true exit-adjacent gaps
-        paint(img, tiles, "red_door", 9, 3)
-        paint(img, tiles, "blue_door", 18, 3)
-        paint(img, tiles, "blue_door", 23, 3)
-        paint(img, tiles, "stone_step", 9, 4)
-        paint(img, tiles, "stone_step", 18, 4)
-        paint(img, tiles, "stone_step", 23, 4)
-        # Signs sit on nearby blocked wall tiles, keeping the new art honest
-        # to collision while giving each important door a readable marker.
-        paint(img, tiles, "signboard", 8, 2)
-        paint(img, tiles, "signboard", 17, 2)
-        paint(img, tiles, "signboard", 22, 3)
-        # One fence frames the campus practice yard and remains on blocked turf.
-        for x in range(4, 7):
-            paint(img, tiles, "fence", x, 7)
-        paint(img, tiles, "fence_post", 3, 7)
-        paint(img, tiles, "fence_post", 7, 7)
-        # statue landmark at (14,7)
-        paint(img, tiles, "statue", 14, 7)
+        # Pallet-style hierarchy: three full architectural masses and one
+        # ceremonial gateway, each fitted exactly to its collision footprint.
+        paint_prop(img, props, "campus_red_building", 2, 1)
+        paint_prop(img, props, "campus_blue_building", 19, 1)
+        paint_prop(img, props, "campus_blue_building", 19, 8)
+        paint_prop(img, props, "annex_gateway", 12, 0)
+        for door, step, tile in (((5, 5), (5, 6), "red_door"), ((22, 5), (22, 6), "blue_door"), ((22, 12), (22, 13), "blue_door")):
+            paint(img, tiles, tile, *door)
+            paint(img, tiles, "stone_step", *step)
+        # The fenced practice lawn is a separate spatial room with one gate.
+        for x in range(3, 9):
+            if x != 5:
+                paint(img, tiles, "fence", x, 13)
+        paint(img, tiles, "fence_post", 3, 14)
+        paint(img, tiles, "fence_post", 8, 14)
+        # Abe and low planters define the plaza without consuming its paths.
+        paint(img, tiles, "statue", 14, 8)
+        for x in (10, 11, 16, 17):
+            paint(img, tiles, "bush", x, 8)
 
     # assembled 2x2 trees over remaining outdoor blocked cells (staggered rows)
     if not interior:
         claimed = set(water)  # water cells are never tree ground
-        for y in range(H - 1):
-            for x in range(W - 1):
-                if area == "campus" and 8 <= x <= 27 and 1 <= y <= 4:
-                    continue  # building zone
+        for y in range(height - 1):
+            for x in range(width - 1):
+                if area == "campus" and (
+                    (2 <= x <= 8 and 1 <= y <= 5)
+                    or (19 <= x <= 25 and 1 <= y <= 5)
+                    or (19 <= x <= 25 and 8 <= y <= 12)
+                    or (12 <= x <= 16 and 0 <= y <= 3)
+                    or (3 <= x <= 8 and 13 <= y <= 14)
+                    or (10 <= x <= 17 and y == 8)
+                ):
+                    continue  # generated architecture owns these blocks
                 if area == "downtown" and 4 <= x <= 23:
                     continue  # storefront zone owns its blocks
                 quad = [(x, y), (x + 1, y), (x, y + 1), (x + 1, y + 1)]
-                if all(blocked(g, qx, qy) and (qx, qy) not in claimed and 0 <= qx < W and 0 <= qy < H for qx, qy in quad):
+                if all(blocked(g, qx, qy) and (qx, qy) not in claimed and 0 <= qx < width and 0 <= qy < height for qx, qy in quad):
                     stagger = (y // 2) % 2
                     if (x + stagger) % 2 == 0:
                         paint(img, tiles, "tree_tl", x, y)
@@ -541,10 +596,17 @@ def compose(area, tiles, props):
                         paint(img, tiles, "tree_br", x + 1, y + 1)
                         claimed.update(quad)
         # leftover blocked cells become bushes so no bare wall shows
-        for y in range(H):
-            for x in range(W):
+        for y in range(height):
+            for x in range(width):
                 if blocked(g, x, y) and (x, y) not in claimed and g[y][x] == "#":
-                    if area == "campus" and 8 <= x <= 27 and 1 <= y <= 4:
+                    if area == "campus" and (
+                        (2 <= x <= 8 and 1 <= y <= 5)
+                        or (19 <= x <= 25 and 1 <= y <= 5)
+                        or (19 <= x <= 25 and 8 <= y <= 12)
+                        or (12 <= x <= 16 and 0 <= y <= 3)
+                        or (3 <= x <= 8 and 13 <= y <= 14)
+                        or (10 <= x <= 17 and y == 8)
+                    ):
                         continue
                     if area == "downtown" and 4 <= x <= 23:
                         continue
@@ -580,17 +642,18 @@ def compose(area, tiles, props):
 
     # ---- pass 6: fixtures over collision blocks (art matches collision) ----
     if area == "fieldhouse":
-        # One source-derived mat, never a tiled logo. It sits over the
-        # existing SPAR zone, which stays fully walkable by design.
-        paint_prop(img, props, "fieldhouse_mat", 10, 3)
-        for x in range(1, 4):        # coach desk
-            paint(img, tiles, "table", x, 2); paint(img, tiles, "table", x, 3)
-        for x in range(21, 25):      # lockers
-            paint(img, tiles, "shelf", x, 2); paint(img, tiles, "shelf", x, 3)
-        for x in range(21, 24):      # weights
-            paint(img, tiles, "counter", x, 9); paint(img, tiles, "counter", x, 10)
-        for x in range(7, 10):       # meeting table
-            paint(img, tiles, "table", x, 11)
+        # The opening room now has Pallet/Oak-Lab hierarchy: one dominant mat,
+        # a deep back wall, and four large functional zones instead of tiny
+        # repeated tiles scattered over an empty floor.
+        paint_prop(img, props, "fieldhouse_mat", 9, 2)
+        paint_prop(img, props, "trophy_wall", 1, 0)
+        paint_prop(img, props, "bleachers", 8, 0)
+        paint_prop(img, props, "fieldhouse_exit", 13, 0)
+        paint_prop(img, props, "scoreboard", 16, 0)
+        paint_prop(img, props, "coach_station", 1, 2)
+        paint_prop(img, props, "locker_bank", 22, 1)
+        paint_prop(img, props, "weight_station", 21, 7)
+        paint_prop(img, props, "meeting_table", 4, 9)
     if area in {"shop", "recovery"}:
         for x in range(10, 18):
             paint(img, tiles, "shelf", x, 4)
@@ -605,13 +668,15 @@ def compose(area, tiles, props):
             paint(img, tiles, "arch", 19, 4)
 
     # ---- pass 7: exits always visible ----
-    for y in range(H):
-        for x in range(W):
+    for y in range(height):
+        for x in range(width):
             if g[y][x] == "E":
-                if interior:
+                if area == "fieldhouse":
+                    pass  # generated double-door prop owns the opening
+                elif area == "campus" and (x, y) in {(14, 1), (5, 5), (22, 5), (22, 12)}:
+                    pass  # generated facades/gateway already own these doors
+                elif interior:
                     paint(img, tiles, "south_door", x, y)
-                elif area == "campus" and y in (1, 13):
-                    paint(img, tiles, "door", x, y)  # arena/field-house thresholds
                 elif area == "downtown" and y == 4:
                     pass  # source-derived marquee prop already paints door + red mat
                 else:

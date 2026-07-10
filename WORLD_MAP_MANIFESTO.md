@@ -76,6 +76,13 @@ This exact rewiring was implemented and verified once (validator BFS green, exit
 | downtown | exits become: (0,7)→campus(26,7) and (21,4)→championship(14,12) **carrying the existing badge gate** ['Neutral Badge','Scramble Badge'] |
 | championship | exit becomes (14,13)→downtown(21,5); start (14,11) |
 
+**v21.28 WP-TOWN coordinate update:** Bascom Hill is now 28x20 so it can
+scroll vertically like a FireRed town. Its west/east exits moved to (1,10)
+and (27,10), the Field House threshold to (14,19), and the shop/recovery/
+library doors to (5,5), (22,5), and (22,12). External destination landings,
+the Madison compass, golden path, wild bands, and every world law remain
+unchanged. `VISUAL_OVERHAUL_GUIDE.md` §5 owns the current collision map.
+
 **Renames (display names only — area ids NEVER change, saves stay compatible):** CAMPUS QUAD→BASCOM HILL, DOWNTOWN→STATE STREET, RIVER TRAIL→PICNIC POINT, CHAMPIONSHIP HALL→KOHL CENTER, STUDY HALL→MEMORIAL LIBRARY.
 
 **Collision/grass:** Lakeshore water band y1–4 full width (Mendota north); Picnic Point water y1–2 and y11–12 (peninsula) + pine stand x14–20 y4–6; isGrass: LAKESHORE→x3–13,y6–10; PICNIC POINT→x4–11,y5–9.

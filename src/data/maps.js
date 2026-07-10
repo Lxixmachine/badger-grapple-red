@@ -18,28 +18,34 @@ export function trainerSeesTile(tr,x,y){
 export function startArea(){return 'fieldhouse';}
 export function defaultPos(area='fieldhouse'){return {...(AREAS[area]?.start||AREAS.fieldhouse.start)};}
 export function areaFor(id){return AREAS[id]||AREAS.fieldhouse;}
+export function areaDimensions(id){const area=areaFor(id);return {width:area.width||WORLD_META.width,height:area.height||WORLD_META.height};}
 export function isBlocked(area,x,y){
- if(x<0||x>27||y<0||y>13)return true;
+ const size=areaDimensions(area);
+ if(x<0||x>=size.width||y<0||y>=size.height)return true;
  const n=areaFor(area).name;
  // Collision matches visible art. Open lanes first; decoration never blocks.
  if(n==='FIELD HOUSE'){
-   // v19.5 exact 28x14 Field House rebuild: collision follows the approved tile plan.
-   // Block only visible walls and large visible fixtures. The mat, floor lines, labels,
-   // shadows, trim, signs, bottles, towels, and banners are non-solid.
+   // v21.28 opening-room rebuild: every large generated fixture is solid;
+   // the mat, floor lines, wall art, doorway mat, and light remain walkable.
    if(x===0||x===27||y===0||y===13)return true;
    if(y===1 && x!==14)return true; // top wall; center door only
-   if(x>=1&&x<=3&&y>=2&&y<=3)return true; // coach desk
-   if(x>=21&&x<=24&&y>=2&&y<=3)return true; // lockers
-   if(x>=21&&x<=23&&y>=9&&y<=10)return true; // weights
-   if(x>=7&&x<=9&&y===11)return true; // meeting table
+   if(x>=1&&x<=4&&y>=2&&y<=4)return true; // coach station
+   if(x>=8&&x<=12&&y===2)return true; // bleachers under the north wall
+   if(x>=22&&x<=26&&y>=2&&y<=4)return true; // lockers
+   if(x>=21&&x<=25&&y>=7&&y<=10)return true; // weight station
+   if(x>=4&&x<=7&&y>=9&&y<=11)return true; // meeting table
    return false;
  }
  if(n==='BASCOM HILL'){
-   if((x===0||x===27||y===0||y===13)&&!((x===14&&y===13)||(x===27&&y===7)||(x===1&&y===7)||(x===14&&y===1)))return true;
-   if(x>=21&&x<=27&&y>=1&&y<=4 && !(x===23&&y>=3&&y<=4))return true; // studyhall door at y3, approach y4 (v21.6 art alignment)
-   if(x>=4&&x<=6&&y>=7&&y<=8)return true;
-   if(x>=8&&x<=10&&y>=1&&y<=2 && !(x===9&&y===2))return true; // shop building, door gap at top-of-door tile
-   if(x>=17&&x<=19&&y>=1&&y<=2 && !(x===18&&y===2))return true; // recovery building, door gap
+   if((x===0||x===27||y===0||y===19)&&!((x===14&&y===19)||(x===27&&y===10)||(x===1&&y===10)||(x===14&&y===1)))return true;
+   if(x>=2&&x<=8&&y>=1&&y<=5&&!(x===5&&y===5))return true; // Team Shop
+   if(x>=19&&x<=25&&y>=1&&y<=5&&!(x===22&&y===5))return true; // Recovery Center
+   if(x>=19&&x<=25&&y>=8&&y<=12&&!(x===22&&y===12))return true; // Memorial Library
+   if(x>=12&&x<=16&&y>=1&&y<=3&&x!==14)return true; // Annex gateway sides
+   if(x===14&&y===8)return true; // Abe statue and plinth
+   if((x===10||x===11||x===16||x===17)&&y===8)return true; // plaza planters
+   if(y===13&&x>=3&&x<=8&&x!==5)return true; // practice-yard fence with gate
+   if((x===3||x===8)&&y===14)return true;
    return false;
  }
  if(n==='MEMORIAL LIBRARY')return y===0||x===0||x===27||y===13||((x<4||x>7)&&y===11);
@@ -58,30 +64,29 @@ export function isBlocked(area,x,y){
  if(n==='KOHL CENTER')return y===0||x===0||x===27||(y===13&&x!==14); // south doors to State Street
  return false;
 }
-export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9)||(n==='BASCOM HILL'&&((x>=3&&x<=7&&y>=2&&y<=5)||(x>=20&&x<=24&&y>=8&&y<=11)));}
+export function isGrass(area,x,y){const n=areaFor(area).name;return (n==='LAKESHORE PATH'&&x>=3&&x<=13&&y>=6&&y<=10)||(n==='PICNIC POINT'&&x>=4&&x<=11&&y>=5&&y<=9)||(n==='BASCOM HILL'&&((x>=3&&x<=8&&y>=14&&y<=17)||(x>=19&&x<=24&&y>=14&&y<=17)));}
 export function spotKind(area,x,y){
  if(trainerAt(area,x,y))return 'TRAINER'; // v21.11: all trainers are data-driven, no per-area cases
  const n=areaFor(area).name;
  if(n==='FIELD HOUSE'){
-   // v19.5 exact, non-overlapping interaction zones from the approved QA plan.
    if(x===14&&y===1)return 'EXIT';
-   if(x===4&&(y===3||y===4))return 'N';
-   if(x>=9&&x<=17&&y>=3&&y<=8)return 'M';
-   if(x>=7&&x<=9&&y===10)return 'MEETING_ROOM';
-   if(x>=21&&x<=24&&y===4)return 'LOCKER_ROOM';
-   if(x===20&&(y===9||y===10))return 'WEIGHT_ROOM';
-   if(x>=1&&x<=4&&y>=2&&y<=4)return 'COACH_OFFICE';
+   if(x===5&&(y===3||y===4))return 'N';
+   if(x>=9&&x<=18&&y>=3&&y<=11)return 'M';
+   if(x>=4&&x<=7&&y===8)return 'MEETING_ROOM';
+   if(x>=22&&x<=26&&y===5)return 'LOCKER_ROOM';
+   if(x===20&&y>=7&&y<=10)return 'WEIGHT_ROOM';
+   if(x===5&&y>=2&&y<=4)return 'COACH_OFFICE';
  }
  if((n==='TEAM SHOP'||n==='RECOVERY CENTER')&&x>=13&&x<=15&&y===11)return 'EXIT';
  if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
  if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
  if(n==='BASCOM HILL'){
-   if(x===14&&y===7)return 'STATUE';
-   if(x===5&&y===5)return 'SCOUT_NPC';
-   if(x===11&&y===8)return 'SAVE_NPC';
-   if(x===8&&y===10)return 'HIDDEN_TAPE';
-   if(x===23&&y===2)return 'DOOR';
-   if(x===18&&y===10)return 'HIDDEN_DRINK';
+   if(x===14&&y===8)return 'STATUE';
+   if(x===5&&y===15)return 'SCOUT_NPC';
+   if(x===11&&y===14)return 'SAVE_NPC';
+   if(x===8&&y===17)return 'HIDDEN_TAPE';
+   if(x===22&&y===11)return 'DOOR';
+   if(x===18&&y===17)return 'HIDDEN_DRINK';
  }
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
  if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
