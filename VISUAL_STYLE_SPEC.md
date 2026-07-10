@@ -42,8 +42,14 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 5. **Every ground material ships as a 3x3 edge block** (center + 8
    edges/corners) plus 1-2 center variants. Transitions between any two
    materials that can touch are REQUIRED assets.
-6. **Props are assembled multi-tile objects** with readable silhouettes
-   and outlines; tree canopies stack/overlap to build borders.
+6. **Objects are drawings first, tiles second.** Anything larger than
+   one tile — a tree, a building, a pier — is authored as ONE seamless
+   drawing across its whole footprint (even dozens of tiles) and then
+   sliced. The grid exists for the engine, never for the eye.
+6b. **Clusters are compositions, not repeats.** A group of trees is its
+   own drawn asset: interlock pieces where canopies overlap, forest
+   fill tiles, 2-3-tree clumps drawn as units. A tree border is
+   composed from the kit — one tree stamped N times never ships.
 7. **Building grammar**: one shared wall + window + door language for
    the whole town; ROOF COLOR is each building's identity. Cardinal red
    roofs = Badger team buildings; Kohl Center keeps the only gold.
@@ -59,8 +65,11 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 
 1. Grounds: lawn, path, pavement, brick, interior wood, sand — each with
    stipple variant + full 3x3 edge blocks vs lawn/each other
-2. Vegetation: tree kit (2x2 + tall stackable canopy), bushes, flowers
-   (2 anim frames), hedges
+2. Vegetation: the FOREST KIT — lone tree, canopy-interlock border
+   pieces (left cap / overlapping middles / right cap, and vertical
+   equivalents), pure canopy fill tiles, a drawn 2-3-tree clump, bushes,
+   flowers (2 anim frames), hedges. Enough kit that a 50-tile tree wall
+   never repeats one silhouette twice in a row
 3. Water: ramp + 4 anim frames + shore edge block
 4. Mats: outdoor worn + sacred competition (distinct materials)
 5. Architecture kit: wall/window/door/eave language + roof ramps in

@@ -29,6 +29,7 @@ tracker for looks.
 | SIL-004 | Silhouette & contact | Props have dark outlines and readable silhouettes, and sit on contact shadows — nothing floats |
 | GRID-011 | Seamlessness | Ground tiles tile invisibly; a 16px seam line is a defect |
 | NOISE-005 | Meaningful marks | Every visible mark depicts something; texture that reads as artifacts is noise |
+| OBJ-007 | Drawings first, tiles second | Multi-tile objects are single seamless drawings sliced to tiles; clusters (tree lines, forests) are dedicated compositions with interlocking pieces — never one element stamped N times |
 
 ## Findings
 
@@ -66,6 +67,12 @@ tracker for looks.
 - **F-008 [TEX-002] street brick mall — OPEN.**
   Brick repeats at an obvious 2-tile rhythm. Owner: Codex (seamless
   brick with 3-4 variants).
+- **F-010 [OBJ-007] every tree border (routes, campus, Celadon-test) — OPEN.**
+  Tony's call, confirmed in the reference sheets: FireRed tree walls are
+  composed from an interlock kit (canopy-over-canopy pieces, fill tiles,
+  drawn clumps); ours are ONE 2x2 tree stamped in staggered rows — the
+  picket-line look. Owner: Codex (forest kit per spec law 6b) + Claude
+  (compositor border pass rewritten to compose from the kit).
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics
