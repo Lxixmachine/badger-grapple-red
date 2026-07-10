@@ -103,3 +103,12 @@ Stage 3 area rebuilds (Bascom Hill especially):
 7. **Roof color is the wayfinding system.** One glance from map scale
    gives the full mental map via roof hues and masses alone - hierarchy
    is spatial and chromatic before it is textual.
+8. **The franchise vocabulary (region level).** Center/Mart/Gym are
+   standardized WORDS across every town: same exterior, same interior
+   program (Gym: same facade promise, unique interior test). This gives
+   the game its familiar pace AND is what makes one-off buildings (the
+   Museum exists only in Pewter) pop as events - "oh wait, that's new."
+   Familiarity funds curiosity. Ours: Recovery Center + Team Shop are
+   canonical franchise units; arenas share a facade family; Field House,
+   Library, boathouse, marquee, Capitol are one-offs that must read
+   one-off.

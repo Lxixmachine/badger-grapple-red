@@ -53,6 +53,17 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 7. **Building grammar**: one shared wall + window + door language for
    the whole town; ROOF COLOR is each building's identity. Cardinal red
    roofs = Badger team buildings; Kohl Center keeps the only gold.
+7b. **The franchise vocabulary (Tony's law).** Institutional buildings
+   are WORDS repeated identically across the whole region: the RECOVERY
+   CENTER gets one canonical exterior + one canonical interior, same in
+   every settlement forever; the TEAM SHOP likewise; arenas share one
+   "this is where you wrestle" facade family with unique interiors.
+   Everything else is a one-off and must READ one-off — each town's
+   unique building is its story, and its unfamiliarity is the player's
+   invitation. Familiarity funds curiosity: the player walks into known
+   buildings without reading, so anything outside the vocabulary lights
+   up automatically. Canonical units are designed ONCE in the master
+   tileset and never redesigned per town.
 8. **Authored at 16px tile scale.** Not a downsized painting. Seamless
    tiling is mandatory and will be machine-checked (GRID-011).
 9. **Exactly two ambient animations**: water (4 frames) and flowers
@@ -73,7 +84,10 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 3. Water: ramp + 4 anim frames + shore edge block
 4. Mats: outdoor worn + sacred competition (distinct materials)
 5. Architecture kit: wall/window/door/eave language + roof ramps in
-   cardinal, slate, tan, green + storefront/awning pieces
+   cardinal, slate, tan, green + storefront/awning pieces — INCLUDING
+   the two canonical franchise units (Recovery Center, Team Shop) as
+   complete exterior+interior packages, and the arena facade family
+   (law 7b). These are forever-assets: extra review weight
 6. Props: Abe statue (outlined, silhouetted), signs, fences, benches,
    Terrace chairs, pier planks, fixtures for the three interiors
 7. Character sheets stay on the existing pipeline until Stage 3 reaches
