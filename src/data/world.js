@@ -13,7 +13,8 @@ export const WORLD_META = {
 };
 
 export const AREAS = {
-  fieldhouse: { name: 'LOCKER / WRESTLING', bg: 'area_fieldhouse', ...LAYERED_MAPS.fieldhouse, encounters: false },
+  fieldhouse: { name: 'LOCKER ROOM', bg: 'area_fieldhouse', ...LAYERED_MAPS.fieldhouse, encounters: false },
+  wrestlingroom: { name: 'WRESTLING ROOM', bg: 'area_wrestlingroom', ...LAYERED_MAPS.wrestlingroom, encounters: false },
   campus: {
     name: 'CAMP RANDALL',
     bg: 'area_campus',

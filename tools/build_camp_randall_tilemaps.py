@@ -19,7 +19,7 @@ MAP_SOURCE = ROOT / "src" / "data" / "campRandallMaps.json"
 RUNTIME_OUT = ROOT / "src" / "data" / "campRandallTilemaps.json"
 ATLAS_OUT = ROOT / "public" / "assets" / "tiles" / "camp_randall_runtime_tiles.png"
 AREA_DIR = ROOT / "public" / "assets" / "ui"
-AREA_IDS = ("fieldhouse", "campus", "studyhall")
+AREA_IDS = ("fieldhouse", "wrestlingroom", "campus", "studyhall")
 TILE_SIZE = 16
 ATLAS_COLUMNS = 32
 

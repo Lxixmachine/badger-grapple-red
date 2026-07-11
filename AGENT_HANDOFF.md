@@ -1,5 +1,33 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.59 separate Field House rooms)
+
+Tony correctly identified that the Field House still read as one malformed room:
+the locker room and wrestling room were painted above and below a divider inside
+the same 28x14 map. v21.59 removes that structural compromise.
+
+- `fieldhouse` is now a compact 20x12 **LOCKER ROOM** entered from campus.
+- New area `wrestlingroom` is a separate 20x12 **WRESTLING ROOM** with its own
+  image, behavior-owned tilemap, foregrounds, NPCs, interactions, and room toast.
+- The two maps share one centered doorway column (`x9`). Locker north exit
+  `(9,1)` lands at wrestling `(9,9)`; wrestling south exit `(9,11)` returns to
+  locker `(9,2)`. The locker south exit `(9,11)` returns to campus.
+- The captain now physically blocks the real north doorway at `(9,2)` until
+  `officeChecked`; afterward he moves to `(7,6)`. Coach and all mat/weight-room
+  interactions moved to `wrestlingroom`. Rex remains in the locker room.
+- The manifest compositor now derives sacred-mat and carpet rendering from each
+  room's declared ground zones instead of hard-coded coordinates. Both rooms
+  reuse the committed Field House object atlas while retaining separate
+  collision and foreground ownership.
+- Full `npm run check` passes: validator reports 11 areas and 692 Camp Randall
+  behavior-owned tiles; all 14 Chromium smoke tests pass, including the gated
+  locker-to-wrestling transition and return path.
+
+Do not recombine these rooms or simulate separation with a divider/overlay. New
+interior refinements must preserve the two map ids and the single-column door
+contract. The next visual gains should come from richer wall/object source art,
+not a larger combined floor plan.
+
 ## Latest Codex Turn (v21.58 continuous terrain and floors)
 
 Tony reported that the terrain/floor tiles still made the movement grid obvious.

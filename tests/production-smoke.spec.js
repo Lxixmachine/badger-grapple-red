@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.58-seamless-materials');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.59-separate-rooms');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -101,7 +101,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(overworld).toMatchObject({
     active: true,
     area: 'fieldhouse',
-    tilePos: {x: 14, y: 12},
+    tilePos: {x: 9, y: 10},
     tileRuntimeVersion: 1,
     playerScale: 0.78,
     camera: {
@@ -113,15 +113,15 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 10, directActorDepth: true}
+    layered: {version: 1, upperCount: 8, directActorDepth: true}
   });
-  expect(overworld.playerWorldY).toBe(208);
+  expect(overworld.playerWorldY).toBe(176);
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
   expect(save).toMatchObject({
     playerName: 'Coach',
     area: 'fieldhouse',
-    pos: {x: 14, y: 12}
+    pos: {x: 9, y: 10}
   });
   expect(save.party).toHaveLength(1);
   expect(save.flags.introDone).toBe(true);
@@ -129,24 +129,37 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(runtimeIssues).toEqual([]);
 });
 
-test('Building 2 rejects full-map masks and loads object-owned foregrounds', async ({page}) => {
+test('Building 2 uses separate object-owned locker and wrestling rooms', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
-  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=6');
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=9&y=8');
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('canvas')).toBeVisible();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
     active: true,
-    tilePos: {x: 14, y: 6}
+    tilePos: {x: 9, y: 8}
   });
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
-  expect(overworld.npcScales).toEqual([0.78, 0.78, 0.78]);
-  expect(overworld.layered.upperCount).toBe(10);
+  expect(overworld.npcScales).toEqual([0.78, 0.78]);
+  expect(overworld.layered.upperCount).toBe(8);
   expect(overworld.layered.upperTextures).toEqual(expect.arrayContaining([
     'camp_fieldhouse_locker_bank_west_upper',
     'camp_fieldhouse_locker_bank_east_upper',
     'camp_fieldhouse_doorway_frame_upper',
     'camp_fieldhouse_exit_door_frame_upper'
+  ]));
+  await page.goto('/?test=1&scene=overworld&area=wrestlingroom&x=9&y=9');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
+    area: 'wrestlingroom',
+    tilePos: {x: 9, y: 9},
+    layered: {upperCount: 3, directActorDepth: true}
+  });
+  const wrestling = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(wrestling.npcScales).toEqual([0.78]);
+  expect(wrestling.layered.upperTextures).toEqual(expect.arrayContaining([
+    'camp_wrestlingroom_rolled_mat_stand_upper',
+    'camp_wrestlingroom_plate_rack_upper',
+    'camp_wrestlingroom_exit_door_frame_upper'
   ]));
   expect(runtimeIssues).toEqual([]);
 });
@@ -201,7 +214,7 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('campus');
   await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('fieldhouse');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 12});
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 10});
   await move(page, 'down');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('campus');
   await page.goto('/?test=1&scene=overworld&area=campus&x=22&y=12');
@@ -227,13 +240,13 @@ test('Camp Randall collision follows the drawn architecture', async ({page}) => 
   const runtimeIssues = collectRuntimeIssues(page);
 
   // exit door frame hugs the south doorway; the lane above it is open
-  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=12');
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=9&y=10');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: false, right: false, up: true, down: true});
-  // floor in front of the lockers: bank above is solid, bench below is solid
-  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=5&y=10');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({up: false, down: false, left: true, right: true});
-  // the practice mat is open floor in every direction
-  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=10&y=3');
+  // locker banks occupy their exact wall-aligned footprints
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=5&y=5');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({up: false, down: true, left: true, right: true});
+  // the separate wrestling-room mat is open floor in every direction
+  await page.goto('/?test=1&scene=overworld&area=wrestlingroom&x=10&y=4');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: true, right: true, up: true, down: true});
 
   // quad path beside the closed garden hedge and the stadium forecourt
@@ -279,25 +292,27 @@ test('Camp Randall doors warp from their approach lanes', async ({page}) => {
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('lakeshore');
 });
 
-test('captain blocks the trophy threshold until the coach office is checked', async ({page}) => {
-  // Act I story gate: the wrestling room is sealed behind the captain at
-  // (14,8) until the player has seen the empty office (synopsis beats 2-4).
-  await page.goto('/?test=1&reset=1&scene=overworld&area=fieldhouse&x=14&y=10');
+test('captain blocks the actual wrestling-room doorway until the coach office is checked', async ({page}) => {
+  // Act I story gate now owns the real north doorway between two maps.
+  await page.goto('/?test=1&reset=1&scene=overworld&area=fieldhouse&x=9&y=4');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').npcTiles)).toEqual(expect.arrayContaining([{x: 14, y: 8}]));
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').npcTiles)).toEqual(expect.arrayContaining([{x: 9, y: 2}]));
   await move(page, 'up');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 9});
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 3});
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable.up)).toBe(false);
   await page.goto('/?test=1&scene=overworld&area=campus&x=22&y=12');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
   await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('studyhall');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.storage().flags.officeChecked)).toBe(true);
-  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=10');
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=9&y=4');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').npcTiles)).toEqual(expect.arrayContaining([{x: 12, y: 9}]));
-  for (const step of ['up', 'up', 'up', 'up']) await move(page, step);
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 6});
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').npcTiles)).toEqual(expect.arrayContaining([{x: 7, y: 6}]));
+  for (const step of ['up', 'up', 'up']) await move(page, step);
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({area: 'wrestlingroom', tilePos: {x: 9, y: 9}});
+  await move(page, 'down');
+  await move(page, 'down');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({area: 'fieldhouse', tilePos: {x: 9, y: 2}});
 });
 
 test('battle command screen renders and opens move selection', async ({page}) => {

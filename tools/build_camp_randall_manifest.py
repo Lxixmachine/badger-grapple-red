@@ -27,6 +27,7 @@ TILE = 16
 ATLAS_PATHS = {
     "campus": ART / "camp_randall_exterior_objects_v1_alpha_2026-07-11.png",
     "fieldhouse": ART / "camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png",
+    "wrestlingroom": ART / "camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png",
     "studyhall": ART / "camp_randall_office_objects_v1_alpha_2026-07-11.png",
 }
 TERRAIN_PATH = ART / "camp_randall_terrain_kit_v2_alpha_2026-07-11.png"
@@ -84,6 +85,7 @@ SOURCES = {
         "office_window": (771, 727, 1297, 947),
     },
 }
+SOURCES["wrestlingroom"] = SOURCES["fieldhouse"]
 
 TERRAIN = {
     "grass": (33, 65, 191, 221),
@@ -225,11 +227,11 @@ def set_rect(grid: list[list[str]], rect: list[int], marker: str) -> None:
 
 def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
     width, height = spec["width"], spec["height"]
-    base_key = {"campus": "grass", "fieldhouse": "wood", "studyhall": "office_carpet"}[area_id]
+    base_key = {"campus": "grass", "fieldhouse": "wood", "wrestlingroom": "wood", "studyhall": "office_carpet"}[area_id]
     canvas = Image.new("RGB", (width * TILE, height * TILE))
     if area_id == "campus":
         render_continuous_grass(canvas)
-    elif area_id == "fieldhouse":
+    elif area_id in {"fieldhouse", "wrestlingroom"}:
         render_continuous_wood(canvas)
     else:
         render_continuous_carpet(canvas)
@@ -279,19 +281,27 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
             draw.rectangle((x1 * TILE, y1 * TILE, (x2 + 1) * TILE - 1, (y2 + 1) * TILE - 1), fill=(238, 218, 170))
             draw.line((x1 * TILE, (y2 + 1) * TILE - 3, (x2 + 1) * TILE - 1, (y2 + 1) * TILE - 3), fill=(123, 29, 42), width=2)
 
-    if area_id == "fieldhouse":
-        # Flat ground materials are drawn once at room scale, not as bordered
-        # tiles. The ring markings are decoration over a walkable mat surface.
-        x1, y1, x2, y2 = [7, 1, 20, 5]
-        box = (x1 * TILE, y1 * TILE, (x2 + 1) * TILE - 1, (y2 + 1) * TILE - 1)
-        draw.rectangle(box, fill=(164, 31, 43), outline=(244, 220, 166), width=2)
-        inset = 18
-        draw.ellipse((box[0] + inset, box[1] + 10, box[2] - inset, box[3] - 10), outline=(244, 220, 166), width=2)
-        draw.ellipse((box[0] + 80, box[1] + 23, box[2] - 80, box[3] - 23), outline=(244, 220, 166), width=2)
-        rx1, ry1, rx2, ry2 = [13, 9, 15, 12]
-        draw.rectangle((rx1 * TILE, ry1 * TILE, (rx2 + 1) * TILE - 1, (ry2 + 1) * TILE - 1), fill=(143, 27, 39))
-        draw.line((rx1 * TILE + 3, ry1 * TILE, rx1 * TILE + 3, (ry2 + 1) * TILE - 1), fill=(218, 168, 72), width=1)
-        draw.line(((rx2 + 1) * TILE - 4, ry1 * TILE, (rx2 + 1) * TILE - 4, (ry2 + 1) * TILE - 1), fill=(218, 168, 72), width=1)
+    if area_id in {"fieldhouse", "wrestlingroom"}:
+        # Room-scale materials come from declared zones so visual boundaries,
+        # navigation, and collision all share the same authored geometry.
+        for zone in spec.get("groundZones", []):
+            rect = zone.get("rect")
+            if not rect:
+                continue
+            x1, y1, x2, y2 = rect
+            box = (x1 * TILE, y1 * TILE, (x2 + 1) * TILE - 1, (y2 + 1) * TILE - 1)
+            if zone["kit"] == "sacred-mat":
+                draw.rectangle(box, fill=(164, 31, 43), outline=(244, 220, 166), width=2)
+                inset_x = max(12, (box[2] - box[0]) // 10)
+                inset_y = max(8, (box[3] - box[1]) // 8)
+                draw.ellipse((box[0] + inset_x, box[1] + inset_y, box[2] - inset_x, box[3] - inset_y), outline=(244, 220, 166), width=2)
+                inner_x = max(34, (box[2] - box[0]) // 3)
+                inner_y = max(20, (box[3] - box[1]) // 3)
+                draw.ellipse((box[0] + inner_x, box[1] + inner_y, box[2] - inner_x, box[3] - inner_y), outline=(244, 220, 166), width=2)
+            elif zone["kit"] == "carpet":
+                draw.rectangle(box, fill=(143, 27, 39))
+                draw.line((box[0] + 3, box[1], box[0] + 3, box[3]), fill=(218, 168, 72), width=1)
+                draw.line((box[2] - 3, box[1], box[2] - 3, box[3]), fill=(218, 168, 72), width=1)
     # Openings must visibly restore the underlying floor/path.
     if area_id != "campus":
         for x, y in spec["walls"].get("openCells", []):
@@ -392,7 +402,7 @@ def main() -> None:
         build_area(area_id, spec, maps["areas"][area_id], terrain)
 
     MAP_PATH.write_text(json.dumps(maps, indent=2) + "\n", encoding="utf-8")
-    inputs = [MANIFEST_PATH, TERRAIN_PATH, *ATLAS_PATHS.values()]
+    inputs = list(dict.fromkeys([MANIFEST_PATH, TERRAIN_PATH, *ATLAS_PATHS.values()]))
     outputs = [AREA_DIR / f"area_{area_id}.png" for area_id in manifest["areas"]]
     outputs.extend(
         LAYER_DIR / f"camp_{area_id}_{obj['id']}_upper.png"
@@ -414,7 +424,7 @@ def main() -> None:
         },
     }
     BUILD_RECORD.write_text(json.dumps(record, indent=2) + "\n", encoding="utf-8")
-    print("Camp Randall manifest runtime: 3 areas, art + foreground + collision rebuilt")
+    print(f"Camp Randall manifest runtime: {len(manifest['areas'])} areas, art + foreground + collision rebuilt")
 
 
 if __name__ == "__main__":

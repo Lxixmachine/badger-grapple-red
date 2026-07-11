@@ -4,47 +4,69 @@
   "tileSize": 16,
   "areas": {
     "fieldhouse": {
-      "width": 28,
-      "height": 14,
+      "width": 20,
+      "height": 12,
       "exits": [
-        {"x": 14, "y": 13, "dir": "down", "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}
+        {"x": 9, "y": 1, "dir": "up", "to": "wrestlingroom", "tx": 9, "ty": 9, "msg": "Wrestling Room."},
+        {"x": 9, "y": 11, "dir": "down", "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}
       ],
       "groundZones": [
-        {"id": "wood_floor", "kit": "interior-wood", "note": "whole room ground layer"},
-        {"id": "competition_mat", "kit": "sacred-mat", "rect": [7, 1, 20, 5], "walkable": true, "note": "flat ground material, ring optional per Tony (approved)"},
-        {"id": "carpet_runner", "kit": "carpet", "rect": [13, 9, 15, 12], "walkable": true}
+        {"id": "wood_floor", "kit": "interior-wood", "note": "continuous maple floor across the room"},
+        {"id": "carpet_runner", "kit": "carpet", "rect": [8, 2, 10, 10], "walkable": true, "note": "one centered circulation line joins both real thresholds"}
       ],
       "walls": {
         "kit": "interior-wall",
-        "solidRects": [[0, 0, 27, 1], [0, 0, 2, 13], [25, 0, 27, 13], [0, 7, 27, 8], [0, 13, 27, 13]],
-        "openCells": [[14, 7], [14, 8], [14, 13]],
-        "exitCells": [[14, 13]],
-        "note": "perimeter rows/cols 0,13 and 0,27; divider wall rows 7-8 full width with single doorway column x14"
+        "solidRects": [[0, 0, 19, 1], [0, 0, 1, 11], [18, 0, 19, 11], [0, 11, 19, 11]],
+        "openCells": [[9, 1], [9, 10], [9, 11]],
+        "exitCells": [[9, 1], [9, 11]],
+        "note": "compact FireRed room shell; north and south thresholds share column x9"
+      },
+      "objects": [
+        {"id": "trophy_case_west", "footprint": [5, 1, 8, 1], "riseRows": 1, "note": "wall-mounted and contained west of the north doorway"},
+        {"id": "trophy_case_east", "footprint": [10, 1, 12, 1], "riseRows": 1, "note": "wall-mounted and contained east of the north doorway"},
+        {"id": "doorway_frame", "footprint": [9, 1, 9, 1], "riseRows": 1, "walkable": true, "note": "single grid-native threshold to the wrestling room"},
+        {"id": "locker_bank_west", "footprint": [2, 3, 7, 4], "riseRows": 1},
+        {"id": "locker_bank_east", "footprint": [12, 3, 17, 4], "riseRows": 1},
+        {"id": "sink_unit_west", "footprint": [2, 6, 3, 7], "riseRows": 1},
+        {"id": "sink_unit_east", "footprint": [16, 6, 17, 7], "riseRows": 1},
+        {"id": "waste_bin_west", "footprint": [2, 8, 2, 8], "riseRows": 0},
+        {"id": "waste_bin_east", "footprint": [17, 8, 17, 8], "riseRows": 0},
+        {"id": "bench_west", "footprint": [3, 9, 7, 9], "riseRows": 0, "note": "low one-row bench with open circulation around every side"},
+        {"id": "bench_east", "footprint": [12, 9, 16, 9], "riseRows": 0},
+        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "centered south threshold to campus"}
+      ]
+    },
+    "wrestlingroom": {
+      "width": 20,
+      "height": 12,
+      "exits": [
+        {"x": 9, "y": 11, "dir": "down", "to": "fieldhouse", "tx": 9, "ty": 2, "msg": "Locker Room."}
+      ],
+      "groundZones": [
+        {"id": "wood_floor", "kit": "interior-wood", "note": "continuous maple perimeter floor"},
+        {"id": "competition_mat", "kit": "sacred-mat", "rect": [4, 2, 15, 8], "walkable": true, "note": "single focal mat with breathing room and a clear southern approach"},
+        {"id": "carpet_runner", "kit": "carpet", "rect": [8, 9, 10, 10], "walkable": true}
+      ],
+      "walls": {
+        "kit": "interior-wall",
+        "solidRects": [[0, 0, 19, 1], [0, 0, 1, 11], [18, 0, 19, 11], [0, 11, 19, 11]],
+        "openCells": [[9, 10], [9, 11]],
+        "exitCells": [[9, 11]],
+        "note": "purpose-built mat room; equipment is perimeter architecture, never a room divider"
       },
       "objects": [
         {"id": "rolled_mat_stand", "footprint": [2, 2, 2, 3], "riseRows": 1},
-        {"id": "headgear_rack", "footprint": [2, 4, 2, 5], "riseRows": 0},
-        {"id": "plate_rack", "footprint": [24, 2, 25, 3], "riseRows": 1},
-        {"id": "barbell_bench", "footprint": [24, 4, 25, 5], "riseRows": 0},
-        {"id": "trophy_case_west", "footprint": [10, 7, 13, 7], "riseRows": 1, "note": "wall-mounted, flanks doorway; TROPHY interaction faces it"},
-        {"id": "trophy_case_east", "footprint": [15, 7, 17, 7], "riseRows": 1},
-        {"id": "doorway_frame", "footprint": [14, 7, 14, 7], "riseRows": 1, "walkable": true, "note": "the captain-gate chokepoint; frame renders as foreground, floor stays walkable"},
-        {"id": "locker_bank_west", "footprint": [3, 8, 9, 9], "riseRows": 1},
-        {"id": "locker_bank_east", "footprint": [18, 8, 23, 9], "riseRows": 1},
-        {"id": "sink_unit_west", "footprint": [1, 8, 2, 9], "riseRows": 1},
-        {"id": "sink_unit_east", "footprint": [24, 8, 25, 9], "riseRows": 1},
-        {"id": "waste_bin_west", "footprint": [2, 10, 2, 10], "riseRows": 0},
-        {"id": "waste_bin_east", "footprint": [24, 10, 24, 10], "riseRows": 0},
-        {"id": "bench_west", "footprint": [4, 11, 9, 11], "riseRows": 0, "note": "drawn CONTAINED in one row - flat FireRed bench language"},
-        {"id": "bench_east", "footprint": [18, 11, 23, 11], "riseRows": 0},
-        {"id": "exit_door_frame", "footprint": [13, 12, 15, 12], "riseRows": 1, "walkableCells": [[14, 12]], "note": "posts solid, threshold walkable, exit E at (14,13)"}
+        {"id": "headgear_rack", "footprint": [2, 5, 2, 6], "riseRows": 0},
+        {"id": "plate_rack", "footprint": [17, 2, 17, 3], "riseRows": 1},
+        {"id": "barbell_bench", "footprint": [16, 5, 17, 6], "riseRows": 0},
+        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "centered return threshold to the locker room"}
       ]
     },
     "campus": {
       "width": 28,
       "height": 18,
       "exits": [
-        {"x": 6, "y": 11, "dir": "up", "to": "fieldhouse", "tx": 14, "ty": 12, "msg": "Locker Room and Wrestling Room."},
+        {"x": 6, "y": 11, "dir": "up", "to": "fieldhouse", "tx": 9, "ty": 10, "msg": "Locker Room."},
         {"x": 22, "y": 11, "dir": "up", "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
         {"x": 14, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
       ],
