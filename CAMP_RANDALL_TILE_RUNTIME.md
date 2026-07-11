@@ -30,10 +30,13 @@ collision rows, foreground ownership/dimensions, and a 700-tile reuse budget.
 
 ## Current Art Debt
 
-v21.55 replaces the transitional 1,112-tile painting slice with a manifest
-composition currently containing 548 behavior-owned tiles. Ground comes from
+v21.58 replaces the transitional 1,112-tile painting slice with a manifest
+composition currently containing 679 behavior-owned tiles. Ground comes from
 reusable terrain families; every solid object is forced into its declared
 footprint; every `riseRows` segment becomes an object-owned foreground sprite.
+Material motifs render continuously across movement cells: grass scatter uses a
+32px phase, wood planks use staggered multi-cell courses, carpet texture uses a
+global field, and brick/dirt patterns flow through complete path masks.
 Remaining work is visual refinement under Tony's phone close gate:
 
 1. Refine the terrain families without changing footprint geometry.

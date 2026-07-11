@@ -120,22 +120,63 @@ def fill_tiles(canvas: Image.Image, sample: Image.Image, rect: list[int]) -> Non
             canvas.paste(sample, (x * TILE, y * TILE))
 
 
-def quiet_grass_tile(variant: int = 0) -> Image.Image:
-    tile = Image.new("RGB", (TILE, TILE), (111, 175, 91))
-    draw = ImageDraw.Draw(tile)
+def render_continuous_grass(canvas: Image.Image) -> None:
+    canvas.paste((111, 175, 91), (0, 0, canvas.width, canvas.height))
+    draw = ImageDraw.Draw(canvas)
     dark, light = (82, 145, 72), (141, 194, 105)
-    accents = [[(3, 5), (11, 12)], [(7, 3)], [(4, 13), (13, 7)]][variant % 3]
-    for x, y in accents:
-        draw.point((x, y), fill=dark)
-        if x + 1 < TILE:
-            draw.point((x + 1, y - 1), fill=light)
-    return tile
+    # A 32px phase lets tufts cross movement-cell boundaries and avoids a
+    # one-motif-per-tile checkerboard.
+    accents = ((5, 7), (22, 4), (13, 25), (29, 19))
+    for by in range(0, canvas.height, 32):
+        for bx in range(0, canvas.width, 32):
+            phase = ((bx // 32) * 5 + (by // 32) * 3) % len(accents)
+            for i in range(2):
+                ox, oy = accents[(phase + i) % len(accents)]
+                x, y = bx + ox, by + oy
+                if x + 1 < canvas.width and 0 < y < canvas.height:
+                    draw.point((x, y), fill=dark)
+                    draw.point((x + 1, y - 1), fill=light)
+
+
+def render_continuous_wood(canvas: Image.Image) -> None:
+    canvas.paste((196, 157, 103), (0, 0, canvas.width, canvas.height))
+    draw = ImageDraw.Draw(canvas)
+    for course, y in enumerate(range(0, canvas.height, 8)):
+        draw.line((0, y, canvas.width, y), fill=(128, 88, 55))
+        if y + 1 < canvas.height:
+            draw.line((0, y + 1, canvas.width, y + 1), fill=(221, 187, 128))
+        x = -((course * 13) % 37)
+        lengths = (29, 43, 35, 51)
+        i = course % len(lengths)
+        while x < canvas.width:
+            x += lengths[i % len(lengths)]
+            if 0 <= x < canvas.width:
+                draw.line((x, y, x, min(y + 7, canvas.height - 1)), fill=(145, 100, 59))
+            i += 1
+    for x, y in ((37, 21), (119, 54), (251, 29), (326, 91), (403, 173), (178, 186)):
+        if x < canvas.width and y < canvas.height:
+            draw.point((x, y), fill=(117, 77, 47))
+            draw.point((x + 1, y), fill=(223, 184, 120))
+
+
+def render_continuous_carpet(canvas: Image.Image) -> None:
+    canvas.paste((143, 137, 119), (0, 0, canvas.width, canvas.height))
+    draw = ImageDraw.Draw(canvas)
+    colors = ((126, 121, 107), (158, 151, 130), (137, 132, 116))
+    for y in range(2, canvas.height, 3):
+        for x in range(1, canvas.width, 3):
+            value = (x * 17 + y * 29 + (x // 32) * 7 + (y // 32) * 11) % 19
+            if value < 4:
+                draw.point((x, y), fill=colors[value % len(colors)])
 
 
 def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material: str) -> None:
+    if not cells:
+        return
+    mask = Image.new("L", canvas.size, 0)
+    mask_draw = ImageDraw.Draw(mask)
+    edges: list[tuple[int, int, dict[str, bool], tuple[int, int, int, int]]] = []
     for x, y in cells:
-        tile = Image.new("RGB", (TILE, TILE), (111, 175, 91))
-        draw = ImageDraw.Draw(tile)
         neighbors = {
             "up": (x, y - 1) in cells,
             "down": (x, y + 1) in cells,
@@ -144,21 +185,27 @@ def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material
         }
         left, top = (0 if neighbors["left"] else 2), (0 if neighbors["up"] else 2)
         right, bottom = (TILE - 1 if neighbors["right"] else TILE - 3), (TILE - 1 if neighbors["down"] else TILE - 3)
-        if material == "brick":
-            draw.rectangle((left, top, right, bottom), fill=(174, 67, 56))
-            for yy in range(top + 4, bottom + 1, 5):
-                draw.line((left, yy, right, yy), fill=(119, 47, 43))
-            for row, yy in enumerate(range(top, bottom + 1, 5)):
-                offset = 3 if (row + x + y) % 2 else 7
-                for xx in range(left + offset, right + 1, 8):
-                    draw.line((xx, yy, xx, min(yy + 4, bottom)), fill=(130, 49, 43))
-            edge, shade = (226, 187, 137), (113, 87, 58)
-        else:
-            draw.rectangle((left, top, right, bottom), fill=(211, 190, 143))
-            for xx, yy in ((5, 5), (11, 8), (7, 13)):
-                if left < xx < right and top < yy < bottom:
-                    draw.point((xx, yy), fill=(174, 151, 108))
-            edge, shade = (231, 214, 169), (107, 145, 76)
+        box = (x * TILE + left, y * TILE + top, x * TILE + right, y * TILE + bottom)
+        mask_draw.rectangle(box, fill=255)
+        edges.append((x, y, neighbors, box))
+
+    pattern = Image.new("RGB", canvas.size, (174, 67, 56) if material == "brick" else (211, 190, 143))
+    pattern_draw = ImageDraw.Draw(pattern)
+    if material == "brick":
+        for row, yy in enumerate(range(0, canvas.height, 5)):
+            pattern_draw.line((0, yy, canvas.width, yy), fill=(119, 47, 43))
+            for xx in range((3 if row % 2 else 7), canvas.width, 8):
+                pattern_draw.line((xx, yy, xx, min(yy + 4, canvas.height - 1)), fill=(130, 49, 43))
+        edge, shade = (226, 187, 137), (113, 87, 58)
+    else:
+        for yy in range(5, canvas.height, 11):
+            for xx in range(7 + (yy % 5), canvas.width, 17):
+                pattern_draw.point((xx, yy), fill=(174, 151, 108))
+        edge, shade = (231, 214, 169), (107, 145, 76)
+    canvas.paste(pattern, (0, 0), mask)
+    draw = ImageDraw.Draw(canvas)
+    for _x, _y, neighbors, box in edges:
+        left, top, right, bottom = box
         if not neighbors["up"]:
             draw.line((left, top, right, top), fill=edge)
         if not neighbors["left"]:
@@ -167,7 +214,6 @@ def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material
             draw.line((left, bottom, right, bottom), fill=shade)
         if not neighbors["right"]:
             draw.line((right, top, right, bottom), fill=shade)
-        canvas.paste(tile, (x * TILE, y * TILE))
 
 
 def set_rect(grid: list[list[str]], rect: list[int], marker: str) -> None:
@@ -182,11 +228,12 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
     base_key = {"campus": "grass", "fieldhouse": "wood", "studyhall": "office_carpet"}[area_id]
     canvas = Image.new("RGB", (width * TILE, height * TILE))
     if area_id == "campus":
-        for y in range(height):
-            for x in range(width):
-                canvas.paste(quiet_grass_tile((x * 7 + y * 11) % 3), (x * TILE, y * TILE))
+        render_continuous_grass(canvas)
+    elif area_id == "fieldhouse":
+        render_continuous_wood(canvas)
     else:
-        fill_tiles(canvas, tile_sample(terrain, base_key), [0, 0, width - 1, height - 1])
+        render_continuous_carpet(canvas)
+    floor_source = canvas.copy()
 
     for zone in spec.get("groundZones", []):
         if area_id == "campus":
@@ -247,9 +294,9 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
         draw.line(((rx2 + 1) * TILE - 4, ry1 * TILE, (rx2 + 1) * TILE - 4, (ry2 + 1) * TILE - 1), fill=(218, 168, 72), width=1)
     # Openings must visibly restore the underlying floor/path.
     if area_id != "campus":
-        open_tile = tile_sample(terrain, base_key)
         for x, y in spec["walls"].get("openCells", []):
-            canvas.paste(open_tile, (x * TILE, y * TILE))
+            box = (x * TILE, y * TILE, (x + 1) * TILE, (y + 1) * TILE)
+            canvas.paste(floor_source.crop(box), (x * TILE, y * TILE))
     return canvas
 
 

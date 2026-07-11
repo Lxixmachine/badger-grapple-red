@@ -10,9 +10,9 @@
     "art/imagegen/camp_randall_office_objects_v1_alpha_2026-07-11.png": "8b5087925fe7e57c231463e64261b5f39bace9f33a7b83a2b57cb0a346851dea"
   },
   "outputSha256": {
-    "public/assets/ui/area_fieldhouse.png": "ebf4703a390f609a586b6a9b14730a8e1703ff6b9788414eb67a6e5cfcaa010c",
-    "public/assets/ui/area_campus.png": "b5f677816ca861f6f880734054b138973ad1edb1e267cc018e6b4c1c3b056d81",
-    "public/assets/ui/area_studyhall.png": "7cb80144b1966c9fae48b7adfa3af159972d128e4ff76ccdda179ef9bd45d2f8",
+    "public/assets/ui/area_fieldhouse.png": "431f36f8c242d2a1177ad93dc6d1ef33f280e56425df219b2108b247503f1075",
+    "public/assets/ui/area_campus.png": "d027ad640ace3d1b98db9c318beb1339eb2697fb7d32a42e034156051c01dfbc",
+    "public/assets/ui/area_studyhall.png": "e716a925c4bd9d7835c8e5a300656101705fb0e1ba103ed4551c00dca4e7dba1",
     "public/assets/layers/camp_fieldhouse_rolled_mat_stand_upper.png": "4b4adadc09fe19c7cb0abbb67603cfa5348565bbd2e489cdca205c0489ee8cbe",
     "public/assets/layers/camp_fieldhouse_plate_rack_upper.png": "5cc96ea15a5a65d6fdf4585107469ac6e42d345d4393b7429485cc0dd3cb5137",
     "public/assets/layers/camp_fieldhouse_trophy_case_west_upper.png": "6873dd58d510e3e4fd839a52daf5b41da6107208b677f11a0d7bfba9979b7163",

@@ -1,5 +1,25 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.58 continuous terrain and floors)
+
+Tony reported that the terrain/floor tiles still made the movement grid obvious.
+The cause was real: grass accents, wood samples, carpet samples, and brick
+courses restarted every 16 pixels even though collision ownership was correct.
+
+v21.58 keeps 16px movement/collision cells but removes 16px visual cadence:
+
+- grass scatter uses a quiet 32px phase with accents crossing cell boundaries;
+- Field House planks run as staggered 29/43/35/51px courses across the room;
+- office carpet is one continuous low-contrast field with sparse global fibers;
+- brick/dirt patterns are rendered once through complete network masks, then
+  clipped by neighbor-aware path edges instead of restarting per tile;
+- wall openings restore the exact continuous floor pixels beneath them.
+
+Map lint confirms Field House grid exposure fell 17% -> 2% and Coach Office
+71% -> 0%; campus remains 0%. The runtime uses 679 behavior-owned tiles, under
+the enforced 700 budget. Phone QA shows no 16px seams in the rooms. Preserve
+this separation: gameplay remains tile-owned, material rendering is continuous.
+
 ## Latest Codex Turn (v21.57 true Coach Office door alignment)
 
 Tony correctly rejected v21.56's two-cell doorway/two-landing response as a
