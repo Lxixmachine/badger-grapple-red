@@ -16,13 +16,13 @@
       "tiles": [
         "####################",
         "#########E##########",
-        "##................##",
+        "##...####.###.....##",
         "########....########",
         "########....########",
         "##................##",
-        "####............####",
-        "####............####",
-        "###..............###",
+        "##................##",
+        "##................##",
+        "##................##",
         "##.#####....#####.##",
         "##......#.#.......##",
         "#########E##########"
@@ -34,7 +34,7 @@
           "texture": "camp_fieldhouse_trophy_case_west_upper",
           "x": 5,
           "y": 0,
-          "depthY": 1,
+          "depthY": 2,
           "source": "manifestObject",
           "owner": "trophy_case_west"
         },
@@ -42,7 +42,7 @@
           "texture": "camp_fieldhouse_trophy_case_east_upper",
           "x": 10,
           "y": 0,
-          "depthY": 1,
+          "depthY": 2,
           "source": "manifestObject",
           "owner": "trophy_case_east"
         },
@@ -71,20 +71,20 @@
           "owner": "locker_bank_east"
         },
         {
-          "texture": "camp_fieldhouse_sink_unit_west_upper",
-          "x": 2,
-          "y": 5,
-          "depthY": 7,
+          "texture": "camp_fieldhouse_bench_west_upper",
+          "x": 3,
+          "y": 8,
+          "depthY": 9,
           "source": "manifestObject",
-          "owner": "sink_unit_west"
+          "owner": "bench_west"
         },
         {
-          "texture": "camp_fieldhouse_sink_unit_east_upper",
-          "x": 16,
-          "y": 5,
-          "depthY": 7,
+          "texture": "camp_fieldhouse_bench_east_upper",
+          "x": 12,
+          "y": 8,
+          "depthY": 9,
           "source": "manifestObject",
-          "owner": "sink_unit_east"
+          "owner": "bench_east"
         },
         {
           "texture": "camp_fieldhouse_exit_door_frame_upper",
@@ -185,11 +185,11 @@
       "tiles": [
         "####################",
         "####################",
-        "###..............###",
-        "###..............###",
-        "##................##",
-        "###.............####",
-        "###.............####",
+        "##...............###",
+        "##...............###",
+        "##...............###",
+        "##...............###",
+        "##...............###",
         "##................##",
         "##................##",
         "##................##",
@@ -201,9 +201,9 @@
       "upperDecor": [
         {
           "texture": "camp_wrestlingroom_rolled_mat_stand_upper",
-          "x": 2,
+          "x": 1,
           "y": 1,
-          "depthY": 3,
+          "depthY": 4,
           "source": "manifestObject",
           "owner": "rolled_mat_stand"
         },

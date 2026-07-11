@@ -225,6 +225,8 @@ for(const [aid,spec] of Object.entries(manifest.areas)){
   for(const [x,y] of spec.walls.exitCells||[])expected[y][x]='E';
   expected.forEach((row,y)=>{if(row.join('')!==map.tiles[y])errs.push(`manifest area ${aid}: collision row ${y} was not generated from object footprints`);});
 }
-if(campStats.tileCount>700)errs.push(`Camp Randall runtime has ${campStats.tileCount} tiles; reusable-kit budget is 700`);
+// Full-composition rooms intentionally preserve unique continuous pixels while
+// behavior remains cell-owned. One 512x512 atlas is the hard runtime ceiling.
+if(campStats.tileCount>1024)errs.push(`Camp Randall runtime has ${campStats.tileCount} tiles; full-composition atlas budget is 1024`);
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}, tile runtime v${campStats.version}/${campStats.tileCount} tiles.`);
 if(errs.length)process.exit(1);

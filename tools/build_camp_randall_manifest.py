@@ -34,6 +34,10 @@ TERRAIN_PATH = ART / "camp_randall_terrain_kit_v2_alpha_2026-07-11.png"
 LOOK_REFERENCE = {
     "campus": ART / "camp_randall_exterior_v4_game_scale_2026-07-10.png",
 }
+FULL_ROOM_PATHS = {
+    "fieldhouse": ART / "camp_randall_locker_room_full_v1_2026-07-11.png",
+    "wrestlingroom": ART / "camp_randall_wrestling_room_full_v1_2026-07-11.png",
+}
 
 # Pixel bboxes in the committed alpha atlases. Geometry and collision remain in
 # the manifest; these coordinates only identify which drawing supplies pixels.
@@ -102,6 +106,27 @@ TERRAIN = {
 
 def crop(image: Image.Image, box: tuple[int, int, int, int]) -> Image.Image:
     return image.crop(box)
+
+
+def prepare_full_room(path: Path, size: tuple[int, int]) -> Image.Image:
+    """Crop the generated room shell to the map aspect without stretching it."""
+    image = Image.open(path).convert("RGB")
+    mask = image.convert("L").point(lambda value: 255 if value > 35 else 0)
+    bbox = mask.getbbox()
+    if not bbox:
+        raise SystemExit(f"{path.name}: full-room painting has no visible bounds")
+    image = image.crop(bbox)
+    target_ratio = size[0] / size[1]
+    source_ratio = image.width / image.height
+    if source_ratio > target_ratio:
+        crop_width = round(image.height * target_ratio)
+        left = (image.width - crop_width) // 2
+        image = image.crop((left, 0, left + crop_width, image.height))
+    elif source_ratio < target_ratio:
+        crop_height = round(image.width / target_ratio)
+        top = (image.height - crop_height) // 2
+        image = image.crop((0, top, image.width, top + crop_height))
+    return image.resize(size, Image.Resampling.LANCZOS)
 
 
 def source_hash(path: Path) -> str:
@@ -321,25 +346,29 @@ def object_collision(grid: list[list[str]], obj: dict) -> None:
 
 def build_area(area_id: str, spec: dict, area_data: dict, terrain: Image.Image) -> None:
     width, height = spec["width"], spec["height"]
-    base = make_ground(area_id, spec, terrain)
-    atlas = Image.open(ATLAS_PATHS[area_id]).convert("RGBA")
+    full_room = area_id in FULL_ROOM_PATHS
+    base = prepare_full_room(FULL_ROOM_PATHS[area_id], (width * TILE, height * TILE)) if full_room else make_ground(area_id, spec, terrain)
+    atlas = None if full_room else Image.open(ATLAS_PATHS[area_id]).convert("RGBA")
     upper_entries: list[dict] = []
 
     for obj in spec["objects"]:
         obj_id = obj["id"]
-        if obj_id not in SOURCES[area_id]:
+        if not full_room and obj_id not in SOURCES[area_id]:
             raise SystemExit(f"{area_id}/{obj_id}: no atlas source bbox")
         x1, y1, x2, y2 = obj["footprint"]
         rise = int(obj.get("riseRows", 0))
         target_w = (x2 - x1 + 1) * TILE
         footprint_h = (y2 - y1 + 1) * TILE
-        art = crop(atlas, SOURCES[area_id][obj_id]).resize(
-            (target_w, footprint_h + rise * TILE), Image.Resampling.NEAREST
-        )
         if rise:
             upper_h = rise * TILE
-            lower = art.crop((0, upper_h, target_w, art.height))
-            upper = art.crop((0, 0, target_w, upper_h))
+            if full_room:
+                upper = base.crop((x1 * TILE, (y1 - rise) * TILE, (x2 + 1) * TILE, y1 * TILE))
+            else:
+                art = crop(atlas, SOURCES[area_id][obj_id]).resize(
+                    (target_w, footprint_h + upper_h), Image.Resampling.NEAREST
+                )
+                lower = art.crop((0, upper_h, target_w, art.height))
+                upper = art.crop((0, 0, target_w, upper_h))
             texture = f"camp_{area_id}_{obj_id}_upper"
             upper.save(LAYER_DIR / f"{texture}.png", optimize=True)
             upper_entries.append({
@@ -350,9 +379,13 @@ def build_area(area_id: str, spec: dict, area_data: dict, terrain: Image.Image) 
                 "source": "manifestObject",
                 "owner": obj_id,
             })
-        else:
+        elif not full_room:
+            art = crop(atlas, SOURCES[area_id][obj_id]).resize(
+                (target_w, footprint_h), Image.Resampling.NEAREST
+            )
             lower = art
-        base.paste(lower, (x1 * TILE, y1 * TILE), lower)
+        if not full_room:
+            base.paste(lower, (x1 * TILE, y1 * TILE), lower)
 
     # Quantize the complete playfield as one shared handheld palette.
     base = base.quantize(colors=48, method=Image.Quantize.MEDIANCUT).convert("RGB")
@@ -402,7 +435,7 @@ def main() -> None:
         build_area(area_id, spec, maps["areas"][area_id], terrain)
 
     MAP_PATH.write_text(json.dumps(maps, indent=2) + "\n", encoding="utf-8")
-    inputs = list(dict.fromkeys([MANIFEST_PATH, TERRAIN_PATH, *ATLAS_PATHS.values()]))
+    inputs = list(dict.fromkeys([MANIFEST_PATH, TERRAIN_PATH, *ATLAS_PATHS.values(), *FULL_ROOM_PATHS.values()]))
     outputs = [AREA_DIR / f"area_{area_id}.png" for area_id in manifest["areas"]]
     outputs.extend(
         LAYER_DIR / f"camp_{area_id}_{obj['id']}_upper.png"

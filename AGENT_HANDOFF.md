@@ -1,5 +1,37 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.60 full-composition hybrid pilot)
+
+Tony identified the central art-pipeline problem precisely: the earlier flat
+Field House painting looked coherent but had unreliable navigation, while the
+manifest-built rooms functioned correctly but looked assembled from tiles and
+resized props. v21.60 combines the strengths of both approaches.
+
+- ChatGPT image generation produced two committed full-room source paintings:
+  `camp_randall_locker_room_full_v1_2026-07-11.png` and
+  `camp_randall_wrestling_room_full_v1_2026-07-11.png`, with exact prompts beside
+  them. Both use the approved v5 Field House candidate as visual reference.
+- `build_camp_randall_manifest.py` now crops those sources to the map aspect,
+  renders each as one coherent 320x192 composition, and samples foreground depth
+  strips from that same finished painting. It no longer rebuilds these two rooms
+  from procedural floors plus independently resized object crops.
+- Collision, exits, story gates, interactions, and NPC anchors still compile
+  from `camp_randall_object_manifest.json`. Footprints were realigned to the new
+  painted benches, trophy cases, and perimeter equipment; there are no invisible
+  sink/equipment collision patches.
+- The behavior-owned runtime still slices the completed paintings into 16px
+  cells. Those cells are transport/behavior ownership, not repeated visible art.
+- Map lint reports locker and wrestling rooms at 0% grid exposure, 99% variety,
+  and 48-color handheld palettes. The richer continuous pixels raise Camp
+  Randall to 994 tiles, still inside one enforced 512x512/1024-tile atlas.
+- Full `npm run check` passes all 14 smoke tests. Phone QA confirms actors remain
+  grounded around doors, lockers, benches, equipment, and the mat.
+
+This is the preferred visual pipeline for future hero maps: full coherent lower
+composition -> manifest-owned behavior -> foreground strips sampled from the
+same composition -> runtime slicing. Do not return to procedural visible tiles
+for landmark rooms, and do not return to unstructured flat-image collision.
+
 ## Latest Codex Turn (v21.59 separate Field House rooms)
 
 Tony correctly identified that the Field House still read as one malformed room:

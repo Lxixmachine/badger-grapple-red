@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.59-separate-rooms');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.60-full-composition');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
@@ -84,7 +84,7 @@ test('production build boots with runtime assets', async ({page}) => {
   const campusTexture = textureReport.find(texture => texture.key === 'area_campus');
   expect(campusTexture).toMatchObject({width: 448, height: 288});
   const campAtlas = textureReport.find(texture => texture.key === 'camp_randall_runtime_tiles');
-  expect(campAtlas).toMatchObject({width: 512, height: 352});
+  expect(campAtlas).toMatchObject({width: 512, height: 512});
 
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');

@@ -22,17 +22,13 @@
         "note": "compact FireRed room shell; north and south thresholds share column x9"
       },
       "objects": [
-        {"id": "trophy_case_west", "footprint": [5, 1, 8, 1], "riseRows": 1, "note": "wall-mounted and contained west of the north doorway"},
-        {"id": "trophy_case_east", "footprint": [10, 1, 12, 1], "riseRows": 1, "note": "wall-mounted and contained east of the north doorway"},
+        {"id": "trophy_case_west", "footprint": [5, 1, 8, 2], "riseRows": 1, "note": "full painted cabinet footprint west of the north doorway"},
+        {"id": "trophy_case_east", "footprint": [10, 1, 12, 2], "riseRows": 1, "note": "full painted cabinet footprint east of the north doorway"},
         {"id": "doorway_frame", "footprint": [9, 1, 9, 1], "riseRows": 1, "walkable": true, "note": "single grid-native threshold to the wrestling room"},
         {"id": "locker_bank_west", "footprint": [2, 3, 7, 4], "riseRows": 1},
         {"id": "locker_bank_east", "footprint": [12, 3, 17, 4], "riseRows": 1},
-        {"id": "sink_unit_west", "footprint": [2, 6, 3, 7], "riseRows": 1},
-        {"id": "sink_unit_east", "footprint": [16, 6, 17, 7], "riseRows": 1},
-        {"id": "waste_bin_west", "footprint": [2, 8, 2, 8], "riseRows": 0},
-        {"id": "waste_bin_east", "footprint": [17, 8, 17, 8], "riseRows": 0},
-        {"id": "bench_west", "footprint": [3, 9, 7, 9], "riseRows": 0, "note": "low one-row bench with open circulation around every side"},
-        {"id": "bench_east", "footprint": [12, 9, 16, 9], "riseRows": 0},
+        {"id": "bench_west", "footprint": [3, 9, 7, 9], "riseRows": 1, "note": "painted top occupies the foreground row; feet own row 9 collision"},
+        {"id": "bench_east", "footprint": [12, 9, 16, 9], "riseRows": 1},
         {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "centered south threshold to campus"}
       ]
     },
@@ -55,10 +51,10 @@
         "note": "purpose-built mat room; equipment is perimeter architecture, never a room divider"
       },
       "objects": [
-        {"id": "rolled_mat_stand", "footprint": [2, 2, 2, 3], "riseRows": 1},
-        {"id": "headgear_rack", "footprint": [2, 5, 2, 6], "riseRows": 0},
+        {"id": "rolled_mat_stand", "footprint": [1, 2, 1, 4], "riseRows": 1, "note": "contained in the solid west perimeter"},
+        {"id": "headgear_rack", "footprint": [1, 5, 1, 7], "riseRows": 0, "note": "contained in the solid west perimeter"},
         {"id": "plate_rack", "footprint": [17, 2, 17, 3], "riseRows": 1},
-        {"id": "barbell_bench", "footprint": [16, 5, 17, 6], "riseRows": 0},
+        {"id": "barbell_bench", "footprint": [17, 4, 17, 6], "riseRows": 0},
         {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "centered return threshold to the locker room"}
       ]
     },
