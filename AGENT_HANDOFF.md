@@ -1,5 +1,44 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.48 Camp Randall visual reset candidate)
+
+Tony rejected v21.47 after direct comparison with his FireRed town and tileset
+references. That rejection was correct: v21.47 had the right nouns but the
+wrong image-making process. It reduced high-resolution prop art into a sparse
+collage, producing an oversized stadium, blank plaza, thin tree strips, and
+interiors whose collision/occlusion data no longer matched what the player saw.
+
+v21.48 replaces those three Camp Randall scenes with complete compositions
+authored at their final map aspect ratios, then reduced to exact game dimensions
+with nearest-neighbor sampling and a 48-color palette:
+
+- `campus`: 448x288, with an irregular forest enclosure, centered stadium,
+  distinct Building 2 and Coach Office facades, cardinal brick path, lawns,
+  courtyards, flowers, hedges, lamps, and obvious doors.
+- `fieldhouse`: 448x224, with a north wrestling room, south locker room,
+  trophy threshold and center passage, benches, lockers, weights, and one
+  south exit.
+- `studyhall`: 288x192, with continuous room walls, whiteboard, window, desk,
+  visitor chair, shelves, filing cabinet, plant, and one south exit.
+
+All source candidates, final-scale assets, and prompt records live under
+`art/imagegen/`. FireRed references were used to study hierarchy, projection,
+transition grammar, density, and scale only; no Nintendo pixels or layouts were
+copied or traced.
+
+The map JSON now flags these scenes as `bakedComposition`. Legacy lower/upper
+prop layers are empty, so no trophy case, locker bank, lamp, or desk can render
+over the player. Collision, starts, NPCs, interactions, and all three thresholds
+were realigned to the new drawings. `npm run check` passes all validation,
+balance, map lint, build, and 11 Playwright tests. Phone-size browser QA at
+390x844 showed grounded actors, readable entrances, and no runtime warnings.
+
+Important release status: this is a local candidate and has not been pushed.
+Tony's phone judgment remains the visual gate. The rest of the game still has
+open visual debt, especially State Street, Lakeshore/River palette sprawl, and
+the Conference/Championship grid-heavy maps. Do not call the game FireRed
+quality based on Camp Randall alone.
+
 ## Latest Codex Turn (v21.47 Camp Randall visual proof-of-concept)
 
 Tony stopped a proposed Bascom/State cleanup because remote `main` was 19

@@ -88,6 +88,15 @@ tracker for looks.
   Bascom rebuild - the Field House gets a real exterior mass on the
   south edge (cardinal roof, the biggest door on campus, the map's
   anchor landmark), with the start emerging from ITS door.
+- **F-013 [OBJ-007/TG-013/SIL-004] v21.47 Camp Randall prop collage — CANDIDATE FIX, AWAITING TONY.**
+  FireRed reference comparison showed that v21.47 named the correct objects but
+  did not compose them as a place: the stadium consumed the top band, the plaza
+  was mostly empty grid, tree borders were thin strips, and interior props did
+  not reliably agree with collision or actor depth. Owner: Codex imagegen plus
+  compositor/map integration. v21.48 replaces all three scenes with complete
+  final-aspect compositions, quantized to 48 colors, and removes their legacy
+  upper-prop layers. Phone-size browser QA is clean; this finding remains open
+  until Tony approves it on his phone.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics

@@ -22,6 +22,11 @@ OUTDOOR_MAT_SOURCE = ROOT / "art" / "imagegen" / "outdoor_worn_mat_v2140_2026-07
 CAMP_EXTERIOR_SOURCE = ROOT / "art" / "imagegen" / "camp_randall_exterior_2026-07-10.png"
 CAMP_INTERIOR_SOURCE = ROOT / "art" / "imagegen" / "camp_randall_interiors_2026-07-10.png"
 CAMP_TERRAIN_SOURCE = ROOT / "art" / "imagegen" / "camp_randall_terrain_2026-07-10.png"
+CAMP_V2_MAP_SOURCES = {
+    "campus": ROOT / "art" / "imagegen" / "camp_randall_exterior_v4_game_scale_2026-07-10.png",
+    "fieldhouse": ROOT / "art" / "imagegen" / "camp_randall_building2_v3_game_scale_2026-07-10.png",
+    "studyhall": ROOT / "art" / "imagegen" / "camp_randall_office_v4_game_scale_2026-07-10.png",
+}
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
 LAYERS_OUT = ROOT / "public" / "assets" / "layers"
@@ -606,6 +611,12 @@ def water_mask(area, g):
     return cells
 
 def compose(area, tiles, props):
+    if area in CAMP_V2_MAP_SOURCES:
+        # v21.48: Camp Randall scenes are authored as complete compositions at
+        # their final game dimensions. This preserves silhouette, projection,
+        # material transitions, and room zoning instead of reconstructing the
+        # scene from unrelated prop crops.
+        return Image.open(CAMP_V2_MAP_SOURCES[area]).convert("RGB")
     g = grid(area)
     width, height = len(g[0]), len(g)
     rng = random.Random(f"wp1-{area}")

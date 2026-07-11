@@ -22,7 +22,8 @@ for(const [aid,map] of Object.entries(LAYERED_MAPS)){
       if(isBlocked(aid,x,y)!=='#X'.includes(row[x]))errs.push(`layered area ${aid}: collision diverges at (${x},${y})`);
     }
   });
-  if(!map.lowerDecor?.length||!map.upperDecor?.length||!map.interactions?.length||(!map.npcs?.length&&!map.allowEmptyNpcs))errs.push(`layered area ${aid}: ground/lower/upper/interactions/NPC layers must all be populated`);
+  const missingDecor=!map.bakedComposition&&(!map.lowerDecor?.length||!map.upperDecor?.length);
+  if(missingDecor||!map.interactions?.length||(!map.npcs?.length&&!map.allowEmptyNpcs))errs.push(`layered area ${aid}: authored composition/decor, interactions, and NPC layers must be populated`);
   for(const exit of map.exits||[]){if(map.tiles[exit.y]?.[exit.x]!=='E')errs.push(`layered area ${aid}: exit (${exit.x},${exit.y}) is not marked E`);}
   for(const upper of map.upperDecor||[]){
     if(!Number.isFinite(upper.depthY))errs.push(`layered area ${aid}: upper ${upper.texture} has no depthY`);
