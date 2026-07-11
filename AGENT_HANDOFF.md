@@ -1,5 +1,69 @@
 # Agent Handoff
 
+## Latest Claude Turn (SEASON_ONE_SYNOPSIS.md — the full beat-by-beat plan)
+
+Tony sent the Pokémon Red step-by-step synopsis he'd been studying and
+said: "We need a plan like this." He then asked to build it together
+rather than have it handed to him — "Don't write it yourself, write it
+with me. Prompt me to help you fill out beats and ideas as we build it."
+The whole turn was interactive: a long back-and-forth (mostly multiple
+choice, per Tony's preference) resolving every open story beat in
+GAME_VISION.md §7 plus several new ones the exercise surfaced. Result:
+**SEASON_ONE_SYNOPSIS.md**, 38 numbered beats, Camp Randall to the
+trophy case, in the same format as the reference doc. Now sits at #3 in
+the reading order, right after GAME_VISION.md.
+
+**Headline decisions, all locked with Tony directly:**
+
+- No organized-crime antagonist thread — pure sports drama, Team
+  Rocket's role goes unfilled on purpose.
+- Emotional-gravity beat = the empty trophy case itself (already built,
+  `trophyLore()`), not a new somber location.
+- Rex's "always one step ahead" = ranking/recruiting record.
+- **The recruit item is the Wisconsin Badgers Singlet**, three tiers
+  (Practice / Travel Quad / Starter), reskinning the existing `invite`
+  item in BattleScene.js — no new system, just a rename + tiering.
+- Franchise units (law 7b): **The Trainer's Room** (recovery), **Bucky's
+  Locker Room** (shop) — same building, same name, every town.
+- **A full style-system rework**, found mid-exercise: `moves.js`
+  already has a 6-style ADV loop (Neutral/Scramble/Top/Pace/Upperbody/
+  Defense) nobody had connected to the region's captain slots. Tony
+  wanted the names and the chart both reconsidered:
+  - **Renames:** Neutral→Shooter, Top→Rider, Scramble→Scrambler,
+    Pace→Bull, Upperbody→Thrower, Defense→Wall.
+  - **New asymmetric advantage chart** (each style strong vs 2, weak vs
+    2, neutral vs 1 — a real web like Pokémon's actual type chart, not
+    a single loop) — full table in the synopsis's closing section.
+  - Player still starts from only 3 personas (Shooter/Rider/Scrambler);
+    restricted to those three the chart is still a clean triangle, so
+    Rex's counter-pick logic is unaffected.
+  - **Six captains, named and located**: The Opener (Field House,
+    Shooter), The Funk Doctor (Wilds/Picnic Point, Scrambler, kept),
+    The Anchor (Kohl, Rider, relocated from "championship"), The
+    Senator (Capitol, Thrower, NEW), The Professor (Bascom, Wall, NEW),
+    The Closer (St. Louis, Bull, NEW, final boss).
+  - **NOT YET IMPLEMENTED.** This touches `roster.js` (every wrestler's
+    `style` field), `moves.js` (the `ADV` export), and captain flavor
+    text in `world.js`. Story and naming came first per Tony's own
+    sequencing rule — the code change is next in the queue, above the
+    map rewrite.
+- Full region beat sequence locked: Coach's equipment-shipment errand
+  (Field House, pays off with Locker + Roster Book + recruiting
+  together) → R1 (full density: optional Rex rematch, recruiting-lesson
+  NPC, mat gauntlet) → Field House Badge → R2 State Street (Deion stays,
+  light touch) → Capitol Badge (Kayak Voucher from a booster, Bus Pass
+  from Senator's staff) → R3 Monona (Kayak Voucher redeemed at
+  Brittingham Boats) → Kohl Badge (a real mini-bracket, not a single
+  fight) → all four badges (Picnic Point Badge included) required for
+  the flight → send-off AT Camp Randall, not the airport → St. Louis
+  as a real multi-round tournament (step away between rounds) → The
+  Closer in the semifinal → Rex in the true final (same twist as Red's
+  rival beating you to Champion) → Coach's verdict (same moral framing
+  as Oak) → Gateway Arch victory lap → whole roster + captain gather at
+  the trophy case. No postgame content this season, by design.
+- Small opens left for later, listed at the close of the synopsis: a
+  few unnamed minor NPCs, and R3's "fishing-style side activity" concept.
+
 ## Latest Claude Turn (GAME_VISION.md — the founding document, v1.0 DRAFT)
 
 Tony: "Camp Randall is a town. The locker room is our 'bedroom,' a

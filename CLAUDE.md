@@ -14,21 +14,27 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
    document: the fantasy, who the player is, the FireRed correspondence
    table, the Season One region, the loop. Settle every unclear decision
    against its §1. (v1.0 DRAFT — §7 open calls await Tony's ratify.)
-3. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
+3. **SEASON_ONE_SYNOPSIS.md** — what happens, beat by beat. Built live
+   with Tony in the format of the Pokémon Red synopsis he shared: 38
+   numbered beats, Camp Randall to the trophy case. This is where the
+   six-style rework (Shooter/Rider/Scrambler/Bull/Thrower/Wall, new
+   asymmetric ADV chart) and every captain's name/venue/badge live —
+   **not yet implemented in code**, see its closing section.
+4. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
    golden path, world laws). "Recognition is the product."
    (Rewrites to v2 from GAME_VISION §4 once the vision is ratified.)
-4. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
+5. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
    town a thesis, every route a micro-story, gates seen before solved,
    the first area matters late. Judge all map work against it.
    **docs/design_bible/** (28 volumes) is its deep companion: tile
    grammar, anti-patterns, the staged production pipeline (Vol XII), and
    the map-linter spec (Vol XV) that `npm run lint-maps` implements.
-5. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
+6. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
    compositor contract, work packages). **VISUAL_STYLE_SPEC.md** is the
    measured bar all new art is generated against;
    **VISUAL_REBUILD_PLAN.md** stages the rebuild;
    **VISUAL_CRITIQUE_LOG.md** tracks Tony's-eye findings.
-6. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
+7. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
    FireRed design parameters (timing, sequences, map structure) that we
    build against.
 
@@ -86,10 +92,16 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
 
 ## Current queue (see handoff for detail)
 
-**Vision first.** GAME_VISION.md is drafted; everything below waits on
-Tony's §7 ratifies. Then: WORLD_MAP_MANIFESTO v2 (from vision §4, Camp
-Randall home town → St. Louis Nationals) → Stage 1 master tileset
-(Codex, per VISUAL_STYLE_SPEC order) → Stage 2 compositor re-point →
-Stage 3 builds the NEW region on the NEW tileset, hometown first (never
-repaint the old world twice) → new systems (locker storage, lineup of
-6, flight gate, map verbs, Roster Book, opening sequence).
+**Vision + synopsis first.** GAME_VISION.md and SEASON_ONE_SYNOPSIS.md
+are both drafted; everything below waits on ratify. Then, roughly in
+order: (1) the style-system rework in code — rename Neutral/Top/
+Scramble/Pace/Upperbody/Defense to Shooter/Rider/Scrambler/Bull/
+Thrower/Wall in roster.js, replace the ADV loop in moves.js with the
+new asymmetric chart, build the three new captains (The Senator,
+The Professor, The Closer) — (2) WORLD_MAP_MANIFESTO v2 (from vision §4
++ synopsis, Camp Randall home town → St. Louis Nationals) → (3) Stage 1
+master tileset (Codex, per VISUAL_STYLE_SPEC order) → (4) Stage 2
+compositor re-point → (5) Stage 3 builds the NEW region on the NEW
+tileset, hometown first (never repaint the old world twice) → (6) new
+systems (locker storage, lineup of 6, flight gate, map verbs, Roster
+Book, opening sequence).
