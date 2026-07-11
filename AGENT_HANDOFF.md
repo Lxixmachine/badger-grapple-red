@@ -1,5 +1,28 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.56 campus polish and Coach Office doorway)
+
+Tony's first v21.55 phone screenshots confirmed collision was better but the
+new terrain lost FireRed-like polish, and the Coach Office entrance could not be
+aligned with the visible door. Both observations were correct.
+
+The office source drawing centers its doorway across the two middle cells of a
+six-cell building, while the old exit still targeted x21. The manifest now owns
+both visible door cells x22/x23, both trigger the same northward transition,
+the brick walk extends to them, each has a stone landing, and the office return
+warp lands at x22. Production smoke explicitly enters through both cells.
+
+The exterior ground compositor no longer shrinks a noisy generated grass sample
+into every cell. It builds quiet three-variant grass, continuous brick and dirt
+networks with neighbor-aware edges/corners, restrained brick courses, and clear
+stone landings. Organic forest pixels remain only inside manifest-solid border
+cells. This restores visual hierarchy without giving art and collision separate
+ownership.
+
+v21.56 keeps the object-owned foreground/collision architecture from v21.55.
+Tony's phone remains the visual close gate; refine source families rather than
+undoing the manifest compiler.
+
 ## Latest Codex Turn (v21.55 executable object manifest)
 
 Tony said "Do it" after the Law 6c/F-016 handoff. v21.55 makes the committed

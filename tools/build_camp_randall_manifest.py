@@ -120,6 +120,56 @@ def fill_tiles(canvas: Image.Image, sample: Image.Image, rect: list[int]) -> Non
             canvas.paste(sample, (x * TILE, y * TILE))
 
 
+def quiet_grass_tile(variant: int = 0) -> Image.Image:
+    tile = Image.new("RGB", (TILE, TILE), (111, 175, 91))
+    draw = ImageDraw.Draw(tile)
+    dark, light = (82, 145, 72), (141, 194, 105)
+    accents = [[(3, 5), (11, 12)], [(7, 3)], [(4, 13), (13, 7)]][variant % 3]
+    for x, y in accents:
+        draw.point((x, y), fill=dark)
+        if x + 1 < TILE:
+            draw.point((x + 1, y - 1), fill=light)
+    return tile
+
+
+def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material: str) -> None:
+    for x, y in cells:
+        tile = Image.new("RGB", (TILE, TILE), (111, 175, 91))
+        draw = ImageDraw.Draw(tile)
+        neighbors = {
+            "up": (x, y - 1) in cells,
+            "down": (x, y + 1) in cells,
+            "left": (x - 1, y) in cells,
+            "right": (x + 1, y) in cells,
+        }
+        left, top = (0 if neighbors["left"] else 2), (0 if neighbors["up"] else 2)
+        right, bottom = (TILE - 1 if neighbors["right"] else TILE - 3), (TILE - 1 if neighbors["down"] else TILE - 3)
+        if material == "brick":
+            draw.rectangle((left, top, right, bottom), fill=(174, 67, 56))
+            for yy in range(top + 4, bottom + 1, 5):
+                draw.line((left, yy, right, yy), fill=(119, 47, 43))
+            for row, yy in enumerate(range(top, bottom + 1, 5)):
+                offset = 3 if (row + x + y) % 2 else 7
+                for xx in range(left + offset, right + 1, 8):
+                    draw.line((xx, yy, xx, min(yy + 4, bottom)), fill=(130, 49, 43))
+            edge, shade = (226, 187, 137), (113, 87, 58)
+        else:
+            draw.rectangle((left, top, right, bottom), fill=(211, 190, 143))
+            for xx, yy in ((5, 5), (11, 8), (7, 13)):
+                if left < xx < right and top < yy < bottom:
+                    draw.point((xx, yy), fill=(174, 151, 108))
+            edge, shade = (231, 214, 169), (107, 145, 76)
+        if not neighbors["up"]:
+            draw.line((left, top, right, top), fill=edge)
+        if not neighbors["left"]:
+            draw.line((left, top, left, bottom), fill=edge)
+        if not neighbors["down"]:
+            draw.line((left, bottom, right, bottom), fill=shade)
+        if not neighbors["right"]:
+            draw.line((right, top, right, bottom), fill=shade)
+        canvas.paste(tile, (x * TILE, y * TILE))
+
+
 def set_rect(grid: list[list[str]], rect: list[int], marker: str) -> None:
     x1, y1, x2, y2 = rect
     for y in range(y1, y2 + 1):
@@ -131,9 +181,16 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
     width, height = spec["width"], spec["height"]
     base_key = {"campus": "grass", "fieldhouse": "wood", "studyhall": "office_carpet"}[area_id]
     canvas = Image.new("RGB", (width * TILE, height * TILE))
-    fill_tiles(canvas, tile_sample(terrain, base_key), [0, 0, width - 1, height - 1])
+    if area_id == "campus":
+        for y in range(height):
+            for x in range(width):
+                canvas.paste(quiet_grass_tile((x * 7 + y * 11) % 3), (x * TILE, y * TILE))
+    else:
+        fill_tiles(canvas, tile_sample(terrain, base_key), [0, 0, width - 1, height - 1])
 
     for zone in spec.get("groundZones", []):
+        if area_id == "campus":
+            continue
         key = {
             "brick-path": "brick",
             "dirt-path": "dirt",
@@ -153,6 +210,20 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
             x1, y1, x2, y2 = rect
             box = (x1 * TILE, y1 * TILE, (x2 + 1) * TILE, (y2 + 1) * TILE)
             canvas.paste(reference.crop(box), (x1 * TILE, y1 * TILE))
+        for material, kit in (("brick", "brick-path"), ("dirt", "dirt-path")):
+            cells: set[tuple[int, int]] = set()
+            for zone in spec.get("groundZones", []):
+                if zone["kit"] != kit:
+                    continue
+                for rect in zone.get("rects", [zone.get("rect")]):
+                    if not rect:
+                        continue
+                    x1, y1, x2, y2 = rect
+                    cells.update((x, y) for y in range(y1, y2 + 1) for x in range(x1, x2 + 1))
+            draw_path_network(canvas, cells, material)
+        # Stone landings make the path-to-door transition explicit.
+        for landing_x in (6, 22, 23):
+            draw.rectangle((landing_x * TILE + 2, 12 * TILE + 1, (landing_x + 1) * TILE - 3, 13 * TILE - 2), fill=(201, 191, 165), outline=(126, 116, 96))
     else:
         # Interior walls are continuous architecture. Repeating a bordered wall
         # sample per cell creates stripes and violates the material hierarchy.
@@ -175,9 +246,10 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
         draw.line((rx1 * TILE + 3, ry1 * TILE, rx1 * TILE + 3, (ry2 + 1) * TILE - 1), fill=(218, 168, 72), width=1)
         draw.line(((rx2 + 1) * TILE - 4, ry1 * TILE, (rx2 + 1) * TILE - 4, (ry2 + 1) * TILE - 1), fill=(218, 168, 72), width=1)
     # Openings must visibly restore the underlying floor/path.
-    open_tile = tile_sample(terrain, "dirt" if area_id == "campus" else base_key)
-    for x, y in spec["walls"].get("openCells", []):
-        canvas.paste(open_tile, (x * TILE, y * TILE))
+    if area_id != "campus":
+        open_tile = tile_sample(terrain, base_key)
+        for x, y in spec["walls"].get("openCells", []):
+            canvas.paste(open_tile, (x * TILE, y * TILE))
     return canvas
 
 
@@ -240,6 +312,7 @@ def build_area(area_id: str, spec: dict, area_data: dict, terrain: Image.Image) 
     for x, y in spec["walls"].get("exitCells", []):
         grid[y][x] = "E"
     area_data["tiles"] = ["".join(row) for row in grid]
+    area_data["exits"] = spec["exits"]
     area_data["upperDecor"] = upper_entries
     area_data["manifestRuntime"] = "camp-randall-objects-v1"
 

@@ -3,8 +3,8 @@
   "tileSize": 16,
   "atlas": "camp_randall_runtime_tiles",
   "atlasColumns": 32,
-  "atlasSha256": "7289e685a92bc8ff62f050f20032bd5bd2d118b5f29f0c56ff6aef863ee55d94",
-  "tileCount": 548,
+  "atlasSha256": "ae497810447ba530fa4f77ad9ed28e9df1401171f86881dc105e6d73672d0114",
+  "tileCount": 572,
   "tiles": [
     {
       "behavior": "solid",
@@ -1227,6 +1227,90 @@
       "blocked": true
     },
     {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
       "behavior": "walkable",
       "blocked": false
     },
@@ -1331,60 +1415,12 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -1567,8 +1603,36 @@
       "blocked": true
     },
     {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "exit",
+      "blocked": false
     },
     {
       "behavior": "exit",
@@ -1599,160 +1663,20 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -1911,6 +1835,62 @@
       "blocked": true
     },
     {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
       "behavior": "solid",
       "blocked": true
     },
@@ -1965,6 +1945,122 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "exit",
@@ -2637,12 +2733,10 @@
           116,
           117,
           118,
-          118,
-          118,
-          118,
-          118,
           119,
           120,
+          118,
+          119,
           121,
           122,
           123,
@@ -2654,17 +2748,17 @@
           129,
           130,
           131,
-          118,
-          118,
-          118,
-          118,
           132,
           133,
-          134
+          118,
+          119,
+          120,
+          118,
+          134,
+          135,
+          136
         ],
         [
-          135,
-          136,
           137,
           138,
           139,
@@ -2690,11 +2784,11 @@
           159,
           160,
           161,
-          162
+          162,
+          163,
+          164
         ],
         [
-          163,
-          164,
           165,
           166,
           167,
@@ -2720,11 +2814,11 @@
           187,
           188,
           189,
-          190
+          190,
+          191,
+          192
         ],
         [
-          191,
-          192,
           193,
           194,
           195,
@@ -2750,11 +2844,11 @@
           215,
           216,
           217,
-          218
+          218,
+          219,
+          220
         ],
         [
-          219,
-          220,
           221,
           222,
           223,
@@ -2780,11 +2874,11 @@
           243,
           244,
           245,
-          246
+          246,
+          247,
+          248
         ],
         [
-          247,
-          248,
           249,
           250,
           251,
@@ -2810,11 +2904,11 @@
           271,
           272,
           273,
-          274
+          274,
+          275,
+          276
         ],
         [
-          275,
-          276,
           277,
           278,
           279,
@@ -2840,55 +2934,49 @@
           299,
           300,
           301,
-          302
-        ],
-        [
+          302,
           303,
-          304,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          306,
-          306,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          307,
-          308
+          304
         ],
         [
-          309,
-          310,
           305,
+          306,
+          307,
+          308,
+          309,
+          307,
+          308,
+          309,
+          307,
+          308,
+          309,
+          307,
+          308,
+          310,
           311,
+          308,
+          309,
+          307,
+          308,
+          309,
+          307,
+          308,
+          309,
+          307,
+          308,
+          309,
           312,
-          313,
+          313
+        ],
+        [
           314,
           315,
+          309,
           316,
           317,
           318,
           319,
           320,
-          306,
-          306,
-          305,
           321,
           322,
           323,
@@ -2896,29 +2984,27 @@
           325,
           326,
           327,
+          307,
           328,
           329,
           330,
           331,
-          332
-        ],
-        [
+          332,
           333,
           334,
-          305,
           335,
           336,
           337,
           338,
-          339,
+          339
+        ],
+        [
           340,
           341,
+          308,
           342,
           343,
           344,
-          306,
-          306,
-          305,
           345,
           346,
           347,
@@ -2928,27 +3014,25 @@
           351,
           352,
           353,
+          309,
           354,
           355,
-          356
-        ],
-        [
+          356,
           357,
           358,
-          305,
           359,
           360,
           361,
           362,
           363,
           364,
-          365,
+          365
+        ],
+        [
           366,
           367,
+          307,
           368,
-          306,
-          306,
-          305,
           369,
           370,
           371,
@@ -2958,136 +3042,113 @@
           375,
           376,
           377,
+          326,
+          327,
+          308,
           378,
           379,
-          380
-        ],
-        [
+          380,
           381,
           382,
-          305,
           383,
           384,
           385,
           386,
           387,
           388,
-          389,
-          306,
-          306,
-          306,
-          306,
-          306,
-          306,
-          306,
-          306,
-          306,
-          305,
+          389
+        ],
+        [
           390,
           391,
+          309,
           392,
           393,
           394,
           395,
           396,
-          397
-        ],
-        [
+          397,
           398,
           399,
-          305,
-          305,
-          306,
-          306,
-          306,
-          306,
-          306,
-          306,
-          305,
-          305,
-          305,
-          306,
-          306,
-          305,
-          305,
-          305,
-          306,
-          306,
-          306,
-          306,
-          305,
-          305,
-          305,
-          305,
           400,
-          401
-        ],
-        [
+          401,
           402,
           403,
-          404,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
-          305,
+          400,
+          401,
+          400,
+          311,
+          308,
           404,
           405,
           406,
-          306,
-          306,
-          406,
-          405,
-          404,
-          305,
-          305,
-          404,
-          305,
-          305,
-          406,
-          305,
-          305,
           407,
-          408
-        ],
-        [
+          408,
           409,
           410,
-          411,
-          412,
-          413,
-          414,
-          415,
-          416,
-          417,
-          418,
-          419,
-          420,
-          421,
-          306,
-          306,
-          411,
-          412,
-          413,
-          414,
-          415,
-          416,
-          417,
-          418,
-          419,
-          420,
-          421,
-          422,
-          423
+          411
         ],
         [
+          412,
+          413,
+          308,
+          309,
+          414,
+          401,
+          415,
+          401,
+          400,
+          416,
+          307,
+          308,
+          309,
+          326,
+          327,
+          309,
+          307,
+          308,
+          417,
+          401,
+          400,
+          401,
+          415,
+          418,
+          309,
+          307,
+          419,
+          420
+        ],
+        [
+          421,
+          422,
+          423,
+          308,
+          309,
+          307,
+          308,
+          309,
+          307,
+          308,
+          423,
           424,
           425,
+          352,
+          353,
+          425,
           426,
+          423,
+          308,
+          309,
+          423,
+          308,
+          309,
+          425,
+          308,
+          309,
           427,
-          428,
+          428
+        ],
+        [
           429,
           430,
           431,
@@ -3097,22 +3158,34 @@
           435,
           436,
           437,
+          438,
+          439,
+          440,
+          441,
+          326,
+          327,
+          431,
+          432,
+          433,
+          434,
+          435,
+          436,
           437,
           438,
           439,
           440,
           441,
           442,
-          443,
+          443
+        ],
+        [
           444,
           445,
           446,
           447,
           448,
           449,
-          450
-        ],
-        [
+          450,
           451,
           452,
           453,
@@ -3126,8 +3199,6 @@
           461,
           462,
           463,
-          437,
-          437,
           464,
           465,
           466,
@@ -3135,14 +3206,14 @@
           468,
           469,
           470,
-          471,
+          471
+        ],
+        [
           472,
           473,
           474,
           475,
-          476
-        ],
-        [
+          476,
           477,
           478,
           479,
@@ -3156,7 +3227,6 @@
           487,
           488,
           489,
-          437,
           490,
           491,
           492,
@@ -3166,15 +3236,41 @@
           496,
           497,
           498,
-          499,
+          499
+        ],
+        [
           500,
           501,
           502,
-          503
+          503,
+          504,
+          505,
+          506,
+          507,
+          508,
+          509,
+          510,
+          511,
+          512,
+          513,
+          514,
+          515,
+          516,
+          517,
+          518,
+          519,
+          520,
+          521,
+          522,
+          523,
+          524,
+          525,
+          526,
+          527
         ]
       ],
       "source": "area_campus.png",
-      "sourceSha256": "1559d9a1ac711b1f2a8f211fa2a3c98a7bfb053c960dd22db1e2b617daefdf6b"
+      "sourceSha256": "c77aa24b22405fcfecb5115a3016da5d80f4882114a919d5f33327c75aacd559"
     },
     "studyhall": {
       "width": 18,
@@ -3202,223 +3298,223 @@
         ],
         [
           0,
-          504,
-          505,
-          506,
-          507,
-          508,
-          509,
-          510,
-          511,
-          512,
-          513,
-          514,
-          515,
-          516,
-          517,
-          518,
-          519,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
-          521,
-          522,
-          523,
-          524,
-          525,
-          520,
-          526,
-          527,
           528,
           529,
           530,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
           531,
           532,
           533,
           534,
           535,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
           536,
           537,
           538,
           539,
           540,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
           541,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
           542,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          0
-        ],
-        [
-          0,
           543,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
           0
         ],
         [
           0,
           544,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          0
-        ],
-        [
-          0,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
+          544,
+          544,
+          544,
+          544,
           545,
-          520,
           546,
-          520,
-          520,
-          520,
-          520,
-          520,
-          520,
+          547,
+          548,
+          549,
+          544,
+          550,
+          551,
+          552,
+          553,
+          554,
           0
         ],
         [
-          504,
-          504,
-          504,
-          504,
-          504,
-          504,
-          504,
-          504,
-          504,
-          547,
-          504,
-          504,
-          504,
-          504,
-          504,
-          504,
-          504,
-          504
+          0,
+          544,
+          544,
+          544,
+          544,
+          544,
+          555,
+          556,
+          557,
+          558,
+          559,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          544,
+          544,
+          544,
+          544,
+          544,
+          560,
+          561,
+          562,
+          563,
+          564,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          565,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          566,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          567,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          568,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          0,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          569,
+          544,
+          570,
+          544,
+          544,
+          544,
+          544,
+          544,
+          544,
+          0
+        ],
+        [
+          528,
+          528,
+          528,
+          528,
+          528,
+          528,
+          528,
+          528,
+          528,
+          571,
+          528,
+          528,
+          528,
+          528,
+          528,
+          528,
+          528,
+          528
         ]
       ],
       "source": "area_studyhall.png",

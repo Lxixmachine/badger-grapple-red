@@ -3,7 +3,7 @@
   "tileSize": 16,
   "objectCount": 40,
   "inputSha256": {
-    "art/imagegen/camp_randall_object_manifest.json": "de0256920cbf930ef8fe44c2023341a84aeed9736ea6c4515b25aa02e9186db2",
+    "art/imagegen/camp_randall_object_manifest.json": "4ba38e2b739ecdb381d21400fd85ec16e93cdd04a9820f354fdddd63cbf1bcc8",
     "art/imagegen/camp_randall_terrain_kit_v2_alpha_2026-07-11.png": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "art/imagegen/camp_randall_exterior_objects_v1_alpha_2026-07-11.png": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "art/imagegen/camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
@@ -11,7 +11,7 @@
   },
   "outputSha256": {
     "public/assets/ui/area_fieldhouse.png": "ebf4703a390f609a586b6a9b14730a8e1703ff6b9788414eb67a6e5cfcaa010c",
-    "public/assets/ui/area_campus.png": "4036e8bb61cb032964fe74997534cb691f00507de9bf80af19c70dca53bef866",
+    "public/assets/ui/area_campus.png": "749df2f5002541b80e85b5731e257813c4050d06c9f9e6fe12e7c8cac08387e7",
     "public/assets/ui/area_studyhall.png": "7cb80144b1966c9fae48b7adfa3af159972d128e4ff76ccdda179ef9bd45d2f8",
     "public/assets/layers/camp_fieldhouse_rolled_mat_stand_upper.png": "4b4adadc09fe19c7cb0abbb67603cfa5348565bbd2e489cdca205c0489ee8cbe",
     "public/assets/layers/camp_fieldhouse_plate_rack_upper.png": "5cc96ea15a5a65d6fdf4585107469ac6e42d345d4393b7429485cc0dd3cb5137",

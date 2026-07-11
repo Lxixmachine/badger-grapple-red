@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.55-grid-native-camp');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.56-campus-polish');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
@@ -204,8 +204,8 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 12});
   await move(page, 'down');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('campus');
-  await page.goto('/?test=1&scene=overworld&area=campus&x=21&y=12');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 21, y: 12});
+  await page.goto('/?test=1&scene=overworld&area=campus&x=22&y=12');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 22, y: 12});
   await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('studyhall');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 10});
@@ -220,6 +220,11 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
     'camp_studyhall_exit_door_frame_upper'
   ]));
   expect(office.npcTiles).toEqual([]);
+  // The generated centered door spans two cells; both visible halves enter.
+  await page.goto('/?test=1&reset=1&scene=overworld&area=campus&x=23&y=12');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
+  await move(page, 'up');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('studyhall');
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -283,7 +288,7 @@ test('captain blocks the trophy threshold until the coach office is checked', as
   await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 9});
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable.up)).toBe(false);
-  await page.goto('/?test=1&scene=overworld&area=campus&x=21&y=12');
+  await page.goto('/?test=1&scene=overworld&area=campus&x=22&y=12');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
   await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('studyhall');
