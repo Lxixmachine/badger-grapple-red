@@ -36,6 +36,14 @@ terrain props (trees, bushes, rocks, fences, signs), mats (indoor
 sacred + outdoor worn), architecture kit (walls, roofs, doors, windows,
 trim). Generated against the style spec, reviewed per family (Vol XII
 gates), regenerated until each family passes — BEFORE any map uses it.
+This is the REUSABLE kit only (law 1 in VISUAL_STYLE_SPEC.md: one
+master palette, generated once, reused forever). Each town's own
+one-off landmark (a museum-equivalent, Bascom Hall, the Capitol, Camp
+Randall Stadium) is deliberately NOT part of Stage 1 — it was never
+going to be reused anywhere, so it doesn't block this stage and this
+stage doesn't wait for it. One-off landmarks get their own dedicated
+pass in Stage 3, per town, same palette, bespoke composition, never
+reused.
 
 **Stage 2 — Compositor rebuild (Claude).**
 The compositor already separates data from crops; it re-points at the

@@ -1,5 +1,47 @@
 # Agent Handoff
 
+## Latest Claude Turn (Law 1 clarified — palette rule vs tile-kit rule)
+
+Tony, sharp catch: "Is law 1 too strict? Obviously grass should be
+consistent but the tileset to build the museum is not the same as to
+build the department store is it? I think that law came before the
+realization that assets were sometimes created then tiled rather than
+built of tiles."
+
+He's right, and it wasn't that law 1 was too strict — it was
+conflating two different claims. **Law 1 was written for a tile-kit
+mental model** (a wall piece + a window piece + a door piece, Lego'd
+into any building, so "generate once reuse everywhere" is just true)
+**and then law 6 quietly broke that framing** ("objects are drawings
+first, tiles second... authored as ONE seamless drawing... then
+sliced") for any genuine one-off composition. A museum facade isn't
+assembled from a reusable kit — it's its own bespoke drawing, by design
+never reused (law 7b: "everything else is a one-off and must READ
+one-off"). Calling that "part of the master tileset, generated once"
+was a category error.
+
+**The fix, now in VISUAL_STYLE_SPEC.md**: law 1 splits into two
+claims. (1) The PALETTE (<=64 colors, one swatch) is shared by
+literally everything, one-off landmarks included — that's what makes
+wildly different buildings still read as one game, same as FireRed's
+own city screens. (2) "Generated once, reused forever" describes the
+REUSABLE KIT only (grounds/vegetation/water/mats/architecture
+language/franchise units) — Stage 1's actual scope. One-off town
+landmarks (a museum-equivalent, Bascom Hall, the Capitol, Camp Randall
+Stadium) were never meant to be part of Stage 1 at all; they get their
+own dedicated pass per town in Stage 3, same palette, bespoke
+composition, never reused. Added a matching clarifying note to
+VISUAL_REBUILD_PLAN.md's Stage 1 description so the two docs don't
+drift apart.
+
+**This corrects something I told Tony last turn**: I'd said starting
+Stage 1 now risked a "second pass" once other towns' one-off landmarks
+surfaced new needs. Under the corrected framing that's wrong — one-off
+landmarks were never part of Stage 1's reuse contract, so there's
+nothing to redo. **Codex can start families 1-6 today**, independent of
+how many town mockups exist; one-off landmarks get designed later,
+per-town, in Stage 3.
+
 ## Latest Claude Turn (Camp Randall mockup — closed out to Stage 4)
 
 Tony said "keep going" on the five open items from the mockup's first

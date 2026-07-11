@@ -31,8 +31,17 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 
 ## The ten laws
 
-1. **One master palette (<= 64), generated once, reused forever.** Every
-   family samples from it; no sheet invents colors.
+1. **One master COLOR PALETTE (<= 64 colors), generated once, reused
+   forever — a palette rule, not a tile-kit rule.** Every asset draws
+   its colors from this one swatch: the reusable modular kit (grounds,
+   vegetation, water, mats, the architecture language, franchise units
+   — laws 5/6/7/7b) AND every one-off bespoke landmark (a town's
+   museum-equivalent, its own unique building — law 7b's "everything
+   else is a one-off"). The PALETTE is shared by everything; the TILES
+   are not — a museum and a department store should look nothing alike
+   while both still read as the same game, exactly like FireRed's own
+   city screens do. No sheet invents colors outside the swatch, but
+   plenty of sheets are one-of-a-kind drawings that are never reused.
 2. **3 shades per material.** Flat cel, single light from top; shadow
    falls south/south-east. No gradients, airbrush, or pixel noise.
 3. **Tinted outlines**: olive-dark for vegetation, slate-dark for
@@ -95,3 +104,16 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 
 Each family is boarded next to the reference sheets; Tony verdicts
 (closer / worse / ship); no family enters the compositor until CLOSED.
+
+**Stage 1 is the reusable kit only — one-off landmarks are NOT in this
+list on purpose.** Families 1-6 above are the "generated once, reused
+forever" assets law 1 actually describes. Each town's own bespoke
+landmark (a museum-equivalent, Bascom Hall, the Capitol, Camp Randall
+Stadium) was never going to be reused anywhere, so it was never part
+of Stage 1's scope — Stage 1 doesn't need it and doesn't wait for it.
+One-off landmarks get their own dedicated generation pass per town, in
+Stage 3, alongside whatever area is being built: same master palette
+(law 1), bespoke one-time composition (law 6), never reused (law 7b).
+This is why Stage 1 can start today regardless of how many towns have
+finished mockups — the reusable kit and the one-off landmarks were
+always two different buckets of work.
