@@ -1,5 +1,38 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.55 executable object manifest)
+
+Tony said "Do it" after the Law 6c/F-016 handoff. v21.55 makes the committed
+Camp Randall object manifest the executable contract instead of another design
+document.
+
+`tools/build_camp_randall_manifest.py` now:
+
+- composes reusable grass/brick/dirt/wood/carpet/mat ground families;
+- forces each generated alpha-atlas object into its exact manifest footprint;
+- splits every `riseRows` section into a small object-owned foreground texture;
+- generates all three collision grids from wall rectangles and object
+  footprints, including walkable/door/exit cells;
+- emits red collision/ownership overlays under `art/imagegen/validation/`;
+- records source-atlas and manifest SHA-256 provenance.
+
+The downstream tile compiler now produces 548 behavior-owned tiles instead of
+1,112 unique painting slices. Validation rejects stale compositor inputs,
+manifest/collision drift, missing or wrongly sized foregrounds, and tile counts
+above 700. Runtime loads 10 Field House, 6 campus, and 3 office foreground
+objects. Full-map masks remain forbidden.
+
+Phone/desktop browser QA covered the banner lamp, locker bench, trophy doorway,
+office chair, and exit frame with no console warnings. The exterior forest uses
+only approved composition pixels inside cells that are solid by manifest, so it
+retains organic density without creating half-solid walkable cells. All 14
+production gameplay tests pass after rebuilding `dist` against the new assets.
+
+Tony's phone remains the close gate for F-015/F-016. Future work should refine
+terrain/object art through the source atlases and rerun
+`npm run build:camp-manifest`; never hand-edit collision rows or restore a flat
+scene painting.
+
 ## Latest Codex Turn (Law 6c grid-native source art)
 
 Read Claude's v21.53-v21.54/F-016 work and fast-forwarded local `main` to

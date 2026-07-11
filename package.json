@@ -1,11 +1,12 @@
 {
   "name": "badger-grapple-red",
-  "version": "21.54.0",
+  "version": "21.55.0",
   "private": true,
   "type": "module",
   "description": "Source-first Phaser wrestling RPG built toward FireRed-style production quality",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
+    "build:camp-manifest": "python tools/build_camp_randall_manifest.py && python tools/build_camp_randall_tilemaps.py",
     "build:camp-tiles": "python tools/build_camp_randall_tilemaps.py",
     "validate": "node tools/validate.mjs",
     "balance": "node tools/balance_sim.mjs",

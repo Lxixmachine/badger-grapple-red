@@ -16,22 +16,103 @@
       "tiles": [
         "############################",
         "############################",
-        "###......................###",
-        "###......................###",
+        "###.....................####",
+        "###.....................####",
         "###.....................####",
         "###.....................####",
         "###......................###",
         "##############.#############",
         "##############.#############",
         "##########........##########",
-        "###.....................#.##",
-        "##..######........######..##",
-        "##...........#.#..........##",
+        "###.....................####",
+        "###.######........######.###",
+        "###..........#.#.........###",
         "##############E#############"
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [],
+      "upperDecor": [
+        {
+          "texture": "camp_fieldhouse_rolled_mat_stand_upper",
+          "x": 2,
+          "y": 1,
+          "depthY": 3,
+          "source": "manifestObject",
+          "owner": "rolled_mat_stand"
+        },
+        {
+          "texture": "camp_fieldhouse_plate_rack_upper",
+          "x": 24,
+          "y": 1,
+          "depthY": 3,
+          "source": "manifestObject",
+          "owner": "plate_rack"
+        },
+        {
+          "texture": "camp_fieldhouse_trophy_case_west_upper",
+          "x": 10,
+          "y": 6,
+          "depthY": 7,
+          "source": "manifestObject",
+          "owner": "trophy_case_west"
+        },
+        {
+          "texture": "camp_fieldhouse_trophy_case_east_upper",
+          "x": 15,
+          "y": 6,
+          "depthY": 7,
+          "source": "manifestObject",
+          "owner": "trophy_case_east"
+        },
+        {
+          "texture": "camp_fieldhouse_doorway_frame_upper",
+          "x": 14,
+          "y": 6,
+          "depthY": 7,
+          "source": "manifestObject",
+          "owner": "doorway_frame"
+        },
+        {
+          "texture": "camp_fieldhouse_locker_bank_west_upper",
+          "x": 3,
+          "y": 7,
+          "depthY": 9,
+          "source": "manifestObject",
+          "owner": "locker_bank_west"
+        },
+        {
+          "texture": "camp_fieldhouse_locker_bank_east_upper",
+          "x": 18,
+          "y": 7,
+          "depthY": 9,
+          "source": "manifestObject",
+          "owner": "locker_bank_east"
+        },
+        {
+          "texture": "camp_fieldhouse_sink_unit_west_upper",
+          "x": 1,
+          "y": 7,
+          "depthY": 9,
+          "source": "manifestObject",
+          "owner": "sink_unit_west"
+        },
+        {
+          "texture": "camp_fieldhouse_sink_unit_east_upper",
+          "x": 24,
+          "y": 7,
+          "depthY": 9,
+          "source": "manifestObject",
+          "owner": "sink_unit_east"
+        },
+        {
+          "texture": "camp_fieldhouse_exit_door_frame_upper",
+          "x": 13,
+          "y": 11,
+          "depthY": 12,
+          "source": "manifestObject",
+          "owner": "exit_door_frame"
+        }
+      ],
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {
@@ -138,7 +219,8 @@
           "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat.",
           "look": "purple"
         }
-      ]
+      ],
+      "manifestRuntime": "camp-randall-objects-v1"
     },
     "campus": {
       "width": 28,
@@ -159,17 +241,17 @@
         "############################",
         "############################",
         "############################",
-        "############....############",
-        "#############...############",
-        "#############...############",
-        "#############...############",
-        "##.###E###.........##E###.##",
+        "##........................##",
+        "##.##########...############",
+        "##.##########...############",
+        "##.##########...############",
+        "##.###E###..........#E######",
         "##........................##",
         "###.......###..###..#..#..##",
         "#############..#############",
         "#############..#############",
         "#############..#############",
-        "##############E#############"
+        "#############.E#############"
       ],
       "paths": [
         [
@@ -186,7 +268,56 @@
         ]
       ],
       "lowerDecor": [],
-      "upperDecor": [],
+      "upperDecor": [
+        {
+          "texture": "camp_campus_banner_lamp_west_upper",
+          "x": 11,
+          "y": 11,
+          "depthY": 13,
+          "source": "manifestObject",
+          "owner": "banner_lamp_west"
+        },
+        {
+          "texture": "camp_campus_banner_lamp_east_upper",
+          "x": 16,
+          "y": 11,
+          "depthY": 13,
+          "source": "manifestObject",
+          "owner": "banner_lamp_east"
+        },
+        {
+          "texture": "camp_campus_lawn_tree_a_upper",
+          "x": 2,
+          "y": 12,
+          "depthY": 13,
+          "source": "manifestObject",
+          "owner": "lawn_tree_a"
+        },
+        {
+          "texture": "camp_campus_lawn_tree_b_upper",
+          "x": 10,
+          "y": 12,
+          "depthY": 13,
+          "source": "manifestObject",
+          "owner": "lawn_tree_b"
+        },
+        {
+          "texture": "camp_campus_lawn_tree_c_upper",
+          "x": 17,
+          "y": 12,
+          "depthY": 13,
+          "source": "manifestObject",
+          "owner": "lawn_tree_c"
+        },
+        {
+          "texture": "camp_campus_lawn_tree_d_upper",
+          "x": 20,
+          "y": 12,
+          "depthY": 13,
+          "source": "manifestObject",
+          "owner": "lawn_tree_d"
+        }
+      ],
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {
@@ -250,7 +381,8 @@
           "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.",
           "look": "red"
         }
-      ]
+      ],
+      "manifestRuntime": "camp-randall-objects-v1"
     },
     "studyhall": {
       "width": 18,
@@ -274,12 +406,37 @@
         "##...............#",
         "##...............#",
         "#................#",
-        "#................#",
+        "#.......#.#......#",
         "#########E########"
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [],
+      "upperDecor": [
+        {
+          "texture": "camp_studyhall_coach_desk_upper",
+          "x": 6,
+          "y": 1,
+          "depthY": 4,
+          "source": "manifestObject",
+          "owner": "coach_desk"
+        },
+        {
+          "texture": "camp_studyhall_plant_sw_upper",
+          "x": 1,
+          "y": 6,
+          "depthY": 8,
+          "source": "manifestObject",
+          "owner": "plant_sw"
+        },
+        {
+          "texture": "camp_studyhall_exit_door_frame_upper",
+          "x": 8,
+          "y": 9,
+          "depthY": 10,
+          "source": "manifestObject",
+          "owner": "exit_door_frame"
+        }
+      ],
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {
@@ -322,7 +479,8 @@
       ],
       "signs": {},
       "npcs": [],
-      "allowEmptyNpcs": true
+      "allowEmptyNpcs": true,
+      "manifestRuntime": "camp-randall-objects-v1"
     }
   }
 }

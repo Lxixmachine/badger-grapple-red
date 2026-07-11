@@ -4,6 +4,8 @@
   "tileSize": 16,
   "areas": {
     "fieldhouse": {
+      "width": 28,
+      "height": 14,
       "groundZones": [
         {"id": "wood_floor", "kit": "interior-wood", "note": "whole room ground layer"},
         {"id": "competition_mat", "kit": "sacred-mat", "rect": [7, 1, 20, 5], "walkable": true, "note": "flat ground material, ring optional per Tony (approved)"},
@@ -11,6 +13,9 @@
       ],
       "walls": {
         "kit": "interior-wall",
+        "solidRects": [[0, 0, 27, 1], [0, 0, 2, 13], [25, 0, 27, 13], [0, 7, 27, 8], [0, 13, 27, 13]],
+        "openCells": [[14, 7], [14, 8], [14, 13]],
+        "exitCells": [[14, 13]],
         "note": "perimeter rows/cols 0,13 and 0,27; divider wall rows 7-8 full width with single doorway column x14"
       },
       "objects": [
@@ -33,6 +38,8 @@
       ]
     },
     "campus": {
+      "width": 28,
+      "height": 18,
       "groundZones": [
         {"id": "lawn", "kit": "grass", "note": "default ground"},
         {"id": "brick_path", "kit": "brick-path", "rects": [[13, 7, 14, 16], [10, 11, 18, 11], [4, 12, 9, 12], [18, 12, 21, 12]], "walkable": true},
@@ -40,6 +47,9 @@
       ],
       "walls": {
         "kit": "forest-border",
+        "solidRects": [[0, 0, 1, 17], [26, 0, 27, 17], [2, 15, 25, 17]],
+        "openCells": [[13, 15], [14, 15], [13, 16], [14, 16], [13, 17], [14, 17]],
+        "exitCells": [[14, 17]],
         "note": "tree wall rows 0-1, cols 0-1 and 26-27, forest rows 15-17 except the gate gap x13-14; composed from the forest kit (law 6b), never one tree stamped"
       },
       "objects": [
@@ -62,11 +72,16 @@
       ]
     },
     "studyhall": {
+      "width": 18,
+      "height": 12,
       "groundZones": [
         {"id": "office_floor", "kit": "office-carpet", "note": "whole room; wall face row 1 is architecture, not floor"}
       ],
       "walls": {
         "kit": "interior-wall",
+        "solidRects": [[0, 0, 17, 1], [0, 0, 0, 11], [17, 0, 17, 11], [0, 11, 17, 11]],
+        "openCells": [[9, 10], [9, 11]],
+        "exitCells": [[9, 11]],
         "note": "perimeter + row 1 wall face (wainscot/window band); whiteboard is wall decor above the COACH_OFFICE interaction tiles at row 2"
       },
       "objects": [
@@ -75,7 +90,9 @@
         {"id": "cabinet_shelves", "footprint": [12, 1, 16, 2], "riseRows": 0, "note": "filing cabinet + two bookcases, one composed unit against the wall"},
         {"id": "plant_ne", "footprint": [11, 1, 11, 1], "riseRows": 0},
         {"id": "plant_sw", "footprint": [1, 7, 1, 8], "riseRows": 1},
-        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "posts solid, threshold walkable, exit E at (9,11)"}
+        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "posts solid, threshold walkable, exit E at (9,11)"},
+        {"id": "strategy_whiteboard", "footprint": [2, 1, 5, 1], "riseRows": 0, "walkable": true, "note": "wall decor; wall collision remains authoritative"},
+        {"id": "office_window", "footprint": [6, 1, 10, 1], "riseRows": 0, "walkable": true, "note": "wall decor; wall collision remains authoritative"}
       ]
     }
   }

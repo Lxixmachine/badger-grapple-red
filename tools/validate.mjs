@@ -172,5 +172,57 @@ const plane=worldPlane();
 plane.conflicts.forEach(c=>errs.push(`world plane contradiction: ${c}`));
 for(const id of WORLD_META.activeOutdoorAreas)if(!plane.pos[id])errs.push(`world plane: outdoor area '${id}' is unreachable from campus via outdoor exits`);
 const campStats=campRuntimeStats();
+const manifestPath=fileURLToPath(new URL('../art/imagegen/camp_randall_object_manifest.json',import.meta.url));
+const manifest=JSON.parse(readFileSync(manifestPath,'utf8'));
+const manifestBuildPath=fileURLToPath(new URL('../src/data/campRandallManifestBuild.json',import.meta.url));
+if(!existsSync(manifestBuildPath))errs.push('Camp Randall manifest build record is missing; run npm run build:camp-manifest');
+else{
+  const build=JSON.parse(readFileSync(manifestBuildPath,'utf8'));
+  if(build.version!==1||build.tileSize!==TILE)errs.push('Camp Randall manifest build version/tile size is unsupported');
+  for(const [path,expected] of Object.entries(build.inputSha256||{})){
+    const source=fileURLToPath(new URL(`../${path}`,import.meta.url));
+    const actual=createHash('sha256').update(readFileSync(source)).digest('hex');
+    if(actual!==expected)errs.push(`Camp Randall manifest input ${path} is stale; run npm run build:camp-manifest`);
+  }
+  for(const [path,expected] of Object.entries(build.outputSha256||{})){
+    const output=fileURLToPath(new URL(`../${path}`,import.meta.url));
+    if(!existsSync(output))errs.push(`Camp Randall generated output ${path} is missing; run npm run build:camp-manifest`);
+    else{
+      const actual=createHash('sha256').update(readFileSync(output)).digest('hex');
+      if(actual!==expected)errs.push(`Camp Randall generated output ${path} is stale; run npm run build:camp-manifest`);
+    }
+  }
+}
+const fillRect=(grid,rect,value)=>{const [x1,y1,x2,y2]=rect;for(let y=y1;y<=y2;y++)for(let x=x1;x<=x2;x++)grid[y][x]=value;};
+for(const [aid,spec] of Object.entries(manifest.areas)){
+  const map=LAYERED_MAPS[aid];
+  if(!map){errs.push(`manifest area ${aid} has no runtime map`);continue;}
+  if(map.manifestRuntime!=='camp-randall-objects-v1')errs.push(`manifest area ${aid} is not marked as object-owned runtime`);
+  if(map.width!==spec.width||map.height!==spec.height)errs.push(`manifest area ${aid} dimensions diverge`);
+  const expected=Array.from({length:spec.height},()=>Array(spec.width).fill('.'));
+  for(const rect of spec.walls.solidRects)fillRect(expected,rect,'#');
+  for(const [x,y] of spec.walls.openCells||[])expected[y][x]='.';
+  for(const object of spec.objects){
+    if(!object.walkable)fillRect(expected,object.footprint,'#');
+    for(const [x,y] of object.walkableCells||[])expected[y][x]='.';
+    for(const [x,y] of object.doorCells||[])expected[y][x]='E';
+    const upper=(map.upperDecor||[]).filter(entry=>entry.owner===object.id);
+    if(object.riseRows>0){
+      if(upper.length!==1)errs.push(`manifest ${aid}/${object.id}: expected one owned foreground, found ${upper.length}`);
+      else{
+        const [x1,,x2]=object.footprint;
+        const asset=fileURLToPath(new URL(`../public/assets/layers/${upper[0].texture}.png`,import.meta.url));
+        if(!existsSync(asset))errs.push(`manifest ${aid}/${object.id}: foreground asset missing`);
+        else{
+          const png=readFileSync(asset);const width=png.readUInt32BE(16),height=png.readUInt32BE(20);
+          if(width!==(x2-x1+1)*TILE||height!==object.riseRows*TILE)errs.push(`manifest ${aid}/${object.id}: foreground is ${width}x${height}, expected ${(x2-x1+1)*TILE}x${object.riseRows*TILE}`);
+        }
+      }
+    }else if(upper.length)errs.push(`manifest ${aid}/${object.id}: zero-rise object owns a foreground`);
+  }
+  for(const [x,y] of spec.walls.exitCells||[])expected[y][x]='E';
+  expected.forEach((row,y)=>{if(row.join('')!==map.tiles[y])errs.push(`manifest area ${aid}: collision row ${y} was not generated from object footprints`);});
+}
+if(campStats.tileCount>700)errs.push(`Camp Randall runtime has ${campStats.tileCount} tiles; reusable-kit budget is 700`);
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}, tile runtime v${campStats.version}/${campStats.tileCount} tiles.`);
 if(errs.length)process.exit(1);

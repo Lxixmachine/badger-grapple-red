@@ -107,7 +107,7 @@ tracker for looks.
   camera, then compiles the visible 16px cells and movement behavior into the
   same runtime tile IDs. Automated and phone-size browser QA are complete;
   Tony's phone remains the close gate.
-- **F-015 [OBJ-007/architecture] baked-map art and tile collision have separate ownership — RUNTIME FIXED IN v21.52; REUSABLE KIT OPEN.**
+- **F-015 [OBJ-007/architecture] baked-map art and tile collision have separate ownership — IMPLEMENTED v21.55, PHONE CLOSE GATE OPEN.**
   Tony's v21.50 evidence showed the player crossing facade art and mobile
   foreground masks reducing the player to a detached head. Root cause: the
   runtime renders one flattened generated map while collision and depth are
@@ -119,7 +119,9 @@ tracker for looks.
   still 1,112 unique tiles because the approved generated paintings contain
   near-universal pixel noise. Extracting reusable terrain families and bespoke
   grid-aligned multi-tile object manifests remains mandatory before new maps.
-- **F-016 [OBJ-007/GRID-011] the compositions are not grid-native — collision can NEVER be exact against them — OPEN, supersedes per-cell fixes.**
+  v21.55 makes that manifest executable: it compiles lower art, collision, and
+  per-object foregrounds together and enforces a 700-tile reuse budget.
+- **F-016 [OBJ-007/GRID-011] the compositions are not grid-native — IMPLEMENTED v21.55, PHONE CLOSE GATE OPEN.**
   Tony's v21.54 phone evidence (4 screenshots: standing ON the locker-room
   bench, ON the quad banner lamp, overlapping the office armchair) plus his
   diagnosis, verbatim: "The grid was built after the art and the art was
@@ -138,7 +140,9 @@ tracker for looks.
   per the object manifest, law 6c) + Claude (compositor assembles ground
   kit + manifest objects; per-object upperDecor depth returns per the
   v21.37 law). Codified as law 6c in VISUAL_STYLE_SPEC.md; manifest at
-  art/imagegen/camp_randall_object_manifest.json.
+  art/imagegen/camp_randall_object_manifest.json. v21.55 forces every generated
+  object into those exact footprints, restores 19 object-owned foregrounds,
+  generates collision from the same data, and emits red ownership overlays.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics

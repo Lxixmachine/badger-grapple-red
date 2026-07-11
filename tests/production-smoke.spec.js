@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.54-collision-truth');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.55-grid-native-camp');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
@@ -84,7 +84,7 @@ test('production build boots with runtime assets', async ({page}) => {
   const campusTexture = textureReport.find(texture => texture.key === 'area_campus');
   expect(campusTexture).toMatchObject({width: 448, height: 288});
   const campAtlas = textureReport.find(texture => texture.key === 'camp_randall_runtime_tiles');
-  expect(campAtlas).toMatchObject({width: 512, height: 560});
+  expect(campAtlas).toMatchObject({width: 512, height: 288});
 
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
@@ -113,7 +113,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 0, directActorDepth: true}
+    layered: {version: 1, upperCount: 10, directActorDepth: true}
   });
   expect(overworld.playerWorldY).toBe(208);
 
@@ -129,7 +129,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(runtimeIssues).toEqual([]);
 });
 
-test('Building 2 rejects unsafe full-map foreground masks', async ({page}) => {
+test('Building 2 rejects full-map masks and loads object-owned foregrounds', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
   await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=6');
@@ -141,8 +141,13 @@ test('Building 2 rejects unsafe full-map foreground masks', async ({page}) => {
   });
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(overworld.npcScales).toEqual([0.78, 0.78, 0.78]);
-  expect(overworld.layered.upperTextures).toEqual([]);
-  expect(overworld.layered.upperCount).toBe(0);
+  expect(overworld.layered.upperCount).toBe(10);
+  expect(overworld.layered.upperTextures).toEqual(expect.arrayContaining([
+    'camp_fieldhouse_locker_bank_west_upper',
+    'camp_fieldhouse_locker_bank_east_upper',
+    'camp_fieldhouse_doorway_frame_upper',
+    'camp_fieldhouse_exit_door_frame_upper'
+  ]));
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -154,7 +159,7 @@ test('Camp Randall renders its complete exterior composition', async ({page}) =>
   await expect(page.locator('canvas')).toBeVisible();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').layered)).toMatchObject({
     version: 1,
-    upperCount: 0,
+    upperCount: 6,
     directActorDepth: true
   });
   const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
@@ -166,8 +171,12 @@ test('Camp Randall renders its complete exterior composition', async ({page}) =>
   expect(state.camera.worldZoom).toBe(1.4);
   expect(state.camera.worldTilesWide).toBeCloseTo(14.2857, 3);
   expect(state.camera.worldTilesHigh).toBe(10);
-  expect(state.layered.upperDepths).toHaveLength(0);
-  expect(state.layered.upperTextures).toEqual([]);
+  expect(state.layered.upperDepths).toHaveLength(6);
+  expect(state.layered.upperTextures).toEqual(expect.arrayContaining([
+    'camp_campus_banner_lamp_west_upper',
+    'camp_campus_banner_lamp_east_upper',
+    'camp_campus_lawn_tree_a_upper'
+  ]));
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -204,7 +213,12 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
   expect(office.playerScale).toBe(1);
   expect(office.tileRuntimeVersion).toBe(1);
   expect(office.playerWorldY).toBe(176);
-  expect(office.layered.upperTextures).toEqual([]);
+  expect(office.layered.upperCount).toBe(3);
+  expect(office.layered.upperTextures).toEqual(expect.arrayContaining([
+    'camp_studyhall_coach_desk_upper',
+    'camp_studyhall_plant_sw_upper',
+    'camp_studyhall_exit_door_frame_upper'
+  ]));
   expect(office.npcTiles).toEqual([]);
   expect(runtimeIssues).toEqual([]);
 });
