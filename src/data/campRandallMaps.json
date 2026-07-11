@@ -5,25 +5,28 @@
     "fieldhouse": {
       "width": 28,
       "height": 14,
-      "start": {"x": 14, "y": 12},
+      "start": {
+        "x": 14,
+        "y": 12
+      },
       "actorScale": 0.78,
       "actorFootOffset": 16,
       "cameraZoom": 1.25,
       "ground": "camp-interior-wood",
       "tiles": [
         "############################",
-        "##......................####",
-        "####..................######",
-        "####..................######",
-        "####..................######",
-        "####..................######",
-        "##......................####",
+        "############################",
+        "###......................###",
+        "###......................###",
+        "###.....................####",
+        "###.....................####",
+        "###......................###",
+        "##############.#############",
         "##############.#############",
         "##########........##########",
-        "##########........##########",
-        "###.#######.......######.###",
-        "###......................###",
-        "#############...############",
+        "###.....................#.##",
+        "##..######........######..##",
+        "##...........#.#..........##",
         "##############E#############"
       ],
       "paths": [],
@@ -31,26 +34,119 @@
       "upperDecor": [],
       "tileRuntime": "camp-randall-v1",
       "exits": [
-        {"x": 14, "y": 13, "dir": "down", "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}
+        {
+          "x": 14,
+          "y": 13,
+          "dir": "down",
+          "to": "campus",
+          "tx": 6,
+          "ty": 12,
+          "msg": "Camp Randall quad."
+        }
       ],
       "interactions": [
-        {"kind": "N", "tiles": [[14, 4], [14, 5]]},
-        {"kind": "M", "rect": [8, 2, 19, 5]},
-        {"kind": "TROPHY", "tiles": [[12, 7], [13, 7], [15, 7], [16, 7]]},
-        {"kind": "LOCKER_ROOM", "rect": [3, 8, 9, 9]},
-        {"kind": "WEIGHT_ROOM", "rect": [22, 2, 26, 5]}
+        {
+          "kind": "N",
+          "tiles": [
+            [
+              14,
+              4
+            ],
+            [
+              14,
+              5
+            ]
+          ]
+        },
+        {
+          "kind": "M",
+          "rect": [
+            8,
+            2,
+            19,
+            5
+          ]
+        },
+        {
+          "kind": "TROPHY",
+          "tiles": [
+            [
+              12,
+              7
+            ],
+            [
+              13,
+              7
+            ],
+            [
+              15,
+              7
+            ],
+            [
+              16,
+              7
+            ]
+          ]
+        },
+        {
+          "kind": "LOCKER_ROOM",
+          "rect": [
+            3,
+            8,
+            9,
+            9
+          ]
+        },
+        {
+          "kind": "WEIGHT_ROOM",
+          "rect": [
+            22,
+            2,
+            26,
+            5
+          ]
+        }
       ],
       "signs": {},
       "npcs": [
-        {"x": 14, "y": 5, "frame": 1, "anim": "npc-idle-down", "dialogue": "Coach: Practice starts on the mat. Build your lineup one wrestler at a time."},
-        {"x": 14, "y": 8, "frame": 7, "anim": "npc-idle-down", "dialogue": "Captain: Coach is in the wrestling room. Check the office first, then come back.", "look": "gray", "gate": {"flag": "officeChecked", "x": 12, "y": 8, "dialogue": "Captain: Told you the office was a dead end. He lives on that mat. Go on through."}},
-        {"x": 11, "y": 10, "frame": 4, "anim": "npc-idle-left", "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat.", "look": "purple"}
+        {
+          "x": 14,
+          "y": 5,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Coach: Practice starts on the mat. Build your lineup one wrestler at a time."
+        },
+        {
+          "x": 14,
+          "y": 8,
+          "frame": 7,
+          "anim": "npc-idle-down",
+          "dialogue": "Captain: Coach is in the wrestling room. Check the office first, then come back.",
+          "look": "gray",
+          "gate": {
+            "flag": "officeChecked",
+            "x": 12,
+            "y": 9,
+            "dialogue": "Captain: Told you the office was a dead end. He lives on that mat. Go on through."
+          }
+        },
+        {
+          "x": 11,
+          "y": 10,
+          "frame": 4,
+          "anim": "npc-idle-left",
+          "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat.",
+          "look": "purple"
+        }
       ]
     },
     "campus": {
       "width": 28,
       "height": 18,
-      "start": {"x": 6, "y": 12},
+      "start": {
+        "x": 6,
+        "y": 12
+      },
       "actorScale": 0.67,
       "actorFootOffset": 16,
       "cameraZoom": 1.4,
@@ -63,32 +159,82 @@
         "############################",
         "############################",
         "############################",
+        "############....############",
         "#############...############",
         "#############...############",
         "#############...############",
-        "#############...############",
-        "###...E..............E...###",
-        "###......####...###......###",
-        "###......####...###......###",
-        "#############...############",
-        "#############...############",
-        "#############...############",
+        "##.###E###.........##E###.##",
+        "##........................##",
+        "###.......###..###..#..#..##",
+        "#############..#############",
+        "#############..#############",
+        "#############..#############",
         "##############E#############"
       ],
       "paths": [
-        [13, 7, 15, 17],
-        [6, 11, 21, 13]
+        [
+          13,
+          7,
+          15,
+          17
+        ],
+        [
+          6,
+          11,
+          21,
+          13
+        ]
       ],
       "lowerDecor": [],
       "upperDecor": [],
       "tileRuntime": "camp-randall-v1",
       "exits": [
-        {"x": 6, "y": 11, "dir": "up", "to": "fieldhouse", "tx": 14, "ty": 12, "msg": "Locker Room and Wrestling Room."},
-        {"x": 21, "y": 11, "dir": "up", "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
-        {"x": 14, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
+        {
+          "x": 6,
+          "y": 11,
+          "dir": "up",
+          "to": "fieldhouse",
+          "tx": 14,
+          "ty": 12,
+          "msg": "Locker Room and Wrestling Room."
+        },
+        {
+          "x": 21,
+          "y": 11,
+          "dir": "up",
+          "to": "studyhall",
+          "tx": 9,
+          "ty": 10,
+          "msg": "Coach's Office."
+        },
+        {
+          "x": 14,
+          "y": 17,
+          "dir": "down",
+          "to": "lakeshore",
+          "tx": 54,
+          "ty": 7,
+          "msg": "Route 1."
+        }
       ],
       "interactions": [
-        {"kind": "SIGN", "tiles": [[13, 7], [14, 7], [15, 7]]}
+        {
+          "kind": "SIGN",
+          "tiles": [
+            [
+              13,
+              7
+            ],
+            [
+              14,
+              7
+            ],
+            [
+              15,
+              7
+            ]
+          ]
+        }
       ],
       "signs": {
         "13,7": "CAMP RANDALL - The tunnel stays closed until the season is finished.",
@@ -96,13 +242,23 @@
         "15,7": "CAMP RANDALL - The tunnel stays closed until the season is finished."
       },
       "npcs": [
-        {"x": 19, "y": 13, "frame": 1, "anim": "npc-idle-left", "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.", "look": "red"}
+        {
+          "x": 19,
+          "y": 13,
+          "frame": 1,
+          "anim": "npc-idle-left",
+          "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.",
+          "look": "red"
+        }
       ]
     },
     "studyhall": {
       "width": 18,
       "height": 12,
-      "start": {"x": 9, "y": 10},
+      "start": {
+        "x": 9,
+        "y": 10
+      },
       "actorScale": 1,
       "actorFootOffset": 16,
       "cameraZoom": 1.25,
@@ -110,15 +266,15 @@
       "tiles": [
         "##################",
         "##################",
-        "##################",
-        "##################",
-        "##################",
-        "##..............##",
-        "##.......#......##",
-        "##..............##",
-        "##..............##",
-        "##..............##",
-        "#########..#######",
+        "#.....#####.######",
+        "#.....#####......#",
+        "#.....#####......#",
+        "#.......#........#",
+        "#.......#........#",
+        "##...............#",
+        "##...............#",
+        "#................#",
+        "#................#",
         "#########E########"
       ],
       "paths": [],
@@ -126,11 +282,43 @@
       "upperDecor": [],
       "tileRuntime": "camp-randall-v1",
       "exits": [
-        {"x": 9, "y": 11, "dir": "down", "to": "campus", "tx": 21, "ty": 12, "msg": "Camp Randall quad."}
+        {
+          "x": 9,
+          "y": 11,
+          "dir": "down",
+          "to": "campus",
+          "tx": 21,
+          "ty": 12,
+          "msg": "Camp Randall quad."
+        }
       ],
       "interactions": [
-        {"kind": "COACH_OFFICE", "rect": [6, 3, 11, 4]},
-        {"kind": "COACH_OFFICE", "tiles": [[2, 2], [3, 2], [4, 2]]}
+        {
+          "kind": "COACH_OFFICE",
+          "rect": [
+            6,
+            3,
+            11,
+            4
+          ]
+        },
+        {
+          "kind": "COACH_OFFICE",
+          "tiles": [
+            [
+              2,
+              2
+            ],
+            [
+              3,
+              2
+            ],
+            [
+              4,
+              2
+            ]
+          ]
+        }
       ],
       "signs": {},
       "npcs": [],

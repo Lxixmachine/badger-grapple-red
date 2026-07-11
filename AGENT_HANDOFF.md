@@ -1,5 +1,51 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.54 — collision re-authored from the art)
+
+Tony's phone video verdict: "the collision is horrendous and the game is
+unplayable." Root cause found in tools/build_camp_randall_tilemaps.py
+line 59: the tile runtime's walkable/solid behavior is copied straight
+from the ASCII grids in campRandallMaps.json — grids that were sketched
+as placeholders BEFORE the final art existed and never re-authored
+against it. Codex's runtime faithfully compiled wrong data.
+
+Made the mismatch visible first (red-overlay of solid cells on each
+composition — the campus overlay showed the player fenced into a narrow
+cross while the art reads as an open quad; the locker room had invisible
+walls on open floor AND walk-through benches). Then re-authored all
+three grids cell-by-cell from the compositions at tile granularity,
+via an explicit prop-footprint spec (zoomed, coordinate-labeled crops
+of every region — forecourt, gardens, both buildings, lawns, both
+interior rooms):
+
+- campus: lawns/aprons/road/path all open; solids only where drawn —
+  stadium mass, tree border, hedge band (row 14, with the path gap),
+  garden boxes, lamp posts, lawn trees/bushes, building masses and
+  their flowerbeds. The unreachable grass sliver east of the right
+  garden stays solid (fenced by flowerbeds in the art).
+- fieldhouse: full wrestling-room floor + mat open with prop footprints
+  solid (rolled-mat stand, headgear hooks, plate rack, barbell/bench);
+  divider row 7 + wall-face row 8 solid with the single doorway column
+  x14; locker floor open with banks, sinks, bins, and BOTH benches
+  solid; exit door frame posts solid.
+- studyhall: row 1 is wall face (was walkable); desk, armchair, cabinet/
+  shelf base, and both plants solid; everything else open.
+- Captain's post-gate spot moved (12,8)->(12,9) — row 8 is correctly
+  wall face now. Gate flow re-verified.
+- Smoke tests that encoded the OLD broken geometry rewritten to assert
+  the drawn architecture (door frame, locker strip, mat openness, sign
+  row, hedge band, desk/armchair). 14/14 green. Player-level scripted
+  walkthrough swept every lane and matched the art exactly.
+- Atlas PNG byte-identical after rebuild (dedup unchanged) — no
+  BootScene cache bump needed.
+
+Standing rule earned here, for every future area: **collision is
+re-authored FROM the final art before an area ships; placeholder grids
+never survive into a release.** The red-overlay board
+(solid-tint over the composition) is the one-glance check — trivially
+regenerated, and worth adding to the check chain when F-015's reusable
+kit lands.
+
 ## Latest Claude Turn (v21.53 — the captain gate works; softlock fixed)
 
 Tony: "Codex did work check it." Checked v21.48-v21.52 end to end: pulled

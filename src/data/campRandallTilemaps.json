@@ -127,92 +127,88 @@
       "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "solid",
@@ -319,20 +315,20 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -431,20 +427,20 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -543,16 +539,16 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -655,10 +651,18 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
       "behavior": "solid",
       "blocked": true
     },
@@ -773,10 +777,6 @@
     {
       "behavior": "walkable",
       "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
     },
     {
       "behavior": "solid",
@@ -943,36 +943,36 @@
       "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "walkable",
       "blocked": false
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "solid",
@@ -1143,32 +1143,28 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -1199,28 +1195,28 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -1231,8 +1227,8 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -1249,30 +1245,6 @@
     {
       "behavior": "solid",
       "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -1283,28 +1255,28 @@
       "blocked": false
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "walkable",
@@ -1363,12 +1335,12 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -1387,20 +1359,20 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -1415,44 +1387,72 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -2407,602 +2407,6 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "exit",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "exit",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
       "behavior": "walkable",
       "blocked": false
     },
@@ -3017,22 +2421,6 @@
     {
       "behavior": "walkable",
       "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
     },
     {
       "behavior": "solid",
@@ -3041,30 +2429,6 @@
     {
       "behavior": "solid",
       "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3081,18 +2445,6 @@
     {
       "behavior": "solid",
       "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3105,30 +2457,6 @@
     {
       "behavior": "solid",
       "blocked": true
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
-    },
-    {
-      "behavior": "walkable",
-      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3429,38 +2757,6 @@
     {
       "behavior": "walkable",
       "blocked": false
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
-    },
-    {
-      "behavior": "solid",
-      "blocked": true
     },
     {
       "behavior": "solid",
@@ -3519,8 +2815,8 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3551,6 +2847,526 @@
       "blocked": true
     },
     {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "exit",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
       "behavior": "solid",
       "blocked": true
     },
@@ -3601,6 +3417,14 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3709,6 +3533,10 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "exit",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3909,6 +3737,26 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3929,6 +3777,10 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -3957,6 +3809,14 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -3969,6 +3829,26 @@
     {
       "behavior": "walkable",
       "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "walkable",
@@ -3993,6 +3873,14 @@
     {
       "behavior": "walkable",
       "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "walkable",
@@ -4031,8 +3919,8 @@
       "blocked": true
     },
     {
-      "behavior": "walkable",
-      "blocked": false
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "walkable",
@@ -4057,6 +3945,10 @@
     {
       "behavior": "walkable",
       "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "solid",
@@ -4087,12 +3979,44 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -4129,6 +4053,10 @@
     {
       "behavior": "walkable",
       "blocked": false
+    },
+    {
+      "behavior": "solid",
+      "blocked": true
     },
     {
       "behavior": "walkable",
@@ -4159,8 +4087,8 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -4231,8 +4159,8 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -4303,8 +4231,8 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -4315,36 +4243,36 @@
       "blocked": true
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "walkable",
@@ -4355,20 +4283,28 @@
       "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
     },
     {
-      "behavior": "solid",
-      "blocked": true
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -4377,6 +4313,70 @@
     {
       "behavior": "solid",
       "blocked": true
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
+    },
+    {
+      "behavior": "walkable",
+      "blocked": false
     },
     {
       "behavior": "solid",
@@ -4882,7 +4882,7 @@
         ]
       ],
       "source": "area_fieldhouse.png",
-      "sourceSha256": "7ca16fc43fecbce9d1b3a05a788afe0f542446e96995be3fe0f6801795b53f5d"
+      "sourceSha256": "85f27955eb72d7f0be74231e91c823b41c431f35f32b26d4d541e28337a6e401"
     },
     "campus": {
       "width": 28,
@@ -5430,7 +5430,7 @@
         ]
       ],
       "source": "area_campus.png",
-      "sourceSha256": "e694f6b5fc9525f7145d48891d984b70c5c97ff9e979efb8141b34c8d3cf83ac"
+      "sourceSha256": "e67933a85dc55bf5033cf2fb875377c4fed58cecbb1b490f035038d0097c3cb9"
     },
     "studyhall": {
       "width": 18,
@@ -5678,7 +5678,7 @@
         ]
       ],
       "source": "area_studyhall.png",
-      "sourceSha256": "f7c0e92401d8952eb343726c79b875be4fab9c1878c36f7d8e27597d15ae724f"
+      "sourceSha256": "b551eff6759cd1cf81d34dc0e6a56d80348d0dc2e001aaa1ea8beb7dc87cbc75"
     }
   }
 }
