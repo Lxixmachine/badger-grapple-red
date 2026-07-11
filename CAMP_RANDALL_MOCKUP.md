@@ -135,6 +135,13 @@ missed once we're generating real tiles.
 
 ## Status
 
+**v21.47 implementation note:** the proof-of-concept tile grids now live in
+`src/data/campRandallMaps.json` and the matching source art lives under
+`art/imagegen/camp_randall_*_2026-07-10.png`. The exterior, connected Building
+2 interior, and Coach's Office are walkable at phone scale. The tunnel/field
+ending remains intentionally deferred. Tony's visual verdict is still the
+gate before this workflow extends to the rest of the region.
+
 All five open questions from the first pass are now locked: Building
 3's interior contents, the outdoor quad's decoration (lamp
 posts/banners/hedges), the R1 exit position, and the stadium's ending

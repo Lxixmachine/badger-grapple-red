@@ -34,7 +34,7 @@ export function trainerSeesTile(tr,x,y){
 // area by exit/landing offsets. Conflicts mean the geography contradicts
 // itself; the validator fails on any. The Town Map renders from this.
 export function worldPlane(){
- const OUT=['campus','lakeshore','river','downtown'];
+ const OUT=WORLD_META.activeOutdoorAreas;
  const pos={campus:{x:0,y:0}};const q=['campus'];const conflicts=[];
  while(q.length){
   const id=q.shift();const b=pos[id];const {width,height}=areaDimensions(id);

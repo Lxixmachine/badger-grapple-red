@@ -1,7 +1,8 @@
 import source from './layeredMaps.json' with {type: 'json'};
+import campRandall from './campRandallMaps.json' with {type: 'json'};
 
 export const LAYERED_MAP_VERSION=source.version;
-export const LAYERED_MAPS=source.areas;
+export const LAYERED_MAPS={...source.areas,...campRandall.areas};
 
 export function layeredMap(area){return LAYERED_MAPS[area]||null;}
 

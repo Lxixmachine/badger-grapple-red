@@ -22,7 +22,7 @@ for(const [aid,map] of Object.entries(LAYERED_MAPS)){
       if(isBlocked(aid,x,y)!=='#X'.includes(row[x]))errs.push(`layered area ${aid}: collision diverges at (${x},${y})`);
     }
   });
-  if(!map.lowerDecor?.length||!map.upperDecor?.length||!map.interactions?.length||!map.npcs?.length)errs.push(`layered area ${aid}: ground/lower/upper/interactions/NPC layers must all be populated`);
+  if(!map.lowerDecor?.length||!map.upperDecor?.length||!map.interactions?.length||(!map.npcs?.length&&!map.allowEmptyNpcs))errs.push(`layered area ${aid}: ground/lower/upper/interactions/NPC layers must all be populated`);
   for(const exit of map.exits||[]){if(map.tiles[exit.y]?.[exit.x]!=='E')errs.push(`layered area ${aid}: exit (${exit.x},${exit.y}) is not marked E`);}
   for(const upper of map.upperDecor||[]){
     if(!Number.isFinite(upper.depthY))errs.push(`layered area ${aid}: upper ${upper.texture} has no depthY`);
@@ -145,6 +145,6 @@ for(const [aid,a] of Object.entries(AREAS)){
 // consistent geography via exit offsets - the Town Map renders from it.
 const plane=worldPlane();
 plane.conflicts.forEach(c=>errs.push(`world plane contradiction: ${c}`));
-for(const id of ['campus','lakeshore','river','downtown'])if(!plane.pos[id])errs.push(`world plane: outdoor area '${id}' is unreachable from campus via outdoor exits`);
-console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Bascom ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}.`);
+for(const id of WORLD_META.activeOutdoorAreas)if(!plane.pos[id])errs.push(`world plane: outdoor area '${id}' is unreachable from campus via outdoor exits`);
+console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}.`);
 if(errs.length)process.exit(1);

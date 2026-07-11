@@ -7,28 +7,28 @@ export const WORLD_META = {
   height: 14,
   maxWidth: 56,
   maxHeight: 20,
+  activeOutdoorAreas: ['campus'],
   source: `layered-map-v${LAYERED_MAP_VERSION}`,
   nextPipeline: 'expand-layered-map'
 };
 
 export const AREAS = {
-  fieldhouse: { name: 'FIELD HOUSE', bg: 'area_fieldhouse', ...LAYERED_MAPS.fieldhouse, encounters: false },
+  fieldhouse: { name: 'LOCKER / WRESTLING', bg: 'area_fieldhouse', ...LAYERED_MAPS.fieldhouse, encounters: false },
   campus: {
-    name: 'BASCOM HILL',
+    name: 'CAMP RANDALL',
     bg: 'area_campus',
     ...LAYERED_MAPS.campus,
-    encounters: true,
-    wildLevels: [3, 6]
+    encounters: false
   },
-  studyhall: { name: 'MEMORIAL LIBRARY', bg: 'area_studyhall', start: { x: 5, y: 10 }, exits: [{ x: 5, y: 11, to: 'campus', tx: 22, ty: 13, msg: 'Bascom Hill.' }], encounters: false },
+  studyhall: { name: "COACH'S OFFICE", bg: 'area_studyhall', ...LAYERED_MAPS.studyhall, encounters: false },
   shop: {
     name: 'TEAM SHOP',
     bg: 'area_shop',
     start: { x: 14, y: 10 },
     exits: [
-      { x: 13, y: 12, to: 'campus', tx: 5, ty: 6, msg: 'Bascom Hill.' },
-      { x: 14, y: 12, to: 'campus', tx: 5, ty: 6, msg: 'Bascom Hill.' },
-      { x: 15, y: 12, to: 'campus', tx: 5, ty: 6, msg: 'Bascom Hill.' }
+      { x: 13, y: 12, to: 'campus', tx: 12, ty: 15, msg: 'Camp Randall.' },
+      { x: 14, y: 12, to: 'campus', tx: 13, ty: 15, msg: 'Camp Randall.' },
+      { x: 15, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' }
     ],
     encounters: false
   },
@@ -37,9 +37,9 @@ export const AREAS = {
     bg: 'area_recovery',
     start: { x: 14, y: 10 },
     exits: [
-      { x: 13, y: 12, to: 'campus', tx: 22, ty: 6, msg: 'Bascom Hill.' },
-      { x: 14, y: 12, to: 'campus', tx: 22, ty: 6, msg: 'Bascom Hill.' },
-      { x: 15, y: 12, to: 'campus', tx: 22, ty: 6, msg: 'Bascom Hill.' }
+      { x: 13, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' },
+      { x: 14, y: 12, to: 'campus', tx: 15, ty: 15, msg: 'Camp Randall.' },
+      { x: 15, y: 12, to: 'campus', tx: 16, ty: 15, msg: 'Camp Randall.' }
     ],
     encounters: false
   },
@@ -68,7 +68,7 @@ export const AREAS = {
     name: 'ANNEX ARENA',
     bg: 'area_conference',
     start: { x: 14, y: 12 },
-    exits: [{ x: 14, y: 13, to: 'campus', tx: 14, ty: 2, msg: 'Bascom Hill.' }],
+    exits: [{ x: 14, y: 13, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' }],
     captain: { x: 14, y: 5, id: 'captainneutral', lvl: 8, type: 'gym', badge: 'Neutral Badge', team: [['drillpartner', 7], ['captainneutral', 8]], reward: { grit: 22, rep: 14 }, intro: 'Captain Neutral: Show me you can win one real varsity dual.', beaten: 'Captain Neutral: Neutral Badge earned. The Lakeshore Path runs west; State Street runs east. Both are yours now.' }
   },
   championship: {
@@ -92,8 +92,8 @@ export const WILD_SLOTS = {
 };
 
 export const TRAINERS = {
-  campus_recruit: { id: 'campus_recruit', look: 'red', area: 'campus', name: 'Buckshot', pos: { x: 22, y: 16 }, facing: 'left', sightRange: 5, team: [['drillpartner', 6], ['pacesetter', 6]], reward: { grit: 9, rep: 8 }, line: 'Buckshot: Want to test yourself? Two matches, back to back.', beaten: 'Buckshot: Good matches. Come back stronger.', spot: "Buckshot: Hey - you! Let's go!" },
-  campus_rival: { id: 'campus_rival', look: 'purple', area: 'campus', name: 'Rex', pos: { x: 18, y: 8 }, facing: 'down', sightRange: 5, team: [['lakechain', 7], ['fieldflyer', 7]], reward: { grit: 12, rep: 10 }, line: 'Rex: Build your lineup all you want. I still want that dual meet. Right now.', beaten: 'Rex: Fine. You earned that one. Next time I bring a real team.', spot: 'Rex: There you are. No walking away this time.' },
+  campus_recruit: { id: 'campus_recruit', look: 'red', area: 'lakeshore', name: 'Buckshot', pos: { x: 30, y: 7 }, facing: 'left', sightRange: 5, team: [['drillpartner', 6], ['pacesetter', 6]], reward: { grit: 9, rep: 8 }, line: 'Buckshot: Want to test yourself? Two matches, back to back.', beaten: 'Buckshot: Good matches. Come back stronger.', spot: "Buckshot: Hey - you! Let's go!" },
+  campus_rival: { id: 'campus_rival', look: 'purple', area: 'lakeshore', name: 'Rex', pos: { x: 47, y: 7 }, facing: 'left', sightRange: 5, team: [['lakechain', 7], ['fieldflyer', 7]], reward: { grit: 12, rep: 10 }, line: 'Rex: Build your lineup all you want. I still want that dual meet. Right now.', beaten: 'Rex: Fine. You earned that one. Next time I bring a real team.', spot: 'Rex: There you are. No walking away this time.' },
   // v21.11 route trainers - level curve sits between Badge 1 (Lv8) and Badge 3 (Lv17)
   lakeshore_marina: { id: 'lakeshore_marina', look: 'green', area: 'lakeshore', name: 'Marina', pos: { x: 40, y: 7 }, facing: 'right', sightRange: 4, team: [['riverroller', 9], ['lakechain', 9]], reward: { grit: 10, rep: 8 }, line: 'Marina: I run the shoreline every morning. Show me your conditioning.', beaten: 'Marina: Good pace. The Picnic Point crowd out west wrestles harder - be ready.', spot: 'Marina: You there! Nobody crosses the shore without a match.' },
   lakeshore_sandy: { id: 'lakeshore_sandy', look: 'gold', area: 'lakeshore', name: 'Sandy', pos: { x: 17, y: 5 }, facing: 'down', sightRange: 4, team: [['whizzkid', 10]], reward: { grit: 9, rep: 7 }, line: 'Sandy: Try to score on my whizzer. Everyone tries.', beaten: 'Sandy: First one to score on him all season. Respect.', spot: 'Sandy: Hold up! My guy needs a live opponent.' },

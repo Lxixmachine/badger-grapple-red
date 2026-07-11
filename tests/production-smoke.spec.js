@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.46-design-bible');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.47-camp-randall');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_campus', 'area_downtown', 'area_studyhall', 'fr1_campus_tree', 'fr2_campus_red_hall', 'fr2_state_storefronts', 'fr2_kohl_center', 'fr2_capitol_grand', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'cr_trophy_wall', 'cr_player_lockers', 'cr_lamp', 'cr_whiteboard', 'cr_coach_desk', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -82,7 +82,7 @@ test('production build boots with runtime assets', async ({page}) => {
     expect(texture.height, `texture ${texture.key} height`).toBeGreaterThan(1);
   }
   const campusTexture = textureReport.find(texture => texture.key === 'area_campus');
-  expect(campusTexture).toMatchObject({width: 448, height: 320});
+  expect(campusTexture).toMatchObject({width: 448, height: 288});
 
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
@@ -99,7 +99,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(overworld).toMatchObject({
     active: true,
     area: 'fieldhouse',
-    tilePos: {x: 14, y: 11},
+    tilePos: {x: 7, y: 12},
     camera: {
       count: 2,
       worldZoom: 1.25,
@@ -109,51 +109,52 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 6, directActorDepth: true}
+    layered: {version: 1, upperCount: 5, directActorDepth: true}
   });
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
   expect(save).toMatchObject({
     playerName: 'Coach',
     area: 'fieldhouse',
-    pos: {x: 14, y: 11}
+    pos: {x: 7, y: 12}
   });
   expect(save.party).toHaveLength(1);
   expect(save.flags.introDone).toBe(true);
-  expect(save.message).toContain('Coach is waiting');
+  expect(save.message).toContain('captain is waiting');
   expect(runtimeIssues).toEqual([]);
 });
 
-test('Field House scenic wall never enters the player occlusion layer', async ({page}) => {
+test('Building 2 uses only narrow, collision-owned upper decor', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
-  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=3');
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=6');
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('canvas')).toBeVisible();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
     active: true,
-    tilePos: {x: 14, y: 3}
+    tilePos: {x: 14, y: 6}
   });
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
-  expect(overworld.layered.upperTextures).toContain('fr1_fieldhouse_exit');
+  expect(overworld.layered.upperTextures).toEqual(expect.arrayContaining(['cr_trophy_wall', 'cr_player_lockers', 'cr_team_lockers', 'cr_weights', 'cr_exit_door']));
   expect(overworld.layered.upperTextures).not.toContain('fr2_fieldhouse_wall');
   expect(runtimeIssues).toEqual([]);
 });
 
-test('FR1 pilot map renders depth-aware Bascom architecture', async ({page}) => {
+test('Camp Randall renders its compact proof-of-concept exterior', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
-  await page.goto('/?test=1&scene=overworld&area=campus&x=9&y=3');
+  await page.goto('/?test=1&scene=overworld&area=campus&x=14&y=10');
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('canvas')).toBeVisible();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').layered)).toMatchObject({
     version: 1,
-    upperCount: 13,
+    upperCount: 4,
     directActorDepth: true
   });
   const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
-  expect(state.tilePos).toEqual({x: 9, y: 3});
-  expect(state.layered.upperDepths).toHaveLength(13);
+  expect(state.tilePos).toEqual({x: 14, y: 10});
+  expect(state.layered.upperDepths).toHaveLength(4);
+  expect(state.layered.upperTextures).toEqual(expect.arrayContaining(['cr_lamp', 'cr_campus_sign', 'cr_office_sign']));
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -171,48 +172,24 @@ test('v21.40 State Street renders layered shops, arena, and Capitol', async ({pa
   expect(runtimeIssues).toEqual([]);
 });
 
-test('coach assignment leads from Field House to Bascom Hill', async ({page}) => {
+test('Camp Randall thresholds connect Building 2 and the Coach office', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
-  await openTestBuild(page);
-  await completeOpeningToOverworld(page);
-
-  await press(page, 'b');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').messageOpen)).toBe(false);
-  await page.waitForTimeout(120);
-
-  // The mat wrestler at (14,8) is solid now - sidestep the mat column first.
-  for (let i = 0; i < 2; i++) await move(page, 'up');
-  await move(page, 'left');
-  for (let i = 0; i < 3; i++) await move(page, 'up');
-  for (let i = 0; i < 8; i++) await move(page, 'left');
-  await move(page, 'up');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 5, y: 5});
-  await page.waitForTimeout(120);
-
-  await press(page, 'a');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Go up Bascom Hill');
-  await page.waitForTimeout(120);
-
-  const assigned = await page.evaluate(() => window.__badgerTest.storage());
-  expect(assigned.flags.coachIntro).toBe(true);
-  expect(assigned.flags.assignment).toBe(true);
-  expect(assigned.objective).toMatchObject({id: 'scout_quad', stage: 2, complete: false});
-
-  await press(page, 'b');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').messageOpen)).toBe(false);
-  await page.waitForTimeout(120);
-
-  for (let i = 0; i < 9; i++) await move(page, 'right');
-  for (let i = 0; i < 4; i++) await move(page, 'up');
-
+  await page.goto('/?test=1&scene=overworld&area=campus&x=7&y=10');
+  await expect(page.locator('#bootError')).toBeHidden();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('campus');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 14, y: 18});
-
-  const campusSave = await page.evaluate(() => window.__badgerTest.storage());
-  expect(campusSave).toMatchObject({
-    area: 'campus',
-    pos: {x: 14, y: 18}
-  });
+  await move(page, 'up');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('fieldhouse');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 7, y: 12});
+  await move(page, 'down');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('campus');
+  await page.goto('/?test=1&scene=overworld&area=campus&x=22&y=11');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 22, y: 11});
+  await move(page, 'up');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('studyhall');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 10});
+  const office = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(office.layered.upperTextures).toEqual(expect.arrayContaining(['cr_whiteboard', 'cr_coach_desk', 'cr_office_exit']));
+  expect(office.npcTiles).toEqual([]);
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -305,36 +282,16 @@ test('route trainer is drawn and ambushes the player through the sight line', as
   expect(runtimeIssues).toEqual([]);
 });
 
-test('campus open mats trigger a real scout encounter that reaches a wild battle', async ({page}) => {
-  test.setTimeout(60000);
+test('Camp Randall quad has no retired Bascom open-mat encounters', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
-  await continueIntoOverworld(page, seededSave({area: 'campus', pos: {x: 22, y: 15}}));
-
-  // Walk the safe grass row (y=15 is outside Buckshot's sight line) until the
-  // 12%-per-step wild encounter fires. 80 steps bounds the run; the odds of a
-  // false negative are (0.88)^80, about one in thirty thousand.
-  let scoutStarted = false;
-  for (let i = 0; i < 80 && !scoutStarted; i++) {
-    await move(page, i % 2 ? 'left' : 'right');
-    scoutStarted = await page.evaluate(() => window.__badgerTest.activeSceneKeys().includes('ScoutScene'));
-  }
-  expect(scoutStarted, 'grass walk should trigger a scout encounter').toBe(true);
-
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').active)).toBe(true);
-  const scout = await page.evaluate(() => window.__badgerTest.sceneState('ScoutScene'));
-  expect(scout.id).toBeTruthy();
-  expect(scout.lvl).toBeGreaterThanOrEqual(3);
-
-  // ScoutScene locks input during its entrance animation - retry the press
-  // until the selection actually moves instead of assuming one press lands.
-  await expect.poll(async () => {
-    const sel = await page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected);
-    if (sel === 0) { await press(page, 'down'); await page.waitForTimeout(140); }
-    return page.evaluate(() => window.__badgerTest.sceneState('ScoutScene').selected);
-  }).toBe(1); // SCOUT FURTHER
-  await press(page, 'a');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await continueIntoOverworld(page, seededSave({area: 'campus', pos: {x: 14, y: 15}}));
+  for (let i = 0; i < 12; i++) await move(page, i % 2 ? 'left' : 'right');
+  const scenes = await page.evaluate(() => window.__badgerTest.activeSceneKeys());
+  expect(scenes).toContain('OverworldScene');
+  expect(scenes).not.toContain('ScoutScene');
+  const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(overworld.area).toBe('campus');
+  expect(overworld.npcTiles).not.toEqual(expect.arrayContaining([{x: 18, y: 8}, {x: 22, y: 16}]));
   expect(runtimeIssues).toEqual([]);
 });
 

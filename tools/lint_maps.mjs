@@ -15,6 +15,7 @@
 import {createHash} from 'node:crypto';
 import {readFileSync} from 'node:fs';
 import {inflateSync} from 'node:zlib';
+import {fileURLToPath} from 'node:url';
 import {AREAS, areaDimensions, spotKind} from '../src/data/maps.js';
 import {layeredMap, layeredNpcs, layeredUpperDecor, layeredWaterRects} from '../src/data/layeredMaps.js';
 
@@ -95,7 +96,7 @@ const findings = [];
 const summary = [];
 
 for (const id of Object.keys(AREAS)) {
-  const png = decodePng(new URL(`../public/assets/ui/area_${id}.png`, import.meta.url).pathname);
+  const png = decodePng(fileURLToPath(new URL(`../public/assets/ui/area_${id}.png`, import.meta.url)));
   const grid = cellHashes(png);
   const ch = grid.length, cw = grid[0].length;
   const water = new Set();

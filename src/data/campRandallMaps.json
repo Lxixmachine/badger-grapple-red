@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "tileSize": 16,
+  "areas": {
+    "fieldhouse": {
+      "width": 28,
+      "height": 14,
+      "start": {"x": 7, "y": 12},
+      "ground": "camp-interior-wood",
+      "tiles": [
+        "############################",
+        "#....................#####.#",
+        "#....................#####.#",
+        "#....................#####.#",
+        "#....................#####.#",
+        "#..........................#",
+        "#..........................#",
+        "##############.#############",
+        "#..........................#",
+        "#.######............####...#",
+        "#.######............####...#",
+        "#.######............####...#",
+        "#..........................#",
+        "#######E####################"
+      ],
+      "paths": [],
+      "lowerDecor": [
+        {"type": "prop", "name": "camp_sacred_mat", "x": 7, "y": 1},
+        {"type": "prop", "name": "camp_doorway", "x": 13, "y": 5}
+      ],
+      "upperDecor": [
+        {"texture": "cr_trophy_wall", "source": "prop", "name": "camp_trophy_wall", "x": 10, "y": 5, "depthY": 7.5},
+        {"texture": "cr_player_lockers", "source": "prop", "name": "camp_player_lockers", "x": 2, "y": 8, "depthY": 12.5},
+        {"texture": "cr_team_lockers", "source": "prop", "name": "camp_team_lockers", "x": 20, "y": 8, "depthY": 12.5},
+        {"texture": "cr_weights", "source": "prop", "name": "camp_weights", "x": 21, "y": 1, "depthY": 5.5},
+        {"texture": "cr_exit_door", "source": "prop", "name": "camp_doorway", "x": 6, "y": 11, "depthY": 13.5}
+      ],
+      "exits": [
+        {"x": 7, "y": 13, "to": "campus", "tx": 7, "ty": 10, "msg": "Camp Randall quad."}
+      ],
+      "interactions": [
+        {"kind": "N", "tiles": [[14, 4], [14, 5]]},
+        {"kind": "M", "rect": [7, 1, 16, 6]},
+        {"kind": "TROPHY", "tiles": [[12, 7], [13, 7], [15, 7], [16, 7]]},
+        {"kind": "LOCKER_ROOM", "rect": [2, 9, 7, 11]},
+        {"kind": "WEIGHT_ROOM", "rect": [21, 1, 25, 4]}
+      ],
+      "signs": {},
+      "npcs": [
+        {"x": 14, "y": 5, "frame": 1, "anim": "npc-idle-down", "dialogue": "Coach: Practice starts on the mat. Build your lineup one wrestler at a time."},
+        {"x": 14, "y": 8, "frame": 7, "anim": "npc-idle-down", "dialogue": "Captain: Coach is in the wrestling room. Check the office first, then come back.", "look": "gray"},
+        {"x": 9, "y": 10, "frame": 4, "anim": "npc-idle-left", "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat.", "look": "purple"}
+      ]
+    },
+    "campus": {
+      "width": 28,
+      "height": 18,
+      "start": {"x": 7, "y": 10},
+      "ground": "camp-quad",
+      "tiles": [
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "############........########",
+        "############........########",
+        "#######E####........########",
+        "###...................E#####",
+        "###......................###",
+        "###......................###",
+        "###........#....#........###",
+        "###......................###",
+        "###......................###",
+        "###......................###",
+        "##############E#############"
+      ],
+      "paths": [
+        [3, 10, 24, 16],
+        [13, 7, 15, 17],
+        [7, 9, 7, 11],
+        [22, 10, 22, 12]
+      ],
+      "lowerDecor": [
+        {"type": "prop", "name": "camp_stadium", "x": 0, "y": 0},
+        {"type": "prop", "name": "camp_training_building", "x": 3, "y": 6},
+        {"type": "prop", "name": "camp_coach_building", "x": 20, "y": 7},
+        {"type": "prop", "name": "camp_tree_border", "x": 0, "y": 6},
+        {"type": "prop", "name": "camp_tree_border", "x": 25, "y": 6},
+        {"type": "prop", "name": "camp_flower_bed", "x": 3, "y": 10},
+        {"type": "prop", "name": "camp_flower_bed", "x": 9, "y": 10},
+        {"type": "prop", "name": "camp_flower_bed", "x": 19, "y": 11},
+        {"type": "prop", "name": "camp_flower_bed", "x": 23, "y": 11}
+      ],
+      "upperDecor": [
+        {"texture": "cr_lamp", "source": "prop", "name": "camp_lamp", "x": 10, "y": 10, "depthY": 14.5},
+        {"texture": "cr_lamp", "source": "prop", "name": "camp_lamp", "x": 15, "y": 10, "depthY": 14.5},
+        {"texture": "cr_campus_sign", "source": "tile", "name": "signboard", "x": 5, "y": 11, "depthY": 11.6},
+        {"texture": "cr_office_sign", "source": "tile", "name": "signboard", "x": 23, "y": 12, "depthY": 12.6}
+      ],
+      "exits": [
+        {"x": 7, "y": 9, "to": "fieldhouse", "tx": 7, "ty": 12, "msg": "Locker Room and Wrestling Room."},
+        {"x": 22, "y": 10, "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
+        {"x": 14, "y": 17, "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
+      ],
+      "interactions": [
+        {"kind": "SIGN", "tiles": [[13, 7], [14, 7], [15, 7]]}
+      ],
+      "signs": {
+        "5,11": "LOCKER & WRESTLING - Building 2.",
+        "23,12": "HEAD COACH - Building 3.",
+        "13,7": "CAMP RANDALL - The tunnel stays closed until the season is finished.",
+        "14,7": "CAMP RANDALL - The tunnel stays closed until the season is finished.",
+        "15,7": "CAMP RANDALL - The tunnel stays closed until the season is finished."
+      },
+      "npcs": [
+        {"x": 18, "y": 13, "frame": 1, "anim": "npc-idle-left", "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.", "look": "red"}
+      ]
+    },
+    "studyhall": {
+      "width": 18,
+      "height": 12,
+      "start": {"x": 9, "y": 10},
+      "ground": "camp-office",
+      "tiles": [
+        "##################",
+        "#................#",
+        "#.....#####......#",
+        "#.....#####......#",
+        "#.....#####......#",
+        "#................#",
+        "#................#",
+        "#................#",
+        "#................#",
+        "#................#",
+        "#................#",
+        "#########E########"
+      ],
+      "paths": [],
+      "lowerDecor": [
+        {"type": "prop", "name": "camp_office_wall", "x": 5, "y": 0}
+      ],
+      "upperDecor": [
+        {"texture": "cr_whiteboard", "source": "prop", "name": "camp_whiteboard", "x": 1, "y": 0, "depthY": 2.5},
+        {"texture": "cr_coach_desk", "source": "prop", "name": "camp_desk", "x": 6, "y": 2, "depthY": 5.5},
+        {"texture": "cr_office_exit", "source": "prop", "name": "camp_doorway", "x": 8, "y": 9, "depthY": 11.5}
+      ],
+      "exits": [
+        {"x": 9, "y": 11, "to": "campus", "tx": 22, "ty": 11, "msg": "Camp Randall quad."}
+      ],
+      "interactions": [
+        {"kind": "COACH_OFFICE", "rect": [6, 2, 10, 4]},
+        {"kind": "COACH_OFFICE", "rect": [1, 1, 6, 2]}
+      ],
+      "signs": {},
+      "npcs": [],
+      "allowEmptyNpcs": true
+    }
+  }
+}

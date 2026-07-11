@@ -19,10 +19,14 @@ LANDMARK_SOURCE = ROOT / "art" / "imagegen" / "madison_landmarks_2026-07-09.png"
 ARCH_SOURCE = ROOT / "art" / "imagegen" / "town_fieldhouse_architecture_2026-07-09.png"
 OVERHAUL_SOURCE = ROOT / "art" / "imagegen" / "madison_visual_overhaul_v2140_2026-07-10.png"
 OUTDOOR_MAT_SOURCE = ROOT / "art" / "imagegen" / "outdoor_worn_mat_v2140_2026-07-10.png"
+CAMP_EXTERIOR_SOURCE = ROOT / "art" / "imagegen" / "camp_randall_exterior_2026-07-10.png"
+CAMP_INTERIOR_SOURCE = ROOT / "art" / "imagegen" / "camp_randall_interiors_2026-07-10.png"
+CAMP_TERRAIN_SOURCE = ROOT / "art" / "imagegen" / "camp_randall_terrain_2026-07-10.png"
 TILES_OUT = ROOT / "public" / "assets" / "tiles" / "terrain_tileset_wp1.png"
 UI_OUT = ROOT / "public" / "assets" / "ui"
 LAYERS_OUT = ROOT / "public" / "assets" / "layers"
 LAYERED_SOURCE = ROOT / "src" / "data" / "layeredMaps.json"
+CAMP_RANDALL_SOURCE = ROOT / "src" / "data" / "campRandallMaps.json"
 TILE = 16
 
 
@@ -199,6 +203,7 @@ MAPS = {
 }
 
 LAYERED_MAPS = json.loads(LAYERED_SOURCE.read_text(encoding="utf-8"))["areas"]
+LAYERED_MAPS.update(json.loads(CAMP_RANDALL_SOURCE.read_text(encoding="utf-8"))["areas"])
 for area_id, area_source in LAYERED_MAPS.items():
     MAPS[area_id] = area_source["tiles"]
 
@@ -291,6 +296,46 @@ LANDMARK_CROPS = {
     "brick1": (1246, 598, 1288, 640),
 }
 
+# v21.44 Camp Randall proof-of-concept sources. Large objects are cropped as
+# complete drawings and only then fitted to the 16px world grid.
+CAMP_TILE_CROPS = {
+    "camp_lawn": (143, 122, 204, 184),
+    "camp_plaza": (355, 122, 416, 184),
+    "camp_brick": (565, 122, 626, 184),
+    "camp_wood": (775, 122, 836, 184),
+    "camp_wood_alt": (714, 60, 775, 122),
+}
+
+CAMP_INTERIOR_TILE_CROPS = {
+    "camp_wall": (575, 883, 675, 964),
+    "camp_window": (650, 780, 760, 875),
+}
+
+CAMP_EXTERIOR_CROPS = {
+    "camp_stadium": (122, 40, 1387, 510),
+    "camp_training_building": (106, 545, 808, 820),
+    "camp_coach_building": (905, 570, 1226, 820),
+    "camp_lamp": (1285, 555, 1448, 856),
+}
+
+CAMP_INTERIOR_CROPS = {
+    "camp_trophy_wall": (43, 45, 756, 347),
+    "camp_player_lockers": (845, 52, 1468, 382),
+    "camp_team_lockers": (92, 428, 430, 665),
+    "camp_weights": (525, 395, 875, 692),
+    "camp_desk": (1018, 398, 1332, 675),
+    "camp_whiteboard": (44, 727, 464, 963),
+    "camp_office_wall": (542, 733, 1119, 972),
+    "camp_doorway": (1244, 748, 1406, 972),
+}
+
+CAMP_TERRAIN_PROP_CROPS = {
+    "camp_sacred_mat": (947, 55, 1396, 430),
+    "camp_tree_border": (1390, 327, 1520, 805),
+    "camp_tree_clump": (1050, 503, 1265, 681),
+    "camp_flower_bed": (150, 694, 350, 758),
+}
+
 # Dedicated opening-map architecture. The image generator returned the same
 # 1448x1086 4x3 canvas as the landmark sheet, with 322px subjects separated by
 # 40px gutters. These cells stay as large props rather than being crushed into
@@ -329,11 +374,14 @@ def normalize_image(tile):
     """Chroma-key and quantize an imagegen crop without drawing new art."""
     if tile.mode != "RGBA":
         tile = tile.convert("RGBA")
-    # Remove only the source's flat chroma green. This preserves model-made
-    # transparent gutters without replacing or drawing any art pixels.
+    # Remove the source sheets' flat chroma green or magenta. This preserves
+    # model-made transparent gutters without replacing or drawing art pixels.
     pixels = tile.get_flattened_data() if hasattr(tile, "get_flattened_data") else tile.getdata()
     keyed = [
-        (r, g, b, 0) if r < 35 and g > 220 and b < 35 else (r, g, b, a)
+        (r, g, b, 0) if (
+            (r < 35 and g > 220 and b < 35)
+            or (r > 220 and g < 40 and b > 220)
+        ) else (r, g, b, a)
         for r, g, b, a in pixels
     ]
     tile.putdata(keyed)
@@ -392,13 +440,16 @@ def load_source_tiles(source_path, crops):
 
 
 def load_tiles():
-    sources = (SOURCE, TOWN_SOURCE, LANDMARK_SOURCE, ARCH_SOURCE)
+    sources = (SOURCE, TOWN_SOURCE, LANDMARK_SOURCE, ARCH_SOURCE,
+               CAMP_EXTERIOR_SOURCE, CAMP_INTERIOR_SOURCE, CAMP_TERRAIN_SOURCE)
     if any(not source.exists() for source in sources):
         missing = next(source for source in sources if not source.exists())
         raise SystemExit(f"Missing imagegen source: {missing}")
     tiles = load_source_tiles(SOURCE, CROPS)
     tiles.update(load_source_tiles(TOWN_SOURCE, TOWN_CROPS))
     tiles.update(load_source_tiles(LANDMARK_SOURCE, LANDMARK_CROPS))
+    tiles.update(load_source_tiles(CAMP_TERRAIN_SOURCE, CAMP_TILE_CROPS))
+    tiles.update(load_source_tiles(CAMP_INTERIOR_SOURCE, CAMP_INTERIOR_TILE_CROPS))
     if OUTDOOR_MAT_SOURCE.exists():
         tiles.update(load_source_tiles(OUTDOOR_MAT_SOURCE, MAT_CROPS))
     return tiles
@@ -435,6 +486,9 @@ def load_props():
     architecture = Image.open(ARCH_SOURCE).convert("RGBA")
     overhaul = Image.open(OVERHAUL_SOURCE).convert("RGBA")
     outdoor_mat = Image.open(OUTDOOR_MAT_SOURCE).convert("RGBA")
+    camp_exterior = Image.open(CAMP_EXTERIOR_SOURCE).convert("RGBA")
+    camp_interior = Image.open(CAMP_INTERIOR_SOURCE).convert("RGBA")
+    camp_terrain = Image.open(CAMP_TERRAIN_SOURCE).convert("RGBA")
     mat = TOWN_CROPS["mat_plain"]
     return {
         "arena_mat": normalize_image(source.crop(mat).resize((80, 80), Image.Resampling.NEAREST)),
@@ -462,6 +516,22 @@ def load_props():
         "kohl_center": fitted_prop(overhaul, OVERHAUL_CROPS["kohl_center"], (128, 96)),
         "capitol_grand": fitted_prop(overhaul, OVERHAUL_CROPS["capitol_grand"], (96, 96)),
         "campus_outdoor_mat": fitted_prop(outdoor_mat, (130, 70, 1400, 950), (96, 64)),
+        "camp_stadium": fitted_prop(camp_exterior, CAMP_EXTERIOR_CROPS["camp_stadium"], (448, 160)),
+        "camp_training_building": fitted_prop(camp_exterior, CAMP_EXTERIOR_CROPS["camp_training_building"], (144, 64)),
+        "camp_coach_building": fitted_prop(camp_exterior, CAMP_EXTERIOR_CROPS["camp_coach_building"], (80, 64)),
+        "camp_lamp": fitted_prop(camp_exterior, CAMP_EXTERIOR_CROPS["camp_lamp"], (32, 64)),
+        "camp_trophy_wall": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_trophy_wall"], (128, 48)),
+        "camp_player_lockers": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_player_lockers"], (96, 64)),
+        "camp_team_lockers": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_team_lockers"], (64, 64)),
+        "camp_weights": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_weights"], (80, 64)),
+        "camp_desk": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_desk"], (80, 48)),
+        "camp_whiteboard": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_whiteboard"], (96, 48)),
+        "camp_office_wall": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_office_wall"], (128, 48)),
+        "camp_doorway": fitted_prop(camp_interior, CAMP_INTERIOR_CROPS["camp_doorway"], (32, 48)),
+        "camp_sacred_mat": fitted_prop(camp_terrain, CAMP_TERRAIN_PROP_CROPS["camp_sacred_mat"], (160, 80)),
+        "camp_tree_border": fitted_prop(camp_terrain, CAMP_TERRAIN_PROP_CROPS["camp_tree_border"], (48, 192)),
+        "camp_tree_clump": fitted_prop(camp_terrain, CAMP_TERRAIN_PROP_CROPS["camp_tree_clump"], (64, 48)),
+        "camp_flower_bed": fitted_prop(camp_terrain, CAMP_TERRAIN_PROP_CROPS["camp_flower_bed"], (48, 16)),
     }
 
 
@@ -549,7 +619,13 @@ def compose(area, tiles, props):
     # ---- pass 1: ground base everywhere ----
     for y in range(height):
         for x in range(width):
-            if interior:
+            if area in {"fieldhouse", "studyhall"}:
+                wood = "camp_wood_alt" if (x * 3 + y * 5) % 11 == 0 else "camp_wood"
+                paint(img, tiles, wood, x, y)
+            elif area == "campus":
+                in_plaza = 3 <= x <= 24 and 7 <= y <= 16
+                paint(img, tiles, "camp_plaza" if in_plaza else "camp_lawn", x, y)
+            elif interior:
                 paint(img, tiles, "floor0" if (x + y) % 2 else "floor1", x, y)
             elif area == "downtown":
                 # rows 6-8 are the brick pedestrian mall between sidewalks
@@ -569,7 +645,10 @@ def compose(area, tiles, props):
     # ---- pass 2: paths, mostly plain; a single fence line on the south edge
     # of east-west walks (FireRed garden convention), never both sides ----
     for (x, y) in paths:
-        paint(img, tiles, "path", x, y)
+        if area == "campus":
+            paint(img, tiles, "camp_brick" if 13 <= x <= 15 else "camp_plaza", x, y)
+        else:
+            paint(img, tiles, "path", x, y)
 
     # ---- pass 3: water. Routes take plain Mendota (the beach sand row
     # already reads the boundary); the post-pile shore tiles only ever
@@ -658,15 +737,18 @@ def compose(area, tiles, props):
         for y in range(height):
             for x in range(width):
                 if g[y][x] == "#":
-                    if area == "fieldhouse" and 0 < x < width - 1 and 0 < y < height - 1:
+                    if area in {"fieldhouse", "studyhall"} and 0 < x < width - 1 and 0 < y < height - 1:
                         # Fixture collision sits over the same wood floor as
                         # the walkable room. The transparent prop supplies the
                         # visible object; fake wall/window blocks must not show
                         # through its gaps.
-                        paint(img, tiles, "floor0" if (x + y) % 2 else "floor1", x, y)
+                        paint(img, tiles, "camp_wood", x, y)
                     else:
                         top_wall = y < height - 1 and not blocked(g, x, y + 1)
-                        paint(img, tiles, ("window" if x % 3 == 1 and top_wall else "interior_wall"), x, y)
+                        if area in {"fieldhouse", "studyhall"}:
+                            paint(img, tiles, "camp_window" if x % 4 == 2 and top_wall else "camp_wall", x, y)
+                        else:
+                            paint(img, tiles, ("window" if x % 3 == 1 and top_wall else "interior_wall"), x, y)
     elif area in {"lakeshore", "river"}:
         pass  # blocked mass is the water, already drawn
     # campus blocked dressing happens below (buildings + assembled trees)
@@ -686,6 +768,8 @@ def compose(area, tiles, props):
         claimed.update((e["x"], e["y"]) for e in LAYERED_MAPS.get(area, {}).get("lowerDecor", []) if e["type"] == "tile")
         for y in range(height - 1):
             for x in range(width - 1):
+                if area == "campus":
+                    continue  # Camp Randall's authored border props own the blocked mass.
                 if area == "campus" and (
                     (2 <= x <= 8 and 1 <= y <= 5)
                     or (19 <= x <= 25 and 1 <= y <= 5)
@@ -709,6 +793,8 @@ def compose(area, tiles, props):
         # leftover blocked cells become bushes so no bare wall shows
         for y in range(height):
             for x in range(width):
+                if area == "campus":
+                    continue
                 if blocked(g, x, y) and (x, y) not in claimed and g[y][x] == "#":
                     if area == "campus" and (
                         (2 <= x <= 8 and 1 <= y <= 5)
@@ -768,7 +854,10 @@ def compose(area, tiles, props):
                     pass  # marquee prop owns its door; the west exit is brick already
                 else:
                     paint(img, tiles, "path", x, y)  # the route runs off the map edge
-    return img.convert("RGB")
+    rgb = img.convert("RGB")
+    if area in {"fieldhouse", "campus", "studyhall"}:
+        return rgb.quantize(colors=64, method=Image.Quantize.MEDIANCUT).convert("RGB")
+    return rgb
 
 def save_tilesheet(tiles):
     names = [*CROPS, *TOWN_CROPS, *LANDMARK_CROPS]

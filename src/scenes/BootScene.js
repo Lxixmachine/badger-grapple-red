@@ -2,7 +2,7 @@ import {chooseStarter,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 const Phaser = window.Phaser;
-const V='243';
+const V='247';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
@@ -49,7 +49,7 @@ export class BootScene extends Phaser.Scene{
       const state=chooseStarter(params.get('starter')||'buckshot');
       const area=allowed.includes(params.get('area'))?params.get('area'):'fieldhouse';
       state.area=area;
-      state.pos={x:Number(params.get('x')||14),y:Number(params.get('y')||(area==='campus'?18:11))};
+      state.pos={x:Number(params.get('x')||14),y:Number(params.get('y')||(area==='campus'?16:11))};
       state.message='';
       saveState(state);
       this.scene.start('OverworldScene');

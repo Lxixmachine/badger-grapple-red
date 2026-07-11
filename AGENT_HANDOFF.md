@@ -1,5 +1,49 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.47 Camp Randall visual proof-of-concept)
+
+Tony stopped a proposed Bascom/State cleanup because remote `main` was 19
+commits ahead. Correctly re-synced first, then executed the new top-of-queue
+brief: Camp Randall as the proof that mockup -> imagegen -> compositor ->
+walkable phone build is a usable workflow.
+
+What shipped in this turn:
+
+- New ChatGPT imagegen source families, each committed with its prompt note:
+  `camp_randall_exterior_2026-07-10.png`,
+  `camp_randall_interiors_2026-07-10.png`, and
+  `camp_randall_terrain_2026-07-10.png`.
+- A bespoke, original Camp Randall-inspired stadium facade; no motion-W,
+  official Bucky, Nintendo art, or copied pixels. The stadium is one complete
+  drawing fitted to the grid, not stamped tiles.
+- A reusable visual family for the proof: quiet lawn, limestone plaza,
+  cardinal brick path, wood floor, tree borders, flower beds, competition mat,
+  Building 2/3 facades, banner lamps, trophy wall, lockers, weights, desk,
+  whiteboard, window wall, and doorway.
+- New `src/data/campRandallMaps.json` overrides the stable `fieldhouse`,
+  `campus`, and `studyhall` ids without breaking save ids. `campus` is now the
+  compact 28x18 Camp Randall exterior; `fieldhouse` is the connected front
+  Locker Room / back Wrestling Room with a one-tile captain gate at the trophy
+  threshold; `studyhall` is the deliberately empty Coach's Office.
+- The old Bascom trainers and hardcoded Memorial Library NPCs were removed
+  from Camp Randall after phone QA exposed them standing on architecture.
+- The active world-plane set is temporarily only Camp Randall. Old areas still
+  exist for the playable campaign and valid save landings, but they are not
+  falsely asserted to be the new region's canonical geography before the
+  WORLD_MAP_MANIFESTO v2 rewrite.
+- New proof areas quantize to 64 colors. Map-linter results: Camp Randall
+  exterior 61 colors / 32% grid exposure / 0 dead screens; Building 2 and
+  Coach's Office also clear the grid/variety/dead-screen thresholds.
+- Regression coverage now checks the Camp Randall dimensions and assets,
+  collision-owned upper decor, both building thresholds, the empty office,
+  and absence of retired Bascom open-mat encounters.
+
+Tony's eye remains the release gate. This is a proof-of-concept board, not a
+claim that the whole game now meets FireRed quality. Deferred exactly per the
+brief: stadium tunnel/field ending, full new region wiring, and extending the
+reusable master family beyond Camp Randall.
+
+
 ## Latest Claude Turn (Camp Randall becomes the proof-of-concept — scoped Codex ask)
 
 Tony: "I want to build camp Randall first and foremost as a proof of

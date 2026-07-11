@@ -878,9 +878,9 @@
           "x": 55,
           "y": 7,
           "to": "campus",
-          "tx": 2,
-          "ty": 10,
-          "msg": "Bascom Hill."
+          "tx": 14,
+          "ty": 16,
+          "msg": "Camp Randall."
         },
         {
           "x": 0,
@@ -1096,9 +1096,9 @@
           "x": 0,
           "y": 7,
           "to": "campus",
-          "tx": 26,
-          "ty": 6,
-          "msg": "Bascom Hill."
+          "tx": 14,
+          "ty": 16,
+          "msg": "Camp Randall."
         },
         {
           "x": 19,
