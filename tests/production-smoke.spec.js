@@ -60,10 +60,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.51-occlusion-hotfix');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.52-tile-runtime');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -83,6 +83,8 @@ test('production build boots with runtime assets', async ({page}) => {
   }
   const campusTexture = textureReport.find(texture => texture.key === 'area_campus');
   expect(campusTexture).toMatchObject({width: 448, height: 288});
+  const campAtlas = textureReport.find(texture => texture.key === 'camp_randall_runtime_tiles');
+  expect(campAtlas).toMatchObject({width: 512, height: 560});
 
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
@@ -100,6 +102,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
     active: true,
     area: 'fieldhouse',
     tilePos: {x: 14, y: 12},
+    tileRuntimeVersion: 1,
     playerScale: 0.78,
     camera: {
       count: 2,
@@ -156,8 +159,9 @@ test('Camp Randall renders its complete exterior composition', async ({page}) =>
   });
   const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(state.tilePos).toEqual({x: 14, y: 10});
+  expect(state.tileRuntimeVersion).toBe(1);
   expect(state.playerScale).toBe(0.67);
-  expect(state.playerWorldY).toBe(182);
+  expect(state.playerWorldY).toBe(176);
   expect(state.npcScales).toEqual([0.67]);
   expect(state.camera.worldZoom).toBe(1.4);
   expect(state.camera.worldTilesWide).toBeCloseTo(14.2857, 3);
@@ -198,6 +202,7 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 10});
   const office = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(office.playerScale).toBe(1);
+  expect(office.tileRuntimeVersion).toBe(1);
   expect(office.playerWorldY).toBe(176);
   expect(office.layered.upperTextures).toEqual([]);
   expect(office.npcTiles).toEqual([]);
@@ -223,6 +228,20 @@ test('Camp Randall collision follows walls, hedges, shrubs, and actor feet', asy
   await page.goto('/?test=1&scene=overworld&area=studyhall&x=9&y=10');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: false, right: true, down: true});
   expect(runtimeIssues).toEqual([]);
+});
+
+test('Camp Randall doors trigger only from their authored direction', async ({page}) => {
+  await page.goto('/?test=1&scene=overworld&area=campus&x=5&y=11');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
+  await move(page, 'right');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
+    area: 'campus',
+    tilePos: {x: 6, y: 11}
+  });
+  await move(page, 'down');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 6, y: 12});
+  await move(page, 'up');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('fieldhouse');
 });
 
 test('battle command screen renders and opens move selection', async ({page}) => {

@@ -1,9 +1,11 @@
 import {ROSTER,STARTERS,PERSONAS} from '../src/data/roster.js';
 import {MOVES} from '../src/data/moves.js';
 import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked,worldPlane,WILD_SLOTS,WILD_SLOT_CHANCES} from '../src/data/maps.js';
-import {existsSync} from 'node:fs';
+import {existsSync,readFileSync} from 'node:fs';
+import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
+import {CAMP_TILE_RUNTIME_VERSION,campTilemap,campRuntimeStats,campRuntimeTile} from '../src/data/campRandallTilemaps.js';
 
 let errs=[];
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
@@ -12,6 +14,13 @@ if(WORLD_META.tileSize!==TILE)errs.push(`WORLD_META.tileSize ${WORLD_META.tileSi
 if(WORLD_META.width!==28||WORLD_META.height!==14||WORLD_META.maxWidth<56||WORLD_META.maxHeight<20)errs.push('WORLD_META must retain 28x14 defaults and support 56-wide routes plus the 20-row Bascom Hill map');
 
 if(LAYERED_MAP_VERSION!==1)errs.push(`layered map version ${LAYERED_MAP_VERSION} is unsupported`);
+if(CAMP_TILE_RUNTIME_VERSION!==1)errs.push(`Camp Randall tile runtime version ${CAMP_TILE_RUNTIME_VERSION} is unsupported`);
+const campAtlas=fileURLToPath(new URL('../public/assets/tiles/camp_randall_runtime_tiles.png',import.meta.url));
+if(!existsSync(campAtlas))errs.push('Camp Randall runtime atlas is missing');
+else{
+  const atlasHash=createHash('sha256').update(readFileSync(campAtlas)).digest('hex');
+  if(atlasHash!==campRuntimeStats().atlasSha256)errs.push('Camp Randall runtime atlas is stale; run npm run build:camp-tiles');
+}
 for(const [aid,map] of Object.entries(LAYERED_MAPS)){
   if(!AREAS[aid]){errs.push(`layered area ${aid}: missing from AREAS`);continue;}
   if(map.tiles.length!==map.height)errs.push(`layered area ${aid}: ${map.tiles.length} rows != height ${map.height}`);
@@ -22,8 +31,23 @@ for(const [aid,map] of Object.entries(LAYERED_MAPS)){
       if(isBlocked(aid,x,y)!=='#X'.includes(row[x]))errs.push(`layered area ${aid}: collision diverges at (${x},${y})`);
     }
   });
-  const missingDecor=!map.bakedComposition&&(!map.lowerDecor?.length||!map.upperDecor?.length);
+  const missingDecor=!map.bakedComposition&&!map.tileRuntime&&(!map.lowerDecor?.length||!map.upperDecor?.length);
   if(missingDecor||!map.interactions?.length||(!map.npcs?.length&&!map.allowEmptyNpcs))errs.push(`layered area ${aid}: authored composition/decor, interactions, and NPC layers must be populated`);
+  if(map.tileRuntime){
+    const runtime=campTilemap(aid);
+    if(!runtime)errs.push(`layered area ${aid}: tileRuntime has no compiled map`);
+    else if(runtime.width!==map.width||runtime.height!==map.height)errs.push(`layered area ${aid}: compiled tile dimensions diverge`);
+    else{
+      const sourcePath=fileURLToPath(new URL(`../public/assets/ui/${runtime.source}`,import.meta.url));
+      const sourceHash=createHash('sha256').update(readFileSync(sourcePath)).update(map.tiles.join('\n')).digest('hex');
+      if(sourceHash!==runtime.sourceSha256)errs.push(`layered area ${aid}: compiled tile runtime is stale; run npm run build:camp-tiles`);
+      for(let y=0;y<map.height;y++)for(let x=0;x<map.width;x++){
+        const tile=campRuntimeTile(aid,x,y);
+        if(!tile)errs.push(`layered area ${aid}: missing compiled tile at (${x},${y})`);
+        else if(tile.blocked!=='#X'.includes(map.tiles[y][x]))errs.push(`layered area ${aid}: compiled tile behavior diverges at (${x},${y})`);
+      }
+    }
+  }
   for(const exit of map.exits||[]){if(map.tiles[exit.y]?.[exit.x]!=='E')errs.push(`layered area ${aid}: exit (${exit.x},${exit.y}) is not marked E`);}
   for(const upper of map.upperDecor||[]){
     if(!Number.isFinite(upper.depthY))errs.push(`layered area ${aid}: upper ${upper.texture} has no depthY`);
@@ -147,5 +171,6 @@ for(const [aid,a] of Object.entries(AREAS)){
 const plane=worldPlane();
 plane.conflicts.forEach(c=>errs.push(`world plane contradiction: ${c}`));
 for(const id of WORLD_META.activeOutdoorAreas)if(!plane.pos[id])errs.push(`world plane: outdoor area '${id}' is unreachable from campus via outdoor exits`);
-console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}.`);
+const campStats=campRuntimeStats();
+console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}, tile runtime v${campStats.version}/${campStats.tileCount} tiles.`);
 if(errs.length)process.exit(1);

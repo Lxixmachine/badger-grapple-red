@@ -2,11 +2,12 @@ import {chooseStarter,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 const Phaser = window.Phaser;
-const V='251';
+const V='252';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
     ['fieldhouse','campus','studyhall','lakeshore','downtown','river','conference','championship','shop','recovery'].forEach(a=>this.load.image('area_'+a,`./assets/ui/area_${a}.png?v=${V}`));
+    this.load.image('camp_randall_runtime_tiles',`./assets/tiles/camp_randall_runtime_tiles.png?v=${V}`);
     LAYERED_UPPER_TEXTURES.forEach(key=>this.load.image(key,`./assets/layers/${key}.png?v=${V}`));
     [0,1,2,3].forEach(i=>this.load.image("anim_water_"+i,`./assets/layers/anim_water_${i}.png?v=${V}`));
     this.load.spritesheet('tiles',`./assets/tiles/fieldhouse_tiles.png?v=${V}`,{frameWidth:16,frameHeight:16});

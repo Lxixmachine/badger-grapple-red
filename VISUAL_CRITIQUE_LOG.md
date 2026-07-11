@@ -97,24 +97,28 @@ tracker for looks.
   final-aspect compositions, quantized to 48 colors, and removes their legacy
   upper-prop layers. Tony approved the resulting composition after the annotated
   v3/v4 corrections; scale/collision follow-up is F-014.
-- **F-014 [SIL-004/collision] Camp Randall actor scale and foot cells — PARTIAL HOTFIX IN v21.51, OPEN.**
+- **F-014 [SIL-004/collision] Camp Randall actor scale and foot cells — STRUCTURAL FIX IN v21.52, PHONE CLOSE GATE OPEN.**
   Phone evidence showed full-size 24x36 actors taller than Building 2 doors and
   oversized against exterior architecture. Broad collision rows also allowed
   feet onto bottom walls, hedges, shrubs, facade edges, and exterior voids.
   Owner: runtime/map data. v21.49 corrected actor scale but Tony's phone evidence
   showed that tile-only collision still disagreed with generated object edges.
-  v21.50 adds per-map foot anchors, object-edge buffers, a FireRed-like 14.29x10
-  exterior camera, and pixel-identical trophy/exit foreground masks. Automated
-  and phone-size browser QA are complete; Tony's phone remains the close gate.
-- **F-015 [OBJ-007/architecture] baked-map art and tile collision have separate ownership — OPEN, BLOCKS NEW MAPS.**
+  v21.52 keeps the per-map foot anchors and FireRed-like 14.29x10 exterior
+  camera, then compiles the visible 16px cells and movement behavior into the
+  same runtime tile IDs. Automated and phone-size browser QA are complete;
+  Tony's phone remains the close gate.
+- **F-015 [OBJ-007/architecture] baked-map art and tile collision have separate ownership — RUNTIME FIXED IN v21.52; REUSABLE KIT OPEN.**
   Tony's v21.50 evidence showed the player crossing facade art and mobile
   foreground masks reducing the player to a detached head. Root cause: the
   runtime renders one flattened generated map while collision and depth are
   authored separately on an inferred 16px grid. This is not FireRed's strategy.
-  Owner: engine/compositor. Convert Camp Randall into reusable grid-aligned
-  terrain plus bespoke grid-aligned multi-tile objects. Each object must own its
-  solid, doorway, interaction, and foreground cells. No new location should use
-  `bakedComposition` after this migration begins.
+  Owner: engine/compositor. v21.52 removes `bakedComposition` from all three
+  Camp Randall maps. Phaser renders their compiled 16x16 tile layers and the
+  same tile records own `solid`, `walkable`, or `exit` behavior. Directional
+  exits and SHA-256 stale-output checks are enforced. The transitional atlas is
+  still 1,112 unique tiles because the approved generated paintings contain
+  near-universal pixel noise. Extracting reusable terrain families and bespoke
+  grid-aligned multi-tile object manifests remains mandatory before new maps.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics

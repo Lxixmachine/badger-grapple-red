@@ -1,5 +1,29 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.52 Camp Randall tile runtime)
+
+Tony correctly rejected the baked-image shortcut. v21.52 converts Field House,
+Camp Randall, and Coach's Office to a compiled 16x16 Phaser tile runtime. Each
+runtime tile ID owns both its pixels and `walkable`, `solid`, or `exit` behavior;
+`layeredBlocked()` now queries that same compiled record. Door exits are
+directional, so exterior doorway cells remain usable as horizontal sidewalk but
+only warp when approached toward the building.
+
+`npm run build:camp-tiles` slices approved compositions, deduplicates only when
+pixels and behavior match, and emits the runtime atlas plus map JSON. Validation
+checks every cell, dimensions, behavior agreement, and source/atlas SHA-256, so
+stale generated output cannot ship. All 13 smoke tests pass. Phone-size browser
+QA covered the exterior and Field House with seamless rendering, whole actors,
+and no console warnings.
+
+Important: the current atlas is structurally correct but not yet the reusable
+FireRed-style art kit. It has 1,112 unique tiles for 1,112 cells because AI
+source paintings contain pixel noise everywhere. Next art work must extract
+semantic reusable terrain families and grid-aligned bespoke object manifests.
+See `CAMP_RANDALL_TILE_RUNTIME.md`; F-015 remains open for reuse and object-owned
+selective foreground tiles. Never restore flattened runtime backgrounds or
+full-map alpha masks.
+
 ## Latest Codex Turn (v21.51 emergency occlusion rollback)
 
 Tony's v21.50 phone screenshots showed catastrophic mobile foreground behavior:

@@ -29,9 +29,9 @@
       "paths": [],
       "lowerDecor": [],
       "upperDecor": [],
-      "bakedComposition": true,
+      "tileRuntime": "camp-randall-v1",
       "exits": [
-        {"x": 14, "y": 13, "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}
+        {"x": 14, "y": 13, "dir": "down", "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}
       ],
       "interactions": [
         {"kind": "N", "tiles": [[14, 4], [14, 5]]},
@@ -52,7 +52,7 @@
       "height": 18,
       "start": {"x": 6, "y": 12},
       "actorScale": 0.67,
-      "actorFootOffset": 22,
+      "actorFootOffset": 16,
       "cameraZoom": 1.4,
       "ground": "camp-quad",
       "tiles": [
@@ -66,8 +66,8 @@
         "#############...############",
         "#############...############",
         "#############...############",
-        "###......................###",
-        "###...E....##...##...E...###",
+        "#############...############",
+        "###...E..............E...###",
         "###......####...###......###",
         "###......####...###......###",
         "#############...############",
@@ -81,11 +81,11 @@
       ],
       "lowerDecor": [],
       "upperDecor": [],
-      "bakedComposition": true,
+      "tileRuntime": "camp-randall-v1",
       "exits": [
-        {"x": 6, "y": 11, "to": "fieldhouse", "tx": 14, "ty": 12, "msg": "Locker Room and Wrestling Room."},
-        {"x": 21, "y": 11, "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
-        {"x": 14, "y": 17, "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
+        {"x": 6, "y": 11, "dir": "up", "to": "fieldhouse", "tx": 14, "ty": 12, "msg": "Locker Room and Wrestling Room."},
+        {"x": 21, "y": 11, "dir": "up", "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
+        {"x": 14, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
       ],
       "interactions": [
         {"kind": "SIGN", "tiles": [[13, 7], [14, 7], [15, 7]]}
@@ -124,9 +124,9 @@
       "paths": [],
       "lowerDecor": [],
       "upperDecor": [],
-      "bakedComposition": true,
+      "tileRuntime": "camp-randall-v1",
       "exits": [
-        {"x": 9, "y": 11, "to": "campus", "tx": 21, "ty": 12, "msg": "Camp Randall quad."}
+        {"x": 9, "y": 11, "dir": "down", "to": "campus", "tx": 21, "ty": 12, "msg": "Camp Randall quad."}
       ],
       "interactions": [
         {"kind": "COACH_OFFICE", "rect": [6, 3, 11, 4]},

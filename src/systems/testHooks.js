@@ -33,6 +33,7 @@ export function installTestHooks(game, routeVirtualButton) {
         up: scene.pass(scene.tilePos.x, scene.tilePos.y - 1),
         down: scene.pass(scene.tilePos.x, scene.tilePos.y + 1)
       } : null,
+      tileRuntimeVersion: scene.bg?.getData?.('campTileRuntime') ?? null,
       messageOpen: scene.messageOpen ?? null,
       message: scene.message ?? null,
       trainerName: scene.trainerName ?? null,

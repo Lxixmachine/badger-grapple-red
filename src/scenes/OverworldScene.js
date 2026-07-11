@@ -5,6 +5,7 @@ import {uiBox,setVirtualHandler} from '../systems/ui.js';
 import {unlockAudio,sfx,playMusic,setMuted} from '../systems/audio.js';
 import {GAME_W,GAME_H,OVERWORLD_ZOOM} from '../systems/resolution.js';
 import {LAYERED_MAP_VERSION,layeredNpcs,layeredUpperDecor,layeredWaterRects} from '../data/layeredMaps.js';
+import {CAMP_TILE_ATLAS,CAMP_TILE_RUNTIME_VERSION,campTilemap} from '../data/campRandallTilemaps.js';
 const Phaser = window.Phaser;
 const DIRS={down:{dx:0,dy:1,frame:1},left:{dx:-1,dy:0,frame:4},right:{dx:1,dy:0,frame:7},up:{dx:0,dy:-1,frame:10}};
 // Collision is controlled by src/data/maps.js so it matches visible map art.
@@ -16,7 +17,7 @@ export class OverworldScene extends Phaser.Scene{
   this.worldCamera=this.cameras.main.setName('world').setBackgroundColor('#000').setZoom(OVERWORLD_ZOOM);this.worldCamera.roundPixels=true;
   this.uiCamera=this.cameras.add(0,0,GAME_W,GAME_H,false,'ui').setBackgroundColor('rgba(0,0,0,0)').setZoom(1);this.uiCamera.roundPixels=true;
   this.worldCamera.ignore(this.uiLayer);this.uiCamera.ignore(this.worldLayer);
-  this.bg=this.addWorld(this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0));/* keep raw pixel colors; no tint pipeline on mobile */
+  this.bg=this.createAreaBackground();
   this.decor=this.addWorld(this.add.container(0,0).setDepth(13));this.actors=[];this.upperObjects=[];this.layeredMapVersion=LAYERED_MAP_VERSION;
   this.shadow=this.addWorld(this.add.ellipse(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20));
   this.player=this.addWorld(this.add.sprite(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1));this.applyPlayerPresentation();
@@ -27,6 +28,15 @@ export class OverworldScene extends Phaser.Scene{
   this.hud=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1000));this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.fadeSceneIn(140);setMuted(this.state.audioMuted);playMusic('overworld');}
  addWorld(obj){this.worldLayer.add(obj);return obj;}
  addUi(obj){this.uiLayer.add(obj);return obj;}
+ createAreaBackground(){
+  const runtime=campTilemap(this.area);
+  if(!runtime){this.areaTilemap=null;return this.addWorld(this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0));}
+  this.areaTilemap=this.make.tilemap({data:runtime.base,tileWidth:16,tileHeight:16});
+  const tileset=this.areaTilemap.addTilesetImage(CAMP_TILE_ATLAS,CAMP_TILE_ATLAS,16,16,0,0);
+  const layer=this.areaTilemap.createLayer(0,tileset,0,0).setDepth(0);
+  layer.setData('campTileRuntime',CAMP_TILE_RUNTIME_VERSION);
+  return this.addWorld(layer);
+ }
  fadeSceneOut(duration){this.worldCamera.fadeOut(duration,0,0,0);this.uiCamera.fadeOut(duration,0,0,0);}
  fadeSceneIn(duration){this.worldCamera.fadeIn(duration,0,0,0);this.uiCamera.fadeIn(duration,0,0,0);}
  okInput(){const now=this.time.now||performance.now();if(now-this.lastInputAt<95)return false;this.lastInputAt=now;return true;}
@@ -53,9 +63,9 @@ export class OverworldScene extends Phaser.Scene{
   if(this.moving||this.sightLocked)return; // one step is atomic; ambush/transition beats own the player
   if(this.facing!==dir&&!this.moving){this.face(dir);this.turnPauseUntil=(this.time.now||0)+120;return;} // tap turns in place; holding walks after a short beat (FireRed: ~8 frames)
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
-  this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.actorWorldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.actorWorldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
- findExit(x,y){return (areaFor(this.area).exits||[]).find(e=>e.x===x&&e.y===y);}
- changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y)-2);this.applyPlayerPresentation();this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
+  this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny,dir);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.actorWorldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.actorWorldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
+ findExit(x,y,dir){return (areaFor(this.area).exits||[]).find(e=>e.x===x&&e.y===y&&(!e.dir||e.dir===dir));}
+ changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.destroy();this.bg=this.createAreaBackground();this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y)-2);this.applyPlayerPresentation();this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
  afterStep(){this.savePos();if(isGrass(this.area,this.tilePos.x,this.tilePos.y))this.grassRustle();this.checkTrainerSight();if(this.sightLocked)return;if(isGrass(this.area,this.tilePos.x,this.tilePos.y)&&Math.random()<.12){this.startScout();return;}this.drawHud();}
  grassRustle(){const wx=this.worldX(this.tilePos.x),wy=this.actorWorldY(this.tilePos.y);for(let i=0;i<5;i++){const f=this.addWorld(this.add.rectangle(wx-6+Math.random()*12,wy-3,2,3,i%2?0xeee6d5:0xcfc4ae,1).setDepth(this.player.depth+1));this.tweens.add({targets:f,y:wy-12-Math.random()*7,x:f.x+(Math.random()*10-5),alpha:0,angle:Math.random()*180,duration:260+Math.random()*120,ease:'Quad.Out',onComplete:()=>f.destroy()});}} // chalk puff off the open mat
  checkTrainerSight(){
