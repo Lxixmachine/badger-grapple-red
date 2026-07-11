@@ -1,5 +1,75 @@
 # Agent Handoff
 
+## Latest Claude Turn (CAMP_RANDALL_MOCKUP.md — the first real town design)
+
+Tony: "We need to design the world to facilitate the synopsis. I think
+we should start by making a mockup of Camp Randall before we build
+assets to fill it. We need to decide what goes where and why and how it
+should look and function then build the assets to match." This is
+literally Design Bible Vol. XII's pipeline (Rule PIPE-001: no map goes
+concept-to-art directly) — goals/route graph/terrain blockout/
+architecture placement before decoration. **CAMP_RANDALL_MOCKUP.md** is
+the result, now #4 in the reading order.
+
+**Key discovery that reframed the whole task**: the area currently
+named `fieldhouse` in `layeredMaps.json` (28x14 — already has a locker
+zone, coach's office, trophy wall, weight room, meeting room, and the
+mat) is functionally already Camp Randall's wrestling room, just
+misnamed for the new region. And the current `campus` area (28x20,
+seven exits — shop/recovery/library/gym/State Street/Lakeshore all
+funneled through one hub) is badly overloaded for a hometown by the
+project's own Vol. XXI Pallet Town case study ("low intersection
+complexity, generous spacing... optimize confidence, not exploration
+density"). So this wasn't "design from zero" — it was "extract Camp
+Randall's true small shape from an overloaded do-everything hub,
+using the wrestling-room interior that already exists as the core."
+
+Tony supplied a reference image (study-only, not committed) showing the
+target composition: stadium as non-enterable backdrop, two small
+flanking buildings, a short entrance path. Locked from there:
+
+- **Exterior**: stadium fills the north half as a landmark, non-
+  enterable all season (until the very end — see below). Building 2
+  (west) = Locker Room + Wrestling Room. Building 3 (east) = Coach's
+  Office. One path south to R1, no other exits.
+- **Building 2 is a "multi-room Pokémon building"**: one exterior, two
+  connected interior rooms (Locker Room front, Wrestling Room back),
+  one doorway between them.
+- **Rex reveal, which also fixes a quiet plot hole**: Rex isn't a
+  stranger recruited the same day — he's a returning teammate, already
+  in the same locker room, same weight class. The falling-out plays out
+  as a real **wrestle-off** (the actual intra-squad challenge match
+  wrestlers use), after which Rex transfers to a rival program. This is
+  *why* he can legitimately be a season-long tournament opponent —
+  teammates don't face each other in duals, only in wrestle-offs. His
+  locker sits empty in the Locker Room for the rest of the season.
+- **The captain physically blocks the doorway** between the two rooms
+  on day one (NPCs are solid, same rule as everywhere else) — a real
+  spatial gate, not just a dialogue trigger, forcing the office-check
+  loop before Coach is reachable.
+- **The trophy wall moved to the doorway/threshold**, not the Wrestling
+  Room — you pass it every time you go from bed to mat, and it's what's
+  in view exactly where the captain stops you on day one.
+- **The stadium opens exactly once**, for the true Act VIII ending: the
+  team walks out through the tunnel onto the actual field after the
+  trophy-case scene — the place you couldn't even get past the doorway
+  to reach on day one. Coach's Office also gets reused once, after
+  Badge Two, for a progress-review checkpoint.
+- **SEASON_ONE_SYNOPSIS.md updated to match** (now 41 beats, was 38) —
+  Act I's Rex beats rewritten for the teammate/wrestle-off reveal, Act
+  VIII expanded with the tunnel/field ending. Both files pushed together
+  so nothing goes stale relative to the other.
+
+Still open, listed at the close of CAMP_RANDALL_MOCKUP.md: Building 3's
+interior detail, the literal tile grid (this doc is room-and-function,
+the ASCII/tile blockout is the next pass), outdoor quad decoration,
+exact R1 exit position, the stadium's interior scope for the ending.
+
+**Reminder for whoever builds this in art**: Tony's reference image
+uses a stylized motion-W for flavor/study only. Per the hard rules,
+Codex's actual tiles need an original letterform, not the real
+athletics logotype.
+
 ## Latest Claude Turn (SEASON_ONE_SYNOPSIS.md — the full beat-by-beat plan)
 
 Tony sent the Pokémon Red step-by-step synopsis he'd been studying and

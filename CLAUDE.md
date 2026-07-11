@@ -15,26 +15,31 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
    table, the Season One region, the loop. Settle every unclear decision
    against its §1. (v1.0 DRAFT — §7 open calls await Tony's ratify.)
 3. **SEASON_ONE_SYNOPSIS.md** — what happens, beat by beat. Built live
-   with Tony in the format of the Pokémon Red synopsis he shared: 38
-   numbered beats, Camp Randall to the trophy case. This is where the
+   with Tony in the format of the Pokémon Red synopsis he shared: 41
+   numbered beats, Camp Randall to the field. This is where the
    six-style rework (Shooter/Rider/Scrambler/Bull/Thrower/Wall, new
    asymmetric ADV chart) and every captain's name/venue/badge live —
    **not yet implemented in code**, see its closing section.
-4. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
+4. **CAMP_RANDALL_MOCKUP.md** — the home town's actual room-by-room
+   layout (Design Bible Vol. XII Stages 1-4: goals → route graph →
+   terrain blockout → architecture placement), built before any art —
+   what goes where and why, ahead of what it looks like. Template for
+   how every future town gets designed.
+5. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
    golden path, world laws). "Recognition is the product."
    (Rewrites to v2 from GAME_VISION §4 once the vision is ratified.)
-5. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
+6. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
    town a thesis, every route a micro-story, gates seen before solved,
    the first area matters late. Judge all map work against it.
    **docs/design_bible/** (28 volumes) is its deep companion: tile
    grammar, anti-patterns, the staged production pipeline (Vol XII), and
    the map-linter spec (Vol XV) that `npm run lint-maps` implements.
-6. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
+7. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
    compositor contract, work packages). **VISUAL_STYLE_SPEC.md** is the
    measured bar all new art is generated against;
    **VISUAL_REBUILD_PLAN.md** stages the rebuild;
    **VISUAL_CRITIQUE_LOG.md** tracks Tony's-eye findings.
-7. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
+8. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
    FireRed design parameters (timing, sequences, map structure) that we
    build against.
 
