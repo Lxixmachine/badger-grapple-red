@@ -97,16 +97,26 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
 
 ## Current queue (see handoff for detail)
 
-**Vision + synopsis first.** GAME_VISION.md and SEASON_ONE_SYNOPSIS.md
-are both drafted; everything below waits on ratify. Then, roughly in
-order: (1) the style-system rework in code — rename Neutral/Top/
-Scramble/Pace/Upperbody/Defense to Shooter/Rider/Scrambler/Bull/
-Thrower/Wall in roster.js, replace the ADV loop in moves.js with the
-new asymmetric chart, build the three new captains (The Senator,
-The Professor, The Closer) — (2) WORLD_MAP_MANIFESTO v2 (from vision §4
-+ synopsis, Camp Randall home town → St. Louis Nationals) → (3) Stage 1
-master tileset (Codex, per VISUAL_STYLE_SPEC order) → (4) Stage 2
-compositor re-point → (5) Stage 3 builds the NEW region on the NEW
-tileset, hometown first (never repaint the old world twice) → (6) new
-systems (locker storage, lineup of 6, flight gate, map verbs, Roster
-Book, opening sequence).
+**Camp Randall first, as a proof of concept.** Tony: prove the whole
+mockup → spec → Codex → compositor → playable pipeline on ONE town
+before generating tileset assets for the whole game or rewriting the
+full region manifesto. Scope: the visual pipeline specifically — a
+walkable, good-looking Camp Randall, judged on Tony's eye. Concrete
+Codex ask is in AGENT_HANDOFF.md, drawn straight from
+CAMP_RANDALL_MOCKUP.md. Once that clears, the same reusable-kit pieces
+extend outward and WORLD_MAP_MANIFESTO v2 follows from vision §4 +
+synopsis (Camp Randall home town → St. Louis Nationals).
+
+**Independent, non-blocking, parallel track**: the style-system code
+rework — rename Neutral/Top/Scramble/Pace/Upperbody/Defense to
+Shooter/Rider/Scrambler/Bull/Thrower/Wall in roster.js, replace the ADV
+loop in moves.js with the new asymmetric chart, build the three new
+captains (The Senator, The Professor, The Closer). Pure code, no Codex
+or Tony's-eye dependency, can happen anytime — but Camp Randall's Act I
+(persona pick, wrestle-off) isn't truly playable until it's done.
+
+After both: Stage 1 master tileset extends to the rest of the region →
+Stage 2 compositor re-point → Stage 3 builds the NEW region, hometown
+first (never repaint the old world twice) → new systems (locker
+storage, lineup of 6, flight gate, map verbs, Roster Book, opening
+sequence).

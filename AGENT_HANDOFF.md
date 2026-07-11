@@ -1,5 +1,57 @@
 # Agent Handoff
 
+## Latest Claude Turn (Camp Randall becomes the proof-of-concept — scoped Codex ask)
+
+Tony: "I want to build camp Randall first and foremost as a proof of
+concept that we have a usable workflow." Confirmed scope: the visual
+pipeline specifically (mockup → Codex → compositor → a walkable,
+good-looking Camp Randall, judged on Tony's eye) — the style-system
+code rework is an independent, non-blocking parallel track (pure code,
+no Codex/eye dependency), not a prerequisite for this proof of concept.
+`CLAUDE.md`'s queue rewritten to put this ahead of generating tileset
+assets for the rest of the game or writing WORLD_MAP_MANIFESTO v2.
+
+**Codex: this is your scoped brief, drawn straight from
+CAMP_RANDALL_MOCKUP.md — nothing here is invented new, it's the room
+list from that document translated into an asset list.**
+
+Reusable kit (Stage 1, extends to the rest of the region once this
+clears — see the Law 1 fix above on why one-off landmarks are handled
+separately):
+- **Grounds**: plaza/quad pavement (+ stipple variant, edge blocks vs
+  the path and vs the buildings' floors), the path material running
+  south to R1, interior flooring for both building interiors.
+- **Vegetation**: tree-border pieces framing both sides of the quad,
+  hedge/flower-bed pieces at each building's door.
+- **Mats**: the Wrestling Room's practice mat. Flagging an assumption
+  rather than inventing a third material: this reuses the **sacred
+  competition** mat (family 4 already lists "outdoor worn + sacred
+  competition" as the two mat materials) rather than a new indoor-
+  practice variant, since real wrestle-offs (Act I) happen there — it's
+  a competition floor, not a casual one. Correct this if wrong.
+- **Architecture kit**: Building 2's exterior facade (one building,
+  footprint large enough to read as housing two rooms) + wall/window/
+  door interior language for the Locker Room and Wrestling Room;
+  Building 3's exterior facade (small, one room) + interior; lamp
+  posts with a banner variant.
+- **Props**: the trophy wall (upperDecor, sits at the threshold between
+  the two rooms — not floating in either room), a recruiting whiteboard
+  (new, Coach's office, showing weight classes/depth chart), a locker
+  bank (your bed/save locker, Rex's locker — visually the same as
+  others so it reads as "empty" rather than "special" once he
+  transfers, teammates' lockers), weight equipment.
+
+One-off landmark (Stage 3 territory per the Law 1 fix, but needed now
+because it's visible from day one): **Camp Randall Stadium's exterior
+facade only** — non-enterable backdrop, seen from the quad. Its
+interior (tunnel + field, empty stands staged like game day is coming)
+is NOT needed for this proof of concept — that's a one-time Act VIII
+scene, safe to defer without blocking "prove the workflow."
+
+Reminder standing from the mockup doc: Tony's reference image's
+stylized motion-W is study-only — whatever gets generated here needs
+an original letterform in team colors, not the real athletics logotype.
+
 ## Latest Claude Turn (Law 1 clarified — palette rule vs tile-kit rule)
 
 Tony, sharp catch: "Is law 1 too strict? Obviously grass should be
