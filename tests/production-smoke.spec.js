@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.48-visual-reset');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.49-scale-collision');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -100,6 +100,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
     active: true,
     area: 'fieldhouse',
     tilePos: {x: 14, y: 12},
+    playerScale: 0.78,
     camera: {
       count: 2,
       worldZoom: 1.25,
@@ -135,6 +136,7 @@ test('Building 2 uses a complete composition without legacy occlusion props', as
     tilePos: {x: 14, y: 6}
   });
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(overworld.npcScales).toEqual([0.78, 0.78, 0.78]);
   expect(overworld.layered.upperTextures).toEqual([]);
   expect(overworld.layered.upperCount).toBe(0);
   expect(runtimeIssues).toEqual([]);
@@ -153,6 +155,8 @@ test('Camp Randall renders its complete exterior composition', async ({page}) =>
   });
   const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(state.tilePos).toEqual({x: 14, y: 10});
+  expect(state.playerScale).toBe(0.67);
+  expect(state.npcScales).toEqual([0.67]);
   expect(state.layered.upperDepths).toHaveLength(0);
   expect(state.layered.upperTextures).toEqual([]);
   expect(runtimeIssues).toEqual([]);
@@ -188,8 +192,28 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').area)).toBe('studyhall');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 10});
   const office = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+  expect(office.playerScale).toBe(1);
   expect(office.layered.upperTextures).toEqual([]);
   expect(office.npcTiles).toEqual([]);
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('Camp Randall collision follows walls, hedges, shrubs, and actor feet', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=12');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: true, right: true, down: true});
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=15&y=12');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({right: false});
+
+  await page.goto('/?test=1&scene=overworld&area=campus&x=9&y=12');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({right: false});
+
+  await page.goto('/?test=1&scene=overworld&area=campus&x=13&y=14');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: false, right: true});
+
+  await page.goto('/?test=1&scene=overworld&area=studyhall&x=9&y=10');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: false, right: true, down: true});
   expect(runtimeIssues).toEqual([]);
 });
 

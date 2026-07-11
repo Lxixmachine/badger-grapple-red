@@ -26,8 +26,8 @@ export const AREAS = {
     bg: 'area_shop',
     start: { x: 14, y: 10 },
     exits: [
-      { x: 13, y: 12, to: 'campus', tx: 12, ty: 15, msg: 'Camp Randall.' },
-      { x: 14, y: 12, to: 'campus', tx: 13, ty: 15, msg: 'Camp Randall.' },
+      { x: 13, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' },
+      { x: 14, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' },
       { x: 15, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' }
     ],
     encounters: false
@@ -38,8 +38,8 @@ export const AREAS = {
     start: { x: 14, y: 10 },
     exits: [
       { x: 13, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' },
-      { x: 14, y: 12, to: 'campus', tx: 15, ty: 15, msg: 'Camp Randall.' },
-      { x: 15, y: 12, to: 'campus', tx: 16, ty: 15, msg: 'Camp Randall.' }
+      { x: 14, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' },
+      { x: 15, y: 12, to: 'campus', tx: 14, ty: 15, msg: 'Camp Randall.' }
     ],
     encounters: false
   },

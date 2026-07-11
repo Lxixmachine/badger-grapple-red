@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.49 actor scale and collision)
+
+Tony approved the v21.48 compositions, then phone play exposed the remaining
+system mismatch: the 24x36 actor sheet was rendered at full size against doors
+and exterior architecture authored closer to FireRed's 16-pixel movement scale.
+The broad placeholder collision grids also allowed the actor's foot tile onto
+bottom walls, hedges, shrub clusters, facade edges, and black exterior voids.
+
+v21.49 adds `actorScale` to the Camp Randall map data and applies it uniformly
+to player/NPC sprites and their shadows. Building 2 uses 0.78, the exterior uses
+0.67, and the already-approved Coach's Office remains 1.0. Scale is reapplied
+on area transitions, so a single save can move among all three correctly.
+
+Collision is now authored against the actor's foot cell. Building 2 restricts
+the south wall to its doorway and closes unsafe side-edge cells. The exterior
+keeps the central/horizontal brick network and usable lawns open while blocking
+garden hedges, lamp/shrub clusters, building edges, and the south tree row. The
+office bottom wall is closed except for its exit, with desk/chair/wall footprints
+also solid. Retired shop/recovery landings were normalized to the valid central
+campus path so map validation remains coherent.
+
+Tests expose actor/NPC scale and passable neighbors, assert all three area scale
+contracts, verify the critical collision boundaries directly, and retain doorway
+transition coverage. Phone-size browser QA shows the exterior actor at roughly
+one movement tile wide, Building 2 actors fitting the doorway, and the Office
+unchanged. No new art was generated in this turn.
+
 ## Latest Codex Turn (v21.48 Camp Randall visual reset candidate)
 
 Tony rejected v21.47 after direct comparison with his FireRed town and tileset
