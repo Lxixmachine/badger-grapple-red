@@ -10,17 +10,25 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
    (ChatGPT). Newest entry on top. Every work turn starts by reading it
    and ends by adding an entry. Work was lost twice when notes didn't
    travel with commits — the handoff goes in the SAME commit as the work.
-2. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
+2. **GAME_VISION.md** — what we're building and why. The founding
+   document: the fantasy, who the player is, the FireRed correspondence
+   table, the Season One region, the loop. Settle every unclear decision
+   against its §1. (v1.0 DRAFT — §7 open calls await Tony's ratify.)
+3. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
    golden path, world laws). "Recognition is the product."
-3. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
+   (Rewrites to v2 from GAME_VISION §4 once the vision is ratified.)
+4. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
    town a thesis, every route a micro-story, gates seen before solved,
    the first area matters late. Judge all map work against it.
    **docs/design_bible/** (28 volumes) is its deep companion: tile
    grammar, anti-patterns, the staged production pipeline (Vol XII), and
    the map-linter spec (Vol XV) that `npm run lint-maps` implements.
-4. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
-   compositor contract, work packages).
-5. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
+5. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
+   compositor contract, work packages). **VISUAL_STYLE_SPEC.md** is the
+   measured bar all new art is generated against;
+   **VISUAL_REBUILD_PLAN.md** stages the rebuild;
+   **VISUAL_CRITIQUE_LOG.md** tracks Tony's-eye findings.
+6. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
    FireRed design parameters (timing, sequences, map structure) that we
    build against.
 
@@ -78,7 +86,10 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
 
 ## Current queue (see handoff for detail)
 
-FR0+FR1 shipped (dual cameras, layered source) · WP-ROUTES shipped
-(routes 2-3x longer, open-mat zones) → FR2 visual recomposition shipped
-(Codex) → WP-LEDGE (one-way hops) → character sprites → State Street
-commerce.
+**Vision first.** GAME_VISION.md is drafted; everything below waits on
+Tony's §7 ratifies. Then: WORLD_MAP_MANIFESTO v2 (from vision §4, Camp
+Randall home town → St. Louis Nationals) → Stage 1 master tileset
+(Codex, per VISUAL_STYLE_SPEC order) → Stage 2 compositor re-point →
+Stage 3 builds the NEW region on the NEW tileset, hometown first (never
+repaint the old world twice) → new systems (locker storage, lineup of
+6, flight gate, map verbs, Roster Book, opening sequence).

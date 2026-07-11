@@ -1,5 +1,42 @@
 # Agent Handoff
 
+## Latest Claude Turn (GAME_VISION.md — the founding document, v1.0 DRAFT)
+
+Tony: "Camp Randall is a town. The locker room is our 'bedroom,' a
+teammate is our 'mom' who sends us to our 'professor' the coach to have
+us pick our wrestling persona and quests us with recruiting and filling
+our 'pokedex' the roster... We need to define our vision before we
+build. We need to know what we're building and why."
+
+So before any manifesto rewrite or map work: **GAME_VISION.md** now
+exists and sits at #2 in the reading order (CLAUDE.md updated). It
+contains the fantasy statement ("You are a freshman walk-on at
+Wisconsin..."), the full FireRed→wrestling correspondence table
+(locker=bedroom, captain=Mom, Coach=Oak, persona pick = starter — you
+ARE your own starter, Roster Book=Pokédex, locker=PC box, travel lineup
+of 6, NCAA bracket=Elite Four, trophy case's empty space=Hall of Fame),
+the Season One region (Camp Randall home → Field House ★1 → Capitol ★2
+→ Kohl ★3/conference → flight → St. Louis Nationals), the three-scale
+loop, and the built-vs-needed systems ledger.
+
+**The one real pivot, awaiting Tony's ratify (§7):** the player stops
+being "Coach" and becomes the freshman wrestler; Coach becomes our
+Professor Oak. Also open: Bascom branch, town-3 X-factor, badge naming,
+flight gate requirement, map-verb set.
+
+SEQUENCING (Tony's explicit instruction — do not jump ahead): nothing
+builds until the §7 calls come back. On ratify: WORLD_MAP_MANIFESTO v2
+from vision §4 → build order per city manifesto Part XI (hometown
+first) → Stages 1-3 of the visual rebuild construct the NEW region on
+the NEW master tileset. We never repaint the old world twice.
+
+**Codex:** no change to your Stage 1 queue — the master tileset
+families in VISUAL_STYLE_SPEC.md order are needed regardless of region
+shape. Note the vision adds two forever-assets to family 5's franchise
+units: the arena facade family now covers Field House / Kohl / St.
+Louis, and family 6 gains locker-room interior fixtures (lockers,
+benches, whiteboard) for the opening sequence.
+
 ## Claude note — world stitch tool (Kanto-style X-ray)
 
 Tony asked to see our world the way the famous stitched Kanto image
