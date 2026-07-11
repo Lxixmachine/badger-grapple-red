@@ -1,4 +1,4 @@
-# BADGER GRAPPLE RED — THE VISION (v1.0 DRAFT, awaiting Tony's ratify)
+# BADGER GRAPPLE RED - THE VISION (v1.1 RATIFIED)
 
 The founding document. Every manifesto, spec, system, and sprite hangs
 under this. When any decision is unclear, settle it against §1.
@@ -18,12 +18,12 @@ language (CITY_DESIGN_MANIFESTO Part X is the translation dictionary).
 
 ## 2. Who you are
 
-A freshman wrestler — NOT the coach. (PIVOT from the current fiction,
-awaiting ratify: "Coach" becomes our Professor.) On day one you pick
-your **persona** — your style (Neutral / Top / Scramble) and its animal
+A freshman wrestler - NOT the coach. Coach is the Professor figure. On day one
+you pick your **persona** - your style (Shooter / Rider / Scrambler) and its animal
 spirit — and *you are your own starter*: your persona is roster slot #1
-and wrestles in your duals. Rex, the other freshman, picks the
-counter-style in the same room and shadows you all season.
+and wrestles in your duals. Rex is a returning teammate in your weight class;
+the opening wrestle-off and his transfer make him the rival who stays ahead all
+season.
 
 ## 3. The cast (correspondence table)
 
@@ -38,12 +38,12 @@ counter-style in the same room and shadows you all season.
 | Catching | Recruiting at open mats (BUILT) |
 | Party of 6 | The TRAVEL LINEUP (6) |
 | PC box | THE LOCKER stores the rest of the roster (NEW SYSTEM) |
-| Center / Mart | Recovery Center / Team Shop franchise words (law 7b) |
+| Center / Mart | Trainer's Room / Bucky's Locker Room franchise words (law 7b) |
 | Gym + badge | Duals/tournaments at real venues; credentials ladder |
 | HMs / map verbs | Film Study (reveal/unlock), Conditioning Cert (sleds), Bus Pass (return travel) |
 | Elite Four | The NCAA bracket, St. Louis: quarters, semis, final |
 | Hall of Fame | The trophy case's empty center space (BUILT, waiting) |
-| Types | Styles + ADV chart (BUILT) |
+| Types | Six wrestling styles + asymmetric ADV chart (DESIGNED, code pending) |
 | Evolution | Development ceremonies (BUILT) |
 | Legendary | A hidden legend of the sport (Season Two seam) |
 
@@ -72,25 +72,23 @@ Geometry law: one plane, validator-checked, Town Map generated from it.
 
 ## 6. Systems: built vs needed
 
-BUILT: personas/styles/ADV, scouting+recruiting, encounter slots +
+BUILT: legacy personas/styles/ADV, scouting+recruiting, encounter slots +
 blue chips, development, badges/gates, tournament bracket, Town Map,
 one-plane law, FireRed cadence, open mats, day/period clock.
 NEEDED (the infrastructure gap Tony named): the LOCKER (roster storage),
 travel lineup cap (6), the flight gate, map verbs (Film Study /
 Conditioning / Bus Pass), Roster Book presentation upgrade of the dex,
 captain-at-home + locker-room opening sequence, player-as-freshman
-fiction pass (dialogue, intro, naming).
+fiction pass (dialogue, intro, naming), and the ratified six-style code rework.
 
-## 7. Open calls (Tony)
+## 7. Remaining open calls (Tony)
 
-1. RATIFY the player pivot: freshman wrestler, Coach becomes the
-   professor figure. (Everything in §2 follows from this.)
-2. Region calls: (a) Bascom optional branch as drawn? (b) Town-3
-   X-factor: Monona Terrace or Vilas Zoo? (c) badge names: styles or
-   venues? (d) is the wilds' Scramble badge required for the flight?
-3. Map verbs: keep the three proposed or swap.
+1. Kohl Center District's non-arena X-factor.
+2. Minor NPC identities listed in `SEASON_ONE_SYNOPSIS.md`.
+3. Monona Shore's optional side activity.
 
-On ratify: WORLD_MAP_MANIFESTO v2 gets written from §4, the build order
-follows the city manifesto Part XI (hometown first), and Stage 1-3 of
-the visual rebuild constructs the NEW region on the NEW tileset - we
-never repaint the old world twice.
+The player pivot, venue-based badge names, Bascom branch, and required Picnic
+Point Badge are ratified in `SEASON_ONE_SYNOPSIS.md`. The build order follows
+`WORLD_MAP_MANIFESTO.md` v2 and `src/data/seasonOneRegion.json`: Camp Randall,
+then R1 and Field House Town, then the rest of the new region. We do not repaint
+the obsolete world twice.

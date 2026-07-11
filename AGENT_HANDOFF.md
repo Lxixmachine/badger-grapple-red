@@ -1,5 +1,64 @@
 # Agent Handoff
 
+## Latest Codex Turn (proven-product audit and Season One authority reset)
+
+Tony supplied four public reverse-engineering repositories and set the correct
+working standard: when the team lacks experience, study proven products at the
+source level, extract their techniques, and apply those techniques to Badger's
+original goals instead of improvising map systems.
+
+Audited snapshots in a temporary, non-project workspace:
+
+- `pret/pokefirered` `df4449a27cd78dd747ce269e47d3ab4a0149d8f4`
+- `pret/pokeemerald` `83df84e40623b79281f2397faa611cbf044170bd`
+- `pret/pokeheartgold` `814275e4392cc21eef45a04e6dc8d980010ca2b7`
+- `JimB16/PokePlat` `ccbdf7ea8b08f23d3adcb6baa7d1f2b8dc24bbc1`
+
+No code, layouts, map data, dialogue, or art were copied. The audit measured
+architecture and production technique:
+
+- FireRed/Emerald maps are structured packages: layout, primary/secondary
+  tilesets, connections, objects, warps, coordinate triggers, background
+  interactions, scripts, music, weather, and map type.
+- Each GBA grid cell stores a metatile id, collision class, and elevation; the
+  metatile adds behavior, terrain, encounter, and layer semantics. Its lower
+  and upper 2x2 subtile layers explicitly place pixels below/above actors.
+- HeartGold/Platinum preserve the separation with richer graphics: map headers
+  reference matrices, land blocks, terrain attributes, events, scripts,
+  messages, encounters, cameras, and other resources. HeartGold terrain is a
+  32x32 attribute field per land block.
+- Adjacency is explicit via connections/offsets or a map matrix. Story gates
+  use flags/variables, coordinate events, object state, and scripted movement.
+- Canonical services are real reusable layouts with local events and return
+  warps. FireRed reuses one standard Center layout for 17 first floors and one
+  Mart layout for all 12 ordinary Marts; Emerald shows the same pattern.
+- The field cadence is about 15x10 cells on GBA and 16x12 on DS. Badger's
+  320x224 canvas keeps a 16x11 outdoor view at 1.25 world zoom.
+
+Shipped this turn:
+
+1. `docs/PROVEN_RPG_ENGINEERING_AUDIT.md`: source-cited evidence, legal boundary,
+   adopted techniques, and the nine-gate map production method.
+2. `src/data/seasonOneRegion.json`: executable design authority for the
+   ratified graph. Camp Randall has only R1; State Street is R2; Capitol Square
+   is Town 2; recurring services belong to developed towns; all four badges
+   gate the flight. Only Camp has an approved mockup/final-art permission.
+3. `tools/validate.mjs`: validates the region graph, reciprocal connections,
+   canonical services, Camp story constraints, golden path, credentials,
+   camera contract, and final-art approval gate.
+4. Rewrote `WORLD_MAP_MANIFESTO.md` as v2 and reconciled `GAME_VISION.md`,
+   `CAMP_RANDALL_MOCKUP.md`, and `CLAUDE.md` with the ratified synopsis.
+
+The v21.62 full-composition world remains playable legacy output during
+migration, but its guidance is retired. Full-scene paintings are look
+references only under Law 6c; production maps are authored as structured area
+packages with grid-native metatile/object manifests.
+
+Next work: reconcile Camp Randall's live manifest/events to its approved
+one-exit story geometry while retaining its successful visual direction. Then
+co-design R1 and Field House Town with Tony through story, graph, camera,
+architecture, and event blockouts before generating final art.
+
 ## Latest Codex Turn (v21.62 full-composition world redesign)
 
 Tony stopped the broad rollout to clarify the correct scope: Camp Randall is

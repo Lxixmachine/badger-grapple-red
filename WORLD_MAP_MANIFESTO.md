@@ -1,128 +1,235 @@
-# BADGER GRAPPLE RED — WORLD MAP MANIFESTO
-### The standing directive for world geography. Companion to VISUAL_OVERHAUL_GUIDE.md (which owns HOW art is produced; this doc owns WHAT the world IS).
+# BADGER GRAPPLE RED - WORLD MAP MANIFESTO v2
 
----
+This document owns what the Season One world is. `VISUAL_STYLE_SPEC.md` owns
+how its art is authored. `src/data/seasonOneRegion.json` is the executable
+design graph. `SEASON_ONE_SYNOPSIS.md` owns story order.
 
-## Context — how we got here, for any agent or human reading cold
-
-This project is built by a relay: Tony (coach, playtester, art director), Claude sessions, and Codex, coordinated through AGENT_HANDOFF.md. In July 2026 two tracks ran in parallel and converged:
-
-**Track A (this document's lineage):** diagnosed that art was being produced bottom-up with no top-down world design ("we don't know what we need"). Produced a World Bible, then audited it against the complete FireRed Kanto overworld map. The audit found three structural failures in our world. Track A implemented and verified the fix (v21.6, local only) but discovered Track B had meanwhile advanced the live game to v21.25 — so the code was discarded and the *design* was preserved here, with the tested migration spec in §5.
-
-**Track B (current live game, v21.25):** massive verified progress — native 320×224, FireRed battle choreography, hold-to-walk, EXP/evolution ceremonies, five route trainers with sight-lines, the Big Ten Championship bracket, the spirit-personas fiction (Badger/Grizzly/Gorilla/Red Panda/Gator), wild level bands (3–6 / 7–10 / 11–14), imagegen pipeline, 8/8 smoke tests. Track B did NOT touch world geography: the map is still the pre-audit layout.
-
-**This manifesto merges them.** Everything in v21.25 stays. The geography changes to match this document. One agent implements §5 as a single work package; nobody else pushes during it.
+The pre-vision Bascom mega-hub and the v21.62 full-painting rollout are legacy
+playable placeholders. They are not the production world plan.
 
 ## 1. North star
 
-**Setting: University of Wisconsin–Madison. Audience: our wrestling team and recruits.** A recruit playing on their phone should keep recognizing real places — the Terrace, Bascom Hill, State Street, the Field House. **Recognition is the product.** Every geography and art decision is judged by one question: *would a Wisconsin kid recognize it?* Cardinal red + white = home team, everywhere. Evoke the brand, never reproduce official marks (no motion-W logo copies, no official Bucky art, no real athlete names/likenesses without written consent).
+The setting is the University of Wisconsin-Madison and the audience is the
+wrestling team and recruits. Two feelings govern the world:
 
-## 2. What the Kanto audit taught us (why the map must change)
+1. "I know this place."
+2. "This is what a season feels like."
 
-Studying the full FireRed overworld against ours exposed three failures:
+Recognition is the product. Every location must be recognizable through
+geography, landmark hierarchy, material language, and story purpose without
+copying official marks, athletes, or copyrighted game assets.
 
-1. **Geography doesn't flow.** Kanto's maps continue into each other — water stays water across a boundary, a route's exit edge matches its neighbor's entry edge. Ours are teleport-pockets. Law: **edge continuity** — whatever terrain touches an exit edge must continue on the far side.
-2. **Our compass contradicts Madison.** We placed the lake east and downtown west. Real Madison: **State Street runs EAST toward the Capitol; the Lakeshore Path runs WEST along Mendota to Picnic Point.** For an audience that knows the city, a mirrored map is worse than a fictional one.
-3. **The finale hangs off a nature trail.** Kanto's ending sits at the end of the journey (Victory Road → Indigo Plateau). Ours puts the Championship Hall behind a riverbank. The Big Ten bracket belongs in **the Kohl Center, entered from State Street** through a marquee door — the city IS the road to the title.
+## 2. Season One region
 
-## 3. The world map (Season One)
+```text
+                              BASCOM HILL (optional venue)
+                                      |
+CAMP RANDALL -> R1 -> FIELD HOUSE -> STATE STREET -> CAPITOL SQUARE
+   home              Town 1 / star1        R2          Town 2 / star2
+                         |
+                  LAKESHORE PATH -> PICNIC POINT
+                                      required badge detour
 
+CAPITOL SQUARE -> MONONA SHORE -> KOHL CENTER
+                       R3           Town 3
+
+KOHL COMPLETE => BUS PASS RETURN TO CAMP RANDALL => AIRPORT => ST. LOUIS
+                 story transition / send-off        flight    Nationals
 ```
- LAKE MENDOTA ————————— water band along the entire northern shore ——————
- PICNIC POINT ←— LAKESHORE PATH ←—→ BASCOM HILL ←—→ STATE STREET → capitol
- (dead-end wilds,   (Badge 1 route:     (HUB: Abe        (Badge 2 gym;     horizon
-  pines, fire        pier, Terrace       statue, recruit   KOHL CENTER
-  circle, top        chairs, tall        grass, all        marquee door =
-  recruits 11-14)    grass 7-10)         doors)            Big Ten bracket)
-                                            |
-                              FIELD HOUSE (home) · ANNEX ARENA (Badge 3)
-                              TEAM SHOP · TRAINING ROOM · MEMORIAL LIBRARY
-```
 
-**Golden path:** Field House → Bascom Hill → west to Lakeshore (Badge 1) → return → east to State Street (Badge 2) → Annex Arena (Badge 3) → the Kohl Center marquee (badge-gated) → Big Ten Championship bracket → CHAMPION. Picnic Point is the optional wilds reward: the deepest recruits (wild band 11–14) live at the dead-end peninsula, fire circle at the tip.
+Single arrows are physical connections. Double arrows are explicit story or
+travel transitions. The Bus Pass does not add physical map connections.
 
-**Wild bands mapped to geography:** campus grass 3–6, Lakeshore 7–10, Picnic Point 11–14 — difficulty rises the farther west you walk from home; the finale lies east. Two directions, two meanings: **west = grow the team, east = win the title.**
+### Camp Randall
 
-**Area identities (one line each):**
-- FIELD HOUSE — home of Badger wrestling; coach, mat centerpiece, save anchor.
-- BASCOM HILL (rename from CAMPUS QUAD) — hub; Abe Lincoln statue (lore lines per badge, ties into existing statue-lore canon); every exit telegraphs its destination.
-- MEMORIAL LIBRARY (rename from STUDY HALL) — film-study NPC, coach-weakness hints.
-- LAKESHORE PATH — "The Coastal Walk" (56x14 since v21.39): Mendota across the whole north edge, the marina cluster mid-route (pier over the water, three Terrace sunburst chairs, locked boathouse — the route's remembered gate), three open-mat zones the walk crosses.
-- PICNIC POINT (rename from RIVER TRAIL) — "The Peninsula Push" (48x14 since v21.39): water both shores and at the tip, two staggered pine pinches, two mat zones, fire circle + the Funk Doctor at the very tip; single exit east.
-- STATE STREET (rename from DOWNTOWN) — brick pedestrian street, Capitol dome silhouette on the east horizon strip, storefront row obeying the door law; the red-marquee building is the Kohl Center.
-- KOHL CENTER (rename Championship Hall's display name) — gold accents (the ONLY gold in the game), spotlight title mat, Big Ten bracket desk, locked NATIONALS door (Season Two seam).
-- ANNEX ARENA (Conference Arena) — Badge 3, bleachers and banners, north of the quad.
+- Home town and Pallet Town analogue.
+- Locker Room, Wrestling Room, Coach's Office, captain, Coach, Rex.
+- Camp Randall Stadium is the X-factor.
+- Exactly one physical world exit: south to R1.
+- No Trainer's Room or Bucky's Locker Room.
+- Stadium remains non-enterable until the homecoming ending.
 
-## 4. World laws (apply to every map, every agent, forever)
+### R1
 
-1. **Door law:** dark opening + lit lintel + red mat = enterable. Drawn shut door, no mat = decoration. No exceptions; this is the game's core readability contract.
-2. **Edge continuity:** terrain at an exit edge continues on the other side (Mendota band spans Picnic Point AND Lakeshore's north edges at the same rows).
-3. **Telegraphing:** from the hub you can see where each exit leads (lake glint west, street east, arena arch north, Field House doors south).
-4. **Open-mat honesty (formerly tall-grass honesty):** encounter cells always render as unmistakable worn red mats — you can SEE where scouts happen; decoration never covers them. (v21.39: Tony's call — open mats are the wrestling translation of tall grass, per CITY_DESIGN_MANIFESTO Part X. Mats are laid deliberately, so zones are rectangles with no fringe.)
-5. **Navigation is law; art and collision share one source.** Compose the
-   walkable route first, then generate visible layers and collision from the
-   same map data. Neither a backdrop PNG nor a separate switch statement is
-   authoritative by itself. Validator BFS (exits reachable, landings walkable,
-   trainers/captains reachable) must pass every release. The v21.36 FR1 pilot
-   implements this law in `src/data/layeredMaps.json` for Field House and
-   Bascom Hill; migrate later areas into that format instead of copying the
-   retired collision branches.
-6. **Landmark hierarchy:** each camera region has one primary focal landmark,
-   two or three secondary anchors, and quiet connective space. An area may have
-   multiple landmarks as the camera reveals them; equal visual weight is the
-   failure to avoid.
-7. **Familiar services expose the x-factor:** every developed town after the
-   home town has a Trainer's Room (recovery), Bucky's Locker Room (shop), and
-   normally a gym/arena. Reuse the service composition and interaction grammar
-   so the player recognizes them immediately, but give each town a local map
-   instance/return warp. The town's landmark, street plan, palette, residents,
-   and gym are the unique layer. Register every new town in
-   `world_composition_manifest.json` under `townServicePolicy`; validation must
-   reject a town missing either familiar service.
+- First journey from home to Field House.
+- Recruiting remains locked on the first outbound trip.
+- Carries the optional early Rex rematch, recruiting lesson, and a denser
+  trainer/open-mat approach before town.
+- Does not exist in the production map set yet. It must be co-designed with
+  Tony before art.
 
-## 5. WP-WORLD: the migration work package (tested spec)
+### Field House Town
 
-This exact rewiring was implemented and verified once (validator BFS green, exit-visual QA pass) before being set aside in the collision — it is a proven spec, not a proposal. Re-implement on the v21.25+ source tree (src/data/world.js):
+- Town 1 and the first complete town loop.
+- Canonical Trainer's Room and Bucky's Locker Room appear for the first time.
+- Field House and its arch are the X-factor.
+- The Opener awards the Field House Badge.
+- Western branch leads through Lakeshore Path to Picnic Point.
+- Main route continues east through State Street.
 
-**Exit rewiring:**
-| Map | Change |
-|---|---|
-| campus | (27,7) now → downtown, landing (1,7), msg "State Street." |
-| campus | (1,7) now → lakeshore, landing (26,7), msg "Lakeshore Path." |
-| lakeshore | exits become: (27,7)→campus(2,7) and (0,9)→river(26,9) |
-| river | single exit: (27,9)→lakeshore(1,9); **remove** the championship exit |
-| downtown | exits become: (0,7)→campus(26,7) and (21,4)→championship(14,12) **carrying the existing badge gate** ['Neutral Badge','Scramble Badge'] |
-| championship | exit becomes (14,13)→downtown(21,5); start (14,11) |
+### Lakeshore Path and Picnic Point
 
-**v21.28 WP-TOWN coordinate update:** Bascom Hill is now 28x20 so it can
-scroll vertically like a FireRed town. Its west exit is (1,10), the Field
-House threshold (14,19), and the shop/recovery/library doors (5,5), (22,5),
-and (22,12). **v21.30 amendment:** the east exit is (27,6) — the State
-Street artery runs through the open rows 6-7 corridor BETWEEN the Recovery
-Center and Memorial Library masses, not down a 1-tile alley beside the
-library (playtest finding: the alley read as "the building blocks the path"
-and forced the sprite over the roof edge). External destination landings,
-the Madison compass, golden path, wild bands, and every world law remain
-unchanged. `VISUAL_OVERHAUL_GUIDE.md` §5 owns the current collision map.
-**v21.32 amendment:** State Street's east end (x24-27, y1-4) is now the
-blocked Capitol grounds — the dome prop over a hedge row closes the
-street's east view (§3's "Capitol dome silhouette" made literal), with a
-readable CAPITOL sign spot along y4. The street corridor itself is rows
-5-9: sidewalk row 5, brick pedestrian mall rows 6-8, sidewalk row 9.
-**v21.39 amendment (WP-ROUTES):** the routes are journeys now. Lakeshore
-Path is 56x14 (exits: (55,7)→campus(2,10), (0,9)→river(46,9); campus west
-exit lands at (54,7)). Picnic Point is 48x14 (exit (47,9)→lakeshore(1,9);
-the Funk Doctor moved to (4,7) by the fire circle at the tip). Both live
-in the FR1 layered source. Encounter cells render as open mats
-everywhere (law #4). Route trainers re-seated on the new sight lines:
-Marina (40,7)→E, Sandy (17,5)→S, Gus (26,9)→E, Tavi (12,4)→S.
+- Western recruit-growth branch rooted at Field House Town.
+- Lakeshore is a route; Picnic Point is a badge venue and wilds payoff.
+- The Funk Doctor awards the Picnic Point Badge.
+- The branch may be explored flexibly but its badge is required for the
+  flight to Nationals.
 
-**Renames (display names only — area ids NEVER change, saves stay compatible):** CAMPUS QUAD→BASCOM HILL, DOWNTOWN→STATE STREET, RIVER TRAIL→PICNIC POINT, CHAMPIONSHIP HALL→KOHL CENTER, STUDY HALL→MEMORIAL LIBRARY.
+### State Street
 
-**Collision/grass:** Lakeshore water band y1–4 full width (Mendota north); Picnic Point water y1–2 and y11–12 (peninsula) + pine stand x14–20 y4–6; isGrass: LAKESHORE→x3–13,y6–10; PICNIC POINT→x4–11,y5–9.
+- R2, not a town and not the owner of recurring services.
+- Connects Field House Town to Capitol Square.
+- Bascom Hill branches from it as an optional venue.
+- Its job is movement, downtown recognition, throw-flavored trainers, and the
+  reveal of Capitol Square ahead.
 
-**Backdrops:** rebuild lakeshore / river / downtown through the current compositor per §3 identities (pier, Terrace chairs, fire circle, Capitol strip, marquee vs shut storefronts).
+### Capitol Square
 
-**Consequential work (the part the first attempt didn't have to face):** re-seat the 5 route trainers and their sight-lines on the new layouts; re-check wild band placement; update any dialog referencing old names/directions; keep the Big Ten bracket exactly as built, just reached via the marquee.
+- Town 2.
+- Owns local instances of the canonical Trainer's Room and Bucky's Locker Room.
+- The enterable Wisconsin State Capitol is the X-factor.
+- The Senator awards the Capitol Badge.
+- The Kayak Voucher and Bus Pass beats live here.
 
-**Acceptance:** `npm run check` 8/8 · validator BFS green · exit-visual QA (door/mat/path pixel-present at every exit tile) · screenshot standing INSIDE one encounter zone per outdoor map · phone walkthrough of the full golden path.
+### Monona Shore
+
+- R3 and the water-route translation.
+- Brittingham Boats redeems the Kayak Voucher.
+- Connects Capitol Square to Kohl Center District.
+
+### Kohl Center District
+
+- Town 3 and the conference tournament.
+- Owns local instances of both canonical services.
+- The arena runs as a short back-to-back bracket.
+- The Anchor awards the Kohl Badge.
+- The district's non-arena X-factor remains a Tony decision; final town art is
+  blocked until that decision and the map mockup are approved.
+
+### Airport and St. Louis
+
+- After the required badges, the story returns to Camp Randall for the send-off;
+  the airport and flight follow as explicit transitions, not physical roads.
+- Airport is a transition map, not an explorable town substitute.
+- Flight requires Field House, Capitol, Kohl, and Picnic Point badges.
+- St. Louis is Town 4, with canonical services supporting a multi-day bracket.
+- The Gateway Arch is the victory-lap X-factor after Nationals.
+
+## 3. World laws
+
+### 3.1 Design before art
+
+No map proceeds directly from a prompt to final art. The required order is:
+
+1. story contract,
+2. region connection,
+3. camera-window blockout,
+4. architecture and event placement,
+5. metatile/object manifest,
+6. original art,
+7. compilation and validation,
+8. Tony's phone review.
+
+### 3.2 Structured area packages
+
+Every area package declares its header, layout, visual resources, metatile
+behaviors, elevation, events, warps, story state, connections, and camera.
+Rendering and collision consume that package. Neither is inferred from the
+other after the fact.
+
+### 3.3 Grid-native bespoke art
+
+Large buildings and landmarks are authored as complete original drawings to
+exact cell footprints. Their doors, solid base, corners, roof rise, and upper
+occlusion rows land on declared cell boundaries. They are then sliced into
+lower and upper metatile layers. Full-scene paintings are look references only.
+
+### 3.4 Honest paths
+
+A path must do one of three things:
+
+1. reach a visible threshold,
+2. continue through a physical map connection,
+3. terminate visibly at a gate, hedge, fence, wall, water edge, or elevation.
+
+A path may never look open while collision silently closes it. Decorative
+ground may not imitate a route.
+
+### 3.5 Door law
+
+Every enterable door uses one repeated interaction grammar: visible opening,
+threshold/landing, aligned walk lane, and an explicit warp cell. Decorative
+doors must read shut and have no approach marker.
+
+### 3.6 Edge continuity
+
+Physical connections are reciprocal and terrain continues across their shared
+edge. Each connection declares direction and offset. The region graph and map
+layouts must agree.
+
+### 3.7 Franchise vocabulary
+
+Every developed town after Camp Randall owns:
+
+- a Trainer's Room for recovery,
+- Bucky's Locker Room for shopping,
+- normally an arena or competition venue.
+
+The two services reuse canonical exterior/interior packages, but each town has
+its own area instance, events, residents, and return warp. Familiarity makes
+the town's unique X-factor more legible.
+
+### 3.8 Landmark hierarchy
+
+Each 16x11 outdoor camera window has one primary focal landmark, no more than
+two or three secondary anchors, and quiet connective space. Whole-map beauty
+does not excuse a confused camera window.
+
+### 3.9 Story gates are explicit state
+
+Every gate declares its flag/variable, trigger cells, before/after objects,
+movement, unlocked destination, and tests. An NPC blocker and the state change
+that moves it ship together.
+
+### 3.10 Open-mat honesty
+
+Recruiting and encounter cells render as unmistakable worn mats. Decoration
+never covers them, and ordinary ground never impersonates them.
+
+## 4. Camera and scale
+
+The logical cell remains 16px. Outdoor maps are composed and reviewed through
+a 16x11-cell camera window, matching the cadence of the 15x10 GBA and 16x12 DS
+field views while preserving Badger's 320x224 higher-resolution UI. The default
+world zoom remains 1.25 unless an approved room-specific reason overrides it.
+
+Actors, doors, furniture, and buildings are judged inside this camera window,
+not from an area-wide thumbnail.
+
+## 5. Reuse policy
+
+Reuse and uniqueness are separate layers:
+
+- Global: cell size, palette, ground grammar, vegetation grammar, doors and
+  interaction language, service layouts.
+- Town family: secondary material kit, roof identity, street furniture,
+  residents, arena facade.
+- One-off: X-factor landmark and story-specific interiors.
+
+The standard service package is reused exactly. A landmark is never assembled
+from generic pieces merely to satisfy reuse; it gets a dedicated grid-native
+manifest and original art pass.
+
+## 6. Production status
+
+- Camp Randall: approved Stages 1-4 mockup; successful visual direction; live
+  geometry must be brought back to the one-exit story contract.
+- R1: next co-design target.
+- Field House Town: next town mockup after or alongside R1.
+- All other production maps: narrative position locked, map design and final
+  art not approved.
+- v21.62 old-world compositions: playable migration placeholders only.
+
+No further final map art should be generated until the relevant node is marked
+`readyForFinalArt: true` in `src/data/seasonOneRegion.json` after Tony approves
+its blockout.

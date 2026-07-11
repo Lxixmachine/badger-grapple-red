@@ -1,0 +1,214 @@
+{
+  "schemaVersion": 1,
+  "status": "design-authority",
+  "source": "GAME_VISION.md + SEASON_ONE_SYNOPSIS.md",
+  "tileSize": 16,
+  "camera": {
+    "outdoorTilesWide": 16,
+    "outdoorTilesHigh": 11,
+    "canvasWidth": 320,
+    "canvasHeight": 224,
+    "defaultWorldZoom": 1.25
+  },
+  "canonicalServices": {
+    "trainer_room": {
+      "displayName": "Trainer's Room",
+      "role": "recovery"
+    },
+    "buckys_locker_room": {
+      "displayName": "Bucky's Locker Room",
+      "role": "shop"
+    }
+  },
+  "seasonFlow": [
+    {"from": "camp_randall", "to": "r1", "mode": "physical"},
+    {"from": "r1", "to": "field_house", "mode": "physical"},
+    {"from": "field_house", "to": "state_street", "mode": "physical"},
+    {"from": "state_street", "to": "capitol_square", "mode": "physical"},
+    {"from": "capitol_square", "to": "monona_shore", "mode": "physical"},
+    {"from": "monona_shore", "to": "kohl_center", "mode": "physical"},
+    {"from": "kohl_center", "to": "camp_randall", "mode": "fast_travel", "gate": "all_flight_credentials"},
+    {"from": "camp_randall", "to": "airport", "mode": "cutscene", "gate": "all_flight_credentials"},
+    {"from": "airport", "to": "st_louis", "mode": "flight", "gate": "all_flight_credentials"},
+    {"from": "st_louis", "to": "camp_randall", "mode": "homecoming", "gate": "nationals_complete"}
+  ],
+  "nodes": {
+    "camp_randall": {
+      "displayName": "Camp Randall",
+      "kind": "home_town",
+      "runtimeAreaIds": ["campus", "fieldhouse", "wrestlingroom", "studyhall"],
+      "services": [],
+      "connections": ["r1"],
+      "transitions": [
+        {"to": "airport", "type": "cutscene", "gate": "all_flight_credentials"}
+      ],
+      "xFactor": {
+        "id": "camp_randall_stadium",
+        "displayName": "Camp Randall Stadium",
+        "entryGate": "season_complete"
+      },
+      "designStatus": "approved_mockup",
+      "readyForFinalArt": true
+    },
+    "r1": {
+      "displayName": "R1",
+      "kind": "route",
+      "runtimeAreaIds": [],
+      "services": [],
+      "connections": ["camp_randall", "field_house"],
+      "transitions": [],
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    },
+    "field_house": {
+      "displayName": "Field House Town",
+      "kind": "town",
+      "runtimeAreaIds": [],
+      "services": ["trainer_room", "buckys_locker_room"],
+      "connections": ["r1", "state_street", "lakeshore_path"],
+      "transitions": [],
+      "xFactor": {
+        "id": "field_house_and_arch",
+        "displayName": "Field House and Arch"
+      },
+      "credential": "field_house_badge",
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    },
+    "lakeshore_path": {
+      "displayName": "Lakeshore Path",
+      "kind": "route",
+      "runtimeAreaIds": ["lakeshore"],
+      "services": [],
+      "connections": ["field_house", "picnic_point"],
+      "transitions": [],
+      "designStatus": "needs_redesign",
+      "readyForFinalArt": false
+    },
+    "picnic_point": {
+      "displayName": "Picnic Point",
+      "kind": "badge_venue",
+      "runtimeAreaIds": ["river"],
+      "services": [],
+      "connections": ["lakeshore_path"],
+      "transitions": [],
+      "credential": "picnic_point_badge",
+      "designStatus": "needs_redesign",
+      "readyForFinalArt": false
+    },
+    "state_street": {
+      "displayName": "State Street",
+      "kind": "route",
+      "runtimeAreaIds": ["downtown"],
+      "services": [],
+      "connections": ["field_house", "capitol_square", "bascom_hill"],
+      "transitions": [],
+      "designStatus": "needs_redesign",
+      "readyForFinalArt": false
+    },
+    "bascom_hill": {
+      "displayName": "Bascom Hill",
+      "kind": "optional_venue",
+      "runtimeAreaIds": [],
+      "services": [],
+      "connections": ["state_street"],
+      "transitions": [],
+      "xFactor": {
+        "id": "bascom_hall",
+        "displayName": "Bascom Hall"
+      },
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    },
+    "capitol_square": {
+      "displayName": "Capitol Square",
+      "kind": "town",
+      "runtimeAreaIds": [],
+      "services": ["trainer_room", "buckys_locker_room"],
+      "connections": ["state_street", "monona_shore"],
+      "transitions": [],
+      "xFactor": {
+        "id": "wisconsin_capitol",
+        "displayName": "Wisconsin State Capitol",
+        "entryGate": "always"
+      },
+      "credential": "capitol_badge",
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    },
+    "monona_shore": {
+      "displayName": "Monona Shore",
+      "kind": "route",
+      "runtimeAreaIds": [],
+      "services": [],
+      "connections": ["capitol_square", "kohl_center"],
+      "transitions": [],
+      "travelGate": "kayak_voucher_redeemed",
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    },
+    "kohl_center": {
+      "displayName": "Kohl Center District",
+      "kind": "town",
+      "runtimeAreaIds": ["championship"],
+      "services": ["trainer_room", "buckys_locker_room"],
+      "connections": ["monona_shore"],
+      "transitions": [
+        {"to": "camp_randall", "type": "fast_travel", "gate": "all_flight_credentials"}
+      ],
+      "xFactor": {
+        "id": "unresolved_town_landmark",
+        "displayName": "Unresolved Town X-Factor",
+        "status": "tony_decision_required"
+      },
+      "credential": "kohl_badge",
+      "designStatus": "blocked_on_x_factor_and_blockout",
+      "readyForFinalArt": false
+    },
+    "airport": {
+      "displayName": "Airport",
+      "kind": "transition",
+      "runtimeAreaIds": [],
+      "services": [],
+      "connections": [],
+      "transitions": [
+        {"to": "st_louis", "type": "flight", "gate": "all_flight_credentials"}
+      ],
+      "travelGate": "all_flight_credentials",
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    },
+    "st_louis": {
+      "displayName": "St. Louis",
+      "kind": "town",
+      "runtimeAreaIds": [],
+      "services": ["trainer_room", "buckys_locker_room"],
+      "connections": [],
+      "transitions": [
+        {"to": "camp_randall", "type": "homecoming", "gate": "nationals_complete"}
+      ],
+      "xFactor": {
+        "id": "gateway_arch",
+        "displayName": "Gateway Arch",
+        "entryGate": "nationals_complete"
+      },
+      "designStatus": "needs_tony_blockout",
+      "readyForFinalArt": false
+    }
+  },
+  "credentials": {
+    "field_house_badge": {"earnedAt": "field_house"},
+    "capitol_badge": {"earnedAt": "capitol_square"},
+    "kohl_badge": {"earnedAt": "kohl_center"},
+    "picnic_point_badge": {"earnedAt": "picnic_point"}
+  },
+  "flightGate": {
+    "node": "airport",
+    "requires": [
+      "field_house_badge",
+      "capitol_badge",
+      "kohl_badge",
+      "picnic_point_badge"
+    ]
+  }
+}

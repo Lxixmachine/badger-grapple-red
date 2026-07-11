@@ -10,6 +10,58 @@ import {CAMP_TILE_RUNTIME_VERSION,campTilemap,campRuntimeStats,campRuntimeTile} 
 let errs=[];
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
 
+// The Season One design graph is the authority for what the world is becoming.
+// The current runtime graph remains playable legacy data while maps are rebuilt.
+const seasonRegionPath=fileURLToPath(new URL('../src/data/seasonOneRegion.json',import.meta.url));
+const seasonRegion=JSON.parse(readFileSync(seasonRegionPath,'utf8'));
+if(seasonRegion.schemaVersion!==1)errs.push('Season One region schema version is unsupported');
+if(seasonRegion.status!=='design-authority')errs.push('Season One region must be marked design-authority');
+if(seasonRegion.tileSize!==16)errs.push('Season One region must retain the 16px logical cell');
+if(seasonRegion.camera?.outdoorTilesWide!==16||seasonRegion.camera?.outdoorTilesHigh!==11||seasonRegion.camera?.defaultWorldZoom!==1.25)errs.push('Season One outdoor camera contract must remain 16x11 cells at 1.25 zoom');
+const seasonNodes=seasonRegion.nodes||{};
+const seasonNodeIds=Object.keys(seasonNodes);
+const requiredSeasonNodes=['camp_randall','r1','field_house','lakeshore_path','picnic_point','state_street','bascom_hill','capitol_square','monona_shore','kohl_center','airport','st_louis'];
+for(const id of requiredSeasonNodes)if(!seasonNodes[id])errs.push(`Season One region is missing '${id}'`);
+for(const [id,node] of Object.entries(seasonNodes)){
+  if(!/^[a-z][a-z0-9_]*$/.test(id))errs.push(`Season One node '${id}' must be a stable lowercase id`);
+  if(!node.displayName||!node.kind||!Array.isArray(node.connections)||!Array.isArray(node.transitions)||!Array.isArray(node.services))errs.push(`Season One node '${id}' is missing identity, connections, transitions, or services`);
+  for(const to of node.connections||[]){
+    if(!seasonNodes[to])errs.push(`Season One node '${id}' connects to missing '${to}'`);
+    else if(!(seasonNodes[to].connections||[]).includes(id))errs.push(`Season One physical connection '${id}' -> '${to}' is not reciprocal`);
+  }
+  for(const transition of node.transitions||[]){
+    if(!seasonNodes[transition.to])errs.push(`Season One transition '${id}' -> '${transition.to}' targets a missing node`);
+    if(!['fast_travel','cutscene','flight','homecoming'].includes(transition.type))errs.push(`Season One transition '${id}' -> '${transition.to}' has unsupported type '${transition.type}'`);
+  }
+  if(node.readyForFinalArt&&node.designStatus!=='approved_mockup')errs.push(`Season One node '${id}' cannot enter final art before an approved mockup`);
+}
+const homeNodes=seasonNodeIds.filter(id=>seasonNodes[id].kind==='home_town');
+if(homeNodes.length!==1||homeNodes[0]!=='camp_randall')errs.push('Camp Randall must be the only Season One home town');
+if(JSON.stringify(seasonNodes.camp_randall?.connections)!==JSON.stringify(['r1']))errs.push('Camp Randall must have exactly one physical world connection: R1');
+if((seasonNodes.camp_randall?.services||[]).length)errs.push('Camp Randall must not contain the recurring town services');
+if(seasonNodes.camp_randall?.xFactor?.entryGate!=='season_complete')errs.push('Camp Randall Stadium must remain closed until the season is complete');
+if(seasonNodes.state_street?.kind!=='route'||(seasonNodes.state_street?.services||[]).length)errs.push('State Street is R2, not a service town');
+if(seasonNodes.capitol_square?.kind!=='town')errs.push('Capitol Square must remain Town 2');
+const canonicalServiceIds=Object.keys(seasonRegion.canonicalServices||{}).sort();
+if(JSON.stringify(canonicalServiceIds)!==JSON.stringify(['buckys_locker_room','trainer_room']))errs.push('Season One canonical services must be Trainer\'s Room and Bucky\'s Locker Room');
+for(const [id,node] of Object.entries(seasonNodes))if(node.kind==='town'){
+  const services=[...(node.services||[])].sort();
+  if(JSON.stringify(services)!==JSON.stringify(canonicalServiceIds))errs.push(`Season One town '${id}' must own both canonical services`);
+}
+for(const step of seasonRegion.seasonFlow||[]){
+  if(!seasonNodes[step.from]||!seasonNodes[step.to]){errs.push(`Season One flow references missing '${step.from}' or '${step.to}'`);continue;}
+  if(step.mode==='physical'){
+    if(!seasonNodes[step.from].connections.includes(step.to))errs.push(`Season One physical flow breaks between '${step.from}' and '${step.to}'`);
+  }else if(!seasonNodes[step.from].transitions.some(t=>t.to===step.to&&t.type===step.mode))errs.push(`Season One ${step.mode} flow '${step.from}' -> '${step.to}' lacks a matching transition`);
+}
+const credentials=seasonRegion.credentials||{};
+for(const [id,credential] of Object.entries(credentials)){
+  if(!seasonNodes[credential.earnedAt])errs.push(`Season One credential '${id}' is earned at missing '${credential.earnedAt}'`);
+  else if(seasonNodes[credential.earnedAt].credential!==id)errs.push(`Season One credential '${id}' is not owned by '${credential.earnedAt}'`);
+}
+for(const id of seasonRegion.flightGate?.requires||[])if(!credentials[id])errs.push(`Season One flight gate references missing credential '${id}'`);
+if(seasonRegion.flightGate?.node!=='airport'||(seasonRegion.flightGate?.requires||[]).length!==4)errs.push('Season One flight must leave from the airport and require all four credentials');
+
 if(WORLD_META.tileSize!==TILE)errs.push(`WORLD_META.tileSize ${WORLD_META.tileSize} does not match TILE ${TILE}`);
 if(WORLD_META.width!==28||WORLD_META.height!==14||WORLD_META.maxWidth<56||WORLD_META.maxHeight<20)errs.push('WORLD_META must retain 28x14 defaults and support 56-wide routes plus the 20-row Bascom Hill map');
 
@@ -226,9 +278,9 @@ for(const [aid,spec] of Object.entries(manifest.areas)){
   expected.forEach((row,y)=>{if(row.join('')!==map.tiles[y])errs.push(`manifest area ${aid}: collision row ${y} was not generated from object footprints`);});
 }
 
-// Full-composition world maps use the same FireRed-style contract as Camp:
-// one authored manifest owns pixels, metatile behavior, warps, interactions,
-// and service placement. Generated files may never become an alternate source.
+// Legacy v21.62 full-composition maps remain validated so the current build is
+// playable during migration. They are not the production template for new
+// Season One maps; see docs/PROVEN_RPG_ENGINEERING_AUDIT.md and Law 6c.
 const worldManifestPath=fileURLToPath(new URL('../art/imagegen/world_composition_manifest.json',import.meta.url));
 const worldManifest=JSON.parse(readFileSync(worldManifestPath,'utf8'));
 const worldBuildPath=fileURLToPath(new URL('../src/data/worldCompositionBuild.json',import.meta.url));

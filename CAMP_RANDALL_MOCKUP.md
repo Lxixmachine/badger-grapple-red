@@ -135,23 +135,24 @@ missed once we're generating real tiles.
 
 ## Status
 
-**v21.47 implementation note:** the proof-of-concept tile grids now live in
-`src/data/campRandallMaps.json` and the matching source art lives under
-`art/imagegen/camp_randall_*_2026-07-10.png`. The exterior, connected Building
-2 interior, and Coach's Office are walkable at phone scale. The tunnel/field
-ending remains intentionally deferred. Tony's visual verdict is still the
-gate before this workflow extends to the rest of the region.
+The Stages 1-4 design in this document remains approved. The successful Camp
+Randall visual direction may be preserved, but v21.62's legacy west/east world
+connections and early stadium entrance contradict this mockup and the Season
+One synopsis. They are not accepted production geometry. Camp Randall has one
+physical world exit to R1, and the stadium opens only for the ending.
+
+The live object manifest and area package must be reconciled to this contract
+before Camp Randall is considered a completed proof of concept. Tony's phone
+verdict remains the visual close gate.
 
 All five open questions from the first pass are now locked: Building
 3's interior contents, the outdoor quad's decoration (lamp
 posts/banners/hedges), the R1 exit position, and the stadium's ending
-tone. What remains is mechanical, not creative:
+tone. What remains is implementation and verification, not a license to change
+the approved layout:
 
-1. The literal tile grid/dimensions for all three spaces, in the same
-   ASCII + rect format `layeredMaps.json` actually reads — this
-   document is the room-and-function layer (Stages 1-4); authoring the
-   real data is Stage 5+ engineering work, done when this area is
-   actually built (after the style-system rework, per `CLAUDE.md`'s
-   queue).
+1. Reconcile the grid-native object/metatile manifest, events, and physical
+   connections to this design. The manifest, collision, lower layers, upper
+   layers, and warps must describe the same cells.
 2. The tunnel corridor's exact length/shape for the ending scene —
    minor, decided when that scene is actually built.

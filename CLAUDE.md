@@ -13,7 +13,7 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
 2. **GAME_VISION.md** — what we're building and why. The founding
    document: the fantasy, who the player is, the FireRed correspondence
    table, the Season One region, the loop. Settle every unclear decision
-   against its §1. (v1.0 DRAFT — §7 open calls await Tony's ratify.)
+   against its §1. The player pivot and Season One spine are ratified.
 3. **SEASON_ONE_SYNOPSIS.md** — what happens, beat by beat. Built live
    with Tony in the format of the Pokémon Red synopsis he shared: 41
    numbered beats, Camp Randall to the field. This is where the
@@ -25,21 +25,24 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
    terrain blockout → architecture placement), built before any art —
    what goes where and why, ahead of what it looks like. Template for
    how every future town gets designed.
-5. **WORLD_MAP_MANIFESTO.md** — what the world IS (Madison compass,
-   golden path, world laws). "Recognition is the product."
-   (Rewrites to v2 from GAME_VISION §4 once the vision is ratified.)
-6. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
+5. **docs/PROVEN_RPG_ENGINEERING_AUDIT.md** — source-level techniques
+   measured from FireRed, Emerald, HeartGold, and Platinum and translated into
+   original Badger architecture. No code, data, layouts, or art are copied.
+6. **WORLD_MAP_MANIFESTO.md** + **src/data/seasonOneRegion.json** — the
+   ratified v2 world and its validator-enforced design graph. State Street is
+   R2, Capitol Square is Town 2, and Camp Randall has one physical route exit.
+7. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
    town a thesis, every route a micro-story, gates seen before solved,
    the first area matters late. Judge all map work against it.
    **docs/design_bible/** (28 volumes) is its deep companion: tile
    grammar, anti-patterns, the staged production pipeline (Vol XII), and
    the map-linter spec (Vol XV) that `npm run lint-maps` implements.
-7. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
+8. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
    compositor contract, work packages). **VISUAL_STYLE_SPEC.md** is the
    measured bar all new art is generated against;
    **VISUAL_REBUILD_PLAN.md** stages the rebuild;
    **VISUAL_CRITIQUE_LOG.md** tracks Tony's-eye findings.
-8. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
+9. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
    FireRed design parameters (timing, sequences, map structure) that we
    build against.
 
@@ -97,15 +100,18 @@ Push to `main` (Tony authorized direct pushes; Pages deploys from main).
 
 ## Current queue (see handoff for detail)
 
-**Camp Randall first, as a proof of concept.** Tony: prove the whole
-mockup → spec → Codex → compositor → playable pipeline on ONE town
-before generating tileset assets for the whole game or rewriting the
-full region manifesto. Scope: the visual pipeline specifically — a
-walkable, good-looking Camp Randall, judged on Tony's eye. Concrete
-Codex ask is in AGENT_HANDOFF.md, drawn straight from
-CAMP_RANDALL_MOCKUP.md. Once that clears, the same reusable-kit pieces
-extend outward and WORLD_MAP_MANIFESTO v2 follows from vision §4 +
-synopsis (Camp Randall home town → St. Louis Nationals).
+**Camp Randall first, as a proof of concept.** Preserve the successful visual
+direction, but restore the approved hometown contract: one physical exit to R1,
+no legacy west/east route links, and no stadium entry before the ending.
+v21.62's full-composition world rollout is a playable legacy placeholder, not
+the production template. Full-scene paintings are look references only;
+production maps use grid-native metatile/object manifests.
+
+Then co-design **R1 and Field House Town** with Tony through story, region
+graph, camera, architecture, and event blockouts before final art. The
+executable design authority is `src/data/seasonOneRegion.json`; validation must
+stay green. The complete method and source evidence live in
+`docs/PROVEN_RPG_ENGINEERING_AUDIT.md`.
 
 **Independent, non-blocking, parallel track**: the style-system code
 rework — rename Neutral/Top/Scramble/Pace/Upperbody/Defense to
@@ -115,8 +121,7 @@ captains (The Senator, The Professor, The Closer). Pure code, no Codex
 or Tony's-eye dependency, can happen anytime — but Camp Randall's Act I
 (persona pick, wrestle-off) isn't truly playable until it's done.
 
-After both: Stage 1 master tileset extends to the rest of the region →
-Stage 2 compositor re-point → Stage 3 builds the NEW region, hometown
-first (never repaint the old world twice) → new systems (locker
-storage, lineup of 6, flight gate, map verbs, Roster Book, opening
-sequence).
+After both: the reusable metatile kit extends only as each approved map needs
+it; the NEW region is built one approved blockout at a time (never repaint the
+old world twice) → new systems (locker storage, lineup of 6, flight gate, map
+verbs, Roster Book, opening sequence).
