@@ -353,6 +353,8 @@ def build_area(area_id: str, spec: dict, area_data: dict, terrain: Image.Image) 
 
     for obj in spec["objects"]:
         obj_id = obj["id"]
+        if full_room:
+            continue
         if not full_room and obj_id not in SOURCES[area_id]:
             raise SystemExit(f"{area_id}/{obj_id}: no atlas source bbox")
         x1, y1, x2, y2 = obj["footprint"]

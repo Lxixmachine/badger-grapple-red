@@ -1,5 +1,35 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.61 grid-native room correction)
+
+Tony reported collision and occlusion faults in the v21.60 hybrid pilot. The
+full paintings were visually strong, but the geometry was not truly native:
+both rooms were 20 cells wide, placing a visually centered door on the boundary
+between x9/x10, and opaque rectangular foreground samples covered actors with
+background pixels.
+
+v21.61 fixes the model rather than masking those symptoms:
+
+- Locker and wrestling rooms are now odd-width 21x12 maps. Their visual center,
+  carpet axis, NPC anchors, exits, and warps all occupy the single center column
+  `x10`.
+- Every non-walkable painted prop owns its complete cell rectangle: lockers own
+  rows 2-4, trophy cases own their cabinet cells, benches own rows 8-9, and mat-
+  room perimeter equipment owns the visible west/east cells.
+- Full-composition rooms now emit zero `upperDecor` entries. Nothing in these
+  compact rooms is meant to be walked behind, so collision is the correct depth
+  contract. All obsolete Field House/Wrestling Room upper PNGs were removed.
+- The mat remains walkable; door posts are solid; each threshold is one explicit
+  walkable/exit cell. Ownership overlays visually confirm art and behavior align.
+- Validator is green at 1018 tiles in one 512x512 atlas. Map lint remains 0% grid
+  exposure/99% variety/48 colors. All 14 production smoke tests pass, including
+  exact locker, bench, equipment, mat, doorway, warp, and captain-gate probes.
+- Phone QA confirms the visual doorway and player movement column coincide.
+
+Preserve odd widths for centered single-cell doors. Do not generate rectangular
+opaque foreground strips from full paintings; use solid complete footprints for
+objects that cannot actually be walked behind.
+
 ## Latest Codex Turn (v21.60 full-composition hybrid pilot)
 
 Tony identified the central art-pipeline problem precisely: the earlier flat

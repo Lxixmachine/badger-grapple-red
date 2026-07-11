@@ -3,10 +3,10 @@
   "tileSize": 16,
   "areas": {
     "fieldhouse": {
-      "width": 20,
+      "width": 21,
       "height": 12,
       "start": {
-        "x": 9,
+        "x": 10,
         "y": 10
       },
       "actorScale": 0.78,
@@ -14,100 +14,35 @@
       "cameraZoom": 1.25,
       "ground": "camp-interior-wood",
       "tiles": [
-        "####################",
-        "#########E##########",
-        "##...####.###.....##",
-        "########....########",
-        "########....########",
-        "##................##",
-        "##................##",
-        "##................##",
-        "##................##",
-        "##.#####....#####.##",
-        "##......#.#.......##",
-        "#########E##########"
+        "#####################",
+        "##########E##########",
+        "##########.##########",
+        "########.....########",
+        "########.....########",
+        "##.................##",
+        "##.................##",
+        "##.................##",
+        "##.#####.....#####.##",
+        "##.#####.....#####.##",
+        "##.......#.#.......##",
+        "##########E##########"
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [
-        {
-          "texture": "camp_fieldhouse_trophy_case_west_upper",
-          "x": 5,
-          "y": 0,
-          "depthY": 2,
-          "source": "manifestObject",
-          "owner": "trophy_case_west"
-        },
-        {
-          "texture": "camp_fieldhouse_trophy_case_east_upper",
-          "x": 10,
-          "y": 0,
-          "depthY": 2,
-          "source": "manifestObject",
-          "owner": "trophy_case_east"
-        },
-        {
-          "texture": "camp_fieldhouse_doorway_frame_upper",
-          "x": 9,
-          "y": 0,
-          "depthY": 1,
-          "source": "manifestObject",
-          "owner": "doorway_frame"
-        },
-        {
-          "texture": "camp_fieldhouse_locker_bank_west_upper",
-          "x": 2,
-          "y": 2,
-          "depthY": 4,
-          "source": "manifestObject",
-          "owner": "locker_bank_west"
-        },
-        {
-          "texture": "camp_fieldhouse_locker_bank_east_upper",
-          "x": 12,
-          "y": 2,
-          "depthY": 4,
-          "source": "manifestObject",
-          "owner": "locker_bank_east"
-        },
-        {
-          "texture": "camp_fieldhouse_bench_west_upper",
-          "x": 3,
-          "y": 8,
-          "depthY": 9,
-          "source": "manifestObject",
-          "owner": "bench_west"
-        },
-        {
-          "texture": "camp_fieldhouse_bench_east_upper",
-          "x": 12,
-          "y": 8,
-          "depthY": 9,
-          "source": "manifestObject",
-          "owner": "bench_east"
-        },
-        {
-          "texture": "camp_fieldhouse_exit_door_frame_upper",
-          "x": 8,
-          "y": 9,
-          "depthY": 10,
-          "source": "manifestObject",
-          "owner": "exit_door_frame"
-        }
-      ],
+      "upperDecor": [],
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {
-          "x": 9,
+          "x": 10,
           "y": 1,
           "dir": "up",
           "to": "wrestlingroom",
-          "tx": 9,
+          "tx": 10,
           "ty": 9,
           "msg": "Wrestling Room."
         },
         {
-          "x": 9,
+          "x": 10,
           "y": 11,
           "dir": "down",
           "to": "campus",
@@ -121,16 +56,12 @@
           "kind": "TROPHY",
           "tiles": [
             [
-              6,
-              1
+              8,
+              2
             ],
             [
-              7,
-              1
-            ],
-            [
-              11,
-              1
+              12,
+              2
             ]
           ]
         },
@@ -138,7 +69,7 @@
           "kind": "LOCKER_ROOM",
           "rect": [
             2,
-            3,
+            2,
             7,
             4
           ]
@@ -147,7 +78,7 @@
       "signs": {},
       "npcs": [
         {
-          "x": 9,
+          "x": 10,
           "y": 2,
           "frame": 7,
           "anim": "npc-idle-down",
@@ -155,7 +86,7 @@
           "look": "gray",
           "gate": {
             "flag": "officeChecked",
-            "x": 7,
+            "x": 8,
             "y": 6,
             "dialogue": "Captain: Told you the office was a dead end. He lives on that mat. Go on through."
           }
@@ -172,10 +103,10 @@
       "manifestRuntime": "camp-randall-objects-v1"
     },
     "wrestlingroom": {
-      "width": 20,
+      "width": 21,
       "height": 12,
       "start": {
-        "x": 9,
+        "x": 10,
         "y": 9
       },
       "actorScale": 0.78,
@@ -183,55 +114,30 @@
       "cameraZoom": 1.25,
       "ground": "camp-interior-wood",
       "tiles": [
-        "####################",
-        "####################",
-        "##...............###",
-        "##...............###",
-        "##...............###",
-        "##...............###",
-        "##...............###",
-        "##................##",
-        "##................##",
-        "##................##",
-        "##......#.#.......##",
-        "#########E##########"
+        "#####################",
+        "#####################",
+        "###...............###",
+        "###...............###",
+        "###...............###",
+        "###...............###",
+        "###...............###",
+        "###................##",
+        "##.................##",
+        "##.................##",
+        "##.......#.#.......##",
+        "##########E##########"
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [
-        {
-          "texture": "camp_wrestlingroom_rolled_mat_stand_upper",
-          "x": 1,
-          "y": 1,
-          "depthY": 4,
-          "source": "manifestObject",
-          "owner": "rolled_mat_stand"
-        },
-        {
-          "texture": "camp_wrestlingroom_plate_rack_upper",
-          "x": 17,
-          "y": 1,
-          "depthY": 3,
-          "source": "manifestObject",
-          "owner": "plate_rack"
-        },
-        {
-          "texture": "camp_wrestlingroom_exit_door_frame_upper",
-          "x": 8,
-          "y": 9,
-          "depthY": 10,
-          "source": "manifestObject",
-          "owner": "exit_door_frame"
-        }
-      ],
+      "upperDecor": [],
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {
-          "x": 9,
+          "x": 10,
           "y": 11,
           "dir": "down",
           "to": "fieldhouse",
-          "tx": 9,
+          "tx": 10,
           "ty": 2,
           "msg": "Locker Room."
         }
@@ -241,11 +147,11 @@
           "kind": "N",
           "tiles": [
             [
-              9,
+              10,
               4
             ],
             [
-              9,
+              10,
               5
             ]
           ]
@@ -255,16 +161,16 @@
           "rect": [
             4,
             2,
-            15,
+            16,
             8
           ]
         },
         {
           "kind": "WEIGHT_ROOM",
           "rect": [
-            16,
+            18,
             2,
-            17,
+            19,
             6
           ]
         }
@@ -272,7 +178,7 @@
       "signs": {},
       "npcs": [
         {
-          "x": 9,
+          "x": 10,
           "y": 5,
           "frame": 1,
           "anim": "npc-idle-down",
@@ -384,7 +290,7 @@
           "y": 11,
           "dir": "up",
           "to": "fieldhouse",
-          "tx": 9,
+          "tx": 10,
           "ty": 10,
           "msg": "Locker Room."
         },
