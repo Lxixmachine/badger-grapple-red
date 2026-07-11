@@ -7,6 +7,8 @@
       "height": 14,
       "start": {"x": 14, "y": 12},
       "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
       "ground": "camp-interior-wood",
       "tiles": [
         "############################",
@@ -19,14 +21,17 @@
         "##############.#############",
         "##########........##########",
         "##########........##########",
-        "##..#######.......######..##",
-        "##........................##",
+        "###.#######.......######.###",
+        "###......................###",
         "#############...############",
         "##############E#############"
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [],
+      "upperDecor": [
+        {"texture": "cr_fieldhouse_threshold_mask", "source": "bakedMask", "name": "fieldhouse_threshold", "x": 0, "y": 0, "depthY": 7.5},
+        {"texture": "cr_fieldhouse_exit_mask", "source": "bakedMask", "name": "fieldhouse_exit", "x": 0, "y": 0, "depthY": 12.4}
+      ],
       "bakedComposition": true,
       "exits": [
         {"x": 14, "y": 13, "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}
@@ -50,6 +55,8 @@
       "height": 18,
       "start": {"x": 6, "y": 12},
       "actorScale": 0.67,
+      "actorFootOffset": 22,
+      "cameraZoom": 1.4,
       "ground": "camp-quad",
       "tiles": [
         "############################",
@@ -64,8 +71,8 @@
         "#############...############",
         "###......................###",
         "###...E....##...##...E...###",
-        "###.......###...##.......###",
-        "###.......###...##.......###",
+        "###......####...###......###",
+        "###......####...###......###",
         "#############...############",
         "#############...############",
         "#############...############",
@@ -92,7 +99,7 @@
         "15,7": "CAMP RANDALL - The tunnel stays closed until the season is finished."
       },
       "npcs": [
-        {"x": 18, "y": 13, "frame": 1, "anim": "npc-idle-left", "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.", "look": "red"}
+        {"x": 19, "y": 13, "frame": 1, "anim": "npc-idle-left", "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.", "look": "red"}
       ]
     },
     "studyhall": {
@@ -100,6 +107,8 @@
       "height": 12,
       "start": {"x": 9, "y": 10},
       "actorScale": 1,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
       "ground": "camp-office",
       "tiles": [
         "##################",

@@ -1,5 +1,33 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.50 FireRed framing and foreground depth)
+
+Tony's v21.49 phone screenshots proved that logical tile collision was still
+not enough. Generated objects cross tile boundaries, Building 2 actors were
+anchored six pixels below the drawn floor, baked interiors had no selective
+foreground depth, and the exterior camera showed 16x11.2 tiles instead of the
+roughly 15x10 framing demonstrated by FireRed gameplay.
+
+v21.50 separates actor placement from generic tile depth with `actorFootOffset`.
+Building 2 and the Coach's Office now use a 16px foot offset; the exterior keeps
+its correctly aligned 22px offset. `cameraZoom` is also map-authored: Camp
+Randall uses 1.4 (14.29x10 visible tiles in the 320x224 viewport), while the two
+rooms remain at 1.25.
+
+Building 2 collision now stops at x24, closes the unsafe right/left margin and
+bottom-wall approaches, and leaves the center exit valid. Exterior shrub/lamp
+clusters have a one-cell visual buffer and the teammate moved to a valid x19
+cell. Two deterministic foreground masks are cut from the final baked room art:
+the trophy threshold and south exit frame. They contain pixel-identical source
+art with alpha/depth only, so actors pass behind architecture without restoring
+v21.47's oversized overlays. The compositor regenerates both masks through the
+new `bakedMask` source type.
+
+Regression tests now assert map-specific camera framing, actor world-Y anchors,
+foreground-mask ownership, collision buffers, and all thresholds. Phone-size
+local QA covered the exterior center, trophy passage, and right room edge with
+no runtime warnings.
+
 ## Latest Codex Turn (v21.49 actor scale and collision)
 
 Tony approved the v21.48 compositions, then phone play exposed the remaining

@@ -18,8 +18,8 @@ export class OverworldScene extends Phaser.Scene{
   this.worldCamera.ignore(this.uiLayer);this.uiCamera.ignore(this.worldLayer);
   this.bg=this.addWorld(this.add.image(0,0,areaFor(this.area).bg).setOrigin(0).setDepth(0));/* keep raw pixel colors; no tint pipeline on mobile */
   this.decor=this.addWorld(this.add.container(0,0).setDepth(13));this.actors=[];this.upperObjects=[];this.layeredMapVersion=LAYERED_MAP_VERSION;
-  this.shadow=this.addWorld(this.add.ellipse(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20));
-  this.player=this.addWorld(this.add.sprite(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1));this.applyPlayerPresentation();
+  this.shadow=this.addWorld(this.add.ellipse(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20));
+  this.player=this.addWorld(this.add.sprite(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1));this.applyPlayerPresentation();
   this.marker=this.addWorld(this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80));
   this.worldCamera.startFollow(this.player,true,1,1);this.applyAreaBounds();this.worldCamera.setDeadzone(0,0);
   this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);
@@ -39,9 +39,10 @@ export class OverworldScene extends Phaser.Scene{
   else if(c.up.isDown||k.W.isDown)this.tryMove(0,-1,'up');
   else if(c.down.isDown||k.S.isDown)this.tryMove(0,1,'down');}
  worldX(x){return x*16+8;} worldY(y){return y*16+22;}
+ actorWorldY(y){const offset=Number(areaFor(this.area).actorFootOffset);return y*16+(Number.isFinite(offset)?offset:22);}
  actorScale(){const scale=Number(areaFor(this.area).actorScale);return Number.isFinite(scale)&&scale>0?scale:1;}
  applyPlayerPresentation(){const scale=this.actorScale();this.player.setScale(scale);this.shadow.setScale(scale);}
- applyAreaBounds(){const {width,height}=areaDimensions(this.area);this.worldCamera.setBounds(0,0,width*16,height*16);}
+ applyAreaBounds(){const {width,height}=areaDimensions(this.area),zoom=Number(areaFor(this.area).cameraZoom);this.worldCamera.setZoom(Number.isFinite(zoom)&&zoom>0?zoom:OVERWORLD_ZOOM);this.worldCamera.setBounds(0,0,width*16,height*16);}
  face(dir){this.facing=dir;this.player.stop();this.player.setFlipX(false);this.player.clearTint();this.player.setFrame(DIRS[dir]?.frame||1);}
  openMenu(){if(this.messageOpen){this.clearMessage();return;}this.playSfx('open');this.scene.launch('MenuScene',{parent:this});}
  unlockSfx(){unlockAudio();}
@@ -52,11 +53,11 @@ export class OverworldScene extends Phaser.Scene{
   if(this.moving||this.sightLocked)return; // one step is atomic; ambush/transition beats own the player
   if(this.facing!==dir&&!this.moving){this.face(dir);this.turnPauseUntil=(this.time.now||0)+120;return;} // tap turns in place; holding walks after a short beat (FireRed: ~8 frames)
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
-  this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.worldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.worldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
+  this.face(dir);let nx=this.tilePos.x+dx,ny=this.tilePos.y+dy;const edge=this.findExit(nx,ny);if(edge){if(!canUseExit(this.state,edge)){this.showMessage(gateMessage(edge));return;}return this.changeArea(edge);}if(!this.pass(nx,ny)){this.playSfx('bump');return;}this.tilePos={x:nx,y:ny};this.moving=true;this.player.play('walk-'+dir,true);this.playSfx('step');this.tweens.add({targets:this.shadow,x:this.worldX(nx),y:this.actorWorldY(ny)-2,duration:240,ease:'Linear'});this.tweens.add({targets:this.player,x:this.worldX(nx),y:this.actorWorldY(ny),duration:240,ease:'Linear',onComplete:()=>{this.moving=false;this.face(dir);this.afterStep();}});}
  findExit(x,y){return (areaFor(this.area).exits||[]).find(e=>e.x===x&&e.y===y);}
- changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.worldY(this.tilePos.y)-2);this.applyPlayerPresentation();this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
+ changeArea(e){this.playSfx('door');this.area=e.to;this.tilePos={x:e.tx,y:e.ty};this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);this.fadeSceneOut(130);this.time.delayedCall(135,()=>{this.bg.setTexture(areaFor(this.area).bg);this.applyAreaBounds();this.player.setPosition(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y));this.shadow.setPosition(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y)-2);this.applyPlayerPresentation();this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.fadeSceneIn(180);this.showAreaToast(areaFor(this.area).name);if(e.msg)this.showMessage(e.msg);});}
  afterStep(){this.savePos();if(isGrass(this.area,this.tilePos.x,this.tilePos.y))this.grassRustle();this.checkTrainerSight();if(this.sightLocked)return;if(isGrass(this.area,this.tilePos.x,this.tilePos.y)&&Math.random()<.12){this.startScout();return;}this.drawHud();}
- grassRustle(){const wx=this.worldX(this.tilePos.x),wy=this.worldY(this.tilePos.y);for(let i=0;i<5;i++){const f=this.addWorld(this.add.rectangle(wx-6+Math.random()*12,wy-3,2,3,i%2?0xeee6d5:0xcfc4ae,1).setDepth(this.player.depth+1));this.tweens.add({targets:f,y:wy-12-Math.random()*7,x:f.x+(Math.random()*10-5),alpha:0,angle:Math.random()*180,duration:260+Math.random()*120,ease:'Quad.Out',onComplete:()=>f.destroy()});}} // chalk puff off the open mat
+ grassRustle(){const wx=this.worldX(this.tilePos.x),wy=this.actorWorldY(this.tilePos.y);for(let i=0;i<5;i++){const f=this.addWorld(this.add.rectangle(wx-6+Math.random()*12,wy-3,2,3,i%2?0xeee6d5:0xcfc4ae,1).setDepth(this.player.depth+1));this.tweens.add({targets:f,y:wy-12-Math.random()*7,x:f.x+(Math.random()*10-5),alpha:0,angle:Math.random()*180,duration:260+Math.random()*120,ease:'Quad.Out',onComplete:()=>f.destroy()});}} // chalk puff off the open mat
  checkTrainerSight(){
    if(this.sightLocked||this.messageOpen)return;
    for(const tr of trainersInArea(this.area)){
@@ -77,7 +78,7 @@ export class OverworldScene extends Phaser.Scene{
    // FireRed spot sequence: "!" beat, then the trainer WALKS to the player
    // tile by tile, the player turns to face them, THEN the challenge lands.
    this.sightLocked=true;this.moving=true;
-   const wx=this.worldX(tr.pos.x),wy=this.worldY(tr.pos.y);
+   const wx=this.worldX(tr.pos.x),wy=this.actorWorldY(tr.pos.y);
    const bang=this.addWorld(this.add.text(wx,wy-30,'!',{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5).setDepth(90));
    this.tweens.add({targets:bang,y:wy-40,duration:260,yoyo:true,repeat:1});
    this.playSfx('bump');
@@ -95,8 +96,8 @@ export class OverworldScene extends Phaser.Scene{
          const step={x:tr.pos.x+v[0]*i,y:tr.pos.y+v[1]*i};
          this.time.delayedCall((i-1)*240,()=>{
            entry.npc.tile={...step};
-           this.tweens.add({targets:entry.npc,x:this.worldX(step.x),y:this.worldY(step.y),duration:235,ease:'Linear'});
-           this.tweens.add({targets:entry.sh,x:this.worldX(step.x),y:this.worldY(step.y)-2,duration:235,ease:'Linear'});
+           this.tweens.add({targets:entry.npc,x:this.worldX(step.x),y:this.actorWorldY(step.y),duration:235,ease:'Linear'});
+           this.tweens.add({targets:entry.sh,x:this.worldX(step.x),y:this.actorWorldY(step.y)-2,duration:235,ease:'Linear'});
          });
        }
      }
@@ -170,12 +171,12 @@ showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScr
  }
  drawLayeredUpperDecor(){for(const obj of this.upperObjects)obj.destroy();this.upperObjects=[];for(const entry of layeredUpperDecor(this.area)){const obj=this.addWorld(this.add.image(entry.x*16,entry.y*16,entry.texture).setOrigin(0).setDepth(this.worldY(entry.depthY)));obj.setData('fr1Upper',true);this.upperObjects.push(obj);}}
  addActor(obj){this.addWorld(obj);this.actors.push(obj);return obj;}
- addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null,look=null){const sx=this.worldX(x),sy=this.worldY(y),scale=this.actorScale();const key=look&&this.textures.exists('npc_'+look)?'npc_'+look:'npc';const sh=this.addActor(this.add.ellipse(sx,sy-2,17,6,0x000000,.28).setDepth(sy-1).setScale(scale));const npc=this.addActor(this.add.sprite(sx,sy,key,frame).setOrigin(.5,1).setDepth(sy).setScale(scale));npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};this.npcList.push({npc,sh,t:0,route,i:0});return npc;}
+ addNpc(x,y,frame=1,anim='npc-idle-down',dialogue='Keep working.',route=null,look=null){const sx=this.worldX(x),sy=this.actorWorldY(y),scale=this.actorScale();const key=look&&this.textures.exists('npc_'+look)?'npc_'+look:'npc';const sh=this.addActor(this.add.ellipse(sx,sy-2,17,6,0x000000,.28).setDepth(sy-1).setScale(scale));const npc=this.addActor(this.add.sprite(sx,sy,key,frame).setOrigin(.5,1).setDepth(sy).setScale(scale));npc.setFlipX(false);npc.clearTint();npc.dialogue=dialogue;npc.home={x,y};npc.tile={x,y};this.npcList.push({npc,sh,t:0,route,i:0});return npc;}
  drawActors(){for(const obj of this.actors)obj.destroy();this.actors=[];this.npcList=[];const a=areaFor(this.area);const cap=a.captain;if(cap){this.addNpc(cap.x,cap.y,1,'npc-idle-down','Captain: Prove it on the mat.',null,'gold');}for(const tr of trainersInArea(this.area)){this.addNpc(tr.pos.x,tr.pos.y,DIRS[tr.facing]?.frame||1,'npc-idle-'+(tr.facing||'down'),tr.line||'Ready to wrestle.',null,tr.look||null);}for(const npc of layeredNpcs(this.area)){this.addNpc(npc.x,npc.y,npc.frame,npc.anim,npc.dialogue,npc.route||null,npc.look||null);}if(this.area==='championship'){this.addNpc(TOURNAMENT.desk.x,TOURNAMENT.desk.y,7,'npc-idle-right','Official: The Big Ten Championship desk.',null,'gray');}
 }
  
  updateNpcPatrols(){if(this.messageOpen||this.moving)return;const now=this.time.now||0;for(const e of this.npcList){if(!e.route||e.route.length<2)continue;if(now-e.t<1600)continue;e.t=now+Phaser.Math.Between(250,900);const ni=(e.i+1)%e.route.length;const [tx,ty]=e.route[ni];if(isBlocked(this.area,tx,ty)||(this.tilePos.x===tx&&this.tilePos.y===ty)||this.npcList.some(o=>o!==e&&o.npc.tile&&o.npc.tile.x===tx&&o.npc.tile.y===ty))continue; // patrols never enter walls, the player's tile, or another NPC
-  e.i=ni;const x=this.worldX(tx),y=this.worldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,40),ease:'Linear'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Linear'});}}
+  e.i=ni;const x=this.worldX(tx),y=this.actorWorldY(ty);const dx=tx-(e.npc.tile?.x??tx),dy=ty-(e.npc.tile?.y??ty);e.npc.tile={x:tx,y:ty};const dir=Math.abs(dx)>Math.abs(dy)?(dx>0?'right':'left'):(dy>0?'down':'up');e.npc.setFrame(DIRS[dir]?.frame||1);this.tweens.add({targets:e.npc,x,y,duration:260+Phaser.Math.Between(0,40),ease:'Linear'});this.tweens.add({targets:e.sh,x,y:y-2,duration:260,ease:'Linear'});}}
 
  updateDepths(){const py=this.player.y;this.player.setDepth(py);this.shadow.setDepth(py-1);for(const entry of this.npcList){entry.npc.setDepth(entry.npc.y);entry.sh.setDepth(entry.npc.y-1);}}
  updateMarker(){const kind=this.kindHere();this.marker.setVisible(['EXIT','R','S','C','g','M','N','STATUE','SCOUT_NPC','TRAINER','TOURNEY','SAVE_NPC','BATTLE_NPC','STUDY_NPC','HIDDEN_TAPE','HIDDEN_FILM','HIDDEN_DRINK','HIDDEN_SHORE','HIDDEN_EMBER','TROPHY','DOOR','NATIONALS','CAPITOL','SIGN','WEIGHT_ROOM','LOCKER_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(kind)&&!this.messageOpen);if(this.marker.visible){this.marker.setPosition(this.player.x,this.player.y-Math.max(24,35*this.actorScale())+Math.sin((this.time.now||0)/180)*1.2);this.marker.setAlpha(.86+Math.sin((this.time.now||0)/160)*.12);}}

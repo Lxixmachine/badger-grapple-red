@@ -901,6 +901,36 @@ def save_water_animation(tiles):
         frame.convert("RGB").save(LAYERS_OUT / f"anim_water_{i}.png")
 
 
+def build_baked_mask(name):
+    """Lift narrow foreground pieces from the final baked composition.
+
+    The pixels remain identical to the background; alpha and depth are the only
+    new information. This gives doorway/threshold occlusion without returning
+    to the oversized prop overlays that v21.48 removed.
+    """
+    source = Image.open(CAMP_V2_MAP_SOURCES["fieldhouse"]).convert("RGBA")
+    image = Image.new("RGBA", source.size, (0, 0, 0, 0))
+    boxes = {
+        "fieldhouse_threshold": [
+            (176, 104, 210, 140),
+            (238, 104, 273, 140),
+            (204, 103, 245, 128),
+            (203, 124, 214, 145),
+            (235, 124, 246, 145),
+        ],
+        "fieldhouse_exit": [
+            (0, 199, 204, 224),
+            (250, 199, 448, 224),
+            (198, 190, 251, 207),
+            (198, 202, 212, 224),
+            (238, 202, 252, 224),
+        ],
+    }
+    for box in boxes[name]:
+        image.alpha_composite(source.crop(box), box[:2])
+    return image
+
+
 def save_layered_textures(tiles, props):
     """Export each FR1 upper source once; placement stays in layeredMaps.json."""
     LAYERS_OUT.mkdir(parents=True, exist_ok=True)
@@ -918,6 +948,8 @@ def save_layered_textures(tiles, props):
                 image = Image.new("RGBA", (TILE * 2, TILE * 2), (0, 0, 0, 0))
                 for name, x, y in (("tree_tl", 0, 0), ("tree_tr", 1, 0), ("tree_bl", 0, 1), ("tree_br", 1, 1)):
                     image.alpha_composite(tiles[name], (x * TILE, y * TILE))
+            elif entry["source"] == "bakedMask":
+                image = build_baked_mask(entry["name"])
             else:
                 raise SystemExit(f"Unknown FR1 upper source: {entry['source']}")
             save_if_changed(image, LAYERS_OUT / f"{texture}.png")

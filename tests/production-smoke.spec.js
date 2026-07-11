@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.49-scale-collision');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.50-firered-framing');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -110,8 +110,9 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 0, directActorDepth: true}
+    layered: {version: 1, upperCount: 2, directActorDepth: true}
   });
+  expect(overworld.playerWorldY).toBe(208);
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
   expect(save).toMatchObject({
@@ -125,7 +126,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(runtimeIssues).toEqual([]);
 });
 
-test('Building 2 uses a complete composition without legacy occlusion props', async ({page}) => {
+test('Building 2 uses only composition-derived foreground masks', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
   await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=6');
@@ -137,8 +138,8 @@ test('Building 2 uses a complete composition without legacy occlusion props', as
   });
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(overworld.npcScales).toEqual([0.78, 0.78, 0.78]);
-  expect(overworld.layered.upperTextures).toEqual([]);
-  expect(overworld.layered.upperCount).toBe(0);
+  expect(overworld.layered.upperTextures).toEqual(['cr_fieldhouse_threshold_mask', 'cr_fieldhouse_exit_mask']);
+  expect(overworld.layered.upperCount).toBe(2);
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -156,7 +157,11 @@ test('Camp Randall renders its complete exterior composition', async ({page}) =>
   const state = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(state.tilePos).toEqual({x: 14, y: 10});
   expect(state.playerScale).toBe(0.67);
+  expect(state.playerWorldY).toBe(182);
   expect(state.npcScales).toEqual([0.67]);
+  expect(state.camera.worldZoom).toBe(1.4);
+  expect(state.camera.worldTilesWide).toBeCloseTo(14.2857, 3);
+  expect(state.camera.worldTilesHigh).toBe(10);
   expect(state.layered.upperDepths).toHaveLength(0);
   expect(state.layered.upperTextures).toEqual([]);
   expect(runtimeIssues).toEqual([]);
@@ -193,6 +198,7 @@ test('Camp Randall thresholds connect Building 2 and the Coach office', async ({
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 9, y: 10});
   const office = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(office.playerScale).toBe(1);
+  expect(office.playerWorldY).toBe(176);
   expect(office.layered.upperTextures).toEqual([]);
   expect(office.npcTiles).toEqual([]);
   expect(runtimeIssues).toEqual([]);
@@ -205,8 +211,10 @@ test('Camp Randall collision follows walls, hedges, shrubs, and actor feet', asy
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({left: true, right: true, down: true});
   await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=15&y=12');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({right: false});
+  await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=24&y=11');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({right: false, down: false});
 
-  await page.goto('/?test=1&scene=overworld&area=campus&x=9&y=12');
+  await page.goto('/?test=1&scene=overworld&area=campus&x=8&y=12');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable)).toMatchObject({right: false});
 
   await page.goto('/?test=1&scene=overworld&area=campus&x=13&y=14');

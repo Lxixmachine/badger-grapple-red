@@ -25,6 +25,7 @@ export function installTestHooks(game, routeVirtualButton) {
       area: scene.area ?? null,
       tilePos: scene.tilePos ?? null,
       playerScale: scene.player?.scaleX ?? null,
+      playerWorldY: scene.player?.y ?? null,
       npcScales: scene.npcList ? scene.npcList.map(e => e.npc.scaleX) : null,
       passable: scene.pass && scene.tilePos ? {
         left: scene.pass(scene.tilePos.x - 1, scene.tilePos.y),
