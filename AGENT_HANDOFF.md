@@ -1,5 +1,38 @@
 # Agent Handoff
 
+## Latest Claude Turn (Camp Randall mockup — closed out to Stage 4)
+
+Tony said "keep going" on the five open items from the mockup's first
+pass. All five are now locked, closing Design Bible Vol. XII's Stages
+1-4 (goals/route graph/terrain blockout/architecture placement) for
+Camp Randall — only mechanical tile-authoring work remains, no more
+open creative calls for this town:
+
+- **Building 3 (Coach's Office)**: desk + empty chair, a recruiting
+  whiteboard (weight classes/depth chart — this is what Coach reviews
+  with you at the Act IV progress-review checkpoint), a window.
+- **Outdoor quad**: lamp posts with banners flanking the entrance path,
+  a hedge/flower bed at each building's door (a plaza apron + material
+  switch at each threshold, straight out of `CITY_DESIGN_MANIFESTO.md`).
+- **R1 exit**: south, centered on the path — the only way out of town.
+- **The stadium's ending tone** (the real creative call, asked
+  directly): Tony chose **"empty stands, but staged like game day is
+  coming"** — banners up, lights on, neither a loud crowd celebration
+  nor a quiet solitary moment. Leaves the door open for future seasons
+  instead of closing the story all the way. `SEASON_ONE_SYNOPSIS.md`
+  beat 40 updated to match.
+
+Rendered three more reference images this turn (refined exterior,
+refined Building 2 interior with exact bed/locker/trophy/mat placement,
+new Building 3 interior) — scratch only, not committed, same as every
+mockup image this project has used as a discussion aid.
+
+**CAMP_RANDALL_MOCKUP.md's "Still open" section now only lists
+mechanical follow-up** (the literal ASCII/rect tile grid, the tunnel's
+exact length) — both deferred to when this area is actually built in
+code, per the queue in `CLAUDE.md` (style-system rework first, then the
+region rewire). No more design decisions are blocking that work.
+
 ## Latest Claude Turn (CAMP_RANDALL_MOCKUP.md — the first real town design)
 
 Tony: "We need to design the world to facilitate the synopsis. I think

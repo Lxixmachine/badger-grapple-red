@@ -42,6 +42,12 @@ the towns it actually belongs to.
 - **The stadium** — non-enterable all season. Opens once, for the
   Act VIII ending (see SEASON_ONE_SYNOPSIS.md beat 40, "Onto the
   Field").
+- Between the two buildings: lamp posts with banners flanking the
+  entrance path, a hedge/flower bed at each building's door (a plaza
+  apron with a material switch at each threshold, per
+  `CITY_DESIGN_MANIFESTO.md`). Player start sits just south of
+  Building 2's door. The **R1 exit sits south, centered** on the path,
+  the only way out of town.
 
 ## Building 2 interior — Locker Room + Wrestling Room
 
@@ -81,10 +87,13 @@ back outside).
 
 ## Building 3 — Coach's Office
 
-Single small room. Empty during Act I (Coach is always at practice,
-not administration — that's the point of the beat). Reused once,
-after Badge Two, for Act IV beat 21's progress-review checkpoint —
-the only time all season Coach is actually behind his own desk.
+Single small room: a desk and an empty chair (Act I — nobody's there,
+Coach is always at practice, not administration, which is the point of
+the beat), a **recruiting whiteboard** showing weight classes and the
+depth chart, and a window. Empty during Act I. Reused once, after Badge
+Two, for Act IV beat 21's progress-review checkpoint — Coach reviews
+the whiteboard with you, the only time all season he's actually behind
+his own desk.
 
 ## The stadium — the season's real X-factor
 
@@ -92,10 +101,13 @@ Non-enterable landmark for the entire season, exactly like Pallet
 Town's untouchable scenery, except this one gets paid off: it opens for
 the true final beat (Act VIII beat 40), the team walking out through
 the tunnel onto the field none of them could reach past the doorway on
-day one. Interior layout (the field, the tunnel, seating) is not yet
-designed — it only needs to exist for one scene, so it can be scoped
-minimally (a short tunnel corridor + a field screen) rather than as a
-fully explorable space.
+day one. Scoped minimally — a short tunnel corridor + a field screen,
+not a fully explorable space. **Tone: empty stands, but staged like
+game day is coming** — banners already up, lights already on. Not a
+loud crowd-and-confetti celebration, and not a solitary quiet moment
+either; the implication that this is what's coming, not what just
+happened. Leaves the door open for future seasons rather than closing
+the story all the way.
 
 ## What this replaces / reuses from the current (old) world
 
@@ -121,14 +133,18 @@ banners needs an original letterform/color treatment in team colors,
 not the actual athletics logotype. Noting this now so it doesn't get
 missed once we're generating real tiles.
 
-## Still open
+## Status
 
-1. Building 3's exact interior layout (just a desk + Coach, or more?).
-2. The exact tile grid/dimensions for all three spaces (this document
-   is the room-and-function layer — Stage 3-4 blockout in literal
-   ASCII/ tile-kind form comes next, once the room list above is
-   confirmed).
-3. What (if anything) decorates the outdoor path/quad beyond the trees
-   and the two buildings — benches, banners, a statue equivalent?
-4. Exact position of the R1 exit relative to the two buildings.
-5. The stadium's interior scope for the Act VIII ending scene.
+All five open questions from the first pass are now locked: Building
+3's interior contents, the outdoor quad's decoration (lamp
+posts/banners/hedges), the R1 exit position, and the stadium's ending
+tone. What remains is mechanical, not creative:
+
+1. The literal tile grid/dimensions for all three spaces, in the same
+   ASCII + rect format `layeredMaps.json` actually reads — this
+   document is the room-and-function layer (Stages 1-4); authoring the
+   real data is Stage 5+ engineering work, done when this area is
+   actually built (after the style-system rework, per `CLAUDE.md`'s
+   queue).
+2. The tunnel corridor's exact length/shape for the ending scene —
+   minor, decided when that scene is actually built.

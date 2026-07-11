@@ -321,8 +321,11 @@ no — **NATIONAL CHAMPION.** The empty space was waiting the whole time.
 The corridor scene isn't the last image. Camp Randall Stadium — the
 region's own X-factor, a non-enterable backdrop for the entire season
 — finally opens. The team walks out through the tunnel onto the actual
-field: the biggest possible closing shot, the same place you couldn't
-even get past the doorway to reach on day one.
+field: the same place you couldn't even get past the doorway to reach
+on day one. The stands are empty, but staged like game day is coming —
+banners already up, lights already on. Not a crowd-and-confetti
+celebration, not a quiet solitary moment either: the implication of
+what's next, not a close of what just happened.
 
 ## 41. Credits
 
