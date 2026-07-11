@@ -1,5 +1,24 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.51 emergency occlusion rollback)
+
+Tony's v21.50 phone screenshots showed catastrophic mobile foreground behavior:
+the player rendered as a detached head in Building 2. The composition-derived
+full-map textures had valid alpha locally, but were not a safe runtime occlusion
+mechanism on the deployed mobile path. Both masks, their JSON entries, generated
+assets, compositor support, and mask-specific tests were removed immediately.
+
+v21.51 preserves the useful v21.50 camera zoom, actor foot anchors, and tighter
+collision buffers, but restores zero upper layers for the baked room so the
+actor always renders whole. This is a hotfix, not the final architecture.
+
+Critical direction: stop patching flat Camp Randall images. The approved
+compositions are now visual source mockups. Production work must extract a
+grid-aligned reusable terrain kit and grid-aligned bespoke multi-tile objects,
+with ground/object/foreground/collision metadata generated from one source.
+Doors, object footprints, and foreground ownership must be validated before a
+map can ship. F-015 tracks this migration.
+
 ## Latest Codex Turn (v21.50 FireRed framing and foreground depth)
 
 Tony's v21.49 phone screenshots proved that logical tile collision was still

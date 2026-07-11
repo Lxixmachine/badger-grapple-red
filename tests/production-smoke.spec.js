@@ -60,7 +60,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.50-firered-framing');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.51-occlusion-hotfix');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_campus', 'area_studyhall', 'battle_arena', 'battle_badger'];
@@ -110,7 +110,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
       worldIgnoresUi: true,
       uiIgnoresWorld: true
     },
-    layered: {version: 1, upperCount: 2, directActorDepth: true}
+    layered: {version: 1, upperCount: 0, directActorDepth: true}
   });
   expect(overworld.playerWorldY).toBe(208);
 
@@ -126,7 +126,7 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
   expect(runtimeIssues).toEqual([]);
 });
 
-test('Building 2 uses only composition-derived foreground masks', async ({page}) => {
+test('Building 2 rejects unsafe full-map foreground masks', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await page.addInitScript(() => localStorage.removeItem('badger_grapple_red_engine_v2'));
   await page.goto('/?test=1&scene=overworld&area=fieldhouse&x=14&y=6');
@@ -138,8 +138,8 @@ test('Building 2 uses only composition-derived foreground masks', async ({page})
   });
   const overworld = await page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
   expect(overworld.npcScales).toEqual([0.78, 0.78, 0.78]);
-  expect(overworld.layered.upperTextures).toEqual(['cr_fieldhouse_threshold_mask', 'cr_fieldhouse_exit_mask']);
-  expect(overworld.layered.upperCount).toBe(2);
+  expect(overworld.layered.upperTextures).toEqual([]);
+  expect(overworld.layered.upperCount).toBe(0);
   expect(runtimeIssues).toEqual([]);
 });
 

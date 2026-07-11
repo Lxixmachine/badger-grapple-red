@@ -28,10 +28,7 @@
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [
-        {"texture": "cr_fieldhouse_threshold_mask", "source": "bakedMask", "name": "fieldhouse_threshold", "x": 0, "y": 0, "depthY": 7.5},
-        {"texture": "cr_fieldhouse_exit_mask", "source": "bakedMask", "name": "fieldhouse_exit", "x": 0, "y": 0, "depthY": 12.4}
-      ],
+      "upperDecor": [],
       "bakedComposition": true,
       "exits": [
         {"x": 14, "y": 13, "to": "campus", "tx": 6, "ty": 12, "msg": "Camp Randall quad."}

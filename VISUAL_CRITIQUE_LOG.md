@@ -97,7 +97,7 @@ tracker for looks.
   final-aspect compositions, quantized to 48 colors, and removes their legacy
   upper-prop layers. Tony approved the resulting composition after the annotated
   v3/v4 corrections; scale/collision follow-up is F-014.
-- **F-014 [SIL-004/collision] Camp Randall actor scale and foot cells — REVISED IN v21.50, AWAITING PHONE CONFIRMATION.**
+- **F-014 [SIL-004/collision] Camp Randall actor scale and foot cells — PARTIAL HOTFIX IN v21.51, OPEN.**
   Phone evidence showed full-size 24x36 actors taller than Building 2 doors and
   oversized against exterior architecture. Broad collision rows also allowed
   feet onto bottom walls, hedges, shrubs, facade edges, and exterior voids.
@@ -106,6 +106,15 @@ tracker for looks.
   v21.50 adds per-map foot anchors, object-edge buffers, a FireRed-like 14.29x10
   exterior camera, and pixel-identical trophy/exit foreground masks. Automated
   and phone-size browser QA are complete; Tony's phone remains the close gate.
+- **F-015 [OBJ-007/architecture] baked-map art and tile collision have separate ownership — OPEN, BLOCKS NEW MAPS.**
+  Tony's v21.50 evidence showed the player crossing facade art and mobile
+  foreground masks reducing the player to a detached head. Root cause: the
+  runtime renders one flattened generated map while collision and depth are
+  authored separately on an inferred 16px grid. This is not FireRed's strategy.
+  Owner: engine/compositor. Convert Camp Randall into reusable grid-aligned
+  terrain plus bespoke grid-aligned multi-tile objects. Each object must own its
+  solid, doorway, interaction, and foreground cells. No new location should use
+  `bakedComposition` after this migration begins.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics
