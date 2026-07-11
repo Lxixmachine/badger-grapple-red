@@ -119,6 +119,26 @@ tracker for looks.
   still 1,112 unique tiles because the approved generated paintings contain
   near-universal pixel noise. Extracting reusable terrain families and bespoke
   grid-aligned multi-tile object manifests remains mandatory before new maps.
+- **F-016 [OBJ-007/GRID-011] the compositions are not grid-native — collision can NEVER be exact against them — OPEN, supersedes per-cell fixes.**
+  Tony's v21.54 phone evidence (4 screenshots: standing ON the locker-room
+  bench, ON the quad banner lamp, overlapping the office armchair) plus his
+  diagnosis, verbatim: "The grid was built after the art and the art was
+  tiled to make tiles, not to fit a pre existing grid... a building is
+  bespoke then tiled but it's bespoke to the tiles. It's built to fill a
+  certain tile footprint and align with the grid, not break the rules of
+  the grid." Measured confirmation: the bench edge lands at y=10.6 tiles,
+  the hedge band at y=14.6, the door posts at x=13.4 — every straddling
+  cell is wrong no matter which behavior it gets (invisible wall on its
+  open half, or walk-on-furniture on its solid half). The v21.54 grid
+  re-author was the best possible fit to this art and still fails, which
+  is the proof the art must change, not the grid. Coupled failure: since
+  the v21.51 rollback these rooms render ZERO foreground layers, so the
+  actor draws over everything — even pixel-perfect collision would still
+  LOOK like standing on the lamp. Owner: Codex (regenerate Camp Randall
+  per the object manifest, law 6c) + Claude (compositor assembles ground
+  kit + manifest objects; per-object upperDecor depth returns per the
+  v21.37 law). Codified as law 6c in VISUAL_STYLE_SPEC.md; manifest at
+  art/imagegen/camp_randall_object_manifest.json.
 - **F-009 — RETRACTED.** Claude inferred "Tony likes the Field House"
   from a color-count metric. Wrong: Tony reports significant issues
   there too. Correction logged as the founding example of why metrics

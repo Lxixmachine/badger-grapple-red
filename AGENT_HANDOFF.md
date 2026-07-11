@@ -1,5 +1,59 @@
 # Agent Handoff
 
+## Latest Claude Turn (F-016 + law 6c — the art must be bespoke TO the grid)
+
+Tony's verdict on v21.54, with four phone screenshots (standing ON the
+locker-room bench, ON the quad banner lamp, overlapping the office
+armchair): "It still fails and here's what I think the issue is. The
+grid was built after the art and the art was tiled to make tiles, not
+to fit a pre existing grid... a building is bespoke then tiled but it's
+bespoke to the tiles. It's built to fill a certain tile footprint and
+align with the grid, not break the rules of the grid."
+
+He's right, and the v21.54 re-author is itself the proof: it was the
+best possible grid FOR this art and still fails, because the objects
+straddle cell boundaries (measured: bench edge y=10.6, hedge y=14.6,
+door posts x=13.4). Every straddling cell is wrong whichever behavior
+it gets — invisible wall on its open half or walk-on-furniture on its
+solid half. No grid can fix it; the art has to be grid-native.
+
+Second coupled failure his screenshots expose: since the v21.51
+rollback these rooms render ZERO foreground layers, so the actor draws
+over everything — even pixel-perfect collision would still LOOK like
+standing on the lamp. The fix is per-object foreground (the proven
+v21.37 upperDecor depth law), which requires per-object sprites —
+another reason full-scene paintings can't ship as playfields.
+
+Shipped this turn (docs + contract, no code):
+- **Law 6c in VISUAL_STYLE_SPEC.md ("Bespoke to the grid, Tony's
+  law")**: every object is authored TO a declared NxM footprint,
+  ground-contact pixels inside the rect, edges on tile boundaries;
+  rises above the footprint are declared rows rendered as depth-sorted
+  foreground; footprints live in a committed manifest; collision
+  compiles from the manifest, never from a painting. Delivery contract
+  (law 10) amended: bespoke objects ship as transparent grid-aligned
+  sprites; full-scene paintings are look references only.
+- **F-016 in VISUAL_CRITIQUE_LOG.md** with Tony's diagnosis verbatim
+  and the measurements.
+- **art/imagegen/camp_randall_object_manifest.json** — the actual
+  contract: every object in all three areas with its exact tile
+  footprint, riseRows, door/walkable cells, plus ground zones and wall
+  kits. Footprints were snapped from the approved compositions, so the
+  look Tony approved is preserved — the geometry is what changes.
+
+**Codex, this is your brief and it replaces per-cell patching:**
+regenerate Camp Randall per the manifest — (1) ground layers from
+reusable kit tiles (grass, brick path, dirt path, interior wood, office
+carpet, sacred mat, carpet runner, interior walls, forest border per
+law 6b); (2) each manifest object as a transparent sprite exactly
+filling its footprint (+declared riseRows), on flat chroma, 16px
+aligned; (3) the stadium facade as the one bespoke landmark, still
+grid-aligned. The approved v21.48 compositions are the look reference —
+match them, aligned. Claude then rebuilds the compositor to assemble
+ground + objects from the manifest, restores per-object upperDecor
+depth (v21.37 law), and compiles collision FROM the manifest, closing
+F-015/F-016 together.
+
 ## Latest Claude Turn (v21.54 — collision re-authored from the art)
 
 Tony's phone video verdict: "the collision is horrendous and the game is

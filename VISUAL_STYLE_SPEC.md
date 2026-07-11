@@ -59,6 +59,21 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
    own drawn asset: interlock pieces where canopies overlap, forest
    fill tiles, 2-3-tree clumps drawn as units. A tree border is
    composed from the kit — one tree stamped N times never ships.
+6c. **Bespoke to the grid (Tony's law, v21.54).** "Drawings first,
+   tiles second" never meant the grid is optional: a bespoke object is
+   authored TO an exact tile footprint — it fills a declared N×M cell
+   rect, its ground-contact pixels stay inside that rect, and its
+   edges land on tile boundaries. FireRed's buildings span dozens of
+   tiles and are still pixel-exact to the grid; that is why its
+   collision is exact for free. Anything that may rise above its
+   footprint (a lamp pole, a tree canopy, a locker top) declares those
+   upper rows, which render as per-object foreground depth-sorted
+   against the actor (the v21.37 depth law) — never as full-map masks.
+   Footprints live in a committed object manifest per area; art is
+   generated against the manifest, and the manifest — not the
+   painting — is what collision compiles from. A full-scene painting
+   whose objects straddle cell boundaries is a look REFERENCE, not a
+   shippable playfield; it bounces at intake.
 7. **Building grammar**: one shared wall + window + door language for
    the whole town; ROOF COLOR is each building's identity. Cardinal red
    roofs = Badger team buildings; Kohl Center keeps the only gold.
@@ -79,7 +94,10 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
    (2 frames), delivered as frame sets. Nothing else moves.
 10. **Delivery contract**: per-family sheets on a flat chroma background,
     16px grid aligned, no staging shadows/grass under subjects, no
-    center rings on mats unless asked. Violations bounce at intake.
+    center rings on mats unless asked. Bespoke objects ship as
+    transparent grid-aligned sprites matching their manifest footprint
+    (law 6c) — full-scene paintings are accepted only as look
+    references. Violations bounce at intake.
 
 ## Stage 1 generation order (Codex, one family per review gate)
 

@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "law": "VISUAL_STYLE_SPEC.md 6c - every object is authored TO its footprint: pixels inside the rect, edges on tile boundaries; riseRows render as per-object foreground depth-sorted vs the actor (v21.37 depth law). Art is generated against this manifest; collision compiles from the manifest, never from a painting.",
+  "tileSize": 16,
+  "areas": {
+    "fieldhouse": {
+      "groundZones": [
+        {"id": "wood_floor", "kit": "interior-wood", "note": "whole room ground layer"},
+        {"id": "competition_mat", "kit": "sacred-mat", "rect": [7, 1, 20, 5], "walkable": true, "note": "flat ground material, ring optional per Tony (approved)"},
+        {"id": "carpet_runner", "kit": "carpet", "rect": [13, 9, 15, 12], "walkable": true}
+      ],
+      "walls": {
+        "kit": "interior-wall",
+        "note": "perimeter rows/cols 0,13 and 0,27; divider wall rows 7-8 full width with single doorway column x14"
+      },
+      "objects": [
+        {"id": "rolled_mat_stand", "footprint": [2, 2, 2, 3], "riseRows": 1},
+        {"id": "headgear_rack", "footprint": [2, 4, 2, 5], "riseRows": 0},
+        {"id": "plate_rack", "footprint": [24, 2, 25, 3], "riseRows": 1},
+        {"id": "barbell_bench", "footprint": [24, 4, 25, 5], "riseRows": 0},
+        {"id": "trophy_case_west", "footprint": [10, 7, 13, 7], "riseRows": 1, "note": "wall-mounted, flanks doorway; TROPHY interaction faces it"},
+        {"id": "trophy_case_east", "footprint": [15, 7, 17, 7], "riseRows": 1},
+        {"id": "doorway_frame", "footprint": [14, 7, 14, 7], "riseRows": 1, "walkable": true, "note": "the captain-gate chokepoint; frame renders as foreground, floor stays walkable"},
+        {"id": "locker_bank_west", "footprint": [3, 8, 9, 9], "riseRows": 1},
+        {"id": "locker_bank_east", "footprint": [18, 8, 23, 9], "riseRows": 1},
+        {"id": "sink_unit_west", "footprint": [1, 8, 2, 9], "riseRows": 1},
+        {"id": "sink_unit_east", "footprint": [24, 8, 25, 9], "riseRows": 1},
+        {"id": "waste_bin_west", "footprint": [2, 10, 2, 10], "riseRows": 0},
+        {"id": "waste_bin_east", "footprint": [24, 10, 24, 10], "riseRows": 0},
+        {"id": "bench_west", "footprint": [4, 11, 9, 11], "riseRows": 0, "note": "drawn CONTAINED in one row - flat FireRed bench language"},
+        {"id": "bench_east", "footprint": [18, 11, 23, 11], "riseRows": 0},
+        {"id": "exit_door_frame", "footprint": [13, 12, 15, 12], "riseRows": 1, "walkableCells": [[14, 12]], "note": "posts solid, threshold walkable, exit E at (14,13)"}
+      ]
+    },
+    "campus": {
+      "groundZones": [
+        {"id": "lawn", "kit": "grass", "note": "default ground"},
+        {"id": "brick_path", "kit": "brick-path", "rects": [[13, 7, 14, 16], [10, 11, 18, 11], [4, 12, 9, 12], [18, 12, 21, 12]], "walkable": true},
+        {"id": "dirt_gate_path", "kit": "dirt-path", "rect": [13, 15, 14, 17], "walkable": true}
+      ],
+      "walls": {
+        "kit": "forest-border",
+        "note": "tree wall rows 0-1, cols 0-1 and 26-27, forest rows 15-17 except the gate gap x13-14; composed from the forest kit (law 6b), never one tree stamped"
+      },
+      "objects": [
+        {"id": "stadium", "footprint": [2, 0, 25, 6], "riseRows": 0, "bespoke": true, "note": "one-off landmark (Stage 3 class). Facade base ON row 6; tunnel mouth at x13-14 row 5-6 stays solid all season; SIGN row is the walkable path row 7 in front"},
+        {"id": "building2_locker_wrestling", "footprint": [3, 8, 9, 11], "riseRows": 0, "doorCells": [[6, 11]], "note": "flowerbeds drawn inside footprint edges; steps decal on walkable (6,12)"},
+        {"id": "building3_coach_office", "footprint": [20, 8, 25, 11], "riseRows": 0, "doorCells": [[21, 11]], "note": "includes the east bush column x25 rows 8-10"},
+        {"id": "garden_west", "footprint": [10, 8, 12, 10], "riseRows": 0, "note": "closed hedge ring + bench + flowers, one composed asset (law 6b)"},
+        {"id": "garden_east", "footprint": [16, 8, 19, 10], "riseRows": 0, "note": "includes the flower-fenced east sliver; fully non-enterable"},
+        {"id": "hedge_band_west", "footprint": [2, 14, 12, 14], "riseRows": 0},
+        {"id": "hedge_band_east", "footprint": [15, 14, 25, 14], "riseRows": 0},
+        {"id": "banner_lamp_west", "footprint": [11, 13, 11, 13], "riseRows": 2, "note": "pole+banner rise as foreground; actor walks BEHIND, never on"},
+        {"id": "banner_lamp_east", "footprint": [16, 13, 16, 13], "riseRows": 2},
+        {"id": "lawn_tree_a", "footprint": [2, 13, 2, 13], "riseRows": 1},
+        {"id": "lawn_tree_b", "footprint": [10, 13, 10, 13], "riseRows": 1},
+        {"id": "lawn_bush_a", "footprint": [12, 13, 12, 13], "riseRows": 0},
+        {"id": "lawn_bush_b", "footprint": [15, 13, 15, 13], "riseRows": 0},
+        {"id": "lawn_tree_c", "footprint": [17, 13, 17, 13], "riseRows": 1},
+        {"id": "lawn_tree_d", "footprint": [20, 13, 20, 13], "riseRows": 1},
+        {"id": "lawn_bush_c", "footprint": [23, 13, 23, 13], "riseRows": 0}
+      ]
+    },
+    "studyhall": {
+      "groundZones": [
+        {"id": "office_floor", "kit": "office-carpet", "note": "whole room; wall face row 1 is architecture, not floor"}
+      ],
+      "walls": {
+        "kit": "interior-wall",
+        "note": "perimeter + row 1 wall face (wainscot/window band); whiteboard is wall decor above the COACH_OFFICE interaction tiles at row 2"
+      },
+      "objects": [
+        {"id": "coach_desk", "footprint": [6, 2, 10, 4], "riseRows": 1, "note": "includes the chair behind the desk"},
+        {"id": "armchair", "footprint": [8, 5, 8, 6], "riseRows": 0, "note": "drawn contained in its two cells"},
+        {"id": "cabinet_shelves", "footprint": [12, 1, 16, 2], "riseRows": 0, "note": "filing cabinet + two bookcases, one composed unit against the wall"},
+        {"id": "plant_ne", "footprint": [11, 1, 11, 1], "riseRows": 0},
+        {"id": "plant_sw", "footprint": [1, 7, 1, 8], "riseRows": 1},
+        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "posts solid, threshold walkable, exit E at (9,11)"}
+      ]
+    }
+  }
+}
