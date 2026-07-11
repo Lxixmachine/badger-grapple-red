@@ -46,12 +46,11 @@
       "exits": [
         {"x": 6, "y": 11, "dir": "up", "to": "fieldhouse", "tx": 14, "ty": 12, "msg": "Locker Room and Wrestling Room."},
         {"x": 22, "y": 11, "dir": "up", "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
-        {"x": 23, "y": 11, "dir": "up", "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
         {"x": 14, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
       ],
       "groundZones": [
         {"id": "lawn", "kit": "grass", "note": "default ground"},
-        {"id": "brick_path", "kit": "brick-path", "rects": [[13, 7, 14, 16], [10, 11, 18, 11], [4, 12, 9, 12], [18, 12, 23, 12]], "walkable": true},
+        {"id": "brick_path", "kit": "brick-path", "rects": [[13, 7, 14, 16], [10, 11, 18, 11], [4, 12, 9, 12], [18, 12, 22, 12]], "walkable": true},
         {"id": "dirt_gate_path", "kit": "dirt-path", "rect": [13, 15, 14, 17], "walkable": true}
       ],
       "walls": {
@@ -64,7 +63,7 @@
       "objects": [
         {"id": "stadium", "footprint": [2, 0, 25, 6], "riseRows": 0, "bespoke": true, "note": "one-off landmark (Stage 3 class). Facade base ON row 6; tunnel mouth at x13-14 row 5-6 stays solid all season; SIGN row is the walkable path row 7 in front"},
         {"id": "building2_locker_wrestling", "footprint": [3, 8, 9, 11], "riseRows": 0, "doorCells": [[6, 11]], "note": "flowerbeds drawn inside footprint edges; steps decal on walkable (6,12)"},
-        {"id": "building3_coach_office", "footprint": [20, 8, 25, 11], "riseRows": 0, "doorCells": [[22, 11], [23, 11]], "note": "the generated centered doorway spans both middle cells; both are authored entrance cells"},
+        {"id": "building3_coach_office", "footprint": [20, 8, 24, 11], "riseRows": 0, "doorCells": [[22, 11]], "note": "odd five-cell width puts the centered generated doorway wholly inside cell x22"},
         {"id": "garden_west", "footprint": [10, 8, 12, 10], "riseRows": 0, "note": "closed hedge ring + bench + flowers, one composed asset (law 6b)"},
         {"id": "garden_east", "footprint": [16, 8, 19, 10], "riseRows": 0, "note": "includes the flower-fenced east sliver; fully non-enterable"},
         {"id": "hedge_band_west", "footprint": [2, 14, 12, 14], "riseRows": 0},

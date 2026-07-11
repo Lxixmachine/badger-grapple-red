@@ -1,5 +1,23 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.57 true Coach Office door alignment)
+
+Tony correctly rejected v21.56's two-cell doorway/two-landing response as a
+shortcut. Root cause: the generated office was six cells wide, so a visually
+centered door necessarily landed on the boundary between its two middle cells.
+No collision or mat adjustment can make a boundary-centered door line up with
+one tile-based walk lane.
+
+v21.57 fixes the object geometry itself. The Coach Office footprint is now an
+odd five cells wide (`x20..24`), which puts the centered source-art doorway
+wholly inside center cell `x22`. The manifest contains one door, one exit, one
+brick approach, and one stone landing. Cell x23 is facade and solid. The office
+return warp remains x22.
+
+The ownership overlay visibly confirms the door/landing/grid centers coincide.
+Production tests enter through x22 and assert x23 cannot enter. Do not restore
+two-cell door semantics or compensate for source geometry with duplicate mats.
+
 ## Latest Codex Turn (v21.56 campus polish and Coach Office doorway)
 
 Tony's first v21.55 phone screenshots confirmed collision was better but the

@@ -222,7 +222,7 @@ def make_ground(area_id: str, spec: dict, terrain: Image.Image) -> Image.Image:
                     cells.update((x, y) for y in range(y1, y2 + 1) for x in range(x1, x2 + 1))
             draw_path_network(canvas, cells, material)
         # Stone landings make the path-to-door transition explicit.
-        for landing_x in (6, 22, 23):
+        for landing_x in (6, 22):
             draw.rectangle((landing_x * TILE + 2, 12 * TILE + 1, (landing_x + 1) * TILE - 3, 13 * TILE - 2), fill=(201, 191, 165), outline=(126, 116, 96))
     else:
         # Interior walls are continuous architecture. Repeating a bordered wall
