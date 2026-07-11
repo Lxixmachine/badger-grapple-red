@@ -1,5 +1,36 @@
 # Agent Handoff
 
+## Latest Codex Turn (Law 6c grid-native source art)
+
+Read Claude's v21.53-v21.54/F-016 work and fast-forwarded local `main` to
+`ff14818`. Tony's diagnosis is now the operating law: slicing a scene painting
+into tiles does not make its objects grid-native. The committed object manifest
+is the geometry contract.
+
+Generated a complete new source-art package with ChatGPT built-in image
+generation:
+
+- three composition-preserving grid references for campus, Field House, office;
+- an exterior alpha atlas with stadium, both buildings, garden/hedge families,
+  banner lamp, lawn tree, and bush;
+- a Field House alpha atlas with all equipment, trophy cases, lockers, sinks,
+  bins, bench, and doorway families;
+- an office alpha atlas with desk/chair, visitor chair, storage, plants,
+  doorway, whiteboard, and window;
+- a reusable terrain alpha atlas with grass, brick/dirt transitions, interior
+  floors, mat/carpet, wall, forest-border, and hedge families.
+
+Raw chroma sources are preserved beside alpha-cleaned outputs. Transparency was
+validated visually: corners are clear and the objects survive without the
+magenta field. Exact prompts, file names, and the integration contract are in
+`art/imagegen/camp_randall_grid_native_v1_2026-07-11.prompt.md`.
+
+These assets are deliberately NOT wired into runtime yet. They must first be
+cropped and scaled to each manifest footprint, split by `riseRows`, and assembled
+by a manifest compositor that also generates collision. Deploying a new flat
+scene would repeat F-016. Claude's next compositor turn can now execute against
+separate, transparent source assets instead of paintings.
+
 ## Latest Claude Turn (F-016 + law 6c — the art must be bespoke TO the grid)
 
 Tony's verdict on v21.54, with four phone screenshots (standing ON the
