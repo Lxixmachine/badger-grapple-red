@@ -43,7 +43,7 @@
       "signs": {},
       "npcs": [
         {"x": 14, "y": 5, "frame": 1, "anim": "npc-idle-down", "dialogue": "Coach: Practice starts on the mat. Build your lineup one wrestler at a time."},
-        {"x": 14, "y": 8, "frame": 7, "anim": "npc-idle-down", "dialogue": "Captain: Coach is in the wrestling room. Check the office first, then come back.", "look": "gray"},
+        {"x": 14, "y": 8, "frame": 7, "anim": "npc-idle-down", "dialogue": "Captain: Coach is in the wrestling room. Check the office first, then come back.", "look": "gray", "gate": {"flag": "officeChecked", "x": 12, "y": 8, "dialogue": "Captain: Told you the office was a dead end. He lives on that mat. Go on through."}},
         {"x": 11, "y": 10, "frame": 4, "anim": "npc-idle-left", "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat.", "look": "purple"}
       ]
     },

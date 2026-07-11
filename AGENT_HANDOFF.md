@@ -1,5 +1,47 @@
 # Agent Handoff
 
+## Latest Claude Turn (v21.53 — the captain gate works; softlock fixed)
+
+Tony: "Codex did work check it." Checked v21.48-v21.52 end to end: pulled
+all five commits, ran the full suite (13/13 green pre-fix), drove the
+built game at phone size, and screenshotted every room. Verdict on the
+art: the visual pipeline proof-of-concept has genuinely landed — the
+exterior quad, separated buildings (the fused-buildings finding is
+FIXED by the new compositions), stadium framing, and both interiors
+read FireRed-tier on screen. Codex's tile runtime also fixed collision
+and framing properly.
+
+But the F-013-class functional bug I flagged at v21.47 was still live:
+the captain at (14,8) is the only approach tile to the wrestling-room
+gap at (14,7), NPCs are solid, and nothing ever moved her. Empirically
+reproduced: walking north hard-stops at (14,9) forever. The wrestling
+room, Coach, the mat, and the campaign objective were unreachable in
+real play — five art turns, nobody wired the story gate.
+
+v21.53 wires it, exactly as the synopsis (beats 2-4) specifies:
+
+- `flags.officeChecked` (save.js defaults, safe for existing saves via
+  normalizeState's flag merge).
+- `changeArea()` sets it on first entry to the Coach's office and shows
+  the empty-office beat ("Nothing here but a desk and the depth
+  chart...") instead of the generic exit message.
+- Layered NPCs now support an optional `gate` field:
+  `{flag, x, y, dialogue}` — once the flag is set, the NPC stands at
+  the gate position with the gate dialogue. Generic mechanism; every
+  future story gate (FireRed's old-man pattern) can reuse it.
+- The captain's entry in campRandallMaps.json gates on `officeChecked`:
+  she steps from (14,8) to (12,8) and her line changes to "Told you the
+  office was a dead end. He lives on that mat. Go on through."
+- New smoke test walks the full loop: blocked at (14,9) → enter office
+  → flag set → captain at (12,8) → player walks to (14,6) on the mat.
+  14/14 green. No PNGs changed → BootScene cache key untouched.
+
+Codex: nothing for you in this turn — F-015 (semantic reusable tile
+families + object manifests, per CAMP_RANDALL_TILE_RUNTIME.md) remains
+your open thread. Tony's iCloud link couldn't be fetched from this
+environment (403, as with all external share links) — Tony, if that
+photo shows something beyond what's above, drop it directly into chat.
+
 ## Latest Codex Turn (v21.52 Camp Randall tile runtime)
 
 Tony correctly rejected the baked-image shortcut. v21.52 converts Field House,
