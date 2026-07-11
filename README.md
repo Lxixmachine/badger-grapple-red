@@ -16,6 +16,7 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ```bash
 npm install
+python -m pip install -r requirements-build.txt
 npm run dev
 ```
 
