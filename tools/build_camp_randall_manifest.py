@@ -102,6 +102,13 @@ def crop(image: Image.Image, box: tuple[int, int, int, int]) -> Image.Image:
     return image.crop(box)
 
 
+def source_hash(path: Path) -> str:
+    if path.suffix.lower() == ".json":
+        canonical = path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
+        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def tile_sample(terrain: Image.Image, key: str) -> Image.Image:
     return crop(terrain, TERRAIN[key]).resize((TILE, TILE), Image.Resampling.NEAREST).convert("RGB")
 
@@ -278,7 +285,7 @@ def main() -> None:
         "tileSize": TILE,
         "objectCount": sum(len(area["objects"]) for area in manifest["areas"].values()),
         "inputSha256": {
-            str(path.relative_to(ROOT)).replace("\\", "/"): hashlib.sha256(path.read_bytes()).hexdigest()
+            str(path.relative_to(ROOT)).replace("\\", "/"): source_hash(path)
             for path in inputs
         },
         "outputSha256": {

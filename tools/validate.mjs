@@ -181,7 +181,9 @@ else{
   if(build.version!==1||build.tileSize!==TILE)errs.push('Camp Randall manifest build version/tile size is unsupported');
   for(const [path,expected] of Object.entries(build.inputSha256||{})){
     const source=fileURLToPath(new URL(`../${path}`,import.meta.url));
-    const actual=createHash('sha256').update(readFileSync(source)).digest('hex');
+    const bytes=readFileSync(source);
+    const canonical=path.endsWith('.json')?bytes.toString('utf8').replace(/\r\n/g,'\n').replace(/\r/g,'\n'):bytes;
+    const actual=createHash('sha256').update(canonical).digest('hex');
     if(actual!==expected)errs.push(`Camp Randall manifest input ${path} is stale; run npm run build:camp-manifest`);
   }
   for(const [path,expected] of Object.entries(build.outputSha256||{})){
