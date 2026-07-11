@@ -1,0 +1,29 @@
+{
+  "version": 1,
+  "inputSha256": {
+    "art/imagegen/world_composition_manifest.json": "8a2a7ce3670d060670fa4bf3f2eb64d4d1d63da0fa281ac2684c3fb6393f341f",
+    "art/imagegen/lakeshore_path_full_v1_2026-07-11.png": "890a8f1147e69c7ff83c3d9af196ba1fa2f978a4e1f4776254da82a3125c91bb",
+    "art/imagegen/lakeshore_path_full_v1_2026-07-11.prompt.md": "b95b1bf38480527e5455c12358fa923335026988a865847e1c812fb980fc1c83",
+    "art/imagegen/picnic_point_full_v1_2026-07-11.png": "ba2059b346bf97dccea20d71f045f756d11c4289b34bb196c032d19b2d2e162d",
+    "art/imagegen/picnic_point_full_v1_2026-07-11.prompt.md": "6d8e1efb6bae65367fb60fc92ffd2f408676d4217c8d01a241a2b6398637843c",
+    "art/imagegen/state_street_full_v1_2026-07-11.png": "1649bec43cd240a986b7355c6cebaaa86e0df6716906c61934cc616654027281",
+    "art/imagegen/state_street_full_v1_2026-07-11.prompt.md": "d9afc6ec891486d4a755de6f0b22b98cc7d5dc240286a15ff7b0f236a3039f54",
+    "art/imagegen/annex_arena_full_v1_2026-07-11.png": "c60e91860f584e0f9a40a46206f3b2a5c191bad9ff70c03dc62eeb4cf6eaa2fe",
+    "art/imagegen/annex_arena_full_v1_2026-07-11.prompt.md": "ffce353eec5e9e4582f11b81cbc7e5891f19d7dbe14fc3b4f669471fa5de09ef",
+    "art/imagegen/kohl_center_full_v1_2026-07-11.png": "4f5eee0a0599c1fd60539e135b1eae1f5155c9b0155e00582bfa1eda4e60088b",
+    "art/imagegen/kohl_center_full_v1_2026-07-11.prompt.md": "e529a8b0dea59cff36609d313159bd2836f00f86329ee6df7a1e72d0abb62e27",
+    "art/imagegen/team_shop_full_v1_2026-07-11.png": "fd331c37385f249089354e0fe69ac90735886d8c4d17e4d36601fc0589558589",
+    "art/imagegen/team_shop_full_v1_2026-07-11.prompt.md": "46a8d3d6fdb7b3944cbd69b903664bf361792c79e89add6eb1208d92f6421f98",
+    "art/imagegen/recovery_center_full_v1_2026-07-11.png": "2bda963d7f39c3b848f1814647731dbd45690d3b6a19ce3d794b8e68a0de48f2",
+    "art/imagegen/recovery_center_full_v1_2026-07-11.prompt.md": "df6d628268254f995828333bbf2657a0b6dffa455a1b6e31cd9340f36ffd248c"
+  },
+  "outputSha256": {
+    "public/assets/ui/area_lakeshore.png": "205a06a3f621996fc85f8b07664ca476aacec92ceaf30bb76608c321630d2d2a",
+    "public/assets/ui/area_river.png": "3534e8e13a1aebf2d1d17208ae5d949ace69cbf559dd7955eb03c3ac856ddaa2",
+    "public/assets/ui/area_downtown.png": "368c066e3936c3a191dacbb74301eb4cdae68fab0e11d99f2d4f81e175ccdfcc",
+    "public/assets/ui/area_conference.png": "fe192d407a22d4c61ac348658df27b78748a6cd24ca20ce111f2816af5e97739",
+    "public/assets/ui/area_championship.png": "48017568fc5379b6197241d3addfdbd234e2ea117a55dc62cb74499301c3188f",
+    "public/assets/ui/area_shop.png": "a29d7b6c2e2616076c037bb8aa7c74b9c1f0734d4be56b5d592e596e1284bee2",
+    "public/assets/ui/area_recovery.png": "bbbaab6fd5335d00654082ae18c8cb9a3b8933afa5c2149a9b9845a18d525cfd"
+  }
+}

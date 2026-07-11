@@ -37,6 +37,7 @@ LOOK_REFERENCE = {
 FULL_ROOM_PATHS = {
     "fieldhouse": ART / "camp_randall_locker_room_full_v1_2026-07-11.png",
     "wrestlingroom": ART / "camp_randall_wrestling_room_full_v1_2026-07-11.png",
+    "studyhall": ART / "camp_randall_office_grid_v5_candidate_2026-07-11.png",
 }
 
 # Pixel bboxes in the committed alpha atlases. Geometry and collision remain in
@@ -406,6 +407,9 @@ def build_area(area_id: str, spec: dict, area_data: dict, terrain: Image.Image) 
     area_data["tiles"] = ["".join(row) for row in grid]
     area_data["exits"] = spec["exits"]
     area_data["upperDecor"] = upper_entries
+    for authored_key in ("signs", "npcs", "actorScale", "actorFootOffset", "cameraZoom", "waterRects"):
+        if authored_key in spec:
+            area_data[authored_key] = spec[authored_key]
     area_data["manifestRuntime"] = "camp-randall-objects-v1"
 
     overlay = base.convert("RGBA")
@@ -437,7 +441,9 @@ def main() -> None:
         build_area(area_id, spec, maps["areas"][area_id], terrain)
 
     MAP_PATH.write_text(json.dumps(maps, indent=2) + "\n", encoding="utf-8")
-    inputs = list(dict.fromkeys([MANIFEST_PATH, TERRAIN_PATH, *ATLAS_PATHS.values(), *FULL_ROOM_PATHS.values()]))
+    art_inputs = [TERRAIN_PATH, *ATLAS_PATHS.values(), *FULL_ROOM_PATHS.values()]
+    prompt_inputs = [path.with_suffix(".prompt.md") for path in art_inputs if path.with_suffix(".prompt.md").exists()]
+    inputs = list(dict.fromkeys([MANIFEST_PATH, *art_inputs, *prompt_inputs]))
     outputs = [AREA_DIR / f"area_{area_id}.png" for area_id in manifest["areas"]]
     outputs.extend(
         LAYER_DIR / f"camp_{area_id}_{obj['id']}_upper.png"

@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "tileSize": 16,
+  "law": "Full paintings are projected onto explicit FireRed-style behavior grids. Every visible barrier owns complete cells; exits and encounter mats are declared here; upper layers are empty unless a player can genuinely walk behind the object.",
+  "townServicePolicy": {
+    "homeTown": "campus",
+    "requiredRoles": ["shop", "recovery"],
+    "towns": {
+      "downtown": {"shop": "shop", "recovery": "recovery", "gym": "championship"}
+    },
+    "serviceNames": {"shop": "Bucky's Locker Room", "recovery": "Trainer's Room"},
+    "note": "Like FireRed's shared Mart and Pokemon Center layouts, every developed town after the home town gets local service map instances that reuse these familiar compositions while its exterior landmarks and gym remain unique."
+  },
+  "areas": {
+    "lakeshore": {
+      "source": "lakeshore_path_full_v1_2026-07-11.png",
+      "width": 56,
+      "height": 14,
+      "start": {"x": 54, "y": 8},
+      "exits": [
+        {"x": 55, "y": 8, "dir": "right", "to": "campus", "tx": 1, "ty": 12, "msg": "Camp Randall."},
+        {"x": 0, "y": 8, "dir": "left", "to": "river", "tx": 46, "ty": 8, "msg": "Picnic Point."}
+      ],
+      "solidRects": [[0, 0, 55, 3], [0, 11, 55, 13], [33, 4, 35, 7]],
+      "openRects": [[28, 2, 30, 4]],
+      "grassRects": [[6, 4, 11, 7], [16, 4, 21, 7], [40, 4, 45, 7]],
+      "objects": [
+        {"id": "tree_west", "footprint": [13, 4, 14, 6]},
+        {"id": "tree_mid", "footprint": [23, 4, 24, 6]},
+        {"id": "terrace_chairs", "footprints": [[27, 5, 27, 5], [29, 5, 29, 5], [31, 5, 31, 5]]},
+        {"id": "tree_east_a", "footprint": [47, 4, 48, 6]},
+        {"id": "tree_east_b", "footprint": [52, 4, 53, 6]},
+        {"id": "bench_west", "footprint": [12, 7, 14, 7]},
+        {"id": "bench_mid", "footprint": [22, 7, 24, 7]},
+        {"id": "bench_east", "footprint": [47, 7, 49, 7]}
+      ],
+      "exitCells": [[55, 8], [0, 8]],
+      "interactions": [{"kind": "HIDDEN_SHORE", "tiles": [[29, 5]]}],
+      "signs": {
+        "34,7": "BOATHOUSE - Locked for crew season. Rowers only.",
+        "54,7": "LAKESHORE PATH - Picnic Point lies west along Mendota."
+      },
+      "npcs": [{"x": 25, "y": 9, "frame": 4, "anim": "npc-idle-left", "dialogue": "Jogger: Every morning along Mendota. The open mats draw wrestlers from all over campus.", "look": "red", "route": [[25, 9], [26, 9], [26, 10], [25, 10]]}],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    },
+    "river": {
+      "source": "picnic_point_full_v1_2026-07-11.png",
+      "width": 48,
+      "height": 14,
+      "start": {"x": 46, "y": 8},
+      "exits": [{"x": 47, "y": 8, "dir": "right", "to": "lakeshore", "tx": 1, "ty": 8, "msg": "Lakeshore Path."}],
+      "solidRects": [[0, 0, 47, 2], [0, 11, 47, 13], [0, 0, 1, 13]],
+      "openRects": [],
+      "grassRects": [[17, 3, 22, 7], [32, 3, 37, 7]],
+      "objects": [
+        {"id": "fire_circle", "footprint": [3, 6, 6, 9]},
+        {"id": "pine_west_north", "footprint": [3, 3, 13, 5]},
+        {"id": "pine_west_south", "footprint": [9, 9, 13, 10]},
+        {"id": "pine_center_north", "footprint": [23, 3, 30, 6]},
+        {"id": "pine_center_south", "footprint": [24, 9, 31, 10]},
+        {"id": "pine_east", "footprint": [39, 3, 45, 6]}
+      ],
+      "exitCells": [[47, 8]],
+      "interactions": [{"kind": "HIDDEN_EMBER", "tiles": [[6, 9]]}],
+      "signs": {"46,7": "PICNIC POINT - Mendota on both shores. Fire circle at the tip."},
+      "npcs": [{"x": 43, "y": 8, "frame": 1, "anim": "npc-idle-down", "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.", "look": "gray", "route": null}],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    },
+    "downtown": {
+      "source": "state_street_full_v1_2026-07-11.png",
+      "width": 28,
+      "height": 14,
+      "start": {"x": 1, "y": 7},
+      "exits": [
+        {"x": 0, "y": 7, "dir": "left", "to": "campus", "tx": 26, "ty": 12, "msg": "Camp Randall."},
+        {"x": 4, "y": 5, "dir": "up", "to": "shop", "tx": 10, "ty": 10, "msg": "Bucky's Locker Room."},
+        {"x": 8, "y": 5, "dir": "up", "to": "recovery", "tx": 10, "ty": 10, "msg": "Trainer's Room."},
+        {"x": 17, "y": 5, "dir": "up", "to": "championship", "tx": 14, "ty": 12, "msg": "The Kohl Center.", "gate": ["Neutral Badge", "Scramble Badge"]}
+      ],
+      "solidRects": [[0, 0, 27, 4], [0, 10, 27, 13], [23, 4, 27, 9]],
+      "openRects": [[0, 7, 1, 7], [4, 5, 4, 5], [8, 5, 8, 5], [17, 5, 17, 5]],
+      "grassRects": [],
+      "objects": [
+        {"id": "north_planters", "footprints": [[2, 5, 3, 5], [6, 5, 7, 5], [10, 5, 11, 5], [14, 5, 15, 5], [20, 5, 21, 5]]},
+        {"id": "south_planters", "footprints": [[3, 9, 4, 9], [9, 9, 10, 9], [15, 9, 16, 9], [20, 9, 21, 9]]}
+      ],
+      "exitCells": [[0, 7], [4, 5], [8, 5], [17, 5]],
+      "interactions": [{"kind": "CAPITOL", "rect": [24, 4, 27, 5]}],
+      "signs": {
+        "3,5": "BUCKY'S LOCKER ROOM - Team gear and supplies.",
+        "7,5": "TRAINER'S ROOM - Recovery and lineup care.",
+        "18,5": "KOHL CENTER - Big Ten Championship. Badge holders only.",
+        "24,5": "CAPITOL SQUARE - State Street ends at the dome."
+      },
+      "npcs": [
+        {"x": 7, "y": 8, "frame": 1, "anim": "npc-idle-down", "dialogue": "Shopper: The familiar doors are easy to find. Everything else on State Street has its own story.", "look": "purple", "route": [[7, 8], [8, 8], [8, 9], [7, 9]]},
+        {"x": 22, "y": 8, "frame": 10, "anim": "npc-idle-up", "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.", "look": "green", "route": null}
+      ],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    },
+    "conference": {
+      "source": "annex_arena_full_v1_2026-07-11.png",
+      "width": 29,
+      "height": 14,
+      "start": {"x": 14, "y": 12},
+      "exits": [{"x": 14, "y": 13, "dir": "down", "to": "campus", "tx": 14, "ty": 7, "msg": "Camp Randall."}],
+      "solidRects": [[0, 0, 28, 1], [0, 0, 1, 13], [27, 0, 28, 13], [0, 13, 28, 13], [2, 2, 4, 11], [24, 2, 26, 11], [13, 2, 15, 3]],
+      "openRects": [[14, 12, 14, 13]],
+      "grassRects": [],
+      "objects": [
+        {"id": "west_benches", "footprints": [[5, 5, 5, 7], [5, 8, 5, 10]]},
+        {"id": "east_benches", "footprints": [[23, 5, 23, 7], [23, 8, 23, 10]]}
+      ],
+      "exitCells": [[14, 13]],
+      "interactions": [{"kind": "TROPHY", "tiles": [[14, 3]]}],
+      "signs": {},
+      "npcs": [],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    },
+    "championship": {
+      "source": "kohl_center_full_v1_2026-07-11.png",
+      "width": 29,
+      "height": 14,
+      "start": {"x": 14, "y": 12},
+      "exits": [{"x": 14, "y": 13, "dir": "down", "to": "downtown", "tx": 17, "ty": 6, "msg": "State Street."}],
+      "solidRects": [[0, 0, 28, 2], [0, 0, 0, 13], [28, 0, 28, 13], [0, 13, 28, 13], [12, 1, 16, 3], [26, 0, 28, 3]],
+      "openRects": [[14, 12, 14, 13]],
+      "grassRects": [],
+      "objects": [
+        {"id": "bracket_desk", "footprint": [1, 6, 5, 8]},
+        {"id": "bench_west", "footprint": [4, 11, 8, 11]},
+        {"id": "bench_east", "footprint": [20, 11, 24, 11]}
+      ],
+      "exitCells": [[14, 13]],
+      "interactions": [{"kind": "TOURNEY", "tiles": [[3, 5]]}, {"kind": "NATIONALS", "tiles": [[27, 3]]}],
+      "signs": {},
+      "npcs": [],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    },
+    "shop": {
+      "source": "team_shop_full_v1_2026-07-11.png",
+      "width": 21,
+      "height": 12,
+      "start": {"x": 10, "y": 10},
+      "exits": [{"x": 10, "y": 11, "dir": "down", "to": "downtown", "tx": 4, "ty": 6, "msg": "State Street."}],
+      "solidRects": [[0, 0, 20, 1], [0, 0, 1, 11], [19, 0, 20, 11], [0, 11, 20, 11], [6, 2, 14, 4], [2, 2, 5, 4], [15, 2, 18, 4]],
+      "openRects": [[10, 10, 10, 11]],
+      "grassRects": [],
+      "objects": [{"id": "display_west", "footprint": [4, 7, 7, 9]}, {"id": "display_east", "footprint": [13, 7, 16, 9]}, {"id": "mirror_bench", "footprint": [18, 4, 18, 6]}],
+      "exitCells": [[10, 11]],
+      "interactions": [{"kind": "S", "tiles": [[10, 4]]}],
+      "signs": {},
+      "npcs": [{"x": 10, "y": 4, "frame": 1, "anim": "npc-idle-down", "dialogue": "Equipment Manager: Same locker-room setup in every town. Stock up and get back on the road.", "look": "red", "route": null}],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    },
+    "recovery": {
+      "source": "recovery_center_full_v1_2026-07-11.png",
+      "width": 21,
+      "height": 12,
+      "start": {"x": 10, "y": 10},
+      "exits": [{"x": 10, "y": 11, "dir": "down", "to": "downtown", "tx": 8, "ty": 6, "msg": "State Street."}],
+      "solidRects": [[0, 0, 20, 1], [0, 0, 1, 11], [19, 0, 20, 11], [0, 11, 20, 11], [6, 2, 14, 4], [2, 2, 5, 3], [15, 2, 18, 3]],
+      "openRects": [[10, 10, 10, 11]],
+      "grassRects": [],
+      "objects": [{"id": "treatment_west", "footprint": [3, 7, 7, 10]}, {"id": "treatment_east", "footprint": [13, 7, 17, 10]}, {"id": "hydration", "footprint": [1, 2, 2, 4]}],
+      "exitCells": [[10, 11]],
+      "interactions": [{"kind": "R", "tiles": [[10, 4]]}],
+      "signs": {},
+      "npcs": [{"x": 10, "y": 4, "frame": 1, "anim": "npc-idle-down", "dialogue": "Athletic Trainer: I can restore the whole lineup. You will find a Trainer's Room in every town after home.", "look": "green", "route": null}],
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25
+    }
+  }
+}

@@ -1,9 +1,10 @@
 import source from './layeredMaps.json' with {type: 'json'};
+import worldCompositions from './worldCompositionMaps.json' with {type: 'json'};
 import campRandall from './campRandallMaps.json' with {type: 'json'};
 import {campTilemap,campRuntimeBlocked} from './campRandallTilemaps.js';
 
 export const LAYERED_MAP_VERSION=source.version;
-export const LAYERED_MAPS={...source.areas,...campRandall.areas};
+export const LAYERED_MAPS={...source.areas,...worldCompositions.areas,...campRandall.areas};
 
 export function layeredMap(area){return LAYERED_MAPS[area]||null;}
 

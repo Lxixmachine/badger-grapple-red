@@ -62,24 +62,29 @@
       "width": 28,
       "height": 18,
       "exits": [
+        {"x": 13, "y": 6, "dir": "up", "to": "conference", "tx": 14, "ty": 12, "msg": "Annex Arena."},
+        {"x": 14, "y": 6, "dir": "up", "to": "conference", "tx": 14, "ty": 12, "msg": "Annex Arena."},
         {"x": 6, "y": 11, "dir": "up", "to": "fieldhouse", "tx": 10, "ty": 10, "msg": "Locker Room."},
         {"x": 22, "y": 11, "dir": "up", "to": "studyhall", "tx": 9, "ty": 10, "msg": "Coach's Office."},
-        {"x": 14, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 7, "msg": "Route 1."}
+        {"x": 0, "y": 12, "dir": "left", "to": "lakeshore", "tx": 54, "ty": 8, "msg": "Lakeshore Path."},
+        {"x": 27, "y": 12, "dir": "right", "to": "downtown", "tx": 1, "ty": 7, "msg": "State Street."},
+        {"x": 13, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 8, "msg": "Lakeshore Path.", "worldPlane": false},
+        {"x": 14, "y": 17, "dir": "down", "to": "lakeshore", "tx": 54, "ty": 8, "msg": "Lakeshore Path.", "worldPlane": false}
       ],
       "groundZones": [
         {"id": "lawn", "kit": "grass", "note": "default ground"},
-        {"id": "brick_path", "kit": "brick-path", "rects": [[13, 7, 14, 16], [10, 11, 18, 11], [4, 12, 9, 12], [18, 12, 22, 12]], "walkable": true},
+        {"id": "brick_path", "kit": "brick-path", "rects": [[13, 7, 14, 16], [10, 11, 18, 11], [0, 12, 9, 12], [18, 12, 27, 12]], "walkable": true},
         {"id": "dirt_gate_path", "kit": "dirt-path", "rect": [13, 15, 14, 17], "walkable": true}
       ],
       "walls": {
         "kit": "forest-border",
         "solidRects": [[0, 0, 1, 17], [26, 0, 27, 17], [2, 15, 25, 17]],
-        "openCells": [[13, 15], [14, 15], [13, 16], [14, 16], [13, 17], [14, 17]],
-        "exitCells": [[14, 17]],
-        "note": "tree wall rows 0-1, cols 0-1 and 26-27, forest rows 15-17 except the gate gap x13-14; composed from the forest kit (law 6b), never one tree stamped"
+        "openCells": [[0, 12], [1, 12], [26, 12], [27, 12], [13, 15], [14, 15], [13, 16], [14, 16], [13, 17], [14, 17]],
+        "exitCells": [[0, 12], [27, 12], [13, 17], [14, 17]],
+        "note": "tree wall rows 0-1, cols 0-1 and 26-27, forest rows 15-17 except the gate gap x13-14; the west and east row-12 paths cut complete route openings through the side borders"
       },
       "objects": [
-        {"id": "stadium", "footprint": [2, 0, 25, 6], "riseRows": 0, "bespoke": true, "note": "one-off landmark (Stage 3 class). Facade base ON row 6; tunnel mouth at x13-14 row 5-6 stays solid all season; SIGN row is the walkable path row 7 in front"},
+        {"id": "stadium", "footprint": [2, 0, 25, 6], "riseRows": 0, "bespoke": true, "doorCells": [[13, 6], [14, 6]], "note": "one-off landmark (Stage 3 class). The two-cell tunnel is a deliberate arena-scale exception and both visible threshold cells enter Annex Arena"},
         {"id": "building2_locker_wrestling", "footprint": [3, 8, 9, 11], "riseRows": 0, "doorCells": [[6, 11]], "note": "flowerbeds drawn inside footprint edges; steps decal on walkable (6,12)"},
         {"id": "building3_coach_office", "footprint": [20, 8, 24, 11], "riseRows": 0, "doorCells": [[22, 11]], "note": "odd five-cell width puts the centered generated doorway wholly inside cell x22"},
         {"id": "garden_west", "footprint": [10, 8, 12, 10], "riseRows": 0, "note": "closed hedge ring + bench + flowers, one composed asset (law 6b)"},
@@ -95,10 +100,15 @@
         {"id": "lawn_tree_c", "footprint": [17, 13, 17, 13], "riseRows": 1},
         {"id": "lawn_tree_d", "footprint": [20, 13, 20, 13], "riseRows": 1},
         {"id": "lawn_bush_c", "footprint": [23, 13, 23, 13], "riseRows": 0}
-      ]
+      ],
+      "signs": {
+        "13,7": "ANNEX ARENA - Neutral Badge varsity dual.",
+        "14,7": "ANNEX ARENA - Neutral Badge varsity dual."
+      },
+      "npcs": [{"x": 19, "y": 13, "frame": 1, "anim": "npc-idle-left", "dialogue": "Teammate: Lakeshore runs west, State Street runs east, and the Annex is through the stadium tunnel.", "look": "red"}]
     },
     "studyhall": {
-      "width": 18,
+      "width": 19,
       "height": 12,
       "exits": [
         {"x": 9, "y": 11, "dir": "down", "to": "campus", "tx": 22, "ty": 12, "msg": "Camp Randall quad."}
@@ -108,20 +118,20 @@
       ],
       "walls": {
         "kit": "interior-wall",
-        "solidRects": [[0, 0, 17, 1], [0, 0, 0, 11], [17, 0, 17, 11], [0, 11, 17, 11]],
+        "solidRects": [[0, 0, 18, 1], [0, 0, 0, 11], [18, 0, 18, 11], [0, 11, 18, 11]],
         "openCells": [[9, 10], [9, 11]],
         "exitCells": [[9, 11]],
         "note": "perimeter + row 1 wall face (wainscot/window band); whiteboard is wall decor above the COACH_OFFICE interaction tiles at row 2"
       },
       "objects": [
-        {"id": "coach_desk", "footprint": [6, 2, 10, 4], "riseRows": 1, "note": "includes the chair behind the desk"},
-        {"id": "armchair", "footprint": [8, 5, 8, 6], "riseRows": 0, "note": "drawn contained in its two cells"},
-        {"id": "cabinet_shelves", "footprint": [12, 1, 16, 2], "riseRows": 0, "note": "filing cabinet + two bookcases, one composed unit against the wall"},
-        {"id": "plant_ne", "footprint": [11, 1, 11, 1], "riseRows": 0},
-        {"id": "plant_sw", "footprint": [1, 7, 1, 8], "riseRows": 1},
-        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 1, "walkableCells": [[9, 10]], "note": "posts solid, threshold walkable, exit E at (9,11)"},
-        {"id": "strategy_whiteboard", "footprint": [2, 1, 5, 1], "riseRows": 0, "walkable": true, "note": "wall decor; wall collision remains authoritative"},
-        {"id": "office_window", "footprint": [6, 1, 10, 1], "riseRows": 0, "walkable": true, "note": "wall decor; wall collision remains authoritative"}
+        {"id": "coach_desk", "footprint": [6, 3, 11, 5], "riseRows": 0, "note": "complete painted desk and coach-chair mass"},
+        {"id": "armchair", "footprint": [8, 6, 10, 8], "riseRows": 0, "note": "complete painted visitor-chair rectangle"},
+        {"id": "cabinet_shelves", "footprint": [13, 1, 17, 4], "riseRows": 0, "note": "filing cabinet and bookcase wall mass"},
+        {"id": "plant_ne", "footprint": [12, 1, 13, 3], "riseRows": 0},
+        {"id": "plant_sw", "footprint": [0, 7, 1, 10], "riseRows": 0},
+        {"id": "exit_door_frame", "footprint": [8, 10, 10, 10], "riseRows": 0, "walkableCells": [[9, 10]], "note": "single center threshold at x9"},
+        {"id": "strategy_whiteboard", "footprint": [2, 1, 5, 2], "riseRows": 0, "walkable": true, "note": "wall decor; wall collision remains authoritative"},
+        {"id": "office_window", "footprint": [6, 1, 11, 2], "riseRows": 0, "walkable": true, "note": "wall decor; wall collision remains authoritative"}
       ]
     }
   }

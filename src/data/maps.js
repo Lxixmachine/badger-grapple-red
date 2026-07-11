@@ -39,6 +39,7 @@ export function worldPlane(){
  while(q.length){
   const id=q.shift();const b=pos[id];const {width,height}=areaDimensions(id);
   for(const e of (areaFor(id).exits||[])){
+   if(e.worldPlane===false)continue;
    if(!OUT.includes(e.to))continue;
    const t=areaDimensions(e.to);
    const dW=e.x,dE=width-1-e.x,dN=e.y,dS=height-1-e.y;
@@ -87,11 +88,7 @@ export function spotKind(area,x,y){
  if(signText(area,x,y))return 'SIGN';
  const layered=layeredInteraction(area,x,y);if(layered)return layered;
  const n=areaFor(area).name;
- if((n==='TEAM SHOP'||n==='RECOVERY CENTER')&&x>=13&&x<=15&&y===11)return 'EXIT';
- if(n==='TEAM SHOP'&&x>=13&&x<=14&&y===7)return 'S';
- if(n==='RECOVERY CENTER'&&x>=13&&x<=14&&y===7)return 'R';
  if(n==='MEMORIAL LIBRARY'){if(x===9&&y===8)return 'STUDY_NPC';if(x===12&&y===6)return 'HIDDEN_FILM';}
- if(n==='KOHL CENTER'&&x===23&&y===0)return 'NATIONALS';
  if(TOURNAMENT.desk.area===area&&TOURNAMENT.desk.x===x&&TOURNAMENT.desk.y===y)return 'TOURNEY';
  const cap=areaFor(area).captain;if(cap&&cap.x===x&&cap.y===y)return 'C';
  if(isGrass(area,x,y))return 'g';

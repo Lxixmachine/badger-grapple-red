@@ -3,27 +3,28 @@
   "tileSize": 16,
   "objectCount": 37,
   "inputSha256": {
-    "art/imagegen/camp_randall_object_manifest.json": "caf0d0be525ffe80902ba46f30c09fc4be856f871e793fe7ee57cd8853531aab",
+    "art/imagegen/camp_randall_object_manifest.json": "807b969ecca94f73e3568698b1456a29c375c00fa6ac17b6b4a691688ffa563c",
     "art/imagegen/camp_randall_terrain_kit_v2_alpha_2026-07-11.png": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "art/imagegen/camp_randall_exterior_objects_v1_alpha_2026-07-11.png": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "art/imagegen/camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
     "art/imagegen/camp_randall_office_objects_v1_alpha_2026-07-11.png": "8b5087925fe7e57c231463e64261b5f39bace9f33a7b83a2b57cb0a346851dea",
     "art/imagegen/camp_randall_locker_room_full_v1_2026-07-11.png": "e9f00b0c5d3bd5372010b2da1397dec8828024b15e137b5fde39c2c8983d4233",
-    "art/imagegen/camp_randall_wrestling_room_full_v1_2026-07-11.png": "d1e8ffd0c95ac1c11fc6c9ec463cf0692913e77b82041c8b3d04d6b816911756"
+    "art/imagegen/camp_randall_wrestling_room_full_v1_2026-07-11.png": "d1e8ffd0c95ac1c11fc6c9ec463cf0692913e77b82041c8b3d04d6b816911756",
+    "art/imagegen/camp_randall_office_grid_v5_candidate_2026-07-11.png": "2417766362a7b6070cdd90c4729b4eb4889dddb2134714590a37bea777d94c0c",
+    "art/imagegen/camp_randall_locker_room_full_v1_2026-07-11.prompt.md": "170ddca0b7f1ccd1cf5138a58864f4137f1c731683b9907b59962cb911bcfcdd",
+    "art/imagegen/camp_randall_wrestling_room_full_v1_2026-07-11.prompt.md": "62fe832f1d8f126b6a801668b144673ba39b447bc356c60bdc28ba4b2bdef63b",
+    "art/imagegen/camp_randall_office_grid_v5_candidate_2026-07-11.prompt.md": "5be20a7fb6ce26d56da753ce6bb91bedfafbb88cfd0ac3f061c92bcbf4c14d13"
   },
   "outputSha256": {
     "public/assets/ui/area_fieldhouse.png": "1c21c419514eb00647929c8b594dfce36dde60ee064dc384d94c819f68b86df0",
     "public/assets/ui/area_wrestlingroom.png": "2304e34a524e86b3c8c8abf690c4b35cfdca0ec4eb645092654483bab8b286d6",
-    "public/assets/ui/area_campus.png": "d027ad640ace3d1b98db9c318beb1339eb2697fb7d32a42e034156051c01dfbc",
-    "public/assets/ui/area_studyhall.png": "e716a925c4bd9d7835c8e5a300656101705fb0e1ba103ed4551c00dca4e7dba1",
+    "public/assets/ui/area_campus.png": "399b1f0f214d6df4283e208d7f4557604ea316939bf2afee2b46c330d914a727",
+    "public/assets/ui/area_studyhall.png": "4f25c4d643683324a5d74697777b27206865c71c97a8a9dd6c4cb13b98e61554",
     "public/assets/layers/camp_campus_banner_lamp_west_upper.png": "147762b44b90b4a06470ac3a24e283556f8c0758c226a344a26ba63f69311456",
     "public/assets/layers/camp_campus_banner_lamp_east_upper.png": "147762b44b90b4a06470ac3a24e283556f8c0758c226a344a26ba63f69311456",
     "public/assets/layers/camp_campus_lawn_tree_a_upper.png": "fdfedb30beb2914a60857ed229382c71e9562370bad176c3e7daa66082fcf2b1",
     "public/assets/layers/camp_campus_lawn_tree_b_upper.png": "fdfedb30beb2914a60857ed229382c71e9562370bad176c3e7daa66082fcf2b1",
     "public/assets/layers/camp_campus_lawn_tree_c_upper.png": "fdfedb30beb2914a60857ed229382c71e9562370bad176c3e7daa66082fcf2b1",
-    "public/assets/layers/camp_campus_lawn_tree_d_upper.png": "fdfedb30beb2914a60857ed229382c71e9562370bad176c3e7daa66082fcf2b1",
-    "public/assets/layers/camp_studyhall_coach_desk_upper.png": "1ddb3453d50ab56e35cc3ab421d7488fbb38cef00f24dff8a0cb8f13fac28e8a",
-    "public/assets/layers/camp_studyhall_plant_sw_upper.png": "c68d99ebd9cc3aefd0ae6fd02e30382db145cf768d84aed08a2aaadccd67d9e0",
-    "public/assets/layers/camp_studyhall_exit_door_frame_upper.png": "07055a495af0673a336dbb959ad9522352aaeba88be446c250544e93e75ae4eb"
+    "public/assets/layers/camp_campus_lawn_tree_d_upper.png": "fdfedb30beb2914a60857ed229382c71e9562370bad176c3e7daa66082fcf2b1"
   }
 }

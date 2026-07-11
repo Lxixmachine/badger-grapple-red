@@ -205,18 +205,18 @@
         "############################",
         "############################",
         "############################",
-        "############################",
+        "#############EE#############",
         "##........................##",
         "##.##########...#########.##",
         "##.##########...#########.##",
         "##.##########...#########.##",
         "##.###E###..........##E##.##",
-        "##........................##",
+        "E..........................E",
         "###.......###..###..#..#..##",
         "#############..#############",
         "#############..#############",
         "#############..#############",
-        "#############.E#############"
+        "#############EE#############"
       ],
       "paths": [
         [
@@ -286,6 +286,24 @@
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {
+          "x": 13,
+          "y": 6,
+          "dir": "up",
+          "to": "conference",
+          "tx": 14,
+          "ty": 12,
+          "msg": "Annex Arena."
+        },
+        {
+          "x": 14,
+          "y": 6,
+          "dir": "up",
+          "to": "conference",
+          "tx": 14,
+          "ty": 12,
+          "msg": "Annex Arena."
+        },
+        {
           "x": 6,
           "y": 11,
           "dir": "up",
@@ -304,13 +322,42 @@
           "msg": "Coach's Office."
         },
         {
+          "x": 0,
+          "y": 12,
+          "dir": "left",
+          "to": "lakeshore",
+          "tx": 54,
+          "ty": 8,
+          "msg": "Lakeshore Path."
+        },
+        {
+          "x": 27,
+          "y": 12,
+          "dir": "right",
+          "to": "downtown",
+          "tx": 1,
+          "ty": 7,
+          "msg": "State Street."
+        },
+        {
+          "x": 13,
+          "y": 17,
+          "dir": "down",
+          "to": "lakeshore",
+          "tx": 54,
+          "ty": 8,
+          "msg": "Lakeshore Path.",
+          "worldPlane": false
+        },
+        {
           "x": 14,
           "y": 17,
           "dir": "down",
           "to": "lakeshore",
           "tx": 54,
-          "ty": 7,
-          "msg": "Route 1."
+          "ty": 8,
+          "msg": "Lakeshore Path.",
+          "worldPlane": false
         }
       ],
       "interactions": [
@@ -333,9 +380,8 @@
         }
       ],
       "signs": {
-        "13,7": "CAMP RANDALL - The tunnel stays closed until the season is finished.",
-        "14,7": "CAMP RANDALL - The tunnel stays closed until the season is finished.",
-        "15,7": "CAMP RANDALL - The tunnel stays closed until the season is finished."
+        "13,7": "ANNEX ARENA - Neutral Badge varsity dual.",
+        "14,7": "ANNEX ARENA - Neutral Badge varsity dual."
       },
       "npcs": [
         {
@@ -343,14 +389,14 @@
           "y": 13,
           "frame": 1,
           "anim": "npc-idle-left",
-          "dialogue": "Teammate: Route 1 starts south. Everything else begins in these two rooms.",
+          "dialogue": "Teammate: Lakeshore runs west, State Street runs east, and the Annex is through the stadium tunnel.",
           "look": "red"
         }
       ],
       "manifestRuntime": "camp-randall-objects-v1"
     },
     "studyhall": {
-      "width": 18,
+      "width": 19,
       "height": 12,
       "start": {
         "x": 9,
@@ -361,47 +407,22 @@
       "cameraZoom": 1.25,
       "ground": "camp-office",
       "tiles": [
-        "##################",
-        "##################",
-        "#.....#####.######",
-        "#.....#####......#",
-        "#.....#####......#",
-        "#.......#........#",
-        "#.......#........#",
-        "##...............#",
-        "##...............#",
-        "#................#",
-        "#.......#.#......#",
-        "#########E########"
+        "###################",
+        "###################",
+        "#...........#######",
+        "#.....#############",
+        "#.....######.######",
+        "#.....######......#",
+        "#.......###.......#",
+        "##......###.......#",
+        "##......###.......#",
+        "##................#",
+        "##......#.#.......#",
+        "#########E#########"
       ],
       "paths": [],
       "lowerDecor": [],
-      "upperDecor": [
-        {
-          "texture": "camp_studyhall_coach_desk_upper",
-          "x": 6,
-          "y": 1,
-          "depthY": 4,
-          "source": "manifestObject",
-          "owner": "coach_desk"
-        },
-        {
-          "texture": "camp_studyhall_plant_sw_upper",
-          "x": 1,
-          "y": 6,
-          "depthY": 8,
-          "source": "manifestObject",
-          "owner": "plant_sw"
-        },
-        {
-          "texture": "camp_studyhall_exit_door_frame_upper",
-          "x": 8,
-          "y": 9,
-          "depthY": 10,
-          "source": "manifestObject",
-          "owner": "exit_door_frame"
-        }
-      ],
+      "upperDecor": [],
       "tileRuntime": "camp-randall-v1",
       "exits": [
         {

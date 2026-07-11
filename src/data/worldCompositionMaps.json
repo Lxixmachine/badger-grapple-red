@@ -1,0 +1,560 @@
+{
+  "version": 1,
+  "tileSize": 16,
+  "areas": {
+    "lakeshore": {
+      "width": 56,
+      "height": 14,
+      "start": {
+        "x": 54,
+        "y": 8
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "########################################################",
+        "########################################################",
+        "############################...#########################",
+        "############################...#########################",
+        "......gggggg.##.gggggg.##........###....gggggg.##...##..",
+        "......gggggg.##.gggggg.##..#.#.#.###....gggggg.##...##..",
+        "......gggggg.##.gggggg.##........###....gggggg.##...##..",
+        "......gggggg###.gggggg###........###....gggggg.###......",
+        "E......................................................E",
+        "........................................................",
+        "........................................................",
+        "########################################################",
+        "########################################################",
+        "########################################################"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 55,
+          "y": 8,
+          "dir": "right",
+          "to": "campus",
+          "tx": 1,
+          "ty": 12,
+          "msg": "Camp Randall."
+        },
+        {
+          "x": 0,
+          "y": 8,
+          "dir": "left",
+          "to": "river",
+          "tx": 46,
+          "ty": 8,
+          "msg": "Picnic Point."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "HIDDEN_SHORE",
+          "tiles": [
+            [
+              29,
+              5
+            ]
+          ]
+        }
+      ],
+      "signs": {
+        "34,7": "BOATHOUSE - Locked for crew season. Rowers only.",
+        "54,7": "LAKESHORE PATH - Picnic Point lies west along Mendota."
+      },
+      "npcs": [
+        {
+          "x": 25,
+          "y": 9,
+          "frame": 4,
+          "anim": "npc-idle-left",
+          "dialogue": "Jogger: Every morning along Mendota. The open mats draw wrestlers from all over campus.",
+          "look": "red",
+          "route": [
+            [
+              25,
+              9
+            ],
+            [
+              26,
+              9
+            ],
+            [
+              26,
+              10
+            ],
+            [
+              25,
+              10
+            ]
+          ]
+        }
+      ],
+      "allowEmptyNpcs": false,
+      "manifestRuntime": "world-full-composition-v1"
+    },
+    "river": {
+      "width": 48,
+      "height": 14,
+      "start": {
+        "x": 46,
+        "y": 8
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "################################################",
+        "################################################",
+        "################################################",
+        "##.###########...gggggg########.gggggg.#######..",
+        "##.###########...gggggg########.gggggg.#######..",
+        "##.###########...gggggg########.gggggg.#######..",
+        "##.####..........gggggg########.gggggg.#######..",
+        "##.####..........gggggg.........gggggg..........",
+        "##.####........................................E",
+        "##.####..#####..........########................",
+        "##.......#####..........########................",
+        "################################################",
+        "################################################",
+        "################################################"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 47,
+          "y": 8,
+          "dir": "right",
+          "to": "lakeshore",
+          "tx": 1,
+          "ty": 8,
+          "msg": "Lakeshore Path."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "HIDDEN_EMBER",
+          "tiles": [
+            [
+              6,
+              9
+            ]
+          ]
+        }
+      ],
+      "signs": {
+        "46,7": "PICNIC POINT - Mendota on both shores. Fire circle at the tip."
+      },
+      "npcs": [
+        {
+          "x": 43,
+          "y": 8,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.",
+          "look": "gray",
+          "route": null
+        }
+      ],
+      "allowEmptyNpcs": false,
+      "manifestRuntime": "world-full-composition-v1"
+    },
+    "downtown": {
+      "width": 28,
+      "height": 14,
+      "start": {
+        "x": 1,
+        "y": 7
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "############################",
+        "..##E.##E.##..##.E..##.#####",
+        ".......................#####",
+        "E......................#####",
+        ".......................#####",
+        "...##....##....##...##.#####",
+        "############################",
+        "############################",
+        "############################",
+        "############################"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 0,
+          "y": 7,
+          "dir": "left",
+          "to": "campus",
+          "tx": 26,
+          "ty": 12,
+          "msg": "Camp Randall."
+        },
+        {
+          "x": 4,
+          "y": 5,
+          "dir": "up",
+          "to": "shop",
+          "tx": 10,
+          "ty": 10,
+          "msg": "Bucky's Locker Room."
+        },
+        {
+          "x": 8,
+          "y": 5,
+          "dir": "up",
+          "to": "recovery",
+          "tx": 10,
+          "ty": 10,
+          "msg": "Trainer's Room."
+        },
+        {
+          "x": 17,
+          "y": 5,
+          "dir": "up",
+          "to": "championship",
+          "tx": 14,
+          "ty": 12,
+          "msg": "The Kohl Center.",
+          "gate": [
+            "Neutral Badge",
+            "Scramble Badge"
+          ]
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "CAPITOL",
+          "rect": [
+            24,
+            4,
+            27,
+            5
+          ]
+        }
+      ],
+      "signs": {
+        "3,5": "BUCKY'S LOCKER ROOM - Team gear and supplies.",
+        "7,5": "TRAINER'S ROOM - Recovery and lineup care.",
+        "18,5": "KOHL CENTER - Big Ten Championship. Badge holders only.",
+        "24,5": "CAPITOL SQUARE - State Street ends at the dome."
+      },
+      "npcs": [
+        {
+          "x": 7,
+          "y": 8,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Shopper: The familiar doors are easy to find. Everything else on State Street has its own story.",
+          "look": "purple",
+          "route": [
+            [
+              7,
+              8
+            ],
+            [
+              8,
+              8
+            ],
+            [
+              8,
+              9
+            ],
+            [
+              7,
+              9
+            ]
+          ]
+        },
+        {
+          "x": 22,
+          "y": 8,
+          "frame": 10,
+          "anim": "npc-idle-up",
+          "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.",
+          "look": "green",
+          "route": null
+        }
+      ],
+      "allowEmptyNpcs": false,
+      "manifestRuntime": "world-full-composition-v1"
+    },
+    "conference": {
+      "width": 29,
+      "height": 14,
+      "start": {
+        "x": 14,
+        "y": 12
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "#############################",
+        "#############################",
+        "#####........###........#####",
+        "#####........###........#####",
+        "#####...................#####",
+        "######.................######",
+        "######.................######",
+        "######.................######",
+        "######.................######",
+        "######.................######",
+        "######.................######",
+        "#####...................#####",
+        "##.........................##",
+        "##############E##############"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 14,
+          "y": 13,
+          "dir": "down",
+          "to": "campus",
+          "tx": 14,
+          "ty": 7,
+          "msg": "Camp Randall."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "TROPHY",
+          "tiles": [
+            [
+              14,
+              3
+            ]
+          ]
+        }
+      ],
+      "signs": {},
+      "npcs": [],
+      "allowEmptyNpcs": true,
+      "manifestRuntime": "world-full-composition-v1"
+    },
+    "championship": {
+      "width": 29,
+      "height": 14,
+      "start": {
+        "x": 14,
+        "y": 12
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "#############################",
+        "#############################",
+        "#############################",
+        "#...........#####.........###",
+        "#...........................#",
+        "#...........................#",
+        "######......................#",
+        "######......................#",
+        "######......................#",
+        "#...........................#",
+        "#...........................#",
+        "#...#####...........#####...#",
+        "#...........................#",
+        "##############E##############"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 14,
+          "y": 13,
+          "dir": "down",
+          "to": "downtown",
+          "tx": 17,
+          "ty": 6,
+          "msg": "State Street."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "TOURNEY",
+          "tiles": [
+            [
+              3,
+              5
+            ]
+          ]
+        },
+        {
+          "kind": "NATIONALS",
+          "tiles": [
+            [
+              27,
+              3
+            ]
+          ]
+        }
+      ],
+      "signs": {},
+      "npcs": [],
+      "allowEmptyNpcs": true,
+      "manifestRuntime": "world-full-composition-v1"
+    },
+    "shop": {
+      "width": 21,
+      "height": 12,
+      "start": {
+        "x": 10,
+        "y": 10
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "#####################",
+        "#####################",
+        "#####################",
+        "#####################",
+        "#####################",
+        "##................###",
+        "##................###",
+        "##..####.....####..##",
+        "##..####.....####..##",
+        "##..####.....####..##",
+        "##.................##",
+        "##########E##########"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 10,
+          "y": 11,
+          "dir": "down",
+          "to": "downtown",
+          "tx": 4,
+          "ty": 6,
+          "msg": "State Street."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "S",
+          "tiles": [
+            [
+              10,
+              4
+            ]
+          ]
+        }
+      ],
+      "signs": {},
+      "npcs": [
+        {
+          "x": 10,
+          "y": 4,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Equipment Manager: Same locker-room setup in every town. Stock up and get back on the road.",
+          "look": "red",
+          "route": null
+        }
+      ],
+      "allowEmptyNpcs": false,
+      "manifestRuntime": "world-full-composition-v1"
+    },
+    "recovery": {
+      "width": 21,
+      "height": 12,
+      "start": {
+        "x": 10,
+        "y": 10
+      },
+      "actorScale": 0.78,
+      "actorFootOffset": 16,
+      "cameraZoom": 1.25,
+      "ground": "full-composition",
+      "tiles": [
+        "#####################",
+        "#####################",
+        "#####################",
+        "#####################",
+        "###...#########....##",
+        "##.................##",
+        "##.................##",
+        "##.#####.....#####.##",
+        "##.#####.....#####.##",
+        "##.#####.....#####.##",
+        "##.#####.....#####.##",
+        "##########E##########"
+      ],
+      "paths": [],
+      "lowerDecor": [],
+      "upperDecor": [],
+      "bakedComposition": true,
+      "exits": [
+        {
+          "x": 10,
+          "y": 11,
+          "dir": "down",
+          "to": "downtown",
+          "tx": 8,
+          "ty": 6,
+          "msg": "State Street."
+        }
+      ],
+      "interactions": [
+        {
+          "kind": "R",
+          "tiles": [
+            [
+              10,
+              4
+            ]
+          ]
+        }
+      ],
+      "signs": {},
+      "npcs": [
+        {
+          "x": 10,
+          "y": 4,
+          "frame": 1,
+          "anim": "npc-idle-down",
+          "dialogue": "Athletic Trainer: I can restore the whole lineup. You will find a Trainer's Room in every town after home.",
+          "look": "green",
+          "route": null
+        }
+      ],
+      "allowEmptyNpcs": false,
+      "manifestRuntime": "world-full-composition-v1"
+    }
+  }
+}

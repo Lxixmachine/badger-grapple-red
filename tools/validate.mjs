@@ -225,8 +225,77 @@ for(const [aid,spec] of Object.entries(manifest.areas)){
   for(const [x,y] of spec.walls.exitCells||[])expected[y][x]='E';
   expected.forEach((row,y)=>{if(row.join('')!==map.tiles[y])errs.push(`manifest area ${aid}: collision row ${y} was not generated from object footprints`);});
 }
+
+// Full-composition world maps use the same FireRed-style contract as Camp:
+// one authored manifest owns pixels, metatile behavior, warps, interactions,
+// and service placement. Generated files may never become an alternate source.
+const worldManifestPath=fileURLToPath(new URL('../art/imagegen/world_composition_manifest.json',import.meta.url));
+const worldManifest=JSON.parse(readFileSync(worldManifestPath,'utf8'));
+const worldBuildPath=fileURLToPath(new URL('../src/data/worldCompositionBuild.json',import.meta.url));
+if(!existsSync(worldBuildPath))errs.push('World composition build record is missing; run npm run build:world-compositions');
+else{
+  const build=JSON.parse(readFileSync(worldBuildPath,'utf8'));
+  if(build.version!==1)errs.push('World composition build version is unsupported');
+  for(const [path,expected] of Object.entries(build.inputSha256||{})){
+    const source=fileURLToPath(new URL(`../${path}`,import.meta.url));
+    if(!existsSync(source))errs.push(`World composition input ${path} is missing`);
+    else{
+      const bytes=readFileSync(source);
+      const canonical=path.endsWith('.json')?bytes.toString('utf8').replace(/\r\n/g,'\n').replace(/\r/g,'\n'):bytes;
+      const actual=createHash('sha256').update(canonical).digest('hex');
+      if(actual!==expected)errs.push(`World composition input ${path} is stale; run npm run build:world-compositions`);
+    }
+  }
+  for(const [path,expected] of Object.entries(build.outputSha256||{})){
+    const output=fileURLToPath(new URL(`../${path}`,import.meta.url));
+    if(!existsSync(output))errs.push(`World composition output ${path} is missing; run npm run build:world-compositions`);
+    else if(createHash('sha256').update(readFileSync(output)).digest('hex')!==expected)errs.push(`World composition output ${path} is stale; run npm run build:world-compositions`);
+  }
+}
+for(const [aid,spec] of Object.entries(worldManifest.areas)){
+  const map=LAYERED_MAPS[aid];
+  if(!map){errs.push(`world composition ${aid}: missing runtime map`);continue;}
+  if(map.manifestRuntime!=='world-full-composition-v1'||!map.bakedComposition)errs.push(`world composition ${aid}: runtime ownership marker is missing`);
+  if(map.width!==spec.width||map.height!==spec.height)errs.push(`world composition ${aid}: dimensions diverge`);
+  if((map.upperDecor||[]).length)errs.push(`world composition ${aid}: full painting must not use rectangular upper patches`);
+  const expected=Array.from({length:spec.height},()=>Array(spec.width).fill('.'));
+  for(const rect of spec.solidRects||[])fillRect(expected,rect,'#');
+  for(const rect of spec.openRects||[])fillRect(expected,rect,'.');
+  for(const rect of spec.grassRects||[])fillRect(expected,rect,'g');
+  for(const object of spec.objects||[])for(const rect of object.footprints||[object.footprint])if(rect)fillRect(expected,rect,'#');
+  for(const [x,y] of spec.exitCells||[])expected[y][x]='E';
+  expected.forEach((row,y)=>{if(row.join('')!==map.tiles[y])errs.push(`world composition ${aid}: behavior row ${y} was not generated from the manifest`);});
+  for(const exit of spec.exits||[])if(!spec.exitCells.some(([x,y])=>x===exit.x&&y===exit.y))errs.push(`world composition ${aid}: exit (${exit.x},${exit.y}) lacks an authored exit cell`);
+  for(const interaction of spec.interactions||[]){
+    for(const [x,y] of interaction.tiles||[])if(x<0||x>=spec.width||y<0||y>=spec.height)errs.push(`world composition ${aid}: ${interaction.kind} interaction (${x},${y}) is out of bounds`);
+    if(interaction.rect){const [x1,y1,x2,y2]=interaction.rect;if(x1<0||y1<0||x2>=spec.width||y2>=spec.height)errs.push(`world composition ${aid}: ${interaction.kind} interaction rect is out of bounds`);}
+  }
+  const output=fileURLToPath(new URL(`../public/assets/ui/area_${aid}.png`,import.meta.url));
+  if(existsSync(output)){
+    const png=readFileSync(output),width=png.readUInt32BE(16),height=png.readUInt32BE(20);
+    if(width!==spec.width*TILE||height!==spec.height*TILE)errs.push(`world composition ${aid}: image is ${width}x${height}, expected ${spec.width*TILE}x${spec.height*TILE}`);
+  }
+}
+const servicePolicy=worldManifest.townServicePolicy;
+for(const [town,services] of Object.entries(servicePolicy?.towns||{})){
+  if(!AREAS[town]){errs.push(`town service policy: missing town '${town}'`);continue;}
+  for(const role of servicePolicy.requiredRoles||[]){
+    const service=services[role];
+    if(!service||!AREAS[service]){errs.push(`town service policy: ${town} has no ${role} area`);continue;}
+    if(!AREAS[town].exits.some(exit=>exit.to===service))errs.push(`town service policy: ${town} has no visible door to ${role} '${service}'`);
+    if(!AREAS[service].exits.some(exit=>exit.to===town))errs.push(`town service policy: ${role} '${service}' does not return to ${town}`);
+  }
+  if(services.gym){
+    if(!AREAS[services.gym])errs.push(`town service policy: ${town} gym '${services.gym}' is missing`);
+    else{
+      if(!AREAS[town].exits.some(exit=>exit.to===services.gym))errs.push(`town service policy: ${town} has no visible gym door to '${services.gym}'`);
+      if(!AREAS[services.gym].exits.some(exit=>exit.to===town))errs.push(`town service policy: gym '${services.gym}' does not return to ${town}`);
+    }
+  }
+}
 // Full-composition rooms intentionally preserve unique continuous pixels while
-// behavior remains cell-owned. One 512x512 atlas is the hard runtime ceiling.
-if(campStats.tileCount>1024)errs.push(`Camp Randall runtime has ${campStats.tileCount} tiles; full-composition atlas budget is 1024`);
+// behavior remains cell-owned. A 32-column atlas may grow vertically, but the
+// unique-tile budget remains bounded so full paintings do not explode memory.
+if(campStats.tileCount>1280)errs.push(`Camp Randall runtime has ${campStats.tileCount} tiles; full-composition atlas budget is 1280`);
 console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}, tile runtime v${campStats.version}/${campStats.tileCount} tiles.`);
 if(errs.length)process.exit(1);

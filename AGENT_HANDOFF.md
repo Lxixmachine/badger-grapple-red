@@ -1,5 +1,78 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.62 full-composition world redesign)
+
+Tony stopped the broad rollout to clarify the correct scope: Camp Randall is
+the successful exterior pilot and should mostly remain; Coach's Office needed
+the same treatment as the locker/wrestling rooms; every other live town/route
+needed a full redesign against FireRed; and every developed town after home
+must provide a familiar Trainer's Room (recovery), Bucky's Locker Room (shop),
+and usually a distinctive gym/arena.
+
+Before implementation, the FireRed source was audited directly at
+`pret/pokefirered` commit `df4449a`. Relevant structural findings:
+
+- GBA maps are 16x16 metatile layouts, and metatile attributes carry behavior,
+  terrain, encounter, and layer semantics. Map collision/warps are authored
+  against those cells rather than guessed from a backdrop.
+- Town-to-route continuity is explicit in map connections and offsets. The live
+  outdoor graph must therefore remain a single contradiction-free plane.
+- FireRed reuses one 15x10 Pokemon Center layout and one 11x9 Mart layout across
+  cities, while each city supplies a distinct secondary tileset, landmark
+  arrangement, NPC/event set, and gym. Familiar services amplify town identity;
+  they do not replace it.
+- Exterior doors are explicit warp events at visible thresholds. Standard
+  interiors may reuse art/layout but each town owns a local map instance/return.
+
+v21.62 applies that model without giving up the richer flat art:
+
+- New `world_composition_manifest.json` is the executable source for seven full
+  paintings: Lakeshore Path, Picnic Point, State Street, Annex Arena, Kohl
+  Center, Bucky's Locker Room, and Trainer's Room. Source PNGs and exact prompt
+  files are committed beside it.
+- `build_world_compositions.py` crops each painting to an exact 16px-cell map,
+  generates behavior rows from complete solid/open/mat/exit footprints, writes
+  ownership overlays, and records input/output SHA-256 provenance. These maps
+  emit zero `upperDecor`; no rectangular backdrop patch may cover an actor.
+- Coach's Office is now a coherent 19x12 full composition with a single centered
+  x9 door. Desk, visitor chair, cabinets, and plants own complete cells; it also
+  emits zero upper patches.
+- Camp Randall's approved composition remains intact. It now has functional west
+  Lakeshore and east State Street paths, both visible south-gate lanes, and both
+  cells of the stadium tunnel enter Annex Arena. The two cardinal connections
+  are reciprocal; the legacy south gate is marked `worldPlane:false` so it does
+  not contradict geography.
+- Outdoor placement is conflict-free: Picnic Point (-104,4), Lakeshore (-56,4),
+  Camp Randall (0,0), and State Street (28,5). West grows the team; east pursues
+  the title.
+- State Street's storefront row now has aligned one-cell doors to Bucky's Locker
+  Room at x4, Trainer's Room at x8, and the badge-gated Kohl Center at x17. Both
+  service interiors return to their exact town door and use a shared, familiar
+  counter/center-runner layout language. The manifest's `townServicePolicy`
+  makes this a validator-enforced expansion rule.
+- Route trainers were re-seated on visible mats; the Funk Doctor stands on open
+  ground beside the fire circle; hidden pier/fire-circle items, route NPCs, and
+  signs were preserved in the new compositions. The tournament official now
+  stands on a reachable cell behind the painted bracket desk.
+- The old WP1 terrain builder explicitly skips all source-owned Camp/world maps,
+  preventing a legacy command from reverting them to procedural tile art.
+- v21.62 validation rejects stale source art/prompts, stale output images,
+  manifest/behavior drift, wrong dimensions, missing exit ownership, upper
+  patches on full paintings, contradictory outdoor placement, and missing town
+  services/returns.
+
+Final release gate: `npm run check` passes deterministic rebuilds, validator,
+balance, map lint, Vite production build, and all 15 Chromium gameplay tests.
+Map lint reports 0% grid exposure, 94-100% variety, no dead screens, and 47-48
+colors on all 11 areas. Phone QA covered every redesigned map and recurring
+service with no browser warnings, overlaps, floating actors, or occlusion masks.
+
+Do not replace these paintings with procedural visible tiles. The reusable unit
+is the behavior/metatile contract, not a repeated-looking bitmap. Future towns
+should create local service map instances from the same shop/recovery composition
+and give the exterior/gym its own identity, then register that town in
+`townServicePolicy` so the compiler enforces both familiar anchors.
+
 ## Latest Codex Turn (v21.61 grid-native room correction)
 
 Tony reported collision and occlusion faults in the v21.60 hybrid pilot. The

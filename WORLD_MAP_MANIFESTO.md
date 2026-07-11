@@ -71,6 +71,14 @@ Studying the full FireRed overworld against ours exposed three failures:
    two or three secondary anchors, and quiet connective space. An area may have
    multiple landmarks as the camera reveals them; equal visual weight is the
    failure to avoid.
+7. **Familiar services expose the x-factor:** every developed town after the
+   home town has a Trainer's Room (recovery), Bucky's Locker Room (shop), and
+   normally a gym/arena. Reuse the service composition and interaction grammar
+   so the player recognizes them immediately, but give each town a local map
+   instance/return warp. The town's landmark, street plan, palette, residents,
+   and gym are the unique layer. Register every new town in
+   `world_composition_manifest.json` under `townServicePolicy`; validation must
+   reject a town missing either familiar service.
 
 ## 5. WP-WORLD: the migration work package (tested spec)
 

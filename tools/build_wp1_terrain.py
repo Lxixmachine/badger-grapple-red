@@ -550,6 +550,11 @@ def load_props():
 import random
 
 OUTDOOR = {"campus", "lakeshore", "river", "downtown"}
+SOURCE_OWNED_AREAS = {
+    "fieldhouse", "wrestlingroom", "campus", "studyhall",
+    "lakeshore", "river", "downtown", "conference",
+    "championship", "shop", "recovery",
+}
 
 def grid(area):
     return [list(row) for row in MAPS[area]]
@@ -933,6 +938,8 @@ def main():
     save_layered_textures(tiles, props)
     save_water_animation(tiles)
     for area in MAPS:
+        if area in SOURCE_OWNED_AREAS:
+            continue
         save_if_changed(compose(area, tiles, props), UI_OUT / f"area_{area}.png")
 
 
