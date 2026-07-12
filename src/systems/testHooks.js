@@ -74,6 +74,17 @@ export function installTestHooks(game, routeVirtualButton) {
             footprint: definition?.footprint ?? []
           };
         })
+      } : null,
+      atlas: scene.atlasVersion ? {
+        version: scene.atlasVersion,
+        mode: scene.mode,
+        selectedMap: scene.mode === 'region' ? scene.selectedIndex : null,
+        mapId: scene.currentMapId ?? null,
+        interiorId: scene.currentInteriorId ?? null,
+        overlayMode: scene.overlayMode,
+        mapWidth: scene.mapWidth ?? null,
+        mapHeight: scene.mapHeight ?? null,
+        returnDepth: scene.returnStack?.length ?? 0
       } : null
     };
   };

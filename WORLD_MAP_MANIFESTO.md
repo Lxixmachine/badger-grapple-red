@@ -55,8 +55,8 @@ travel transitions. The Bus Pass does not add physical map connections.
 - Recruiting remains locked on the first outbound trip.
 - Carries the optional early Rex rematch, recruiting lesson, and a denser
   trainer/open-mat approach before town.
-- Does not exist in the production map set yet. It must be co-designed with
-  Tony before art.
+- Its exact pre-art blockout now exists in the Season One atlas and must be
+  reviewed with Tony before art.
 
 ### Field House Town
 
@@ -181,7 +181,7 @@ the town's unique X-factor more legible.
 
 ### 3.8 Landmark hierarchy
 
-Each 16x11 outdoor camera window has one primary focal landmark, no more than
+Each 15x10 outdoor camera window has one primary focal landmark, no more than
 two or three secondary anchors, and quiet connective space. Whole-map beauty
 does not excuse a confused camera window.
 
@@ -198,10 +198,10 @@ never covers them, and ordinary ground never impersonates them.
 
 ## 4. Camera and scale
 
-The logical cell remains 16px. Outdoor maps are composed and reviewed through
-a 16x11-cell camera window, matching the cadence of the 15x10 GBA and 16x12 DS
-field views while preserving Badger's 320x224 higher-resolution UI. The default
-world zoom remains 1.25 unless an approved room-specific reason overrides it.
+The production cell is 32px. Outdoor maps are composed and reviewed through an
+exact 15x10-cell camera on a 480x320 canvas. Actors are 32x64 with one 32x32
+foot/collision owner. The default world zoom is 1; CSS scales the whole 3:2
+canvas without changing its internal geometry.
 
 Actors, doors, furniture, and buildings are judged inside this camera window,
 not from an area-wide thumbnail.
@@ -222,13 +222,15 @@ manifest and original art pass.
 
 ## 6. Production status
 
-- Camp Randall: approved Stages 1-4 mockup; successful visual direction; live
-  geometry must be brought back to the one-exit story contract.
-- R1: next co-design target.
-- Field House Town: next town mockup after or alongside R1.
-- All other production maps: narrative position locked, map design and final
-  art not approved.
-- v21.62 old-world compositions: playable migration placeholders only.
+- v21.64 contains an executable atlas for all 12 Season One exteriors and all
+  12 planned interiors at the approved 32px scale.
+- The Madison maps occupy one exact world plane with reciprocal two-cell
+  connections. Airport and St. Louis are explicit transition planes.
+- Every area has dimensions, start, paths, blockers, structures, doors, event
+  anchors, and 15x10 camera-review windows.
+- All layouts remain pre-art drafts pending Tony's map-by-map review. Kohl
+  Center's non-arena X-factor is still an explicit open decision.
+- v21.62 old-world compositions remain playable migration references only.
 
 No further final map art should be generated until the relevant node is marked
 `readyForFinalArt: true` in `src/data/seasonOneRegion.json` after Tony approves

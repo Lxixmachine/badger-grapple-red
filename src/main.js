@@ -7,6 +7,7 @@ import {ScoutScene} from './scenes/ScoutScene.js';
 import {BattleScene} from './scenes/BattleScene.js';
 import {MenuScene} from './scenes/MenuScene.js';
 import {VisualSliceScene} from './scenes/VisualSliceScene.js';
+import {WorldAtlasScene} from './scenes/WorldAtlasScene.js';
 import {installTestHooks} from './systems/testHooks.js';
 
 const fail = msg => {
@@ -25,17 +26,21 @@ if (!window.Phaser) {
 const Phaser = window.Phaser;
 const params = new URLSearchParams(window.location.search);
 const sliceMode = params.has('slice');
-const width = sliceMode ? 480 : 320;
-const height = sliceMode ? 320 : 224;
-const scenes = sliceMode
-  ? [VisualSliceScene]
-  : [BootScene, TitleScene, IntroScene, StarterScene, OverworldScene, ScoutScene, BattleScene, MenuScene];
+const atlasMode = params.has('atlas');
+const modernMode = sliceMode || atlasMode;
+const width = modernMode ? 480 : 320;
+const height = modernMode ? 320 : 224;
+const scenes = atlasMode
+  ? [WorldAtlasScene]
+  : sliceMode
+    ? [VisualSliceScene]
+    : [BootScene, TitleScene, IntroScene, StarterScene, OverworldScene, ScoutScene, BattleScene, MenuScene];
 
-if (sliceMode) {
+if (modernMode) {
   document.body.classList.add('slice-mode');
-  document.title = 'Badger Grapple Red - Scale Slice';
+  document.title = atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
-  if (note) note.textContent = 'v21.63 Scale Slice';
+  if (note) note.textContent = atlasMode ? 'v21.64 World Atlas' : 'v21.63 Scale Slice';
 }
 
 const config = {
@@ -63,7 +68,9 @@ let game;
 try {
   game = new Phaser.Game(config);
   window.badgerGame = game;
-  window.BADGER_VERSION = sliceMode ? '21.63-scale-slice' : '21.62-world-compositions';
+  window.BADGER_VERSION = atlasMode
+    ? '21.64-world-atlas'
+    : sliceMode ? '21.63-scale-slice' : '21.62-world-compositions';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -71,6 +78,7 @@ try {
 
 function routeVirtualButton(key, phase = 'press') {
   const priority = [
+    'WorldAtlasScene',
     'VisualSliceScene',
     'MenuScene',
     'BattleScene',
@@ -112,7 +120,7 @@ document.querySelectorAll('[data-key]').forEach(button => {
     activePointer = event.pointerId;
     button.setPointerCapture?.(event.pointerId);
     routeVirtualButton(key, 'down');
-    if (!sliceMode) {
+    if (!modernMode) {
       repeat = window.setInterval(() => routeVirtualButton(key, 'repeat'), 140);
     }
   };

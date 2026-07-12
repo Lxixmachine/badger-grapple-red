@@ -1,6 +1,7 @@
 # Visual Slice Contract
 
-Status: approved scale implemented for review in v21.63.
+Status: approved scale proven in v21.63 and expanded to the full pre-art atlas
+in v21.64.
 
 The scale slice at `?slice=1` is the production reference for the new world
 runtime. The v21.62 game remains available at the ordinary URL while migration
@@ -62,5 +63,12 @@ separate 15x10 Team Locker Room. Automated tests verify native resolution,
 camera cell count, doorway entry/return, neighboring facade collision, depth
 on both sides of the trophy case, and hold-to-walk browser behavior.
 
-The slice is intentionally isolated. It proves the replacement runtime before
-story maps, battle systems, saves, or the existing world are migrated.
+`WorldAtlasScene` applies the same contract to 12 exterior maps and 12
+interiors. It adds exact region coordinates, reciprocal edge thresholds,
+camera-review windows, canonical service footprints, event anchors, and direct
+exterior/interior review links. `tools/validate_region_layouts.mjs` validates
+the manifest independently of rendering.
+
+The slice and atlas are intentionally isolated. They prove the replacement
+runtime and approve layouts before story systems, saves, final art, or the
+existing world are migrated.

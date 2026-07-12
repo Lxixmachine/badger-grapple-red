@@ -6,6 +6,7 @@ import {createHash} from 'node:crypto';
 import {fileURLToPath} from 'node:url';
 import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
 import {CAMP_TILE_RUNTIME_VERSION,campTilemap,campRuntimeStats,campRuntimeTile} from '../src/data/campRandallTilemaps.js';
+import {validateSeasonOneLayouts} from './validate_region_layouts.mjs';
 
 let errs=[];
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
@@ -14,10 +15,13 @@ const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Num
 // The current runtime graph remains playable legacy data while maps are rebuilt.
 const seasonRegionPath=fileURLToPath(new URL('../src/data/seasonOneRegion.json',import.meta.url));
 const seasonRegion=JSON.parse(readFileSync(seasonRegionPath,'utf8'));
-if(seasonRegion.schemaVersion!==1)errs.push('Season One region schema version is unsupported');
+const seasonLayoutsPath=fileURLToPath(new URL('../src/data/seasonOneLayouts.json',import.meta.url));
+const seasonLayouts=JSON.parse(readFileSync(seasonLayoutsPath,'utf8'));
+if(seasonRegion.schemaVersion!==2)errs.push('Season One region schema version is unsupported');
 if(seasonRegion.status!=='design-authority')errs.push('Season One region must be marked design-authority');
-if(seasonRegion.tileSize!==16)errs.push('Season One region must retain the 16px logical cell');
-if(seasonRegion.camera?.outdoorTilesWide!==16||seasonRegion.camera?.outdoorTilesHigh!==11||seasonRegion.camera?.defaultWorldZoom!==1.25)errs.push('Season One outdoor camera contract must remain 16x11 cells at 1.25 zoom');
+if(seasonRegion.tileSize!==32)errs.push('Season One region must use the approved 32px gameplay cell');
+if(seasonRegion.camera?.outdoorTilesWide!==15||seasonRegion.camera?.outdoorTilesHigh!==10||seasonRegion.camera?.canvasWidth!==480||seasonRegion.camera?.canvasHeight!==320||seasonRegion.camera?.defaultWorldZoom!==1)errs.push('Season One outdoor camera contract must remain 15x10 cells at native 480x320');
+errs.push(...validateSeasonOneLayouts(seasonRegion,seasonLayouts));
 const seasonNodes=seasonRegion.nodes||{};
 const seasonNodeIds=Object.keys(seasonNodes);
 const requiredSeasonNodes=['camp_randall','r1','field_house','lakeshore_path','picnic_point','state_street','bascom_hill','capitol_square','monona_shore','kohl_center','airport','st_louis'];
@@ -349,5 +353,5 @@ for(const [town,services] of Object.entries(servicePolicy?.towns||{})){
 // behavior remains cell-owned. A 32-column atlas may grow vertically, but the
 // unique-tile budget remains bounded so full paintings do not explode memory.
 if(campStats.tileCount>1280)errs.push(`Camp Randall runtime has ${campStats.tileCount} tiles; full-composition atlas budget is 1280`);
-console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} areas, ${Object.keys(TRAINERS).length} trainers. Default ${WORLD_META.width}x${WORLD_META.height}, Camp Randall ${areaDimensions('campus').width}x${areaDimensions('campus').height}@${WORLD_META.tileSize}, tile runtime v${campStats.version}/${campStats.tileCount} tiles.`);
+console.log(errs.length?errs.join('\n'):`ALL VALID - ${Object.keys(ROSTER).length} roster entries, ${Object.keys(MOVES).length} moves, ${Object.keys(AREAS).length} legacy areas, ${Object.keys(TRAINERS).length} trainers. Season atlas ${Object.keys(seasonLayouts.maps).length} exteriors/${Object.keys(seasonLayouts.interiors).length} interiors @${seasonLayouts.contract.cellSize}px; legacy Camp runtime v${campStats.version}/${campStats.tileCount} tiles.`);
 if(errs.length)process.exit(1);

@@ -1,14 +1,15 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "status": "design-authority",
-  "source": "GAME_VISION.md + SEASON_ONE_SYNOPSIS.md",
-  "tileSize": 16,
+  "source": "GAME_VISION.md + SEASON_ONE_SYNOPSIS.md + docs/VISUAL_SLICE_CONTRACT.md + docs/SEASON_ONE_LAYOUT_ATLAS.md",
+  "layoutSource": "src/data/seasonOneLayouts.json",
+  "tileSize": 32,
   "camera": {
-    "outdoorTilesWide": 16,
-    "outdoorTilesHigh": 11,
-    "canvasWidth": 320,
-    "canvasHeight": 224,
-    "defaultWorldZoom": 1.25
+    "outdoorTilesWide": 15,
+    "outdoorTilesHigh": 10,
+    "canvasWidth": 480,
+    "canvasHeight": 320,
+    "defaultWorldZoom": 1
   },
   "canonicalServices": {
     "trainer_room": {
@@ -37,6 +38,7 @@
       "displayName": "Camp Randall",
       "kind": "home_town",
       "runtimeAreaIds": ["campus", "fieldhouse", "wrestlingroom", "studyhall"],
+      "layoutId": "camp_randall",
       "services": [],
       "connections": ["r1"],
       "transitions": [
@@ -48,22 +50,26 @@
         "entryGate": "season_complete"
       },
       "designStatus": "approved_mockup",
-      "readyForFinalArt": true
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_scale_review"
     },
     "r1": {
       "displayName": "R1",
       "kind": "route",
       "runtimeAreaIds": [],
+      "layoutId": "r1",
       "services": [],
       "connections": ["camp_randall", "field_house"],
       "transitions": [],
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "field_house": {
       "displayName": "Field House Town",
       "kind": "town",
       "runtimeAreaIds": [],
+      "layoutId": "field_house",
       "services": ["trainer_room", "buckys_locker_room"],
       "connections": ["r1", "state_street", "lakeshore_path"],
       "transitions": [],
@@ -72,44 +78,52 @@
         "displayName": "Field House and Arch"
       },
       "credential": "field_house_badge",
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "lakeshore_path": {
       "displayName": "Lakeshore Path",
       "kind": "route",
       "runtimeAreaIds": ["lakeshore"],
+      "layoutId": "lakeshore_path",
       "services": [],
       "connections": ["field_house", "picnic_point"],
       "transitions": [],
-      "designStatus": "needs_redesign",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "picnic_point": {
       "displayName": "Picnic Point",
       "kind": "badge_venue",
       "runtimeAreaIds": ["river"],
+      "layoutId": "picnic_point",
       "services": [],
       "connections": ["lakeshore_path"],
       "transitions": [],
       "credential": "picnic_point_badge",
-      "designStatus": "needs_redesign",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "state_street": {
       "displayName": "State Street",
       "kind": "route",
       "runtimeAreaIds": ["downtown"],
+      "layoutId": "state_street",
       "services": [],
       "connections": ["field_house", "capitol_square", "bascom_hill"],
       "transitions": [],
-      "designStatus": "needs_redesign",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "bascom_hill": {
       "displayName": "Bascom Hill",
       "kind": "optional_venue",
       "runtimeAreaIds": [],
+      "layoutId": "bascom_hill",
       "services": [],
       "connections": ["state_street"],
       "transitions": [],
@@ -117,13 +131,15 @@
         "id": "bascom_hall",
         "displayName": "Bascom Hall"
       },
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "capitol_square": {
       "displayName": "Capitol Square",
       "kind": "town",
       "runtimeAreaIds": [],
+      "layoutId": "capitol_square",
       "services": ["trainer_room", "buckys_locker_room"],
       "connections": ["state_street", "monona_shore"],
       "transitions": [],
@@ -133,24 +149,28 @@
         "entryGate": "always"
       },
       "credential": "capitol_badge",
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "monona_shore": {
       "displayName": "Monona Shore",
       "kind": "route",
       "runtimeAreaIds": [],
+      "layoutId": "monona_shore",
       "services": [],
       "connections": ["capitol_square", "kohl_center"],
       "transitions": [],
       "travelGate": "kayak_voucher_redeemed",
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "kohl_center": {
       "displayName": "Kohl Center District",
       "kind": "town",
       "runtimeAreaIds": ["championship"],
+      "layoutId": "kohl_center",
       "services": ["trainer_room", "buckys_locker_room"],
       "connections": ["monona_shore"],
       "transitions": [
@@ -162,26 +182,30 @@
         "status": "tony_decision_required"
       },
       "credential": "kohl_badge",
-      "designStatus": "blocked_on_x_factor_and_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft_blocked_on_x_factor",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "airport": {
       "displayName": "Airport",
       "kind": "transition",
       "runtimeAreaIds": [],
+      "layoutId": "airport",
       "services": [],
       "connections": [],
       "transitions": [
         {"to": "st_louis", "type": "flight", "gate": "all_flight_credentials"}
       ],
       "travelGate": "all_flight_credentials",
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     },
     "st_louis": {
       "displayName": "St. Louis",
       "kind": "town",
       "runtimeAreaIds": [],
+      "layoutId": "st_louis",
       "services": ["trainer_room", "buckys_locker_room"],
       "connections": [],
       "transitions": [
@@ -192,8 +216,9 @@
         "displayName": "Gateway Arch",
         "entryGate": "nationals_complete"
       },
-      "designStatus": "needs_tony_blockout",
-      "readyForFinalArt": false
+      "designStatus": "layout_draft",
+      "readyForFinalArt": false,
+      "layoutStatus": "draft_for_tony_review"
     }
   },
   "credentials": {

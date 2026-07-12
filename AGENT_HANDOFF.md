@@ -1,5 +1,33 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.64 Season One layout atlas)
+
+The approved v21.63 scale contract is now a complete executable pre-art atlas,
+not just a Camp Randall slice. Open `?atlas=1` for the region overview, select
+an area with the D-pad, and press A to walk its blockout. SELECT cycles clean,
+ownership, and exact 15x10 camera-window overlays. Direct review routes use
+`?atlas=1&play=1&area=capitol_square` or
+`?atlas=1&interior=coach_office`.
+
+`src/data/seasonOneLayouts.json` owns 12 exterior packages and 12 interior
+packages at 32px cells on the 480x320/15x10 contract. It declares exact world
+coordinates, dimensions, spawns, paths, blockers, structure footprints, doors,
+events, reciprocal two-cell connections, and camera reviews. The first ten
+areas share one Madison plane; Airport and St. Louis are story-transition
+planes. All developed towns after Camp use the same canonical Trainer's Room
+and Bucky's Locker Room footprints and interiors.
+
+`tools/validate_region_layouts.mjs` proves bounds, reachability, service
+presence, canonical footprints, physical edge alignment, reciprocal metadata,
+camera dimensions, interior references, and pre-art status. Playwright covers
+native framing, map selection, edge travel, door return, and direct interior
+review. `docs/SEASON_ONE_LAYOUT_ATLAS.md` is the review guide.
+
+No layout is approved for final art yet. Kohl Center's non-arena town X-factor
+is deliberately unresolved. Next work is Tony's map-by-map approval, followed
+by shared terrain/service kit production and grid-native bespoke structures for
+approved areas only. Do not continue final art from v21.62 compositions.
+
 ## Latest Codex Turn (v21.63 approved scale vertical slice)
 
 Tony approved the purpose-built 2x faithful scale comparison, then directed
