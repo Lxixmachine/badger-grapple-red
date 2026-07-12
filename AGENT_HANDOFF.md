@@ -2385,8 +2385,9 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   slicing every exterior object into 32px structure metatiles. The build emits
   241 atlas visuals and behavior variants (`walkable`, `solid`, `warp`) for
   every structure visual.
-- Ground is no longer repainted as full-cell overlays. Brick, stone, and dirt
-  each compile 16 neighbor-aware transition variants over a pure grass layer.
+- Ground uses fixed full-cell Brick, Stone, and Dirt tiles over a pure grass
+  layer. Neighboring cells never mutate a painted tile. Any future edge,
+  corner, curb, or landing must be authored and selected explicitly.
 - Map Studio schema v2 exposes compact Structure families and draggable whole
   building Stamps. Collision and Door edits swap behavior variants of the same
   visual, so pixels and behavior cannot silently diverge.
@@ -2400,3 +2401,15 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   rendering for the Camp exterior. New towns should receive primary terrain
   families, a town-specific secondary structure kit, stamps, and metatile
   behavior before final placement.
+
+## Codex Ground Determinism Correction (v21.68)
+
+- Ground material names now map one-to-one to fixed 32px atlas visuals. The
+  renderer does not inspect neighboring cells or infer edge/corner variants.
+- Brick, Stone, and Dirt always fill their complete authored cells. Future
+  transitions are explicit palette tiles, never hidden auto-tiling behavior.
+- Camp doorway approaches begin on the cell south of each threshold. The
+  metatile compiler rejects any terrain path that overlaps a building or
+  landmark footprint.
+- Map Studio migrates old local drafts to layout revision 3 while preserving
+  cells the user explicitly repainted.

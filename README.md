@@ -6,7 +6,7 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ## Current Build
 
-- Version: 21.67 Camp Metatile Pilot
+- Version: 21.68 Deterministic Ground Tiles
 - Runtime: Phaser 3 + Vite
 - Canvas: 320x224 legacy game; 480x320 Season One world contract
 - Content: 11 legacy areas, 12 Season One exterior plans, 23 roster entries, 26 moves, and 7 trainers
@@ -15,7 +15,7 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 ## Map Studio
 
 `map-editor.html` is the visual authoring tool for the Camp Randall production
-pilot. Camp Randall now renders from neighbor-aware ground metatiles and
+pilot. Camp Randall now renders from deterministic full-cell ground tiles and
 behavior-owned structure metatiles. Whole buildings are editable stamps rather
 than indivisible pictures. The editor also provides exact door cells, event and
 camera editing, undo/redo, local drafts, Playtest, and validated JSON/PNG export. See

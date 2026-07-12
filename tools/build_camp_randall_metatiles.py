@@ -2,8 +2,8 @@
 
 The approved building drawings remain the visual source. They are sliced on the
 authoritative gameplay grid and stored as reusable metatiles; whole buildings
-survive only as convenience stamps. Terrain uses neighbor-aware variants so
-the editor and runtime never stack full-cell paint over baked path edges.
+survive only as convenience stamps. Each ground material compiles to one fixed,
+full-cell tile. Edge and corner art must be authored as explicit tiles.
 """
 
 from __future__ import annotations
@@ -12,7 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from PIL import Image, ImageChops
+from PIL import Image
 
 from build_camp_randall_production import CELL, draw_path_network
 
@@ -26,7 +26,6 @@ PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
 ATLAS_COLUMNS = 16
 MATERIALS = ("brick", "stone", "dirt")
-NEIGHBOR_BITS = {"up": 1, "right": 2, "down": 4, "left": 8}
 
 
 def load_json(path: Path) -> dict:
@@ -45,7 +44,7 @@ def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.exists():
         current = Image.open(path).convert(image.mode)
-        if current.size == image.size and ImageChops.difference(current, image).getbbox() is None:
+        if current.size == image.size and current.tobytes() == image.tobytes():
             return
     image.save(path, optimize=True)
 
@@ -88,30 +87,26 @@ def terrain_rows(layout: dict) -> list[list[str]]:
     return rows
 
 
-def path_variant(material: str, mask: int) -> Image.Image:
-    canvas = Image.new("RGBA", (CELL * 3, CELL * 3), (0, 0, 0, 0))
-    cells = {(1, 1)}
-    if mask & NEIGHBOR_BITS["up"]:
-        cells.add((1, 0))
-    if mask & NEIGHBOR_BITS["right"]:
-        cells.add((2, 1))
-    if mask & NEIGHBOR_BITS["down"]:
-        cells.add((1, 2))
-    if mask & NEIGHBOR_BITS["left"]:
-        cells.add((0, 1))
-    draw_path_network(canvas, cells, material)
-    return canvas.crop((CELL, CELL, CELL * 2, CELL * 2))
+def ground_tile(material: str) -> Image.Image:
+    canvas = Image.new("RGBA", (CELL, CELL), (0, 0, 0, 0))
+    draw_path_network(canvas, {(0, 0)}, material)
+    if canvas.getchannel("A").getextrema() != (255, 255):
+        raise SystemExit(f"{material}: ground tile does not cover its complete {CELL}x{CELL} cell")
+    return canvas
 
 
-def terrain_mask(rows: list[list[str]], x: int, y: int) -> int:
-    material = rows[y][x]
-    width, height = len(rows[0]), len(rows)
-    mask = 0
-    for direction, dx, dy in (("up", 0, -1), ("right", 1, 0), ("down", 0, 1), ("left", -1, 0)):
-        xx, yy = x + dx, y + dy
-        if 0 <= xx < width and 0 <= yy < height and rows[yy][xx] == material:
-            mask |= NEIGHBOR_BITS[direction]
-    return mask
+def validate_path_clearance(layout: dict, rows: list[list[str]]) -> None:
+    for owner in [*layout.get("buildings", []), *layout.get("landmarks", [])]:
+        covered = []
+        for y in range(owner["y"], owner["y"] + owner["height"]):
+            for x in range(owner["x"], owner["x"] + owner["width"]):
+                if rows[y][x] != "grass":
+                    covered.append(f"{x},{y}")
+        if covered:
+            raise SystemExit(
+                f"{owner['id']}: terrain paths overlap structure cells {', '.join(covered)}; "
+                "approaches must begin south of the doorway"
+            )
 
 
 def build() -> dict:
@@ -124,6 +119,8 @@ def build() -> dict:
     ground_path = ROOT / "public" / production["map"]["ground"]["path"].removeprefix("./")
     if not ground_path.exists():
         raise SystemExit("Camp ground layer is missing; run build_camp_randall_production.py first")
+    terrain = terrain_rows(layout)
+    validate_path_clearance(layout, terrain)
 
     visuals: list[Image.Image] = []
     visual_lookup: dict[bytes, int] = {}
@@ -160,14 +157,10 @@ def build() -> dict:
             entry["names"].append(name)
         return tile_id
 
-    terrain_variants: dict[str, dict[str, int]] = {}
-    for material in MATERIALS:
-        terrain_variants[material] = {}
-        for mask in range(16):
-            image = path_variant(material, mask)
-            terrain_variants[material][str(mask)] = add_visual(
-                image, "terrain", material, f"{material.title()} transition {mask:02x}"
-            )
+    terrain_tiles = {
+        material: add_visual(ground_tile(material), "terrain", material, f"{material.title()} ground")
+        for material in MATERIALS
+    }
 
     stamps: dict[str, dict] = {}
     palette_ids: list[str] = []
@@ -263,13 +256,12 @@ def build() -> dict:
         atlas.alpha_composite(image, ((index % ATLAS_COLUMNS) * CELL, (index // ATLAS_COLUMNS) * CELL))
     save_png(atlas, ATLAS_PATH)
 
-    terrain = terrain_rows(layout)
     preview = Image.open(ground_path).convert("RGBA")
     for y, row in enumerate(terrain):
         for x, material in enumerate(row):
             if material == "grass":
                 continue
-            index = terrain_variants[material][str(terrain_mask(terrain, x, y))]
+            index = terrain_tiles[material]
             preview.alpha_composite(visuals[index], (x * CELL, y * CELL))
     for object_entry in sorted(production["map"]["objects"], key=lambda entry: entry["depth"]):
         stamp = stamps[object_entry["id"]]
@@ -291,8 +283,8 @@ def build() -> dict:
     save_png(preview, PREVIEW_PATH)
 
     result = {
-        "schema": "badger-grapple-metatiles/v1",
-        "version": 1,
+        "schema": "badger-grapple-metatiles/v2",
+        "version": 2,
         "status": "production-pilot",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
@@ -305,7 +297,7 @@ def build() -> dict:
         },
         "terrain": {
             "baseMaterial": "grass",
-            "variants": terrain_variants,
+            "tiles": terrain_tiles,
         },
         "metatiles": metatiles,
         "palette": palette_ids,

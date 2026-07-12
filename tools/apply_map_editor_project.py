@@ -4,8 +4,9 @@ Usage:
   python tools/apply_map_editor_project.py path/to/map-pack.json
   python tools/apply_map_editor_project.py path/to/map-pack.json --write
 
-The dry run is the default. --write updates the Season One layout and Camp
-production manifest, then recompiles the audited production assets.
+The dry run is the default. --write updates the Season One layout authority,
+region revision, and Camp production manifest, then recompiles the audited
+production assets.
 """
 
 from __future__ import annotations
@@ -20,6 +21,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
+REGION_PATH = ROOT / "src" / "data" / "seasonOneRegion.json"
 MANIFEST_PATH = ROOT / "art" / "imagegen" / "camp_randall_production_manifest.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 METATILE_BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
@@ -351,11 +353,13 @@ def main() -> None:
 
     project = load_json(args.project.resolve())
     layouts = load_json(LAYOUT_PATH)
+    region = load_json(REGION_PATH)
     manifest = load_json(MANIFEST_PATH)
     build = load_json(BUILD_PATH)
     metatile_build = load_json(METATILE_BUILD_PATH)
     validate_project(project, build, metatile_build)
     apply_project(project, layouts, manifest)
+    region["layoutRevision"] = layouts["revision"]
     overrides = metatile_overrides(project)
 
     object_count = sum(len(map_data.get("objects", [])) for map_data in project["maps"].values())
@@ -366,6 +370,7 @@ def main() -> None:
         return
 
     LAYOUT_PATH.write_text(json.dumps(layouts, indent=2) + "\n", encoding="utf-8")
+    REGION_PATH.write_text(json.dumps(region, indent=2) + "\n", encoding="utf-8")
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     METATILE_OVERRIDES_PATH.write_text(json.dumps(overrides, indent=2) + "\n", encoding="utf-8")
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_camp_randall_production.py")], cwd=ROOT, check=True)

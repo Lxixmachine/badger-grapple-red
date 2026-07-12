@@ -155,13 +155,7 @@ export class MapRenderer {
   drawTerrainMetatile(map, atlas, x, y) {
     const material = map.terrain[y][x];
     if (material === 'grass' || !atlas?.complete || !atlas.naturalWidth) return;
-    const same = (xx, yy) => xx >= 0 && yy >= 0 && xx < map.width && yy < map.height
-      && map.terrain[yy][xx] === material;
-    const mask = (same(x, y - 1) ? 1 : 0)
-      | (same(x + 1, y) ? 2 : 0)
-      | (same(x, y + 1) ? 4 : 0)
-      | (same(x - 1, y) ? 8 : 0);
-    const visual = map.terrainVariants?.[material]?.[String(mask)];
+    const visual = map.terrainTiles?.[material];
     if (!Number.isInteger(visual)) return;
     this.drawAtlasVisual(atlas, map.metatileAtlas.columns, map.cellSize, visual, x * map.cellSize, y * map.cellSize);
   }

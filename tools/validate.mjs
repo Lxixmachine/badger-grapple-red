@@ -58,16 +58,15 @@ const campMetatileOverridesPath=fileURLToPath(new URL('../art/metatiles/camp_ran
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v1'||metatileBuild.version!==1)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==2)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==metatileBuild.atlas.sha256)errs.push('Camp metatile atlas is missing or stale');
   if(metatileBuild.atlas.visualCount!==metatileBuild.atlas.entries?.length)errs.push('Camp metatile visual catalog is incomplete');
-  for(const [material,variants] of Object.entries(metatileBuild.terrain?.variants||{})){
-    if(!['brick','stone','dirt'].includes(material)||Object.keys(variants).length!==16)errs.push(`Camp metatile terrain family ${material} is incomplete`);
-    for(const visual of Object.values(variants))if(!Number.isInteger(visual)||visual<0||visual>=metatileBuild.atlas.visualCount)errs.push(`Camp metatile terrain family ${material} references an invalid visual`);
-  }
+  const terrainTiles=metatileBuild.terrain?.tiles||{};
+  if(JSON.stringify(Object.keys(terrainTiles).sort())!==JSON.stringify(['brick','dirt','stone']))errs.push('Camp metatile ground catalog must declare one fixed tile per material');
+  for(const [material,visual] of Object.entries(terrainTiles))if(!Number.isInteger(visual)||visual<0||visual>=metatileBuild.atlas.visualCount)errs.push(`Camp metatile ground ${material} references an invalid visual`);
   const validateStamp=(label,stamp)=>{
     if(stamp.cells?.length!==stamp.height||stamp.cells?.some(row=>row.length!==stamp.width)){errs.push(`${label}: metatile matrix does not match footprint`);return;}
     for(let y=0;y<stamp.height;y++)for(let x=0;x<stamp.width;x++){

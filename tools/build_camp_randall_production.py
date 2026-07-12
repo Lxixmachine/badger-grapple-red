@@ -171,35 +171,11 @@ def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material
         return
     mask = Image.new("L", canvas.size, 0)
     mask_draw = ImageDraw.Draw(mask)
-    edge_rows: list[tuple[dict[str, bool], tuple[int, int, int, int]]] = []
-    inset = 5
     for x, y in cells:
-        neighbors = {
-            "up": (x, y - 1) in cells,
-            "down": (x, y + 1) in cells,
-            "left": (x - 1, y) in cells,
-            "right": (x + 1, y) in cells,
-        }
-        left = x * CELL + (0 if neighbors["left"] else inset)
-        top = y * CELL + (0 if neighbors["up"] else inset)
-        right = (x + 1) * CELL - (0 if neighbors["right"] else inset)
-        bottom = (y + 1) * CELL - (0 if neighbors["down"] else inset)
-        box = (left, top, right, bottom)
-        mask_draw.rounded_rectangle(box, radius=4, fill=255)
-        edge_rows.append((neighbors, box))
+        left = x * CELL
+        top = y * CELL
+        mask_draw.rectangle((left, top, left + CELL - 1, top + CELL - 1), fill=255)
     canvas.paste(path_pattern(canvas.size, material), (0, 0), mask)
-    draw = ImageDraw.Draw(canvas)
-    highlight = (236, 211, 162) if material != "brick" else (226, 171, 132)
-    shadow = (110, 129, 74) if material != "brick" else (107, 55, 48)
-    for neighbors, (left, top, right, bottom) in edge_rows:
-        if not neighbors["up"]:
-            draw.line((left + 3, top, right - 3, top), fill=highlight, width=2)
-        if not neighbors["left"]:
-            draw.line((left, top + 3, left, bottom - 3), fill=highlight, width=2)
-        if not neighbors["down"]:
-            draw.line((left + 3, bottom, right - 3, bottom), fill=shadow, width=2)
-        if not neighbors["right"]:
-            draw.line((right, top + 3, right, bottom - 3), fill=shadow, width=2)
 
 
 def make_exterior_ground(layout: dict) -> Image.Image:

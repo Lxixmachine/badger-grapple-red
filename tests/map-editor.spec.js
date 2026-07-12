@@ -34,6 +34,7 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
+  expect(state.project).toMatchObject({layoutRevision: 3, metatileVersion: 2});
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'team_locker_room', 'wrestling_room', 'coach_office', 'stadium_tunnel'
   ]);
@@ -42,6 +43,13 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   expect(state.project.assets.metatiles.length).toBeGreaterThan(500);
   expect(state.project.maps.camp_randall.objects.every(object => object.metatiles?.length === object.height)).toBe(true);
   expect(state.project.maps.camp_randall.objects).toHaveLength(7);
+  const camp = state.project.maps.camp_randall;
+  expect(camp.terrain[10][5]).toBe('grass');
+  expect(camp.terrain[11][5]).toBe('stone');
+  expect(camp.terrain[12][17]).toBe('grass');
+  expect(camp.terrain[13][17]).toBe('stone');
+  expect(camp.terrain[5][11]).toBe('grass');
+  expect(camp.terrain[6][11]).toBe('stone');
   await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '768');
   await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '640');
   expect(issues).toEqual([]);
@@ -103,10 +111,16 @@ test('object dragging, collision painting, and doors stay grid-owned', async ({p
   expect(issues).toEqual([]);
 });
 
-test('ground painting uses neighbor-aware metatiles instead of full-cell overlays', async ({page}) => {
+test('stone painting fills the cell and does not change when neighbors change', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
   await page.getByRole('button', {name: 'Toggle grid'}).click();
+  const beforeCorners = await page.evaluate(() => {
+    const context = document.querySelector('#mapCanvas').getContext('2d');
+    return [[1, 1], [30, 1], [1, 30], [30, 30]].map(([x, y]) => (
+      [...context.getImageData(10 * 32 + x, 14 * 32 + y, 1, 1).data].slice(0, 3)
+    ));
+  });
   await page.getByRole('button', {name: 'Stone', exact: true}).click();
   await clickCell(page, 10, 14);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.terrain[14][10]).toBe('stone');
@@ -121,22 +135,47 @@ test('ground painting uses neighbor-aware metatiles instead of full-cell overlay
     const context = canvas.getContext('2d');
     const sample = (x, y) => [...context.getImageData(x, y, 1, 1).data];
     return {
-      corner: sample(10 * 32 + 1, 14 * 32 + 1),
-      center: sample(10 * 32 + 10, 14 * 32 + 10)
+      corners: [[1, 1], [30, 1], [1, 30], [30, 30]].map(([x, y]) => sample(10 * 32 + x, 14 * 32 + y)),
+      center: sample(10 * 32 + 10, 14 * 32 + 10),
+      signature: [[1, 1], [16, 1], [30, 1], [1, 16], [16, 16], [30, 16], [1, 30], [16, 30], [30, 30]]
+        .map(([x, y]) => sample(10 * 32 + x, 14 * 32 + y).slice(0, 3))
     };
   });
   expect(pixels.center.slice(0, 3)).toEqual([196, 188, 165]);
-  expect(pixels.corner.slice(0, 3)).not.toEqual(pixels.center.slice(0, 3));
+  pixels.corners.forEach((corner, index) => expect(corner.slice(0, 3)).not.toEqual(beforeCorners[index]));
 
   await clickCell(page, 10, 13);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.terrain[13][10]).toBe('stone');
   await page.mouse.move(0, 0);
-  const sharedEdge = await page.evaluate(() => {
+  const connectedSignature = await page.evaluate(() => {
     const context = document.querySelector('#mapCanvas').getContext('2d');
-    return [...context.getImageData(10 * 32 + 16, 14 * 32, 1, 1).data];
+    return [[1, 1], [16, 1], [30, 1], [1, 16], [16, 16], [30, 16], [1, 30], [16, 30], [30, 30]]
+      .map(([x, y]) => [...context.getImageData(10 * 32 + x, 14 * 32 + y, 1, 1).data].slice(0, 3));
   });
-  expect(sharedEdge.slice(0, 3)).not.toEqual(pixels.corner.slice(0, 3));
+  expect(connectedSignature).toEqual(pixels.signature);
   expect(issues).toEqual([]);
+});
+
+test('saved drafts adopt corrected path defaults without losing explicit terrain edits', async ({page}) => {
+  await openEditor(page);
+  await page.evaluate(() => {
+    const draft = window.__badgerMapEditorTest.project();
+    draft.layoutRevision = 2;
+    draft.metatileVersion = 1;
+    draft.maps.camp_randall.originalTerrain[10][5] = 'stone';
+    draft.maps.camp_randall.terrain[10][5] = 'stone';
+    draft.maps.camp_randall.originalTerrain[11][5] = 'grass';
+    draft.maps.camp_randall.terrain[11][5] = 'grass';
+    draft.maps.camp_randall.terrain[14][10] = 'dirt';
+    localStorage.setItem('badger-grapple-map-studio-v2-metatiles', JSON.stringify(draft));
+  });
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
+  const state = await editorState(page);
+  expect(state.project).toMatchObject({layoutRevision: 3, metatileVersion: 2});
+  expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
+  expect(state.project.maps.camp_randall.terrain[11][5]).toBe('stone');
+  expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
 });
 
 test('structure metatiles can be placed independently and retain behavior ownership', async ({page}) => {

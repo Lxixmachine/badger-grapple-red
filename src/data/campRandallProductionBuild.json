@@ -1,7 +1,7 @@
 {
   "version": 1,
   "status": "production-pilot",
-  "layoutRevision": 2,
+  "layoutRevision": 3,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "map": {
@@ -835,8 +835,8 @@
     }
   },
   "sources": {
-    "manifest": "33c6d227485a12a600d20e50da645249bedd244e5c1de365e552b174cec09d5e",
-    "layout": "ed881840a0cdb561964e91e9b2e58d8ad2dd67b214c27bc75b7805543c849842",
+    "manifest": "f6dd1c77bf3b37697c91add30cdfc5adc81cf7fa8933ac858fefc38e91993311",
+    "layout": "d33f807711b427d2c84fd9e63cbdc47082a891289fc6c0d1756eeac20b7c7b8f",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
@@ -858,7 +858,7 @@
     "camp-randall__practice_pond.png": "a350bc4d1c50ccb2ebc8548196388476b68e40aecb322e42916baec0fc92356b",
     "camp-randall__team_building.png": "4732964a1601ac26fda4e9ec285e4d4f788d90f13d32e783eca8ccafa11761a2",
     "camp-randall__west_tree_border.png": "12e1f3cda27be425a08e9ec9cdf2efa63c96528019a20e98d9eed4adafc37ef0",
-    "camp_randall_base.png": "bbecd5e42a0a9d0c93233394d363058422e7b180b49cde734083bbb9970d4f5a",
+    "camp_randall_base.png": "1aab2ffa6aff572d46c0fc9a73ddd41b5da9d61399e2e830414329354dfa8dbc",
     "camp_randall_ground.png": "cd1cb7ba69ce043db7169e763bf3719e950f77d59fdee781b582ac4b08d41eb8",
     "coach-office__coach_desk.png": "b1b8defeb67c4cb051662ce50477d7b2e16379617032904d1aa2d4a5dfeb3e6a",
     "coach-office__depth_chart.png": "0b765670a0215cdee843785d6b008b2164ee0d0805e1bc14c0c045c601b10c73",

@@ -7,9 +7,10 @@ path for the Season One replacement runtime:
 
 - `tools/build_camp_randall_production.py` emits a pure grass ground layer and
   exact grid-sized source objects.
-- `tools/build_camp_randall_metatiles.py` compiles 16 neighbor variants for
-  every path material, slices every building/landmark into 32px metatiles, and
-  assigns `walkable`, `solid`, or `warp` behavior to each used cell.
+- `tools/build_camp_randall_metatiles.py` compiles one deterministic full-cell
+  tile for every ground material, slices every building/landmark into 32px
+  metatiles, and assigns `walkable`, `solid`, or `warp` behavior to each used
+  structure cell. Ground edges and corners require explicit authored tiles.
 - `src/data/campRandallMetatileBuild.json` is consumed by Map Studio and the
   playable World Atlas Camp map.
 - `public/assets/metatiles/camp_randall_metatiles.png` contains the original

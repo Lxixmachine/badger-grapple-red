@@ -142,7 +142,7 @@ function makeMap(mapId, mapPackage, layout, type) {
     renderModel: usesMetatiles ? 'metatile' : 'object',
     background: usesMetatiles ? metatileBuild.map.ground : mapPackage.base,
     metatileAtlas: usesMetatiles ? deepClone(metatileBuild.atlas) : null,
-    terrainVariants: usesMetatiles ? deepClone(metatileBuild.terrain.variants) : null,
+    terrainTiles: usesMetatiles ? deepClone(metatileBuild.terrain.tiles) : null,
     originalTerrain,
     terrain: deepClone(originalTerrain),
     objects,

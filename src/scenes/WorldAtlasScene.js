@@ -454,17 +454,11 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.metatileRenderCount = 0;
     this.track(this.add.image(0, 0, 'camp-metatile-ground').setOrigin(0).setDepth(0));
     const terrain = campMetatiles.map.terrain;
-    const same = (material, x, y) => y >= 0 && y < terrain.length
-      && x >= 0 && x < terrain[0].length && terrain[y][x] === material;
     for (let y = 0; y < terrain.length; y += 1) {
       for (let x = 0; x < terrain[y].length; x += 1) {
         const material = terrain[y][x];
         if (material === 'grass') continue;
-        const mask = (same(material, x, y - 1) ? 1 : 0)
-          | (same(material, x + 1, y) ? 2 : 0)
-          | (same(material, x, y + 1) ? 4 : 0)
-          | (same(material, x - 1, y) ? 8 : 0);
-        const visual = campMetatiles.terrain.variants[material]?.[String(mask)];
+        const visual = campMetatiles.terrain.tiles[material];
         if (Number.isInteger(visual)) {
           this.track(this.add.image((x + 0.5) * CELL, (y + 0.5) * CELL, 'camp-metatile-atlas', visual).setDepth(1));
           this.metatileRenderCount += 1;

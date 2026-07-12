@@ -38,13 +38,51 @@ let historyIndex = 0;
 const renderer = new MapRenderer(canvas, requestRender);
 
 function loadDraft() {
+  const seed = createSeedProject();
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (saved?.schema === PROJECT_SCHEMA) return saved;
+    if (saved?.schema === PROJECT_SCHEMA) {
+      if (saved.layoutRevision !== seed.layoutRevision || saved.metatileVersion !== seed.metatileVersion) {
+        const migrated = migrateDraft(saved, seed);
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
+        return migrated;
+      }
+      return saved;
+    }
   } catch {
     localStorage.removeItem(STORAGE_KEY);
   }
-  return createSeedProject();
+  return seed;
+}
+
+function migrateDraft(saved, seed) {
+  const migrated = cloneProject(saved);
+  for (const [mapId, seedMap] of Object.entries(seed.maps)) {
+    const savedMap = migrated.maps?.[mapId];
+    if (!savedMap || savedMap.width !== seedMap.width || savedMap.height !== seedMap.height) {
+      migrated.maps[mapId] = cloneProject(seedMap);
+      continue;
+    }
+    const terrain = seedMap.terrain.map((row, y) => row.map((material, x) => {
+      const previous = savedMap.terrain?.[y]?.[x];
+      const previousDefault = savedMap.originalTerrain?.[y]?.[x];
+      return previous !== undefined && previous !== previousDefault ? previous : material;
+    }));
+    Object.assign(savedMap, {
+      renderModel: seedMap.renderModel,
+      background: cloneProject(seedMap.background),
+      metatileAtlas: cloneProject(seedMap.metatileAtlas),
+      terrainTiles: cloneProject(seedMap.terrainTiles),
+      originalTerrain: cloneProject(seedMap.originalTerrain),
+      terrain
+    });
+    delete savedMap.terrainVariants;
+  }
+  migrated.productionVersion = seed.productionVersion;
+  migrated.layoutRevision = seed.layoutRevision;
+  migrated.metatileVersion = seed.metatileVersion;
+  migrated.assets.metatiles = cloneProject(seed.assets.metatiles);
+  return migrated;
 }
 
 function activeMap() {

@@ -22,9 +22,11 @@ The first editable pack contains:
 - Coach's Office
 - Camp Randall Tunnel
 
-The Camp Randall exterior uses a FireRed-style metatile authoring model. Ground
-brushes resolve to neighbor-aware edge/corner variants. Buildings and landmarks
-are matrices of 32px structure metatiles with behavior attached to each cell.
+The Camp Randall exterior uses a FireRed-style metatile authoring model. Every
+Ground brush paints one fixed 32px tile that fills its cell; neighboring cells
+never change that tile implicitly. Edges, corners, curbs, and landings are
+separate explicit tiles when authored. Buildings and landmarks are matrices of
+32px structure metatiles with behavior attached to each cell.
 Whole buildings remain available as placement stamps, but their roof, wall,
 window, doorway, foundation, vegetation, and water cells can be edited
 individually. Interiors remain on the previous object model during the pilot.
@@ -34,8 +36,8 @@ individually. Interiors remain on the previous object model during the pilot.
 1. Choose a map. On a phone, **Pan** is selected automatically; drag the map to
    change the visible area. On desktop, **Pan** or middle-mouse drag does the
    same without editing the map.
-2. Use **Tiles** to paint Ground brushes. Exposed edges and connected neighbors
-   are recomputed automatically.
+2. Use **Tiles** to paint Ground brushes. Every painted cell retains exactly
+   the selected tile until you replace it.
 3. Choose a Structure family to paint or drag individual behavior-owned
    metatiles. Use **Stamps** to place a complete building at once.
 4. Use **Actors**, then tap the map or drag an actor onto it.
@@ -70,9 +72,10 @@ After review, apply it with:
 npm run apply:map-editor -- path\to\badger-grapple-map-pack.json --write
 ```
 
-The importer updates `seasonOneLayouts.json`, the Camp production manifest,
-and the metatile override source. It then increments the layout revision and
-recompiles both the production artwork and behavior-owned metatile package.
+The importer updates `seasonOneLayouts.json`, the matching region revision,
+the Camp production manifest, and the metatile override source. It then
+increments the layout revision and recompiles both the production artwork and
+behavior-owned metatile package.
 
 ## Production Laws
 

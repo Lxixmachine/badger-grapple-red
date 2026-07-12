@@ -121,7 +121,7 @@ const localOverlaps = (a, b) => a.x < b.x + b.width
 const doorHasAuthoredApproach = (map, door) => [
   ...(map.paths || []),
   ...(map.clearings || [])
-].some(entry => inRect(door.x, door.y, entry));
+].some(entry => inRect(door.x, door.y + 1, entry));
 
 function distanceFromEdge(map, rect, edge) {
   if (edge === 'north') return rect.y;
@@ -137,8 +137,9 @@ export function validateSeasonOneLayouts(region, layouts) {
   const contract = layouts.contract || {};
   const requiredIds = Object.keys(region.nodes || {});
 
-  if (layouts.schemaVersion !== 1 || layouts.revision !== 2 || layouts.status !== 'pre-art-blockout') {
-    errors.push('Season One layouts must use schemaVersion 1, revision 2, and pre-art-blockout status');
+  if (layouts.schemaVersion !== 1 || !Number.isInteger(layouts.revision) || layouts.revision < 1
+    || layouts.status !== 'pre-art-blockout') {
+    errors.push('Season One layouts must use schemaVersion 1, a positive revision, and pre-art-blockout status');
   }
   if (contract.cellSize !== region.tileSize
     || contract.canvasWidth !== region.camera?.canvasWidth
