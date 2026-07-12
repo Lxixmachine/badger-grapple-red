@@ -1,7 +1,7 @@
 import {cloneProject, createSeedProject, PROJECT_SCHEMA, TERRAIN, validateProject} from './project.js';
 import {MapRenderer} from './renderer.js';
 
-const STORAGE_KEY = 'badger-grapple-map-studio-v4-imagegen-tileset';
+const STORAGE_KEY = 'badger-grapple-map-studio-v5-unified-transitions';
 const canvas = document.querySelector('#mapCanvas');
 const workspace = document.querySelector('#workspace');
 const mapSelect = document.querySelector('#mapSelect');

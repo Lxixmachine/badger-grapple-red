@@ -2484,3 +2484,18 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
 - Current authority is world tileset v3, tileset contract v2, 57 prepared
   Imagegen sources, Camp metatile v5, and app v21.71. Preserve the Imagegen
   source-to-logical-to-runtime chain when adding any new tile family.
+
+## Codex Unified Transition Grammar (v21.72)
+
+- Phone review exposed a real seam defect: canonical straight dirt, brick,
+  stone, shoreline, road, and mowed edges came directly from Imagegen panels,
+  while corners and junctions came from the 47-piece compiler grammar.
+- Every straight, corner, inner corner, and junction now uses one mask and
+  border grammar over the prepared Imagegen material textures. Hard-surface
+  bevels are continuous instead of phase-broken at cell boundaries.
+- `validate_plaza_transition_seams()` compares all eight straight-to-corner
+  joins for every transition family during the world build. The acceptance
+  image now includes complete 4x4 dirt, brick, and stone plazas.
+- Current authority is Camp metatile v6 and app v21.72. Map Studio uses a fresh
+  draft key and a new atlas filename so mobile Safari cannot retain v21.71
+  transition pixels.

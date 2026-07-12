@@ -27,6 +27,7 @@ from season_one_pixel_art import (
     road_marking as authored_road_marking,
     service_building as authored_service_building,
     transition_tile,
+    validate_plaza_transition_seams,
 )
 from prepare_imagegen_tileset_sources import MANIFEST_PATH as IMAGEGEN_SOURCE_MANIFEST_PATH
 from prepare_imagegen_tileset_sources import build as prepare_imagegen_sources
@@ -38,7 +39,7 @@ CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
 ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v3.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v3"
-GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v3"
+GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v4"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
 SEAM_PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_tileset_seam_test.png"
 
@@ -327,6 +328,7 @@ def plaza_mask(name: str, cell: int) -> Image.Image:
 
 def build() -> dict:
     prepared_sources = prepare_imagegen_sources()
+    validate_plaza_transition_seams()
     manifest = load_json(MANIFEST_PATH)
     contract = load_json(CONTRACT_PATH)
     cell = manifest["cellSize"]
@@ -780,7 +782,7 @@ def build() -> dict:
     # A direct composition board is the visual acceptance surface. It catches
     # seams, scale drift, weak silhouettes, and incompatible palettes that a
     # catalog/contact sheet can hide.
-    seam_width, seam_height = 24, 16
+    seam_width, seam_height = 24, 22
     seam_test = Image.new("RGBA", (seam_width * cell, seam_height * cell), (0, 0, 0, 0))
     grass_variants = [ground_tiles["grass"], ground_tiles["grass_b"], ground_tiles["grass_c"]]
     for y in range(seam_height):
@@ -820,6 +822,24 @@ def build() -> dict:
     place_structure("fence_long", 10, 12)
     place_structure("campus_lamp", 15, 12)
     place_structure("wood_bench", 17, 13)
+
+    def place_plaza(material: str, x: int, y: int) -> None:
+        rows = (
+            ("north_west", "north", "north", "north_east"),
+            ("west", "center", "center", "east"),
+            ("west", "center", "center", "east"),
+            ("south_west", "south", "south", "south_east"),
+        )
+        for row_index, row in enumerate(rows):
+            for column_index, suffix in enumerate(row):
+                seam_test.alpha_composite(
+                    visuals[ground_tiles[f"{material}_edge_{suffix}"]],
+                    ((x + column_index) * cell, (y + row_index) * cell),
+                )
+
+    place_plaza("dirt", 0, 17)
+    place_plaza("brick", 6, 17)
+    place_plaza("stone", 12, 17)
     save_png(seam_test, SEAM_PREVIEW_PATH)
 
     # Contact sheet: ground vocabulary first, then readable stamp thumbnails.

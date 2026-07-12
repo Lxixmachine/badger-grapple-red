@@ -34,7 +34,7 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 5});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 6});
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'team_locker_room', 'wrestling_room', 'coach_office', 'stadium_tunnel'
   ]);
@@ -222,12 +222,12 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
     draft.maps.camp_randall.originalTerrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[14][10] = 'dirt';
-    localStorage.setItem('badger-grapple-map-studio-v4-imagegen-tileset', JSON.stringify(draft));
+    localStorage.setItem('badger-grapple-map-studio-v5-unified-transitions', JSON.stringify(draft));
   });
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 5});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 6});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

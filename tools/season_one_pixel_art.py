@@ -267,23 +267,21 @@ class EdgeStyle:
 
 
 EDGE_STYLES = {
-    "surface_dirt": EdgeStyle("grass", "dirt", (4, 4, 3, 3, 4, 5, 4, 3, 3, 4, 4, 5, 4, 3, 4, 4), None, PALETTE["dirt_dark"]),
+    "surface_dirt": EdgeStyle("grass", "dirt", (4, 4, 3, 3, 4, 5, 4, 3, 3, 4, 5, 4, 3, 3, 4, 4), None, PALETTE["dirt_dark"]),
     "surface_brick": EdgeStyle("grass", "brick", (3,) * 16, PALETTE["curb"], PALETTE["brick_dark"]),
-    "surface_stone": EdgeStyle("grass", "stone", (3, 3, 3, 4, 4, 3, 3, 3, 3, 4, 4, 3, 3, 3, 4, 3), PALETTE["stone_light"], PALETTE["stone_dark"]),
-    "surface_sand": EdgeStyle("grass", "sand", (4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 4, 3, 3, 4, 4), None, PALETTE["sand_dark"]),
-    "surface_gravel": EdgeStyle("grass", "gravel", (3, 4, 3, 3, 4, 4, 3, 4, 3, 3, 4, 3, 4, 3, 3, 4), None, PALETTE["gravel_dark"]),
-    "shore_water": EdgeStyle("grass", "water", (4, 4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 4, 3, 4, 4), PALETTE["sand"], PALETTE["water_dark"], PALETTE["foam"]),
+    "surface_stone": EdgeStyle("grass", "stone", (3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3), PALETTE["stone_light"], PALETTE["stone_dark"]),
+    "surface_sand": EdgeStyle("grass", "sand", (4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 5, 4, 3, 3, 4), None, PALETTE["sand_dark"]),
+    "surface_gravel": EdgeStyle("grass", "gravel", (3, 4, 3, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 3, 4, 3), None, PALETTE["gravel_dark"]),
+    "shore_water": EdgeStyle("grass", "water", (4, 4, 3, 3, 4, 5, 5, 4, 4, 5, 5, 4, 3, 3, 4, 4), PALETTE["sand"], PALETTE["water_dark"], PALETTE["foam"]),
     "road_asphalt_grass": EdgeStyle("grass", "asphalt", (4,) * 16, PALETTE["curb"], PALETTE["asphalt_dark"]),
     "road_asphalt_curb": EdgeStyle("concrete", "asphalt", (2,) * 16, PALETTE["curb"], PALETTE["curb_dark"]),
-    "lawn_mowed": EdgeStyle("grass", "mowed_grass", (2, 2, 2, 3, 2, 2, 2, 2, 3, 2, 2, 2, 2, 2, 3, 2), None, PALETTE["grass_dark"]),
+    "lawn_mowed": EdgeStyle("grass", "mowed_grass", (2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2), None, PALETTE["grass_dark"]),
 }
 
 
 def _rotated_profile(profile: tuple[int, ...], direction: str) -> tuple[int, ...]:
     if direction in {"s", "w"}:
         return tuple(reversed(profile))
-    if direction == "e":
-        return profile[4:] + profile[:4]
     return profile
 
 
@@ -330,25 +328,6 @@ def _ring_in(mask: Image.Image) -> Image.Image:
 
 
 def transition_tile(family: str, signature: int, phase: int = 0) -> Image.Image:
-    # Imagegen supplies the canonical straight boundary for each primary
-    # material. The compiler rotates that one exact logical tile and still
-    # owns the complete 47-signature grammar for corners and junctions.
-    canonical_straights = {110: 0, 205: 270, 155: 180, 55: 90}
-    source_id = {
-        "surface_dirt": "dirt_edge",
-        "surface_brick": "brick_limestone_edge",
-        "surface_stone": "stone_grass_edge",
-        "shore_water": "shoreline_edge",
-        "road_asphalt_grass": "asphalt_curb_edge",
-        "lawn_mowed": "mowed_grass_edge",
-    }.get(family)
-    if source_id and signature in canonical_straights:
-        return source_asset("transitions", source_id).rotate(
-            canonical_straights[signature],
-            resample=Image.Resampling.NEAREST,
-            expand=False,
-        )
-
     style = EDGE_STYLES[family]
     mask = transition_mask(family, signature)
     result = material_tile(style.substrate, phase)
@@ -357,14 +336,7 @@ def transition_tile(family: str, signature: int, phase: int = 0) -> Image.Image:
     result.paste(material_tile(style.material, phase), (0, 0), mask)
     if style.inner:
         ring = _ring_in(mask)
-        # A broken inner edge avoids the uniform sticker outline of the old kit.
-        broken = Image.new("L", ring.size, 0)
-        rb, bb = ring.load(), broken.load()
-        for y in range(16):
-            for x in range(16):
-                if rb[x, y] and (x * 3 + y * 5 + phase) % 7 != 0:
-                    bb[x, y] = 255
-        result.paste(Image.new("RGBA", result.size, style.inner), (0, 0), broken)
+        result.paste(Image.new("RGBA", result.size, style.inner), (0, 0), ring)
     if family == "shore_water" and style.accent:
         ring = _ring_in(mask)
         foam = Image.new("L", ring.size, 0)
@@ -375,6 +347,45 @@ def transition_tile(family: str, signature: int, phase: int = 0) -> Image.Image:
                     fp[x, y] = 255
         result.paste(Image.new("RGBA", result.size, style.accent), (0, 0), foam)
     return result
+
+
+def validate_plaza_transition_seams() -> None:
+    """Reject any edge grammar whose four plaza corners do not join."""
+    signatures = {
+        "north": 110, "east": 205, "south": 155, "west": 55,
+        "north_west": 38, "north_east": 76,
+        "south_west": 19, "south_east": 137,
+    }
+
+    def edge(image: Image.Image, side: str) -> bytes:
+        if side == "top":
+            return image.crop((0, 0, LOGICAL_CELL, 1)).tobytes()
+        if side == "bottom":
+            return image.crop((0, LOGICAL_CELL - 1, LOGICAL_CELL, LOGICAL_CELL)).tobytes()
+        if side == "left":
+            return image.crop((0, 0, 1, LOGICAL_CELL)).tobytes()
+        return image.crop((LOGICAL_CELL - 1, 0, LOGICAL_CELL, LOGICAL_CELL)).tobytes()
+
+    joins = (
+        ("north_west", "right", "north", "left"),
+        ("north", "right", "north_east", "left"),
+        ("north_west", "bottom", "west", "top"),
+        ("north_east", "bottom", "east", "top"),
+        ("west", "bottom", "south_west", "top"),
+        ("east", "bottom", "south_east", "top"),
+        ("south_west", "right", "south", "left"),
+        ("south", "right", "south_east", "left"),
+    )
+    for family in EDGE_STYLES:
+        tiles = {
+            name: transition_tile(family, signature, 0)
+            for name, signature in signatures.items()
+        }
+        for first, first_side, second, second_side in joins:
+            if edge(tiles[first], first_side) != edge(tiles[second], second_side):
+                raise AssertionError(
+                    f"{family}: {first} does not join {second}"
+                )
 
 
 def connector_tile(material: str, bits: int, phase: int = 0) -> Image.Image:
