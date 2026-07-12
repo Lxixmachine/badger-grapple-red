@@ -222,7 +222,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
     draft.maps.camp_randall.originalTerrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[14][10] = 'dirt';
-    localStorage.setItem('badger-grapple-map-studio-v5-unified-transitions', JSON.stringify(draft));
+    localStorage.setItem('badger-grapple-map-studio-v4-imagegen-tileset', JSON.stringify(draft));
   });
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);

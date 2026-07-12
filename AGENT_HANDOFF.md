@@ -2496,6 +2496,6 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
 - `validate_plaza_transition_seams()` compares all eight straight-to-corner
   joins for every transition family during the world build. The acceptance
   image now includes complete 4x4 dirt, brick, and stone plazas.
-- Current authority is Camp metatile v6 and app v21.72. Map Studio uses a fresh
-  draft key and a new atlas filename so mobile Safari cannot retain v21.71
-  transition pixels.
+- Current authority is Camp metatile v6 and app v21.72. The new atlas filename
+  prevents mobile Safari from retaining v21.71 pixels, while the existing
+  draft key migrates Tony's saved map edits onto the corrected asset catalog.
