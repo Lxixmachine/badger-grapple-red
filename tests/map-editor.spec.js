@@ -203,3 +203,34 @@ test('mobile layout keeps the canvas and touch palette usable', async ({page}) =
   expect(overflow.topbarHeight).toBeLessThanOrEqual(176);
   expect(issues).toEqual([]);
 });
+
+test('mobile Pan tool moves the map viewport without editing the project', async ({page}) => {
+  await page.setViewportSize({width: 390, height: 844});
+  await openEditor(page);
+  const before = await page.evaluate(() => JSON.stringify(window.__badgerMapEditorTest.project()));
+  const canvas = page.locator('#mapCanvas');
+  const box = await canvas.boundingBox();
+  expect(box).not.toBeNull();
+
+  await page.getByRole('button', {name: 'Pan'}).click();
+  await page.evaluate(() => {
+    const workspace = document.querySelector('#workspace');
+    workspace.scrollLeft = 0;
+    workspace.scrollTop = 0;
+  });
+  await page.mouse.move(box.x + 330, box.y + 240);
+  await page.mouse.down();
+  await page.mouse.move(box.x + 90, box.y + 90, {steps: 5});
+  await page.mouse.up();
+
+  const result = await page.evaluate(() => ({
+    scrollLeft: document.querySelector('#workspace').scrollLeft,
+    scrollTop: document.querySelector('#workspace').scrollTop,
+    project: JSON.stringify(window.__badgerMapEditorTest.project()),
+    mode: window.__badgerMapEditorTest.state().mode
+  }));
+  expect(result.mode).toBe('pan');
+  expect(result.scrollLeft).toBeGreaterThan(150);
+  expect(result.scrollTop).toBeGreaterThan(80);
+  expect(result.project).toBe(before);
+});

@@ -31,7 +31,9 @@ individually. Interiors remain on the previous object model during the pilot.
 
 ## Editing Workflow
 
-1. Choose a map.
+1. Choose a map. On a phone, **Pan** is selected automatically; drag the map to
+   change the visible area. On desktop, **Pan** or middle-mouse drag does the
+   same without editing the map.
 2. Use **Tiles** to paint Ground brushes. Exposed edges and connected neighbors
    are recomputed automatically.
 3. Choose a Structure family to paint or drag individual behavior-owned

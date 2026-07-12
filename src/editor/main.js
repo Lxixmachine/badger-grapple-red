@@ -18,7 +18,7 @@ const zoomValue = document.querySelector('#zoomValue');
 const fileInput = document.querySelector('#fileInput');
 
 let project = loadDraft();
-let mode = 'select';
+let mode = window.matchMedia('(pointer: coarse)').matches ? 'pan' : 'select';
 let paletteTab = 'terrain';
 let selectedTerrain = 'brick';
 let selectedMetatile = null;
@@ -151,6 +151,10 @@ function clamp(value, minimum, maximum) {
   return Math.max(minimum, Math.min(maximum, value));
 }
 
+function cursorForMode(value = mode) {
+  return value === 'pan' ? 'grab' : value === 'select' || value === 'event' ? 'default' : 'crosshair';
+}
+
 function buildMapSelect() {
   mapSelect.innerHTML = Object.values(project.maps)
     .map(map => `<option value="${escapeHtml(map.id)}">${escapeHtml(map.name)}</option>`)
@@ -163,7 +167,7 @@ function setMode(nextMode) {
   if (nextMode !== 'select') placingAsset = null;
   document.querySelectorAll('[data-tool]').forEach(button => button.classList.toggle('active', button.dataset.tool === mode));
   modeReadout.textContent = mode[0].toUpperCase() + mode.slice(1);
-  canvas.style.cursor = mode === 'select' || mode === 'event' ? 'default' : 'crosshair';
+  canvas.style.cursor = cursorForMode();
   requestRender();
 }
 
@@ -633,6 +637,20 @@ function setCameraAt(cell) {
 }
 
 canvas.addEventListener('pointerdown', event => {
+  if (mode === 'pan' || event.button === 1) {
+    event.preventDefault();
+    gesture = {
+      type: 'pan',
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startY: event.clientY,
+      scrollLeft: workspace.scrollLeft,
+      scrollTop: workspace.scrollTop
+    };
+    canvas.setPointerCapture(event.pointerId);
+    canvas.style.cursor = 'grabbing';
+    return;
+  }
   const cell = cellFromClient(event.clientX, event.clientY);
   if (!cell) return;
   canvas.focus();
@@ -720,6 +738,13 @@ canvas.addEventListener('pointerdown', event => {
 });
 
 canvas.addEventListener('pointermove', event => {
+  if (gesture?.type === 'pan') {
+    workspace.scrollLeft = gesture.scrollLeft - (event.clientX - gesture.startX);
+    workspace.scrollTop = gesture.scrollTop - (event.clientY - gesture.startY);
+    hoverCell = null;
+    cellReadout.textContent = 'Cell --,--';
+    return;
+  }
   const cell = cellFromClient(event.clientX, event.clientY);
   hoverCell = cell;
   cellReadout.textContent = cell ? `Cell ${cell.x},${cell.y}` : 'Cell --,--';
@@ -737,6 +762,11 @@ canvas.addEventListener('pointerleave', () => {
 
 function finishGesture(event) {
   if (!gesture || (gesture.pointerId !== undefined && event.pointerId !== gesture.pointerId)) return;
+  if (gesture.type === 'pan') {
+    gesture = null;
+    canvas.style.cursor = cursorForMode();
+    return;
+  }
   const label = gesture.type === 'paint-terrain' ? 'Terrain painted'
     : gesture.type === 'paint-structure' ? 'Structure metatiles painted'
     : gesture.type === 'paint-collision' ? 'Collision painted'
@@ -882,7 +912,7 @@ window.addEventListener('keydown', event => {
   if ((event.key === 'Delete' || event.key === 'Backspace') && document.activeElement === canvas) {
     event.preventDefault(); deleteSelection(); return;
   }
-  const toolKeys = {v: 'select', t: 'terrain', s: 'structure', c: 'collision', d: 'door', e: 'event'};
+  const toolKeys = {h: 'pan', v: 'select', t: 'terrain', s: 'structure', c: 'collision', d: 'door', e: 'event'};
   if (document.activeElement === canvas && toolKeys[event.key.toLowerCase()]) setMode(toolKeys[event.key.toLowerCase()]);
 });
 
