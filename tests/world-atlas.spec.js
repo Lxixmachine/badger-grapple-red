@@ -41,15 +41,11 @@ async function walk(page, direction, steps) {
     down: {x: 0, y: 1}
   }[direction];
   for (let step = 0; step < steps; step += 1) {
+    await expect.poll(async () => (await state(page)).inputLocked).toBe(false);
     const before = (await state(page)).tilePos;
     const target = {x: before.x + delta.x, y: before.y + delta.y};
-    let after = before;
-    for (let attempt = 0; attempt < 3 && after.x === before.x && after.y === before.y; attempt += 1) {
-      await press(page, direction);
-      await page.waitForTimeout(200);
-      after = (await state(page)).tilePos;
-    }
-    expect(after).toEqual(target);
+    await press(page, direction);
+    await expect.poll(async () => (await state(page)).tilePos, {timeout: 8000}).toEqual(target);
   }
 }
 
@@ -117,6 +113,7 @@ test('blockout doors enter planned interiors and return to their exact exterior'
 });
 
 test('major arena approaches route around the facade to south-facing doors', async ({page}) => {
+  test.setTimeout(90000);
   const issues = runtimeIssues(page);
   const approaches = [
     ['field_house', 'field_house_floor'],
