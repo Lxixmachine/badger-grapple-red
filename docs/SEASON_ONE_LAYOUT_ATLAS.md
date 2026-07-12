@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: executable pre-art review package in v21.64.
+Status: FireRed-informed town-composition revision 2 in v21.65.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is
@@ -15,6 +15,8 @@ buildings, props, or character art are produced. The exact authority is
 - Every physical map edge uses a reciprocal two-cell threshold.
 - Every building, landmark, door, event, blocker, and camera window has exact
   integer-cell ownership.
+- A connected town reserves at least eight cells before a major arena
+  footprint so its first camera establishes place before the venue reveal.
 
 ## Region Layout
 
@@ -23,20 +25,20 @@ are explicit story-transition planes.
 
 | Order | Area | Role | Origin | Size | Camera reviews |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Camp Randall | Home town | 3,0 | 24x16 | 2 |
-| 2 | R1 - First Walk | Route | 6,16 | 18x24 | 3 |
-| 3 | Field House Town | Town 1 | 0,40 | 30x20 | 4 |
-| 4 | Lakeshore Path | Branch route | -30,45 | 30x14 | 3 |
-| 5 | Picnic Point | Badge venue | -54,43 | 24x18 | 3 |
-| 6 | State Street | R2 | 30,41 | 36x14 | 3 |
-| 7 | Bascom Hill | Optional venue | 39,23 | 18x18 | 3 |
-| 8 | Capitol Square | Town 2 | 66,38 | 30x20 | 4 |
-| 9 | Monona Shore | R3 | 72,58 | 18x24 | 3 |
-| 10 | Kohl Center District | Town 3 | 66,82 | 30x20 | 4 |
+| 1 | Camp Randall | Home town | 3,0 | 24x20 | 4 |
+| 2 | R1 - First Walk | Route | 6,20 | 18x24 | 3 |
+| 3 | Field House Town | Town 1 | -6,44 | 40x28 | 7 |
+| 4 | Lakeshore Path | Branch route | -36,54 | 30x14 | 3 |
+| 5 | Picnic Point | Badge venue | -60,52 | 24x18 | 3 |
+| 6 | State Street | R2 | 34,50 | 44x18 | 5 |
+| 7 | Bascom Hill | Optional venue | 48,32 | 18x18 | 3 |
+| 8 | Capitol Square | Town 2 | 78,44 | 40x28 | 7 |
+| 9 | Monona Shore | R3 | 90,72 | 18x24 | 3 |
+| 10 | Kohl Center District | Town 3 | 78,96 | 40x28 | 8 |
 | 11 | Airport | Story transition | separate | 15x10 | 1 |
-| 12 | St. Louis Nationals | Town 4 | separate | 30x20 | 4 |
+| 12 | St. Louis Nationals | Town 4 | separate | 42x30 | 7 |
 
-The atlas contains 37 exact camera-review windows. Developed towns after Camp
+The atlas contains 54 exact camera-review windows. Developed towns after Camp
 Randall contain the same 5x4 Trainer's Room and Bucky's Locker Room exterior
 footprints, centered door grammar, and canonical interiors. Their local
 placement changes; their recognition language does not.
@@ -74,7 +76,7 @@ Review the package in this order:
 1. region topology and story order;
 2. area dimensions and 15x10 camera compositions;
 3. path honesty, entrances, and reciprocal edge thresholds;
-4. canonical service recognition and X-factor hierarchy;
+4. arrival sequence, canonical service recognition, and X-factor hierarchy;
 5. event anchors, gates, and interior flow;
 6. only then, original art production.
 

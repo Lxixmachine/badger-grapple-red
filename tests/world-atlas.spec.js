@@ -17,6 +17,7 @@ async function openAtlas(page, query = '') {
   await expect(page.locator('canvas')).toBeVisible();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || []))
     .toContain('WorldAtlasScene');
+  await expect.poll(async () => (await state(page))?.inputLocked).toBe(false);
 }
 
 async function state(page) {
@@ -27,6 +28,31 @@ async function press(page, key) {
   await page.evaluate(keyName => window.__badgerTest.press(keyName), key);
 }
 
+async function walk(page, direction, steps) {
+  for (let attempt = 0; attempt < 3 && (await state(page)).facing !== direction; attempt += 1) {
+    await press(page, direction);
+    await page.waitForTimeout(50);
+  }
+  expect((await state(page)).facing).toBe(direction);
+  const delta = {
+    left: {x: -1, y: 0},
+    right: {x: 1, y: 0},
+    up: {x: 0, y: -1},
+    down: {x: 0, y: 1}
+  }[direction];
+  for (let step = 0; step < steps; step += 1) {
+    const before = (await state(page)).tilePos;
+    const target = {x: before.x + delta.x, y: before.y + delta.y};
+    let after = before;
+    for (let attempt = 0; attempt < 3 && after.x === before.x && after.y === before.y; attempt += 1) {
+      await press(page, direction);
+      await page.waitForTimeout(200);
+      after = (await state(page)).tilePos;
+    }
+    expect(after).toEqual(target);
+  }
+}
+
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
@@ -34,7 +60,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 1, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 2, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
@@ -43,7 +69,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await press(page, 'a');
   await expect.poll(() => state(page)).toMatchObject({
     tilePos: {x: 5, y: 12},
-    atlas: {mode: 'map', mapId: 'camp_randall', mapWidth: 24, mapHeight: 16}
+    atlas: {mode: 'map', mapId: 'camp_randall', mapWidth: 24, mapHeight: 20}
   });
   await press(page, 'save');
   await expect.poll(async () => (await state(page)).atlas.overlayMode).toBe(1);
@@ -52,7 +78,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
 
 test('physical atlas edges transition through reciprocal two-cell thresholds', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=11&y=14&facing=down');
+  await openAtlas(page, '&play=1&area=camp_randall&x=11&y=18&facing=down');
   await press(page, 'down');
   await expect.poll(async () => (await state(page)).atlas.mapId).toBe('r1');
   await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 8, y: 0});
@@ -74,6 +100,28 @@ test('blockout doors enter planned interiors and return to their exact exterior'
   expect(issues).toEqual([]);
 });
 
+test('major arena approaches route around the facade to south-facing doors', async ({page}) => {
+  const issues = runtimeIssues(page);
+  const approaches = [
+    ['field_house', 'field_house_floor'],
+    ['kohl_center', 'kohl_bracket_floor']
+  ];
+
+  for (const [area, interior] of approaches) {
+    await openAtlas(page, `&play=1&area=${area}&x=20&y=6&facing=left`);
+    await walk(page, 'left', 7);
+    await walk(page, 'down', 11);
+    await walk(page, 'right', 7);
+    await walk(page, 'up', 0);
+    for (let attempt = 0; attempt < 3 && (await state(page)).atlas.interiorId !== interior; attempt += 1) {
+      await press(page, 'up');
+      await page.waitForTimeout(200);
+    }
+    await expect.poll(async () => (await state(page)).atlas.interiorId).toBe(interior);
+  }
+  expect(issues).toEqual([]);
+});
+
 test('interiors can be opened directly for layout review', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page, '&interior=coach_office');
@@ -86,18 +134,18 @@ test('interiors can be opened directly for layout review', async ({page}) => {
 test('every planned exterior and interior boots through its direct review route', async ({page}) => {
   const issues = runtimeIssues(page);
   const exteriors = {
-    camp_randall: [24, 16],
+    camp_randall: [24, 20],
     r1: [18, 24],
-    field_house: [30, 20],
+    field_house: [40, 28],
     lakeshore_path: [30, 14],
     picnic_point: [24, 18],
-    state_street: [36, 14],
+    state_street: [44, 18],
     bascom_hill: [18, 18],
-    capitol_square: [30, 20],
+    capitol_square: [40, 28],
     monona_shore: [18, 24],
-    kohl_center: [30, 20],
+    kohl_center: [40, 28],
     airport: [15, 10],
-    st_louis: [30, 20]
+    st_louis: [42, 30]
   };
   const interiors = {
     team_locker_room: [15, 10],

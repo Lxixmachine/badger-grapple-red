@@ -185,13 +185,20 @@ Each 15x10 outdoor camera window has one primary focal landmark, no more than
 two or three secondary anchors, and quiet connective space. Whole-map beauty
 does not excuse a confused camera window.
 
-### 3.9 Story gates are explicit state
+### 3.9 Arrival choreography
+
+A town edge establishes local terrain, circulation, and a smaller first
+landmark before revealing its dominant venue. A connected town must reserve at
+least eight cells between its edge and a major arena footprint. The venue is a
+destination at the end of an approach, never a facade filling the entry camera.
+
+### 3.10 Story gates are explicit state
 
 Every gate declares its flag/variable, trigger cells, before/after objects,
 movement, unlocked destination, and tests. An NPC blocker and the state change
 that moves it ship together.
 
-### 3.10 Open-mat honesty
+### 3.11 Open-mat honesty
 
 Recruiting and encounter cells render as unmistakable worn mats. Decoration
 never covers them, and ordinary ground never impersonates them.
@@ -205,6 +212,12 @@ canvas without changing its internal geometry.
 
 Actors, doors, furniture, and buildings are judged inside this camera window,
 not from an area-wide thumbnail.
+
+Scope reduction comes from fewer towns, routes, and story beats, not from
+compressing developed towns until they stop functioning as neighborhoods. Camp
+Randall uses the 24x20 small-settlement class. Developed Season One towns use
+at least 1,000 cells and seven authored camera compositions while remaining
+smaller than FireRed's typical major-city maps.
 
 ## 5. Reuse policy
 
@@ -222,7 +235,7 @@ manifest and original art pass.
 
 ## 6. Production status
 
-- v21.64 contains an executable atlas for all 12 Season One exteriors and all
+- v21.65 contains FireRed-informed revision 2 blockouts for all 12 Season One exteriors and all
   12 planned interiors at the approved 32px scale.
 - The Madison maps occupy one exact world plane with reciprocal two-cell
   connections. Airport and St. Louis are explicit transition planes.

@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "revision": 2,
   "status": "pre-art-blockout",
   "contract": {
     "cellSize": 32,
@@ -9,12 +10,13 @@
     "cameraCellsHigh": 10,
     "actorWidth": 32,
     "actorHeight": 64,
-    "actorFootprint": [1, 1]
+    "actorFootprint": [1, 1],
+    "majorVenueArrivalBuffer": 8
   },
   "canonicalFootprints": {
     "trainer_room_exterior": {"width": 5, "height": 4, "doorOffset": [2, 3], "interior": "trainer_room"},
     "buckys_locker_room_exterior": {"width": 5, "height": 4, "doorOffset": [2, 3], "interior": "buckys_locker_room"},
-    "town_arena_exterior": {"width": 9, "height": 6, "doorOffset": [4, 5]}
+    "competition_venue_minimum": {"minimumWidth": 12, "minimumHeight": 7, "doorRule": "centered_south"}
   },
   "region": {
     "reviewOrder": [
@@ -31,7 +33,7 @@
       "airport",
       "st_louis"
     ],
-    "madisonBounds": {"x": -54, "y": 0, "width": 150, "height": 102},
+    "madisonBounds": {"x": -60, "y": 0, "width": 178, "height": 124},
     "transitions": [
       {"from": "kohl_center", "to": "camp_randall", "kind": "bus", "gate": "all_flight_credentials"},
       {"from": "camp_randall", "to": "airport", "kind": "cutscene", "gate": "all_flight_credentials"},
@@ -45,44 +47,50 @@
       "kind": "home_town",
       "plane": "madison",
       "origin": {"x": 3, "y": 0},
-      "size": {"width": 24, "height": 16},
-      "start": {"x": 5, "y": 12, "facing": "up"},
+      "size": {"width": 24, "height": 20},
+      "start": {"x": 5, "y": 12, "facing": "down"},
       "ground": "lawn",
       "walkableMode": "open",
       "paths": [
-        {"id": "stadium_axis", "x": 11, "y": 5, "width": 2, "height": 11, "material": "brick"},
-        {"id": "team_building_apron", "x": 5, "y": 10, "width": 8, "height": 2, "material": "stone"},
-        {"id": "coach_office_apron", "x": 11, "y": 10, "width": 7, "height": 2, "material": "stone"}
+        {"id": "stadium_axis", "x": 11, "y": 4, "width": 2, "height": 16, "material": "brick"},
+        {"id": "stadium_forecourt", "x": 7, "y": 5, "width": 10, "height": 2, "material": "stone"},
+        {"id": "team_building_walk", "x": 5, "y": 10, "width": 8, "height": 2, "material": "stone"},
+        {"id": "coach_office_walk", "x": 11, "y": 12, "width": 7, "height": 2, "material": "stone"},
+        {"id": "south_landing", "x": 9, "y": 17, "width": 6, "height": 3, "material": "dirt"}
       ],
       "blockers": [
-        {"id": "west_tree_border", "kind": "forest", "x": 0, "y": 0, "width": 2, "height": 16},
-        {"id": "east_tree_border", "kind": "forest", "x": 22, "y": 0, "width": 2, "height": 16}
+        {"id": "west_tree_border", "kind": "forest", "x": 0, "y": 0, "width": 2, "height": 20},
+        {"id": "east_tree_border", "kind": "forest", "x": 22, "y": 0, "width": 2, "height": 20},
+        {"id": "memory_garden", "kind": "hedge", "x": 3, "y": 14, "width": 6, "height": 4},
+        {"id": "practice_pond", "kind": "water", "x": 16, "y": 15, "width": 4, "height": 3}
       ],
       "buildings": [
         {"id": "team_building", "name": "Team Building", "kind": "home", "x": 2, "y": 7, "width": 7, "height": 4, "door": {"x": 5, "y": 10}, "interior": "team_locker_room"},
-        {"id": "coach_office", "name": "Coach's Office", "kind": "story", "x": 15, "y": 7, "width": 6, "height": 4, "door": {"x": 17, "y": 10}, "interior": "coach_office"}
+        {"id": "coach_office", "name": "Coach's Office", "kind": "story", "x": 15, "y": 9, "width": 6, "height": 4, "door": {"x": 17, "y": 12}, "interior": "coach_office"}
       ],
       "landmarks": [
-        {"id": "camp_randall_stadium", "name": "Camp Randall Stadium", "kind": "x_factor", "x": 3, "y": 0, "width": 18, "height": 6, "door": {"x": 11, "y": 5}, "interior": "stadium_tunnel", "gate": "season_complete"}
+        {"id": "camp_randall_stadium", "name": "Camp Randall Stadium", "kind": "x_factor", "x": 4, "y": 0, "width": 16, "height": 6, "door": {"x": 11, "y": 5}, "interior": "stadium_tunnel", "gate": "season_complete"}
       ],
       "connections": [
         {"to": "r1", "edge": "south", "start": 11, "span": 2, "toEdge": "north", "toStart": 8}
       ],
       "events": [
         {"id": "opening_spawn", "label": "Wake / name", "x": 5, "y": 12, "beat": 1},
-        {"id": "coach_office_empty", "label": "Office empty", "x": 17, "y": 11, "beat": 3},
+        {"id": "coach_office_empty", "label": "Office empty", "x": 17, "y": 13, "beat": 3},
         {"id": "stadium_final_gate", "label": "Ending gate", "x": 11, "y": 6, "beat": 40}
       ],
       "cameraReviews": [
-        {"id": "home_core", "label": "Home core", "x": 4, "y": 2, "width": 15, "height": 10},
-        {"id": "south_exit", "label": "R1 departure", "x": 4, "y": 6, "width": 15, "height": 10}
+        {"id": "stadium_front", "label": "Stadium identity", "x": 4, "y": 0, "width": 15, "height": 10},
+        {"id": "home_core", "label": "Team building and lawn", "x": 0, "y": 6, "width": 15, "height": 10},
+        {"id": "coach_garden", "label": "Coach office and relief", "x": 9, "y": 8, "width": 15, "height": 10},
+        {"id": "south_exit", "label": "R1 departure", "x": 5, "y": 10, "width": 15, "height": 10}
       ]
     },
     "r1": {
       "displayName": "R1 - First Walk",
       "kind": "route",
       "plane": "madison",
-      "origin": {"x": 6, "y": 16},
+      "origin": {"x": 6, "y": 20},
       "size": {"width": 18, "height": 24},
       "start": {"x": 8, "y": 1, "facing": "down"},
       "ground": "forest",
@@ -107,7 +115,7 @@
       ],
       "connections": [
         {"to": "camp_randall", "edge": "north", "start": 8, "span": 2, "toEdge": "south", "toStart": 11},
-        {"to": "field_house", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 14}
+        {"to": "field_house", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 20}
       ],
       "events": [
         {"id": "rex_rematch", "label": "Optional Rex", "x": 6, "y": 6, "beat": 10},
@@ -125,50 +133,69 @@
       "displayName": "Field House Town",
       "kind": "town",
       "plane": "madison",
-      "origin": {"x": 0, "y": 40},
-      "size": {"width": 30, "height": 20},
-      "start": {"x": 14, "y": 1, "facing": "down"},
+      "origin": {"x": -6, "y": 44},
+      "size": {"width": 40, "height": 28},
+      "start": {"x": 20, "y": 1, "facing": "down"},
       "ground": "lawn",
       "walkableMode": "open",
       "paths": [
-        {"id": "north_south_axis", "x": 14, "y": 0, "width": 2, "height": 20, "material": "brick"},
-        {"id": "town_crossing", "x": 0, "y": 10, "width": 30, "height": 2, "material": "brick"},
-        {"id": "service_row", "x": 4, "y": 6, "width": 22, "height": 2, "material": "stone"}
+        {"id": "north_arrival", "x": 19, "y": 0, "width": 3, "height": 8, "material": "brick"},
+        {"id": "arrival_crosswalk", "x": 4, "y": 6, "width": 27, "height": 2, "material": "stone"},
+        {"id": "west_arena_bypass", "x": 11, "y": 6, "width": 3, "height": 14, "material": "stone"},
+        {"id": "east_arena_bypass", "x": 26, "y": 6, "width": 3, "height": 14, "material": "stone"},
+        {"id": "arena_forecourt", "x": 10, "y": 16, "width": 20, "height": 4, "material": "stone"},
+        {"id": "west_spine", "x": 5, "y": 7, "width": 3, "height": 18, "material": "brick"},
+        {"id": "lakeshore_walk", "x": 0, "y": 17, "width": 11, "height": 3, "material": "brick"},
+        {"id": "state_walk", "x": 26, "y": 13, "width": 14, "height": 3, "material": "brick"},
+        {"id": "east_spine", "x": 35, "y": 13, "width": 3, "height": 12, "material": "stone"},
+        {"id": "buckys_walk", "x": 32, "y": 22, "width": 6, "height": 3, "material": "stone"},
+        {"id": "south_walk", "x": 5, "y": 24, "width": 33, "height": 2, "material": "stone"}
       ],
       "blockers": [
-        {"id": "south_garden", "kind": "hedge", "x": 2, "y": 15, "width": 10, "height": 3},
-        {"id": "east_garden", "kind": "hedge", "x": 18, "y": 15, "width": 10, "height": 3}
+        {"id": "north_tree_west", "kind": "forest", "x": 0, "y": 0, "width": 17, "height": 2},
+        {"id": "north_tree_east", "kind": "forest", "x": 24, "y": 0, "width": 16, "height": 2},
+        {"id": "west_border_north", "kind": "forest", "x": 0, "y": 0, "width": 2, "height": 16},
+        {"id": "west_border_south", "kind": "forest", "x": 0, "y": 19, "width": 2, "height": 9},
+        {"id": "east_border_north", "kind": "forest", "x": 38, "y": 0, "width": 2, "height": 14},
+        {"id": "east_border_south", "kind": "forest", "x": 38, "y": 16, "width": 2, "height": 12},
+        {"id": "south_tree_line", "kind": "forest", "x": 0, "y": 26, "width": 40, "height": 2},
+        {"id": "memorial_garden", "kind": "hedge", "x": 18, "y": 20, "width": 7, "height": 3}
       ],
       "buildings": [
         {"id": "trainer_room_field", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 3, "width": 5, "height": 4, "door": {"x": 4, "y": 6}, "interior": "trainer_room"},
-        {"id": "field_house_arena", "name": "Wisconsin Field House", "kind": "arena", "x": 9, "y": 3, "width": 12, "height": 7, "door": {"x": 14, "y": 9}, "interior": "field_house_floor"},
-        {"id": "buckys_field", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 23, "y": 3, "width": 5, "height": 4, "door": {"x": 25, "y": 6}, "interior": "buckys_locker_room"}
+        {"id": "field_house_arena", "name": "Wisconsin Field House", "kind": "arena", "x": 14, "y": 10, "width": 12, "height": 7, "door": {"x": 20, "y": 16}, "interior": "field_house_floor"},
+        {"id": "buckys_field", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 30, "y": 19, "width": 5, "height": 4, "door": {"x": 32, "y": 22}, "interior": "buckys_locker_room"},
+        {"id": "equipment_annex", "name": "Equipment Annex", "kind": "closed_building", "x": 31, "y": 3, "width": 7, "height": 5},
+        {"id": "campus_housing", "name": "Campus Housing", "kind": "closed_building", "x": 8, "y": 20, "width": 8, "height": 4}
       ],
       "landmarks": [
-        {"id": "field_house_arch", "name": "Field House Arch", "kind": "x_factor", "x": 12, "y": 0, "width": 6, "height": 3, "walkable": true}
+        {"id": "field_house_arch", "name": "Field House Arch", "kind": "x_factor", "x": 18, "y": 4, "width": 5, "height": 2, "walkable": true}
       ],
       "connections": [
-        {"to": "r1", "edge": "north", "start": 14, "span": 2, "toEdge": "south", "toStart": 8},
-        {"to": "lakeshore_path", "edge": "west", "start": 12, "span": 2, "toEdge": "east", "toStart": 7},
-        {"to": "state_street", "edge": "east", "start": 8, "span": 2, "toEdge": "west", "toStart": 7}
+        {"to": "r1", "edge": "north", "start": 20, "span": 2, "toEdge": "south", "toStart": 8},
+        {"to": "lakeshore_path", "edge": "west", "start": 17, "span": 2, "toEdge": "east", "toStart": 7},
+        {"to": "state_street", "edge": "east", "start": 14, "span": 2, "toEdge": "west", "toStart": 8}
       ],
       "events": [
-        {"id": "equipment_delivery", "label": "Equipment manager", "x": 14, "y": 10, "beat": 11},
-        {"id": "locker_access", "label": "Locker unlocked", "x": 13, "y": 10, "beat": 11},
-        {"id": "field_badge", "label": "The Opener", "x": 14, "y": 9, "beat": 14}
+        {"id": "equipment_delivery", "label": "Equipment manager", "x": 11, "y": 18, "beat": 11},
+        {"id": "locker_access", "label": "Locker unlocked", "x": 32, "y": 23, "beat": 11},
+        {"id": "field_badge", "label": "The Opener", "x": 20, "y": 16, "beat": 14}
       ],
       "cameraReviews": [
-        {"id": "arch_arrival", "label": "Arch reveal", "x": 7, "y": 0, "width": 15, "height": 10},
-        {"id": "west_services", "label": "Recovery and west branch", "x": 0, "y": 5, "width": 15, "height": 10},
-        {"id": "east_services", "label": "Shop and State exit", "x": 15, "y": 5, "width": 15, "height": 10},
-        {"id": "south_gardens", "label": "Quiet town space", "x": 7, "y": 10, "width": 15, "height": 10}
+        {"id": "arch_arrival", "label": "Arch arrival", "x": 13, "y": 0, "width": 15, "height": 10},
+        {"id": "trainer_quarter", "label": "Trainer's Room quarter", "x": 0, "y": 1, "width": 15, "height": 10},
+        {"id": "arena_front", "label": "Field House forecourt", "x": 13, "y": 8, "width": 15, "height": 10},
+        {"id": "lakeshore_branch", "label": "Western branch", "x": 0, "y": 12, "width": 15, "height": 10},
+        {"id": "state_departure", "label": "State Street departure", "x": 25, "y": 10, "width": 15, "height": 10},
+        {"id": "south_neighborhood", "label": "Residential relief", "x": 8, "y": 18, "width": 15, "height": 10},
+        {"id": "buckys_quarter", "label": "Bucky's Locker Room quarter", "x": 25, "y": 18, "width": 15, "height": 10}
       ]
     },
     "lakeshore_path": {
       "displayName": "Lakeshore Path",
       "kind": "route",
       "plane": "madison",
-      "origin": {"x": -30, "y": 45},
+      "origin": {"x": -36, "y": 54},
       "size": {"width": 30, "height": 14},
       "start": {"x": 28, "y": 7, "facing": "left"},
       "ground": "shore",
@@ -191,7 +218,7 @@
       ],
       "connections": [
         {"to": "picnic_point", "edge": "west", "start": 7, "span": 2, "toEdge": "east", "toStart": 9},
-        {"to": "field_house", "edge": "east", "start": 7, "span": 2, "toEdge": "west", "toStart": 12}
+        {"to": "field_house", "edge": "east", "start": 7, "span": 2, "toEdge": "west", "toStart": 17}
       ],
       "events": [
         {"id": "first_recruit_zone", "label": "Recruiting mats", "x": 13, "y": 5, "beat": 12},
@@ -207,7 +234,7 @@
       "displayName": "Picnic Point",
       "kind": "badge_venue",
       "plane": "madison",
-      "origin": {"x": -54, "y": 43},
+      "origin": {"x": -60, "y": 52},
       "size": {"width": 24, "height": 18},
       "start": {"x": 22, "y": 9, "facing": "left"},
       "ground": "shore",
@@ -243,50 +270,67 @@
       "displayName": "State Street",
       "kind": "route",
       "plane": "madison",
-      "origin": {"x": 30, "y": 41},
-      "size": {"width": 36, "height": 14},
-      "start": {"x": 1, "y": 7, "facing": "right"},
+      "origin": {"x": 34, "y": 50},
+      "size": {"width": 44, "height": 18},
+      "start": {"x": 1, "y": 8, "facing": "right"},
       "ground": "urban",
       "walkableMode": "paths",
       "paths": [
-        {"id": "state_walk", "x": 0, "y": 5, "width": 36, "height": 5, "material": "pedestrian_brick"},
-        {"id": "bascom_branch", "x": 17, "y": 0, "width": 2, "height": 7, "material": "stone"}
+        {"id": "main_promenade", "x": 0, "y": 7, "width": 44, "height": 4, "material": "pedestrian_brick"},
+        {"id": "north_sidewalk", "x": 0, "y": 5, "width": 44, "height": 2, "material": "stone"},
+        {"id": "south_sidewalk", "x": 0, "y": 11, "width": 44, "height": 2, "material": "stone"},
+        {"id": "bascom_branch", "x": 21, "y": 0, "width": 2, "height": 8, "material": "stone"},
+        {"id": "library_plaza", "x": 12, "y": 4, "width": 9, "height": 10, "material": "stone"},
+        {"id": "capitol_forecourt", "x": 35, "y": 5, "width": 9, "height": 8, "material": "stone"}
       ],
       "clearings": [
-        {"id": "throw_plaza", "x": 7, "y": 4, "width": 7, "height": 7},
-        {"id": "capitol_reveal", "x": 28, "y": 4, "width": 8, "height": 7}
+        {"id": "throw_plaza", "x": 8, "y": 6, "width": 6, "height": 7},
+        {"id": "library_mall", "x": 14, "y": 3, "width": 7, "height": 12},
+        {"id": "capitol_reveal", "x": 36, "y": 5, "width": 8, "height": 8}
       ],
       "blockers": [
-        {"id": "north_storefronts_west", "kind": "storefront", "x": 0, "y": 0, "width": 17, "height": 5},
-        {"id": "north_storefronts_east", "kind": "storefront", "x": 19, "y": 0, "width": 17, "height": 5},
-        {"id": "south_building_line", "kind": "storefront", "x": 0, "y": 10, "width": 36, "height": 4}
+        {"id": "north_storefront_west", "kind": "storefront", "x": 0, "y": 0, "width": 11, "height": 5},
+        {"id": "north_storefront_mid", "kind": "storefront", "x": 11, "y": 0, "width": 10, "height": 3},
+        {"id": "north_storefront_east", "kind": "storefront", "x": 23, "y": 0, "width": 13, "height": 5},
+        {"id": "north_terminal_block", "kind": "storefront", "x": 36, "y": 0, "width": 8, "height": 5},
+        {"id": "south_storefront_west", "kind": "storefront", "x": 0, "y": 13, "width": 8, "height": 5},
+        {"id": "south_storefront_mid_left", "kind": "storefront", "x": 14, "y": 14, "width": 8, "height": 4},
+        {"id": "south_storefront_mid_right", "kind": "storefront", "x": 25, "y": 13, "width": 10, "height": 5},
+        {"id": "south_storefront_east", "kind": "storefront", "x": 39, "y": 13, "width": 5, "height": 5}
       ],
-      "buildings": [],
+      "buildings": [
+        {"id": "bookstore_row", "name": "Bookstore Row", "kind": "closed_building", "x": 1, "y": 1, "width": 9, "height": 4},
+        {"id": "theater_marquee", "name": "State Street Theater", "kind": "closed_building", "x": 25, "y": 1, "width": 8, "height": 4},
+        {"id": "food_cart_row", "name": "Food Cart Row", "kind": "closed_building", "x": 25, "y": 14, "width": 9, "height": 4}
+      ],
       "landmarks": [
-        {"id": "state_street_gate", "name": "State Street Gate", "kind": "route_landmark", "x": 1, "y": 5, "width": 3, "height": 2, "walkable": true},
-        {"id": "capitol_view", "name": "Capitol View", "kind": "vista", "x": 32, "y": 5, "width": 3, "height": 2, "walkable": true}
+        {"id": "state_street_gate", "name": "State Street Gate", "kind": "route_landmark", "x": 1, "y": 6, "width": 3, "height": 2, "walkable": true},
+        {"id": "library_mall_marker", "name": "Library Mall", "kind": "route_landmark", "x": 15, "y": 4, "width": 5, "height": 3, "walkable": true},
+        {"id": "capitol_view", "name": "Capitol Vista", "kind": "vista", "x": 39, "y": 6, "width": 4, "height": 2, "walkable": true}
       ],
       "connections": [
-        {"to": "field_house", "edge": "west", "start": 7, "span": 2, "toEdge": "east", "toStart": 8},
-        {"to": "bascom_hill", "edge": "north", "start": 17, "span": 2, "toEdge": "south", "toStart": 8},
-        {"to": "capitol_square", "edge": "east", "start": 7, "span": 2, "toEdge": "west", "toStart": 10}
+        {"to": "field_house", "edge": "west", "start": 8, "span": 2, "toEdge": "east", "toStart": 14},
+        {"to": "bascom_hill", "edge": "north", "start": 22, "span": 2, "toEdge": "south", "toStart": 8},
+        {"to": "capitol_square", "edge": "east", "start": 8, "span": 2, "toEdge": "west", "toStart": 14}
       ],
       "events": [
-        {"id": "deion_throw", "label": "Deion", "x": 9, "y": 7, "beat": 16},
-        {"id": "throw_trainer_two", "label": "Throw trainer", "x": 21, "y": 7, "beat": 16},
-        {"id": "capitol_reveal", "label": "Capitol reveal", "x": 31, "y": 7, "beat": 17}
+        {"id": "deion_throw", "label": "Deion", "x": 9, "y": 9, "beat": 16},
+        {"id": "throw_trainer_two", "label": "Throw trainer", "x": 28, "y": 9, "beat": 16},
+        {"id": "capitol_reveal", "label": "Capitol reveal", "x": 40, "y": 9, "beat": 17}
       ],
       "cameraReviews": [
-        {"id": "field_entry", "label": "Route opening", "x": 0, "y": 2, "width": 15, "height": 10},
-        {"id": "bascom_junction", "label": "Optional branch", "x": 10, "y": 0, "width": 15, "height": 10},
-        {"id": "capitol_reveal", "label": "Town reveal", "x": 21, "y": 2, "width": 15, "height": 10}
+        {"id": "field_entry", "label": "Field House departure", "x": 0, "y": 4, "width": 15, "height": 10},
+        {"id": "bookstore_plaza", "label": "Bookstore and throw plaza", "x": 8, "y": 2, "width": 15, "height": 10},
+        {"id": "bascom_junction", "label": "Bascom branch", "x": 15, "y": 0, "width": 15, "height": 10},
+        {"id": "theater_block", "label": "Theater block", "x": 22, "y": 3, "width": 15, "height": 10},
+        {"id": "capitol_reveal", "label": "Capitol reveal", "x": 29, "y": 4, "width": 15, "height": 10}
       ]
     },
     "bascom_hill": {
       "displayName": "Bascom Hill",
       "kind": "optional_venue",
       "plane": "madison",
-      "origin": {"x": 39, "y": 23},
+      "origin": {"x": 48, "y": 32},
       "size": {"width": 18, "height": 18},
       "start": {"x": 8, "y": 16, "facing": "up"},
       "ground": "slope",
@@ -312,7 +356,7 @@
         {"id": "abe_statue", "name": "Abe Lincoln", "kind": "x_factor", "x": 8, "y": 8, "width": 2, "height": 2}
       ],
       "connections": [
-        {"to": "state_street", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 17}
+        {"to": "state_street", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 22}
       ],
       "events": [
         {"id": "professor_wall", "label": "The Professor", "x": 8, "y": 6, "beat": 16},
@@ -328,49 +372,65 @@
       "displayName": "Capitol Square",
       "kind": "town",
       "plane": "madison",
-      "origin": {"x": 66, "y": 38},
-      "size": {"width": 30, "height": 20},
-      "start": {"x": 1, "y": 10, "facing": "right"},
+      "origin": {"x": 78, "y": 44},
+      "size": {"width": 40, "height": 28},
+      "start": {"x": 1, "y": 14, "facing": "right"},
       "ground": "urban",
       "walkableMode": "open",
       "paths": [
-        {"id": "state_arrival", "x": 0, "y": 10, "width": 16, "height": 2, "material": "brick"},
-        {"id": "capitol_axis", "x": 14, "y": 8, "width": 2, "height": 12, "material": "stone"},
-        {"id": "square_ring_north", "x": 6, "y": 8, "width": 18, "height": 2, "material": "stone"},
-        {"id": "service_row", "x": 4, "y": 16, "width": 22, "height": 2, "material": "stone"}
+        {"id": "state_arrival", "x": 0, "y": 13, "width": 14, "height": 3, "material": "brick"},
+        {"id": "square_ring_north", "x": 8, "y": 3, "width": 24, "height": 3, "material": "stone"},
+        {"id": "square_ring_south", "x": 8, "y": 16, "width": 24, "height": 3, "material": "stone"},
+        {"id": "square_ring_west", "x": 8, "y": 3, "width": 3, "height": 16, "material": "stone"},
+        {"id": "square_ring_east", "x": 29, "y": 3, "width": 3, "height": 16, "material": "stone"},
+        {"id": "capitol_axis", "x": 19, "y": 13, "width": 3, "height": 15, "material": "brick"},
+        {"id": "trainer_walk", "x": 4, "y": 6, "width": 5, "height": 3, "material": "stone"},
+        {"id": "buckys_walk", "x": 29, "y": 20, "width": 8, "height": 3, "material": "stone"},
+        {"id": "south_loop", "x": 5, "y": 21, "width": 30, "height": 3, "material": "stone"}
       ],
       "blockers": [
-        {"id": "northwest_garden", "kind": "hedge", "x": 1, "y": 2, "width": 6, "height": 6},
-        {"id": "northeast_garden", "kind": "hedge", "x": 23, "y": 2, "width": 6, "height": 6}
+        {"id": "north_city_edge", "kind": "city", "x": 0, "y": 0, "width": 40, "height": 2},
+        {"id": "west_city_top", "kind": "city", "x": 0, "y": 0, "width": 2, "height": 14},
+        {"id": "west_city_bottom", "kind": "city", "x": 0, "y": 16, "width": 2, "height": 12},
+        {"id": "east_city_edge", "kind": "city", "x": 38, "y": 0, "width": 2, "height": 28},
+        {"id": "south_city_left", "kind": "city", "x": 0, "y": 26, "width": 20, "height": 2},
+        {"id": "south_city_right", "kind": "city", "x": 22, "y": 26, "width": 18, "height": 2},
+        {"id": "west_capitol_garden", "kind": "hedge", "x": 11, "y": 6, "width": 2, "height": 8},
+        {"id": "east_capitol_garden", "kind": "hedge", "x": 27, "y": 6, "width": 2, "height": 8}
       ],
       "buildings": [
-        {"id": "trainer_room_capitol", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 13, "width": 5, "height": 4, "door": {"x": 4, "y": 16}, "interior": "trainer_room"},
-        {"id": "buckys_capitol", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 23, "y": 13, "width": 5, "height": 4, "door": {"x": 25, "y": 16}, "interior": "buckys_locker_room"}
+        {"id": "trainer_room_capitol", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 3, "width": 5, "height": 4, "door": {"x": 4, "y": 6}, "interior": "trainer_room"},
+        {"id": "buckys_capitol", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 33, "y": 18, "width": 5, "height": 4, "door": {"x": 35, "y": 21}, "interior": "buckys_locker_room"},
+        {"id": "capitol_hotel", "name": "Capitol Hotel", "kind": "closed_building", "x": 2, "y": 8, "width": 5, "height": 4},
+        {"id": "civic_offices", "name": "Civic Offices", "kind": "closed_building", "x": 33, "y": 3, "width": 5, "height": 7}
       ],
       "landmarks": [
-        {"id": "wisconsin_capitol", "name": "Wisconsin State Capitol", "kind": "x_factor", "x": 9, "y": 1, "width": 12, "height": 8, "door": {"x": 14, "y": 8}, "interior": "capitol_interior"}
+        {"id": "wisconsin_capitol", "name": "Wisconsin State Capitol", "kind": "x_factor", "x": 14, "y": 6, "width": 12, "height": 8, "door": {"x": 20, "y": 13}, "interior": "capitol_interior", "gate": "always"}
       ],
       "connections": [
-        {"to": "state_street", "edge": "west", "start": 10, "span": 2, "toEdge": "east", "toStart": 7},
-        {"to": "monona_shore", "edge": "south", "start": 14, "span": 2, "toEdge": "north", "toStart": 8}
+        {"to": "state_street", "edge": "west", "start": 14, "span": 2, "toEdge": "east", "toStart": 8},
+        {"to": "monona_shore", "edge": "south", "start": 20, "span": 2, "toEdge": "north", "toStart": 8}
       ],
       "events": [
-        {"id": "booster_speech", "label": "Booster / voucher", "x": 8, "y": 11, "beat": 18},
-        {"id": "senator_badge", "label": "The Senator", "x": 14, "y": 8, "beat": 19},
-        {"id": "bus_pass", "label": "Bus Pass", "x": 20, "y": 11, "beat": 22}
+        {"id": "booster_speech", "label": "Booster / voucher", "x": 9, "y": 15, "beat": 18},
+        {"id": "senator_badge", "label": "The Senator", "x": 20, "y": 13, "beat": 19},
+        {"id": "bus_pass", "label": "Bus Pass", "x": 29, "y": 20, "beat": 22}
       ],
       "cameraReviews": [
-        {"id": "state_arrival", "label": "State Street arrival", "x": 0, "y": 5, "width": 15, "height": 10},
-        {"id": "capitol_front", "label": "Capitol dominance", "x": 7, "y": 0, "width": 15, "height": 10},
-        {"id": "services", "label": "Known services", "x": 7, "y": 10, "width": 15, "height": 10},
-        {"id": "monona_gate", "label": "Shore departure", "x": 15, "y": 10, "width": 15, "height": 10}
+        {"id": "state_arrival", "label": "State Street arrival", "x": 0, "y": 9, "width": 15, "height": 10},
+        {"id": "trainer_quarter", "label": "Trainer's Room quarter", "x": 0, "y": 0, "width": 15, "height": 10},
+        {"id": "capitol_north", "label": "Capitol crown", "x": 12, "y": 0, "width": 15, "height": 10},
+        {"id": "capitol_front", "label": "Capitol forecourt", "x": 12, "y": 7, "width": 15, "height": 10},
+        {"id": "civic_quarter", "label": "Eastern civic quarter", "x": 25, "y": 1, "width": 15, "height": 10},
+        {"id": "buckys_quarter", "label": "Bucky's Locker Room quarter", "x": 25, "y": 18, "width": 15, "height": 10},
+        {"id": "monona_gate", "label": "Monona departure", "x": 12, "y": 18, "width": 15, "height": 10}
       ]
     },
     "monona_shore": {
       "displayName": "Monona Shore",
       "kind": "route",
       "plane": "madison",
-      "origin": {"x": 72, "y": 58},
+      "origin": {"x": 90, "y": 72},
       "size": {"width": 18, "height": 24},
       "start": {"x": 8, "y": 1, "facing": "down"},
       "ground": "water",
@@ -395,8 +455,8 @@
         {"id": "monona_crossing", "name": "Kayak Crossing", "kind": "route_landmark", "x": 7, "y": 10, "width": 4, "height": 8, "walkable": true}
       ],
       "connections": [
-        {"to": "capitol_square", "edge": "north", "start": 8, "span": 2, "toEdge": "south", "toStart": 14},
-        {"to": "kohl_center", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 14}
+        {"to": "capitol_square", "edge": "north", "start": 8, "span": 2, "toEdge": "south", "toStart": 20},
+        {"to": "kohl_center", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 20}
       ],
       "events": [
         {"id": "voucher_redeem", "label": "Redeem voucher", "x": 4, "y": 6, "beat": 23},
@@ -413,48 +473,65 @@
       "displayName": "Kohl Center District",
       "kind": "town",
       "plane": "madison",
-      "origin": {"x": 66, "y": 82},
-      "size": {"width": 30, "height": 20},
-      "start": {"x": 14, "y": 1, "facing": "down"},
+      "origin": {"x": 78, "y": 96},
+      "size": {"width": 40, "height": 28},
+      "start": {"x": 20, "y": 1, "facing": "down"},
       "ground": "urban",
       "walkableMode": "open",
       "paths": [
-        {"id": "shore_arrival", "x": 14, "y": 0, "width": 2, "height": 20, "material": "stone"},
-        {"id": "district_crossing", "x": 2, "y": 10, "width": 26, "height": 2, "material": "brick"},
-        {"id": "service_row", "x": 4, "y": 16, "width": 22, "height": 2, "material": "stone"}
+        {"id": "shore_arrival", "x": 19, "y": 0, "width": 3, "height": 8, "material": "stone"},
+        {"id": "entry_crossing", "x": 10, "y": 6, "width": 20, "height": 2, "material": "stone"},
+        {"id": "west_arena_bypass", "x": 11, "y": 6, "width": 3, "height": 14, "material": "stone"},
+        {"id": "east_arena_bypass", "x": 26, "y": 6, "width": 3, "height": 14, "material": "stone"},
+        {"id": "arena_forecourt", "x": 10, "y": 16, "width": 20, "height": 4, "material": "brick"},
+        {"id": "west_spine", "x": 5, "y": 10, "width": 3, "height": 15, "material": "stone"},
+        {"id": "identity_walk", "x": 5, "y": 10, "width": 8, "height": 3, "material": "stone"},
+        {"id": "east_spine", "x": 36, "y": 9, "width": 2, "height": 17, "material": "stone"},
+        {"id": "south_crossing", "x": 5, "y": 23, "width": 33, "height": 3, "material": "stone"},
+        {"id": "trainer_walk", "x": 4, "y": 22, "width": 9, "height": 3, "material": "stone"},
+        {"id": "buckys_walk", "x": 29, "y": 9, "width": 9, "height": 3, "material": "stone"}
       ],
       "blockers": [
-        {"id": "rail_edge_west", "kind": "fence", "x": 0, "y": 0, "width": 2, "height": 20},
-        {"id": "rail_edge_east", "kind": "fence", "x": 28, "y": 0, "width": 2, "height": 20}
+        {"id": "north_rail_west", "kind": "fence", "x": 0, "y": 0, "width": 17, "height": 2},
+        {"id": "north_rail_east", "kind": "fence", "x": 23, "y": 0, "width": 17, "height": 2},
+        {"id": "west_rail_edge", "kind": "fence", "x": 0, "y": 0, "width": 2, "height": 28},
+        {"id": "east_rail_edge", "kind": "fence", "x": 38, "y": 0, "width": 2, "height": 28},
+        {"id": "south_rail_edge", "kind": "fence", "x": 0, "y": 26, "width": 40, "height": 2}
       ],
       "buildings": [
-        {"id": "trainer_room_kohl", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 13, "width": 5, "height": 4, "door": {"x": 4, "y": 16}, "interior": "trainer_room"},
-        {"id": "kohl_arena", "name": "Kohl Center", "kind": "arena", "x": 8, "y": 2, "width": 14, "height": 8, "door": {"x": 14, "y": 9}, "interior": "kohl_bracket_floor"},
-        {"id": "buckys_kohl", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 23, "y": 13, "width": 5, "height": 4, "door": {"x": 25, "y": 16}, "interior": "buckys_locker_room"}
+        {"id": "trainer_room_kohl", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 19, "width": 5, "height": 4, "door": {"x": 4, "y": 22}, "interior": "trainer_room"},
+        {"id": "kohl_arena", "name": "Kohl Center", "kind": "arena", "x": 14, "y": 10, "width": 12, "height": 7, "door": {"x": 20, "y": 16}, "interior": "kohl_bracket_floor"},
+        {"id": "buckys_kohl", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 31, "y": 6, "width": 5, "height": 4, "door": {"x": 33, "y": 9}, "interior": "buckys_locker_room"},
+        {"id": "transit_hotel", "name": "Tournament Hotel", "kind": "closed_building", "x": 26, "y": 20, "width": 9, "height": 3}
       ],
       "landmarks": [
-        {"id": "kohl_x_factor_reserve", "name": "District X-Factor Reserve", "kind": "decision_required", "x": 2, "y": 3, "width": 5, "height": 6, "gate": "tony_decision_required"}
+        {"id": "kohl_x_factor_reserve", "name": "District X-Factor Reserve", "kind": "decision_required", "x": 3, "y": 4, "width": 7, "height": 7, "gate": "tony_decision_required"},
+        {"id": "tournament_way_gateway", "name": "Tournament Way Gateway", "kind": "gateway", "x": 18, "y": 4, "width": 5, "height": 2, "walkable": true}
       ],
       "connections": [
-        {"to": "monona_shore", "edge": "north", "start": 14, "span": 2, "toEdge": "south", "toStart": 8}
+        {"to": "monona_shore", "edge": "north", "start": 20, "span": 2, "toEdge": "south", "toStart": 8}
       ],
       "events": [
-        {"id": "conference_checkin", "label": "Bracket check-in", "x": 14, "y": 11, "beat": 24},
-        {"id": "anchor_badge", "label": "The Anchor", "x": 14, "y": 9, "beat": 25},
-        {"id": "bus_return", "label": "Bus to Camp", "x": 19, "y": 11, "beat": 28}
+        {"id": "conference_checkin", "label": "Bracket check-in", "x": 20, "y": 18, "beat": 24},
+        {"id": "anchor_badge", "label": "The Anchor", "x": 20, "y": 16, "beat": 25},
+        {"id": "bus_return", "label": "Bus to Camp", "x": 28, "y": 18, "beat": 28}
       ],
       "cameraReviews": [
-        {"id": "shore_arrival", "label": "District arrival", "x": 7, "y": 0, "width": 15, "height": 10},
-        {"id": "arena_front", "label": "Kohl dominance", "x": 7, "y": 2, "width": 15, "height": 10},
-        {"id": "reserved_identity", "label": "X-factor reserve", "x": 0, "y": 2, "width": 15, "height": 10},
-        {"id": "services", "label": "Tournament services", "x": 7, "y": 10, "width": 15, "height": 10}
+        {"id": "shore_arrival", "label": "Monona arrival", "x": 13, "y": 0, "width": 15, "height": 10},
+        {"id": "reserved_identity", "label": "Unresolved X-factor quarter", "x": 0, "y": 2, "width": 15, "height": 10},
+        {"id": "arena_front", "label": "Kohl Center", "x": 12, "y": 8, "width": 15, "height": 10},
+        {"id": "buckys_quarter", "label": "Bucky's Locker Room quarter", "x": 25, "y": 3, "width": 15, "height": 10},
+        {"id": "district_core", "label": "Tournament district core", "x": 12, "y": 12, "width": 15, "height": 10},
+        {"id": "trainer_quarter", "label": "Trainer's Room quarter", "x": 0, "y": 18, "width": 15, "height": 10},
+        {"id": "south_district", "label": "South district", "x": 12, "y": 18, "width": 15, "height": 10},
+        {"id": "hotel_quarter", "label": "Tournament hotel quarter", "x": 25, "y": 18, "width": 15, "height": 10}
       ]
     },
     "airport": {
       "displayName": "Airport Transition",
       "kind": "transition",
       "plane": "transition",
-      "atlasPosition": {"x": 106, "y": 15},
+      "atlasPosition": {"x": 134, "y": 22},
       "size": {"width": 15, "height": 10},
       "start": {"x": 7, "y": 8, "facing": "up"},
       "ground": "terminal",
@@ -483,41 +560,55 @@
       "displayName": "St. Louis Nationals",
       "kind": "town",
       "plane": "st_louis",
-      "atlasPosition": {"x": 110, "y": 40},
-      "size": {"width": 30, "height": 20},
-      "start": {"x": 14, "y": 19, "facing": "up"},
+      "atlasPosition": {"x": 132, "y": 62},
+      "size": {"width": 42, "height": 30},
+      "start": {"x": 20, "y": 28, "facing": "up"},
       "ground": "urban",
       "walkableMode": "open",
       "paths": [
-        {"id": "nationals_axis", "x": 14, "y": 8, "width": 2, "height": 12, "material": "stone"},
-        {"id": "town_crossing", "x": 2, "y": 10, "width": 26, "height": 2, "material": "brick"},
-        {"id": "service_row", "x": 4, "y": 16, "width": 22, "height": 2, "material": "stone"},
-        {"id": "arch_walk", "x": 20, "y": 6, "width": 6, "height": 2, "material": "stone"}
+        {"id": "arrival_axis", "x": 19, "y": 21, "width": 4, "height": 9, "material": "stone"},
+        {"id": "nationals_axis", "x": 20, "y": 11, "width": 2, "height": 11, "material": "brick"},
+        {"id": "venue_forecourt", "x": 10, "y": 11, "width": 22, "height": 5, "material": "stone"},
+        {"id": "west_loop", "x": 5, "y": 10, "width": 3, "height": 14, "material": "stone"},
+        {"id": "east_loop", "x": 34, "y": 8, "width": 3, "height": 16, "material": "stone"},
+        {"id": "town_crossing", "x": 5, "y": 21, "width": 32, "height": 3, "material": "brick"},
+        {"id": "trainer_walk", "x": 4, "y": 23, "width": 8, "height": 3, "material": "stone"},
+        {"id": "shop_walk", "x": 32, "y": 20, "width": 7, "height": 3, "material": "stone"},
+        {"id": "arch_walk", "x": 29, "y": 6, "width": 9, "height": 3, "material": "stone"},
+        {"id": "victory_walk", "x": 28, "y": 8, "width": 3, "height": 14, "material": "stone"}
       ],
       "blockers": [
-        {"id": "west_city_edge", "kind": "city", "x": 0, "y": 0, "width": 2, "height": 20},
-        {"id": "east_river_edge", "kind": "water", "x": 28, "y": 0, "width": 2, "height": 20}
+        {"id": "west_city_edge", "kind": "city", "x": 0, "y": 0, "width": 2, "height": 30},
+        {"id": "east_river_edge", "kind": "water", "x": 40, "y": 0, "width": 2, "height": 30},
+        {"id": "north_city_edge", "kind": "city", "x": 2, "y": 0, "width": 38, "height": 2},
+        {"id": "south_city_left", "kind": "city", "x": 0, "y": 28, "width": 19, "height": 2},
+        {"id": "south_city_right", "kind": "city", "x": 23, "y": 28, "width": 19, "height": 2}
       ],
       "buildings": [
-        {"id": "trainer_room_stl", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 13, "width": 5, "height": 4, "door": {"x": 4, "y": 16}, "interior": "trainer_room"},
-        {"id": "nationals_arena", "name": "NCAA Championships", "kind": "arena", "x": 8, "y": 1, "width": 14, "height": 9, "door": {"x": 14, "y": 9}, "interior": "nationals_floor"},
-        {"id": "buckys_stl", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 23, "y": 13, "width": 5, "height": 4, "door": {"x": 25, "y": 16}, "interior": "buckys_locker_room"}
+        {"id": "trainer_room_stl", "name": "Trainer's Room", "kind": "trainer_room", "x": 2, "y": 21, "width": 5, "height": 4, "door": {"x": 4, "y": 24}, "interior": "trainer_room"},
+        {"id": "nationals_arena", "name": "NCAA Championships", "kind": "arena", "x": 14, "y": 4, "width": 14, "height": 8, "door": {"x": 21, "y": 11}, "interior": "nationals_floor"},
+        {"id": "buckys_stl", "name": "Bucky's Locker Room", "kind": "buckys_locker_room", "x": 35, "y": 17, "width": 5, "height": 4, "door": {"x": 37, "y": 20}, "interior": "buckys_locker_room"},
+        {"id": "team_hotel", "name": "Team Hotel", "kind": "closed_building", "x": 3, "y": 4, "width": 8, "height": 6},
+        {"id": "riverfront_hotel", "name": "Riverfront Hotel", "kind": "closed_building", "x": 27, "y": 15, "width": 7, "height": 4}
       ],
       "landmarks": [
-        {"id": "gateway_arch", "name": "Gateway Arch", "kind": "x_factor", "x": 23, "y": 2, "width": 5, "height": 8, "walkable": true, "gate": "nationals_complete"}
+        {"id": "gateway_arch", "name": "Gateway Arch", "kind": "x_factor", "x": 32, "y": 4, "width": 5, "height": 9, "walkable": true, "gate": "nationals_complete"}
       ],
       "connections": [],
       "events": [
-        {"id": "nationals_round_one", "label": "Round One", "x": 13, "y": 10, "beat": 31},
-        {"id": "closer_semifinal", "label": "The Closer", "x": 14, "y": 9, "beat": 32},
-        {"id": "rex_final", "label": "Rex Final", "x": 15, "y": 10, "beat": 34},
-        {"id": "arch_victory", "label": "Victory lap", "x": 24, "y": 10, "beat": 37}
+        {"id": "nationals_round_one", "label": "Round One", "x": 18, "y": 15, "beat": 31},
+        {"id": "closer_semifinal", "label": "The Closer", "x": 21, "y": 11, "beat": 32},
+        {"id": "rex_final", "label": "Rex Final", "x": 22, "y": 15, "beat": 34},
+        {"id": "arch_victory", "label": "Victory lap", "x": 34, "y": 10, "beat": 37}
       ],
       "cameraReviews": [
-        {"id": "arrival", "label": "Nationals arrival", "x": 7, "y": 10, "width": 15, "height": 10},
-        {"id": "arena", "label": "Tournament identity", "x": 7, "y": 0, "width": 15, "height": 10},
-        {"id": "services", "label": "Multi-day services", "x": 7, "y": 10, "width": 15, "height": 10},
-        {"id": "arch", "label": "Victory X-factor", "x": 15, "y": 1, "width": 15, "height": 10}
+        {"id": "arrival", "label": "Nationals arrival", "x": 13, "y": 20, "width": 15, "height": 10},
+        {"id": "trainer_quarter", "label": "Trainer's Room quarter", "x": 0, "y": 18, "width": 15, "height": 10},
+        {"id": "west_hotels", "label": "Team hotel quarter", "x": 0, "y": 2, "width": 15, "height": 10},
+        {"id": "arena", "label": "Nationals venue", "x": 13, "y": 3, "width": 15, "height": 10},
+        {"id": "final_district", "label": "Nationals forecourt", "x": 13, "y": 10, "width": 15, "height": 10},
+        {"id": "arch", "label": "Gateway Arch payoff", "x": 27, "y": 2, "width": 15, "height": 10},
+        {"id": "services", "label": "Riverfront service quarter", "x": 27, "y": 14, "width": 15, "height": 10}
       ]
     }
   },

@@ -79,6 +79,23 @@ function overlaps(a, b) {
     && a.origin.y + a.size.height > b.origin.y;
 }
 
+const localOverlaps = (a, b) => a.x < b.x + b.width
+  && a.x + a.width > b.x
+  && a.y < b.y + b.height
+  && a.y + a.height > b.y;
+
+const doorHasAuthoredApproach = (map, door) => [
+  ...(map.paths || []),
+  ...(map.clearings || [])
+].some(entry => inRect(door.x, door.y, entry));
+
+function distanceFromEdge(map, rect, edge) {
+  if (edge === 'north') return rect.y;
+  if (edge === 'south') return map.size.height - (rect.y + rect.height);
+  if (edge === 'west') return rect.x;
+  return map.size.width - (rect.x + rect.width);
+}
+
 export function validateSeasonOneLayouts(region, layouts) {
   const errors = [];
   const maps = layouts.maps || {};
@@ -86,8 +103,8 @@ export function validateSeasonOneLayouts(region, layouts) {
   const contract = layouts.contract || {};
   const requiredIds = Object.keys(region.nodes || {});
 
-  if (layouts.schemaVersion !== 1 || layouts.status !== 'pre-art-blockout') {
-    errors.push('Season One layouts must use schemaVersion 1 and pre-art-blockout status');
+  if (layouts.schemaVersion !== 1 || layouts.revision !== 2 || layouts.status !== 'pre-art-blockout') {
+    errors.push('Season One layouts must use schemaVersion 1, revision 2, and pre-art-blockout status');
   }
   if (contract.cellSize !== region.tileSize
     || contract.canvasWidth !== region.camera?.canvasWidth
@@ -95,6 +112,9 @@ export function validateSeasonOneLayouts(region, layouts) {
     || contract.cameraCellsWide !== region.camera?.outdoorTilesWide
     || contract.cameraCellsHigh !== region.camera?.outdoorTilesHigh) {
     errors.push('Season One layout contract diverges from region camera/scale authority');
+  }
+  if (!Number.isInteger(contract.majorVenueArrivalBuffer) || contract.majorVenueArrivalBuffer < 6) {
+    errors.push('Season One layout contract must reserve at least six cells before a major venue reveal');
   }
 
   for (const id of requiredIds) {
@@ -124,6 +144,14 @@ export function validateSeasonOneLayouts(region, layouts) {
         if (!rectInBounds(map, entry)) errors.push(`Layout '${id}' ${group} '${entry.id}' is out of bounds`);
       }
     }
+    const structures = [...(map.buildings || []), ...(map.landmarks || [])];
+    for (let i = 0; i < structures.length; i += 1) {
+      for (let j = i + 1; j < structures.length; j += 1) {
+        if (localOverlaps(structures[i], structures[j])) {
+          errors.push(`Layout '${id}' structures '${structures[i].id}' and '${structures[j].id}' overlap`);
+        }
+      }
+    }
     for (const building of map.buildings || []) {
       if (building.door && !inRect(building.door.x, building.door.y, building)) {
         errors.push(`Layout '${id}' building '${building.id}' door is outside its footprint`);
@@ -131,6 +159,12 @@ export function validateSeasonOneLayouts(region, layouts) {
       if (building.interior) {
         referencedInteriors.add(building.interior);
         if (!interiors[building.interior]) errors.push(`Layout '${id}' building '${building.id}' references missing interior '${building.interior}'`);
+      }
+      if (Boolean(building.door) !== Boolean(building.interior)) {
+        errors.push(`Layout '${id}' building '${building.id}' must declare both door and interior, or neither`);
+      }
+      if (building.door && !doorHasAuthoredApproach(map, building.door)) {
+        errors.push(`Layout '${id}' building '${building.id}' door has no authored path or clearing`);
       }
       if (building.kind === 'trainer_room' || building.kind === 'buckys_locker_room') {
         const key = building.kind === 'trainer_room' ? 'trainer_room_exterior' : 'buckys_locker_room_exterior';
@@ -142,6 +176,15 @@ export function validateSeasonOneLayouts(region, layouts) {
           errors.push(`Layout '${id}' service '${building.id}' diverges from canonical '${key}'`);
         }
       }
+      if (building.kind === 'arena') {
+        const canonical = layouts.canonicalFootprints?.competition_venue_minimum;
+        const centeredDoorX = building.x + Math.floor(building.width / 2);
+        const southDoorY = building.y + building.height - 1;
+        if (!canonical || building.width < canonical.minimumWidth || building.height < canonical.minimumHeight
+          || building.door?.x !== centeredDoorX || building.door?.y !== southDoorY) {
+          errors.push(`Layout '${id}' arena '${building.id}' violates the competition venue footprint`);
+        }
+      }
     }
     for (const landmark of map.landmarks || []) {
       if (landmark.door && !inRect(landmark.door.x, landmark.door.y, landmark)) {
@@ -150,6 +193,12 @@ export function validateSeasonOneLayouts(region, layouts) {
       if (landmark.interior) {
         referencedInteriors.add(landmark.interior);
         if (!interiors[landmark.interior]) errors.push(`Layout '${id}' landmark '${landmark.id}' references missing interior '${landmark.interior}'`);
+      }
+      if (Boolean(landmark.door) !== Boolean(landmark.interior)) {
+        errors.push(`Layout '${id}' landmark '${landmark.id}' must declare both door and interior, or neither`);
+      }
+      if (landmark.door && !doorHasAuthoredApproach(map, landmark.door)) {
+        errors.push(`Layout '${id}' landmark '${landmark.id}' door has no authored path or clearing`);
       }
     }
 
@@ -195,6 +244,17 @@ export function validateSeasonOneLayouts(region, layouts) {
     }
   }
 
+  if (physicalMaps.length) {
+    const minX = Math.min(...physicalMaps.map(([, map]) => map.origin.x));
+    const minY = Math.min(...physicalMaps.map(([, map]) => map.origin.y));
+    const maxX = Math.max(...physicalMaps.map(([, map]) => map.origin.x + map.size.width));
+    const maxY = Math.max(...physicalMaps.map(([, map]) => map.origin.y + map.size.height));
+    const computedBounds = {x: minX, y: minY, width: maxX - minX, height: maxY - minY};
+    if (JSON.stringify(layouts.region?.madisonBounds) !== JSON.stringify(computedBounds)) {
+      errors.push(`Madison bounds must match authored map plane ${JSON.stringify(computedBounds)}`);
+    }
+  }
+
   for (const [id, map] of Object.entries(maps)) {
     for (const connection of map.connections || []) {
       const target = maps[connection.to];
@@ -228,10 +288,36 @@ export function validateSeasonOneLayouts(region, layouts) {
   const canonicalServices = ['trainer_room', 'buckys_locker_room'];
   for (const [id, node] of Object.entries(region.nodes || {})) {
     if (node.kind !== 'town') continue;
-    const kinds = (maps[id]?.buildings || []).map(entry => entry.kind);
+    const map = maps[id];
+    const kinds = (map?.buildings || []).map(entry => entry.kind);
     for (const service of canonicalServices) {
       if (!kinds.includes(service)) errors.push(`Town layout '${id}' is missing canonical service '${service}'`);
     }
+    const structures = [...(map?.buildings || []), ...(map?.landmarks || [])];
+    if (map && map.size.width * map.size.height < 1000) errors.push(`Town layout '${id}' is too compressed for the approved city scale`);
+    if (structures.length < 5) errors.push(`Town layout '${id}' needs at least five structures to read as a neighborhood`);
+    if ((map?.cameraReviews || []).length < 7) errors.push(`Town layout '${id}' needs at least seven authored camera compositions`);
+    const serviceDoors = (map?.buildings || []).filter(entry => canonicalServices.includes(entry.kind)).map(entry => entry.door);
+    if (serviceDoors.length === 2) {
+      const distance = Math.abs(serviceDoors[0].x - serviceDoors[1].x) + Math.abs(serviceDoors[0].y - serviceDoors[1].y);
+      if (distance < 18) errors.push(`Town layout '${id}' canonical services are compressed into one service row`);
+    }
+    const arenas = (map?.buildings || []).filter(entry => entry.kind === 'arena');
+    for (const connection of map?.connections || []) {
+      for (const arena of arenas) {
+        if (distanceFromEdge(map, arena, connection.edge) < contract.majorVenueArrivalBuffer) {
+          errors.push(`Town layout '${id}' arena '${arena.id}' overwhelms the '${connection.edge}' arrival sequence`);
+        }
+      }
+    }
+  }
+  if (maps.camp_randall?.size.width !== 24 || maps.camp_randall?.size.height !== 20
+    || (maps.camp_randall?.cameraReviews || []).length < 4) {
+    errors.push('Camp Randall must retain the approved 24x20 small-town scale and four camera compositions');
+  }
+  if (maps.state_street?.size.width < 40 || maps.state_street?.size.height < 18
+    || [...(maps.state_street?.buildings || []), ...(maps.state_street?.landmarks || [])].length < 5) {
+    errors.push('State Street must retain its multi-block route scale and authored street-wall structures');
   }
 
   for (const [id, interior] of Object.entries(interiors)) {

@@ -1,5 +1,33 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.65 FireRed town-composition revision)
+
+Tony supplied eleven FireRed/LeafGreen town sheets. Their exterior panels made
+the first atlas's weakness measurable: small settlements are about 24x20 cells,
+while developed cities commonly occupy roughly 48x40 cells or more. Badger's
+30x20 towns had plausible objects but only four camera screens, forcing every
+town into a symmetrical landmark-plus-cross diagram.
+
+Revision 2 preserves 50% scope by shipping fewer locations, not by removing
+the spatial substance from each location. Camp Randall is now 24x20. Field
+House, Capitol Square, and Kohl Center are 40x28; St. Louis is 42x30; State
+Street is a 44x18 multi-block route. Developed towns separate the canonical
+services into distinct quarters and add secondary closed buildings, circulation
+loops, perimeter closure, landmark-owned approaches, and seven or more camera
+reviews. The Madison plane remains exact and reciprocal.
+
+The first revision-2 screenshots exposed one remaining composition error:
+Field House and Kohl Center filled their entry cameras. Both venues now sit
+ten cells inside their north edge. Their first cameras establish a gateway and
+cross street, then reveal the arena from a forecourt. The contract and validator
+require an eight-cell major-venue arrival buffer on every connected town edge.
+
+`docs/FIRERED_TOWN_COMPOSITION_AUDIT.md` records the adopted methods and legal
+boundary. The validator now rejects compressed cities, service rows, missing
+door approaches, overlapping structures, stale world bounds, underauthored
+camera coverage, and arena facades that overwhelm town entries. These remain
+pre-art blockouts; no FireRed layouts or art were copied.
+
 ## Latest Codex Turn (v21.64 Season One layout atlas)
 
 The approved v21.63 scale contract is now a complete executable pre-art atlas,

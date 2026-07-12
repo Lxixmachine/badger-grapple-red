@@ -19,6 +19,7 @@ const seasonLayoutsPath=fileURLToPath(new URL('../src/data/seasonOneLayouts.json
 const seasonLayouts=JSON.parse(readFileSync(seasonLayoutsPath,'utf8'));
 if(seasonRegion.schemaVersion!==2)errs.push('Season One region schema version is unsupported');
 if(seasonRegion.status!=='design-authority')errs.push('Season One region must be marked design-authority');
+if(seasonRegion.layoutRevision!==seasonLayouts.revision)errs.push('Season One region and layout revision must match');
 if(seasonRegion.tileSize!==32)errs.push('Season One region must use the approved 32px gameplay cell');
 if(seasonRegion.camera?.outdoorTilesWide!==15||seasonRegion.camera?.outdoorTilesHigh!==10||seasonRegion.camera?.canvasWidth!==480||seasonRegion.camera?.canvasHeight!==320||seasonRegion.camera?.defaultWorldZoom!==1)errs.push('Season One outdoor camera contract must remain 15x10 cells at native 480x320');
 errs.push(...validateSeasonOneLayouts(seasonRegion,seasonLayouts));

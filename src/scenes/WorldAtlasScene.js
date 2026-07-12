@@ -122,10 +122,16 @@ function structureColor(kind) {
   return COLORS.building;
 }
 
+function clearingColor(ground) {
+  if (ground === 'urban' || ground === 'terminal') return COLORS.stone;
+  if (ground === 'water') return 0x72a9d0;
+  return 0x91bd75;
+}
+
 export class WorldAtlasScene extends Phaser.Scene {
   constructor() {
     super('WorldAtlasScene');
-    this.atlasVersion = 1;
+    this.atlasVersion = layouts.revision;
     this.nativeWidth = WIDTH;
     this.nativeHeight = HEIGHT;
     this.cellSize = CELL;
@@ -262,11 +268,17 @@ export class WorldAtlasScene extends Phaser.Scene {
       const position = map.origin || map.atlasPosition;
       return {id, map, position};
     });
-    const minX = -54;
-    const minY = 0;
-    const scale = 2.22;
-    const offsetX = 26;
-    const offsetY = 49;
+    const minX = Math.min(...atlasEntries.map(entry => entry.position.x));
+    const minY = Math.min(...atlasEntries.map(entry => entry.position.y));
+    const maxX = Math.max(...atlasEntries.map(entry => entry.position.x + entry.map.size.width));
+    const maxY = Math.max(...atlasEntries.map(entry => entry.position.y + entry.map.size.height));
+    const regionViewport = {x: 16, y: 48, width: 448, height: 226};
+    const scale = Math.min(
+      regionViewport.width / (maxX - minX),
+      regionViewport.height / (maxY - minY)
+    );
+    const offsetX = regionViewport.x + (regionViewport.width - (maxX - minX) * scale) / 2;
+    const offsetY = regionViewport.y + (regionViewport.height - (maxY - minY) * scale) / 2;
     const centerOf = entry => ({
       x: offsetX + (entry.position.x - minX + entry.map.size.width / 2) * scale,
       y: offsetY + (entry.position.y - minY + entry.map.size.height / 2) * scale
@@ -404,7 +416,7 @@ export class WorldAtlasScene extends Phaser.Scene {
       this.drawMaterialMarks(graphics, path, x, y, pathWidth, pathHeight);
     }
     for (const clearing of map.clearings || []) {
-      fill(graphics, 0x91bd75, clearing.x * CELL, clearing.y * CELL, clearing.width * CELL, clearing.height * CELL);
+      fill(graphics, clearingColor(map.ground), clearing.x * CELL, clearing.y * CELL, clearing.width * CELL, clearing.height * CELL);
       stroke(graphics, 0x5e8a54, 2, clearing.x * CELL, clearing.y * CELL, clearing.width * CELL, clearing.height * CELL, 0.65);
     }
     for (const blocker of map.blockers || []) this.drawBlocker(graphics, blocker);
@@ -445,9 +457,14 @@ export class WorldAtlasScene extends Phaser.Scene {
     const width = structure.width * CELL;
     const height = structure.height * CELL;
     const color = structureColor(structure.kind);
-    fill(graphics, COLORS.ink, x - 3, y - 3, width + 6, height + 6);
-    fill(graphics, color, x, y, width, height);
-    fill(graphics, 0xffffff, x + 5, y + 5, width - 10, 7, 0.26);
+    if (structure.walkable) {
+      fill(graphics, color, x, y, width, height, 0.28);
+      stroke(graphics, COLORS.ink, 3, x, y, width, height, 0.88);
+    } else {
+      fill(graphics, COLORS.ink, x - 3, y - 3, width + 6, height + 6);
+      fill(graphics, color, x, y, width, height);
+      fill(graphics, 0xffffff, x + 5, y + 5, width - 10, 7, 0.26);
+    }
     if (structure.kind === 'decision_required') {
       for (let px = x; px < x + width; px += 16) line(graphics, COLORS.event, 2, px, y, Math.min(x + width, px + height), y + Math.min(height, x + width - px), 0.45);
     }
