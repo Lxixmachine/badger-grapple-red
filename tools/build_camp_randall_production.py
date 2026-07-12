@@ -20,6 +20,7 @@ LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 OUTPUT_DIR = ROOT / "public" / "assets" / "camp-production"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 VALIDATION_DIR = ROOT / "art" / "imagegen" / "validation"
+WORLD_BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
 
 MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 LAYOUTS = json.loads(LAYOUT_PATH.read_text(encoding="utf-8"))
@@ -337,6 +338,32 @@ def forest_strip(size: tuple[int, int], mirrored: bool) -> Image.Image:
     return image
 
 
+def world_stamp_art(stamp_id: str, size: tuple[int, int]) -> Image.Image:
+    if not WORLD_BUILD_PATH.exists():
+        raise SystemExit("Season One world tileset is missing; build it before Camp production")
+    world = json.loads(WORLD_BUILD_PATH.read_text(encoding="utf-8"))
+    stamp = world.get("stamps", {}).get(stamp_id)
+    if not stamp:
+        raise SystemExit(f"Season One world tileset has no {stamp_id} stamp")
+    expected = (stamp["width"] * CELL, stamp["height"] * CELL)
+    if size != expected:
+        raise SystemExit(f"{stamp_id}: world stamp footprint is {expected}, requested {size}")
+    atlas_path = ROOT / "public" / world["atlas"]["path"].removeprefix("./")
+    atlas = Image.open(atlas_path).convert("RGBA")
+    columns = world["atlas"]["columns"]
+    output = Image.new("RGBA", size, (0, 0, 0, 0))
+    for y, row in enumerate(stamp["cells"]):
+        for x, tile_id in enumerate(row):
+            visual = world["metatiles"][tile_id]["visual"]
+            source_x = (visual % columns) * CELL
+            source_y = (visual // columns) * CELL
+            output.alpha_composite(
+                atlas.crop((source_x, source_y, source_x + CELL, source_y + CELL)),
+                (x * CELL, y * CELL),
+            )
+    return output
+
+
 def pond_grid_native(size: tuple[int, int]) -> Image.Image:
     image = Image.new("RGBA", size, (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
@@ -371,6 +398,9 @@ def interior_south_exit(size: tuple[int, int]) -> Image.Image:
 
 def fit_art(spec: dict, size: tuple[int, int]) -> Image.Image:
     art = spec["art"]
+    if art == "world_stamp":
+        image = world_stamp_art(spec["stamp"], size)
+        return ImageOps.mirror(image) if spec.get("mirror") else image
     if art == "stadium_grid_native":
         return stadium_grid_native(size)
     if art == "forest_strip":
@@ -545,8 +575,21 @@ def build() -> dict:
     runtime["sources"] = {
         "manifest": sha256(MANIFEST_PATH),
         "layout": sha256(LAYOUT_PATH),
+        "worldTileset": sha256(WORLD_BUILD_PATH),
         **{key: sha256(ROOT / relative) for key, relative in MANIFEST["sourceAssets"].items()},
     }
+    referenced_paths = {
+        runtime["map"]["ground"]["path"],
+        runtime["map"]["base"]["path"],
+        *(entry["path"] for entry in runtime["map"]["objects"]),
+        *(sheet["path"] for sheet in runtime["actorSheets"].values()),
+    }
+    for interior in runtime["interiors"].values():
+        referenced_paths.add(interior["base"]["path"])
+        referenced_paths.update(entry["path"] for entry in interior["objects"])
+    for stale in OUTPUT_DIR.glob("*.png"):
+        if public_path(stale) not in referenced_paths:
+            stale.unlink()
     output_paths = list(OUTPUT_DIR.glob("*.png"))
     runtime["outputs"] = {path.name: sha256(path) for path in sorted(output_paths)}
     BUILD_PATH.write_text(json.dumps(runtime, indent=2) + "\n", encoding="utf-8")

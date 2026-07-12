@@ -40,7 +40,7 @@ if (modernMode) {
   document.body.classList.add('slice-mode');
   document.title = atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
-  if (note) note.textContent = atlasMode ? 'v21.68 Deterministic Ground Tiles' : 'v21.63 Scale Slice';
+  if (note) note.textContent = atlasMode ? 'v21.69 World Tileset' : 'v21.63 Scale Slice';
 }
 
 const config = {
@@ -69,7 +69,7 @@ try {
   game = new Phaser.Game(config);
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
-    ? '21.68-deterministic-ground-tiles'
+    ? '21.69-world-tileset'
     : sliceMode ? '21.63-scale-slice' : '21.62-world-compositions';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));

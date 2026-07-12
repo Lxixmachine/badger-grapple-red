@@ -24,6 +24,7 @@ BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
 ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
+WORLD_BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
 ATLAS_COLUMNS = 16
 MATERIALS = ("brick", "stone", "dirt")
 
@@ -112,6 +113,13 @@ def validate_path_clearance(layout: dict, rows: list[list[str]]) -> None:
 def build() -> dict:
     layouts = load_json(LAYOUT_PATH)
     production = load_json(PRODUCTION_PATH)
+    if not WORLD_BUILD_PATH.exists():
+        raise SystemExit("Season One world tileset is missing; run build_season_one_world_tileset.py first")
+    world = load_json(WORLD_BUILD_PATH)
+    if world.get("cellSize") != CELL:
+        raise SystemExit("Season One world tileset cell size does not match Camp Randall")
+    world_atlas_path = ROOT / "public" / world["atlas"]["path"].removeprefix("./")
+    world_atlas = Image.open(world_atlas_path).convert("RGBA")
     layout = layouts["maps"][production["map"]["id"]]
     if production["cellSize"] != CELL or production["layoutRevision"] != layouts["revision"]:
         raise SystemExit("Camp metatiles cannot compile from a stale production package")
@@ -120,7 +128,6 @@ def build() -> dict:
     if not ground_path.exists():
         raise SystemExit("Camp ground layer is missing; run build_camp_randall_production.py first")
     terrain = terrain_rows(layout)
-    validate_path_clearance(layout, terrain)
 
     visuals: list[Image.Image] = []
     visual_lookup: dict[bytes, int] = {}
@@ -157,13 +164,40 @@ def build() -> dict:
             entry["names"].append(name)
         return tile_id
 
-    terrain_tiles = {
-        material: add_visual(ground_tile(material), "terrain", material, f"{material.title()} ground")
-        for material in MATERIALS
-    }
+    def world_visual(index: int) -> Image.Image:
+        columns = world["atlas"]["columns"]
+        left = (index % columns) * CELL
+        top = (index // columns) * CELL
+        return world_atlas.crop((left, top, left + CELL, top + CELL))
 
-    stamps: dict[str, dict] = {}
-    palette_ids: list[str] = []
+    terrain_catalog: list[dict] = []
+    terrain_tiles: dict[str, int] = {}
+    for entry in world["terrain"]["catalog"]:
+        mapped_visual = add_visual(
+            world_visual(entry["visual"]), "terrain", entry["family"], entry["name"]
+        )
+        terrain_tiles[entry["id"]] = mapped_visual
+        terrain_catalog.append({**entry, "visual": mapped_visual})
+
+    world_tile_ids: dict[str, str] = {}
+    for source_id, entry in world["metatiles"].items():
+        mapped_id = add_metatile(
+            world_visual(entry["visual"]),
+            entry["behavior"],
+            entry["layer"],
+            entry["families"][0],
+            entry["names"][0],
+        )
+        world_tile_ids[source_id] = mapped_id
+
+    stamps: dict[str, dict] = {
+        stamp_id: {
+            **stamp,
+            "cells": [[world_tile_ids[tile_id] for tile_id in row] for row in stamp["cells"]],
+        }
+        for stamp_id, stamp in world["stamps"].items()
+    }
+    palette_ids: list[str] = [world_tile_ids[tile_id] for tile_id in world["palette"]]
     for object_entry in production["map"]["objects"]:
         owner = owner_by_id(layout, object_entry)
         image_path = ROOT / "public" / object_entry["path"].removeprefix("./")
@@ -217,6 +251,21 @@ def build() -> dict:
     }
     if overrides.get("schema") != "badger-grapple-metatile-overrides/v1":
         raise SystemExit("Camp metatile overrides use an unsupported schema")
+
+    if "terrain" in overrides:
+        override_terrain = overrides["terrain"]
+        expected_width, expected_height = layout["size"]["width"], layout["size"]["height"]
+        if len(override_terrain) != expected_height or any(
+            not isinstance(row, list) or len(row) != expected_width for row in override_terrain
+        ):
+            raise SystemExit(f"Camp terrain override must be exactly {expected_width}x{expected_height} cells")
+        unavailable = {
+            tile_id for row in override_terrain for tile_id in row if tile_id not in terrain_tiles
+        }
+        if unavailable:
+            raise SystemExit(f"Camp terrain override references unavailable tiles {sorted(unavailable)}")
+        terrain = override_terrain
+    validate_path_clearance(layout, terrain)
 
     def validate_cells(label: str, cells: list[list[str]], width: int, height: int) -> None:
         if len(cells) != height or any(len(row) != width for row in cells):
@@ -284,7 +333,7 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 2,
+        "version": 3,
         "status": "production-pilot",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
@@ -298,6 +347,7 @@ def build() -> dict:
         "terrain": {
             "baseMaterial": "grass",
             "tiles": terrain_tiles,
+            "catalog": terrain_catalog,
         },
         "metatiles": metatiles,
         "palette": palette_ids,
@@ -314,6 +364,8 @@ def build() -> dict:
             "layout": sha256(LAYOUT_PATH),
             "production": sha256(PRODUCTION_PATH),
             "overrides": sha256(OVERRIDES_PATH),
+            "worldTileset": sha256(WORLD_BUILD_PATH),
+            "worldAtlas": sha256(world_atlas_path),
         },
     }
     text = json.dumps(result, indent=2) + "\n"

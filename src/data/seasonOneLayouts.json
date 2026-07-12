@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 3,
+  "revision": 4,
   "status": "pre-art-blockout",
   "contract": {
     "cellSize": 32,
@@ -59,8 +59,20 @@
         {"id": "south_landing", "x": 9, "y": 17, "width": 6, "height": 3, "material": "dirt"}
       ],
       "blockers": [
-        {"id": "west_tree_border", "kind": "forest", "x": 0, "y": 0, "width": 2, "height": 20},
-        {"id": "east_tree_border", "kind": "forest", "x": 22, "y": 0, "width": 2, "height": 20},
+        {"id": "west_tree_01", "kind": "tree", "x": 0, "y": 0, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "west_tree_02", "kind": "tree", "x": 0, "y": 3, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "west_tree_03", "kind": "tree", "x": 0, "y": 6, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "west_tree_04", "kind": "tree", "x": 0, "y": 9, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "west_tree_05", "kind": "tree", "x": 0, "y": 12, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "west_tree_06", "kind": "tree", "x": 0, "y": 15, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "west_south_shrub", "kind": "shrub", "x": 0, "y": 19, "width": 1, "height": 1},
+        {"id": "east_tree_01", "kind": "tree", "x": 22, "y": 0, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "east_tree_02", "kind": "tree", "x": 22, "y": 3, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "east_tree_03", "kind": "tree", "x": 22, "y": 6, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "east_tree_04", "kind": "tree", "x": 22, "y": 9, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "east_tree_05", "kind": "tree", "x": 22, "y": 12, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "east_tree_06", "kind": "tree", "x": 22, "y": 15, "width": 2, "height": 3, "collisionMask": ["..", "..", "##"]},
+        {"id": "east_south_shrub", "kind": "shrub", "x": 23, "y": 19, "width": 1, "height": 1},
         {"id": "memory_garden", "kind": "hedge", "x": 3, "y": 14, "width": 6, "height": 4, "collisionMask": ["######", "#....#", "#....#", "######"]},
         {"id": "practice_pond", "kind": "water", "x": 16, "y": 15, "width": 4, "height": 3}
       ],

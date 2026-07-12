@@ -21,8 +21,10 @@ let project = loadDraft();
 let mode = window.matchMedia('(pointer: coarse)').matches ? 'pan' : 'select';
 let paletteTab = 'terrain';
 let selectedTerrain = 'brick';
+let selectedGroundFamily = 'path_brick';
 let selectedMetatile = null;
 let selectedMetatileFamily = 'team_building';
+let selectedObjectFamily = 'trees';
 let placingAsset = null;
 let selection = null;
 let hoverCell = null;
@@ -81,6 +83,8 @@ function migrateDraft(saved, seed) {
   migrated.productionVersion = seed.productionVersion;
   migrated.layoutRevision = seed.layoutRevision;
   migrated.metatileVersion = seed.metatileVersion;
+  migrated.assets.objects = cloneProject(seed.assets.objects);
+  migrated.assets.groundTiles = cloneProject(seed.assets.groundTiles);
   migrated.assets.metatiles = cloneProject(seed.assets.metatiles);
   return migrated;
 }
@@ -221,6 +225,13 @@ function buildPalette() {
   if (paletteTab === 'terrain') {
     const map = activeMap();
     const terrainEntries = Object.entries(TERRAIN).filter(([id]) => activeMap().type === 'exterior' ? id !== 'floor' : id === 'floor');
+    const allGroundTiles = map.renderModel === 'metatile' ? (project.assets.groundTiles || []) : [];
+    const groundFamilies = [...new Set(allGroundTiles.map(tile => tile.family).filter(Boolean))];
+    if (!groundFamilies.includes(selectedGroundFamily)) {
+      selectedGroundFamily = groundFamilies.includes('path_brick') ? 'path_brick' : groundFamilies[0] || '';
+    }
+    const coreGroundTiles = allGroundTiles.filter(tile => tile.tags?.includes('base'));
+    const groundTiles = allGroundTiles.filter(tile => tile.family === selectedGroundFamily && !tile.tags?.includes('base'));
     const allStructureTiles = map.renderModel === 'metatile'
       ? (project.assets.metatiles || []).filter(tile => tile.palette)
       : [];
@@ -229,10 +240,22 @@ function buildPalette() {
       selectedMetatileFamily = structureFamilies.includes('team_building') ? 'team_building' : structureFamilies[0] || '';
     }
     const structureTiles = allStructureTiles.filter(tile => tile.families?.[0] === selectedMetatileFamily);
-    paletteContent.innerHTML = `<div class="palette-section-title">Ground brushes</div><div class="palette-grid">${terrainEntries.map(([id, terrain]) => `
-      <div class="palette-item terrain-item ${selectedTerrain === id ? 'active' : ''}" data-terrain="${id}" role="button" tabindex="0">
-        <div class="terrain-swatch ${id}"></div><span>${escapeHtml(terrain.label)}</span>
-      </div>`).join('')}</div>${structureTiles.length ? `
+    const groundMarkup = allGroundTiles.length ? `
+      <div class="palette-grid ground-tile-grid">${coreGroundTiles.map(tile => `
+        <div class="palette-item terrain-item ${selectedTerrain === tile.id ? 'active' : ''}" data-terrain="${tile.id}" role="button" tabindex="0" title="${escapeHtml(tile.name)}">
+          ${metatileThumb(tile)}<span>${escapeHtml(tile.name)}</span>
+        </div>`).join('')}</div>
+      <div class="palette-section-title structure-title">Transitions and details</div>
+      <label class="metatile-family"><span>Family</span><select id="groundFamily">${groundFamilies.map(family => `
+        <option value="${family}" ${family === selectedGroundFamily ? 'selected' : ''}>${escapeHtml(family.replaceAll('_', ' '))}</option>`).join('')}</select></label>
+      <div class="palette-grid ground-tile-grid">${groundTiles.map(tile => `
+        <div class="palette-item terrain-item ${selectedTerrain === tile.id ? 'active' : ''}" data-terrain="${tile.id}" role="button" tabindex="0" title="${escapeHtml(tile.name)}">
+          ${metatileThumb(tile)}<span>${escapeHtml(tile.name)}</span>
+        </div>`).join('')}</div>` : `<div class="palette-grid">${terrainEntries.map(([id, terrain]) => `
+        <div class="palette-item terrain-item ${selectedTerrain === id ? 'active' : ''}" data-terrain="${id}" role="button" tabindex="0">
+          <div class="terrain-swatch ${id}"></div><span>${escapeHtml(terrain.label)}</span>
+        </div>`).join('')}</div>`;
+    paletteContent.innerHTML = `<div class="palette-section-title">Ground tiles</div>${groundMarkup}${structureTiles.length ? `
         <div class="palette-section-title structure-title">Structure metatiles</div>
         <label class="metatile-family"><span>Family</span><select id="metatileFamily">${structureFamilies.map(family => `
           <option value="${family}" ${family === selectedMetatileFamily ? 'selected' : ''}>${escapeHtml(family.replaceAll('_', ' '))}</option>`).join('')}</select></label>
@@ -240,6 +263,10 @@ function buildPalette() {
           <div class="palette-item metatile-item ${selectedMetatile === tile.id ? 'active' : ''}" draggable="true" data-metatile="${tile.id}" role="button" tabindex="0" title="${escapeHtml(tile.names?.[0] || tile.id)}">
             ${metatileThumb(tile)}<span class="visually-hidden">${escapeHtml(tile.names?.[0] || tile.id)}</span>
           </div>`).join('')}</div>` : ''}`;
+    paletteContent.querySelector('#groundFamily')?.addEventListener('change', event => {
+      selectedGroundFamily = event.currentTarget.value;
+      buildPalette();
+    });
     paletteContent.querySelector('#metatileFamily')?.addEventListener('change', event => {
       selectedMetatileFamily = event.currentTarget.value;
       selectedMetatile = null;
@@ -272,16 +299,31 @@ function buildPalette() {
   }
 
   const map = activeMap();
-  const assets = paletteTab === 'objects'
+  const availableAssets = paletteTab === 'objects'
     ? project.assets.objects.filter(asset => asset.mapType === map.type)
     : project.assets.actors;
-  paletteContent.innerHTML = `<div class="palette-grid">${assets.map(asset => {
+  const objectFamilies = paletteTab === 'objects'
+    ? [...new Set(availableAssets.map(asset => asset.category).filter(Boolean))]
+    : [];
+  if (paletteTab === 'objects' && !objectFamilies.includes(selectedObjectFamily)) {
+    selectedObjectFamily = objectFamilies.includes('trees') ? 'trees' : objectFamilies[0] || '';
+  }
+  const assets = paletteTab === 'objects'
+    ? availableAssets.filter(asset => asset.category === selectedObjectFamily)
+    : availableAssets;
+  const objectFilter = paletteTab === 'objects' ? `<label class="metatile-family"><span>Family</span><select id="objectFamily">${objectFamilies.map(family => `
+    <option value="${family}" ${family === selectedObjectFamily ? 'selected' : ''}>${escapeHtml(family.replaceAll('_', ' '))}</option>`).join('')}</select></label>` : '';
+  paletteContent.innerHTML = `${objectFilter}<div class="palette-grid">${assets.map(asset => {
     const active = placingAsset?.id === asset.id ? 'active' : '';
     const thumb = paletteTab === 'actors'
       ? `<div class="palette-thumb"><span class="actor-thumb" style="width:32px;height:60px;background-image:url('${asset.path}');background-position:-32px 0;background-repeat:no-repeat"></span></div>`
       : `<div class="palette-thumb"><img src="${asset.path}" alt="" /></div>`;
     return `<div class="palette-item ${active}" draggable="true" data-asset="${escapeHtml(asset.id)}" data-asset-kind="${paletteTab === 'actors' ? 'actor' : 'object'}" role="button" tabindex="0">${thumb}<span>${escapeHtml(asset.name)}</span></div>`;
   }).join('')}</div>`;
+  paletteContent.querySelector('#objectFamily')?.addEventListener('change', event => {
+    selectedObjectFamily = event.currentTarget.value;
+    buildPalette();
+  });
   paletteContent.querySelectorAll('[data-asset]').forEach(item => {
     const activate = () => {
       placingAsset = {kind: item.dataset.assetKind, id: item.dataset.asset};
@@ -534,6 +576,7 @@ function addObject(assetId, cell) {
   const object = {
     id: uniqueId(asset.sourceId, map.objects),
     assetId: asset.id,
+    sourceKind: asset.sourceKind || null,
     name: asset.name,
     x: clamp(cell.x, 0, map.width - asset.width),
     y: clamp(cell.y, 0, map.height - asset.height),

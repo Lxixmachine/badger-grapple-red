@@ -2413,3 +2413,26 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   landmark footprint.
 - Map Studio migrates old local drafts to layout revision 3 while preserving
   cells the user explicitly repainted.
+
+## Codex Season One World Tileset (v21.69)
+
+- Added an original reusable 32px world kit compiled by
+  `tools/build_season_one_world_tileset.py`: 129 full-cell Ground tiles, 68
+  grid-native stamps, and 351 deduplicated source-atlas visuals.
+- Ground families now include full materials, explicit 16-way Dirt/Brick/Stone
+  path connectors, wide plaza transitions and inner corners, shoreline tiles,
+  asphalt/road markings, crosswalks, flowers, tall grass, and reeds. There is
+  still no runtime or editor auto-tiling.
+- Stamps now include independent trees, shrubs, hedge and fence modules,
+  campus props, cardinal/slate roofs, limestone/brick walls, doors/windows,
+  storefronts, awnings, and retaining walls. Source sheets and prompts are
+  committed under `art/imagegen/`; no Pokemon art ships in the game.
+- Camp Randall's two 2x20 forest strips were removed. Its boundary now uses
+  twelve separate 2x3 oak stamps plus two shrubs. Tree canopy rows are
+  walkable/depth-sorted and visible root cells own collision.
+- Map Studio exposes family filters for Ground, Structure, and Stamps. Ground
+  choices and free metatile stamps survive JSON export/import through
+  `camp_randall_metatile_overrides.json`.
+- Current authority is layout revision 4 and Camp metatile package v3. Do not
+  restore forest strips, hidden neighbour selection, or partial-cell Ground
+  painting.

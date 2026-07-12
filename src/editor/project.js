@@ -91,6 +91,24 @@ function makeObjectInstance(mapId, entry, owner, stamp = null) {
   };
 }
 
+function makeWorldStampAsset(stamp) {
+  return {
+    id: `world:${stamp.id}`,
+    sourceId: stamp.id,
+    sourceKind: 'metatile',
+    name: stamp.name,
+    category: stamp.category,
+    mapType: 'exterior',
+    path: stamp.thumbnail,
+    width: stamp.width,
+    height: stamp.height,
+    defaultCollisionMask: [...stamp.collisionMask],
+    defaultDoor: stamp.door ? {...stamp.door} : null,
+    metatiles: deepClone(stamp.cells),
+    minimumCoverage: 1
+  };
+}
+
 function makeActor(actor, mapId) {
   const sheet = production.actorSheets[actor.sheet];
   return {
@@ -168,6 +186,12 @@ export function createSeedProject() {
       metatileBuild.stamps[entry.id]
     ));
   }
+  const productionStampIds = new Set(production.map.objects.map(entry => entry.id));
+  for (const stamp of Object.values(metatileBuild.stamps)) {
+    if (!productionStampIds.has(stamp.id) && stamp.tags?.includes('season_one_world_kit')) {
+      objectAssets.push(makeWorldStampAsset(stamp));
+    }
+  }
   maps[production.map.id] = makeMap(production.map.id, production.map, campLayout, 'exterior');
 
   for (const [mapId, mapPackage] of Object.entries(production.interiors)) {
@@ -199,6 +223,12 @@ export function createSeedProject() {
     assets: {
       objects: objectAssets,
       actors: actorAssets,
+      groundTiles: (metatileBuild.terrain.catalog || []).map(tile => ({
+        ...deepClone(tile),
+        atlasPath: metatileBuild.atlas.path,
+        atlasColumns: metatileBuild.atlas.columns,
+        cellSize: metatileBuild.cellSize
+      })),
       metatiles: Object.values(metatileBuild.metatiles).map(tile => ({
         ...deepClone(tile),
         atlasPath: metatileBuild.atlas.path,
@@ -216,6 +246,7 @@ export function validateProject(project) {
   const warnings = [];
   if (project.schema !== PROJECT_SCHEMA) errors.push(`Unsupported schema: ${project.schema || 'missing'}`);
   const metatileLibrary = new Map((project.assets?.metatiles || []).map(tile => [tile.id, tile]));
+  const groundLibrary = new Set((project.assets?.groundTiles || []).map(tile => tile.id));
   for (const [mapId, map] of Object.entries(project.maps || {})) {
     if (!Number.isInteger(map.width) || !Number.isInteger(map.height) || map.width < 1 || map.height < 1) {
       errors.push(`${mapId}: invalid map dimensions`);
@@ -224,7 +255,9 @@ export function validateProject(project) {
     if (!Array.isArray(map.terrain) || map.terrain.length !== map.height || map.terrain.some(row => row.length !== map.width)) {
       errors.push(`${mapId}: terrain must be exactly ${map.width}x${map.height} cells`);
     } else {
-      const allowed = map.type === 'exterior' ? new Set(['grass', 'brick', 'stone', 'dirt']) : new Set(['floor']);
+      const allowed = map.renderModel === 'metatile'
+        ? groundLibrary
+        : map.type === 'exterior' ? new Set(['grass', 'brick', 'stone', 'dirt']) : new Set(['floor']);
       if (map.terrain.some(row => row.some(material => !allowed.has(material)))) {
         errors.push(`${mapId}: terrain contains a material that is invalid for ${map.type} maps`);
       }

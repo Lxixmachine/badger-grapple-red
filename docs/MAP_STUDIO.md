@@ -22,24 +22,31 @@ The first editable pack contains:
 - Coach's Office
 - Camp Randall Tunnel
 
-The Camp Randall exterior uses a FireRed-style metatile authoring model. Every
-Ground brush paints one fixed 32px tile that fills its cell; neighboring cells
-never change that tile implicitly. Edges, corners, curbs, and landings are
-separate explicit tiles when authored. Buildings and landmarks are matrices of
-32px structure metatiles with behavior attached to each cell.
-Whole buildings remain available as placement stamps, but their roof, wall,
-window, doorway, foundation, vegetation, and water cells can be edited
-individually. Interiors remain on the previous object model during the pilot.
+The Camp Randall exterior uses a FireRed-style metatile authoring model with
+original project art. The Season One kit currently provides 129 Ground tiles:
+base materials, three complete 16-piece narrow-path connector families, wide
+plaza edges and inner/outer corners, shorelines, roads, crosswalks, flowers,
+tall grass, and reeds. Every brush paints one fixed 32px tile that fills its
+cell; neighboring cells never change that tile implicitly. Buildings and
+landmarks are matrices of 32px structure metatiles with behavior attached to
+each cell.
+The 68-piece shared Stamp kit includes independent deciduous and pine trees,
+shrubs, hedge/fence modules, campus props, roof/wall/window/door modules,
+storefronts, and retaining walls. Whole buildings remain available as placement
+stamps, but their component cells can also be edited individually. Interiors
+remain on the previous object model during the pilot.
 
 ## Editing Workflow
 
 1. Choose a map. On a phone, **Pan** is selected automatically; drag the map to
    change the visible area. On desktop, **Pan** or middle-mouse drag does the
    same without editing the map.
-2. Use **Tiles** to paint Ground brushes. Every painted cell retains exactly
-   the selected tile until you replace it.
-3. Choose a Structure family to paint or drag individual behavior-owned
-   metatiles. Use **Stamps** to place a complete building at once.
+2. Use **Tiles** to choose a core Ground material or filter a transition/detail
+   family. Every painted cell retains exactly the selected tile until you
+   replace it.
+3. Choose a Structure family to paint individual behavior-owned metatiles. Use
+   the family filter under **Stamps** to place trees, props, architecture
+   modules, or complete buildings.
 4. Use **Actors**, then tap the map or drag an actor onto it.
 5. Use **Select** to move an existing stamp. Placement always snaps to cells.
 6. Select a stamp, then use **Collision** to change the behavior variant of a
@@ -89,3 +96,5 @@ behavior-owned metatile package.
 - The approved flat drawings are source art. Runtime buildings are compiled
   cell-by-cell from those drawings; a large PNG is never the final map owner.
 - FireRed assets are reference material only. Runtime art remains original.
+- Trees are independent depth-sorted stamps. Canopy cells are walk-behind and
+  only visibly occupied foot cells are solid; forest-wall pictures are banned.

@@ -6,7 +6,7 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ## Current Build
 
-- Version: 21.68 Deterministic Ground Tiles
+- Version: 21.69 Season One World Tileset
 - Runtime: Phaser 3 + Vite
 - Canvas: 320x224 legacy game; 480x320 Season One world contract
 - Content: 11 legacy areas, 12 Season One exterior plans, 23 roster entries, 26 moves, and 7 trainers
@@ -15,10 +15,11 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 ## Map Studio
 
 `map-editor.html` is the visual authoring tool for the Camp Randall production
-pilot. Camp Randall now renders from deterministic full-cell ground tiles and
-behavior-owned structure metatiles. Whole buildings are editable stamps rather
-than indivisible pictures. The editor also provides exact door cells, event and
-camera editing, undo/redo, local drafts, Playtest, and validated JSON/PNG export. See
+pilot. Its shared authoring kit now contains 129 deterministic full-cell ground
+tiles and 68 original grid-native vegetation, prop, and architecture stamps.
+Whole buildings remain editable stamps rather than indivisible pictures. The
+editor also provides family filters, exact door cells, event and camera editing,
+undo/redo, local drafts, Playtest, and validated JSON/PNG export. See
 [`docs/MAP_STUDIO.md`](docs/MAP_STUDIO.md).
 
 ## Development
@@ -51,6 +52,7 @@ That runs content validation, balance simulation, a production build, and a brow
 - `public/vendor/`: external Phaser runtime copied directly into production builds
 - `tools/slice_imagegen_creature_assets.py`: slices the imagegen creature sheet into 96x96 runtime sprites and portraits
 - `tools/build_camp_randall_production.py`: compiles grid-owned Camp art and rejects visually empty solid cells
+- `tools/build_season_one_world_tileset.py`: compiles the reusable 32px ground, transition, vegetation, prop, and architecture kit
 - `tools/build_camp_randall_metatiles.py`: slices approved art into terrain/structure metatiles and compiles behavior-owned stamps
 - `tools/apply_map_editor_project.py`: validates and applies exported Map Studio packs
 - `tools/validate.mjs`: content and reachability validator

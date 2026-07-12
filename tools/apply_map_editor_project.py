@@ -53,6 +53,7 @@ def validate_project(project: dict, build: dict, metatile_build: dict) -> None:
         fail("export was created from a different metatile package")
     assets = {asset["id"]: asset for asset in project.get("assets", {}).get("objects", [])}
     metatiles = {tile["id"]: tile for tile in project.get("assets", {}).get("metatiles", [])}
+    ground_tiles = {tile["id"] for tile in project.get("assets", {}).get("groundTiles", [])}
     if not assets:
         fail("object asset library is missing")
 
@@ -66,10 +67,13 @@ def validate_project(project: dict, build: dict, metatile_build: dict) -> None:
         for row in terrain:
             if not isinstance(row, list) or len(row) != width:
                 fail(f"{map_id}: terrain width does not match the map")
-            unsupported = set(row) - SUPPORTED_TERRAIN
+            supported = ground_tiles if map_data.get("renderModel") == "metatile" else SUPPORTED_TERRAIN
+            unsupported = set(row) - supported
             if unsupported:
                 fail(f"{map_id}: unsupported terrain {sorted(unsupported)}")
-            allowed = {"grass", "brick", "stone", "dirt"} if map_data.get("type") == "exterior" else {"floor"}
+            allowed = ground_tiles if map_data.get("renderModel") == "metatile" else (
+                {"grass", "brick", "stone", "dirt"} if map_data.get("type") == "exterior" else {"floor"}
+            )
             invalid_for_map = set(row) - allowed
             if invalid_for_map:
                 fail(f"{map_id}: terrain {sorted(invalid_for_map)} is invalid for {map_data.get('type')} maps")
@@ -340,6 +344,7 @@ def metatile_overrides(project: dict) -> dict:
             objects[instance["id"]] = {"cells": instance["metatiles"]}
     return {
         "schema": "badger-grapple-metatile-overrides/v1",
+        "terrain": map_data["terrain"],
         "objects": objects,
         "patches": patches,
     }
@@ -373,6 +378,7 @@ def main() -> None:
     REGION_PATH.write_text(json.dumps(region, indent=2) + "\n", encoding="utf-8")
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
     METATILE_OVERRIDES_PATH.write_text(json.dumps(overrides, indent=2) + "\n", encoding="utf-8")
+    subprocess.run([sys.executable, str(ROOT / "tools" / "build_season_one_world_tileset.py")], cwd=ROOT, check=True)
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_camp_randall_production.py")], cwd=ROOT, check=True)
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_camp_randall_metatiles.py")], cwd=ROOT, check=True)
     print(f"APPLIED: layout revision {layouts['revision']}, {object_count} objects, {actor_count} actors")
