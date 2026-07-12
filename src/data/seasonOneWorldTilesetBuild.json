@@ -13,8 +13,8 @@
   "atlas": {
     "path": "./assets/metatiles/season_one_world_tileset_v3.png",
     "columns": 16,
-    "visualCount": 817,
-    "sha256": "b643e6152b0829f13ec82a129342248047b559780cf7e044289a4a79ab97ac45",
+    "visualCount": 845,
+    "sha256": "f67bb74ca7b9b01531f5010996b8d8c2a465dbbed74f9a5e16eb23b797eab85f",
     "entries": [
       {
         "index": 0,
@@ -7314,7 +7314,6 @@
         "names": [
           "Cardinal Roof Wide 1,1",
           "Cardinal Roof Gable 1,1",
-          "Trainer's Room 1,1",
           "Campus House 1,1"
         ]
       },
@@ -7332,9 +7331,6 @@
           "Cardinal Roof Hip 1,1",
           "Cardinal Roof Hip 2,1",
           "Cardinal Roof Corner 1,1",
-          "Trainer's Room 2,1",
-          "Trainer's Room 3,1",
-          "Trainer's Room 4,1",
           "Campus House 2,1",
           "Campus House 3,1",
           "Campus House 4,1"
@@ -7350,7 +7346,6 @@
         "names": [
           "Cardinal Roof Wide 4,1",
           "Cardinal Roof Gable 3,1",
-          "Trainer's Room 5,1",
           "Campus House 5,1"
         ]
       },
@@ -7364,7 +7359,6 @@
         "names": [
           "Cardinal Roof Wide 1,2",
           "Cardinal Roof Gable 1,2",
-          "Trainer's Room 1,2",
           "Campus House 1,2"
         ]
       },
@@ -7382,8 +7376,6 @@
           "Cardinal Roof Hip 1,2",
           "Cardinal Roof Hip 2,2",
           "Cardinal Roof Corner 1,2",
-          "Trainer's Room 2,2",
-          "Trainer's Room 4,2",
           "Campus House 2,2",
           "Campus House 4,2"
         ]
@@ -7398,7 +7390,6 @@
         "names": [
           "Cardinal Roof Wide 4,2",
           "Cardinal Roof Gable 3,2",
-          "Trainer's Room 5,2",
           "Campus House 5,2"
         ]
       },
@@ -7406,87 +7397,72 @@
         "index": 702,
         "kind": "structure",
         "families": [
-          "roof_slate",
-          "service_buildings"
+          "roof_slate"
         ],
         "names": [
           "Slate Roof Wide 1,1",
-          "Slate Roof Gable 1,1",
-          "Bucky's Locker Room 1,1"
+          "Slate Roof Gable 1,1"
         ]
       },
       {
         "index": 703,
         "kind": "structure",
         "families": [
-          "roof_slate",
-          "service_buildings"
+          "roof_slate"
         ],
         "names": [
           "Slate Roof Wide 2,1",
           "Slate Roof Wide 3,1",
           "Slate Roof Gable 2,1",
           "Slate Roof Hip 1,1",
-          "Slate Roof Hip 2,1",
-          "Bucky's Locker Room 2,1",
-          "Bucky's Locker Room 3,1",
-          "Bucky's Locker Room 4,1"
+          "Slate Roof Hip 2,1"
         ]
       },
       {
         "index": 704,
         "kind": "structure",
         "families": [
-          "roof_slate",
-          "service_buildings"
+          "roof_slate"
         ],
         "names": [
           "Slate Roof Wide 4,1",
-          "Slate Roof Gable 3,1",
-          "Bucky's Locker Room 5,1"
+          "Slate Roof Gable 3,1"
         ]
       },
       {
         "index": 705,
         "kind": "structure",
         "families": [
-          "roof_slate",
-          "service_buildings"
+          "roof_slate"
         ],
         "names": [
           "Slate Roof Wide 1,2",
-          "Slate Roof Gable 1,2",
-          "Bucky's Locker Room 1,2"
+          "Slate Roof Gable 1,2"
         ]
       },
       {
         "index": 706,
         "kind": "structure",
         "families": [
-          "roof_slate",
-          "service_buildings"
+          "roof_slate"
         ],
         "names": [
           "Slate Roof Wide 2,2",
           "Slate Roof Wide 3,2",
           "Slate Roof Gable 2,2",
           "Slate Roof Hip 1,2",
-          "Slate Roof Hip 2,2",
-          "Bucky's Locker Room 2,2",
-          "Bucky's Locker Room 4,2"
+          "Slate Roof Hip 2,2"
         ]
       },
       {
         "index": 707,
         "kind": "structure",
         "families": [
-          "roof_slate",
-          "service_buildings"
+          "roof_slate"
         ],
         "names": [
           "Slate Roof Wide 4,2",
-          "Slate Roof Gable 3,2",
-          "Bucky's Locker Room 5,2"
+          "Slate Roof Gable 3,2"
         ]
       },
       {
@@ -7657,7 +7633,6 @@
         ],
         "names": [
           "Wood Door 1,2",
-          "Bucky's Locker Room 3,4",
           "Campus House 3,4"
         ]
       },
@@ -7695,12 +7670,10 @@
         "index": 726,
         "kind": "structure",
         "families": [
-          "windows_doors",
-          "service_buildings"
+          "windows_doors"
         ],
         "names": [
-          "Cardinal Door 1,2",
-          "Trainer's Room 3,4"
+          "Cardinal Door 1,2"
         ]
       },
       {
@@ -8204,7 +8177,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 3,2"
+          "Trainer's Room 1,1"
         ]
       },
       {
@@ -8214,7 +8187,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 1,3"
+          "Trainer's Room 2,1"
         ]
       },
       {
@@ -8224,7 +8197,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 2,3"
+          "Trainer's Room 3,1"
         ]
       },
       {
@@ -8234,7 +8207,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 3,3"
+          "Trainer's Room 4,1"
         ]
       },
       {
@@ -8244,7 +8217,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 4,3"
+          "Trainer's Room 5,1"
         ]
       },
       {
@@ -8254,7 +8227,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 5,3"
+          "Trainer's Room 1,2"
         ]
       },
       {
@@ -8264,7 +8237,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 1,4"
+          "Trainer's Room 2,2"
         ]
       },
       {
@@ -8274,7 +8247,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 2,4"
+          "Trainer's Room 3,2"
         ]
       },
       {
@@ -8284,7 +8257,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 4,4"
+          "Trainer's Room 4,2"
         ]
       },
       {
@@ -8294,7 +8267,7 @@
           "service_buildings"
         ],
         "names": [
-          "Trainer's Room 5,4"
+          "Trainer's Room 5,2"
         ]
       },
       {
@@ -8304,7 +8277,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 3,2"
+          "Trainer's Room 1,3"
         ]
       },
       {
@@ -8314,8 +8287,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 1,3",
-          "Campus House 1,3"
+          "Trainer's Room 2,3"
         ]
       },
       {
@@ -8325,8 +8297,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 2,3",
-          "Campus House 2,3"
+          "Trainer's Room 3,3"
         ]
       },
       {
@@ -8336,7 +8307,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 3,3"
+          "Trainer's Room 4,3"
         ]
       },
       {
@@ -8346,8 +8317,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 4,3",
-          "Campus House 4,3"
+          "Trainer's Room 5,3"
         ]
       },
       {
@@ -8357,8 +8327,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 5,3",
-          "Campus House 5,3"
+          "Trainer's Room 1,4"
         ]
       },
       {
@@ -8368,8 +8337,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 1,4",
-          "Campus House 1,4"
+          "Trainer's Room 2,4"
         ]
       },
       {
@@ -8379,8 +8347,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 2,4",
-          "Campus House 2,4"
+          "Trainer's Room 3,4"
         ]
       },
       {
@@ -8390,8 +8357,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 4,4",
-          "Campus House 4,4"
+          "Trainer's Room 4,4"
         ]
       },
       {
@@ -8401,8 +8367,7 @@
           "service_buildings"
         ],
         "names": [
-          "Bucky's Locker Room 5,4",
-          "Campus House 5,4"
+          "Trainer's Room 5,4"
         ]
       },
       {
@@ -8412,7 +8377,7 @@
           "service_buildings"
         ],
         "names": [
-          "Campus House 3,2"
+          "Bucky's Locker Room 1,1"
         ]
       },
       {
@@ -8422,11 +8387,291 @@
           "service_buildings"
         ],
         "names": [
-          "Campus House 3,3"
+          "Bucky's Locker Room 2,1"
         ]
       },
       {
         "index": 796,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 3,1"
+        ]
+      },
+      {
+        "index": 797,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 4,1"
+        ]
+      },
+      {
+        "index": 798,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 5,1"
+        ]
+      },
+      {
+        "index": 799,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 1,2"
+        ]
+      },
+      {
+        "index": 800,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 2,2"
+        ]
+      },
+      {
+        "index": 801,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 3,2"
+        ]
+      },
+      {
+        "index": 802,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 4,2"
+        ]
+      },
+      {
+        "index": 803,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 5,2"
+        ]
+      },
+      {
+        "index": 804,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 1,3"
+        ]
+      },
+      {
+        "index": 805,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 2,3"
+        ]
+      },
+      {
+        "index": 806,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 3,3"
+        ]
+      },
+      {
+        "index": 807,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 4,3"
+        ]
+      },
+      {
+        "index": 808,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 5,3"
+        ]
+      },
+      {
+        "index": 809,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 1,4"
+        ]
+      },
+      {
+        "index": 810,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 2,4"
+        ]
+      },
+      {
+        "index": 811,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 3,4"
+        ]
+      },
+      {
+        "index": 812,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 4,4"
+        ]
+      },
+      {
+        "index": 813,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Bucky's Locker Room 5,4"
+        ]
+      },
+      {
+        "index": 814,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 3,2"
+        ]
+      },
+      {
+        "index": 815,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 1,3"
+        ]
+      },
+      {
+        "index": 816,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 2,3"
+        ]
+      },
+      {
+        "index": 817,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 3,3"
+        ]
+      },
+      {
+        "index": 818,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 4,3"
+        ]
+      },
+      {
+        "index": 819,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 5,3"
+        ]
+      },
+      {
+        "index": 820,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 1,4"
+        ]
+      },
+      {
+        "index": 821,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 2,4"
+        ]
+      },
+      {
+        "index": 822,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 4,4"
+        ]
+      },
+      {
+        "index": 823,
+        "kind": "structure",
+        "families": [
+          "service_buildings"
+        ],
+        "names": [
+          "Campus House 5,4"
+        ]
+      },
+      {
+        "index": 824,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8437,7 +8682,7 @@
         ]
       },
       {
-        "index": 797,
+        "index": 825,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8449,7 +8694,7 @@
         ]
       },
       {
-        "index": 798,
+        "index": 826,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8460,7 +8705,7 @@
         ]
       },
       {
-        "index": 799,
+        "index": 827,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8471,7 +8716,7 @@
         ]
       },
       {
-        "index": 800,
+        "index": 828,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8483,7 +8728,7 @@
         ]
       },
       {
-        "index": 801,
+        "index": 829,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8494,7 +8739,7 @@
         ]
       },
       {
-        "index": 802,
+        "index": 830,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8505,7 +8750,7 @@
         ]
       },
       {
-        "index": 803,
+        "index": 831,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8516,7 +8761,7 @@
         ]
       },
       {
-        "index": 804,
+        "index": 832,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8527,7 +8772,7 @@
         ]
       },
       {
-        "index": 805,
+        "index": 833,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8538,7 +8783,7 @@
         ]
       },
       {
-        "index": 806,
+        "index": 834,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8549,7 +8794,7 @@
         ]
       },
       {
-        "index": 807,
+        "index": 835,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8560,7 +8805,7 @@
         ]
       },
       {
-        "index": 808,
+        "index": 836,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8571,7 +8816,7 @@
         ]
       },
       {
-        "index": 809,
+        "index": 837,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8582,7 +8827,7 @@
         ]
       },
       {
-        "index": 810,
+        "index": 838,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8592,7 +8837,7 @@
         ]
       },
       {
-        "index": 811,
+        "index": 839,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8602,7 +8847,7 @@
         ]
       },
       {
-        "index": 812,
+        "index": 840,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8612,7 +8857,7 @@
         ]
       },
       {
-        "index": 813,
+        "index": 841,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8622,7 +8867,7 @@
         ]
       },
       {
-        "index": 814,
+        "index": 842,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8632,7 +8877,7 @@
         ]
       },
       {
-        "index": 815,
+        "index": 843,
         "kind": "structure",
         "families": [
           "elevation"
@@ -8643,7 +8888,7 @@
         ]
       },
       {
-        "index": 816,
+        "index": 844,
         "kind": "structure",
         "families": [
           "elevation"
@@ -24957,7 +25202,6 @@
       "names": [
         "Cardinal Roof Wide 1,1",
         "Cardinal Roof Gable 1,1",
-        "Trainer's Room 1,1",
         "Campus House 1,1"
       ]
     },
@@ -24974,7 +25218,6 @@
       "names": [
         "Cardinal Roof Wide 1,1",
         "Cardinal Roof Gable 1,1",
-        "Trainer's Room 1,1",
         "Campus House 1,1"
       ]
     },
@@ -24991,7 +25234,6 @@
       "names": [
         "Cardinal Roof Wide 1,1",
         "Cardinal Roof Gable 1,1",
-        "Trainer's Room 1,1",
         "Campus House 1,1"
       ]
     },
@@ -25012,9 +25254,6 @@
         "Cardinal Roof Hip 1,1",
         "Cardinal Roof Hip 2,1",
         "Cardinal Roof Corner 1,1",
-        "Trainer's Room 2,1",
-        "Trainer's Room 3,1",
-        "Trainer's Room 4,1",
         "Campus House 2,1",
         "Campus House 3,1",
         "Campus House 4,1"
@@ -25037,9 +25276,6 @@
         "Cardinal Roof Hip 1,1",
         "Cardinal Roof Hip 2,1",
         "Cardinal Roof Corner 1,1",
-        "Trainer's Room 2,1",
-        "Trainer's Room 3,1",
-        "Trainer's Room 4,1",
         "Campus House 2,1",
         "Campus House 3,1",
         "Campus House 4,1"
@@ -25062,9 +25298,6 @@
         "Cardinal Roof Hip 1,1",
         "Cardinal Roof Hip 2,1",
         "Cardinal Roof Corner 1,1",
-        "Trainer's Room 2,1",
-        "Trainer's Room 3,1",
-        "Trainer's Room 4,1",
         "Campus House 2,1",
         "Campus House 3,1",
         "Campus House 4,1"
@@ -25083,7 +25316,6 @@
       "names": [
         "Cardinal Roof Wide 4,1",
         "Cardinal Roof Gable 3,1",
-        "Trainer's Room 5,1",
         "Campus House 5,1"
       ]
     },
@@ -25100,7 +25332,6 @@
       "names": [
         "Cardinal Roof Wide 4,1",
         "Cardinal Roof Gable 3,1",
-        "Trainer's Room 5,1",
         "Campus House 5,1"
       ]
     },
@@ -25117,7 +25348,6 @@
       "names": [
         "Cardinal Roof Wide 4,1",
         "Cardinal Roof Gable 3,1",
-        "Trainer's Room 5,1",
         "Campus House 5,1"
       ]
     },
@@ -25134,7 +25364,6 @@
       "names": [
         "Cardinal Roof Wide 1,2",
         "Cardinal Roof Gable 1,2",
-        "Trainer's Room 1,2",
         "Campus House 1,2"
       ]
     },
@@ -25151,7 +25380,6 @@
       "names": [
         "Cardinal Roof Wide 1,2",
         "Cardinal Roof Gable 1,2",
-        "Trainer's Room 1,2",
         "Campus House 1,2"
       ]
     },
@@ -25168,7 +25396,6 @@
       "names": [
         "Cardinal Roof Wide 1,2",
         "Cardinal Roof Gable 1,2",
-        "Trainer's Room 1,2",
         "Campus House 1,2"
       ]
     },
@@ -25189,8 +25416,6 @@
         "Cardinal Roof Hip 1,2",
         "Cardinal Roof Hip 2,2",
         "Cardinal Roof Corner 1,2",
-        "Trainer's Room 2,2",
-        "Trainer's Room 4,2",
         "Campus House 2,2",
         "Campus House 4,2"
       ]
@@ -25212,8 +25437,6 @@
         "Cardinal Roof Hip 1,2",
         "Cardinal Roof Hip 2,2",
         "Cardinal Roof Corner 1,2",
-        "Trainer's Room 2,2",
-        "Trainer's Room 4,2",
         "Campus House 2,2",
         "Campus House 4,2"
       ]
@@ -25235,8 +25458,6 @@
         "Cardinal Roof Hip 1,2",
         "Cardinal Roof Hip 2,2",
         "Cardinal Roof Corner 1,2",
-        "Trainer's Room 2,2",
-        "Trainer's Room 4,2",
         "Campus House 2,2",
         "Campus House 4,2"
       ]
@@ -25254,7 +25475,6 @@
       "names": [
         "Cardinal Roof Wide 4,2",
         "Cardinal Roof Gable 3,2",
-        "Trainer's Room 5,2",
         "Campus House 5,2"
       ]
     },
@@ -25271,7 +25491,6 @@
       "names": [
         "Cardinal Roof Wide 4,2",
         "Cardinal Roof Gable 3,2",
-        "Trainer's Room 5,2",
         "Campus House 5,2"
       ]
     },
@@ -25288,7 +25507,6 @@
       "names": [
         "Cardinal Roof Wide 4,2",
         "Cardinal Roof Gable 3,2",
-        "Trainer's Room 5,2",
         "Campus House 5,2"
       ]
     },
@@ -25299,13 +25517,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 1,1",
-        "Slate Roof Gable 1,1",
-        "Bucky's Locker Room 1,1"
+        "Slate Roof Gable 1,1"
       ]
     },
     "mt_4e7cd5d185a5": {
@@ -25315,13 +25531,11 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 1,1",
-        "Slate Roof Gable 1,1",
-        "Bucky's Locker Room 1,1"
+        "Slate Roof Gable 1,1"
       ]
     },
     "mt_52c067f9e598": {
@@ -25331,13 +25545,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 1,1",
-        "Slate Roof Gable 1,1",
-        "Bucky's Locker Room 1,1"
+        "Slate Roof Gable 1,1"
       ]
     },
     "mt_36c67c4e16a1": {
@@ -25347,18 +25559,14 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 2,1",
         "Slate Roof Wide 3,1",
         "Slate Roof Gable 2,1",
         "Slate Roof Hip 1,1",
-        "Slate Roof Hip 2,1",
-        "Bucky's Locker Room 2,1",
-        "Bucky's Locker Room 3,1",
-        "Bucky's Locker Room 4,1"
+        "Slate Roof Hip 2,1"
       ]
     },
     "mt_3d5a1876e20c": {
@@ -25368,18 +25576,14 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 2,1",
         "Slate Roof Wide 3,1",
         "Slate Roof Gable 2,1",
         "Slate Roof Hip 1,1",
-        "Slate Roof Hip 2,1",
-        "Bucky's Locker Room 2,1",
-        "Bucky's Locker Room 3,1",
-        "Bucky's Locker Room 4,1"
+        "Slate Roof Hip 2,1"
       ]
     },
     "mt_51ed090046c3": {
@@ -25389,18 +25593,14 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 2,1",
         "Slate Roof Wide 3,1",
         "Slate Roof Gable 2,1",
         "Slate Roof Hip 1,1",
-        "Slate Roof Hip 2,1",
-        "Bucky's Locker Room 2,1",
-        "Bucky's Locker Room 3,1",
-        "Bucky's Locker Room 4,1"
+        "Slate Roof Hip 2,1"
       ]
     },
     "mt_1394cd2058e7": {
@@ -25410,13 +25610,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 4,1",
-        "Slate Roof Gable 3,1",
-        "Bucky's Locker Room 5,1"
+        "Slate Roof Gable 3,1"
       ]
     },
     "mt_6f16c9f163a6": {
@@ -25426,13 +25624,11 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 4,1",
-        "Slate Roof Gable 3,1",
-        "Bucky's Locker Room 5,1"
+        "Slate Roof Gable 3,1"
       ]
     },
     "mt_effe59388b18": {
@@ -25442,13 +25638,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 4,1",
-        "Slate Roof Gable 3,1",
-        "Bucky's Locker Room 5,1"
+        "Slate Roof Gable 3,1"
       ]
     },
     "mt_d142fc76ba40": {
@@ -25458,13 +25652,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 1,2",
-        "Slate Roof Gable 1,2",
-        "Bucky's Locker Room 1,2"
+        "Slate Roof Gable 1,2"
       ]
     },
     "mt_2c66c6d66263": {
@@ -25474,13 +25666,11 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 1,2",
-        "Slate Roof Gable 1,2",
-        "Bucky's Locker Room 1,2"
+        "Slate Roof Gable 1,2"
       ]
     },
     "mt_1b0a412a92a0": {
@@ -25490,13 +25680,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 1,2",
-        "Slate Roof Gable 1,2",
-        "Bucky's Locker Room 1,2"
+        "Slate Roof Gable 1,2"
       ]
     },
     "mt_577914ffb0b9": {
@@ -25506,17 +25694,14 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 2,2",
         "Slate Roof Wide 3,2",
         "Slate Roof Gable 2,2",
         "Slate Roof Hip 1,2",
-        "Slate Roof Hip 2,2",
-        "Bucky's Locker Room 2,2",
-        "Bucky's Locker Room 4,2"
+        "Slate Roof Hip 2,2"
       ]
     },
     "mt_f53c8362c72a": {
@@ -25526,17 +25711,14 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 2,2",
         "Slate Roof Wide 3,2",
         "Slate Roof Gable 2,2",
         "Slate Roof Hip 1,2",
-        "Slate Roof Hip 2,2",
-        "Bucky's Locker Room 2,2",
-        "Bucky's Locker Room 4,2"
+        "Slate Roof Hip 2,2"
       ]
     },
     "mt_7e88983d6527": {
@@ -25546,17 +25728,14 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 2,2",
         "Slate Roof Wide 3,2",
         "Slate Roof Gable 2,2",
         "Slate Roof Hip 1,2",
-        "Slate Roof Hip 2,2",
-        "Bucky's Locker Room 2,2",
-        "Bucky's Locker Room 4,2"
+        "Slate Roof Hip 2,2"
       ]
     },
     "mt_09620cda6d48": {
@@ -25566,13 +25745,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 4,2",
-        "Slate Roof Gable 3,2",
-        "Bucky's Locker Room 5,2"
+        "Slate Roof Gable 3,2"
       ]
     },
     "mt_486a4f8f5be3": {
@@ -25582,13 +25759,11 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 4,2",
-        "Slate Roof Gable 3,2",
-        "Bucky's Locker Room 5,2"
+        "Slate Roof Gable 3,2"
       ]
     },
     "mt_307804bde7c7": {
@@ -25598,13 +25773,11 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "roof_slate",
-        "service_buildings"
+        "roof_slate"
       ],
       "names": [
         "Slate Roof Wide 4,2",
-        "Slate Roof Gable 3,2",
-        "Bucky's Locker Room 5,2"
+        "Slate Roof Gable 3,2"
       ]
     },
     "mt_df47df086e76": {
@@ -26222,7 +26395,6 @@
       ],
       "names": [
         "Wood Door 1,2",
-        "Bucky's Locker Room 3,4",
         "Campus House 3,4"
       ]
     },
@@ -26238,7 +26410,6 @@
       ],
       "names": [
         "Wood Door 1,2",
-        "Bucky's Locker Room 3,4",
         "Campus House 3,4"
       ]
     },
@@ -26254,7 +26425,6 @@
       ],
       "names": [
         "Wood Door 1,2",
-        "Bucky's Locker Room 3,4",
         "Campus House 3,4"
       ]
     },
@@ -26382,12 +26552,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "windows_doors",
-        "service_buildings"
+        "windows_doors"
       ],
       "names": [
-        "Cardinal Door 1,2",
-        "Trainer's Room 3,4"
+        "Cardinal Door 1,2"
       ]
     },
     "mt_27489489da96": {
@@ -26397,12 +26565,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "windows_doors",
-        "service_buildings"
+        "windows_doors"
       ],
       "names": [
-        "Cardinal Door 1,2",
-        "Trainer's Room 3,4"
+        "Cardinal Door 1,2"
       ]
     },
     "mt_83429d918018": {
@@ -26412,12 +26578,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "windows_doors",
-        "service_buildings"
+        "windows_doors"
       ],
       "names": [
-        "Cardinal Door 1,2",
-        "Trainer's Room 3,4"
+        "Cardinal Door 1,2"
       ]
     },
     "mt_3b6f31681fd8": {
@@ -28325,9 +28489,282 @@
         "Long Forest Border East 2,15"
       ]
     },
-    "mt_6119629e0809": {
-      "id": "mt_6119629e0809",
+    "mt_3e8b0b4d27fe": {
+      "id": "mt_3e8b0b4d27fe",
       "visual": 774,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 1,1"
+      ]
+    },
+    "mt_9fe724861b11": {
+      "id": "mt_9fe724861b11",
+      "visual": 774,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 1,1"
+      ]
+    },
+    "mt_a408876624af": {
+      "id": "mt_a408876624af",
+      "visual": 774,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 1,1"
+      ]
+    },
+    "mt_db507c805003": {
+      "id": "mt_db507c805003",
+      "visual": 775,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 2,1"
+      ]
+    },
+    "mt_674af6df03c8": {
+      "id": "mt_674af6df03c8",
+      "visual": 775,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 2,1"
+      ]
+    },
+    "mt_624ff29d46ac": {
+      "id": "mt_624ff29d46ac",
+      "visual": 775,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 2,1"
+      ]
+    },
+    "mt_4fcad1d36cde": {
+      "id": "mt_4fcad1d36cde",
+      "visual": 776,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 3,1"
+      ]
+    },
+    "mt_b597544a72cc": {
+      "id": "mt_b597544a72cc",
+      "visual": 776,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 3,1"
+      ]
+    },
+    "mt_3b5b0fcec178": {
+      "id": "mt_3b5b0fcec178",
+      "visual": 776,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 3,1"
+      ]
+    },
+    "mt_ad87b5aa7e12": {
+      "id": "mt_ad87b5aa7e12",
+      "visual": 777,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 4,1"
+      ]
+    },
+    "mt_7882256db941": {
+      "id": "mt_7882256db941",
+      "visual": 777,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 4,1"
+      ]
+    },
+    "mt_d052dc315322": {
+      "id": "mt_d052dc315322",
+      "visual": 777,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 4,1"
+      ]
+    },
+    "mt_f33bf3e629ff": {
+      "id": "mt_f33bf3e629ff",
+      "visual": 778,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 5,1"
+      ]
+    },
+    "mt_0ea00acf225e": {
+      "id": "mt_0ea00acf225e",
+      "visual": 778,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 5,1"
+      ]
+    },
+    "mt_c27caa7070a9": {
+      "id": "mt_c27caa7070a9",
+      "visual": 778,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 5,1"
+      ]
+    },
+    "mt_da884f78e5ee": {
+      "id": "mt_da884f78e5ee",
+      "visual": 779,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 1,2"
+      ]
+    },
+    "mt_dc4be6d283e4": {
+      "id": "mt_dc4be6d283e4",
+      "visual": 779,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 1,2"
+      ]
+    },
+    "mt_21f4d7f6218e": {
+      "id": "mt_21f4d7f6218e",
+      "visual": 779,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 1,2"
+      ]
+    },
+    "mt_9718227c182b": {
+      "id": "mt_9718227c182b",
+      "visual": 780,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 2,2"
+      ]
+    },
+    "mt_4c2e10bcccc8": {
+      "id": "mt_4c2e10bcccc8",
+      "visual": 780,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 2,2"
+      ]
+    },
+    "mt_226db9871df2": {
+      "id": "mt_226db9871df2",
+      "visual": 780,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 2,2"
+      ]
+    },
+    "mt_132a9269acd6": {
+      "id": "mt_132a9269acd6",
+      "visual": 781,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28338,9 +28775,9 @@
         "Trainer's Room 3,2"
       ]
     },
-    "mt_091f43c13e20": {
-      "id": "mt_091f43c13e20",
-      "visual": 774,
+    "mt_8814904219bd": {
+      "id": "mt_8814904219bd",
+      "visual": 781,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28351,9 +28788,9 @@
         "Trainer's Room 3,2"
       ]
     },
-    "mt_b6f56a883c61": {
-      "id": "mt_b6f56a883c61",
-      "visual": 774,
+    "mt_f8eba18fa8bd": {
+      "id": "mt_f8eba18fa8bd",
+      "visual": 781,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28364,9 +28801,87 @@
         "Trainer's Room 3,2"
       ]
     },
-    "mt_a4c0a4d95182": {
-      "id": "mt_a4c0a4d95182",
-      "visual": 775,
+    "mt_ce9cbd4f87be": {
+      "id": "mt_ce9cbd4f87be",
+      "visual": 782,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 4,2"
+      ]
+    },
+    "mt_082253ddddbe": {
+      "id": "mt_082253ddddbe",
+      "visual": 782,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 4,2"
+      ]
+    },
+    "mt_f71784969600": {
+      "id": "mt_f71784969600",
+      "visual": 782,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 4,2"
+      ]
+    },
+    "mt_8cd8dbc6f79c": {
+      "id": "mt_8cd8dbc6f79c",
+      "visual": 783,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 5,2"
+      ]
+    },
+    "mt_776b05c33bc9": {
+      "id": "mt_776b05c33bc9",
+      "visual": 783,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 5,2"
+      ]
+    },
+    "mt_cbfb8ba52d51": {
+      "id": "mt_cbfb8ba52d51",
+      "visual": 783,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 5,2"
+      ]
+    },
+    "mt_d7ee8c60583f": {
+      "id": "mt_d7ee8c60583f",
+      "visual": 784,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28377,9 +28892,9 @@
         "Trainer's Room 1,3"
       ]
     },
-    "mt_b89b7690869b": {
-      "id": "mt_b89b7690869b",
-      "visual": 775,
+    "mt_d80a1ad00d2f": {
+      "id": "mt_d80a1ad00d2f",
+      "visual": 784,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28390,9 +28905,9 @@
         "Trainer's Room 1,3"
       ]
     },
-    "mt_b7e2bfb2aa6a": {
-      "id": "mt_b7e2bfb2aa6a",
-      "visual": 775,
+    "mt_16ccd8d076e4": {
+      "id": "mt_16ccd8d076e4",
+      "visual": 784,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28403,9 +28918,9 @@
         "Trainer's Room 1,3"
       ]
     },
-    "mt_65e8f0749e60": {
-      "id": "mt_65e8f0749e60",
-      "visual": 776,
+    "mt_5cee6b319a54": {
+      "id": "mt_5cee6b319a54",
+      "visual": 785,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28416,9 +28931,9 @@
         "Trainer's Room 2,3"
       ]
     },
-    "mt_7e9a2a1762d8": {
-      "id": "mt_7e9a2a1762d8",
-      "visual": 776,
+    "mt_3709aacdef37": {
+      "id": "mt_3709aacdef37",
+      "visual": 785,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28429,9 +28944,9 @@
         "Trainer's Room 2,3"
       ]
     },
-    "mt_a9addeb00020": {
-      "id": "mt_a9addeb00020",
-      "visual": 776,
+    "mt_ab87cedf191c": {
+      "id": "mt_ab87cedf191c",
+      "visual": 785,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28442,9 +28957,9 @@
         "Trainer's Room 2,3"
       ]
     },
-    "mt_e02bd6c4e634": {
-      "id": "mt_e02bd6c4e634",
-      "visual": 777,
+    "mt_1766b09adcd5": {
+      "id": "mt_1766b09adcd5",
+      "visual": 786,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28455,9 +28970,9 @@
         "Trainer's Room 3,3"
       ]
     },
-    "mt_e8a201a6399f": {
-      "id": "mt_e8a201a6399f",
-      "visual": 777,
+    "mt_2e2a37115bd0": {
+      "id": "mt_2e2a37115bd0",
+      "visual": 786,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28468,9 +28983,9 @@
         "Trainer's Room 3,3"
       ]
     },
-    "mt_3e6f2f496ac3": {
-      "id": "mt_3e6f2f496ac3",
-      "visual": 777,
+    "mt_c2bd314e7bbc": {
+      "id": "mt_c2bd314e7bbc",
+      "visual": 786,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28481,9 +28996,9 @@
         "Trainer's Room 3,3"
       ]
     },
-    "mt_4bb874da9822": {
-      "id": "mt_4bb874da9822",
-      "visual": 778,
+    "mt_7a315ee15df6": {
+      "id": "mt_7a315ee15df6",
+      "visual": 787,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28494,9 +29009,9 @@
         "Trainer's Room 4,3"
       ]
     },
-    "mt_5e2906552605": {
-      "id": "mt_5e2906552605",
-      "visual": 778,
+    "mt_73f0d1c2adc0": {
+      "id": "mt_73f0d1c2adc0",
+      "visual": 787,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28507,9 +29022,9 @@
         "Trainer's Room 4,3"
       ]
     },
-    "mt_ec58bb06caeb": {
-      "id": "mt_ec58bb06caeb",
-      "visual": 778,
+    "mt_548e48bbb2e0": {
+      "id": "mt_548e48bbb2e0",
+      "visual": 787,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28520,9 +29035,9 @@
         "Trainer's Room 4,3"
       ]
     },
-    "mt_6804edf0c793": {
-      "id": "mt_6804edf0c793",
-      "visual": 779,
+    "mt_b9fcaa987d86": {
+      "id": "mt_b9fcaa987d86",
+      "visual": 788,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28533,9 +29048,9 @@
         "Trainer's Room 5,3"
       ]
     },
-    "mt_240b69c0c8a0": {
-      "id": "mt_240b69c0c8a0",
-      "visual": 779,
+    "mt_a9c443cf50d4": {
+      "id": "mt_a9c443cf50d4",
+      "visual": 788,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28546,9 +29061,9 @@
         "Trainer's Room 5,3"
       ]
     },
-    "mt_66cd0ec89af8": {
-      "id": "mt_66cd0ec89af8",
-      "visual": 779,
+    "mt_4023c2f9c125": {
+      "id": "mt_4023c2f9c125",
+      "visual": 788,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28559,9 +29074,9 @@
         "Trainer's Room 5,3"
       ]
     },
-    "mt_c5fa8f913287": {
-      "id": "mt_c5fa8f913287",
-      "visual": 780,
+    "mt_0c6756dc904e": {
+      "id": "mt_0c6756dc904e",
+      "visual": 789,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28572,9 +29087,9 @@
         "Trainer's Room 1,4"
       ]
     },
-    "mt_b81cdbeca651": {
-      "id": "mt_b81cdbeca651",
-      "visual": 780,
+    "mt_b9f5a7ba2273": {
+      "id": "mt_b9f5a7ba2273",
+      "visual": 789,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28585,9 +29100,9 @@
         "Trainer's Room 1,4"
       ]
     },
-    "mt_a15e2179a909": {
-      "id": "mt_a15e2179a909",
-      "visual": 780,
+    "mt_80b522f99d49": {
+      "id": "mt_80b522f99d49",
+      "visual": 789,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28598,9 +29113,9 @@
         "Trainer's Room 1,4"
       ]
     },
-    "mt_410133292f5f": {
-      "id": "mt_410133292f5f",
-      "visual": 781,
+    "mt_1c26b14e578e": {
+      "id": "mt_1c26b14e578e",
+      "visual": 790,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28611,9 +29126,9 @@
         "Trainer's Room 2,4"
       ]
     },
-    "mt_79993cb382ea": {
-      "id": "mt_79993cb382ea",
-      "visual": 781,
+    "mt_ca5dd0c2872e": {
+      "id": "mt_ca5dd0c2872e",
+      "visual": 790,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28624,9 +29139,9 @@
         "Trainer's Room 2,4"
       ]
     },
-    "mt_70e9f5afe94d": {
-      "id": "mt_70e9f5afe94d",
-      "visual": 781,
+    "mt_b56c3f529dea": {
+      "id": "mt_b56c3f529dea",
+      "visual": 790,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28637,9 +29152,48 @@
         "Trainer's Room 2,4"
       ]
     },
-    "mt_835b5a455e6a": {
-      "id": "mt_835b5a455e6a",
-      "visual": 782,
+    "mt_2c5f71c69e44": {
+      "id": "mt_2c5f71c69e44",
+      "visual": 791,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 3,4"
+      ]
+    },
+    "mt_aa61b8844de0": {
+      "id": "mt_aa61b8844de0",
+      "visual": 791,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 3,4"
+      ]
+    },
+    "mt_fd8534b084f0": {
+      "id": "mt_fd8534b084f0",
+      "visual": 791,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Trainer's Room 3,4"
+      ]
+    },
+    "mt_9beaef185a73": {
+      "id": "mt_9beaef185a73",
+      "visual": 792,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28650,9 +29204,9 @@
         "Trainer's Room 4,4"
       ]
     },
-    "mt_dfee1fe0f194": {
-      "id": "mt_dfee1fe0f194",
-      "visual": 782,
+    "mt_ccf0d9bb4638": {
+      "id": "mt_ccf0d9bb4638",
+      "visual": 792,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28663,9 +29217,9 @@
         "Trainer's Room 4,4"
       ]
     },
-    "mt_6d265ec214e8": {
-      "id": "mt_6d265ec214e8",
-      "visual": 782,
+    "mt_3456bcf9b7d3": {
+      "id": "mt_3456bcf9b7d3",
+      "visual": 792,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28676,9 +29230,9 @@
         "Trainer's Room 4,4"
       ]
     },
-    "mt_07cfbe00ba99": {
-      "id": "mt_07cfbe00ba99",
-      "visual": 783,
+    "mt_4339c5e86c5e": {
+      "id": "mt_4339c5e86c5e",
+      "visual": 793,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28689,9 +29243,9 @@
         "Trainer's Room 5,4"
       ]
     },
-    "mt_a964e135f835": {
-      "id": "mt_a964e135f835",
-      "visual": 783,
+    "mt_d78e8a2cebfa": {
+      "id": "mt_d78e8a2cebfa",
+      "visual": 793,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28702,9 +29256,9 @@
         "Trainer's Room 5,4"
       ]
     },
-    "mt_f82780ad1823": {
-      "id": "mt_f82780ad1823",
-      "visual": 783,
+    "mt_a3ffe30fb1c7": {
+      "id": "mt_a3ffe30fb1c7",
+      "visual": 793,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28715,9 +29269,282 @@
         "Trainer's Room 5,4"
       ]
     },
-    "mt_457d3a087eac": {
-      "id": "mt_457d3a087eac",
-      "visual": 784,
+    "mt_90a164a18745": {
+      "id": "mt_90a164a18745",
+      "visual": 794,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,1"
+      ]
+    },
+    "mt_68691164c47f": {
+      "id": "mt_68691164c47f",
+      "visual": 794,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,1"
+      ]
+    },
+    "mt_c98e43402f3d": {
+      "id": "mt_c98e43402f3d",
+      "visual": 794,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,1"
+      ]
+    },
+    "mt_f17f4b84e44f": {
+      "id": "mt_f17f4b84e44f",
+      "visual": 795,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,1"
+      ]
+    },
+    "mt_4afaaf7cf264": {
+      "id": "mt_4afaaf7cf264",
+      "visual": 795,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,1"
+      ]
+    },
+    "mt_5996f7f0e275": {
+      "id": "mt_5996f7f0e275",
+      "visual": 795,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,1"
+      ]
+    },
+    "mt_b6cabbf6dca0": {
+      "id": "mt_b6cabbf6dca0",
+      "visual": 796,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 3,1"
+      ]
+    },
+    "mt_148e3dac84c1": {
+      "id": "mt_148e3dac84c1",
+      "visual": 796,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 3,1"
+      ]
+    },
+    "mt_60dba8de3f87": {
+      "id": "mt_60dba8de3f87",
+      "visual": 796,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 3,1"
+      ]
+    },
+    "mt_dd45e187995e": {
+      "id": "mt_dd45e187995e",
+      "visual": 797,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 4,1"
+      ]
+    },
+    "mt_9b9c0fc98e46": {
+      "id": "mt_9b9c0fc98e46",
+      "visual": 797,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 4,1"
+      ]
+    },
+    "mt_6849effd674d": {
+      "id": "mt_6849effd674d",
+      "visual": 797,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 4,1"
+      ]
+    },
+    "mt_2917af213c2e": {
+      "id": "mt_2917af213c2e",
+      "visual": 798,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 5,1"
+      ]
+    },
+    "mt_21ea74be2993": {
+      "id": "mt_21ea74be2993",
+      "visual": 798,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 5,1"
+      ]
+    },
+    "mt_b41c4fec6fdc": {
+      "id": "mt_b41c4fec6fdc",
+      "visual": 798,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 5,1"
+      ]
+    },
+    "mt_cac36a680dfd": {
+      "id": "mt_cac36a680dfd",
+      "visual": 799,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,2"
+      ]
+    },
+    "mt_cd2031183ee9": {
+      "id": "mt_cd2031183ee9",
+      "visual": 799,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,2"
+      ]
+    },
+    "mt_3d5f3c008941": {
+      "id": "mt_3d5f3c008941",
+      "visual": 799,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,2"
+      ]
+    },
+    "mt_8aa825e6bf0f": {
+      "id": "mt_8aa825e6bf0f",
+      "visual": 800,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,2"
+      ]
+    },
+    "mt_3f7d98ec5767": {
+      "id": "mt_3f7d98ec5767",
+      "visual": 800,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,2"
+      ]
+    },
+    "mt_be6237eac19c": {
+      "id": "mt_be6237eac19c",
+      "visual": 800,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,2"
+      ]
+    },
+    "mt_be223f995ef8": {
+      "id": "mt_be223f995ef8",
+      "visual": 801,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28728,9 +29555,9 @@
         "Bucky's Locker Room 3,2"
       ]
     },
-    "mt_0d1934c4f19a": {
-      "id": "mt_0d1934c4f19a",
-      "visual": 784,
+    "mt_720aa8aa52bb": {
+      "id": "mt_720aa8aa52bb",
+      "visual": 801,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28741,9 +29568,9 @@
         "Bucky's Locker Room 3,2"
       ]
     },
-    "mt_1e60d6331617": {
-      "id": "mt_1e60d6331617",
-      "visual": 784,
+    "mt_40737ffb1f69": {
+      "id": "mt_40737ffb1f69",
+      "visual": 801,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28754,9 +29581,9 @@
         "Bucky's Locker Room 3,2"
       ]
     },
-    "mt_f1495ef101b9": {
-      "id": "mt_f1495ef101b9",
-      "visual": 785,
+    "mt_e59723ec9749": {
+      "id": "mt_e59723ec9749",
+      "visual": 802,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28764,13 +29591,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 1,3",
-        "Campus House 1,3"
+        "Bucky's Locker Room 4,2"
       ]
     },
-    "mt_3ee29cac2ef0": {
-      "id": "mt_3ee29cac2ef0",
-      "visual": 785,
+    "mt_ec620c2e6d47": {
+      "id": "mt_ec620c2e6d47",
+      "visual": 802,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28778,13 +29604,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 1,3",
-        "Campus House 1,3"
+        "Bucky's Locker Room 4,2"
       ]
     },
-    "mt_233e42182111": {
-      "id": "mt_233e42182111",
-      "visual": 785,
+    "mt_54d121244cd2": {
+      "id": "mt_54d121244cd2",
+      "visual": 802,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28792,13 +29617,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 1,3",
-        "Campus House 1,3"
+        "Bucky's Locker Room 4,2"
       ]
     },
-    "mt_ddac8fa220b8": {
-      "id": "mt_ddac8fa220b8",
-      "visual": 786,
+    "mt_1154eabc84d4": {
+      "id": "mt_1154eabc84d4",
+      "visual": 803,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28806,13 +29630,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 2,3",
-        "Campus House 2,3"
+        "Bucky's Locker Room 5,2"
       ]
     },
-    "mt_20d291cfd522": {
-      "id": "mt_20d291cfd522",
-      "visual": 786,
+    "mt_db3568cc412d": {
+      "id": "mt_db3568cc412d",
+      "visual": 803,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28820,13 +29643,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 2,3",
-        "Campus House 2,3"
+        "Bucky's Locker Room 5,2"
       ]
     },
-    "mt_f9646ef49b75": {
-      "id": "mt_f9646ef49b75",
-      "visual": 786,
+    "mt_2ffadd849e1a": {
+      "id": "mt_2ffadd849e1a",
+      "visual": 803,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28834,13 +29656,90 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 2,3",
-        "Campus House 2,3"
+        "Bucky's Locker Room 5,2"
       ]
     },
-    "mt_4aa23aea7bf7": {
-      "id": "mt_4aa23aea7bf7",
-      "visual": 787,
+    "mt_51b78b59c5d7": {
+      "id": "mt_51b78b59c5d7",
+      "visual": 804,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,3"
+      ]
+    },
+    "mt_a06450bf7529": {
+      "id": "mt_a06450bf7529",
+      "visual": 804,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,3"
+      ]
+    },
+    "mt_0c36ebe8bd77": {
+      "id": "mt_0c36ebe8bd77",
+      "visual": 804,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 1,3"
+      ]
+    },
+    "mt_fb4b57a89d31": {
+      "id": "mt_fb4b57a89d31",
+      "visual": 805,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,3"
+      ]
+    },
+    "mt_d13e10b7db1c": {
+      "id": "mt_d13e10b7db1c",
+      "visual": 805,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,3"
+      ]
+    },
+    "mt_e6af53379d6e": {
+      "id": "mt_e6af53379d6e",
+      "visual": 805,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 2,3"
+      ]
+    },
+    "mt_10b93b929a04": {
+      "id": "mt_10b93b929a04",
+      "visual": 806,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28851,9 +29750,9 @@
         "Bucky's Locker Room 3,3"
       ]
     },
-    "mt_82c282aa8ad5": {
-      "id": "mt_82c282aa8ad5",
-      "visual": 787,
+    "mt_fcdceb3b7d4e": {
+      "id": "mt_fcdceb3b7d4e",
+      "visual": 806,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28864,9 +29763,9 @@
         "Bucky's Locker Room 3,3"
       ]
     },
-    "mt_4d724db32f66": {
-      "id": "mt_4d724db32f66",
-      "visual": 787,
+    "mt_b3f9ce265334": {
+      "id": "mt_b3f9ce265334",
+      "visual": 806,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28877,9 +29776,9 @@
         "Bucky's Locker Room 3,3"
       ]
     },
-    "mt_34d3fea37394": {
-      "id": "mt_34d3fea37394",
-      "visual": 788,
+    "mt_4fdd3169e532": {
+      "id": "mt_4fdd3169e532",
+      "visual": 807,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28887,13 +29786,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 4,3",
-        "Campus House 4,3"
+        "Bucky's Locker Room 4,3"
       ]
     },
-    "mt_e6d5373769ee": {
-      "id": "mt_e6d5373769ee",
-      "visual": 788,
+    "mt_59a5c51982c7": {
+      "id": "mt_59a5c51982c7",
+      "visual": 807,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28901,13 +29799,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 4,3",
-        "Campus House 4,3"
+        "Bucky's Locker Room 4,3"
       ]
     },
-    "mt_9848ae6c8a41": {
-      "id": "mt_9848ae6c8a41",
-      "visual": 788,
+    "mt_cb982fc8beb3": {
+      "id": "mt_cb982fc8beb3",
+      "visual": 807,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28915,13 +29812,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 4,3",
-        "Campus House 4,3"
+        "Bucky's Locker Room 4,3"
       ]
     },
-    "mt_95d899658c27": {
-      "id": "mt_95d899658c27",
-      "visual": 789,
+    "mt_e88628d1c982": {
+      "id": "mt_e88628d1c982",
+      "visual": 808,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28929,13 +29825,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 5,3",
-        "Campus House 5,3"
+        "Bucky's Locker Room 5,3"
       ]
     },
-    "mt_b70e729b6943": {
-      "id": "mt_b70e729b6943",
-      "visual": 789,
+    "mt_fd3ebf48164d": {
+      "id": "mt_fd3ebf48164d",
+      "visual": 808,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28943,13 +29838,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 5,3",
-        "Campus House 5,3"
+        "Bucky's Locker Room 5,3"
       ]
     },
-    "mt_bd69891a772b": {
-      "id": "mt_bd69891a772b",
-      "visual": 789,
+    "mt_0b05a178c036": {
+      "id": "mt_0b05a178c036",
+      "visual": 808,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28957,13 +29851,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 5,3",
-        "Campus House 5,3"
+        "Bucky's Locker Room 5,3"
       ]
     },
-    "mt_5ee9cb6892f8": {
-      "id": "mt_5ee9cb6892f8",
-      "visual": 790,
+    "mt_43e1c5448e6b": {
+      "id": "mt_43e1c5448e6b",
+      "visual": 809,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -28971,13 +29864,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 1,4",
-        "Campus House 1,4"
+        "Bucky's Locker Room 1,4"
       ]
     },
-    "mt_63eebf47d37f": {
-      "id": "mt_63eebf47d37f",
-      "visual": 790,
+    "mt_a5a31517c5c1": {
+      "id": "mt_a5a31517c5c1",
+      "visual": 809,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -28985,13 +29877,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 1,4",
-        "Campus House 1,4"
+        "Bucky's Locker Room 1,4"
       ]
     },
-    "mt_ac65ca97751e": {
-      "id": "mt_ac65ca97751e",
-      "visual": 790,
+    "mt_3b185ee4d329": {
+      "id": "mt_3b185ee4d329",
+      "visual": 809,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -28999,13 +29890,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 1,4",
-        "Campus House 1,4"
+        "Bucky's Locker Room 1,4"
       ]
     },
-    "mt_7e6097076f79": {
-      "id": "mt_7e6097076f79",
-      "visual": 791,
+    "mt_b5aade5c0ac6": {
+      "id": "mt_b5aade5c0ac6",
+      "visual": 810,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29013,13 +29903,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 2,4",
-        "Campus House 2,4"
+        "Bucky's Locker Room 2,4"
       ]
     },
-    "mt_c691c5fb1340": {
-      "id": "mt_c691c5fb1340",
-      "visual": 791,
+    "mt_95ece19fb9f2": {
+      "id": "mt_95ece19fb9f2",
+      "visual": 810,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29027,13 +29916,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 2,4",
-        "Campus House 2,4"
+        "Bucky's Locker Room 2,4"
       ]
     },
-    "mt_7f0218a67255": {
-      "id": "mt_7f0218a67255",
-      "visual": 791,
+    "mt_43e3f69e6be2": {
+      "id": "mt_43e3f69e6be2",
+      "visual": 810,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29041,13 +29929,38 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 2,4",
-        "Campus House 2,4"
+        "Bucky's Locker Room 2,4"
       ]
     },
-    "mt_411cbc385c68": {
-      "id": "mt_411cbc385c68",
-      "visual": 792,
+    "mt_04cbb731998a": {
+      "id": "mt_04cbb731998a",
+      "visual": 811,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 3,4"
+      ]
+    },
+    "mt_b65b0f41baed": {
+      "id": "mt_b65b0f41baed",
+      "visual": 811,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 3,4"
+      ]
+    },
+    "mt_0961fbf6bd6e": {
+      "id": "mt_0961fbf6bd6e",
+      "visual": 811,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29055,41 +29968,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 4,4",
-        "Campus House 4,4"
+        "Bucky's Locker Room 3,4"
       ]
     },
-    "mt_b8c412375f2e": {
-      "id": "mt_b8c412375f2e",
-      "visual": 792,
-      "behavior": "walkable",
-      "layer": "structure",
-      "layerType": "covered",
-      "families": [
-        "service_buildings"
-      ],
-      "names": [
-        "Bucky's Locker Room 4,4",
-        "Campus House 4,4"
-      ]
-    },
-    "mt_1e735c377a6f": {
-      "id": "mt_1e735c377a6f",
-      "visual": 792,
-      "behavior": "warp",
-      "layer": "structure",
-      "layerType": "normal",
-      "families": [
-        "service_buildings"
-      ],
-      "names": [
-        "Bucky's Locker Room 4,4",
-        "Campus House 4,4"
-      ]
-    },
-    "mt_d2dee728a70d": {
-      "id": "mt_d2dee728a70d",
-      "visual": 793,
+    "mt_f5c40d239c9d": {
+      "id": "mt_f5c40d239c9d",
+      "visual": 812,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29097,13 +29981,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 5,4",
-        "Campus House 5,4"
+        "Bucky's Locker Room 4,4"
       ]
     },
-    "mt_d1ea8cb088a1": {
-      "id": "mt_d1ea8cb088a1",
-      "visual": 793,
+    "mt_47b399a4990d": {
+      "id": "mt_47b399a4990d",
+      "visual": 812,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29111,13 +29994,12 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 5,4",
-        "Campus House 5,4"
+        "Bucky's Locker Room 4,4"
       ]
     },
-    "mt_e4bb4c2dab1a": {
-      "id": "mt_e4bb4c2dab1a",
-      "visual": 793,
+    "mt_66c769bc8b32": {
+      "id": "mt_66c769bc8b32",
+      "visual": 812,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29125,13 +30007,51 @@
         "service_buildings"
       ],
       "names": [
-        "Bucky's Locker Room 5,4",
-        "Campus House 5,4"
+        "Bucky's Locker Room 4,4"
+      ]
+    },
+    "mt_acc0dc22e48a": {
+      "id": "mt_acc0dc22e48a",
+      "visual": 813,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 5,4"
+      ]
+    },
+    "mt_992f476e70bc": {
+      "id": "mt_992f476e70bc",
+      "visual": 813,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 5,4"
+      ]
+    },
+    "mt_b9d15847b27c": {
+      "id": "mt_b9d15847b27c",
+      "visual": 813,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Bucky's Locker Room 5,4"
       ]
     },
     "mt_5114db53989e": {
       "id": "mt_5114db53989e",
-      "visual": 794,
+      "visual": 814,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29144,7 +30064,7 @@
     },
     "mt_d59f6631cdd9": {
       "id": "mt_d59f6631cdd9",
-      "visual": 794,
+      "visual": 814,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29157,7 +30077,7 @@
     },
     "mt_52598fd5f236": {
       "id": "mt_52598fd5f236",
-      "visual": 794,
+      "visual": 814,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29168,9 +30088,87 @@
         "Campus House 3,2"
       ]
     },
+    "mt_f1495ef101b9": {
+      "id": "mt_f1495ef101b9",
+      "visual": 815,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 1,3"
+      ]
+    },
+    "mt_3ee29cac2ef0": {
+      "id": "mt_3ee29cac2ef0",
+      "visual": 815,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 1,3"
+      ]
+    },
+    "mt_233e42182111": {
+      "id": "mt_233e42182111",
+      "visual": 815,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 1,3"
+      ]
+    },
+    "mt_ddac8fa220b8": {
+      "id": "mt_ddac8fa220b8",
+      "visual": 816,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 2,3"
+      ]
+    },
+    "mt_20d291cfd522": {
+      "id": "mt_20d291cfd522",
+      "visual": 816,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 2,3"
+      ]
+    },
+    "mt_f9646ef49b75": {
+      "id": "mt_f9646ef49b75",
+      "visual": 816,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 2,3"
+      ]
+    },
     "mt_e46d93c41d0f": {
       "id": "mt_e46d93c41d0f",
-      "visual": 795,
+      "visual": 817,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29183,7 +30181,7 @@
     },
     "mt_0685d155862f": {
       "id": "mt_0685d155862f",
-      "visual": 795,
+      "visual": 817,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29196,7 +30194,7 @@
     },
     "mt_aa268e865a6f": {
       "id": "mt_aa268e865a6f",
-      "visual": 795,
+      "visual": 817,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29207,9 +30205,243 @@
         "Campus House 3,3"
       ]
     },
+    "mt_34d3fea37394": {
+      "id": "mt_34d3fea37394",
+      "visual": 818,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 4,3"
+      ]
+    },
+    "mt_e6d5373769ee": {
+      "id": "mt_e6d5373769ee",
+      "visual": 818,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 4,3"
+      ]
+    },
+    "mt_9848ae6c8a41": {
+      "id": "mt_9848ae6c8a41",
+      "visual": 818,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 4,3"
+      ]
+    },
+    "mt_95d899658c27": {
+      "id": "mt_95d899658c27",
+      "visual": 819,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 5,3"
+      ]
+    },
+    "mt_b70e729b6943": {
+      "id": "mt_b70e729b6943",
+      "visual": 819,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 5,3"
+      ]
+    },
+    "mt_bd69891a772b": {
+      "id": "mt_bd69891a772b",
+      "visual": 819,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 5,3"
+      ]
+    },
+    "mt_5ee9cb6892f8": {
+      "id": "mt_5ee9cb6892f8",
+      "visual": 820,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 1,4"
+      ]
+    },
+    "mt_63eebf47d37f": {
+      "id": "mt_63eebf47d37f",
+      "visual": 820,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 1,4"
+      ]
+    },
+    "mt_ac65ca97751e": {
+      "id": "mt_ac65ca97751e",
+      "visual": 820,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 1,4"
+      ]
+    },
+    "mt_7e6097076f79": {
+      "id": "mt_7e6097076f79",
+      "visual": 821,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 2,4"
+      ]
+    },
+    "mt_c691c5fb1340": {
+      "id": "mt_c691c5fb1340",
+      "visual": 821,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 2,4"
+      ]
+    },
+    "mt_7f0218a67255": {
+      "id": "mt_7f0218a67255",
+      "visual": 821,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 2,4"
+      ]
+    },
+    "mt_411cbc385c68": {
+      "id": "mt_411cbc385c68",
+      "visual": 822,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 4,4"
+      ]
+    },
+    "mt_b8c412375f2e": {
+      "id": "mt_b8c412375f2e",
+      "visual": 822,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 4,4"
+      ]
+    },
+    "mt_1e735c377a6f": {
+      "id": "mt_1e735c377a6f",
+      "visual": 822,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 4,4"
+      ]
+    },
+    "mt_d2dee728a70d": {
+      "id": "mt_d2dee728a70d",
+      "visual": 823,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 5,4"
+      ]
+    },
+    "mt_d1ea8cb088a1": {
+      "id": "mt_d1ea8cb088a1",
+      "visual": 823,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 5,4"
+      ]
+    },
+    "mt_e4bb4c2dab1a": {
+      "id": "mt_e4bb4c2dab1a",
+      "visual": 823,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_buildings"
+      ],
+      "names": [
+        "Campus House 5,4"
+      ]
+    },
     "mt_363796381ee9": {
       "id": "mt_363796381ee9",
-      "visual": 796,
+      "visual": 824,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29223,7 +30455,7 @@
     },
     "mt_0778214a615c": {
       "id": "mt_0778214a615c",
-      "visual": 796,
+      "visual": 824,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29237,7 +30469,7 @@
     },
     "mt_1578a62da194": {
       "id": "mt_1578a62da194",
-      "visual": 796,
+      "visual": 824,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29251,7 +30483,7 @@
     },
     "mt_70fb1cdb7837": {
       "id": "mt_70fb1cdb7837",
-      "visual": 797,
+      "visual": 825,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29266,7 +30498,7 @@
     },
     "mt_7ed5f4b16653": {
       "id": "mt_7ed5f4b16653",
-      "visual": 797,
+      "visual": 825,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29281,7 +30513,7 @@
     },
     "mt_106bb630813e": {
       "id": "mt_106bb630813e",
-      "visual": 797,
+      "visual": 825,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29296,7 +30528,7 @@
     },
     "mt_4b0f1d1d948d": {
       "id": "mt_4b0f1d1d948d",
-      "visual": 798,
+      "visual": 826,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29310,7 +30542,7 @@
     },
     "mt_0dce6e94482e": {
       "id": "mt_0dce6e94482e",
-      "visual": 798,
+      "visual": 826,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29324,7 +30556,7 @@
     },
     "mt_6411b23d8ac1": {
       "id": "mt_6411b23d8ac1",
-      "visual": 798,
+      "visual": 826,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29338,7 +30570,7 @@
     },
     "mt_eee427605d73": {
       "id": "mt_eee427605d73",
-      "visual": 799,
+      "visual": 827,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29352,7 +30584,7 @@
     },
     "mt_bfe7e7d30027": {
       "id": "mt_bfe7e7d30027",
-      "visual": 799,
+      "visual": 827,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29366,7 +30598,7 @@
     },
     "mt_c71b296d467c": {
       "id": "mt_c71b296d467c",
-      "visual": 799,
+      "visual": 827,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29380,7 +30612,7 @@
     },
     "mt_9270f2998d46": {
       "id": "mt_9270f2998d46",
-      "visual": 800,
+      "visual": 828,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29395,7 +30627,7 @@
     },
     "mt_72d14ddd1618": {
       "id": "mt_72d14ddd1618",
-      "visual": 800,
+      "visual": 828,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29410,7 +30642,7 @@
     },
     "mt_e6c4fc48621a": {
       "id": "mt_e6c4fc48621a",
-      "visual": 800,
+      "visual": 828,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29425,7 +30657,7 @@
     },
     "mt_03bbf9655e30": {
       "id": "mt_03bbf9655e30",
-      "visual": 801,
+      "visual": 829,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29439,7 +30671,7 @@
     },
     "mt_88120d623279": {
       "id": "mt_88120d623279",
-      "visual": 801,
+      "visual": 829,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29453,7 +30685,7 @@
     },
     "mt_5cf7e42b0f21": {
       "id": "mt_5cf7e42b0f21",
-      "visual": 801,
+      "visual": 829,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29467,7 +30699,7 @@
     },
     "mt_2f864a246d00": {
       "id": "mt_2f864a246d00",
-      "visual": 802,
+      "visual": 830,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29481,7 +30713,7 @@
     },
     "mt_f7c721313d3b": {
       "id": "mt_f7c721313d3b",
-      "visual": 802,
+      "visual": 830,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29495,7 +30727,7 @@
     },
     "mt_4988fe6bbd14": {
       "id": "mt_4988fe6bbd14",
-      "visual": 802,
+      "visual": 830,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29509,7 +30741,7 @@
     },
     "mt_7e5e0889c082": {
       "id": "mt_7e5e0889c082",
-      "visual": 803,
+      "visual": 831,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29523,7 +30755,7 @@
     },
     "mt_c46ee987139c": {
       "id": "mt_c46ee987139c",
-      "visual": 803,
+      "visual": 831,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29537,7 +30769,7 @@
     },
     "mt_0036deddd275": {
       "id": "mt_0036deddd275",
-      "visual": 803,
+      "visual": 831,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29551,7 +30783,7 @@
     },
     "mt_e4f392da1598": {
       "id": "mt_e4f392da1598",
-      "visual": 804,
+      "visual": 832,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29565,7 +30797,7 @@
     },
     "mt_8e6081f7a94e": {
       "id": "mt_8e6081f7a94e",
-      "visual": 804,
+      "visual": 832,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29579,7 +30811,7 @@
     },
     "mt_e46c9e5fd0e9": {
       "id": "mt_e46c9e5fd0e9",
-      "visual": 804,
+      "visual": 832,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29593,7 +30825,7 @@
     },
     "mt_f4b6d8516e20": {
       "id": "mt_f4b6d8516e20",
-      "visual": 805,
+      "visual": 833,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29607,7 +30839,7 @@
     },
     "mt_033b90266a44": {
       "id": "mt_033b90266a44",
-      "visual": 805,
+      "visual": 833,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29621,7 +30853,7 @@
     },
     "mt_bafcab88af02": {
       "id": "mt_bafcab88af02",
-      "visual": 805,
+      "visual": 833,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29635,7 +30867,7 @@
     },
     "mt_4e1f728c6ddf": {
       "id": "mt_4e1f728c6ddf",
-      "visual": 806,
+      "visual": 834,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29649,7 +30881,7 @@
     },
     "mt_a8e7a1398bc5": {
       "id": "mt_a8e7a1398bc5",
-      "visual": 806,
+      "visual": 834,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29663,7 +30895,7 @@
     },
     "mt_4d4ad43506ac": {
       "id": "mt_4d4ad43506ac",
-      "visual": 806,
+      "visual": 834,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29677,7 +30909,7 @@
     },
     "mt_61fad17f2de5": {
       "id": "mt_61fad17f2de5",
-      "visual": 807,
+      "visual": 835,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29691,7 +30923,7 @@
     },
     "mt_fa0ba8ff45bb": {
       "id": "mt_fa0ba8ff45bb",
-      "visual": 807,
+      "visual": 835,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29705,7 +30937,7 @@
     },
     "mt_65897f5db497": {
       "id": "mt_65897f5db497",
-      "visual": 807,
+      "visual": 835,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29719,7 +30951,7 @@
     },
     "mt_bb29c72a0089": {
       "id": "mt_bb29c72a0089",
-      "visual": 808,
+      "visual": 836,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29733,7 +30965,7 @@
     },
     "mt_4a6f320793cc": {
       "id": "mt_4a6f320793cc",
-      "visual": 808,
+      "visual": 836,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29747,7 +30979,7 @@
     },
     "mt_5057f909b218": {
       "id": "mt_5057f909b218",
-      "visual": 808,
+      "visual": 836,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29761,7 +30993,7 @@
     },
     "mt_c5dc6f85f299": {
       "id": "mt_c5dc6f85f299",
-      "visual": 809,
+      "visual": 837,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29775,7 +31007,7 @@
     },
     "mt_746e4451e1f0": {
       "id": "mt_746e4451e1f0",
-      "visual": 809,
+      "visual": 837,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29789,7 +31021,7 @@
     },
     "mt_5024a5b20b9f": {
       "id": "mt_5024a5b20b9f",
-      "visual": 809,
+      "visual": 837,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29803,7 +31035,7 @@
     },
     "mt_17db4d3e5704": {
       "id": "mt_17db4d3e5704",
-      "visual": 810,
+      "visual": 838,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29816,7 +31048,7 @@
     },
     "mt_503b9cf1a4cb": {
       "id": "mt_503b9cf1a4cb",
-      "visual": 810,
+      "visual": 838,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29829,7 +31061,7 @@
     },
     "mt_98bc7308cb06": {
       "id": "mt_98bc7308cb06",
-      "visual": 810,
+      "visual": 838,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29842,7 +31074,7 @@
     },
     "mt_6259a94be6b3": {
       "id": "mt_6259a94be6b3",
-      "visual": 811,
+      "visual": 839,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29855,7 +31087,7 @@
     },
     "mt_b807b0f4d91a": {
       "id": "mt_b807b0f4d91a",
-      "visual": 811,
+      "visual": 839,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29868,7 +31100,7 @@
     },
     "mt_cdfd2e77216c": {
       "id": "mt_cdfd2e77216c",
-      "visual": 811,
+      "visual": 839,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29881,7 +31113,7 @@
     },
     "mt_70602eaa8021": {
       "id": "mt_70602eaa8021",
-      "visual": 812,
+      "visual": 840,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29894,7 +31126,7 @@
     },
     "mt_ce8af557133b": {
       "id": "mt_ce8af557133b",
-      "visual": 812,
+      "visual": 840,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29907,7 +31139,7 @@
     },
     "mt_1177dfcbce74": {
       "id": "mt_1177dfcbce74",
-      "visual": 812,
+      "visual": 840,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29920,7 +31152,7 @@
     },
     "mt_3c20eb879246": {
       "id": "mt_3c20eb879246",
-      "visual": 813,
+      "visual": 841,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29933,7 +31165,7 @@
     },
     "mt_49cdba783c59": {
       "id": "mt_49cdba783c59",
-      "visual": 813,
+      "visual": 841,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29946,7 +31178,7 @@
     },
     "mt_0988cbb47f9e": {
       "id": "mt_0988cbb47f9e",
-      "visual": 813,
+      "visual": 841,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29959,7 +31191,7 @@
     },
     "mt_08c8bd643798": {
       "id": "mt_08c8bd643798",
-      "visual": 814,
+      "visual": 842,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -29972,7 +31204,7 @@
     },
     "mt_1c5726cff2fe": {
       "id": "mt_1c5726cff2fe",
-      "visual": 814,
+      "visual": 842,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -29985,7 +31217,7 @@
     },
     "mt_cb4ca7dd0ddd": {
       "id": "mt_cb4ca7dd0ddd",
-      "visual": 814,
+      "visual": 842,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -29998,7 +31230,7 @@
     },
     "mt_1b693c2b3b36": {
       "id": "mt_1b693c2b3b36",
-      "visual": 815,
+      "visual": 843,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -30012,7 +31244,7 @@
     },
     "mt_f7e2856e06e5": {
       "id": "mt_f7e2856e06e5",
-      "visual": 815,
+      "visual": 843,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -30026,7 +31258,7 @@
     },
     "mt_122aac8fc201": {
       "id": "mt_122aac8fc201",
-      "visual": 815,
+      "visual": 843,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -30040,7 +31272,7 @@
     },
     "mt_00af0a7fa827": {
       "id": "mt_00af0a7fa827",
-      "visual": 816,
+      "visual": 844,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -30053,7 +31285,7 @@
     },
     "mt_ca8c8a4a396c": {
       "id": "mt_ca8c8a4a396c",
-      "visual": 816,
+      "visual": 844,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -30066,7 +31298,7 @@
     },
     "mt_5833e361ab4b": {
       "id": "mt_5833e361ab4b",
-      "visual": 816,
+      "visual": 844,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -30301,28 +31533,60 @@
     "mt_e1d723df7fff",
     "mt_9328d0c4fccc",
     "mt_0d9e421faa49",
-    "mt_6119629e0809",
-    "mt_a4c0a4d95182",
-    "mt_65e8f0749e60",
-    "mt_e02bd6c4e634",
-    "mt_4bb874da9822",
-    "mt_6804edf0c793",
-    "mt_c5fa8f913287",
-    "mt_410133292f5f",
-    "mt_835b5a455e6a",
-    "mt_07cfbe00ba99",
-    "mt_457d3a087eac",
+    "mt_3e8b0b4d27fe",
+    "mt_db507c805003",
+    "mt_4fcad1d36cde",
+    "mt_ad87b5aa7e12",
+    "mt_f33bf3e629ff",
+    "mt_da884f78e5ee",
+    "mt_9718227c182b",
+    "mt_132a9269acd6",
+    "mt_ce9cbd4f87be",
+    "mt_8cd8dbc6f79c",
+    "mt_d7ee8c60583f",
+    "mt_5cee6b319a54",
+    "mt_1766b09adcd5",
+    "mt_7a315ee15df6",
+    "mt_b9fcaa987d86",
+    "mt_0c6756dc904e",
+    "mt_1c26b14e578e",
+    "mt_2c5f71c69e44",
+    "mt_9beaef185a73",
+    "mt_4339c5e86c5e",
+    "mt_90a164a18745",
+    "mt_f17f4b84e44f",
+    "mt_b6cabbf6dca0",
+    "mt_dd45e187995e",
+    "mt_2917af213c2e",
+    "mt_cac36a680dfd",
+    "mt_8aa825e6bf0f",
+    "mt_be223f995ef8",
+    "mt_e59723ec9749",
+    "mt_1154eabc84d4",
+    "mt_51b78b59c5d7",
+    "mt_fb4b57a89d31",
+    "mt_10b93b929a04",
+    "mt_4fdd3169e532",
+    "mt_e88628d1c982",
+    "mt_43e1c5448e6b",
+    "mt_b5aade5c0ac6",
+    "mt_04cbb731998a",
+    "mt_f5c40d239c9d",
+    "mt_acc0dc22e48a",
+    "mt_3e6f92018f2e",
+    "mt_cb6f1ff30bf9",
+    "mt_6fd00058962c",
+    "mt_5114db53989e",
+    "mt_43eb4471f6bc",
     "mt_f1495ef101b9",
     "mt_ddac8fa220b8",
-    "mt_4aa23aea7bf7",
+    "mt_e46d93c41d0f",
     "mt_34d3fea37394",
     "mt_95d899658c27",
     "mt_5ee9cb6892f8",
     "mt_7e6097076f79",
     "mt_411cbc385c68",
     "mt_d2dee728a70d",
-    "mt_5114db53989e",
-    "mt_e46d93c41d0f",
     "mt_363796381ee9",
     "mt_70fb1cdb7837",
     "mt_4b0f1d1d948d",
@@ -34086,36 +35350,36 @@
       "height": 4,
       "cells": [
         [
-          "mt_28962fbe0b6b",
-          "mt_7934306c3a24",
-          "mt_7934306c3a24",
-          "mt_7934306c3a24",
-          "mt_fbf27c9bef1b"
+          "mt_3e8b0b4d27fe",
+          "mt_db507c805003",
+          "mt_4fcad1d36cde",
+          "mt_ad87b5aa7e12",
+          "mt_f33bf3e629ff"
         ],
         [
-          "mt_ec612d73f1a3",
-          "mt_47de2e1fb584",
-          "mt_6119629e0809",
-          "mt_47de2e1fb584",
-          "mt_72e8f10d0055"
+          "mt_da884f78e5ee",
+          "mt_9718227c182b",
+          "mt_132a9269acd6",
+          "mt_ce9cbd4f87be",
+          "mt_8cd8dbc6f79c"
         ],
         [
-          "mt_a4c0a4d95182",
-          "mt_65e8f0749e60",
-          "mt_e02bd6c4e634",
-          "mt_4bb874da9822",
-          "mt_6804edf0c793"
+          "mt_d7ee8c60583f",
+          "mt_5cee6b319a54",
+          "mt_1766b09adcd5",
+          "mt_7a315ee15df6",
+          "mt_b9fcaa987d86"
         ],
         [
-          "mt_c5fa8f913287",
-          "mt_410133292f5f",
-          "mt_bd80a062f34b",
-          "mt_835b5a455e6a",
-          "mt_07cfbe00ba99"
+          "mt_0c6756dc904e",
+          "mt_1c26b14e578e",
+          "mt_2c5f71c69e44",
+          "mt_9beaef185a73",
+          "mt_4339c5e86c5e"
         ]
       ],
       "collisionMask": [
-        "#####",
+        ".###.",
         "#####",
         "#####",
         "##.##"
@@ -34127,25 +35391,23 @@
       "sourceKind": "metatile",
       "semanticBehavior": null,
       "coverageAudit": {
-        "0,0": 0.4844,
-        "1,0": 1.0,
-        "2,0": 1.0,
-        "3,0": 1.0,
-        "4,0": 0.4844,
-        "0,1": 0.5,
+        "1,0": 0.8594,
+        "2,0": 0.9375,
+        "3,0": 0.8555,
+        "0,1": 0.6875,
         "1,1": 1.0,
         "2,1": 1.0,
         "3,1": 1.0,
-        "4,1": 0.5,
-        "0,2": 1.0,
+        "4,1": 0.6875,
+        "0,2": 0.6953,
         "1,2": 1.0,
         "2,2": 1.0,
         "3,2": 1.0,
-        "4,2": 0.9766,
-        "0,3": 1.0,
-        "1,3": 1.0,
-        "3,3": 1.0,
-        "4,3": 0.9883
+        "4,2": 0.6953,
+        "0,3": 0.6992,
+        "1,3": 0.9648,
+        "3,3": 0.9609,
+        "4,3": 0.6992
       },
       "tags": [
         "service_buildings",
@@ -34164,36 +35426,36 @@
       "height": 4,
       "cells": [
         [
-          "mt_c64c76faebf0",
-          "mt_36c67c4e16a1",
-          "mt_36c67c4e16a1",
-          "mt_36c67c4e16a1",
-          "mt_1394cd2058e7"
+          "mt_90a164a18745",
+          "mt_f17f4b84e44f",
+          "mt_b6cabbf6dca0",
+          "mt_dd45e187995e",
+          "mt_2917af213c2e"
         ],
         [
-          "mt_d142fc76ba40",
-          "mt_577914ffb0b9",
-          "mt_457d3a087eac",
-          "mt_577914ffb0b9",
-          "mt_09620cda6d48"
+          "mt_cac36a680dfd",
+          "mt_8aa825e6bf0f",
+          "mt_be223f995ef8",
+          "mt_e59723ec9749",
+          "mt_1154eabc84d4"
         ],
         [
-          "mt_f1495ef101b9",
-          "mt_ddac8fa220b8",
-          "mt_4aa23aea7bf7",
-          "mt_34d3fea37394",
-          "mt_95d899658c27"
+          "mt_51b78b59c5d7",
+          "mt_fb4b57a89d31",
+          "mt_10b93b929a04",
+          "mt_4fdd3169e532",
+          "mt_e88628d1c982"
         ],
         [
-          "mt_5ee9cb6892f8",
-          "mt_7e6097076f79",
-          "mt_c6352e9aeb8e",
-          "mt_411cbc385c68",
-          "mt_d2dee728a70d"
+          "mt_43e1c5448e6b",
+          "mt_b5aade5c0ac6",
+          "mt_04cbb731998a",
+          "mt_f5c40d239c9d",
+          "mt_acc0dc22e48a"
         ]
       ],
       "collisionMask": [
-        "#####",
+        ".###.",
         "#####",
         "#####",
         "##.##"
@@ -34205,25 +35467,23 @@
       "sourceKind": "metatile",
       "semanticBehavior": null,
       "coverageAudit": {
-        "0,0": 0.4844,
-        "1,0": 1.0,
-        "2,0": 1.0,
-        "3,0": 1.0,
-        "4,0": 0.4219,
-        "0,1": 0.5,
+        "1,0": 0.625,
+        "2,0": 0.8594,
+        "3,0": 0.625,
+        "0,1": 0.582,
         "1,1": 1.0,
         "2,1": 1.0,
         "3,1": 1.0,
-        "4,1": 0.4375,
-        "0,2": 1.0,
+        "4,1": 0.5781,
+        "0,2": 0.625,
         "1,2": 1.0,
         "2,2": 1.0,
         "3,2": 1.0,
-        "4,2": 1.0,
-        "0,3": 1.0,
-        "1,3": 1.0,
-        "3,3": 1.0,
-        "4,3": 1.0
+        "4,2": 0.625,
+        "0,3": 0.6016,
+        "1,3": 0.9453,
+        "3,3": 0.9414,
+        "4,3": 0.6055
       },
       "tags": [
         "service_buildings",
@@ -34242,18 +35502,18 @@
       "height": 4,
       "cells": [
         [
-          "mt_28962fbe0b6b",
+          "mt_3e6f92018f2e",
           "mt_7934306c3a24",
           "mt_7934306c3a24",
           "mt_7934306c3a24",
-          "mt_fbf27c9bef1b"
+          "mt_cb6f1ff30bf9"
         ],
         [
-          "mt_ec612d73f1a3",
+          "mt_6fd00058962c",
           "mt_47de2e1fb584",
           "mt_5114db53989e",
           "mt_47de2e1fb584",
-          "mt_72e8f10d0055"
+          "mt_43eb4471f6bc"
         ],
         [
           "mt_f1495ef101b9",
@@ -34271,8 +35531,8 @@
         ]
       ],
       "collisionMask": [
-        "#####",
-        "#####",
+        ".###.",
+        ".###.",
         "#####",
         "##.##"
       ],
@@ -34283,16 +35543,12 @@
       "sourceKind": "metatile",
       "semanticBehavior": null,
       "coverageAudit": {
-        "0,0": 0.4844,
         "1,0": 1.0,
         "2,0": 1.0,
         "3,0": 1.0,
-        "4,0": 0.4844,
-        "0,1": 0.5,
         "1,1": 1.0,
         "2,1": 1.0,
         "3,1": 1.0,
-        "4,1": 0.5,
         "0,2": 1.0,
         "1,2": 1.0,
         "2,2": 1.0,
@@ -34670,26 +35926,26 @@
     },
     "groundAssemblyCount": 20,
     "blobSignatureCount": 47,
-    "preparedImagegenAssetCount": 57,
-    "exactNearestNeighborVisualCount": 817,
+    "preparedImagegenAssetCount": 59,
+    "exactNearestNeighborVisualCount": 845,
     "logicalCellSize": 16,
     "contractSatisfied": true
   },
   "contract": {
     "schema": "badger-grapple-tileset-contract/v1",
     "version": 2,
-    "sha256": "0df389fd623dc1b9fb98815dd10bf20c0382560b28a205699857f27bc2f72cea"
+    "sha256": "c270537bc72aca03500a0271f4d49031ca6f5192d748f75d64ebd4d0aa12c219"
   },
   "validation": {
     "seamTest": "art/imagegen/validation/season_one_tileset_seam_test.png",
-    "seamTestSha256": "752eb1bf4baf31a3b2998c7b72aab079075cc3e06600fb7a07a9a5421e619956"
+    "seamTestSha256": "172605c9d88c53d042a35e0720674169c1e27000e46a1448084a493a00058aa7"
   },
   "sources": {
     "manifest": "0bb108eacd52741e2d14fc0d2721b7d8a6391dfa8b9001a283796f1cb7e9d069",
-    "contract": "0df389fd623dc1b9fb98815dd10bf20c0382560b28a205699857f27bc2f72cea",
-    "pixelArtModule": "207d42029dfdd9d5c103f96e9f2c5a76057789f8c5bae61394f1b6ef22dae3ed",
-    "preparedImagegenManifest": "3866e9a5919fb5b688445d836e8ad3c6a9269b66b934d9f4e9dc6e153b7d2bfd",
-    "preparedImagegenAssetCount": 57,
+    "contract": "c270537bc72aca03500a0271f4d49031ca6f5192d748f75d64ebd4d0aa12c219",
+    "pixelArtModule": "746e9307f7b348fe855caa57c22abef3e52439404cae52708a4025ff9f5194b1",
+    "preparedImagegenManifest": "faee87e90f3b846c887c23689488d06c4b9e67781569316508130d9436624a22",
+    "preparedImagegenAssetCount": 59,
     "referenceBoards": {
       "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
       "vegetation": "94453f4bef0f9849be3395e49db53ffe9c0f89f431d3aa87a6ff147ed8e72b20",

@@ -4,9 +4,9 @@ Usage:
   python tools/apply_map_editor_project.py path/to/map-pack.json
   python tools/apply_map_editor_project.py path/to/map-pack.json --write
 
-The dry run is the default. --write updates the Season One layout authority,
-region revision, and Camp production manifest, then recompiles the audited
-production assets.
+The dry run is the default. --write updates the complete Season One layout
+authority, region revision, and Camp production manifest, then recompiles the
+audited production assets and shared map atlas.
 """
 
 from __future__ import annotations
@@ -161,13 +161,17 @@ def rectangles_for_material(terrain: list[list[str]], material: str) -> list[dic
 
 
 def apply_terrain(layout: dict, map_data: dict) -> None:
-    if map_data.get("type") != "exterior":
+    if map_data.get("type") != "exterior" or map_data.get("renderModel") == "metatile":
         return
     paths: list[dict] = []
     for material in ("brick", "stone", "dirt"):
         for index, rect in enumerate(rectangles_for_material(map_data["terrain"], material), start=1):
             paths.append({"id": f"editor_{material}_{index}", **rect, "material": material})
     layout["paths"] = paths
+
+
+def apply_metatile_terrain(layout: dict, map_data: dict) -> None:
+    layout["terrainOverride"] = copy.deepcopy(map_data["terrain"])
 
 
 def object_from_instance(instance: dict, template: dict) -> dict:
@@ -306,14 +310,121 @@ def apply_interior(project: dict, layouts: dict, manifest: dict, map_data: dict)
     manifest["interiors"][map_id]["actors"] = [actor_for_manifest(actor) for actor in map_data.get("actors", [])]
 
 
+def direct_editor_objects(map_data: dict, asset_library: dict[str, dict]) -> list[dict]:
+    return [
+        copy.deepcopy(instance)
+        for instance in map_data.get("objects", [])
+        if not asset_library.get(instance.get("assetId"))
+        and instance.get("sourceKind") == "metatile"
+    ]
+
+
+def generic_owner(instance: dict, asset: dict) -> dict:
+    template = {
+        "id": instance["id"],
+        "name": instance.get("name") or asset.get("name") or instance["id"].replace("_", " ").title(),
+        "kind": "editor_stamp",
+        "editorStampId": asset["sourceId"],
+        "x": instance["x"],
+        "y": instance["y"],
+        "width": instance["width"],
+        "height": instance["height"],
+    }
+    return object_from_instance(instance, template)
+
+
+def apply_planned_exterior(project: dict, layouts: dict, map_data: dict) -> None:
+    map_id = map_data["id"]
+    layout = layouts["maps"][map_id]
+    asset_library = {asset["id"]: asset for asset in project["assets"]["objects"]}
+    instances_by_asset: dict[str, list[dict]] = {}
+    for instance in map_data.get("objects", []):
+        if instance.get("assetId") in asset_library:
+            instances_by_asset.setdefault(instance["assetId"], []).append(instance)
+
+    consumed: set[str] = set()
+    for group in EXTERIOR_GROUPS:
+        rebuilt: list[dict] = []
+        for template in layout.get(group, []):
+            asset_id = f"{map_id}:{template['id']}"
+            asset = asset_library.get(asset_id)
+            if not asset or asset.get("category") != group:
+                rebuilt.append(copy.deepcopy(template))
+                continue
+            consumed.add(asset_id)
+            for instance in instances_by_asset.get(asset_id, []):
+                rebuilt.append(object_from_instance(instance, template))
+        layout[group] = rebuilt
+
+    for asset_id, instances in instances_by_asset.items():
+        if asset_id in consumed:
+            continue
+        asset = asset_library[asset_id]
+        if asset.get("mapId") not in (None, map_id) or asset.get("category") == "room_shell":
+            continue
+        for instance in instances:
+            owner = generic_owner(instance, asset)
+            group = "blockers" if any("#" in row for row in instance["collisionMask"]) else "landmarks"
+            layout.setdefault(group, []).append(owner)
+
+    layout["events"] = copy.deepcopy(map_data.get("events", []))
+    layout["cameraReviews"] = copy.deepcopy(map_data.get("cameraReviews", []))
+    layout["actors"] = copy.deepcopy(map_data.get("actors", []))
+    layout["editorObjects"] = direct_editor_objects(map_data, asset_library)
+    apply_metatile_terrain(layout, map_data)
+
+
+def apply_planned_interior(project: dict, layouts: dict, map_data: dict) -> None:
+    map_id = map_data["id"]
+    layout = layouts["interiors"][map_id]
+    asset_library = {asset["id"]: asset for asset in project["assets"]["objects"]}
+    instances_by_asset: dict[str, list[dict]] = {}
+    for instance in map_data.get("objects", []):
+        asset = asset_library.get(instance.get("assetId"))
+        if asset and asset.get("category") != "room_shell":
+            instances_by_asset.setdefault(instance["assetId"], []).append(instance)
+
+    rebuilt: list[dict] = []
+    consumed: set[str] = set()
+    for template in layout.get("fixtures", []):
+        asset_id = f"{map_id}:{template['id']}"
+        asset = asset_library.get(asset_id)
+        if not asset or asset.get("category") != "fixtures":
+            rebuilt.append(copy.deepcopy(template))
+            continue
+        consumed.add(asset_id)
+        for instance in instances_by_asset.get(asset_id, []):
+            rebuilt.append(object_from_instance(instance, template))
+
+    for asset_id, instances in instances_by_asset.items():
+        if asset_id in consumed:
+            continue
+        asset = asset_library[asset_id]
+        if asset.get("mapId") not in (None, map_id):
+            continue
+        rebuilt.extend(generic_owner(instance, asset) for instance in instances)
+
+    layout["fixtures"] = rebuilt
+    layout["events"] = copy.deepcopy(map_data.get("events", []))
+    layout["actors"] = copy.deepcopy(map_data.get("actors", []))
+    layout["editorObjects"] = direct_editor_objects(map_data, asset_library)
+    apply_metatile_terrain(layout, map_data)
+
+
 def apply_project(project: dict, layouts: dict, manifest: dict) -> None:
     for map_id, map_data in project["maps"].items():
         if map_data.get("id") != map_id:
             fail(f"map key {map_id} does not match embedded id")
         if map_data.get("type") == "exterior":
-            apply_exterior(project, layouts, manifest, map_data)
+            if map_id == "camp_randall":
+                apply_exterior(project, layouts, manifest, map_data)
+            else:
+                apply_planned_exterior(project, layouts, map_data)
         else:
-            apply_interior(project, layouts, manifest, map_data)
+            if map_id in manifest["interiors"]:
+                apply_interior(project, layouts, manifest, map_data)
+            else:
+                apply_planned_interior(project, layouts, map_data)
     layouts["revision"] += 1
     manifest["layoutRevision"] = layouts["revision"]
 

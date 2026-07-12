@@ -13,7 +13,7 @@
     "visibleCollisionCoverage": 0.55,
     "doorFootprint": [1, 1],
     "imagegenSourceRequired": true,
-    "minimumPreparedImagegenAssets": 57,
+    "minimumPreparedImagegenAssets": 59,
     "exactNearestNeighborScale": true,
     "materialSpecificTransitions": true,
     "sceneCropStretching": false

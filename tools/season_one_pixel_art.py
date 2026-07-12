@@ -889,6 +889,10 @@ def authored_stamp(spec_id: str, width: int, height: int) -> Image.Image:
 
 def service_building(kind: str) -> Image.Image:
     """Create a recognizable 5x4 familiar-service building from modules."""
+    if kind == "trainer":
+        return source_asset("service_buildings", "trainer_room_exterior")
+    if kind == "shop":
+        return source_asset("service_buildings", "buckys_locker_room_exterior")
     image = canvas(5, 4)
     roof_color = "red" if kind != "shop" else "slate"
     wall_kind = "limestone" if kind == "trainer" else "brick"

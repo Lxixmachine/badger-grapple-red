@@ -2499,3 +2499,28 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
 - Current authority is Camp metatile v6 and app v21.72. The new atlas filename
   prevents mobile Safari from retaining v21.71 pixels, while the existing
   draft key migrates Tony's saved map edits onto the corrected asset catalog.
+
+## Codex Complete Map Studio Atlas (v21.73)
+
+- Map Studio now contains every authoritative Season One location: 12
+  exteriors followed by 12 interiors. The dropdown order matches
+  `seasonOneLayouts.json` and the region review order.
+- `build_camp_randall_metatiles.py` compiles ground for all exterior layouts,
+  including material aliases, water blockers, and walkable landmark surfaces.
+  The result is stored in `plannedMaps`; every cell references a full-cell tile
+  in the shared Imagegen-derived atlas.
+- Camp Randall and its four approved interiors retain their production
+  compositions. Remaining locations are editable grid-native blockouts built
+  from exact layout rectangles. Resized visual stamps are converted cell by
+  cell to matching walkable, solid, and warp metatile variants.
+- Map-specific stamps are hidden outside their owning map, while the reusable
+  Season One kit stays available everywhere. Playtest now follows the selected
+  exterior or interior. The existing local-storage key remains in use so old
+  edits migrate forward instead of being erased.
+- Current authority is layout revision 5, world tileset v3, Camp/Season atlas
+  metatile v7, and app v21.73.
+- Trainer's Room and Bucky's Locker Room no longer use the generic modular
+  service-building compositions. A dedicated ChatGPT Imagegen source board is
+  normalized into two 80x64 logical assets, palette-reduced, and exported at
+  exact nearest-neighbor 2x. Their 5x4 footprints and centered warp cells did
+  not change. The prepared Imagegen source minimum is now 59 assets.

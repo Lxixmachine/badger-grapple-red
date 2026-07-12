@@ -60,6 +60,7 @@ function makeObjectAsset(mapId, entry, owner, mapType, stamp = null) {
   return {
     id: `${mapId}:${entry.id}`,
     sourceId: entry.id,
+    mapId,
     name: owner?.name || entry.id.replaceAll('_', ' '),
     category: entry.ownerGroup || 'fixtures',
     mapType,
@@ -106,6 +107,215 @@ function makeWorldStampAsset(stamp) {
     defaultDoor: stamp.door ? {...stamp.door} : null,
     metatiles: deepClone(stamp.cells),
     minimumCoverage: 1
+  };
+}
+
+const metatileById = new Map(Object.entries(metatileBuild.metatiles));
+const behaviorVariants = new Map();
+for (const [tileId, tile] of metatileById) {
+  behaviorVariants.set(`${tile.visual}:${tile.behavior}`, tileId);
+}
+
+function behaviorVariant(tileId, behavior) {
+  const tile = metatileById.get(tileId);
+  return tile ? behaviorVariants.get(`${tile.visual}:${behavior}`) || tileId : tileId;
+}
+
+function sampleIndex(index, targetSize, sourceSize) {
+  if (sourceSize <= 1 || targetSize <= 1) return Math.floor((sourceSize - 1) / 2);
+  if (targetSize <= sourceSize) return Math.round(index * (sourceSize - 1) / (targetSize - 1));
+  if (index === 0) return 0;
+  if (index === targetSize - 1) return sourceSize - 1;
+  if (sourceSize <= 2) return index % sourceSize;
+  return 1 + ((index - 1) % (sourceSize - 2));
+}
+
+function resizeStampCells(stamp, width, height) {
+  return Array.from({length: height}, (_, y) => Array.from({length: width}, (_, x) => {
+    const sourceY = sampleIndex(y, height, stamp.height);
+    const sourceX = sampleIndex(x, width, stamp.width);
+    return stamp.cells[sourceY][sourceX];
+  }));
+}
+
+function stampForOwner(sourceStamp, owner) {
+  const mask = collisionMask(owner);
+  const door = doorFor(owner);
+  const cells = resizeStampCells(sourceStamp, owner.width, owner.height).map((row, y) => row.map((tileId, x) => {
+    const behavior = door?.x === x && door?.y === y ? 'warp' : mask[y][x] === '#' ? 'solid' : 'walkable';
+    return behaviorVariant(tileId, behavior);
+  }));
+  return {...sourceStamp, width: owner.width, height: owner.height, cells};
+}
+
+function forestStamp(owner, mapWidth, mapHeight) {
+  if (owner.width <= 2 && owner.height > owner.width) {
+    return owner.x < mapWidth / 2 ? 'forest_edge_west' : 'forest_edge_east';
+  }
+  if (owner.height <= 2 && owner.width > owner.height) {
+    return owner.y < mapHeight / 2 ? 'forest_edge_north' : 'forest_edge_south';
+  }
+  return 'forest_mass_core';
+}
+
+function sourceStampId(owner, group, layout) {
+  const id = owner.id || '';
+  if (owner.editorStampId && metatileBuild.stamps[owner.editorStampId]) return owner.editorStampId;
+  if (id.includes('trainer_room')) return 'trainer_room_exterior';
+  if (id.includes('buckys')) return 'buckys_locker_room_exterior';
+  if (id.includes('locker') || id.includes('singlet') || id.includes('supply')) return 'wall_brick_wide';
+  if (id.includes('bench') || id.includes('tables')) return 'wood_bench';
+  if (id.includes('board')) return 'blank_plaque';
+  if (id.includes('counter') || id.includes('desk') || id.includes('gallery')) return 'storefront_wide';
+  if (id.includes('rack')) return 'fence_long';
+  if (id.includes('statue') || id.includes('marker')) return 'campus_sign';
+  if (id.includes('wall')) return 'wall_brick_wide';
+
+  const byKind = {
+    home: 'team_building',
+    story: 'campus_house_exterior',
+    closed_building: 'campus_house_exterior',
+    trainer_room: 'trainer_room_exterior',
+    buckys_locker_room: 'buckys_locker_room_exterior',
+    arena: 'camp_randall_stadium',
+    storefront: 'storefront_wide',
+    city: 'storefront_wide',
+    hedge: 'hedge_horizontal',
+    shrub: 'shrub_round',
+    cliff: 'cliff_run',
+    fence: 'fence_long',
+    seating: 'wood_bench',
+    x_factor: owner.width >= 5 ? 'camp_randall_stadium' : 'campus_sign',
+    decision_required: 'campus_house_exterior',
+    route_landmark: 'campus_sign'
+  };
+  if (owner.kind === 'forest' || owner.kind === 'forest_mass') {
+    return forestStamp(owner, layout.size.width, layout.size.height);
+  }
+  return byKind[owner.kind] || (group === 'buildings' ? 'campus_house_exterior' : 'wall_limestone_wide');
+}
+
+function plannedObject(mapId, owner, group, layout, mapType = 'exterior') {
+  const sourceStamp = metatileBuild.stamps[sourceStampId(owner, group, layout)];
+  if (!sourceStamp) throw new Error(`${mapId}.${owner.id}: missing source stamp`);
+  const inheritsSourceMask = !owner.collisionMask && !owner.walkable && owner.door && sourceStamp.door
+    && sourceStamp.width === owner.width && sourceStamp.height === owner.height;
+  const effectiveOwner = inheritsSourceMask
+    ? {...owner, collisionMask: [...sourceStamp.collisionMask]}
+    : owner;
+  const stamp = stampForOwner(sourceStamp, effectiveOwner);
+  const entry = {
+    id: owner.id,
+    ownerGroup: group,
+    path: sourceStamp.thumbnail,
+    x: owner.x,
+    y: owner.y,
+    width: owner.width,
+    height: owner.height,
+    audit: {minimumCoverage: 1}
+  };
+  return {
+    asset: makeObjectAsset(mapId, entry, effectiveOwner, mapType, stamp),
+    object: {...makeObjectInstance(mapId, entry, effectiveOwner, stamp), sourceKind: 'planned-metatile'}
+  };
+}
+
+function plannedExterior(mapId, layout, objectAssets) {
+  const objects = [];
+  for (const group of ['blockers', 'buildings', 'landmarks']) {
+    for (const owner of layout[group] || []) {
+      if (['water', 'deep_water'].includes(owner.kind) || owner.walkable) continue;
+      const built = plannedObject(mapId, owner, group, layout);
+      objectAssets.push(built.asset);
+      objects.push(built.object);
+    }
+  }
+  for (const patch of layout.editorObjects || []) objects.push(deepClone(patch));
+  const planned = metatileBuild.plannedMaps[mapId];
+  return {
+    id: mapId,
+    name: layout.displayName,
+    type: 'exterior',
+    width: layout.size.width,
+    height: layout.size.height,
+    cellSize: production.cellSize,
+    renderModel: 'metatile',
+    background: null,
+    metatileAtlas: deepClone(metatileBuild.atlas),
+    terrainTiles: deepClone(metatileBuild.terrain.tiles),
+    originalTerrain: deepClone(planned.terrain),
+    terrain: deepClone(planned.terrain),
+    objects,
+    actors: [],
+    events: deepClone(layout.events || []),
+    connections: deepClone(layout.connections || []),
+    cameraReviews: deepClone(layout.cameraReviews || []),
+    start: deepClone(layout.start || null),
+    exit: null
+  };
+}
+
+function roomShellOwners(layout) {
+  const width = layout.size.width;
+  const height = layout.size.height;
+  const exitX = layout.exit?.x ?? Math.floor(width / 2);
+  return [
+    {id: 'room_wall_north', x: 0, y: 0, width, height: 1},
+    {id: 'room_wall_west', x: 0, y: 1, width: 1, height: height - 2},
+    {id: 'room_wall_east', x: width - 1, y: 1, width: 1, height: height - 2},
+    ...(exitX > 0 ? [{id: 'room_wall_south_west', x: 0, y: height - 1, width: exitX, height: 1}] : []),
+    ...(exitX < width - 1 ? [{id: 'room_wall_south_east', x: exitX + 1, y: height - 1, width: width - exitX - 1, height: 1}] : [])
+  ];
+}
+
+function plannedInterior(mapId, layout, objectAssets) {
+  const hasTerrainOverride = Boolean(layout.terrainOverride);
+  const terrain = hasTerrainOverride
+    ? deepClone(layout.terrainOverride)
+    : Array.from({length: layout.size.height}, () => Array(layout.size.width).fill('stone'));
+  const objects = [];
+  const add = (owner, group = 'fixtures') => {
+    const built = plannedObject(mapId, owner, group, layout, 'interior');
+    objectAssets.push(built.asset);
+    objects.push(built.object);
+  };
+
+  if (mapId !== 'stadium_tunnel') {
+    for (const owner of roomShellOwners(layout)) add(owner, 'room_shell');
+  }
+  for (const fixture of layout.fixtures || []) {
+    if (fixture.walkable) {
+      if (!hasTerrainOverride) {
+        const material = fixture.id.includes('lane') ? 'stone' : 'brick';
+        for (let y = fixture.y; y < fixture.y + fixture.height; y += 1) {
+          for (let x = fixture.x; x < fixture.x + fixture.width; x += 1) terrain[y][x] = material;
+        }
+      }
+    } else {
+      add(fixture);
+    }
+  }
+  for (const patch of layout.editorObjects || []) objects.push(deepClone(patch));
+  return {
+    id: mapId,
+    name: layout.displayName,
+    type: 'interior',
+    width: layout.size.width,
+    height: layout.size.height,
+    cellSize: production.cellSize,
+    renderModel: 'metatile',
+    background: null,
+    metatileAtlas: deepClone(metatileBuild.atlas),
+    terrainTiles: deepClone(metatileBuild.terrain.tiles),
+    originalTerrain: deepClone(terrain),
+    terrain,
+    objects,
+    actors: [],
+    events: deepClone(layout.events || []),
+    connections: [],
+    cameraReviews: [],
+    start: null,
+    exit: deepClone(layout.exit || null)
   };
 }
 
@@ -194,8 +404,17 @@ export function createSeedProject() {
   }
   maps[production.map.id] = makeMap(production.map.id, production.map, campLayout, 'exterior');
 
-  for (const [mapId, mapPackage] of Object.entries(production.interiors)) {
-    const layout = layouts.interiors[mapId];
+  for (const mapId of layouts.region.reviewOrder) {
+    if (mapId === production.map.id) continue;
+    maps[mapId] = plannedExterior(mapId, layouts.maps[mapId], objectAssets);
+  }
+
+  for (const [mapId, layout] of Object.entries(layouts.interiors)) {
+    const mapPackage = production.interiors[mapId];
+    if (!mapPackage) {
+      maps[mapId] = plannedInterior(mapId, layout, objectAssets);
+      continue;
+    }
     for (const entry of mapPackage.objects) {
       objectAssets.push(makeObjectAsset(mapId, entry, findOwner(layout, entry), 'interior'));
     }
@@ -218,7 +437,7 @@ export function createSeedProject() {
     productionVersion: production.version,
     layoutRevision: production.layoutRevision,
     metatileVersion: metatileBuild.version,
-    createdFrom: 'camp-randall-metatile-pilot',
+    createdFrom: 'season-one-map-studio-atlas',
     activeMapId: production.map.id,
     assets: {
       objects: objectAssets,

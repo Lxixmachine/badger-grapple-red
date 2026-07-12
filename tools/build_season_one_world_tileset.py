@@ -543,6 +543,7 @@ def build() -> dict:
         door: dict | None = None,
         tags: list[str] | None = None,
         semantic_behavior: str | None = None,
+        minimum_coverage: float = 0.12,
     ) -> None:
         expected = (width * cell, height * cell)
         if fitted.size != expected:
@@ -564,7 +565,7 @@ def build() -> dict:
                 if collision_mask[y][x] == "#":
                     alpha = tile_image.getchannel("A")
                     visible = sum(value >= 32 for value in alpha.get_flattened_data()) / (cell * cell)
-                    if visible < 0.12:
+                    if visible < minimum_coverage:
                         raise SystemExit(f"{stamp_id}: solid cell {x},{y} has only {visible:.0%} visible coverage")
                     coverage[f"{x},{y}"] = round(visible, 4)
                 row.append(tile_id)
@@ -613,10 +614,13 @@ def build() -> dict:
     ) -> None:
         width, height = 5, 4
         image = export_2x(authored_service_building(emblem))
+        top_row = ".###."
+        second_row = "#####" if emblem in {"trainer", "shop"} else ".###."
         register_stamp(
             stamp_id, name, "service_buildings", image, width, height,
-            ["#####", "#####", "#####", "##.##"], {"x": 2, "y": 3},
+            [top_row, second_row, "#####", "##.##"], {"x": 2, "y": 3},
             ["familiar_service", emblem, "authored16"],
+            minimum_coverage=contract["rules"]["visibleCollisionCoverage"],
         )
 
     service_building(

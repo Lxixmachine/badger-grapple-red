@@ -29,14 +29,18 @@ async function clickCell(page, x, y) {
   await canvas.click({position: {x: x * 32 + 16, y: y * 32 + 16}});
 }
 
-test('map studio boots with the audited Camp production pack', async ({page}) => {
+test('map studio boots with the complete Season One atlas', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 6});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 7});
   expect(Object.keys(state.project.maps)).toEqual([
-    'camp_randall', 'team_locker_room', 'wrestling_room', 'coach_office', 'stadium_tunnel'
+    'camp_randall', 'r1', 'field_house', 'lakeshore_path', 'picnic_point', 'state_street',
+    'bascom_hill', 'capitol_square', 'monona_shore', 'kohl_center', 'airport', 'st_louis',
+    'team_locker_room', 'wrestling_room', 'coach_office', 'trainer_room',
+    'buckys_locker_room', 'field_house_floor', 'capitol_interior', 'brittingham_boats',
+    'kohl_bracket_floor', 'nationals_floor', 'bascom_classroom', 'stadium_tunnel'
   ]);
   expect(state.project.maps.camp_randall).toMatchObject({width: 24, height: 20, cellSize: 32});
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
@@ -57,6 +61,41 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   expect(camp.terrain[6][11]).toMatch(/^surface_stone_blob_/);
   await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '768');
   await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '640');
+  expect(issues).toEqual([]);
+});
+
+test('every planned location is grid-native, editable, and linked to its playtest route', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  const {project} = await editorState(page);
+  const exteriorSizes = {
+    camp_randall: [24, 20], r1: [18, 24], field_house: [40, 28], lakeshore_path: [30, 14],
+    picnic_point: [24, 18], state_street: [44, 18], bascom_hill: [18, 18],
+    capitol_square: [40, 28], monona_shore: [18, 24], kohl_center: [40, 28],
+    airport: [15, 10], st_louis: [42, 30]
+  };
+  for (const [mapId, [width, height]] of Object.entries(exteriorSizes)) {
+    expect(project.maps[mapId]).toMatchObject({id: mapId, type: 'exterior', width, height, renderModel: 'metatile'});
+    expect(project.maps[mapId].terrain).toHaveLength(height);
+    expect(project.maps[mapId].terrain.every(row => row.length === width)).toBe(true);
+  }
+  expect(project.maps.picnic_point.terrain[4][4]).toMatch(/^surface_brick_blob_/);
+  expect(project.maps.monona_shore.terrain[10][0]).toMatch(/^shore_water_blob_/);
+  expect(project.maps.field_house.objects.find(object => object.id === 'trainer_room_field')).toMatchObject({
+    width: 5, height: 4, door: {x: 2, y: 3}, interior: 'trainer_room',
+    collisionMask: ['.###.', '#####', '#####', '##.##']
+  });
+  expect(project.maps.field_house.objects.find(object => object.id === 'buckys_field').collisionMask)
+    .toEqual(['.###.', '#####', '#####', '##.##']);
+  expect(project.maps.trainer_room).toMatchObject({type: 'interior', width: 15, height: 10, renderModel: 'metatile'});
+  expect(project.maps.trainer_room.objects.some(object => object.id === 'recovery_counter')).toBe(true);
+  await expect(page.locator('#mapSelect option')).toHaveCount(24);
+
+  await page.getByRole('combobox', {name: 'Map'}).selectOption('state_street');
+  await expect(page.locator('#playtestButton')).toHaveAttribute('href', './?atlas=1&play=1&area=state_street');
+  await page.getByRole('combobox', {name: 'Map'}).selectOption('trainer_room');
+  await expect(page.locator('#playtestButton')).toHaveAttribute('href', './?atlas=1&interior=trainer_room');
+  expect((await editorState(page)).state.validation.valid).toBe(true);
   expect(issues).toEqual([]);
 });
 
@@ -227,7 +266,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 6});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 7});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

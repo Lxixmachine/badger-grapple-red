@@ -76,6 +76,15 @@ BOARDS = {
             ("stone_stairs", (32, 32), "contain", 20),
         ],
     },
+    "service_buildings": {
+        "path": SOURCE_DIR / "season_one_service_buildings_source_v2.png",
+        "columns": 2,
+        "rows": 1,
+        "entries": [
+            ("trainer_room_exterior", (80, 64), "contain", 32),
+            ("buckys_locker_room_exterior", (80, 64), "contain", 32),
+        ],
+    },
     "props": {
         "path": SOURCE_DIR / "season_one_props_source_v1.png",
         "columns": 4,

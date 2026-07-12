@@ -73,7 +73,7 @@ else{
   if(!existsSync(preparedImagegenManifestPath)||world.sources?.preparedImagegenManifest!==fileHash(preparedImagegenManifestPath))errs.push('Prepared Imagegen source manifest is missing or stale');
   else{
     const prepared=JSON.parse(readFileSync(preparedImagegenManifestPath,'utf8'));
-    if(prepared.schema!=='badger-grapple-imagegen-tileset-sources/v1'||Object.keys(prepared.assets||{}).length<57||world.sources?.preparedImagegenAssetCount!==Object.keys(prepared.assets||{}).length)errs.push('Prepared Imagegen source coverage is incomplete');
+    if(prepared.schema!=='badger-grapple-imagegen-tileset-sources/v1'||Object.keys(prepared.assets||{}).length<59||world.sources?.preparedImagegenAssetCount!==Object.keys(prepared.assets||{}).length)errs.push('Prepared Imagegen source coverage is incomplete');
     for(const asset of Object.values(prepared.assets||{})){
       const source=fileURLToPath(new URL(`../${asset.path}`,import.meta.url));
       if(!existsSync(source)||fileHash(source)!==asset.sha256)errs.push(`Prepared Imagegen asset ${asset.path} is missing or stale`);
@@ -95,7 +95,7 @@ else{
     if(world.terrain.behaviors?.[tile.id]!==tile.behavior)errs.push(`Season One ground tile ${tile.id} behavior index is stale`);
   }
   for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
-  if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<57||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
+  if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<59||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
   for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
     if((world.coverage?.groundFamilyCounts?.[family]||0)<47)errs.push(`Season One world transition family ${family} is incomplete`);
   }
@@ -105,7 +105,7 @@ else{
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==6)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==7)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
@@ -127,6 +127,17 @@ else{
   };
   for(const [id,stamp] of Object.entries(metatileBuild.stamps||{}))validateStamp(`Camp stamp ${id}`,stamp);
   for(const patch of metatileBuild.patches||[])validateStamp(`Camp patch ${patch.id}`,patch);
+  const plannedMapIds=Object.keys(seasonLayouts.maps||{});
+  if(JSON.stringify(Object.keys(metatileBuild.plannedMaps||{}))!==JSON.stringify(plannedMapIds))errs.push('Map Studio must compile every Season One exterior in layout order');
+  for(const mapId of plannedMapIds){
+    const layout=seasonLayouts.maps[mapId];
+    const planned=metatileBuild.plannedMaps?.[mapId];
+    if(!planned||planned.width!==layout.size.width||planned.height!==layout.size.height||planned.terrain?.length!==layout.size.height||planned.terrain?.some(row=>row.length!==layout.size.width)){
+      errs.push(`Map Studio exterior ${mapId} does not match its authoritative layout footprint`);
+      continue;
+    }
+    for(const row of planned.terrain)for(const tileId of row)if(!Object.hasOwn(terrainTiles,tileId))errs.push(`Map Studio exterior ${mapId} references unknown ground tile ${tileId}`);
+  }
 }
 const seasonNodes=seasonRegion.nodes||{};
 const seasonNodeIds=Object.keys(seasonNodes);

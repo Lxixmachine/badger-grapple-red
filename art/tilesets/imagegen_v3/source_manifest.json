@@ -7,6 +7,7 @@
     "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
     "vegetation": "94453f4bef0f9849be3395e49db53ffe9c0f89f431d3aa87a6ff147ed8e72b20",
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
+    "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
     "props": "be9a7a8cbb13c2ce3aec6faad80ef04b2dc2d60816065229b2bb677b16af6f0e",
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0"
   },
@@ -307,6 +308,24 @@
       "colors": 20,
       "sha256": "6f9dda722260ed90e21336fb45ac1fc3a92d2905dba35f0d970e9a5a3cc57c18",
       "sourcePanel": 11
+    },
+    "trainer_room_exterior": {
+      "category": "service_buildings",
+      "path": "art/tilesets/imagegen_v3/service_buildings/trainer_room_exterior.png",
+      "width": 80,
+      "height": 64,
+      "colors": 32,
+      "sha256": "9ab50f8ad882adfa14330081c5db7868fc7d180889040bfa6031162ae8c1a285",
+      "sourcePanel": 0
+    },
+    "buckys_locker_room_exterior": {
+      "category": "service_buildings",
+      "path": "art/tilesets/imagegen_v3/service_buildings/buckys_locker_room_exterior.png",
+      "width": 80,
+      "height": 64,
+      "colors": 32,
+      "sha256": "6836e4c8b2c4579f31898aee5e90c58ac1c6e1759085c5b2299380aa08b1aa88",
+      "sourcePanel": 1
     },
     "campus_lamp": {
       "category": "props",

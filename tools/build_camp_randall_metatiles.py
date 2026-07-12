@@ -27,7 +27,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v6.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v7.png"
 GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v3.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
@@ -87,15 +87,43 @@ def behavior_at(owner: dict, rows: list[str], x: int, y: int) -> str:
 
 def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
     width, height = layout["size"]["width"], layout["size"]["height"]
-    raw = [["grass" for _ in range(width)] for _ in range(height)]
+    override = layout.get("terrainOverride")
+    if override is not None:
+        if len(override) != height or any(not isinstance(row, list) or len(row) != width for row in override):
+            raise SystemExit(f"{layout['displayName']}: terrain override must be exactly {width}x{height}")
+        missing = {tile_id for row in override for tile_id in row if tile_id not in world["terrain"]["tiles"]}
+        if missing:
+            raise SystemExit(f"{layout['displayName']}: terrain override references unavailable tiles {sorted(missing)}")
+        return [list(row) for row in override]
+    base_material = {
+        "water": "water",
+        "terminal": "asphalt",
+    }.get(layout.get("ground"), "grass")
+    raw = [[base_material for _ in range(width)] for _ in range(height)]
+
+    material_aliases = {
+        "pedestrian_brick": "brick",
+        "dock": "stone",
+        "water_lane": "water",
+        "terminal_carpet": "stone",
+    }
+
+    def paint_rect(entry: dict, material: str) -> None:
+        for y in range(entry["y"], entry["y"] + entry["height"]):
+            for x in range(entry["x"], entry["x"] + entry["width"]):
+                if 0 <= x < width and 0 <= y < height:
+                    raw[y][x] = material
+
     for path in layout.get("paths", []):
-        for y in range(path["y"], path["y"] + path["height"]):
-            for x in range(path["x"], path["x"] + path["width"]):
-                raw[y][x] = path["material"]
+        paint_rect(path, material_aliases.get(path["material"], path["material"]))
     for body in layout.get("waterBodies", []):
-        for y in range(body["y"], body["y"] + body["height"]):
-            for x in range(body["x"], body["x"] + body["width"]):
-                raw[y][x] = "water"
+        paint_rect(body, "water")
+    for blocker in layout.get("blockers", []):
+        if blocker.get("kind") in {"water", "deep_water"}:
+            paint_rect(blocker, "water")
+    for landmark in layout.get("landmarks", []):
+        if landmark.get("walkable"):
+            paint_rect(landmark, "brick" if landmark.get("kind") == "arena" else "stone")
 
     family_by_material = {
         "brick": "surface_brick",
@@ -123,7 +151,7 @@ def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
                     signature |= DIAGONAL_BITS[direction]
             tile_id = f"{family}_blob_{blob_signature_name(signature)}"
             if tile_id not in world["terrain"]["tiles"]:
-                raise SystemExit(f"Camp terrain resolver produced unavailable tile {tile_id}")
+                raise SystemExit(f"{layout['displayName']}: terrain resolver produced unavailable tile {tile_id}")
             rows[y][x] = tile_id
     return rows
 
@@ -389,10 +417,21 @@ def build() -> dict:
                 )
     save_png(preview, PREVIEW_PATH)
 
+    planned_maps = {
+        map_id: {
+            "id": map_id,
+            "width": planned_layout["size"]["width"],
+            "height": planned_layout["size"]["height"],
+            "terrain": terrain_rows(planned_layout, world),
+        }
+        for map_id, planned_layout in layouts["maps"].items()
+    }
+    planned_maps[production["map"]["id"]]["terrain"] = terrain
+
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 6,
-        "status": "production-pilot",
+        "version": 7,
+        "status": "season-one-map-atlas",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
         "atlas": {
@@ -413,6 +452,7 @@ def build() -> dict:
         "palette": palette_ids,
         "stamps": stamps,
         "patches": patches,
+        "plannedMaps": planned_maps,
         "map": {
             "id": production["map"]["id"],
             "width": layout["size"]["width"],

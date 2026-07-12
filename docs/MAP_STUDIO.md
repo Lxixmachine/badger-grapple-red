@@ -14,13 +14,16 @@ During development, use `http://127.0.0.1:5173/map-editor.html`.
 
 ## Current Scope
 
-The first editable pack contains:
+The editor contains the complete Season One layout atlas: 12 exterior maps and
+12 interiors, in story order.
 
-- Camp Randall exterior
-- Team Locker Room
-- Wrestling Room
-- Coach's Office
-- Camp Randall Tunnel
+Exteriors: Camp Randall, R1, Field House, Lakeshore Path, Picnic Point, State
+Street, Bascom Hill, Capitol Square, Monona Shore, Kohl Center, Airport, and St.
+Louis.
+
+Interiors: Team Locker Room, Wrestling Room, Coach's Office, Trainer's Room,
+Bucky's Locker Room, Field House Floor, Capitol Interior, Brittingham Boats,
+Kohl Bracket Floor, Nationals Floor, Bascom Classroom, and Stadium Tunnel.
 
 The Camp Randall exterior uses a FireRed-style metatile authoring model with
 original project art. The Season One kit provides 567 explicit ground tiles,
@@ -29,17 +32,27 @@ including nine complete 47-piece surface-transition families, three complete
 natural details. Every brush paints one fixed 32px tile; neighboring cells never
 change it implicitly.
 
-Those visuals originate in five Imagegen source boards, then pass through a
+Those visuals originate in six Imagegen source boards, then pass through a
 deterministic chroma-removal, palette-reduction, and 16px logical-grid build.
 Map Studio never paints from a raw generated board: every displayed palette
 entry is an exact nearest-neighbor 2x runtime tile.
+
+Trainer's Room and Bucky's Locker Room exteriors come from a dedicated
+Imagegen service-building board rather than being assembled from generic roof
+and wall modules. Both are normalized to exact 5x4 logical footprints, retain
+one centered door/warp cell, and remain visually recognizable at phone scale.
 
 The shared kit also provides 20 reusable ground assemblies and 96 structure
 stamps. These include connected forest masses, individual trees, cliffs,
 stairs, hedge and fence modules, campus props, architecture modules, and the
 familiar Trainer's Room and Bucky's Locker Room exteriors. Whole buildings
 remain placement stamps while every component cell keeps explicit behavior.
-Interiors remain on the previous object model during the pilot.
+The four approved Camp Randall interiors retain their production compositions.
+The remaining locations are grid-native metatile blockouts compiled from
+`seasonOneLayouts.json`. Their paths, structures, collision, doors, events,
+connections, camera reviews, and exits use the same authoritative cells as the
+region plan. Final town-specific art can replace these blockout stamps without
+changing map geometry or behavior.
 
 ## Editing Workflow
 
@@ -69,9 +82,10 @@ Interiors remain on the previous object model during the pilot.
    visible art still needs coverage review.
 12. Export a clean review PNG and the validated JSON map pack.
 
-The browser keeps a local draft. **Reset Draft** returns to the current
-production seed. Undo and redo preserve a valid selection so small adjustments
-can be compared quickly.
+The browser keeps a local draft. Atlas upgrades add missing maps and corrected
+defaults without discarding explicitly repainted terrain on existing maps.
+**Reset Draft** returns to the current production seed. Undo and redo preserve
+a valid selection so small adjustments can be compared quickly.
 
 ## Applying An Export
 

@@ -10,6 +10,7 @@ const inspectorContent = document.querySelector('#inspectorContent');
 const validationContent = document.querySelector('#validationContent');
 const validationCount = document.querySelector('#validationCount');
 const deleteButton = document.querySelector('#deleteButton');
+const playtestButton = document.querySelector('#playtestButton');
 const cellReadout = document.querySelector('#cellReadout');
 const modeReadout = document.querySelector('#modeReadout');
 const mapStatus = document.querySelector('#mapStatus');
@@ -84,6 +85,7 @@ function migrateDraft(saved, seed) {
   migrated.productionVersion = seed.productionVersion;
   migrated.layoutRevision = seed.layoutRevision;
   migrated.metatileVersion = seed.metatileVersion;
+  migrated.createdFrom = seed.createdFrom;
   migrated.assets.objects = cloneProject(seed.assets.objects);
   migrated.assets.groundTiles = cloneProject(seed.assets.groundTiles);
   migrated.assets.groundStamps = cloneProject(seed.assets.groundStamps);
@@ -200,9 +202,11 @@ function cursorForMode(value = mode) {
 }
 
 function buildMapSelect() {
-  mapSelect.innerHTML = Object.values(project.maps)
+  const options = type => Object.values(project.maps)
+    .filter(map => map.type === type)
     .map(map => `<option value="${escapeHtml(map.id)}">${escapeHtml(map.name)}</option>`)
     .join('');
+  mapSelect.innerHTML = `<optgroup label="Exterior maps">${options('exterior')}</optgroup><optgroup label="Interiors">${options('interior')}</optgroup>`;
   mapSelect.value = project.activeMapId;
 }
 
@@ -334,7 +338,7 @@ function buildPalette() {
 
   const map = activeMap();
   const availableAssets = paletteTab === 'objects'
-    ? project.assets.objects.filter(asset => asset.mapType === map.type)
+    ? project.assets.objects.filter(asset => asset.mapType === map.type && (!asset.mapId || asset.mapId === map.id))
     : project.assets.actors;
   const objectFamilies = paletteTab === 'objects'
     ? [...new Set(availableAssets.map(asset => asset.category).filter(Boolean))]
@@ -500,6 +504,9 @@ function updateValidation() {
 function updateAll() {
   const map = activeMap();
   mapStatus.textContent = `${map.width} x ${map.height} cells`;
+  playtestButton.href = map.type === 'interior'
+    ? `./?atlas=1&interior=${encodeURIComponent(map.id)}`
+    : `./?atlas=1&play=1&area=${encodeURIComponent(map.id)}`;
   updateHistoryButtons();
   updateInspector();
   updateValidation();

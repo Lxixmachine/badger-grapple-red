@@ -61,6 +61,22 @@ asset must survive reduction to a 16px logical grid. Isolate each on flat
 hard pixel treatment. No text or copied assets.
 ```
 
+## Service Buildings Board
+
+```text
+Create two significantly more polished original service-building exteriors for
+a Wisconsin collegiate wrestling RPG. Place the Trainer's Room on the left: a
+cream limestone sports recovery center with a cardinal roof, blue windows, red
+glass center door, and simple athletic-tape cross emblem. Place Bucky's Locker
+Room on the right: a red-brick wrestling equipment shop with charcoal roof,
+cardinal-and-gold trim, display windows, center door, and simple gold singlet
+emblem. Both buildings face south, share one baseline and scale, and normalize
+to exact 5x4 footprints on a 16px logical grid. Isolate both on perfectly flat
+#ff00ff. Polished late-GBA pixel art, crisp clusters, limited shared palette,
+strong phone-size silhouettes. No text, characters, scenery, copied assets,
+Pokemon logos, cast shadows, blur, antialiasing, or watermark.
+```
+
 ## Transitions And Elevation Board
 
 ```text
