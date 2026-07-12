@@ -27,7 +27,8 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v5.png"
+GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v3.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
 WORLD_BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
@@ -163,9 +164,7 @@ def build() -> dict:
     if production["cellSize"] != CELL or production["layoutRevision"] != layouts["revision"]:
         raise SystemExit("Camp metatiles cannot compile from a stale production package")
 
-    ground_path = ROOT / "public" / production["map"]["ground"]["path"].removeprefix("./")
-    if not ground_path.exists():
-        raise SystemExit("Camp ground layer is missing; run build_camp_randall_production.py first")
+    ground_path = GROUND_PATH
     terrain = terrain_rows(layout, world)
 
     visuals: list[Image.Image] = []
@@ -217,6 +216,26 @@ def build() -> dict:
         )
         terrain_tiles[entry["id"]] = mapped_visual
         terrain_catalog.append({**entry, "visual": mapped_visual})
+
+    # The proof map cannot retain the old high-resolution flat lawn beneath
+    # authored metatiles. Build its base from the same exact logical grass cell
+    # used by Map Studio and runtime terrain placement.
+    grass_visuals = [
+        visuals[terrain_tiles["grass"]],
+        visuals[terrain_tiles["grass_b"]],
+        visuals[terrain_tiles["grass_c"]],
+    ]
+    ground_image = Image.new(
+        "RGBA",
+        (layout["size"]["width"] * CELL, layout["size"]["height"] * CELL),
+        (0, 0, 0, 0),
+    )
+    for y in range(layout["size"]["height"]):
+        for x in range(layout["size"]["width"]):
+            selector = (x * 7 + y * 11 + (x // 4) * 3) % 17
+            variant = 1 if selector == 5 else 2 if selector == 13 else 0
+            ground_image.alpha_composite(grass_visuals[variant], (x * CELL, y * CELL))
+    save_png(ground_image, ground_path)
 
     world_tile_ids: dict[str, str] = {}
     for source_id, entry in world["metatiles"].items():
@@ -372,7 +391,7 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 4,
+        "version": 5,
         "status": "production-pilot",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
@@ -398,7 +417,7 @@ def build() -> dict:
             "id": production["map"]["id"],
             "width": layout["size"]["width"],
             "height": layout["size"]["height"],
-            "ground": production["map"]["ground"],
+            "ground": {"texture": "camp-metatile-ground", "path": public_path(ground_path)},
             "terrain": terrain,
         },
         "sources": {

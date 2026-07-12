@@ -29,6 +29,11 @@ including nine complete 47-piece surface-transition families, three complete
 natural details. Every brush paints one fixed 32px tile; neighboring cells never
 change it implicitly.
 
+Those visuals originate in five Imagegen source boards, then pass through a
+deterministic chroma-removal, palette-reduction, and 16px logical-grid build.
+Map Studio never paints from a raw generated board: every displayed palette
+entry is an exact nearest-neighbor 2x runtime tile.
+
 The shared kit also provides 20 reusable ground assemblies and 96 structure
 stamps. These include connected forest masses, individual trees, cliffs,
 stairs, hedge and fence modules, campus props, architecture modules, and the

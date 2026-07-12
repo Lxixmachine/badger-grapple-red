@@ -1,7 +1,9 @@
 {
   "schema": "badger-grapple-tileset-contract/v1",
-  "version": 1,
+  "version": 2,
   "cellSize": 32,
+  "logicalCellSize": 16,
+  "renderScale": 2,
   "designTarget": "FireRed-scale environmental vocabulary using original Badger Grapple Red art",
   "rules": {
     "explicitCells": true,
@@ -9,7 +11,12 @@
     "fullCellGroundCoverage": true,
     "gridNativeStructures": true,
     "visibleCollisionCoverage": 0.55,
-    "doorFootprint": [1, 1]
+    "doorFootprint": [1, 1],
+    "imagegenSourceRequired": true,
+    "minimumPreparedImagegenAssets": 57,
+    "exactNearestNeighborScale": true,
+    "materialSpecificTransitions": true,
+    "sceneCropStretching": false
   },
   "behaviorVocabulary": [
     "walkable",

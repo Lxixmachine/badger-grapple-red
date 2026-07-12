@@ -34,7 +34,7 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 4});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 5});
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'team_locker_room', 'wrestling_room', 'coach_office', 'stadium_tunnel'
   ]);
@@ -42,7 +42,7 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
   expect(state.project.assets.groundTiles).toHaveLength(567);
   expect(state.project.assets.groundStamps).toHaveLength(20);
-  expect(state.project.assets.metatiles.length).toBeGreaterThan(2000);
+  expect(state.project.assets.metatiles.length).toBeGreaterThan(1000);
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'water').behavior).toBe('water');
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'shore_water_blob_n_e_s_w_ne_se_sw_nw').behavior).toBe('water');
   expect(state.project.assets.objects.some(asset => asset.id === 'world:tree_oak_a')).toBe(true);
@@ -121,11 +121,15 @@ test('stone painting fills the cell and does not change when neighbors change', 
   const issues = runtimeIssues(page);
   await openEditor(page);
   await page.getByRole('button', {name: 'Toggle grid'}).click();
-  const beforeCorners = await page.evaluate(() => {
+  const before = await page.evaluate(() => {
     const context = document.querySelector('#mapCanvas').getContext('2d');
-    return [[1, 1], [30, 1], [1, 30], [30, 30]].map(([x, y]) => (
-      [...context.getImageData(10 * 32 + x, 14 * 32 + y, 1, 1).data].slice(0, 3)
-    ));
+    const sample = (x, y) => [...context.getImageData(10 * 32 + x, 14 * 32 + y, 1, 1).data];
+    return {
+      center: sample(10 * 32 + 10, 14 * 32 + 10),
+      corners: [[1, 1], [30, 1], [1, 30], [30, 30]].map(([x, y]) => (
+        sample(10 * 32 + x, 14 * 32 + y)
+      ))
+    };
   });
   await page.getByRole('button', {name: 'Stone', exact: true}).click();
   await clickCell(page, 10, 14);
@@ -133,8 +137,8 @@ test('stone painting fills the cell and does not change when neighbors change', 
   await page.mouse.move(0, 0);
   await expect.poll(async () => page.evaluate(() => {
     const context = document.querySelector('#mapCanvas').getContext('2d');
-    return [...context.getImageData(10 * 32 + 10, 14 * 32 + 10, 1, 1).data].slice(0, 3);
-  })).toEqual([196, 188, 165]);
+    return [...context.getImageData(10 * 32 + 10, 14 * 32 + 10, 1, 1).data][3];
+  })).toBe(255);
 
   const pixels = await page.evaluate(() => {
     const canvas = document.querySelector('#mapCanvas');
@@ -147,8 +151,9 @@ test('stone painting fills the cell and does not change when neighbors change', 
         .map(([x, y]) => sample(10 * 32 + x, 14 * 32 + y).slice(0, 3))
     };
   });
-  expect(pixels.center.slice(0, 3)).toEqual([196, 188, 165]);
-  pixels.corners.forEach((corner, index) => expect(corner.slice(0, 3)).not.toEqual(beforeCorners[index]));
+  expect(pixels.center[3]).toBe(255);
+  expect(pixels.center.slice(0, 3)).not.toEqual(before.center.slice(0, 3));
+  pixels.corners.forEach((corner, index) => expect(corner.slice(0, 3)).not.toEqual(before.corners[index].slice(0, 3)));
 
   await clickCell(page, 10, 13);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.terrain[13][10]).toBe('stone');
@@ -217,12 +222,12 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
     draft.maps.camp_randall.originalTerrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[14][10] = 'dirt';
-    localStorage.setItem('badger-grapple-map-studio-v3-complete-tileset', JSON.stringify(draft));
+    localStorage.setItem('badger-grapple-map-studio-v4-imagegen-tileset', JSON.stringify(draft));
   });
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 4});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 5});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

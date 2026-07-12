@@ -1,0 +1,528 @@
+{
+  "schema": "badger-grapple-imagegen-tileset-sources/v1",
+  "version": 1,
+  "logicalCellSize": 16,
+  "chromaKey": "#ff00ff",
+  "sourceBoards": {
+    "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
+    "vegetation": "94453f4bef0f9849be3395e49db53ffe9c0f89f431d3aa87a6ff147ed8e72b20",
+    "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
+    "props": "be9a7a8cbb13c2ce3aec6faad80ef04b2dc2d60816065229b2bb677b16af6f0e",
+    "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0"
+  },
+  "assets": {
+    "grass": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/grass.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "7129896d817e4de1aa0f58280037c67b5c29d4bbd66d23850c34194f12991772",
+      "sourcePanel": 0
+    },
+    "mowed_grass": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/mowed_grass.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "a9f00215df919645d66ade88d1f9063127ffdbb2e98dea623d9b6608520c387a",
+      "sourcePanel": 1
+    },
+    "dirt": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/dirt.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "ac094c3152597cf51ab7bdf1a4e267a3134c0650e0fffb6f163234827f3e9bb7",
+      "sourcePanel": 2
+    },
+    "brick": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/brick.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "6257fcd22ff986fb40e4ba82ed160bdbfe9d01c9e3b42eff0fe03c39a4a47a13",
+      "sourcePanel": 3
+    },
+    "stone": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/stone.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "b8d8ce5ac03e31eba752c849b4209b0e11469a5d0ba6581e08e702c6dc2fcf24",
+      "sourcePanel": 4
+    },
+    "gravel": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/gravel.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "8250b45e0a7e7fecb9407b05aacf6338bfe53eb2c54808e3178df0c3e0ddb3bd",
+      "sourcePanel": 5
+    },
+    "sand": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/sand.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "40f9d8b1a22e2cc784291efd2fff6bff0f5888bb46b9226a0aadc2483a97507b",
+      "sourcePanel": 6
+    },
+    "water": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/water.png",
+      "width": 16,
+      "height": 16,
+      "colors": 16,
+      "sha256": "2eb0d4b1b8d403d0b4bf530c573b35cf73bffdc174bd6363b5cc82e88efde9c9",
+      "sourcePanel": 7
+    },
+    "asphalt": {
+      "category": "ground",
+      "path": "art/tilesets/imagegen_v3/ground/asphalt.png",
+      "width": 16,
+      "height": 16,
+      "colors": 15,
+      "sha256": "143d29fe23ffea0c97d242bed0943a9fdb1ae6f811430b8f4a74271827b86f44",
+      "sourcePanel": 8
+    },
+    "tree_oak_a": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/tree_oak_a.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "08610424f4056880ab8c2e6a54e3737c44e11914ed65bda18c71430383872f98",
+      "sourcePanel": 0
+    },
+    "tree_oak_autumn": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/tree_oak_autumn.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "201ab36ccb466854bf32e9d4f28701bf56a2721fc99f42c97ed4478b16f1f094",
+      "sourcePanel": 1
+    },
+    "tree_pine": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/tree_pine.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "9a1bc83bfb05945102feb288178002c75e487e88e8748cdb3d2c2614251daad9",
+      "sourcePanel": 2
+    },
+    "tree_ornamental": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/tree_ornamental.png",
+      "width": 16,
+      "height": 32,
+      "colors": 24,
+      "sha256": "e08469f4425b0d4202f1c3c3719cd1945569ea600ad726c09babbf0fcad95d26",
+      "sourcePanel": 3
+    },
+    "forest_top": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/forest_top.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "ef7b5221d944317eebeea1e4f469871e880e0bdd246d1a8b7478be4db8497710",
+      "sourcePanel": 4
+    },
+    "forest_middle": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/forest_middle.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "612ff618b1898d6afcd924b89747ebc30e52ec3dcf90198b32e9fe778052b3ba",
+      "sourcePanel": 5
+    },
+    "forest_bottom": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/forest_bottom.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "67c0aee784fc2ba39b960a0120a3357a522168e15fd3f56874838354cd7b5a40",
+      "sourcePanel": 6
+    },
+    "forest_corner": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/forest_corner.png",
+      "width": 32,
+      "height": 48,
+      "colors": 24,
+      "sha256": "641858b4542386eab23e92f908714688c39e3892e22892dcf506f20485b3d350",
+      "sourcePanel": 7
+    },
+    "hedge_horizontal": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/hedge_horizontal.png",
+      "width": 48,
+      "height": 16,
+      "colors": 20,
+      "sha256": "3f87b472f832312053af9fa318fcc2e0979843cd691d4020bf4118d3bf370320",
+      "sourcePanel": 8
+    },
+    "shrub_flowering": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/shrub_flowering.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "db98acebf7e72ae7672e7f28e405aaa31b85424eda4a4d1437aab76e8d102070",
+      "sourcePanel": 9
+    },
+    "rock_cluster": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/rock_cluster.png",
+      "width": 32,
+      "height": 16,
+      "colors": 18,
+      "sha256": "9845a1cf7ac36a7d0e23618f9049ad0c685bf7582561f4b681bcb968ddd56467",
+      "sourcePanel": 10
+    },
+    "shore_reeds": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/shore_reeds.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "5bbbce21bdcb0b81e035489797111098d41a0a62a7e57cb955bc06af05d6f929",
+      "sourcePanel": 11
+    },
+    "roof_red_gable": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/roof_red_gable.png",
+      "width": 48,
+      "height": 32,
+      "colors": 24,
+      "sha256": "3ceed69d2025e7340b2d3f828d3c57fd649627365716bb2c94d08e0dcbe4b1a2",
+      "sourcePanel": 0
+    },
+    "roof_slate_gable": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/roof_slate_gable.png",
+      "width": 48,
+      "height": 32,
+      "colors": 24,
+      "sha256": "e391ba1e08ac025ef87c87b899ae618a2f2938ee598f719dfb1c91297052f95b",
+      "sourcePanel": 1
+    },
+    "wall_limestone": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/wall_limestone.png",
+      "width": 48,
+      "height": 32,
+      "colors": 20,
+      "sha256": "ba322f4d9c2e5a81f3743f8bc2711b5fc1756b3f07d16d07a1ec638a220ca820",
+      "sourcePanel": 2
+    },
+    "wall_brick": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/wall_brick.png",
+      "width": 48,
+      "height": 32,
+      "colors": 20,
+      "sha256": "8a10f524c87dc8ac302ad9b5129009134d6af353c5b7b36d218e215991922638",
+      "sourcePanel": 3
+    },
+    "window_limestone": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/window_limestone.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "209850baa32a61e8e92cdda84e773abe6c32cc7349dc221af35031760ac272cb",
+      "sourcePanel": 4
+    },
+    "door_wood": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/door_wood.png",
+      "width": 16,
+      "height": 32,
+      "colors": 20,
+      "sha256": "cdad30deb5966a1af1fb12153a9c43864fd859ffac080d0c32ae7921ad23739b",
+      "sourcePanel": 5
+    },
+    "door_red": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/door_red.png",
+      "width": 16,
+      "height": 32,
+      "colors": 20,
+      "sha256": "ff0da2dbdafb45f5a4b36d4801b3b3ec572531fa7d125762cb1e5e19ab86c07b",
+      "sourcePanel": 6
+    },
+    "storefront": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/storefront.png",
+      "width": 32,
+      "height": 32,
+      "colors": 23,
+      "sha256": "8d69ac0cfd1cab263ef0589506621d5a6b6ea2bd24026c12a503c68bc3a6b282",
+      "sourcePanel": 7
+    },
+    "awning_cardinal": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/awning_cardinal.png",
+      "width": 48,
+      "height": 32,
+      "colors": 18,
+      "sha256": "deea1a1894c95082ba29004eca2a14b4f9258f6db8375637c3ae4efdf79a3370",
+      "sourcePanel": 8
+    },
+    "awning_gold": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/awning_gold.png",
+      "width": 48,
+      "height": 32,
+      "colors": 18,
+      "sha256": "8914e4da86e1a265f1320c29958e5f82ef5af15838fa3d9e66929aa19e5b3f12",
+      "sourcePanel": 9
+    },
+    "stadium_trim": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/stadium_trim.png",
+      "width": 64,
+      "height": 32,
+      "colors": 24,
+      "sha256": "fc547d57274fbc54b538d6343da700cf76c83fd42e52a6cfc945ca85bcad4fc6",
+      "sourcePanel": 10
+    },
+    "stone_stairs": {
+      "category": "architecture",
+      "path": "art/tilesets/imagegen_v3/architecture/stone_stairs.png",
+      "width": 32,
+      "height": 32,
+      "colors": 20,
+      "sha256": "6f9dda722260ed90e21336fb45ac1fc3a92d2905dba35f0d970e9a5a3cc57c18",
+      "sourcePanel": 11
+    },
+    "campus_lamp": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/campus_lamp.png",
+      "width": 16,
+      "height": 32,
+      "colors": 20,
+      "sha256": "ee7d1f89a1ab9b4f3eadcdc9ea485e80b74259e5b4d251d08a2cb0f21ee3270c",
+      "sourcePanel": 0
+    },
+    "wood_bench": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/wood_bench.png",
+      "width": 48,
+      "height": 32,
+      "colors": 20,
+      "sha256": "babeed6ddd1d200cf7997079e71a612829935fd84258c9fead6656ca208e0ca8",
+      "sourcePanel": 1
+    },
+    "campus_sign": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/campus_sign.png",
+      "width": 48,
+      "height": 32,
+      "colors": 20,
+      "sha256": "7e8d3381db7bb9515e53f265abab19286b847eaf3962ada78ee55a604661a7cb",
+      "sourcePanel": 2
+    },
+    "banner_pole": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/banner_pole.png",
+      "width": 16,
+      "height": 32,
+      "colors": 19,
+      "sha256": "605a5032cb4ddd1be0a629f461ffd946bb84045290c30940b64170f7483c595b",
+      "sourcePanel": 3
+    },
+    "fence_long": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/fence_long.png",
+      "width": 64,
+      "height": 32,
+      "colors": 18,
+      "sha256": "bfb29106c0a9ccb94e4408b67bd55a4a0d6ee0bb7bf092c462942a16b17a0865",
+      "sourcePanel": 4
+    },
+    "open_gate": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/open_gate.png",
+      "width": 64,
+      "height": 32,
+      "colors": 20,
+      "sha256": "1a9a2a36565e1dd68e0541acca3e91f4b1ecb1d5268344f76e10c3f736672ffe",
+      "sourcePanel": 5
+    },
+    "bike_rack": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/bike_rack.png",
+      "width": 48,
+      "height": 16,
+      "colors": 18,
+      "sha256": "31910991dab56d41111f11fa83efc7569158072832a85341ecf904b2ccba0ed4",
+      "sourcePanel": 6
+    },
+    "trash_can": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/trash_can.png",
+      "width": 16,
+      "height": 16,
+      "colors": 18,
+      "sha256": "ecb14d2429dee4d76e10a3bbd7fdc50495585067fab9f78a7bd74157cfdf2a63",
+      "sourcePanel": 7
+    },
+    "flowers_white": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/flowers_white.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "10236b504fc715e06f8283bd673e2a60a3a95a944cc276d0ae28c72e0aec887e",
+      "sourcePanel": 8
+    },
+    "flowers_cardinal": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/flowers_cardinal.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "86d37ae93501c2cf3ebed712b0431e7c3d91d8e8259b1b429b8ad392d5a6b4f6",
+      "sourcePanel": 9
+    },
+    "bollard": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/bollard.png",
+      "width": 16,
+      "height": 32,
+      "colors": 18,
+      "sha256": "286d7050a5f535901f3d7e51684a0e2d5010dcd030250653787d49f7fcba5cfd",
+      "sourcePanel": 10
+    },
+    "hanging_sign": {
+      "category": "props",
+      "path": "art/tilesets/imagegen_v3/props/hanging_sign.png",
+      "width": 32,
+      "height": 32,
+      "colors": 20,
+      "sha256": "a1f386870a1293f53d88f19b73265f7604bb3f61363964f8550b95f62cc81449",
+      "sourcePanel": 11
+    },
+    "dirt_edge": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/dirt_edge.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "8c0a78cb714cf29cce7ee21cec57a42534e509aa319417c9b9f001b97664d30c",
+      "sourcePanel": 0
+    },
+    "dirt_corner": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/dirt_corner.png",
+      "width": 16,
+      "height": 16,
+      "colors": 19,
+      "sha256": "f01a34f285ae1d6a0a4d8e167fd3f7d632d7e94486bc5d76ece627371235ec6b",
+      "sourcePanel": 1
+    },
+    "brick_limestone_edge": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/brick_limestone_edge.png",
+      "width": 16,
+      "height": 16,
+      "colors": 18,
+      "sha256": "9d5f0d84212c586b97915c9710faab0630d0afa66073647cea3df572dddf6cb2",
+      "sourcePanel": 2
+    },
+    "stone_grass_edge": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/stone_grass_edge.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "dd6dab6ffda3153f38ea5762d87a61fd14bd1e4160eb833fa4323cbeb0f7c404",
+      "sourcePanel": 3
+    },
+    "shoreline_edge": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/shoreline_edge.png",
+      "width": 16,
+      "height": 16,
+      "colors": 21,
+      "sha256": "84dde94c009904502ca03df1eb44a41a934919007c317f53aadfd3c57c6b8430",
+      "sourcePanel": 4
+    },
+    "shoreline_corner": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/shoreline_corner.png",
+      "width": 16,
+      "height": 16,
+      "colors": 21,
+      "sha256": "cd331aa8d8451e00e0c976e3833698b1f08ca864331e98dc3a44882ffcdfdfea",
+      "sourcePanel": 5
+    },
+    "asphalt_curb_edge": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/asphalt_curb_edge.png",
+      "width": 16,
+      "height": 16,
+      "colors": 20,
+      "sha256": "9f3a6668047b66d0c44d3e95a89fbd2ae54f0586b1103a5929fa2cfa1cb565e7",
+      "sourcePanel": 6
+    },
+    "mowed_grass_edge": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/mowed_grass_edge.png",
+      "width": 16,
+      "height": 16,
+      "colors": 18,
+      "sha256": "a9bd0d8adf576d2e822df2cee81fcd053e5fed68e546af1726ada2124812655b",
+      "sourcePanel": 7
+    },
+    "cliff_face": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/cliff_face.png",
+      "width": 48,
+      "height": 32,
+      "colors": 23,
+      "sha256": "3a998c95daf488198a4462db4fc6b980d70e88cac71ac26367f7836a43c60810",
+      "sourcePanel": 8
+    },
+    "cliff_corner": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/cliff_corner.png",
+      "width": 32,
+      "height": 32,
+      "colors": 24,
+      "sha256": "545ce4351dd17cf10770a17ba126fb76b967e56daca36aeb43f4b8751195722c",
+      "sourcePanel": 9
+    },
+    "cliff_stairs": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/cliff_stairs.png",
+      "width": 32,
+      "height": 32,
+      "colors": 24,
+      "sha256": "9c7c025043316f6de97db7e8c069aa8b40a089e3cc0a745c94bfa4ab0938a48e",
+      "sourcePanel": 10
+    },
+    "retaining_wall": {
+      "category": "transitions",
+      "path": "art/tilesets/imagegen_v3/transitions/retaining_wall.png",
+      "width": 48,
+      "height": 16,
+      "colors": 22,
+      "sha256": "7eba04537b3ff01d5d7009e341c882e96c2f71b7407f0e7f3c9c0ae3ecd01373",
+      "sourcePanel": 11
+    }
+  }
+}

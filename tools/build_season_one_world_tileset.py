@@ -1,9 +1,8 @@
-"""Compile the original Season One world art into deterministic 32px metatiles.
+"""Compile the authored Season One pixel kit into deterministic 32px metatiles.
 
-The generated source boards are never placed directly in maps. This compiler
-turns them into explicit full-cell ground tiles and grid-native structure
-stamps. Runtime and editor code select tile IDs; they never infer or mutate a
-tile from its neighbours.
+Every visual is authored at a 16px logical resolution and exported at exact 2x
+nearest-neighbor scale. Runtime and editor code select explicit tile IDs; they
+never infer or mutate a tile from its neighbours.
 """
 
 from __future__ import annotations
@@ -14,15 +13,34 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
 
+from season_one_pixel_art import (
+    LOGICAL_CELL,
+    RENDER_SCALE,
+    authored_stamp,
+    cliff,
+    cliff_stairs,
+    connector_tile,
+    export_2x,
+    ground_detail,
+    is_exact_2x,
+    material_tile,
+    road_marking as authored_road_marking,
+    service_building as authored_service_building,
+    transition_tile,
+)
+from prepare_imagegen_tileset_sources import MANIFEST_PATH as IMAGEGEN_SOURCE_MANIFEST_PATH
+from prepare_imagegen_tileset_sources import build as prepare_imagegen_sources
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset.png"
-STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps"
-GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v3.png"
+STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v3"
+GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v3"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
+SEAM_PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_tileset_seam_test.png"
 
 
 def load_json(path: Path) -> dict:
@@ -308,16 +326,22 @@ def plaza_mask(name: str, cell: int) -> Image.Image:
 
 
 def build() -> dict:
+    prepared_sources = prepare_imagegen_sources()
     manifest = load_json(MANIFEST_PATH)
     contract = load_json(CONTRACT_PATH)
     cell = manifest["cellSize"]
     if contract.get("cellSize") != cell:
         raise SystemExit("Tileset contract and source manifest use different cell sizes")
+    if manifest.get("logicalCellSize") != LOGICAL_CELL or manifest.get("renderScale") != RENDER_SCALE:
+        raise SystemExit("Tileset manifest does not match the authored 16px/2x pixel pipeline")
+    if LOGICAL_CELL * RENDER_SCALE != cell:
+        raise SystemExit("Authored logical cell does not resolve to the runtime cell size")
+    if contract.get("logicalCellSize") != LOGICAL_CELL or contract.get("renderScale") != RENDER_SCALE:
+        raise SystemExit("Tileset contract does not enforce the authored 16px/2x pipeline")
+    minimum_sources = contract["rules"].get("minimumPreparedImagegenAssets", 0)
+    if not contract["rules"].get("imagegenSourceRequired") or len(prepared_sources["assets"]) < minimum_sources:
+        raise SystemExit("Tileset contract does not have enough prepared Imagegen source assets")
     columns = manifest["atlasColumns"]
-    sources = {
-        key: Image.open(ROOT / relative).convert("RGBA")
-        for key, relative in manifest["sources"].items()
-    }
 
     visuals: list[Image.Image] = []
     visual_lookup: dict[bytes, int] = {}
@@ -357,6 +381,8 @@ def build() -> dict:
         normalized = image.convert("RGBA")
         if normalized.getchannel("A").getextrema() != (255, 255):
             raise SystemExit(f"{tile_id}: ground tile must cover the complete {cell}x{cell} cell")
+        if not is_exact_2x(normalized):
+            raise SystemExit(f"{tile_id}: ground tile is not exact nearest-neighbor 2x pixel art")
         visual = add_visual(normalized, "ground", family, name)
         ground_tiles[tile_id] = visual
         ground_catalog.append({
@@ -365,6 +391,8 @@ def build() -> dict:
         })
 
     def add_metatile(image: Image.Image, behavior: str, family: str, name: str) -> str:
+        if not is_exact_2x(image):
+            raise SystemExit(f"{name}: structure tile is not exact nearest-neighbor 2x pixel art")
         visual = add_visual(image, "structure", family, name)
         digest = hashlib.sha256(image.convert("RGBA").tobytes() + f"|{behavior}|structure".encode()).hexdigest()[:12]
         tile_id = f"mt_{digest}"
@@ -379,34 +407,28 @@ def build() -> dict:
             entry["names"].append(name)
         return tile_id
 
-    terrain = sources["terrain"]
-    grass = texture_from_crop(terrain, manifest["terrainCrops"]["grass_a"], (cell, cell))
-    grass_b = texture_from_crop(terrain, manifest["terrainCrops"]["grass_b"], (cell, cell), 1)
-    brick = texture_from_crop(terrain, manifest["terrainCrops"]["brick"], (cell, cell))
-    dirt = texture_from_crop(terrain, manifest["terrainCrops"]["dirt"], (cell, cell))
-    stone = procedural_material("stone", (cell, cell))
-    asphalt = procedural_material("asphalt", (cell, cell))
-    water = procedural_material("water", (cell, cell))
-    sand = procedural_material("sand", (cell, cell))
-    gravel = procedural_material("gravel", (cell, cell))
-    mowed = mowed_texture(grass)
-    concrete = tint_texture(stone, (208, 205, 190), 0.22)
-    materials = {
-        "dirt": dirt, "brick": brick, "stone": stone, "water": water,
-        "asphalt": asphalt, "sand": sand, "gravel": gravel, "mowed_grass": mowed,
-    }
-    borders = {
-        "dirt": (142, 113, 73, 255), "brick": (102, 46, 43, 255),
-        "stone": (128, 123, 111, 255), "water": (42, 100, 145, 255),
-        "asphalt": (49, 54, 57, 255), "sand": (169, 143, 91, 255),
-        "gravel": (118, 117, 108, 255), "mowed_grass": (86, 127, 61, 255),
-    }
+    # The runtime cell is 32px, but all source pixels below are deliberately
+    # authored at 16px and enlarged by exactly 2x.  Do not reintroduce crop
+    # fitting, antialiasing, or generic 32px morphology here.
+    grass = export_2x(material_tile("grass"))
+    grass_b = export_2x(material_tile("grass", 1))
+    grass_c = export_2x(material_tile("grass", 2))
+    mowed = export_2x(material_tile("mowed_grass"))
+    mowed_b = export_2x(material_tile("mowed_grass", 1))
+    brick = export_2x(material_tile("brick"))
+    dirt = export_2x(material_tile("dirt"))
+    stone = export_2x(material_tile("stone"))
+    concrete = export_2x(material_tile("concrete"))
+    asphalt = export_2x(material_tile("asphalt"))
+    water = export_2x(material_tile("water"))
+    sand = export_2x(material_tile("sand"))
+    gravel = export_2x(material_tile("gravel"))
 
     add_ground("grass", "Grass", "grass", grass, ["base", "natural"])
     add_ground("grass_b", "Grass B", "grass", grass_b, ["base", "natural", "variation"])
-    add_ground("grass_c", "Grass C", "grass", tint_texture(grass_b, (113, 146, 70), 0.08), ["base", "natural", "variation"])
+    add_ground("grass_c", "Grass C", "grass", grass_c, ["base", "natural", "variation"])
     add_ground("mowed_grass", "Mowed Grass", "lawn_mowed", mowed, ["base", "campus", "maintained"])
-    add_ground("mowed_grass_b", "Mowed Grass B", "lawn_mowed", mowed_texture(grass_b, 1), ["base", "campus", "maintained", "variation"])
+    add_ground("mowed_grass_b", "Mowed Grass B", "lawn_mowed", mowed_b, ["base", "campus", "maintained", "variation"])
     add_ground("brick", "Brick", "path_brick", brick, ["base", "paving"])
     add_ground("stone", "Stone", "path_stone", stone, ["base", "paving"])
     add_ground("concrete", "Concrete", "sidewalks", concrete, ["base", "paving", "urban"])
@@ -415,117 +437,96 @@ def build() -> dict:
     add_ground("gravel", "Gravel", "surface_gravel", gravel, ["base", "route", "urban"])
     add_ground("water", "Open Water", "water", water, ["base", "water"], "water")
     add_ground("asphalt", "Asphalt", "roads", asphalt, ["base", "road"])
-    add_ground("asphalt_b", "Asphalt B", "roads", procedural_material("asphalt", (cell, cell), 2), ["base", "road", "variation"])
+    add_ground("asphalt_b", "Asphalt B", "roads", export_2x(material_tile("asphalt", 1)), ["base", "road", "variation"])
 
     for overlay in manifest["groundOverlays"]:
-        source = sources[overlay["source"]].crop(tuple(overlay["crop"]))
-        detail = fit_sprite(source, (cell, cell), "contain")
-        composed = grass.copy()
-        composed.alpha_composite(detail)
-        add_ground(overlay["id"], overlay["name"], overlay["family"], composed, ["detail", "natural"])
+        add_ground(
+            overlay["id"], overlay["name"], overlay["family"],
+            export_2x(ground_detail(overlay["id"])), ["detail", "natural", "authored16"],
+        )
 
     for material in ("dirt", "brick", "stone"):
         family = f"path_{material}"
         for bits, suffix in CONNECTOR_NAMES.items():
-            tile = material_mask_tile(grass, materials[material], connector_mask(bits, cell), borders[material])
-            add_ground(f"{material}_path_{suffix}", f"{material.title()} path {suffix.replace('_', ' ')}", family, tile, ["narrow", "connector", suffix])
+            tile = export_2x(connector_tile(material, bits, bits % 3))
+            add_ground(f"{material}_path_{suffix}", f"{material.title()} path {suffix.replace('_', ' ')}", family, tile, ["narrow", "connector", "authored16", suffix])
 
     plaza_names = [
         "center", "north", "south", "west", "east",
         "north_west", "north_east", "south_west", "south_east",
         "inner_north_west", "inner_north_east", "inner_south_west", "inner_south_east",
     ]
+    def plaza_signature(name: str) -> int:
+        if name == "center":
+            return 255
+        missing_cardinals = {
+            "north": {"n"}, "south": {"s"}, "west": {"w"}, "east": {"e"},
+            "north_west": {"n", "w"}, "north_east": {"n", "e"},
+            "south_west": {"s", "w"}, "south_east": {"s", "e"},
+        }
+        if name.startswith("inner_"):
+            missing_diagonal = name.removeprefix("inner_").replace("north", "n").replace("south", "s").replace("west", "w").replace("east", "e").replace("_", "")
+            return 255 & ~DIAGONAL_BITS[missing_diagonal]
+        missing = missing_cardinals[name]
+        signature = sum(bit for direction, bit in CARDINAL_BITS.items() if direction not in missing)
+        for diagonal, bit in DIAGONAL_BITS.items():
+            required = DIAGONAL_REQUIREMENTS[diagonal]
+            if signature & required == required:
+                signature |= bit
+        return signature
+
+    legacy_transition_families = {
+        "dirt": "surface_dirt", "brick": "surface_brick", "stone": "surface_stone",
+        "water": "shore_water", "asphalt": "road_asphalt_grass",
+    }
     for material in ("dirt", "brick", "stone", "water", "asphalt"):
         family = "water" if material == "water" else "roads" if material == "asphalt" else f"plaza_{material}"
         for suffix in plaza_names:
-            mask = plaza_mask(suffix, cell)
-            tile = material_mask_tile(grass, materials[material], mask, borders[material])
+            tile = export_2x(transition_tile(legacy_transition_families[material], plaza_signature(suffix)))
             add_ground(
                 f"{material}_edge_{suffix}",
                 f"{material.title()} {suffix.replace('_', ' ')}",
                 family,
                 tile,
-                ["wide", "transition", suffix],
+                ["wide", "transition", "authored16", suffix],
                 "water" if material == "water" else "walkable",
             )
 
     blob_families = [
-        ("surface_dirt", grass, dirt, [(5, borders["dirt"])]),
-        ("surface_brick", grass, brick, [(7, (137, 119, 93, 255)), (3, borders["brick"])]),
-        ("surface_stone", grass, stone, [(5, borders["stone"])]),
-        ("surface_sand", grass, sand, [(5, borders["sand"])]),
-        ("surface_gravel", grass, gravel, [(5, borders["gravel"])]),
-        ("shore_water", grass, water, [(9, (197, 176, 118, 255)), (5, (48, 91, 102, 255))]),
-        ("road_asphalt_grass", grass, asphalt, [(9, (187, 181, 160, 255)), (5, (76, 79, 75, 255))]),
-        ("road_asphalt_curb", concrete, asphalt, [(7, (226, 220, 197, 255)), (3, (100, 102, 96, 255))]),
-        ("lawn_mowed", grass, mowed, [(3, (93, 132, 65, 255))]),
+        "surface_dirt", "surface_brick", "surface_stone", "surface_sand",
+        "surface_gravel", "shore_water", "road_asphalt_grass",
+        "road_asphalt_curb", "lawn_mowed",
     ]
-    for family, substrate, material_image, edge_bands in blob_families:
+    for family in blob_families:
         label = family.replace("_", " ").title()
         for signature in blob_signatures():
             suffix = blob_signature_name(signature)
-            tile = layered_mask_tile(substrate, material_image, blob_mask(signature, cell), edge_bands)
+            tile = export_2x(transition_tile(family, signature, signature % 3))
             add_ground(
                 f"{family}_blob_{suffix}",
                 f"{label} {suffix.replace('_', ' ')}",
                 family,
                 tile,
-                ["blob47", "transition", suffix],
+                ["blob47", "transition", "authored16", suffix],
                 "water" if family == "shore_water" else "walkable",
             )
 
-    def road_marking(tile_id: str, name: str, direction: str, crosswalk: bool = False) -> None:
-        image = asphalt.copy()
-        draw = ImageDraw.Draw(image)
-        if crosswalk:
-            if direction == "horizontal":
-                for x in range(3, cell, 7):
-                    draw.rectangle((x, 5, x + 3, cell - 6), fill=(221, 218, 201, 255))
-            else:
-                for y in range(3, cell, 7):
-                    draw.rectangle((5, y, cell - 6, y + 3), fill=(221, 218, 201, 255))
-        elif direction == "horizontal":
-            draw.line((0, cell // 2, cell, cell // 2), fill=(232, 190, 57, 255), width=2)
-        else:
-            draw.line((cell // 2, 0, cell // 2, cell), fill=(232, 190, 57, 255), width=2)
-        add_ground(tile_id, name, "roads", image, ["road", "marking"])
-
-    road_marking("road_centerline_ew", "Road Centerline East-West", "horizontal")
-    road_marking("road_centerline_ns", "Road Centerline North-South", "vertical")
-    road_marking("crosswalk_ew", "Crosswalk East-West", "horizontal", True)
-    road_marking("crosswalk_ns", "Crosswalk North-South", "vertical", True)
-
-    def road_detail(tile_id: str, name: str, painter) -> None:
-        image = asphalt.copy()
-        painter(ImageDraw.Draw(image))
-        add_ground(tile_id, name, "roads", image, ["road", "detail"])
-
-    road_detail("road_edge_n", "Road Edge North", lambda draw: draw.line((0, 4, cell, 4), fill=(226, 220, 197, 255), width=3))
-    road_detail("road_edge_s", "Road Edge South", lambda draw: draw.line((0, cell - 5, cell, cell - 5), fill=(226, 220, 197, 255), width=3))
-    road_detail("road_edge_w", "Road Edge West", lambda draw: draw.line((4, 0, 4, cell), fill=(226, 220, 197, 255), width=3))
-    road_detail("road_edge_e", "Road Edge East", lambda draw: draw.line((cell - 5, 0, cell - 5, cell), fill=(226, 220, 197, 255), width=3))
-
-    def paint_parking_ns(draw: ImageDraw.ImageDraw) -> None:
-        draw.line((5, 0, 5, cell), fill=(215, 213, 196, 255), width=2)
-        draw.line((cell - 6, 0, cell - 6, cell), fill=(215, 213, 196, 255), width=2)
-
-    def paint_parking_ew(draw: ImageDraw.ImageDraw) -> None:
-        draw.line((0, 5, cell, 5), fill=(215, 213, 196, 255), width=2)
-        draw.line((0, cell - 6, cell, cell - 6), fill=(215, 213, 196, 255), width=2)
-
-    def paint_drain(draw: ImageDraw.ImageDraw) -> None:
-        draw.rectangle((7, 11, cell - 8, cell - 12), fill=(40, 43, 44, 255), outline=(116, 119, 115, 255), width=1)
-        for x in range(10, cell - 8, 4):
-            draw.line((x, 13, x, cell - 14), fill=(126, 129, 124, 255), width=1)
-
-    def paint_manhole(draw: ImageDraw.ImageDraw) -> None:
-        draw.ellipse((8, 8, cell - 9, cell - 9), fill=(63, 67, 68, 255), outline=(133, 135, 128, 255), width=2)
-        draw.line((12, cell // 2, cell - 13, cell // 2), fill=(102, 105, 102, 255), width=1)
-
-    road_detail("parking_bay_ns", "Parking Bay North-South", paint_parking_ns)
-    road_detail("parking_bay_ew", "Parking Bay East-West", paint_parking_ew)
-    road_detail("storm_drain", "Storm Drain", paint_drain)
-    road_detail("road_manhole", "Road Manhole", paint_manhole)
+    road_visuals = {
+        "road_centerline_ew": "Road Centerline East-West",
+        "road_centerline_ns": "Road Centerline North-South",
+        "crosswalk_ew": "Crosswalk East-West",
+        "crosswalk_ns": "Crosswalk North-South",
+        "road_edge_n": "Road Edge North",
+        "road_edge_s": "Road Edge South",
+        "road_edge_w": "Road Edge West",
+        "road_edge_e": "Road Edge East",
+        "parking_bay_ns": "Parking Bay North-South",
+        "parking_bay_ew": "Parking Bay East-West",
+        "storm_drain": "Storm Drain",
+        "road_manhole": "Road Manhole",
+    }
+    for tile_id, name in road_visuals.items():
+        add_ground(tile_id, name, "roads", export_2x(authored_road_marking(tile_id)), ["road", "authored16"])
 
     stamps: dict[str, dict] = {}
 
@@ -584,160 +585,59 @@ def build() -> dict:
             "tags": [family, "season_one_world_kit", *(tags or [])],
         }
 
-    sprite_specs = {spec["id"]: spec for spec in manifest["sprites"]}
-
-    def fitted_sprite(spec: dict, size: tuple[int, int] | None = None) -> Image.Image:
-        source = sources[spec["source"]].crop(tuple(spec["crop"]))
-        source = transformed(source, spec.get("transform"))
-        target = size or (spec["width"] * cell, spec["height"] * cell)
-        fitted = fit_sprite(source, target, spec.get("fit", "contain"))
-        scale = spec.get("scale", 1)
-        if scale != 1 and size is None:
-            scaled = fitted.resize(
-                (round(fitted.width * scale), round(fitted.height * scale)),
-                Image.Resampling.LANCZOS,
-            )
-            scaled_canvas = Image.new("RGBA", fitted.size, (0, 0, 0, 0))
-            scaled_canvas.alpha_composite(
-                scaled,
-                ((fitted.width - scaled.width) // 2, fitted.height - scaled.height),
-            )
-            fitted = scaled_canvas
-        return fitted
-
     for spec in manifest["sprites"]:
+        fitted = export_2x(authored_stamp(spec["id"], spec["width"], spec["height"]))
         register_stamp(
-            spec["id"], spec["name"], spec["family"], fitted_sprite(spec),
+            spec["id"], spec["name"], spec["family"], fitted,
             spec["width"], spec["height"], spec["collisionMask"], spec.get("door"),
+            ["authored16", "nearest2x"],
         )
-
-    def long_forest_edge(mirror: bool) -> Image.Image:
-        segment = fitted_sprite(sprite_specs["forest_edge_west"])
-        if mirror:
-            segment = ImageOps.mirror(segment)
-        output = Image.new("RGBA", (2 * cell, 18 * cell), (0, 0, 0, 0))
-        output.alpha_composite(segment, (0, 0))
-        overlap = 48
-        step = segment.height - overlap
-        for index, top in enumerate(range(step, output.height, step), start=1):
-            part = ImageOps.flip(segment) if index % 2 else segment
-            remaining = output.height - top
-            if remaining <= 0:
-                break
-            part = part.crop((0, 0, part.width, min(part.height, remaining)))
-            blend_height = min(overlap, part.height, remaining)
-            if blend_height:
-                old = output.crop((0, top, output.width, top + blend_height))
-                incoming = part.crop((0, 0, part.width, blend_height))
-                blended = Image.new("RGBA", old.size)
-                for row in range(blend_height):
-                    alpha = row / max(1, blend_height - 1)
-                    strip = Image.blend(
-                        old.crop((0, row, old.width, row + 1)),
-                        incoming.crop((0, row, incoming.width, row + 1)),
-                        alpha,
-                    )
-                    blended.alpha_composite(strip, (0, row))
-                output.alpha_composite(blended, (0, top))
-            if part.height > blend_height:
-                output.alpha_composite(part.crop((0, blend_height, part.width, part.height)), (0, top + blend_height))
-        return output
 
     register_stamp(
         "forest_border_west_long", "Long Forest Border West", "forest_masses",
-        long_forest_edge(False), 2, 18, ["##"] * 18, tags=["border", "continuous"],
+        export_2x(authored_stamp("forest_border_west_long", 2, 18)),
+        2, 18, ["##"] * 18, tags=["border", "continuous", "authored16"],
     )
     register_stamp(
         "forest_border_east_long", "Long Forest Border East", "forest_masses",
-        long_forest_edge(True), 2, 18, ["##"] * 18, tags=["border", "continuous"],
+        export_2x(authored_stamp("forest_border_east_long", 2, 18)),
+        2, 18, ["##"] * 18, tags=["border", "continuous", "authored16"],
     )
 
     def service_building(
         stamp_id: str,
         name: str,
-        roof_id: str,
-        wall_id: str,
-        door_id: str,
-        window_id: str,
         emblem: str,
     ) -> None:
         width, height = 5, 4
-        image = Image.new("RGBA", (width * cell, height * cell), (0, 0, 0, 0))
-        image.alpha_composite(fitted_sprite(sprite_specs[roof_id], (width * cell, 2 * cell)), (0, 0))
-        image.alpha_composite(fitted_sprite(sprite_specs[wall_id], (width * cell, 2 * cell)), (0, 2 * cell))
-        window = fitted_sprite(sprite_specs[window_id], (cell, cell))
-        image.alpha_composite(window, (cell // 2, 2 * cell + 9))
-        image.alpha_composite(window, (width * cell - cell - cell // 2, 2 * cell + 9))
-        door = fitted_sprite(sprite_specs[door_id], (cell, 2 * cell))
-        image.alpha_composite(door, (2 * cell, 2 * cell))
-        draw = ImageDraw.Draw(image)
-        plaque = (2 * cell + 6, 2 * cell - 9, 3 * cell - 7, 2 * cell + 8)
-        draw.rounded_rectangle(plaque, radius=3, fill=(244, 231, 198, 255), outline=(77, 55, 45, 255), width=2)
-        cx, cy = (plaque[0] + plaque[2]) // 2, (plaque[1] + plaque[3]) // 2
-        if emblem == "trainer":
-            draw.rectangle((cx - 2, cy - 6, cx + 2, cy + 6), fill=(177, 34, 49, 255))
-            draw.rectangle((cx - 6, cy - 2, cx + 6, cy + 2), fill=(177, 34, 49, 255))
-        elif emblem == "shop":
-            draw.polygon(((cx - 6, cy - 5), (cx - 2, cy - 7), (cx, cy - 3), (cx + 2, cy - 7), (cx + 6, cy - 5), (cx + 4, cy + 6), (cx - 4, cy + 6)), fill=(171, 30, 45, 255), outline=(105, 75, 33, 255))
-        else:
-            draw.rectangle((cx - 5, cy - 5, cx + 5, cy + 5), fill=(85, 126, 143, 255), outline=(70, 51, 43, 255), width=1)
-            draw.line((cx, cy - 5, cx, cy + 5), fill=(235, 224, 190, 255), width=1)
-            draw.line((cx - 5, cy, cx + 5, cy), fill=(235, 224, 190, 255), width=1)
+        image = export_2x(authored_service_building(emblem))
         register_stamp(
             stamp_id, name, "service_buildings", image, width, height,
             ["#####", "#####", "#####", "##.##"], {"x": 2, "y": 3},
-            ["familiar_service", emblem],
+            ["familiar_service", emblem, "authored16"],
         )
 
     service_building(
-        "trainer_room_exterior", "Trainer's Room", "roof_red_wide", "wall_limestone_wide",
-        "door_red", "window_limestone_single", "trainer",
+        "trainer_room_exterior", "Trainer's Room", "trainer",
     )
     service_building(
-        "buckys_locker_room_exterior", "Bucky's Locker Room", "roof_slate_wide", "wall_brick_wide",
-        "door_wood", "window_brick_single", "shop",
+        "buckys_locker_room_exterior", "Bucky's Locker Room", "shop",
     )
     service_building(
-        "campus_house_exterior", "Campus House", "roof_red_wide", "wall_brick_wide",
-        "door_wood", "window_brick_single", "house",
+        "campus_house_exterior", "Campus House", "house",
     )
 
-    def cliff_image(width: int, height: int, variant: str = "center") -> Image.Image:
-        image = Image.new("RGBA", (width * cell, height * cell), (0, 0, 0, 0))
-        draw = ImageDraw.Draw(image)
-        for x in range(width):
-            phase = x % 3
-            left, right = x * cell, (x + 1) * cell - 1
-            draw.rectangle((left, 0, right, 11), fill=(119, 158, 75, 255))
-            draw.rectangle((left, 9, right, 14), fill=(70, 103, 54, 255))
-            draw.rectangle((left, 14, right, cell * height - 1), fill=(133, 105, 78, 255))
-            for yy in range(19 + phase * 3, cell * height - 4, 12):
-                draw.line((left + 3, yy, right - 3, yy - 3), fill=(91, 72, 62, 255), width=2)
-                draw.line((left + 5, yy - 3, right - 6, yy - 6), fill=(174, 143, 98, 255), width=1)
-            draw.line((right, 15, right, cell * height - 1), fill=(91, 72, 62, 255), width=1)
-        if variant == "left":
-            draw.line((2, 10, 2, cell * height - 2), fill=(70, 62, 57, 255), width=4)
-        elif variant == "right":
-            draw.line((width * cell - 3, 10, width * cell - 3, cell * height - 2), fill=(70, 62, 57, 255), width=4)
-        return image
+    register_stamp("cliff_run", "Cliff Run", "elevation", export_2x(cliff(5, 2)), 5, 2, ["#####", "#####"], tags=["cliff", "elevation_1", "authored16"], semantic_behavior="ledge")
+    register_stamp("cliff_corner_left", "Cliff Corner Left", "elevation", export_2x(cliff(3, 2, "left")), 3, 2, ["###", "###"], tags=["cliff", "corner", "authored16"], semantic_behavior="ledge")
+    register_stamp("cliff_corner_right", "Cliff Corner Right", "elevation", export_2x(cliff(3, 2, "right")), 3, 2, ["###", "###"], tags=["cliff", "corner", "authored16"], semantic_behavior="ledge")
+    register_stamp("cliff_end_left", "Cliff End Left", "elevation", export_2x(cliff(2, 2, "left")), 2, 2, ["##", "##"], tags=["cliff", "end", "authored16"], semantic_behavior="ledge")
+    register_stamp("cliff_end_right", "Cliff End Right", "elevation", export_2x(cliff(2, 2, "right")), 2, 2, ["##", "##"], tags=["cliff", "end", "authored16"], semantic_behavior="ledge")
 
-    register_stamp("cliff_run", "Cliff Run", "elevation", cliff_image(5, 2), 5, 2, ["#####", "#####"], tags=["cliff", "elevation_1"], semantic_behavior="ledge")
-    register_stamp("cliff_corner_left", "Cliff Corner Left", "elevation", cliff_image(3, 2, "left"), 3, 2, ["###", "###"], tags=["cliff", "corner"], semantic_behavior="ledge")
-    register_stamp("cliff_corner_right", "Cliff Corner Right", "elevation", cliff_image(3, 2, "right"), 3, 2, ["###", "###"], tags=["cliff", "corner"], semantic_behavior="ledge")
-    register_stamp("cliff_end_left", "Cliff End Left", "elevation", cliff_image(2, 2, "left"), 2, 2, ["##", "##"], tags=["cliff", "end"], semantic_behavior="ledge")
-    register_stamp("cliff_end_right", "Cliff End Right", "elevation", cliff_image(2, 2, "right"), 2, 2, ["##", "##"], tags=["cliff", "end"], semantic_behavior="ledge")
+    register_stamp("cliff_stairs", "Cliff Stairs", "elevation", export_2x(cliff_stairs()), 2, 2, ["..", ".."], tags=["stairs", "elevation_access", "authored16"], semantic_behavior="stairs")
 
-    stairs = Image.new("RGBA", (2 * cell, 2 * cell), (0, 0, 0, 0))
-    stairs_draw = ImageDraw.Draw(stairs)
-    stairs_draw.rectangle((8, 0, 2 * cell - 9, 2 * cell - 1), fill=(183, 174, 151, 255), outline=(91, 84, 75, 255), width=2)
-    for y in range(7, 2 * cell, 8):
-        stairs_draw.line((10, y, 2 * cell - 11, y), fill=(111, 105, 94, 255), width=2)
-        stairs_draw.line((11, y - 2, 2 * cell - 12, y - 2), fill=(222, 214, 189, 255), width=1)
-    register_stamp("cliff_stairs", "Cliff Stairs", "elevation", stairs, 2, 2, ["..", ".."], tags=["stairs", "elevation_access"], semantic_behavior="stairs")
-
-    ledge = cliff_image(4, 1)
-    register_stamp("stone_ledge", "Stone Ledge", "elevation", ledge, 4, 1, ["####"], tags=["ledge"], semantic_behavior="ledge")
-    register_stamp("retaining_corner", "Retaining Wall Corner", "elevation", ImageOps.mirror(ledge), 4, 1, ["####"], tags=["retaining_wall"], semantic_behavior="ledge")
+    ledge = export_2x(cliff(4, 1))
+    register_stamp("stone_ledge", "Stone Ledge", "elevation", ledge, 4, 1, ["####"], tags=["ledge", "authored16"], semantic_behavior="ledge")
+    register_stamp("retaining_corner", "Retaining Wall Corner", "elevation", ImageOps.mirror(ledge), 4, 1, ["####"], tags=["retaining_wall", "authored16"], semantic_behavior="ledge")
 
     ground_stamps: dict[str, dict] = {}
 
@@ -865,6 +765,9 @@ def build() -> dict:
         "structureFamilyCounts": stamp_family_counts,
         "groundAssemblyCount": len(ground_stamps),
         "blobSignatureCount": len(blob_signatures()),
+        "preparedImagegenAssetCount": len(prepared_sources["assets"]),
+        "exactNearestNeighborVisualCount": len(visuals),
+        "logicalCellSize": LOGICAL_CELL,
         "contractSatisfied": True,
     }
 
@@ -873,6 +776,51 @@ def build() -> dict:
     for index, visual in enumerate(visuals):
         atlas.alpha_composite(visual, ((index % columns) * cell, (index // columns) * cell))
     save_png(atlas, ATLAS_PATH)
+
+    # A direct composition board is the visual acceptance surface. It catches
+    # seams, scale drift, weak silhouettes, and incompatible palettes that a
+    # catalog/contact sheet can hide.
+    seam_width, seam_height = 24, 16
+    seam_test = Image.new("RGBA", (seam_width * cell, seam_height * cell), (0, 0, 0, 0))
+    grass_variants = [ground_tiles["grass"], ground_tiles["grass_b"], ground_tiles["grass_c"]]
+    for y in range(seam_height):
+        for x in range(seam_width):
+            selector = (x * 7 + y * 11) % 19
+            variant = 1 if selector == 5 else 2 if selector == 13 else 0
+            seam_test.alpha_composite(visuals[grass_variants[variant]], (x * cell, y * cell))
+
+    def place_ground_assembly(stamp_id: str, x: int, y: int) -> None:
+        stamp = ground_stamps[stamp_id]
+        for row_index, row in enumerate(stamp["cells"]):
+            for column_index, tile_id in enumerate(row):
+                if tile_id is not None:
+                    seam_test.alpha_composite(
+                        visuals[ground_tiles[tile_id]],
+                        ((x + column_index) * cell, (y + row_index) * cell),
+                    )
+
+    def place_structure(stamp_id: str, x: int, y: int) -> None:
+        stamp = stamps[stamp_id]
+        for row_index, row in enumerate(stamp["cells"]):
+            for column_index, tile_id in enumerate(row):
+                seam_test.alpha_composite(
+                    visuals[metatiles[tile_id]["visual"]],
+                    ((x + column_index) * cell, (y + row_index) * cell),
+                )
+
+    place_structure("forest_edge_north", 0, 0)
+    place_ground_assembly("pond_small", 1, 4)
+    place_ground_assembly("dirt_trail_turn_ne", 6, 3)
+    place_ground_assembly("brick_walk_cross", 10, 3)
+    place_structure("trainer_room_exterior", 18, 0)
+    place_structure("buckys_locker_room_exterior", 18, 6)
+    place_structure("tree_oak_a", 1, 10)
+    place_structure("tree_pine", 3, 10)
+    place_structure("hedge_horizontal", 6, 13)
+    place_structure("fence_long", 10, 12)
+    place_structure("campus_lamp", 15, 12)
+    place_structure("wood_bench", 17, 13)
+    save_png(seam_test, SEAM_PREVIEW_PATH)
 
     # Contact sheet: ground vocabulary first, then readable stamp thumbnails.
     font = ImageFont.load_default()
@@ -919,10 +867,17 @@ def build() -> dict:
     save_png(preview, PREVIEW_PATH)
 
     result = {
-        "schema": "badger-grapple-world-tileset/v2",
-        "version": 2,
-        "status": "season-one-complete-vocabulary",
+        "schema": "badger-grapple-world-tileset/v3",
+        "version": 3,
+        "status": "season-one-authored-pixel-kit",
         "cellSize": cell,
+        "artPipeline": {
+            "logicalCellSize": LOGICAL_CELL,
+            "renderScale": RENDER_SCALE,
+            "resampling": "nearest",
+            "sourceMode": "authored-logical-pixel-tiles",
+            "pixelPerfect": True,
+        },
         "atlas": {
             "path": public_path(ATLAS_PATH), "columns": columns,
             "visualCount": len(visuals), "sha256": sha256(ATLAS_PATH), "entries": visual_metadata,
@@ -943,9 +898,20 @@ def build() -> dict:
             "version": contract["version"],
             "sha256": sha256(CONTRACT_PATH),
         },
-        "sources": {"manifest": sha256(MANIFEST_PATH), "contract": sha256(CONTRACT_PATH), **{
-            key: sha256(ROOT / path) for key, path in manifest["sources"].items()
-        }},
+        "validation": {
+            "seamTest": str(SEAM_PREVIEW_PATH.relative_to(ROOT).as_posix()),
+            "seamTestSha256": sha256(SEAM_PREVIEW_PATH),
+        },
+        "sources": {
+            "manifest": sha256(MANIFEST_PATH),
+            "contract": sha256(CONTRACT_PATH),
+            "pixelArtModule": sha256(ROOT / manifest["artModule"]),
+            "preparedImagegenManifest": sha256(IMAGEGEN_SOURCE_MANIFEST_PATH),
+            "preparedImagegenAssetCount": len(prepared_sources["assets"]),
+            "referenceBoards": {
+                key: sha256(ROOT / path) for key, path in manifest["referenceSources"].items()
+            },
+        },
     }
     text = json.dumps(result, indent=2) + "\n"
     if not BUILD_PATH.exists() or BUILD_PATH.read_text(encoding="utf-8") != text:

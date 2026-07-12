@@ -58,16 +58,30 @@ const campMetatileOverridesPath=fileURLToPath(new URL('../art/metatiles/camp_ran
 const worldTilesetBuildPath=fileURLToPath(new URL('../src/data/seasonOneWorldTilesetBuild.json',import.meta.url));
 const worldTilesetManifestPath=fileURLToPath(new URL('../art/tilesets/season_one_world_tileset_manifest.json',import.meta.url));
 const worldTilesetContractPath=fileURLToPath(new URL('../art/tilesets/season_one_tileset_contract.json',import.meta.url));
+const preparedImagegenManifestPath=fileURLToPath(new URL('../art/tilesets/imagegen_v3/source_manifest.json',import.meta.url));
 if(!existsSync(worldTilesetBuildPath))errs.push('Season One world tileset is missing; run npm run build:world-tileset');
 else{
   const world=JSON.parse(readFileSync(worldTilesetBuildPath,'utf8'));
   const manifest=JSON.parse(readFileSync(worldTilesetManifestPath,'utf8'));
-  if(world.schema!=='badger-grapple-world-tileset/v2'||world.version!==2||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  const contract=JSON.parse(readFileSync(worldTilesetContractPath,'utf8'));
+  if(world.schema!=='badger-grapple-world-tileset/v3'||world.version!==3||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  if(manifest.schema!=='badger-grapple-world-tileset-manifest/v2'||manifest.version!==2||manifest.logicalCellSize!==16||manifest.renderScale!==2)errs.push('Season One world tileset manifest must use the authored 16px/2x pipeline');
+  if(contract.version!==2||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
+  if(world.artPipeline?.logicalCellSize!==16||world.artPipeline?.renderScale!==2||world.artPipeline?.resampling!=='nearest'||world.artPipeline?.pixelPerfect!==true)errs.push('Season One world tileset is not an exact nearest-neighbor logical-grid export');
   if(world.sources?.manifest!==fileHash(worldTilesetManifestPath))errs.push('Season One world tileset manifest is stale');
   if(!existsSync(worldTilesetContractPath)||world.sources?.contract!==fileHash(worldTilesetContractPath)||world.contract?.sha256!==fileHash(worldTilesetContractPath))errs.push('Season One world tileset contract is missing or stale');
-  for(const [sourceId,relative] of Object.entries(manifest.sources||{})){
+  if(!existsSync(preparedImagegenManifestPath)||world.sources?.preparedImagegenManifest!==fileHash(preparedImagegenManifestPath))errs.push('Prepared Imagegen source manifest is missing or stale');
+  else{
+    const prepared=JSON.parse(readFileSync(preparedImagegenManifestPath,'utf8'));
+    if(prepared.schema!=='badger-grapple-imagegen-tileset-sources/v1'||Object.keys(prepared.assets||{}).length<57||world.sources?.preparedImagegenAssetCount!==Object.keys(prepared.assets||{}).length)errs.push('Prepared Imagegen source coverage is incomplete');
+    for(const asset of Object.values(prepared.assets||{})){
+      const source=fileURLToPath(new URL(`../${asset.path}`,import.meta.url));
+      if(!existsSync(source)||fileHash(source)!==asset.sha256)errs.push(`Prepared Imagegen asset ${asset.path} is missing or stale`);
+    }
+  }
+  for(const [sourceId,relative] of Object.entries(manifest.referenceSources||{})){
     const source=fileURLToPath(new URL(`../${relative}`,import.meta.url));
-    if(!existsSync(source)||world.sources?.[sourceId]!==fileHash(source))errs.push(`Season One world tileset source ${sourceId} is stale`);
+    if(!existsSync(source)||world.sources?.referenceBoards?.[sourceId]!==fileHash(source))errs.push(`Season One Imagegen source board ${sourceId} is stale`);
   }
   const atlasPath=fileURLToPath(new URL(`../public/${world.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==world.atlas.sha256)errs.push('Season One world tileset atlas is missing or stale');
@@ -81,7 +95,7 @@ else{
     if(world.terrain.behaviors?.[tile.id]!==tile.behavior)errs.push(`Season One ground tile ${tile.id} behavior index is stale`);
   }
   for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
-  if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47)errs.push('Season One world tileset does not satisfy the complete vocabulary contract');
+  if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<57||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
   for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
     if((world.coverage?.groundFamilyCounts?.[family]||0)<47)errs.push(`Season One world transition family ${family} is incomplete`);
   }
@@ -91,7 +105,7 @@ else{
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==4)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==5)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));

@@ -1,12 +1,18 @@
 {
-  "schema": "badger-grapple-world-tileset-manifest/v1",
-  "version": 1,
+  "schema": "badger-grapple-world-tileset-manifest/v2",
+  "version": 2,
   "cellSize": 32,
+  "logicalCellSize": 16,
+  "renderScale": 2,
+  "artPipeline": "authored-logical-pixel-tiles",
+  "artModule": "tools/season_one_pixel_art.py",
   "atlasColumns": 16,
-  "sources": {
-    "terrain": "art/imagegen/camp_randall_terrain_kit_v2_alpha_2026-07-11.png",
-    "vegetation": "art/imagegen/world_tileset_vegetation_props_v1_alpha_2026-07-12.png",
-    "architecture": "art/imagegen/world_tileset_architecture_v1_alpha_2026-07-12.png"
+  "referenceSources": {
+    "ground": "art/imagegen/tileset_v3/season_one_ground_source_v1.png",
+    "vegetation": "art/imagegen/tileset_v3/season_one_vegetation_source_v1.png",
+    "architecture": "art/imagegen/tileset_v3/season_one_architecture_source_v1.png",
+    "props": "art/imagegen/tileset_v3/season_one_props_source_v1.png",
+    "transitions": "art/imagegen/tileset_v3/season_one_transitions_source_v1.png"
   },
   "terrainCrops": {
     "grass_a": [33, 65, 191, 221],
@@ -36,10 +42,10 @@
     {"id": "forest_edge_west_b", "name": "Forest West Edge B", "family": "forest_masses", "source": "terrain", "crop": [470, 1079, 559, 1249], "transform": "flip", "width": 2, "height": 6, "fit": "stretch", "collisionMask": ["##", "##", "##", "##", "##", "##"]},
     {"id": "forest_edge_east", "name": "Forest East Edge", "family": "forest_masses", "source": "terrain", "crop": [470, 1079, 559, 1249], "transform": "mirror", "width": 2, "height": 6, "fit": "stretch", "collisionMask": ["##", "##", "##", "##", "##", "##"]},
     {"id": "forest_edge_east_b", "name": "Forest East Edge B", "family": "forest_masses", "source": "terrain", "crop": [470, 1079, 559, 1249], "transform": "mirror_flip", "width": 2, "height": 6, "fit": "stretch", "collisionMask": ["##", "##", "##", "##", "##", "##"]},
-    {"id": "forest_corner_inner_nw", "name": "Forest Inner Corner NW", "family": "forest_masses", "source": "terrain", "crop": [602, 1080, 756, 1249], "width": 5, "height": 5, "fit": "stretch", "collisionMask": ["#####", "#####", "#####", "#####", "#####"]},
-    {"id": "forest_corner_inner_ne", "name": "Forest Inner Corner NE", "family": "forest_masses", "source": "terrain", "crop": [602, 1080, 756, 1249], "transform": "mirror", "width": 5, "height": 5, "fit": "stretch", "collisionMask": ["#####", "#####", "#####", "#####", "#####"]},
-    {"id": "forest_corner_outer_sw", "name": "Forest Outer Corner SW", "family": "forest_masses", "source": "terrain", "crop": [800, 1080, 984, 1249], "width": 6, "height": 5, "fit": "stretch", "collisionMask": ["######", "######", "######", "######", "######"]},
-    {"id": "forest_corner_outer_se", "name": "Forest Outer Corner SE", "family": "forest_masses", "source": "terrain", "crop": [800, 1080, 984, 1249], "transform": "mirror", "width": 6, "height": 5, "fit": "stretch", "collisionMask": ["######", "######", "######", "######", "######"]},
+    {"id": "forest_corner_inner_nw", "name": "Forest Inner Corner NW", "family": "forest_masses", "source": "terrain", "crop": [602, 1080, 756, 1249], "width": 5, "height": 5, "fit": "authored16", "collisionMask": ["..###", "..###", "#####", "#####", "#####"]},
+    {"id": "forest_corner_inner_ne", "name": "Forest Inner Corner NE", "family": "forest_masses", "source": "terrain", "crop": [602, 1080, 756, 1249], "transform": "mirror", "width": 5, "height": 5, "fit": "authored16", "collisionMask": ["###..", "###..", "#####", "#####", "#####"]},
+    {"id": "forest_corner_outer_sw", "name": "Forest Outer Corner SW", "family": "forest_masses", "source": "terrain", "crop": [800, 1080, 984, 1249], "width": 6, "height": 5, "fit": "authored16", "collisionMask": ["###...", "###...", "######", "######", "######"]},
+    {"id": "forest_corner_outer_se", "name": "Forest Outer Corner SE", "family": "forest_masses", "source": "terrain", "crop": [800, 1080, 984, 1249], "transform": "mirror", "width": 6, "height": 5, "fit": "authored16", "collisionMask": ["...###", "...###", "######", "######", "######"]},
     {"id": "forest_grove_small", "name": "Dense Grove", "family": "forest_masses", "source": "terrain", "crop": [235, 1188, 446, 1321], "width": 5, "height": 4, "fit": "stretch", "collisionMask": ["#####", "#####", "#####", "#####"]},
     {"id": "tree_stump", "name": "Tree Stump", "family": "natural_props", "source": "vegetation", "crop": [976, 200, 1116, 320], "width": 1, "height": 1, "fit": "contain", "collisionMask": ["#"]},
     {"id": "boulder", "name": "Boulder", "family": "natural_props", "source": "vegetation", "crop": [1164, 204, 1276, 317], "width": 1, "height": 1, "fit": "contain", "collisionMask": ["#"]},

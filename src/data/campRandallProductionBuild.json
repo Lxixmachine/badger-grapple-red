@@ -26,34 +26,34 @@
         "depth": 575,
         "audit": {
           "blockedCellCount": 36,
-          "minimumCoverage": 0.9678,
+          "minimumCoverage": 0.8867,
           "coverage": {
-            "0,0": 0.9688,
-            "1,0": 0.9678,
+            "0,0": 0.8867,
+            "1,0": 0.8867,
             "0,1": 1.0,
             "1,1": 1.0,
-            "0,2": 1.0,
-            "1,2": 1.0,
+            "0,2": 0.9531,
+            "1,2": 0.9492,
             "0,3": 1.0,
-            "1,3": 1.0,
+            "1,3": 0.9961,
             "0,4": 1.0,
             "1,4": 1.0,
             "0,5": 1.0,
             "1,5": 1.0,
             "0,6": 1.0,
-            "1,6": 1.0,
+            "1,6": 0.9961,
             "0,7": 1.0,
             "1,7": 1.0,
             "0,8": 1.0,
             "1,8": 1.0,
             "0,9": 1.0,
-            "1,9": 1.0,
+            "1,9": 0.9961,
             "0,10": 1.0,
             "1,10": 1.0,
             "0,11": 1.0,
             "1,11": 1.0,
             "0,12": 1.0,
-            "1,12": 1.0,
+            "1,12": 0.9961,
             "0,13": 1.0,
             "1,13": 1.0,
             "0,14": 1.0,
@@ -62,8 +62,8 @@
             "1,15": 1.0,
             "0,16": 1.0,
             "1,16": 1.0,
-            "0,17": 1.0,
-            "1,17": 1.0
+            "0,17": 0.9062,
+            "1,17": 0.9219
           }
         },
         "ownerGroup": "blockers"
@@ -79,9 +79,9 @@
         "depth": 639,
         "audit": {
           "blockedCellCount": 1,
-          "minimumCoverage": 0.7061,
+          "minimumCoverage": 0.7383,
           "coverage": {
-            "0,0": 0.7061
+            "0,0": 0.7383
           }
         },
         "ownerGroup": "blockers"
@@ -97,33 +97,33 @@
         "depth": 575,
         "audit": {
           "blockedCellCount": 36,
-          "minimumCoverage": 0.9678,
+          "minimumCoverage": 0.8867,
           "coverage": {
-            "0,0": 0.9678,
-            "1,0": 0.9688,
+            "0,0": 0.8867,
+            "1,0": 0.8867,
             "0,1": 1.0,
             "1,1": 1.0,
-            "0,2": 1.0,
-            "1,2": 1.0,
-            "0,3": 1.0,
+            "0,2": 0.9492,
+            "1,2": 0.9531,
+            "0,3": 0.9961,
             "1,3": 1.0,
             "0,4": 1.0,
             "1,4": 1.0,
             "0,5": 1.0,
             "1,5": 1.0,
-            "0,6": 1.0,
+            "0,6": 0.9961,
             "1,6": 1.0,
             "0,7": 1.0,
             "1,7": 1.0,
             "0,8": 1.0,
             "1,8": 1.0,
-            "0,9": 1.0,
+            "0,9": 0.9961,
             "1,9": 1.0,
             "0,10": 1.0,
             "1,10": 1.0,
             "0,11": 1.0,
             "1,11": 1.0,
-            "0,12": 1.0,
+            "0,12": 0.9961,
             "1,12": 1.0,
             "0,13": 1.0,
             "1,13": 1.0,
@@ -133,8 +133,8 @@
             "1,15": 1.0,
             "0,16": 1.0,
             "1,16": 1.0,
-            "0,17": 1.0,
-            "1,17": 1.0
+            "0,17": 0.9219,
+            "1,17": 0.9062
           }
         },
         "ownerGroup": "blockers"
@@ -150,9 +150,9 @@
         "depth": 639,
         "audit": {
           "blockedCellCount": 1,
-          "minimumCoverage": 0.7539,
+          "minimumCoverage": 0.6875,
           "coverage": {
-            "0,0": 0.7539
+            "0,0": 0.6875
           }
         },
         "ownerGroup": "blockers"
@@ -836,7 +836,7 @@
   "sources": {
     "manifest": "3c9e675f412dcacd96fb65957c08d4f5e14d9c08d256d09e5e6081817f4c65d4",
     "layout": "cf7a52dfe1245045f887fa4247cc5622e624a274f5086762ea856eb445d731e8",
-    "worldTileset": "204808f9e59013d3b1c3057333b3ca17a72126ab624f5286833febbd694d63a3",
+    "worldTileset": "c0c0f146ade96ea249f04a7d89fd7ea39b36f89f2564021b94dcec0f9d70ae56",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
@@ -853,12 +853,12 @@
     "actor_rex.png": "3dc3b1f9d520ee1626ebdb48da25211e4f5baba3ee6e8cf7dd76b72e0b925d13",
     "camp-randall__camp_randall_stadium.png": "ee9c429db38e2cec10a4cd09586ccad396752755172282c80743cc0c7510378e",
     "camp-randall__coach_office.png": "52788f1713f3a5bbc445597804066b061bdd6e54f1b21ad42b0095d22c3f423f",
-    "camp-randall__east_forest_border.png": "cc29bbb47dc0ea2ea7cc1a823b1a6f879b38380b70d9a53464a5561063ceb261",
-    "camp-randall__east_south_shrub.png": "13b0a87a7ff41dba562be0e735c567674613a722bde805382ab36e4298b14e3c",
+    "camp-randall__east_forest_border.png": "e0f067cf7d3caa5fb4e9240258d6a178b1eb365b3014aa5463f7e083c9a69bfe",
+    "camp-randall__east_south_shrub.png": "d897f39b00d71a94de40a53b2e645fce0e506abb9b7af85423b481d3636d97bb",
     "camp-randall__memory_garden.png": "a2f1f555986a8677928f606fa1e59cd3bf01a8796e02860317a0904872963c38",
     "camp-randall__team_building.png": "4732964a1601ac26fda4e9ec285e4d4f788d90f13d32e783eca8ccafa11761a2",
-    "camp-randall__west_forest_border.png": "84f5bc76ecea40096b7315bf4afe6ea258f3b1799eca7d9a3e91a09b2c6e4715",
-    "camp-randall__west_south_shrub.png": "fbbcb9a0490c5e2dcecd0e3388df1fd1f3d792b88338e3a38c70762e7e7b1ca6",
+    "camp-randall__west_forest_border.png": "c4490c93c46e0801f898af5e446cfe572fc42dfe50d3b494dc30392881d11ea7",
+    "camp-randall__west_south_shrub.png": "34d00c02bd4894499b5b2a8f2f63abd9de0d0aa9d7e6832343307800a78b081d",
     "camp_randall_base.png": "1aab2ffa6aff572d46c0fc9a73ddd41b5da9d61399e2e830414329354dfa8dbc",
     "camp_randall_ground.png": "cd1cb7ba69ce043db7169e763bf3719e950f77d59fdee781b582ac4b08d41eb8",
     "coach-office__coach_desk.png": "b1b8defeb67c4cb051662ce50477d7b2e16379617032904d1aa2d4a5dfeb3e6a",

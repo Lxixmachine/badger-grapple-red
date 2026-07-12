@@ -6,7 +6,8 @@ using only original Badger Grapple Red artwork and wrestling-specific symbols.
 
 ## Fixed Contract
 
-- Gameplay cell: 32x32 pixels.
+- Authored art cell: 16x16 logical pixels.
+- Gameplay cell: exact 2x nearest-neighbor export at 32x32 pixels.
 - Camera: 15x10 cells at 480x320 native resolution.
 - Ground: one explicit, fully opaque tile ID per cell.
 - Structures: grid-native matrices of transparent 32px metatiles.
@@ -14,10 +15,28 @@ using only original Badger Grapple Red artwork and wrestling-specific symbols.
   saved map is always authoritative.
 - Collision: owned by the same cell that owns the visible obstacle.
 - Doors: one visible 1x1 threshold cell aligned with the movement grid.
-- Original flat artwork may be used only after it is sliced into this contract.
+- Imagegen source boards must pass through the deterministic preparation step;
+  raw boards and scene crops cannot be used by runtime maps.
+- Scene-crop stretching and antialiased resampling are forbidden.
 
 The machine-readable coverage gate is
 `art/tilesets/season_one_tileset_contract.json`.
+
+## Imagegen Pipeline
+
+Image generation supplies original surface texture, object silhouettes,
+lighting, and detail. It does not decide gameplay geometry.
+
+1. Generate category-specific source boards on a flat `#ff00ff` panel grid.
+2. Preserve the source board and prompt under `art/imagegen/tileset_v3/`.
+3. Run `tools/prepare_imagegen_tileset_sources.py` to extract panels, remove
+   chroma, reduce palettes, and normalize declared logical footprints.
+4. Store prepared logical assets under `art/tilesets/imagegen_v3/`.
+5. Compose transition families and stamps from those prepared pixels.
+6. Export every logical pixel as one exact 2x2 runtime block.
+
+The generated source manifest records every board and prepared asset hash. A
+world build is invalid when the Imagegen source chain is missing or stale.
 
 ## Vocabulary
 
@@ -65,6 +84,9 @@ has a behavior variant and every assembly has an exact collision matrix.
 ## Quality Gates
 
 - Every transition family contains all 47 valid signatures.
+- Every runtime atlas visual is an exact nearest-neighbor 2x export.
+- At least 57 prepared Imagegen assets cover ground, transitions, elevation,
+  vegetation, architecture, and campus props.
 - Every solid stamp cell contains visible art.
 - No path is hidden underneath a solid structure footprint.
 - No decorative opening implies an unavailable route.

@@ -2462,3 +2462,25 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
 - Continue building maps with the explicit vocabulary and reusable assemblies;
   do not regress to whole-scene collision art, generic rectangular paths, or
   isolated tree wallpaper.
+
+## Codex Imagegen Logical Tileset (v21.71)
+
+- Tony correctly rejected v21.70 as structurally comprehensive but visually
+  inferior to the supplied FireRed tile references. The v21.70 generic 32px
+  masks and stretched source crops are no longer the production art pipeline.
+- Five original ChatGPT image-generation boards now own ground materials,
+  transitions/elevation, vegetation/forest modules, architecture, and campus
+  props. Their source PNGs and prompts live under `art/imagegen/tileset_v3/`.
+- `tools/prepare_imagegen_tileset_sources.py` removes the flat chroma key,
+  extracts 57 declared panels, palette-reduces them, and normalizes exact 16px
+  logical footprints under `art/tilesets/imagegen_v3/`.
+- `tools/season_one_pixel_art.py` composes the prepared Imagegen pixels into
+  material-specific transitions and grid-native stamps. Runtime output remains
+  32px, but every shared world-atlas visual must be an exact nearest-neighbor
+  2x export. Raw Imagegen boards never enter a map.
+- Camp Randall's lawn and forest boundaries now render from this same atlas;
+  the old flat lawn fallback was removed from the metatile proof. The visual
+  acceptance board is `art/imagegen/validation/season_one_tileset_seam_test.png`.
+- Current authority is world tileset v3, tileset contract v2, 57 prepared
+  Imagegen sources, Camp metatile v5, and app v21.71. Preserve the Imagegen
+  source-to-logical-to-runtime chain when adding any new tile family.
