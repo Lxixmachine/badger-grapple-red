@@ -116,6 +116,10 @@ def validate_visual_ownership(label: str, image: Image.Image, owner: dict) -> di
 
 
 def tiled_texture(sample: Image.Image, size: tuple[int, int], block: int = 160) -> Image.Image:
+    # Generated kit swatches include a presentation outline. It is atlas chrome,
+    # not terrain, and must be removed before a swatch can repeat seamlessly.
+    inset = 3
+    sample = sample.crop((inset, inset, sample.width - inset, sample.height - inset))
     sample = ImageOps.fit(sample.convert("RGB"), (block, block), method=Image.Resampling.LANCZOS)
     output = Image.new("RGB", size)
     variants = [sample, ImageOps.mirror(sample), ImageOps.flip(sample), ImageOps.mirror(ImageOps.flip(sample))]
