@@ -34,7 +34,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 7});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 8});
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'r1', 'field_house', 'lakeshore_path', 'picnic_point', 'state_street',
     'bascom_hill', 'capitol_square', 'monona_shore', 'kohl_center', 'airport', 'st_louis',
@@ -87,6 +87,21 @@ test('every planned location is grid-native, editable, and linked to its playtes
   });
   expect(project.maps.field_house.objects.find(object => object.id === 'buckys_field').collisionMask)
     .toEqual(['.###.', '#####', '#####', '##.##']);
+  const dedicatedLandmarks = {
+    'field_house:field_house_arena': 'field_house_arena_exterior',
+    'kohl_center:kohl_arena': 'kohl_arena_exterior',
+    'st_louis:nationals_arena': 'nationals_arena_exterior',
+    'bascom_hill:bascom_hall': 'bascom_hall_exterior',
+    'capitol_square:wisconsin_capitol': 'wisconsin_capitol_exterior',
+    'monona_shore:brittingham_boats': 'brittingham_boats_exterior'
+  };
+  for (const [assetId, sourceName] of Object.entries(dedicatedLandmarks)) {
+    const asset = project.assets.objects.find(entry => entry.id === assetId);
+    expect(asset.path).toContain(`season_one_${sourceName}.png`);
+    expect(asset.metatiles).toHaveLength(asset.height);
+    expect(asset.defaultCollisionMask.some(row => row.includes('#'))).toBe(true);
+    expect(asset.defaultCollisionMask.some(row => row.includes('.'))).toBe(true);
+  }
   expect(project.maps.trainer_room).toMatchObject({type: 'interior', width: 15, height: 10, renderModel: 'metatile'});
   expect(project.maps.trainer_room.objects.some(object => object.id === 'recovery_counter')).toBe(true);
   await expect(page.locator('#mapSelect option')).toHaveCount(24);
@@ -261,15 +276,23 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
     draft.maps.camp_randall.originalTerrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[14][10] = 'dirt';
+    const fieldHouse = draft.maps.field_house.objects.find(object => object.id === 'field_house_arena');
+    fieldHouse.x = 13;
+    fieldHouse.metatiles = [];
+    fieldHouse.collisionMask = Array.from({length: fieldHouse.height}, () => '#'.repeat(fieldHouse.width));
     localStorage.setItem('badger-grapple-map-studio-v4-imagegen-tileset', JSON.stringify(draft));
   });
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 7});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 8});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
+  const migratedArena = state.project.maps.field_house.objects.find(object => object.id === 'field_house_arena');
+  expect(migratedArena.x).toBe(13);
+  expect(migratedArena.metatiles).toHaveLength(7);
+  expect(migratedArena.collisionMask[0]).not.toBe('#'.repeat(12));
 });
 
 test('structure metatiles can be placed independently and retain behavior ownership', async ({page}) => {

@@ -2524,3 +2524,20 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   normalized into two 80x64 logical assets, palette-reduced, and exported at
   exact nearest-neighbor 2x. Their 5x4 footprints and centered warp cells did
   not change. The prepared Imagegen source minimum is now 59 assets.
+
+## Codex Landmark Art Pack (v21.74)
+
+- Six high-impact placeholders were replaced with dedicated ChatGPT Imagegen
+  sources: Field House, Kohl Center, national championship arena, Bascom Hall,
+  Wisconsin Capitol, and Brittingham Boats.
+- Each source is normalized independently to its authoritative 16px logical
+  footprint, palette-reduced, and exported at exact nearest-neighbor 2x. Map
+  Studio no longer resizes Camp Randall Stadium or the campus house for these
+  landmarks.
+- Landmark collision masks are compiled from per-cell alpha coverage using the
+  55% visible-collision contract. Sparse roof corners become walk-behind cells;
+  declared entrances remain exact bottom-row warp cells.
+- Map Studio migration refreshes existing `planned-metatile` objects to the new
+  art while preserving their user-adjusted x/y positions. Current authority is
+  65 prepared Imagegen assets, 102 shared world stamps, Camp metatile v8, and
+  app v21.74.

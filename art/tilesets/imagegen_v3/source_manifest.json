@@ -9,7 +9,13 @@
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
     "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
     "props": "be9a7a8cbb13c2ce3aec6faad80ef04b2dc2d60816065229b2bb677b16af6f0e",
-    "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0"
+    "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
+    "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
+    "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
+    "landmarks:nationals_arena_exterior": "ca455a729265756657ba63fcdd81983032c4af4718c328f438947a963d28ab08",
+    "landmarks:bascom_hall_exterior": "939d0b252dff7566b19a35cd6a4300cba649efe668530a5f9a8f8823ae21637d",
+    "landmarks:wisconsin_capitol_exterior": "81820a0b81d28d7aa91e904b75f5c22f98f83fa1aec60faef36cb71d926f9ffc",
+    "landmarks:brittingham_boats_exterior": "75b7aaa260deb3a55ee935c914e778edd659a335e10297bfde2fdde8a98928bd"
   },
   "assets": {
     "grass": {
@@ -542,6 +548,60 @@
       "colors": 22,
       "sha256": "7eba04537b3ff01d5d7009e341c882e96c2f71b7407f0e7f3c9c0ae3ecd01373",
       "sourcePanel": 11
+    },
+    "field_house_arena_exterior": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/field_house_arena_exterior.png",
+      "width": 192,
+      "height": 112,
+      "colors": 36,
+      "sha256": "e64111b17809f7b3e19a2c90c91c7a17b1b1703c5250b2775820bec7fedba588",
+      "sourceFile": "season_one_field_house_arena_source_v1.png"
+    },
+    "kohl_arena_exterior": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/kohl_arena_exterior.png",
+      "width": 192,
+      "height": 112,
+      "colors": 36,
+      "sha256": "e003b531aa28c266d45687b170f84ecf48b9e53011d7b86f6f73ad0c09f5eefc",
+      "sourceFile": "season_one_kohl_arena_source_v1.png"
+    },
+    "nationals_arena_exterior": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/nationals_arena_exterior.png",
+      "width": 224,
+      "height": 128,
+      "colors": 40,
+      "sha256": "bb98324280356eebdb608c98d4ef8433d318b70088038d25c397f25d62ff0e42",
+      "sourceFile": "season_one_nationals_arena_source_v1.png"
+    },
+    "bascom_hall_exterior": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/bascom_hall_exterior.png",
+      "width": 160,
+      "height": 80,
+      "colors": 32,
+      "sha256": "2e68883ebab44b5e4d08651bd5a5134d4b4f98ac98ad98eabc7b9a67b56ce27a",
+      "sourceFile": "season_one_bascom_hall_source_v1.png"
+    },
+    "wisconsin_capitol_exterior": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/wisconsin_capitol_exterior.png",
+      "width": 192,
+      "height": 128,
+      "colors": 40,
+      "sha256": "8660b5dc09fc314f5a6b1a89e492e70d318b66fa0715a354832b59654d974dd7",
+      "sourceFile": "season_one_wisconsin_capitol_source_v1.png"
+    },
+    "brittingham_boats_exterior": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/brittingham_boats_exterior.png",
+      "width": 96,
+      "height": 80,
+      "colors": 32,
+      "sha256": "835d7f596763f5be67bb671426f786ae16ceb330eca26d774936162213123312",
+      "sourceFile": "season_one_brittingham_boats_source_v1.png"
     }
   }
 }

@@ -80,6 +80,12 @@ function migrateDraft(saved, seed) {
       originalTerrain: cloneProject(seedMap.originalTerrain),
       terrain
     });
+    const seedObjects = new Map((seedMap.objects || []).map(object => [object.id, object]));
+    savedMap.objects = (savedMap.objects || []).map(object => {
+      if (object.sourceKind !== 'planned-metatile') return object;
+      const replacement = seedObjects.get(object.id);
+      return replacement ? {...cloneProject(replacement), x: object.x, y: object.y, name: object.name} : object;
+    });
     delete savedMap.terrainVariants;
   }
   migrated.productionVersion = seed.productionVersion;

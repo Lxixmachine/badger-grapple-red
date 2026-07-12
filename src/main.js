@@ -40,7 +40,7 @@ if (modernMode) {
   document.body.classList.add('slice-mode');
   document.title = atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
-  if (note) note.textContent = atlasMode ? 'v21.73 Season Atlas Studio' : 'v21.63 Scale Slice';
+  if (note) note.textContent = atlasMode ? 'v21.74 Landmark Art Pack' : 'v21.63 Scale Slice';
 }
 
 const config = {
@@ -69,7 +69,7 @@ try {
   game = new Phaser.Game(config);
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
-    ? '21.73-season-atlas-studio'
+    ? '21.74-landmark-art-pack'
     : sliceMode ? '21.63-scale-slice' : '21.62-world-compositions';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));

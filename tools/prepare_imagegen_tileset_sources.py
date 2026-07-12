@@ -125,6 +125,17 @@ BOARDS = {
     },
 }
 
+STANDALONE_ASSETS = {
+    "landmarks": [
+        ("field_house_arena_exterior", SOURCE_DIR / "season_one_field_house_arena_source_v1.png", (192, 112), 36),
+        ("kohl_arena_exterior", SOURCE_DIR / "season_one_kohl_arena_source_v1.png", (192, 112), 36),
+        ("nationals_arena_exterior", SOURCE_DIR / "season_one_nationals_arena_source_v1.png", (224, 128), 40),
+        ("bascom_hall_exterior", SOURCE_DIR / "season_one_bascom_hall_source_v1.png", (160, 80), 32),
+        ("wisconsin_capitol_exterior", SOURCE_DIR / "season_one_wisconsin_capitol_source_v1.png", (192, 128), 40),
+        ("brittingham_boats_exterior", SOURCE_DIR / "season_one_brittingham_boats_source_v1.png", (96, 80), 32),
+    ],
+}
+
 
 def sha256(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -232,6 +243,27 @@ def build() -> dict:
                 "colors": len(normalized.convert("RGB").getcolors(maxcolors=65536) or []),
                 "sha256": sha256(output_path),
                 "sourcePanel": index,
+            }
+
+    for category, entries in STANDALONE_ASSETS.items():
+        for asset_id, path, size, colors in entries:
+            if not path.exists():
+                raise SystemExit(f"Missing Imagegen standalone source: {path}")
+            source_key = f"{category}:{asset_id}"
+            sources[source_key] = sha256(path)
+            board = Image.open(path).convert("RGBA")
+            panel = extract_panel(board, 1, 1, 0)
+            normalized = normalize(panel, size, "contain", colors)
+            output_path = OUTPUT_DIR / category / f"{asset_id}.png"
+            save_png(normalized, output_path)
+            outputs[asset_id] = {
+                "category": category,
+                "path": output_path.relative_to(ROOT).as_posix(),
+                "width": normalized.width,
+                "height": normalized.height,
+                "colors": len(normalized.convert("RGB").getcolors(maxcolors=65536) or []),
+                "sha256": sha256(output_path),
+                "sourceFile": path.name,
             }
 
     manifest = {

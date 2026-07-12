@@ -26,6 +26,7 @@ from season_one_pixel_art import (
     material_tile,
     road_marking as authored_road_marking,
     service_building as authored_service_building,
+    source_asset,
     transition_tile,
     validate_plaza_transition_seams,
 )
@@ -588,6 +589,29 @@ def build() -> dict:
             "tags": [family, "season_one_world_kit", *(tags or [])],
         }
 
+    def collision_mask_from_alpha(
+        image: Image.Image,
+        width: int,
+        height: int,
+        door: dict,
+        minimum_coverage: float,
+    ) -> list[str]:
+        rows: list[str] = []
+        for y in range(height):
+            row: list[str] = []
+            for x in range(width):
+                tile = image.crop((x * cell, y * cell, (x + 1) * cell, (y + 1) * cell))
+                alpha = tile.getchannel("A")
+                visible = sum(value >= 32 for value in alpha.get_flattened_data()) / (cell * cell)
+                if door == {"x": x, "y": y}:
+                    if visible < 0.25:
+                        raise SystemExit(f"landmark door {x},{y} has only {visible:.0%} visible coverage")
+                    row.append(".")
+                else:
+                    row.append("#" if visible >= minimum_coverage else ".")
+            rows.append("".join(row))
+        return rows
+
     for spec in manifest["sprites"]:
         fitted = export_2x(authored_stamp(spec["id"], spec["width"], spec["height"]))
         register_stamp(
@@ -632,6 +656,24 @@ def build() -> dict:
     service_building(
         "campus_house_exterior", "Campus House", "house",
     )
+
+    def landmark_building(stamp_id: str, name: str, width: int, height: int, door_x: int) -> None:
+        image = export_2x(source_asset("landmarks", stamp_id))
+        door = {"x": door_x, "y": height - 1}
+        minimum_coverage = contract["rules"]["visibleCollisionCoverage"]
+        mask = collision_mask_from_alpha(image, width, height, door, minimum_coverage)
+        register_stamp(
+            stamp_id, name, "town_landmarks", image, width, height,
+            mask, door, ["landmark", "imagegen_direct", "authored16"],
+            minimum_coverage=minimum_coverage,
+        )
+
+    landmark_building("field_house_arena_exterior", "Wisconsin Field House", 12, 7, 6)
+    landmark_building("kohl_arena_exterior", "Kohl Center", 12, 7, 6)
+    landmark_building("nationals_arena_exterior", "National Championships Arena", 14, 8, 7)
+    landmark_building("bascom_hall_exterior", "Bascom Hall", 10, 5, 4)
+    landmark_building("wisconsin_capitol_exterior", "Wisconsin State Capitol", 12, 8, 6)
+    landmark_building("brittingham_boats_exterior", "Brittingham Boats", 6, 5, 2)
 
     register_stamp("cliff_run", "Cliff Run", "elevation", export_2x(cliff(5, 2)), 5, 2, ["#####", "#####"], tags=["cliff", "elevation_1", "authored16"], semantic_behavior="ledge")
     register_stamp("cliff_corner_left", "Cliff Corner Left", "elevation", export_2x(cliff(3, 2, "left")), 3, 2, ["###", "###"], tags=["cliff", "corner", "authored16"], semantic_behavior="ledge")

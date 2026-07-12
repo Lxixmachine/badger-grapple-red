@@ -160,6 +160,15 @@ function forestStamp(owner, mapWidth, mapHeight) {
 
 function sourceStampId(owner, group, layout) {
   const id = owner.id || '';
+  const dedicatedLandmarks = {
+    field_house_arena: 'field_house_arena_exterior',
+    kohl_arena: 'kohl_arena_exterior',
+    nationals_arena: 'nationals_arena_exterior',
+    bascom_hall: 'bascom_hall_exterior',
+    wisconsin_capitol: 'wisconsin_capitol_exterior',
+    brittingham_boats: 'brittingham_boats_exterior'
+  };
+  if (dedicatedLandmarks[id]) return dedicatedLandmarks[id];
   if (owner.editorStampId && metatileBuild.stamps[owner.editorStampId]) return owner.editorStampId;
   if (id.includes('trainer_room')) return 'trainer_room_exterior';
   if (id.includes('buckys')) return 'buckys_locker_room_exterior';

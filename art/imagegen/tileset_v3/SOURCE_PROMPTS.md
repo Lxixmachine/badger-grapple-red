@@ -77,6 +77,28 @@ strong phone-size silhouettes. No text, characters, scenery, copied assets,
 Pokemon logos, cast shadows, blur, antialiasing, or watermark.
 ```
 
+## Dedicated Landmark Sources
+
+Each landmark was generated as a separate isolated source so its composition
+could match one authoritative map footprint instead of being resized from a
+generic arena or house.
+
+```text
+Create one original, south-facing late-GBA pixel-art landmark for Badger
+Grapple Red on perfectly flat #ff00ff. Use a cohesive Wisconsin limestone,
+cardinal red, charcoal, gold, and blue-glass palette; crisp clusters; strong
+phone-size silhouette; no scenery, floor plane, text, characters, copied game
+assets, blur, or watermark. Keep one visible center entrance aligned to the
+specified bottom-row cell and fit the complete building within its declared
+16px logical-grid footprint.
+
+Sources: historic barrel-roof Wisconsin Field House (12x7, door x6); modern
+Kohl Center conference arena (12x7, door x6); grand neutral-site national
+championship arena (14x8, door x7); academic Bascom Hall with book relief
+(10x5, door x4); domed Wisconsin civic capitol (12x8, door x6); compact timber
+Brittingham boathouse with kayak bays (6x5, door x2).
+```
+
 ## Transitions And Elevation Board
 
 ```text
