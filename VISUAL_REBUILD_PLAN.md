@@ -25,7 +25,8 @@ A single page that defines the look before any art is generated:
 - outline rule: dark outline on props/architecture, none on ground
 - texture rule: drawn repeating motifs (tufts, pebbles, planks); no
   washes, no noise; every mark depicts something
-- scale rule: authored at 16px tile scale (not downsized paintings)
+- scale rule: authored at the approved 32px gameplay-cell scale on a 480x320,
+  15x10 camera (not downsized paintings)
 - seamlessness: every ground tile tiles invisibly; edge tiles for every
   material pair that can touch
 

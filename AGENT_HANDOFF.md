@@ -1,5 +1,44 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.63 approved scale vertical slice)
+
+Tony approved the purpose-built 2x faithful scale comparison, then directed
+implementation. The live v21.62 game remains untouched at the ordinary URL;
+the replacement world runtime now runs at `?slice=1` for focused review.
+
+The approved contract is now executable rather than aspirational:
+
+- 480x320 native canvas, exact 3:2 browser framing, and a 15x10 camera;
+- 32x32 gameplay cells;
+- 32x64 wrestlers with one 32x32 foot/collision owner;
+- a 9x5 exterior building, one-cell door threshold, two-cell path, and
+  three-cell landing;
+- complete object drawings with explicit integer-cell footprints;
+- foot-Y actor depth and south-edge object depth, with no map-sized foreground
+  masks;
+- cardinal 165ms steps, turn-in-place, continuous hold movement, and exact-cell
+  warps;
+- pointer capture plus disabled touch selection/callouts on the mobile D-pad.
+
+`src/data/visualSliceMaps.js` is the first structured area package. It defines
+a scrolling 22x16 Camp Randall exterior and a separate 15x10 Team Locker Room,
+including blocked cells, object ownership, actors, interactions, and reciprocal
+door warps. `VisualSliceScene` draws cohesive original pixel art directly at
+the approved scale. Its trophy case demonstrates valid local occlusion: the
+player is behind it from the north and in front from the south, while remaining
+visually readable.
+
+The shell previously stretched canvases because width and height were clamped
+independently. v21.63 derives width from the native aspect ratio for both the
+new 3:2 slice and legacy 320x224 route. Phone QA at 390x844 renders the slice at
+374x249 with no overlap; text and controls remain readable.
+
+`docs/VISUAL_SLICE_CONTRACT.md` is the concise authority. New maps must target
+this runtime. Do not add new production work to the 16px legacy world. The next
+gate is Tony's hands-on review of the slice; after approval, migrate the new
+game shell and Camp Randall story package onto this contract before expanding
+the region.
+
 ## Latest Codex Turn (proven-product audit and Season One authority reset)
 
 Tony supplied four public reverse-engineering repositories and set the correct

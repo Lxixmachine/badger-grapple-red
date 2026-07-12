@@ -88,12 +88,14 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
    buildings without reading, so anything outside the vocabulary lights
    up automatically. Canonical units are designed ONCE in the master
    tileset and never redesigned per town.
-8. **Authored at 16px tile scale.** Not a downsized painting. Seamless
+8. **Authored at the 32px Badger gameplay-cell scale.** This is the approved
+   faithful 2x presentation of the proven 16px GBA metatile cadence: a
+   480x320 canvas shows 15x10 cells. It is not a downsized painting. Seamless
    tiling is mandatory and will be machine-checked (GRID-011).
 9. **Exactly two ambient animations**: water (4 frames) and flowers
    (2 frames), delivered as frame sets. Nothing else moves.
 10. **Delivery contract**: per-family sheets on a flat chroma background,
-    16px grid aligned, no staging shadows/grass under subjects, no
+    32px gameplay-cell aligned, no staging shadows/grass under subjects, no
     center rings on mats unless asked. Bespoke objects ship as
     transparent grid-aligned sprites matching their manifest footprint
     (law 6c) — full-scene paintings are accepted only as look

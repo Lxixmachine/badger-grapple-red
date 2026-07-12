@@ -24,6 +24,7 @@ export function installTestHooks(game, routeVirtualButton) {
       resultTitle: scene.resultTitle ?? null,
       area: scene.area ?? null,
       tilePos: scene.tilePos ?? null,
+      facing: scene.facing ?? null,
       playerScale: scene.player?.scaleX ?? null,
       playerWorldY: scene.player?.y ?? null,
       npcScales: scene.npcList ? scene.npcList.map(e => e.npc.scaleX) : null,
@@ -53,6 +54,26 @@ export function installTestHooks(game, routeVirtualButton) {
         worldTilesHigh: scene.worldCamera.height / scene.worldCamera.zoom / 16,
         worldIgnoresUi: (scene.uiLayer.cameraFilter & scene.worldCamera.id) !== 0,
         uiIgnoresWorld: (scene.worldLayer.cameraFilter & scene.uiCamera.id) !== 0
+      } : null,
+      slice: scene.sliceVersion ? {
+        version: scene.sliceVersion,
+        nativeWidth: scene.nativeWidth,
+        nativeHeight: scene.nativeHeight,
+        cellSize: scene.cellSize,
+        cameraTilesWide: scene.cameraTilesWide,
+        cameraTilesHigh: scene.cameraTilesHigh,
+        mapWidth: scene.mapWidth,
+        mapHeight: scene.mapHeight,
+        playerDepth: scene.player?.depth ?? null,
+        objects: (scene.depthObjects || []).map(object => {
+          const definition = object.getData?.('definition');
+          return {
+            id: definition?.id ?? null,
+            depth: object.depth,
+            ownerDepth: object.getData?.('ownerDepth') ?? null,
+            footprint: definition?.footprint ?? []
+          };
+        })
       } : null
     };
   };
