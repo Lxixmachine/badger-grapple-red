@@ -1,0 +1,113 @@
+{
+  "schema": "badger-grapple-tileset-contract/v1",
+  "version": 1,
+  "cellSize": 32,
+  "designTarget": "FireRed-scale environmental vocabulary using original Badger Grapple Red art",
+  "rules": {
+    "explicitCells": true,
+    "runtimeAutotiling": false,
+    "fullCellGroundCoverage": true,
+    "gridNativeStructures": true,
+    "visibleCollisionCoverage": 0.55,
+    "doorFootprint": [1, 1]
+  },
+  "behaviorVocabulary": [
+    "walkable",
+    "solid",
+    "warp",
+    "water",
+    "ledge",
+    "stairs"
+  ],
+  "layers": [
+    "base_ground",
+    "ground_transition",
+    "elevation",
+    "structure",
+    "overhead",
+    "detail"
+  ],
+  "groundFamilies": {
+    "base_surfaces": {
+      "minimum": 12,
+      "required": ["grass", "grass_b", "mowed_grass", "dirt", "brick", "stone", "water", "asphalt", "sand", "gravel"]
+    },
+    "natural_details": {
+      "minimum": 12,
+      "required": ["grass_white_flowers", "grass_red_flowers", "grass_gold_flowers", "tall_grass", "shore_reeds"]
+    },
+    "narrow_paths": {
+      "minimumPerMaterial": 16,
+      "materials": ["dirt", "brick", "stone"]
+    },
+    "blob47_transitions": {
+      "minimumPerFamily": 47,
+      "families": [
+        "surface_dirt",
+        "surface_brick",
+        "surface_stone",
+        "surface_sand",
+        "surface_gravel",
+        "shore_water",
+        "road_asphalt_grass",
+        "road_asphalt_curb",
+        "lawn_mowed"
+      ]
+    },
+    "roads": {
+      "minimum": 12,
+      "required": ["road_centerline_ew", "road_centerline_ns", "crosswalk_ew", "crosswalk_ns"]
+    }
+  },
+  "assemblyFamilies": {
+    "forest_masses": {
+      "minimum": 10,
+      "required": [
+        "forest_mass_core",
+        "forest_edge_north",
+        "forest_edge_south",
+        "forest_edge_west",
+        "forest_edge_east",
+        "forest_corner_inner_nw",
+        "forest_corner_inner_ne",
+        "forest_corner_outer_sw",
+        "forest_corner_outer_se"
+      ]
+    },
+    "individual_vegetation": {
+      "minimum": 12,
+      "required": ["tree_oak_a", "tree_oak_b", "tree_pine", "tree_ornamental", "shrub_round", "shrub_flowering"]
+    },
+    "elevation": {
+      "minimum": 8,
+      "required": ["cliff_run", "cliff_corner_left", "cliff_corner_right", "cliff_stairs"]
+    },
+    "boundaries_and_props": {
+      "minimum": 24,
+      "required": ["hedge_horizontal", "fence_long", "gate_left", "wood_bench", "campus_lamp", "campus_sign"]
+    },
+    "architecture_modules": {
+      "minimum": 28,
+      "required": ["roof_red_gable", "roof_slate_gable", "wall_brick_center", "wall_limestone_center", "door_red", "door_wood"]
+    },
+    "service_buildings": {
+      "minimum": 3,
+      "required": ["trainer_room_exterior", "buckys_locker_room_exterior", "campus_house_exterior"]
+    }
+  },
+  "groundAssemblies": {
+    "minimum": 18,
+    "required": [
+      "brick_walk_ns",
+      "brick_walk_ew",
+      "brick_walk_turn_ne",
+      "brick_walk_cross",
+      "stone_walk_ns",
+      "stone_walk_ew",
+      "dirt_trail_ns",
+      "dirt_trail_ew",
+      "pond_small",
+      "road_crossing"
+    ]
+  }
+}

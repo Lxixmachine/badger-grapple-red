@@ -229,6 +229,7 @@ export function createSeedProject() {
         atlasColumns: metatileBuild.atlas.columns,
         cellSize: metatileBuild.cellSize
       })),
+      groundStamps: Object.values(metatileBuild.terrain.stamps || {}).map(stamp => deepClone(stamp)),
       metatiles: Object.values(metatileBuild.metatiles).map(tile => ({
         ...deepClone(tile),
         atlasPath: metatileBuild.atlas.path,

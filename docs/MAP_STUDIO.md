@@ -23,18 +23,18 @@ The first editable pack contains:
 - Camp Randall Tunnel
 
 The Camp Randall exterior uses a FireRed-style metatile authoring model with
-original project art. The Season One kit currently provides 129 Ground tiles:
-base materials, three complete 16-piece narrow-path connector families, wide
-plaza edges and inner/outer corners, shorelines, roads, crosswalks, flowers,
-tall grass, and reeds. Every brush paints one fixed 32px tile that fills its
-cell; neighboring cells never change that tile implicitly. Buildings and
-landmarks are matrices of 32px structure metatiles with behavior attached to
-each cell.
-The 68-piece shared Stamp kit includes independent deciduous and pine trees,
-shrubs, hedge/fence modules, campus props, roof/wall/window/door modules,
-storefronts, and retaining walls. Whole buildings remain available as placement
-stamps, but their component cells can also be edited individually. Interiors
-remain on the previous object model during the pilot.
+original project art. The Season One kit provides 567 explicit ground tiles,
+including nine complete 47-piece surface-transition families, three complete
+16-piece narrow-path families, roads, curbs, shorelines, maintained lawns, and
+natural details. Every brush paints one fixed 32px tile; neighboring cells never
+change it implicitly.
+
+The shared kit also provides 20 reusable ground assemblies and 96 structure
+stamps. These include connected forest masses, individual trees, cliffs,
+stairs, hedge and fence modules, campus props, architecture modules, and the
+familiar Trainer's Room and Bucky's Locker Room exteriors. Whole buildings
+remain placement stamps while every component cell keeps explicit behavior.
+Interiors remain on the previous object model during the pilot.
 
 ## Editing Workflow
 
@@ -44,6 +44,9 @@ remain on the previous object model during the pilot.
 2. Use **Tiles** to choose a core Ground material or filter a transition/detail
    family. Every painted cell retains exactly the selected tile until you
    replace it.
+   Ground assemblies appear below these families. Select or drag a path, pond,
+   crossing, or courtyard assembly to stamp its exact tile matrix. Transparent
+   assembly cells leave the existing ground unchanged.
 3. Choose a Structure family to paint individual behavior-owned metatiles. Use
    the family filter under **Stamps** to place trees, props, architecture
    modules, or complete buildings.
@@ -82,7 +85,7 @@ npm run apply:map-editor -- path\to\badger-grapple-map-pack.json --write
 The importer updates `seasonOneLayouts.json`, the matching region revision,
 the Camp production manifest, and the metatile override source. It then
 increments the layout revision and recompiles both the production artwork and
-behavior-owned metatile package.
+the behavior-owned metatile package.
 
 ## Production Laws
 
@@ -96,5 +99,6 @@ behavior-owned metatile package.
 - The approved flat drawings are source art. Runtime buildings are compiled
   cell-by-cell from those drawings; a large PNG is never the final map owner.
 - FireRed assets are reference material only. Runtime art remains original.
-- Trees are independent depth-sorted stamps. Canopy cells are walk-behind and
-  only visibly occupied foot cells are solid; forest-wall pictures are banned.
+- Individual trees use walk-behind canopy cells and solid visible roots.
+  Impassable woods use connected forest-edge, corner, and core metatiles whose
+  complete collision footprint visibly reads as dense vegetation.

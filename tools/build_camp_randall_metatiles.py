@@ -15,6 +15,12 @@ from pathlib import Path
 from PIL import Image
 
 from build_camp_randall_production import CELL, draw_path_network
+from build_season_one_world_tileset import (
+    CARDINAL_BITS,
+    DIAGONAL_BITS,
+    DIAGONAL_REQUIREMENTS,
+    blob_signature_name,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -78,13 +84,46 @@ def behavior_at(owner: dict, rows: list[str], x: int, y: int) -> str:
     return "solid" if rows[y][x] == "#" else "walkable"
 
 
-def terrain_rows(layout: dict) -> list[list[str]]:
+def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
     width, height = layout["size"]["width"], layout["size"]["height"]
-    rows = [["grass" for _ in range(width)] for _ in range(height)]
+    raw = [["grass" for _ in range(width)] for _ in range(height)]
     for path in layout.get("paths", []):
         for y in range(path["y"], path["y"] + path["height"]):
             for x in range(path["x"], path["x"] + path["width"]):
-                rows[y][x] = path["material"]
+                raw[y][x] = path["material"]
+    for body in layout.get("waterBodies", []):
+        for y in range(body["y"], body["y"] + body["height"]):
+            for x in range(body["x"], body["x"] + body["width"]):
+                raw[y][x] = "water"
+
+    family_by_material = {
+        "brick": "surface_brick",
+        "stone": "surface_stone",
+        "dirt": "surface_dirt",
+        "water": "shore_water",
+    }
+    rows = [["grass" for _ in range(width)] for _ in range(height)]
+    for y in range(height):
+        for x in range(width):
+            material = raw[y][x]
+            family = family_by_material.get(material)
+            if not family:
+                rows[y][x] = material
+                continue
+            signature = 0
+            cardinal_neighbors = {"n": (x, y - 1), "e": (x + 1, y), "s": (x, y + 1), "w": (x - 1, y)}
+            diagonal_neighbors = {"ne": (x + 1, y - 1), "se": (x + 1, y + 1), "sw": (x - 1, y + 1), "nw": (x - 1, y - 1)}
+            for direction, (nx, ny) in cardinal_neighbors.items():
+                if 0 <= nx < width and 0 <= ny < height and raw[ny][nx] == material:
+                    signature |= CARDINAL_BITS[direction]
+            for direction, (nx, ny) in diagonal_neighbors.items():
+                required = DIAGONAL_REQUIREMENTS[direction]
+                if signature & required == required and 0 <= nx < width and 0 <= ny < height and raw[ny][nx] == material:
+                    signature |= DIAGONAL_BITS[direction]
+            tile_id = f"{family}_blob_{blob_signature_name(signature)}"
+            if tile_id not in world["terrain"]["tiles"]:
+                raise SystemExit(f"Camp terrain resolver produced unavailable tile {tile_id}")
+            rows[y][x] = tile_id
     return rows
 
 
@@ -127,7 +166,7 @@ def build() -> dict:
     ground_path = ROOT / "public" / production["map"]["ground"]["path"].removeprefix("./")
     if not ground_path.exists():
         raise SystemExit("Camp ground layer is missing; run build_camp_randall_production.py first")
-    terrain = terrain_rows(layout)
+    terrain = terrain_rows(layout, world)
 
     visuals: list[Image.Image] = []
     visual_lookup: dict[bytes, int] = {}
@@ -333,7 +372,7 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 3,
+        "version": 4,
         "status": "production-pilot",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
@@ -348,6 +387,8 @@ def build() -> dict:
             "baseMaterial": "grass",
             "tiles": terrain_tiles,
             "catalog": terrain_catalog,
+            "behaviors": world["terrain"].get("behaviors", {}),
+            "stamps": world["terrain"].get("stamps", {}),
         },
         "metatiles": metatiles,
         "palette": palette_ids,

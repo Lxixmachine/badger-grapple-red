@@ -91,7 +91,7 @@ export class MapRenderer {
 
     if (clean) return;
     this.drawMarkers(state);
-    if (state.showCollision) this.drawCollision(map, cell);
+    if (state.showCollision) this.drawCollision(map, cell, project);
     if (state.showGrid) this.drawGrid(map, cell);
     this.drawSelection(state, cell);
     if (state.cameraPreview) this.drawCameraPreview(state, cell);
@@ -244,8 +244,17 @@ export class MapRenderer {
     }
   }
 
-  drawCollision(map, cell) {
+  drawCollision(map, cell, project) {
     const context = this.context;
+    const groundBehaviors = new Map((project.assets.groundTiles || []).map(tile => [tile.id, tile.behavior]));
+    for (let y = 0; y < map.height; y += 1) {
+      for (let x = 0; x < map.width; x += 1) {
+        const behavior = groundBehaviors.get(map.terrain[y]?.[x]);
+        if (!['solid', 'water'].includes(behavior)) continue;
+        context.fillStyle = behavior === 'water' ? 'rgba(45, 121, 190, .38)' : 'rgba(208, 43, 57, .34)';
+        context.fillRect(x * cell, y * cell, cell, cell);
+      }
+    }
     for (const object of map.objects) {
       for (let y = 0; y < object.height; y += 1) {
         for (let x = 0; x < object.width; x += 1) {

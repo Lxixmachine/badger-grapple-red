@@ -2436,3 +2436,29 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
 - Current authority is layout revision 4 and Camp metatile package v3. Do not
   restore forest strips, hidden neighbour selection, or partial-cell Ground
   painting.
+
+## Codex Complete Tileset Architecture (v21.70)
+
+- Tony rejected the v21.69 asset-count shortcut. The production gate is now
+  `art/tilesets/season_one_tileset_contract.json`, documented in
+  `docs/SEASON_ONE_TILESET_SYSTEM.md`.
+- The compiler emits 567 explicit full-cell ground tiles: nine canonical
+  47-signature transition families, three 16-piece narrow-path families,
+  natural details, roads, curbs, water banks, lawns, sand, gravel, and concrete.
+  Build-time seeding may choose an exact transition ID; runtime/editor
+  neighbor mutation remains forbidden.
+- Map Studio now exposes 20 reusable Ground assemblies. Placing one writes its
+  exact tile matrix and leaves null cells unchanged. Playwright covers this.
+- The 96 shared structure stamps include connected forest cores/edges/corners,
+  individual vegetation, elevation grammar, urban props, architecture modules,
+  and recognizable Trainer's Room/Bucky's Locker Room service buildings.
+- Camp Randall uses two continuous 2x18 forest-edge assemblies instead of
+  twelve isolated tree columns. These are still cell-sliced metatile matrices:
+  every visible forest cell is solid, and no flat image owns collision outside
+  its grid footprint.
+- Current authority is layout revision 5, world tileset v2, Camp metatile v4,
+  and app v21.70. Map Studio uses a new local-draft key because the vocabulary
+  and canonical object ownership changed incompatibly.
+- Continue building maps with the explicit vocabulary and reusable assemblies;
+  do not regress to whole-scene collision art, generic rectangular paths, or
+  isolated tree wallpaper.

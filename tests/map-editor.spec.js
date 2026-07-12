@@ -34,24 +34,27 @@ test('map studio boots with the audited Camp production pack', async ({page}) =>
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 4, metatileVersion: 3});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 4});
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'team_locker_room', 'wrestling_room', 'coach_office', 'stadium_tunnel'
   ]);
   expect(state.project.maps.camp_randall).toMatchObject({width: 24, height: 20, cellSize: 32});
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
-  expect(state.project.assets.groundTiles).toHaveLength(129);
-  expect(state.project.assets.metatiles.length).toBeGreaterThan(1000);
+  expect(state.project.assets.groundTiles).toHaveLength(567);
+  expect(state.project.assets.groundStamps).toHaveLength(20);
+  expect(state.project.assets.metatiles.length).toBeGreaterThan(2000);
+  expect(state.project.assets.groundTiles.find(tile => tile.id === 'water').behavior).toBe('water');
+  expect(state.project.assets.groundTiles.find(tile => tile.id === 'shore_water_blob_n_e_s_w_ne_se_sw_nw').behavior).toBe('water');
   expect(state.project.assets.objects.some(asset => asset.id === 'world:tree_oak_a')).toBe(true);
   expect(state.project.maps.camp_randall.objects.every(object => object.metatiles?.length === object.height)).toBe(true);
-  expect(state.project.maps.camp_randall.objects).toHaveLength(19);
+  expect(state.project.maps.camp_randall.objects).toHaveLength(8);
   const camp = state.project.maps.camp_randall;
   expect(camp.terrain[10][5]).toBe('grass');
-  expect(camp.terrain[11][5]).toBe('stone');
+  expect(camp.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(camp.terrain[12][17]).toBe('grass');
-  expect(camp.terrain[13][17]).toBe('stone');
+  expect(camp.terrain[13][17]).toMatch(/^surface_stone_blob_/);
   expect(camp.terrain[5][11]).toBe('grass');
-  expect(camp.terrain[6][11]).toBe('stone');
+  expect(camp.terrain[6][11]).toMatch(/^surface_stone_blob_/);
   await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '768');
   await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '640');
   expect(issues).toEqual([]);
@@ -65,14 +68,14 @@ test('assets place on whole cells and undo restores the prior map', async ({page
   await page.getByRole('button', {name: 'memory garden', exact: true}).click();
   await clickCell(page, 10, 8);
 
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(20);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(9);
   let state = await editorState(page);
   const placed = state.project.maps.camp_randall.objects.find(entry => entry.id === 'memory_garden_2');
   expect(placed).toMatchObject({x: 10, y: 8, width: 6, height: 4, depthMode: 'row-sliced'});
   expect(placed.metatiles).toHaveLength(4);
 
   await page.getByRole('button', {name: 'Undo'}).click();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(19);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(8);
   expect(issues).toEqual([]);
 });
 
@@ -184,25 +187,44 @@ test('explicit transition tiles remain selected and individual trees place as gr
   expect(issues).toEqual([]);
 });
 
+test('ground assemblies place exact tile matrices without mutating transparent cells', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  const before = await editorState(page);
+  const untouched = before.project.maps.camp_randall.terrain[12][8];
+
+  await page.getByRole('button', {name: 'Brick Walk Cross', exact: true}).click();
+  await clickCell(page, 8, 12);
+
+  const state = await editorState(page);
+  const terrain = state.project.maps.camp_randall.terrain;
+  expect(terrain[12][8]).toBe(untouched);
+  expect(terrain[12][10]).toBe('surface_brick_blob_s');
+  expect(terrain[14][10]).toBe('surface_brick_blob_n_e_s_w');
+  expect(terrain[14][8]).toBe('surface_brick_blob_e');
+  expect(state.state.validation.valid).toBe(true);
+  expect(issues).toEqual([]);
+});
+
 test('saved drafts adopt corrected path defaults without losing explicit terrain edits', async ({page}) => {
   await openEditor(page);
   await page.evaluate(() => {
     const draft = window.__badgerMapEditorTest.project();
-    draft.layoutRevision = 3;
-    draft.metatileVersion = 2;
+    draft.layoutRevision = 4;
+    draft.metatileVersion = 3;
     draft.maps.camp_randall.originalTerrain[10][5] = 'stone';
     draft.maps.camp_randall.terrain[10][5] = 'stone';
     draft.maps.camp_randall.originalTerrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[11][5] = 'grass';
     draft.maps.camp_randall.terrain[14][10] = 'dirt';
-    localStorage.setItem('badger-grapple-map-studio-v2-metatiles', JSON.stringify(draft));
+    localStorage.setItem('badger-grapple-map-studio-v3-complete-tileset', JSON.stringify(draft));
   });
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 4, metatileVersion: 3});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 4});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
-  expect(state.project.maps.camp_randall.terrain[11][5]).toBe('stone');
+  expect(state.project.maps.camp_randall.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
 });
 

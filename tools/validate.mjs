@@ -57,12 +57,14 @@ const campMetatileBuildPath=fileURLToPath(new URL('../src/data/campRandallMetati
 const campMetatileOverridesPath=fileURLToPath(new URL('../art/metatiles/camp_randall_metatile_overrides.json',import.meta.url));
 const worldTilesetBuildPath=fileURLToPath(new URL('../src/data/seasonOneWorldTilesetBuild.json',import.meta.url));
 const worldTilesetManifestPath=fileURLToPath(new URL('../art/tilesets/season_one_world_tileset_manifest.json',import.meta.url));
+const worldTilesetContractPath=fileURLToPath(new URL('../art/tilesets/season_one_tileset_contract.json',import.meta.url));
 if(!existsSync(worldTilesetBuildPath))errs.push('Season One world tileset is missing; run npm run build:world-tileset');
 else{
   const world=JSON.parse(readFileSync(worldTilesetBuildPath,'utf8'));
   const manifest=JSON.parse(readFileSync(worldTilesetManifestPath,'utf8'));
-  if(world.schema!=='badger-grapple-world-tileset/v1'||world.version!==1||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  if(world.schema!=='badger-grapple-world-tileset/v2'||world.version!==2||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
   if(world.sources?.manifest!==fileHash(worldTilesetManifestPath))errs.push('Season One world tileset manifest is stale');
+  if(!existsSync(worldTilesetContractPath)||world.sources?.contract!==fileHash(worldTilesetContractPath)||world.contract?.sha256!==fileHash(worldTilesetContractPath))errs.push('Season One world tileset contract is missing or stale');
   for(const [sourceId,relative] of Object.entries(manifest.sources||{})){
     const source=fileURLToPath(new URL(`../${relative}`,import.meta.url));
     if(!existsSync(source)||world.sources?.[sourceId]!==fileHash(source))errs.push(`Season One world tileset source ${sourceId} is stale`);
@@ -71,25 +73,32 @@ else{
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==world.atlas.sha256)errs.push('Season One world tileset atlas is missing or stale');
   const catalog=world.terrain?.catalog||[];
   const tileIds=new Set(catalog.map(tile=>tile.id));
-  if(catalog.length<120||tileIds.size!==catalog.length)errs.push('Season One world ground catalog must contain at least 120 unique explicit tiles');
-  for(const required of ['grass','brick','stone','dirt','water','asphalt','brick_path_cross','stone_edge_north','water_edge_south','crosswalk_ns'])if(!tileIds.has(required))errs.push(`Season One world ground catalog is missing ${required}`);
+  if(catalog.length<500||tileIds.size!==catalog.length)errs.push('Season One world ground catalog must contain at least 500 unique explicit tiles');
+  for(const required of ['grass','mowed_grass','brick','stone','concrete','dirt','sand','gravel','water','asphalt','brick_path_cross','surface_brick_blob_n_e_s_w_ne_se_sw_nw','shore_water_blob_n_e_s_w_ne_se_sw_nw','crosswalk_ns'])if(!tileIds.has(required))errs.push(`Season One world ground catalog is missing ${required}`);
   for(const tile of catalog){
-    if(tile.behavior!=='walkable'||tile.coverage!=='full')errs.push(`Season One ground tile ${tile.id} must be full-cell and walkable`);
+    if(!['walkable','water'].includes(tile.behavior)||tile.coverage!=='full')errs.push(`Season One ground tile ${tile.id} must be full-cell with a supported behavior`);
     if(world.terrain.tiles?.[tile.id]!==tile.visual||!Number.isInteger(tile.visual)||tile.visual<0||tile.visual>=world.atlas.visualCount)errs.push(`Season One ground tile ${tile.id} references an invalid visual`);
+    if(world.terrain.behaviors?.[tile.id]!==tile.behavior)errs.push(`Season One ground tile ${tile.id} behavior index is stale`);
   }
-  for(const required of ['tree_oak_a','tree_pine','hedge_corner_nw','fence_long','wood_bench','roof_red_gable','door_red','awning_cardinal'])if(!world.stamps?.[required])errs.push(`Season One world stamp library is missing ${required}`);
+  for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
+  if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47)errs.push('Season One world tileset does not satisfy the complete vocabulary contract');
+  for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
+    if((world.coverage?.groundFamilyCounts?.[family]||0)<47)errs.push(`Season One world transition family ${family} is incomplete`);
+  }
+  for(const required of ['tree_oak_a','tree_pine','forest_mass_core','forest_border_west_long','hedge_corner_nw','fence_long','wood_bench','roof_red_gable','door_red','awning_cardinal','trainer_room_exterior','buckys_locker_room_exterior','cliff_run','cliff_stairs'])if(!world.stamps?.[required])errs.push(`Season One world stamp library is missing ${required}`);
+  if(Object.keys(world.terrain?.stamps||{}).length<18)errs.push('Season One world tileset is missing reusable ground assemblies');
 }
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==3)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==4)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==metatileBuild.atlas.sha256)errs.push('Camp metatile atlas is missing or stale');
   if(metatileBuild.atlas.visualCount!==metatileBuild.atlas.entries?.length)errs.push('Camp metatile visual catalog is incomplete');
   const terrainTiles=metatileBuild.terrain?.tiles||{};
-  if(Object.keys(terrainTiles).length<120||metatileBuild.terrain?.catalog?.length!==Object.keys(terrainTiles).length)errs.push('Camp metatile ground catalog did not merge the Season One authoring kit');
+  if(Object.keys(terrainTiles).length<500||metatileBuild.terrain?.catalog?.length!==Object.keys(terrainTiles).length)errs.push('Camp metatile ground catalog did not merge the Season One authoring kit');
   for(const required of ['grass','brick','dirt','stone','water','asphalt'])if(!Object.hasOwn(terrainTiles,required))errs.push(`Camp metatile ground catalog is missing ${required}`);
   for(const [material,visual] of Object.entries(terrainTiles))if(!Number.isInteger(visual)||visual<0||visual>=metatileBuild.atlas.visualCount)errs.push(`Camp metatile ground ${material} references an invalid visual`);
   const validateStamp=(label,stamp)=>{

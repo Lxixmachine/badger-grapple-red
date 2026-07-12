@@ -1,7 +1,7 @@
 import {cloneProject, createSeedProject, PROJECT_SCHEMA, TERRAIN, validateProject} from './project.js';
 import {MapRenderer} from './renderer.js';
 
-const STORAGE_KEY = 'badger-grapple-map-studio-v2-metatiles';
+const STORAGE_KEY = 'badger-grapple-map-studio-v3-complete-tileset';
 const canvas = document.querySelector('#mapCanvas');
 const workspace = document.querySelector('#workspace');
 const mapSelect = document.querySelector('#mapSelect');
@@ -22,6 +22,7 @@ let mode = window.matchMedia('(pointer: coarse)').matches ? 'pan' : 'select';
 let paletteTab = 'terrain';
 let selectedTerrain = 'brick';
 let selectedGroundFamily = 'path_brick';
+let selectedGroundStampFamily = 'brick_walk';
 let selectedMetatile = null;
 let selectedMetatileFamily = 'team_building';
 let selectedObjectFamily = 'trees';
@@ -85,6 +86,7 @@ function migrateDraft(saved, seed) {
   migrated.metatileVersion = seed.metatileVersion;
   migrated.assets.objects = cloneProject(seed.assets.objects);
   migrated.assets.groundTiles = cloneProject(seed.assets.groundTiles);
+  migrated.assets.groundStamps = cloneProject(seed.assets.groundStamps);
   migrated.assets.metatiles = cloneProject(seed.assets.metatiles);
   return migrated;
 }
@@ -232,6 +234,12 @@ function buildPalette() {
     }
     const coreGroundTiles = allGroundTiles.filter(tile => tile.tags?.includes('base'));
     const groundTiles = allGroundTiles.filter(tile => tile.family === selectedGroundFamily && !tile.tags?.includes('base'));
+    const allGroundStamps = map.renderModel === 'metatile' ? (project.assets.groundStamps || []) : [];
+    const groundStampFamilies = [...new Set(allGroundStamps.map(stamp => stamp.family).filter(Boolean))];
+    if (!groundStampFamilies.includes(selectedGroundStampFamily)) {
+      selectedGroundStampFamily = groundStampFamilies.includes('brick_walk') ? 'brick_walk' : groundStampFamilies[0] || '';
+    }
+    const groundStamps = allGroundStamps.filter(stamp => stamp.family === selectedGroundStampFamily);
     const allStructureTiles = map.renderModel === 'metatile'
       ? (project.assets.metatiles || []).filter(tile => tile.palette)
       : [];
@@ -255,7 +263,15 @@ function buildPalette() {
         <div class="palette-item terrain-item ${selectedTerrain === id ? 'active' : ''}" data-terrain="${id}" role="button" tabindex="0">
           <div class="terrain-swatch ${id}"></div><span>${escapeHtml(terrain.label)}</span>
         </div>`).join('')}</div>`;
-    paletteContent.innerHTML = `<div class="palette-section-title">Ground tiles</div>${groundMarkup}${structureTiles.length ? `
+    const groundStampMarkup = groundStamps.length ? `
+      <div class="palette-section-title structure-title">Ground assemblies</div>
+      <label class="metatile-family"><span>Family</span><select id="groundStampFamily">${groundStampFamilies.map(family => `
+        <option value="${family}" ${family === selectedGroundStampFamily ? 'selected' : ''}>${escapeHtml(family.replaceAll('_', ' '))}</option>`).join('')}</select></label>
+      <div class="palette-grid">${groundStamps.map(stamp => `
+        <div class="palette-item ${placingAsset?.kind === 'groundStamp' && placingAsset.id === stamp.id ? 'active' : ''}" draggable="true" data-ground-stamp="${stamp.id}" role="button" tabindex="0" title="${escapeHtml(stamp.name)}">
+          <div class="palette-thumb"><img src="${stamp.thumbnail}" alt="" /></div><span>${escapeHtml(stamp.name)}</span>
+        </div>`).join('')}</div>` : '';
+    paletteContent.innerHTML = `<div class="palette-section-title">Ground tiles</div>${groundMarkup}${groundStampMarkup}${structureTiles.length ? `
         <div class="palette-section-title structure-title">Structure metatiles</div>
         <label class="metatile-family"><span>Family</span><select id="metatileFamily">${structureFamilies.map(family => `
           <option value="${family}" ${family === selectedMetatileFamily ? 'selected' : ''}>${escapeHtml(family.replaceAll('_', ' '))}</option>`).join('')}</select></label>
@@ -265,6 +281,10 @@ function buildPalette() {
           </div>`).join('')}</div>` : ''}`;
     paletteContent.querySelector('#groundFamily')?.addEventListener('change', event => {
       selectedGroundFamily = event.currentTarget.value;
+      buildPalette();
+    });
+    paletteContent.querySelector('#groundStampFamily')?.addEventListener('change', event => {
+      selectedGroundStampFamily = event.currentTarget.value;
       buildPalette();
     });
     paletteContent.querySelector('#metatileFamily')?.addEventListener('change', event => {
@@ -293,6 +313,20 @@ function buildPalette() {
       item.addEventListener('dragstart', event => {
         event.dataTransfer.effectAllowed = 'copy';
         event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: 'metatile', id: item.dataset.metatile}));
+      });
+    });
+    paletteContent.querySelectorAll('[data-ground-stamp]').forEach(item => {
+      const activate = () => {
+        placingAsset = {kind: 'groundStamp', id: item.dataset.groundStamp};
+        selectedMetatile = null;
+        setMode('select');
+        buildPalette();
+      };
+      item.addEventListener('click', activate);
+      item.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') activate(); });
+      item.addEventListener('dragstart', event => {
+        event.dataTransfer.effectAllowed = 'copy';
+        event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: 'groundStamp', id: item.dataset.groundStamp}));
       });
     });
     return;
@@ -569,6 +603,23 @@ function toggleCollisionCell(object, localX, localY, marker = null) {
   if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, next === '#' ? 'solid' : 'walkable');
 }
 
+function applyGroundStamp(stampId, cell) {
+  const map = activeMap();
+  const stamp = (project.assets.groundStamps || []).find(entry => entry.id === stampId);
+  if (!stamp || map.renderModel !== 'metatile') return;
+  const originX = clamp(cell.x, 0, map.width - stamp.width);
+  const originY = clamp(cell.y, 0, map.height - stamp.height);
+  for (let y = 0; y < stamp.height; y += 1) {
+    for (let x = 0; x < stamp.width; x += 1) {
+      const tileId = stamp.cells[y][x];
+      if (tileId) map.terrain[originY + y][originX + x] = tileId;
+    }
+  }
+  placingAsset = null;
+  buildPalette();
+  recordHistory('Ground assembly placed');
+}
+
 function addObject(assetId, cell) {
   const map = activeMap();
   const asset = project.assets.objects.find(entry => entry.id === assetId);
@@ -736,7 +787,8 @@ canvas.addEventListener('pointerdown', event => {
   if (!cell) return;
   canvas.focus();
   if (placingAsset) {
-    if (placingAsset.kind === 'object') addObject(placingAsset.id, cell);
+    if (placingAsset.kind === 'groundStamp') applyGroundStamp(placingAsset.id, cell);
+    else if (placingAsset.kind === 'object') addObject(placingAsset.id, cell);
     else addActor(placingAsset.id, cell);
     return;
   }
@@ -872,7 +924,8 @@ canvas.addEventListener('drop', event => {
     if (asset.kind === 'metatile') {
       paintStructureMetatile(cell, asset.id);
       recordHistory('Structure metatile placed');
-    } else if (asset.kind === 'object') addObject(asset.id, cell);
+    } else if (asset.kind === 'groundStamp') applyGroundStamp(asset.id, cell);
+    else if (asset.kind === 'object') addObject(asset.id, cell);
     else addActor(asset.id, cell);
   } catch {
     saveStatus.textContent = 'Unsupported drop data';

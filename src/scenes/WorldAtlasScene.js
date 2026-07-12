@@ -507,6 +507,11 @@ export class WorldAtlasScene extends Phaser.Scene {
     return null;
   }
 
+  campGroundBehaviorAt(x, y) {
+    const tileId = campMetatiles.map.terrain[y]?.[x];
+    return campMetatiles.terrain.behaviors?.[tileId] || 'walkable';
+  }
+
   drawMaterialMarks(graphics, path, x, y, width, height) {
     const horizontal = width >= height;
     if (horizontal) {
@@ -905,7 +910,10 @@ export class WorldAtlasScene extends Phaser.Scene {
     if (x < 0 || y < 0 || x >= map.size.width || y >= map.size.height) return false;
     if ((map.connections || []).some(connection => connectionContains(map, connection, x, y))) return true;
     if (this.currentMapId === campMetatiles.map.id) {
-      return this.campMetatileAt(x, y)?.behavior !== 'solid';
+      const structureBehavior = this.campMetatileAt(x, y)?.behavior;
+      if (structureBehavior === 'solid') return false;
+      if (structureBehavior === 'warp') return true;
+      return !['solid', 'water'].includes(this.campGroundBehaviorAt(x, y));
     }
     if ((map.buildings || []).some(entry => doorAt(entry, x, y))) return true;
     if ((map.landmarks || []).some(entry => doorAt(entry, x, y))) return true;
