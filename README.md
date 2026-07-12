@@ -6,11 +6,19 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 
 ## Current Build
 
-- Version: 21.24 WP1.2 Town Kit
+- Version: 21.66 Map Studio
 - Runtime: Phaser 3 + Vite
-- Canvas: 320x224 logical pixels, pixel-art scaling
-- Content: 10 areas, 23 roster entries, 26 moves, 2 trainer NPCs, 3 captain battles
+- Canvas: 320x224 legacy game; 480x320 Season One world contract
+- Content: 11 legacy areas, 12 Season One exterior plans, 23 roster entries, 26 moves, and 7 trainers
 - Save: browser localStorage with version normalization and an expansion flag seam
+
+## Map Studio
+
+`map-editor.html` is the visual authoring tool for the Camp Randall production
+pilot. It provides snapped terrain/object/actor placement, object-owned
+collision masks, exact door cells, event and camera editing, undo/redo, local
+drafts, and validated JSON/PNG export. See
+[`docs/MAP_STUDIO.md`](docs/MAP_STUDIO.md).
 
 ## Development
 
@@ -41,6 +49,8 @@ That runs content validation, balance simulation, a production build, and a brow
 - `public/assets/`: runtime PNG assets copied directly into production builds
 - `public/vendor/`: external Phaser runtime copied directly into production builds
 - `tools/slice_imagegen_creature_assets.py`: slices the imagegen creature sheet into 96x96 runtime sprites and portraits
+- `tools/build_camp_randall_production.py`: compiles grid-owned Camp art and rejects visually empty solid cells
+- `tools/apply_map_editor_project.py`: validates and applies exported Map Studio packs
 - `tools/validate.mjs`: content and reachability validator
 - `tools/balance_sim.mjs`: deterministic-ish campaign balance smoke test
 - `tests/production-smoke.spec.js`: production-build browser smoke test
@@ -59,14 +69,14 @@ The source sheet and prompt live in `art/imagegen/`. Runtime assets are written 
 
 1. Source changes should happen in `src/`, `art/`, `public/assets/`, and `tools/`, not inside an uploaded zip.
 2. Every new area needs validation coverage for exits, landing tiles, gates, captains, and trainers.
-3. Collision must keep matching visible art until the Tiled JSON pipeline replaces the code collision rules.
+3. Collision must belong to visible object cells and pass the production coverage audit.
 4. Player-facing text should be ASCII unless the file already intentionally uses UTF-8 text.
 5. Run `npm run check` before deploying.
 
 ## Next Pipeline Milestones
 
-1. Replace the remaining code collision rules with Tiled object layers.
-2. Add a script that imports Tiled JSON into `src/data/world.js` or a generated equivalent.
+1. Approve Camp Randall through Map Studio and apply its exported map pack.
+2. Extend the Map Studio asset library to the next approved town package.
 3. Expand the browser smoke test from Campus Quad into first scout -> first trainer/battle.
 4. Add save migration fixtures before changing save shape again.
 5. Expand from the current vertical slice only after one 30-45 minute route feels polished end to end.

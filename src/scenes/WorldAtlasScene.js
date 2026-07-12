@@ -82,6 +82,12 @@ const line = (graphics, color, width, x1, y1, x2, y2, alpha = 1) => {
 const inRect = (x, y, rect) => x >= rect.x && y >= rect.y
   && x < rect.x + rect.width && y < rect.y + rect.height;
 
+const blocksAt = (entry, x, y) => {
+  if (!inRect(x, y, entry)) return false;
+  if (!entry.collisionMask) return true;
+  return entry.collisionMask[y - entry.y]?.[x - entry.x] === '#';
+};
+
 const doorAt = (entry, x, y) => entry.door?.x === x && entry.door?.y === y;
 
 function connectionContains(map, connection, x, y) {
@@ -824,9 +830,9 @@ export class WorldAtlasScene extends Phaser.Scene {
     if ((map.connections || []).some(connection => connectionContains(map, connection, x, y))) return true;
     if ((map.buildings || []).some(entry => doorAt(entry, x, y))) return true;
     if ((map.landmarks || []).some(entry => doorAt(entry, x, y))) return true;
-    if ((map.blockers || []).some(entry => inRect(x, y, entry))) return false;
-    if ((map.buildings || []).some(entry => inRect(x, y, entry))) return false;
-    if ((map.landmarks || []).some(entry => !entry.walkable && inRect(x, y, entry))) return false;
+    if ((map.blockers || []).some(entry => blocksAt(entry, x, y))) return false;
+    if ((map.buildings || []).some(entry => blocksAt(entry, x, y))) return false;
+    if ((map.landmarks || []).some(entry => !entry.walkable && blocksAt(entry, x, y))) return false;
     if (map.walkableMode === 'open') return true;
     return (map.paths || []).some(entry => inRect(x, y, entry))
       || (map.clearings || []).some(entry => inRect(x, y, entry))
@@ -837,9 +843,9 @@ export class WorldAtlasScene extends Phaser.Scene {
     if (x < 0 || y < 0 || x >= interior.size.width || y >= interior.size.height) return false;
     if (x === interior.exit.x && y === interior.exit.y) return true;
     if (x === 0 || y === 0 || x === interior.size.width - 1 || y === interior.size.height - 1) {
-      return (interior.fixtures || []).some(entry => entry.to && inRect(x, y, entry));
+      return (interior.fixtures || []).some(entry => (entry.to || entry.walkable) && inRect(x, y, entry));
     }
-    return !(interior.fixtures || []).some(entry => !entry.to && inRect(x, y, entry));
+    return !(interior.fixtures || []).some(entry => !entry.to && !entry.walkable && blocksAt(entry, x, y));
   }
 
   pass(x, y) {

@@ -23,6 +23,35 @@ if(seasonRegion.layoutRevision!==seasonLayouts.revision)errs.push('Season One re
 if(seasonRegion.tileSize!==32)errs.push('Season One region must use the approved 32px gameplay cell');
 if(seasonRegion.camera?.outdoorTilesWide!==15||seasonRegion.camera?.outdoorTilesHigh!==10||seasonRegion.camera?.canvasWidth!==480||seasonRegion.camera?.canvasHeight!==320||seasonRegion.camera?.defaultWorldZoom!==1)errs.push('Season One outdoor camera contract must remain 15x10 cells at native 480x320');
 errs.push(...validateSeasonOneLayouts(seasonRegion,seasonLayouts));
+const productionBuildPath=fileURLToPath(new URL('../src/data/campRandallProductionBuild.json',import.meta.url));
+const productionManifestPath=fileURLToPath(new URL('../art/imagegen/camp_randall_production_manifest.json',import.meta.url));
+if(!existsSync(productionBuildPath))errs.push('Camp production build is missing; run npm run build:camp-production');
+else{
+  const production=JSON.parse(readFileSync(productionBuildPath,'utf8'));
+  const productionManifest=JSON.parse(readFileSync(productionManifestPath,'utf8'));
+  const hashFile=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
+  if(production.version!==1||production.status!=='production-pilot')errs.push('Camp production build version/status is unsupported');
+  if(production.layoutRevision!==seasonLayouts.revision||production.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp production build diverges from the Season One layout contract');
+  if(production.minimumBlockedCellCoverage!==productionManifest.minimumBlockedCellCoverage)errs.push('Camp production visual-coverage threshold diverges from its manifest');
+  if(production.sources?.manifest!==hashFile(productionManifestPath))errs.push('Camp production manifest is stale; run npm run build:camp-production');
+  if(production.sources?.layout!==hashFile(seasonLayoutsPath))errs.push('Camp production layout is stale; run npm run build:camp-production');
+  for(const [sourceId,relative] of Object.entries(productionManifest.sourceAssets||{})){
+    const source=fileURLToPath(new URL(`../${relative}`,import.meta.url));
+    if(!existsSync(source)||production.sources?.[sourceId]!==hashFile(source))errs.push(`Camp production source ${sourceId} is stale; run npm run build:camp-production`);
+  }
+  for(const [filename,expected] of Object.entries(production.outputs||{})){
+    const output=fileURLToPath(new URL(`../public/assets/camp-production/${filename}`,import.meta.url));
+    if(!existsSync(output)||hashFile(output)!==expected)errs.push(`Camp production output ${filename} is stale; run npm run build:camp-production`);
+  }
+  const packages=[production.map,...Object.values(production.interiors||{})];
+  for(const entry of packages)for(const object of entry.objects||[]){
+    if(object.audit?.minimumCoverage<production.minimumBlockedCellCoverage)errs.push(`Camp production object ${object.id} fails visible collision coverage`);
+  }
+  for(const [actorId,sheet] of Object.entries(production.actorSheets||{})){
+    const output=fileURLToPath(new URL(`../public/${sheet.path.replace(/^\.\//,'')}`,import.meta.url));
+    if(sheet.frameWidth!==32||sheet.frameHeight!==64||!existsSync(output))errs.push(`Camp production actor ${actorId} is missing or not 32x64 framed`);
+  }
+}
 const seasonNodes=seasonRegion.nodes||{};
 const seasonNodeIds=Object.keys(seasonNodes);
 const requiredSeasonNodes=['camp_randall','r1','field_house','lakeshore_path','picnic_point','state_street','bascom_hill','capitol_square','monona_shore','kohl_center','airport','st_louis'];

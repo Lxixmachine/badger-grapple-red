@@ -1,19 +1,21 @@
 {
   "name": "badger-grapple-red",
-  "version": "21.65.0",
+  "version": "21.66.0",
   "private": true,
   "type": "module",
   "description": "Source-first Phaser wrestling RPG built toward FireRed-style production quality",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build:camp-manifest": "python tools/build_camp_randall_manifest.py && python tools/build_camp_randall_tilemaps.py",
+    "build:camp-production": "python tools/build_camp_randall_production.py",
+    "apply:map-editor": "python tools/apply_map_editor_project.py",
     "build:camp-tiles": "python tools/build_camp_randall_tilemaps.py",
     "build:world-compositions": "python tools/build_world_compositions.py",
     "build:maps": "npm run build:camp-manifest && npm run build:world-compositions",
     "validate": "node tools/validate.mjs",
     "balance": "node tools/balance_sim.mjs",
     "smoke": "playwright test",
-    "check": "npm run build:maps && npm run validate && npm run balance && npm run lint-maps && npm run build && npm run smoke",
+    "check": "npm run build:maps && npm run build:camp-production && npm run validate && npm run balance && npm run lint-maps && npm run build && npm run smoke",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint-maps": "node tools/lint_maps.mjs"

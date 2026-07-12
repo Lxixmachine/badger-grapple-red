@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Badger Grapple Map Studio</title>
+  <link rel="stylesheet" href="./src/editor/editor.css" />
+</head>
+<body>
+  <div class="editor-shell">
+    <header class="topbar">
+      <div class="brand-block">
+        <strong>BADGER GRAPPLE</strong>
+        <span>MAP STUDIO</span>
+      </div>
+      <label class="map-picker">
+        <span>Map</span>
+        <select id="mapSelect" aria-label="Map"></select>
+      </label>
+      <div class="tool-segments" id="toolSegments" aria-label="Editor tool">
+        <button class="active" data-tool="select" title="Select and move objects">Select</button>
+        <button data-tool="terrain" title="Paint terrain cells">Terrain</button>
+        <button data-tool="collision" title="Paint selected object collision">Collision</button>
+        <button data-tool="door" title="Place selected object door">Door</button>
+        <button data-tool="event" title="Move event markers">Events</button>
+        <button data-tool="camera" title="Position the camera review window">Camera</button>
+      </div>
+      <div class="icon-actions">
+        <button id="undoButton" class="icon-button" title="Undo" aria-label="Undo">&#8630;</button>
+        <button id="redoButton" class="icon-button" title="Redo" aria-label="Redo">&#8631;</button>
+        <button id="gridButton" class="icon-button active" title="Toggle grid" aria-label="Toggle grid">#</button>
+        <button id="collisionButton" class="icon-button" title="Toggle collision overlay" aria-label="Toggle collision overlay">C</button>
+        <button id="cameraButton" class="icon-button" title="Toggle camera preview" aria-label="Toggle camera preview">&#9635;</button>
+      </div>
+      <div class="zoom-control" aria-label="Zoom">
+        <button id="zoomOut" class="icon-button" title="Zoom out" aria-label="Zoom out">&#8722;</button>
+        <output id="zoomValue">100%</output>
+        <button id="zoomIn" class="icon-button" title="Zoom in" aria-label="Zoom in">+</button>
+      </div>
+      <div class="file-actions">
+        <button id="importButton">Import</button>
+        <button id="resetButton">Reset Draft</button>
+        <button id="pngButton">Review PNG</button>
+        <button id="exportButton" class="primary">Export JSON</button>
+      </div>
+    </header>
+
+    <main class="editor-main">
+      <aside class="palette-panel" aria-label="Asset palette">
+        <div class="panel-heading">
+          <strong>Palette</strong>
+          <div class="palette-tabs" role="tablist">
+            <button class="active" data-palette="terrain" role="tab">Tiles</button>
+            <button data-palette="objects" role="tab">Objects</button>
+            <button data-palette="actors" role="tab">Actors</button>
+          </div>
+        </div>
+        <div id="paletteContent" class="palette-content"></div>
+      </aside>
+
+      <section class="workspace" id="workspace" aria-label="Map canvas">
+        <div class="canvas-stage" id="canvasStage">
+          <canvas id="mapCanvas" tabindex="0" aria-label="Editable map"></canvas>
+        </div>
+        <div class="workspace-readout">
+          <span id="cellReadout">Cell --,--</span>
+          <span id="modeReadout">Select</span>
+        </div>
+      </section>
+
+      <aside class="inspector-panel" id="inspectorPanel" aria-label="Inspector">
+        <div class="panel-heading">
+          <strong>Inspector</strong>
+          <button id="deleteButton" class="icon-button danger" title="Delete selection" aria-label="Delete selection">&#215;</button>
+        </div>
+        <div id="inspectorContent" class="inspector-content"></div>
+        <section class="validation-panel">
+          <div class="validation-title">
+            <strong>Validation</strong>
+            <span id="validationCount">0</span>
+          </div>
+          <div id="validationContent"></div>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="statusbar">
+      <span id="saveStatus">Local draft ready</span>
+      <span id="mapStatus">24 x 20 cells</span>
+      <span>32 px grid</span>
+    </footer>
+  </div>
+  <input id="fileInput" type="file" accept="application/json,.json" hidden />
+  <script type="module" src="./src/editor/main.js"></script>
+</body>
+</html>

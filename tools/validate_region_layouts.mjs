@@ -11,6 +11,12 @@ const rectInBounds = (map, rect) => Number.isInteger(rect.x) && Number.isInteger
 const inRect = (x, y, rect) => x >= rect.x && y >= rect.y
   && x < rect.x + rect.width && y < rect.y + rect.height;
 
+const blocksAt = (entry, x, y) => {
+  if (!inRect(x, y, entry)) return false;
+  if (!entry.collisionMask) return true;
+  return entry.collisionMask[y - entry.y]?.[x - entry.x] === '#';
+};
+
 const connectionContains = (map, connection, x, y) => {
   if (connection.edge === 'north') return y === 0 && x >= connection.start && x < connection.start + connection.span;
   if (connection.edge === 'south') return y === map.size.height - 1 && x >= connection.start && x < connection.start + connection.span;
@@ -28,9 +34,9 @@ function passable(map, x, y) {
   if ((map.landmarks || []).some(entry => doorAt(entry, x, y))) return true;
 
   const blockers = map.blockers || [];
-  if (blockers.some(rect => inRect(x, y, rect))) return false;
-  if ((map.buildings || []).some(rect => inRect(x, y, rect))) return false;
-  if ((map.landmarks || []).some(rect => !rect.walkable && inRect(x, y, rect))) return false;
+  if (blockers.some(rect => blocksAt(rect, x, y))) return false;
+  if ((map.buildings || []).some(rect => blocksAt(rect, x, y))) return false;
+  if ((map.landmarks || []).some(rect => !rect.walkable && blocksAt(rect, x, y))) return false;
 
   if (map.walkableMode === 'open') return true;
   return (map.paths || []).some(rect => inRect(x, y, rect))
@@ -50,6 +56,34 @@ function reachableCells(map) {
       const ny = y + dy;
       const key = `${nx},${ny}`;
       if (seen.has(key) || !passable(map, nx, ny)) continue;
+      seen.add(key);
+      queue.push([nx, ny]);
+    }
+  }
+  return seen;
+}
+
+function interiorPassable(interior, x, y) {
+  if (!pointInBounds(interior, x, y)) return false;
+  if (x === interior.exit.x && y === interior.exit.y) return true;
+  if (x === 0 || y === 0 || x === interior.size.width - 1 || y === interior.size.height - 1) {
+    return (interior.fixtures || []).some(entry => (entry.to || entry.walkable) && inRect(x, y, entry));
+  }
+  return !(interior.fixtures || []).some(entry => !entry.to && !entry.walkable && blocksAt(entry, x, y));
+}
+
+function reachableInteriorCells(interior) {
+  const start = {x: interior.exit.x, y: Math.max(1, interior.exit.y - 1)};
+  if (!interiorPassable(interior, start.x, start.y)) return new Set();
+  const seen = new Set([`${start.x},${start.y}`]);
+  const queue = [[start.x, start.y]];
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nx = x + dx;
+      const ny = y + dy;
+      const key = `${nx},${ny}`;
+      if (seen.has(key) || !interiorPassable(interior, nx, ny)) continue;
       seen.add(key);
       queue.push([nx, ny]);
     }
@@ -121,7 +155,9 @@ export function validateSeasonOneLayouts(region, layouts) {
     const node = region.nodes[id];
     if (node.layoutId !== id) errors.push(`Season One node '${id}' must point to its stable layout id`);
     if (!maps[id]) errors.push(`Season One layout map '${id}' is missing`);
-    if (node.readyForFinalArt) errors.push(`Season One node '${id}' cannot enter final art while atlas status is pre-art-blockout`);
+    if (node.readyForFinalArt && region.productionPilot !== id) {
+      errors.push(`Season One node '${id}' cannot enter final art before it becomes the declared production pilot`);
+    }
   }
   for (const id of Object.keys(maps)) {
     if (!region.nodes[id]) errors.push(`Season One layout '${id}' has no region node`);
@@ -142,6 +178,12 @@ export function validateSeasonOneLayouts(region, layouts) {
     for (const group of ['paths', 'clearings', 'blockers', 'buildings', 'landmarks']) {
       for (const entry of map[group] || []) {
         if (!rectInBounds(map, entry)) errors.push(`Layout '${id}' ${group} '${entry.id}' is out of bounds`);
+        if (entry.collisionMask) {
+          if (entry.collisionMask.length !== entry.height
+            || entry.collisionMask.some(row => row.length !== entry.width || /[^.#]/.test(row))) {
+            errors.push(`Layout '${id}' ${group} '${entry.id}' has an invalid collision mask`);
+          }
+        }
       }
     }
     const structures = [...(map.buildings || []), ...(map.landmarks || [])];
@@ -320,15 +362,41 @@ export function validateSeasonOneLayouts(region, layouts) {
     errors.push('State Street must retain its multi-block route scale and authored street-wall structures');
   }
 
+  if (!region.productionPilot || !maps[region.productionPilot]
+    || !region.nodes?.[region.productionPilot]?.readyForFinalArt) {
+    errors.push('Season One must declare one ready-for-art production pilot');
+  }
+
   for (const [id, interior] of Object.entries(interiors)) {
     if (!interior.displayName || !interior.size || !interior.exit) errors.push(`Interior '${id}' is missing identity, size, or exit`);
     if (!pointInBounds(interior, interior.exit.x, interior.exit.y)) errors.push(`Interior '${id}' exit is out of bounds`);
     for (const fixture of interior.fixtures || []) {
       if (!rectInBounds(interior, fixture)) errors.push(`Interior '${id}' fixture '${fixture.id}' is out of bounds`);
+      if (fixture.collisionMask && (fixture.collisionMask.length !== fixture.height
+        || fixture.collisionMask.some(row => row.length !== fixture.width || /[^.#]/.test(row)))) {
+        errors.push(`Interior '${id}' fixture '${fixture.id}' has an invalid collision mask`);
+      }
       if (fixture.to) referencedInteriors.add(fixture.to);
     }
     for (const event of interior.events || []) {
       if (!pointInBounds(interior, event.x, event.y)) errors.push(`Interior '${id}' event '${event.id}' is out of bounds`);
+    }
+    const reachable = reachableInteriorCells(interior);
+    if (!reachable.size) errors.push(`Interior '${id}' has no reachable spawn cell`);
+    const reachableOrAdjacent = (x, y) => reachable.has(`${x},${y}`)
+      || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => reachable.has(`${x + dx},${y + dy}`));
+    if (!reachable.has(`${interior.exit.x},${interior.exit.y}`)) errors.push(`Interior '${id}' exit is unreachable`);
+    for (const fixture of interior.fixtures || []) {
+      if (fixture.to) {
+        const cells = [];
+        for (let y = fixture.y; y < fixture.y + fixture.height; y += 1) {
+          for (let x = fixture.x; x < fixture.x + fixture.width; x += 1) cells.push(`${x},${y}`);
+        }
+        if (!cells.some(cell => reachable.has(cell))) errors.push(`Interior '${id}' connection fixture '${fixture.id}' is unreachable`);
+      }
+    }
+    for (const event of interior.events || []) {
+      if (!reachableOrAdjacent(event.x, event.y)) errors.push(`Interior '${id}' event '${event.id}' has no reachable interaction cell`);
     }
   }
   for (const id of referencedInteriors) if (!interiors[id]) errors.push(`Referenced interior '${id}' is missing`);

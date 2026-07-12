@@ -61,7 +61,7 @@
       "blockers": [
         {"id": "west_tree_border", "kind": "forest", "x": 0, "y": 0, "width": 2, "height": 20},
         {"id": "east_tree_border", "kind": "forest", "x": 22, "y": 0, "width": 2, "height": 20},
-        {"id": "memory_garden", "kind": "hedge", "x": 3, "y": 14, "width": 6, "height": 4},
+        {"id": "memory_garden", "kind": "hedge", "x": 3, "y": 14, "width": 6, "height": 4, "collisionMask": ["######", "#....#", "#....#", "######"]},
         {"id": "practice_pond", "kind": "water", "x": 16, "y": 15, "width": 4, "height": 3}
       ],
       "buildings": [
@@ -69,7 +69,7 @@
         {"id": "coach_office", "name": "Coach's Office", "kind": "story", "x": 15, "y": 9, "width": 6, "height": 4, "door": {"x": 17, "y": 12}, "interior": "coach_office"}
       ],
       "landmarks": [
-        {"id": "camp_randall_stadium", "name": "Camp Randall Stadium", "kind": "x_factor", "x": 4, "y": 0, "width": 16, "height": 6, "door": {"x": 11, "y": 5}, "interior": "stadium_tunnel", "gate": "season_complete"}
+        {"id": "camp_randall_stadium", "name": "Camp Randall Stadium", "kind": "x_factor", "x": 4, "y": 0, "width": 15, "height": 6, "door": {"x": 11, "y": 5}, "interior": "stadium_tunnel", "gate": "season_complete"}
       ],
       "connections": [
         {"to": "r1", "edge": "south", "start": 11, "span": 2, "toEdge": "north", "toStart": 8}
@@ -619,10 +619,14 @@
       "size": {"width": 15, "height": 10},
       "exit": {"x": 7, "y": 9},
       "fixtures": [
-        {"id": "player_locker", "name": "Your Locker", "x": 2, "y": 1, "width": 3, "height": 2},
-        {"id": "rex_locker", "name": "Rex's Locker", "x": 10, "y": 1, "width": 3, "height": 2},
-        {"id": "trophy_threshold", "name": "Trophy Wall", "x": 6, "y": 3, "width": 3, "height": 1},
-        {"id": "wrestling_door", "name": "Wrestling Room Door", "x": 7, "y": 0, "width": 1, "height": 1, "to": "wrestling_room"}
+        {"id": "wrestling_door", "name": "Wrestling Room Door", "x": 7, "y": 0, "width": 1, "height": 1, "to": "wrestling_room"},
+        {"id": "player_lockers", "name": "Your Locker", "x": 1, "y": 1, "width": 4, "height": 2},
+        {"id": "trophy_case_west", "name": "Trophy Wall", "x": 5, "y": 1, "width": 2, "height": 2},
+        {"id": "trophy_case_east", "name": "Trophy Wall", "x": 8, "y": 1, "width": 2, "height": 2},
+        {"id": "rex_lockers", "name": "Rex's Locker", "x": 10, "y": 1, "width": 4, "height": 2},
+        {"id": "bench_west", "name": "Locker Room Bench", "x": 2, "y": 6, "width": 3, "height": 1},
+        {"id": "bench_east", "name": "Locker Room Bench", "x": 10, "y": 6, "width": 3, "height": 1},
+        {"id": "locker_exit_frame", "name": "Quad Exit", "x": 6, "y": 8, "width": 3, "height": 1, "walkable": true}
       ],
       "events": [
         {"id": "captain_block", "label": "Captain blocks", "x": 7, "y": 4, "beat": 2},
@@ -636,9 +640,10 @@
       "size": {"width": 15, "height": 10},
       "exit": {"x": 7, "y": 9},
       "fixtures": [
-        {"id": "practice_mat", "name": "Practice Mat", "x": 3, "y": 1, "width": 9, "height": 6},
+        {"id": "practice_mat", "name": "Practice Mat", "x": 3, "y": 1, "width": 9, "height": 6, "walkable": true},
         {"id": "weights", "name": "Weights", "x": 1, "y": 2, "width": 2, "height": 3},
-        {"id": "practice_station", "name": "Practice Station", "x": 12, "y": 2, "width": 2, "height": 3}
+        {"id": "practice_station", "name": "Practice Station", "x": 12, "y": 2, "width": 2, "height": 3},
+        {"id": "wrestling_exit_frame", "name": "Locker Room Exit", "x": 6, "y": 8, "width": 3, "height": 1, "walkable": true}
       ],
       "events": [
         {"id": "coach_found", "label": "Coach found", "x": 7, "y": 5, "beat": 4},
@@ -652,9 +657,11 @@
       "size": {"width": 11, "height": 8},
       "exit": {"x": 5, "y": 7},
       "fixtures": [
-        {"id": "coach_desk", "name": "Coach's Desk", "x": 3, "y": 2, "width": 5, "height": 2},
+        {"id": "coach_desk", "name": "Coach's Desk", "x": 3, "y": 2, "width": 5, "height": 3, "collisionMask": ["..#..", "#####", "#####"]},
         {"id": "recruit_board", "name": "Recruiting Board", "x": 1, "y": 1, "width": 3, "height": 1},
-        {"id": "depth_chart", "name": "Depth Chart", "x": 8, "y": 1, "width": 2, "height": 2}
+        {"id": "depth_chart", "name": "Depth Chart", "x": 8, "y": 1, "width": 2, "height": 2},
+        {"id": "office_plant", "name": "Office Plant", "x": 1, "y": 4, "width": 1, "height": 2},
+        {"id": "office_exit_frame", "name": "Quad Exit", "x": 4, "y": 6, "width": 3, "height": 1, "walkable": true}
       ],
       "events": [
         {"id": "office_empty", "label": "Empty office", "x": 5, "y": 5, "beat": 3},
@@ -696,7 +703,7 @@
       "size": {"width": 15, "height": 12},
       "exit": {"x": 7, "y": 11},
       "fixtures": [
-        {"id": "competition_mat", "name": "Competition Mat", "x": 3, "y": 2, "width": 9, "height": 7},
+        {"id": "competition_mat", "name": "Competition Mat", "x": 3, "y": 2, "width": 9, "height": 7, "walkable": true},
         {"id": "equipment_desk", "name": "Equipment Manager", "x": 1, "y": 2, "width": 2, "height": 3}
       ],
       "events": [
@@ -710,9 +717,9 @@
       "size": {"width": 15, "height": 12},
       "exit": {"x": 7, "y": 11},
       "fixtures": [
-        {"id": "rotunda", "name": "Rotunda", "x": 3, "y": 1, "width": 9, "height": 7},
+        {"id": "rotunda", "name": "Rotunda", "x": 3, "y": 1, "width": 9, "height": 7, "walkable": true},
         {"id": "booster_gallery", "name": "Booster Gallery", "x": 1, "y": 4, "width": 2, "height": 4},
-        {"id": "senate_floor", "name": "Senate Mat", "x": 5, "y": 8, "width": 5, "height": 2}
+        {"id": "senate_floor", "name": "Senate Mat", "x": 5, "y": 8, "width": 5, "height": 2, "walkable": true}
       ],
       "events": [
         {"id": "booster", "label": "Kayak Voucher", "x": 3, "y": 5, "beat": 18},
@@ -738,7 +745,7 @@
       "size": {"width": 15, "height": 12},
       "exit": {"x": 7, "y": 11},
       "fixtures": [
-        {"id": "conference_mat", "name": "Conference Mat", "x": 3, "y": 1, "width": 9, "height": 7},
+        {"id": "conference_mat", "name": "Conference Mat", "x": 3, "y": 1, "width": 9, "height": 7, "walkable": true},
         {"id": "bracket_desk", "name": "Bracket Desk", "x": 5, "y": 9, "width": 5, "height": 1}
       ],
       "events": [
@@ -753,7 +760,7 @@
       "size": {"width": 15, "height": 12},
       "exit": {"x": 7, "y": 11},
       "fixtures": [
-        {"id": "nationals_mat", "name": "Nationals Mat", "x": 3, "y": 1, "width": 9, "height": 7},
+        {"id": "nationals_mat", "name": "Nationals Mat", "x": 3, "y": 1, "width": 9, "height": 7, "walkable": true},
         {"id": "bracket_board", "name": "Bracket Board", "x": 1, "y": 2, "width": 2, "height": 4}
       ],
       "events": [
@@ -781,7 +788,9 @@
       "size": {"width": 9, "height": 12},
       "exit": {"x": 4, "y": 11},
       "fixtures": [
-        {"id": "tunnel_lane", "name": "Field Tunnel", "x": 3, "y": 0, "width": 3, "height": 12}
+        {"id": "tunnel_wall_west", "name": "Tunnel Wall", "x": 0, "y": 0, "width": 3, "height": 12},
+        {"id": "tunnel_lane", "name": "Field Tunnel", "x": 3, "y": 0, "width": 3, "height": 12, "walkable": true},
+        {"id": "tunnel_wall_east", "name": "Tunnel Wall", "x": 6, "y": 0, "width": 3, "height": 12}
       ],
       "events": [
         {"id": "team_walk", "label": "Team walkout", "x": 4, "y": 4, "beat": 40},

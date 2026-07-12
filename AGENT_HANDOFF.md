@@ -1,5 +1,41 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.66 Map Studio)
+
+Tony identified the missing production loop: when generated composition is
+close, he needs to correct it directly instead of describing small visual,
+collision, door, and depth errors through screenshots. `map-editor.html` is now
+a deployed grid-native editor for the Camp Randall production pilot and its
+four interiors.
+
+Map Studio loads the audited 32px production package and supports snapped
+terrain/object/actor placement, direct object dragging, object-specific
+collision masks, exact door cells, events, 15x10 camera reviews, row-sliced
+depth, undo/redo, local drafts, clean PNG review, and validated JSON export. It
+works at desktop and 390x844 phone layouts. Object dimensions cannot be scaled
+off-grid. Newly added solid cells produce coverage warnings.
+
+`tools/apply_map_editor_project.py` closes the loop. Its default dry run
+validates schema, revisions, bounds, fixed footprints, masks, doors, terrain,
+actors, and events. `--write` converts the pack back into Season One paths,
+object owners, fixtures, actors, events, camera reviews, and production-manifest
+entries, increments the layout revision, and recompiles Camp assets.
+
+The Camp production compiler now emits all collision-owning exterior art as
+objects, including the pond, plus 32x64 actor sheets with FireRed-faithful
+32x48 visible figures. It rejects any blocked cell below 55% visible alpha.
+The existing game renderer was deliberately left stable; production art should
+be integrated only after Tony edits/approves the exported Camp pack.
+
+Verification: production compiler passes; importer seed dry run reports 5 maps,
+23 objects, and 5 actors; `npm run validate` passes; the Vite multi-page build
+emits `map-editor.html`; five dedicated Chromium editor tests pass, including
+mobile layout. See `docs/MAP_STUDIO.md`.
+
+Do not stage the unrelated State Street/downtown files already dirty in Tony's
+worktree. The next step is Tony's hands-on Camp edit and JSON export, then apply
+that pack and integrate the approved runtime renderer.
+
 ## Latest Codex Turn (v21.65 FireRed town-composition revision)
 
 Tony supplied eleven FireRed/LeafGreen town sheets. Their exterior panels made

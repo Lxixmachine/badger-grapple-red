@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "status": "production-pilot",
+  "layoutId": "camp_randall",
+  "layoutRevision": 2,
+  "cellSize": 32,
+  "minimumBlockedCellCoverage": 0.55,
+  "law": "Every solid gameplay cell must visibly read as occupied. Collision comes from seasonOneLayouts.json; this manifest only assigns original art to those owners. Roof and trim pixels may decorate an owner but may not silently expand collision.",
+  "sourceAssets": {
+    "terrain": "art/imagegen/camp_randall_terrain_kit_v2_alpha_2026-07-11.png",
+    "exterior": "art/imagegen/camp_randall_exterior_objects_v1_alpha_2026-07-11.png",
+    "locker": "art/imagegen/camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png",
+    "office": "art/imagegen/camp_randall_office_objects_v1_alpha_2026-07-11.png",
+    "player": "public/assets/sprites/player_walk.png",
+    "captain": "public/assets/sprites/npc_walk_red.png",
+    "coach": "public/assets/sprites/npc_walk_gray.png",
+    "rex": "public/assets/sprites/npc_walk_purple.png"
+  },
+  "sourceCrops": {
+    "grass": [33, 65, 191, 221],
+    "brick": [583, 65, 708, 196],
+    "dirt": [33, 387, 174, 527],
+    "wood": [212, 567, 370, 727],
+    "mat": [399, 564, 557, 730],
+    "carpet": [33, 766, 164, 861],
+    "office_carpet": [33, 892, 187, 1048],
+    "forest": [33, 1079, 212, 1321],
+    "stadium_reference": [82, 97, 709, 382],
+    "team_building": [768, 140, 1089, 398],
+    "coach_office": [1149, 144, 1483, 398],
+    "memory_garden": [132, 469, 432, 744],
+    "locker_bank_west": [67, 464, 604, 680],
+    "locker_bank_east": [904, 464, 1461, 680],
+    "trophy_case_west": [1104, 126, 1329, 429],
+    "trophy_case_east": [1362, 128, 1467, 429],
+    "locker_door": [678, 444, 832, 678],
+    "locker_exit": [1086, 718, 1310, 939],
+    "bench": [543, 848, 961, 932],
+    "plate_rack": [675, 173, 840, 403],
+    "barbell_bench": [869, 196, 1076, 416],
+    "coach_desk": [115, 17, 616, 398],
+    "strategy_board": [203, 716, 582, 950],
+    "depth_chart": [780, 115, 1010, 360],
+    "office_plant": [836, 394, 948, 658],
+    "office_exit": [1076, 433, 1353, 662]
+  },
+  "exterior": {
+    "baseStyle": "campus_lawn",
+    "objects": [
+      {"ownerGroup": "blockers", "ownerId": "west_tree_border", "art": "forest_strip"},
+      {"ownerGroup": "blockers", "ownerId": "east_tree_border", "art": "forest_strip_mirrored"},
+      {"ownerGroup": "blockers", "ownerId": "memory_garden", "art": "memory_garden", "source": "exterior"},
+      {"ownerGroup": "blockers", "ownerId": "practice_pond", "art": "pond_grid_native"},
+      {"ownerGroup": "buildings", "ownerId": "team_building", "art": "team_building", "source": "exterior"},
+      {"ownerGroup": "buildings", "ownerId": "coach_office", "art": "coach_office", "source": "exterior"},
+      {"ownerGroup": "landmarks", "ownerId": "camp_randall_stadium", "art": "stadium_grid_native"}
+    ],
+    "actors": [
+      {"id": "assistant_coach", "sheet": "coach", "x": 20, "y": 14, "facing": "left", "solid": true, "dialogue": "Camp Randall is home. The season starts in the Team Building."}
+    ]
+  },
+  "interiors": {
+    "team_locker_room": {
+      "baseStyle": "locker_room",
+      "fixtures": {
+        "wrestling_door": {"art": "interior_north_door"},
+        "player_lockers": {"art": "locker_bank_west", "source": "locker"},
+        "trophy_case_west": {"art": "trophy_case_west", "source": "locker"},
+        "trophy_case_east": {"art": "trophy_case_east", "source": "locker"},
+        "rex_lockers": {"art": "locker_bank_east", "source": "locker"},
+        "bench_west": {"art": "bench", "source": "locker"},
+        "bench_east": {"art": "bench", "source": "locker", "mirror": true},
+        "locker_exit_frame": {"art": "interior_south_exit"}
+      },
+      "actors": [
+        {"id": "captain", "sheet": "captain", "x": 7, "y": 4, "facing": "down", "solid": true, "condition": "office_unchecked", "dialogue": "Captain: Coach is not in here. Check his office next door first."},
+        {"id": "rex_locker", "sheet": "rex", "x": 11, "y": 4, "facing": "left", "solid": true, "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat."}
+      ]
+    },
+    "wrestling_room": {
+      "baseStyle": "wrestling_room",
+      "fixtures": {
+        "practice_mat": {"art": "mat_floor", "renderMode": "base"},
+        "weights": {"art": "plate_rack", "source": "locker"},
+        "practice_station": {"art": "barbell_bench", "source": "locker", "foundation": "equipment_pad"},
+        "wrestling_exit_frame": {"art": "interior_south_exit"}
+      },
+      "actors": [
+        {"id": "coach", "sheet": "coach", "x": 7, "y": 5, "facing": "down", "solid": true, "dialogue": "Coach: Your persona is how you impose yourself on a match."},
+        {"id": "rex_mat", "sheet": "rex", "x": 9, "y": 5, "facing": "left", "solid": true, "dialogue": "Rex: Pick your style. Then wrestle me for the spot."}
+      ]
+    },
+    "coach_office": {
+      "baseStyle": "coach_office",
+      "fixtures": {
+        "coach_desk": {"art": "coach_desk", "source": "office"},
+        "recruit_board": {"art": "strategy_board", "source": "office"},
+        "depth_chart": {"art": "depth_chart", "source": "office"},
+        "office_plant": {"art": "office_plant", "source": "office"},
+        "office_exit_frame": {"art": "interior_south_exit"}
+      }
+    },
+    "stadium_tunnel": {
+      "baseStyle": "stadium_tunnel",
+      "fixtures": {
+        "tunnel_wall_west": {"art": "tunnel_wall", "renderMode": "base"},
+        "tunnel_lane": {"art": "tunnel_lane", "renderMode": "base"},
+        "tunnel_wall_east": {"art": "tunnel_wall", "renderMode": "base"}
+      }
+    }
+  }
+}
