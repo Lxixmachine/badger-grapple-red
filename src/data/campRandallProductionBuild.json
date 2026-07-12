@@ -6,6 +6,10 @@
   "minimumBlockedCellCoverage": 0.55,
   "map": {
     "id": "camp_randall",
+    "ground": {
+      "texture": "camp-prod-camp-randall-ground",
+      "path": "./assets/camp-production/camp_randall_ground.png"
+    },
     "base": {
       "texture": "camp-prod-camp-randall-base",
       "path": "./assets/camp-production/camp_randall_base.png"
@@ -855,6 +859,7 @@
     "camp-randall__team_building.png": "4732964a1601ac26fda4e9ec285e4d4f788d90f13d32e783eca8ccafa11761a2",
     "camp-randall__west_tree_border.png": "12e1f3cda27be425a08e9ec9cdf2efa63c96528019a20e98d9eed4adafc37ef0",
     "camp_randall_base.png": "bbecd5e42a0a9d0c93233394d363058422e7b180b49cde734083bbb9970d4f5a",
+    "camp_randall_ground.png": "cd1cb7ba69ce043db7169e763bf3719e950f77d59fdee781b582ac4b08d41eb8",
     "coach-office__coach_desk.png": "b1b8defeb67c4cb051662ce50477d7b2e16379617032904d1aa2d4a5dfeb3e6a",
     "coach-office__depth_chart.png": "0b765670a0215cdee843785d6b008b2164ee0d0805e1bc14c0c045c601b10c73",
     "coach-office__office_exit_frame.png": "35f99d18bf469bd636ffff9b6a30848196c7945647b19500f8bc355f1a044e94",

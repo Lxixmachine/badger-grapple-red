@@ -22,7 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 MANIFEST_PATH = ROOT / "art" / "imagegen" / "camp_randall_production_manifest.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
-SCHEMA = "badger-grapple-map-pack/v1"
+METATILE_BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
+METATILE_OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
+SCHEMA = "badger-grapple-map-pack/v2"
 EXTERIOR_GROUPS = ("blockers", "buildings", "landmarks")
 SUPPORTED_TERRAIN = {"grass", "brick", "stone", "dirt", "floor"}
 
@@ -38,14 +40,17 @@ def load_json(path: Path) -> dict:
         fail(str(error))
 
 
-def validate_project(project: dict, build: dict) -> None:
+def validate_project(project: dict, build: dict, metatile_build: dict) -> None:
     if project.get("schema") != SCHEMA:
         fail(f"unsupported schema {project.get('schema')!r}")
     if project.get("layoutRevision") != build.get("layoutRevision"):
         fail("export was created from a different layout revision")
     if project.get("productionVersion") != build.get("version"):
         fail("export was created from a different production package")
+    if project.get("metatileVersion") != metatile_build.get("version"):
+        fail("export was created from a different metatile package")
     assets = {asset["id"]: asset for asset in project.get("assets", {}).get("objects", [])}
+    metatiles = {tile["id"]: tile for tile in project.get("assets", {}).get("metatiles", [])}
     if not assets:
         fail("object asset library is missing")
 
@@ -72,13 +77,13 @@ def validate_project(project: dict, build: dict) -> None:
                 fail(f"{map_id}: duplicate object id {instance.get('id')}")
             ids.add(instance.get("id"))
             asset = assets.get(instance.get("assetId"))
-            if not asset:
+            if not asset and instance.get("sourceKind") != "metatile":
                 fail(f"{map_id}.{instance.get('id')}: unknown asset {instance.get('assetId')}")
             geometry = [instance.get(key) for key in ("x", "y", "width", "height")]
             if not all(isinstance(value, int) for value in geometry):
                 fail(f"{map_id}.{instance.get('id')}: geometry must use whole cells")
             x, y, object_width, object_height = geometry
-            if object_width != asset["width"] or object_height != asset["height"]:
+            if asset and (object_width != asset["width"] or object_height != asset["height"]):
                 fail(f"{map_id}.{instance.get('id')}: asset footprint was resized")
             if x < 0 or y < 0 or x + object_width > width or y + object_height > height:
                 fail(f"{map_id}.{instance.get('id')}: footprint leaves the map")
@@ -96,6 +101,24 @@ def validate_project(project: dict, build: dict) -> None:
                     fail(f"{map_id}.{instance.get('id')}: door leaves the footprint")
                 if mask[door_y][door_x] == "#":
                     fail(f"{map_id}.{instance.get('id')}: door cell is solid")
+            if map_data.get("renderModel") == "metatile":
+                cells = instance.get("metatiles")
+                if not isinstance(cells, list) or len(cells) != object_height or any(
+                    not isinstance(row, list) or len(row) != object_width for row in cells
+                ):
+                    fail(f"{map_id}.{instance.get('id')}: metatile matrix does not match the footprint")
+                for local_y, row in enumerate(cells):
+                    for local_x, tile_id in enumerate(row):
+                        tile = metatiles.get(tile_id)
+                        if not tile:
+                            fail(f"{map_id}.{instance.get('id')}: unknown metatile {tile_id}")
+                        is_door = door and door["x"] == local_x and door["y"] == local_y
+                        expected = "warp" if is_door else "solid" if mask[local_y][local_x] == "#" else "walkable"
+                        if tile.get("behavior") != expected:
+                            fail(
+                                f"{map_id}.{instance.get('id')}: metatile {local_x},{local_y} "
+                                f"is {tile.get('behavior')}, expected {expected}"
+                            )
         for collection_name in ("actors", "events"):
             for entry in map_data.get(collection_name, []):
                 if not isinstance(entry.get("x"), int) or not isinstance(entry.get("y"), int):
@@ -217,10 +240,14 @@ def apply_exterior(project: dict, layouts: dict, manifest: dict, map_data: dict)
     }
 
     new_specs: list[dict] = []
+    production_instances = [
+        instance for instance in map_data.get("objects", [])
+        if instance.get("sourceKind") != "metatile"
+    ]
     for group in EXTERIOR_GROUPS:
         preserved = [entry for entry in layout.get(group, []) if entry["id"] not in managed_sources[group]]
         rebuilt = []
-        for instance in map_data.get("objects", []):
+        for instance in production_instances:
             asset = asset_library[instance["assetId"]]
             if asset.get("category") != group:
                 continue
@@ -285,6 +312,37 @@ def apply_project(project: dict, layouts: dict, manifest: dict) -> None:
     manifest["layoutRevision"] = layouts["revision"]
 
 
+def metatile_overrides(project: dict) -> dict:
+    map_data = project.get("maps", {}).get("camp_randall")
+    if not map_data or map_data.get("renderModel") != "metatile":
+        return {"schema": "badger-grapple-metatile-overrides/v1", "objects": {}, "patches": []}
+    objects: dict[str, dict] = {}
+    patches: list[dict] = []
+    for instance in map_data.get("objects", []):
+        if instance.get("sourceKind") == "metatile":
+            patches.append({
+                "id": instance["id"],
+                "name": instance.get("name", "Structure metatile"),
+                "x": instance["x"],
+                "y": instance["y"],
+                "width": instance["width"],
+                "height": instance["height"],
+                "depthMode": instance.get("depthMode", "row-sliced"),
+                "collisionMask": instance["collisionMask"],
+                "door": instance.get("door"),
+                "gate": instance.get("gate"),
+                "interior": instance.get("interior"),
+                "cells": instance["metatiles"],
+            })
+        else:
+            objects[instance["id"]] = {"cells": instance["metatiles"]}
+    return {
+        "schema": "badger-grapple-metatile-overrides/v1",
+        "objects": objects,
+        "patches": patches,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("project", type=Path)
@@ -295,8 +353,10 @@ def main() -> None:
     layouts = load_json(LAYOUT_PATH)
     manifest = load_json(MANIFEST_PATH)
     build = load_json(BUILD_PATH)
-    validate_project(project, build)
+    metatile_build = load_json(METATILE_BUILD_PATH)
+    validate_project(project, build, metatile_build)
     apply_project(project, layouts, manifest)
+    overrides = metatile_overrides(project)
 
     object_count = sum(len(map_data.get("objects", [])) for map_data in project["maps"].values())
     actor_count = sum(len(map_data.get("actors", [])) for map_data in project["maps"].values())
@@ -307,7 +367,9 @@ def main() -> None:
 
     LAYOUT_PATH.write_text(json.dumps(layouts, indent=2) + "\n", encoding="utf-8")
     MANIFEST_PATH.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    METATILE_OVERRIDES_PATH.write_text(json.dumps(overrides, indent=2) + "\n", encoding="utf-8")
     subprocess.run([sys.executable, str(ROOT / "tools" / "build_camp_randall_production.py")], cwd=ROOT, check=True)
+    subprocess.run([sys.executable, str(ROOT / "tools" / "build_camp_randall_metatiles.py")], cwd=ROOT, check=True)
     print(f"APPLIED: layout revision {layouts['revision']}, {object_count} objects, {actor_count} actors")
 
 

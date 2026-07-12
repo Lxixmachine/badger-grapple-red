@@ -1,5 +1,26 @@
 # Camp Randall Tile Runtime
 
+## Season One 32px Metatile Pilot
+
+The approved Camp Randall exterior now has a second, source-of-truth production
+path for the Season One replacement runtime:
+
+- `tools/build_camp_randall_production.py` emits a pure grass ground layer and
+  exact grid-sized source objects.
+- `tools/build_camp_randall_metatiles.py` compiles 16 neighbor variants for
+  every path material, slices every building/landmark into 32px metatiles, and
+  assigns `walkable`, `solid`, or `warp` behavior to each used cell.
+- `src/data/campRandallMetatileBuild.json` is consumed by Map Studio and the
+  playable World Atlas Camp map.
+- `public/assets/metatiles/camp_randall_metatiles.png` contains the original
+  terrain and structure visuals. Buildings are convenience stamps made from
+  those cells, not runtime pictures.
+- `art/metatiles/camp_randall_metatile_overrides.json` preserves exported
+  cell-level edits through rebuilds.
+
+The 16px runtime below still serves the legacy main campaign while migration is
+staged. It is no longer the template for new Season One maps.
+
 ## Contract
 
 Camp Randall uses one authoritative 16x16 grid. The compiled tile ID at each

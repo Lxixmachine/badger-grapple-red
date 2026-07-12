@@ -2376,3 +2376,27 @@ http://127.0.0.1:5175/?test=1&scene=battle&starter=buckshot&enemyId=drillpartner
 ## Coordination Notes
 
 Keep changes source-first. If assets are generated, commit the source inputs or source notes alongside the exported runtime files so later agents can reproduce and improve them. Prefer small, shippable polish passes with browser screenshots and `npm run check` before handoff. Use ChatGPT image generation for major art/sprite passes unless the user redirects.
+
+## Codex Metatile Turn (v21.67)
+
+- Tony correctly identified that snapping whole building PNGs to cells was not
+  the FireRed architecture. Camp Randall is now the first true metatile pilot.
+- `tools/build_camp_randall_metatiles.py` preserves the approved flat art while
+  slicing every exterior object into 32px structure metatiles. The build emits
+  241 atlas visuals and behavior variants (`walkable`, `solid`, `warp`) for
+  every structure visual.
+- Ground is no longer repainted as full-cell overlays. Brick, stone, and dirt
+  each compile 16 neighbor-aware transition variants over a pure grass layer.
+- Map Studio schema v2 exposes compact Structure families and draggable whole
+  building Stamps. Collision and Door edits swap behavior variants of the same
+  visual, so pixels and behavior cannot silently diverge.
+- `art/metatiles/camp_randall_metatile_overrides.json` is the source round-trip
+  for cell-level structure edits and free metatile patches. The Map Studio
+  importer rebuilds production art and metatiles after applying an export.
+- `WorldAtlasScene` uses the same atlas for the playable Camp Randall map at
+  `?atlas=1&play=1&area=camp_randall`; collision queries the rendered metatile
+  behavior. Other atlas towns and Camp interiors remain blockout/object pilots.
+- Do not restore the prior changed-cell canvas painter or large-PNG runtime
+  rendering for the Camp exterior. New towns should receive primary terrain
+  families, a town-specific secondary structure kit, stamps, and metatile
+  behavior before final placement.

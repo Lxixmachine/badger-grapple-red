@@ -84,7 +84,10 @@ export function installTestHooks(game, routeVirtualButton) {
         overlayMode: scene.overlayMode,
         mapWidth: scene.mapWidth ?? null,
         mapHeight: scene.mapHeight ?? null,
-        returnDepth: scene.returnStack?.length ?? 0
+        returnDepth: scene.returnStack?.length ?? 0,
+        metatileVersion: scene.metatileVersion ?? null,
+        metatilePlacementCount: scene.metatilePlacements?.length ?? 0,
+        metatileRenderCount: scene.metatileRenderCount ?? 0
       } : null
     };
   };

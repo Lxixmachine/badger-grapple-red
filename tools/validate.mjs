@@ -9,6 +9,7 @@ import {CAMP_TILE_RUNTIME_VERSION,campTilemap,campRuntimeStats,campRuntimeTile} 
 import {validateSeasonOneLayouts} from './validate_region_layouts.mjs';
 
 let errs=[];
+const fileHash=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
 
 // The Season One design graph is the authority for what the world is becoming.
@@ -51,6 +52,34 @@ else{
     const output=fileURLToPath(new URL(`../public/${sheet.path.replace(/^\.\//,'')}`,import.meta.url));
     if(sheet.frameWidth!==32||sheet.frameHeight!==64||!existsSync(output))errs.push(`Camp production actor ${actorId} is missing or not 32x64 framed`);
   }
+}
+const campMetatileBuildPath=fileURLToPath(new URL('../src/data/campRandallMetatileBuild.json',import.meta.url));
+const campMetatileOverridesPath=fileURLToPath(new URL('../art/metatiles/camp_randall_metatile_overrides.json',import.meta.url));
+if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
+else{
+  const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v1'||metatileBuild.version!==1)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
+  if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
+  const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
+  if(!existsSync(atlasPath)||fileHash(atlasPath)!==metatileBuild.atlas.sha256)errs.push('Camp metatile atlas is missing or stale');
+  if(metatileBuild.atlas.visualCount!==metatileBuild.atlas.entries?.length)errs.push('Camp metatile visual catalog is incomplete');
+  for(const [material,variants] of Object.entries(metatileBuild.terrain?.variants||{})){
+    if(!['brick','stone','dirt'].includes(material)||Object.keys(variants).length!==16)errs.push(`Camp metatile terrain family ${material} is incomplete`);
+    for(const visual of Object.values(variants))if(!Number.isInteger(visual)||visual<0||visual>=metatileBuild.atlas.visualCount)errs.push(`Camp metatile terrain family ${material} references an invalid visual`);
+  }
+  const validateStamp=(label,stamp)=>{
+    if(stamp.cells?.length!==stamp.height||stamp.cells?.some(row=>row.length!==stamp.width)){errs.push(`${label}: metatile matrix does not match footprint`);return;}
+    for(let y=0;y<stamp.height;y++)for(let x=0;x<stamp.width;x++){
+      const tile=metatileBuild.metatiles[stamp.cells[y][x]];
+      if(!tile){errs.push(`${label}: missing metatile at ${x},${y}`);continue;}
+      const expected=stamp.door?.x===x&&stamp.door?.y===y?'warp':stamp.collisionMask[y][x]==='#'?'solid':'walkable';
+      if(tile.behavior!==expected)errs.push(`${label}: metatile behavior diverges at ${x},${y}`);
+      if(!Number.isInteger(tile.visual)||tile.visual<0||tile.visual>=metatileBuild.atlas.visualCount)errs.push(`${label}: invalid visual at ${x},${y}`);
+    }
+  };
+  for(const [id,stamp] of Object.entries(metatileBuild.stamps||{}))validateStamp(`Camp stamp ${id}`,stamp);
+  for(const patch of metatileBuild.patches||[])validateStamp(`Camp patch ${patch.id}`,patch);
 }
 const seasonNodes=seasonRegion.nodes||{};
 const seasonNodeIds=Object.keys(seasonNodes);

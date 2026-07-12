@@ -47,9 +47,11 @@ export class MapRenderer {
       context.drawImage(background, 0, 0, this.canvas.width, this.canvas.height);
     }
 
+    const metatileAtlas = map.renderModel === 'metatile' ? this.image(map.metatileAtlas?.path) : null;
     for (let y = 0; y < map.height; y += 1) {
       for (let x = 0; x < map.width; x += 1) {
-        if (map.terrain[y][x] !== map.originalTerrain[y][x]) this.drawTerrainCell(map, x, y);
+        if (map.renderModel === 'metatile') this.drawTerrainMetatile(map, metatileAtlas, x, y);
+        else if (map.terrain[y][x] !== map.originalTerrain[y][x]) this.drawTerrainCell(map, x, y);
       }
     }
 
@@ -59,7 +61,7 @@ export class MapRenderer {
       const image = this.image(asset?.path);
       for (let row = 0; row < object.height; row += 1) {
         commands.push({
-          kind: 'object', object, image, row,
+          kind: 'object', object, image, metatileAtlas, project, row,
           depth: object.depthMode === 'flat'
             ? (object.y + object.height) * cell - 1
             : (object.y + row + 1) * cell - 1,
@@ -77,9 +79,14 @@ export class MapRenderer {
     });
     commands.sort((a, b) => a.depth - b.depth || a.order - b.order);
     for (const command of commands) {
-      if (!command.image?.complete || !command.image.naturalWidth) continue;
-      if (command.kind === 'object') this.drawObjectRow(command, cell);
-      else this.drawActor(command, cell);
+      if (command.kind === 'object') {
+        const hasMetatiles = command.object.metatiles
+          && command.metatileAtlas?.complete && command.metatileAtlas.naturalWidth;
+        const hasImage = command.image?.complete && command.image.naturalWidth;
+        if (hasMetatiles || hasImage) this.drawObjectRow(command, cell);
+      } else if (command.image?.complete && command.image.naturalWidth) {
+        this.drawActor(command, cell);
+      }
     }
 
     if (clean) return;
@@ -145,8 +152,45 @@ export class MapRenderer {
     if (!same(x + 1, y)) { context.beginPath(); context.moveTo(left + cell - 1, top); context.lineTo(left + cell - 1, top + cell); context.stroke(); }
   }
 
+  drawTerrainMetatile(map, atlas, x, y) {
+    const material = map.terrain[y][x];
+    if (material === 'grass' || !atlas?.complete || !atlas.naturalWidth) return;
+    const same = (xx, yy) => xx >= 0 && yy >= 0 && xx < map.width && yy < map.height
+      && map.terrain[yy][xx] === material;
+    const mask = (same(x, y - 1) ? 1 : 0)
+      | (same(x + 1, y) ? 2 : 0)
+      | (same(x, y + 1) ? 4 : 0)
+      | (same(x - 1, y) ? 8 : 0);
+    const visual = map.terrainVariants?.[material]?.[String(mask)];
+    if (!Number.isInteger(visual)) return;
+    this.drawAtlasVisual(atlas, map.metatileAtlas.columns, map.cellSize, visual, x * map.cellSize, y * map.cellSize);
+  }
+
+  drawAtlasVisual(atlas, columns, cell, visual, destinationX, destinationY) {
+    const sourceX = (visual % columns) * cell;
+    const sourceY = Math.floor(visual / columns) * cell;
+    this.context.drawImage(atlas, sourceX, sourceY, cell, cell, destinationX, destinationY, cell, cell);
+  }
+
   drawObjectRow(command, cell) {
-    const {object, image, row} = command;
+    const {object, image, metatileAtlas, project, row} = command;
+    if (object.metatiles && metatileAtlas?.complete && metatileAtlas.naturalWidth) {
+      const lookup = new Map((project.assets.metatiles || []).map(tile => [tile.id, tile]));
+      for (let column = 0; column < object.width; column += 1) {
+        const tile = lookup.get(object.metatiles[row]?.[column]);
+        if (!tile) continue;
+        this.drawAtlasVisual(
+          metatileAtlas,
+          tile.atlasColumns,
+          cell,
+          tile.visual,
+          (object.x + column) * cell,
+          (object.y + row) * cell
+        );
+      }
+      return;
+    }
+    if (!image?.complete || !image.naturalWidth) return;
     const sourceWidth = image.naturalWidth;
     const sourceRowHeight = image.naturalHeight / object.height;
     const sourceY = row * sourceRowHeight;

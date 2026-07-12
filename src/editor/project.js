@@ -1,7 +1,8 @@
 import layouts from '../data/seasonOneLayouts.json';
 import production from '../data/campRandallProductionBuild.json';
+import metatileBuild from '../data/campRandallMetatileBuild.json';
 
-export const PROJECT_SCHEMA = 'badger-grapple-map-pack/v1';
+export const PROJECT_SCHEMA = 'badger-grapple-map-pack/v2';
 export const TERRAIN = {
   grass: {label: 'Grass', color: '#5f9f58'},
   brick: {label: 'Brick', color: '#ad473d'},
@@ -55,7 +56,7 @@ function terrainRows(layout, interior = false) {
   return rows;
 }
 
-function makeObjectAsset(mapId, entry, owner, mapType) {
+function makeObjectAsset(mapId, entry, owner, mapType, stamp = null) {
   return {
     id: `${mapId}:${entry.id}`,
     sourceId: entry.id,
@@ -67,11 +68,12 @@ function makeObjectAsset(mapId, entry, owner, mapType) {
     height: entry.height,
     defaultCollisionMask: collisionMask(owner),
     defaultDoor: doorFor(owner),
+    metatiles: stamp ? deepClone(stamp.cells) : null,
     minimumCoverage: entry.audit?.minimumCoverage ?? 1
   };
 }
 
-function makeObjectInstance(mapId, entry, owner) {
+function makeObjectInstance(mapId, entry, owner, stamp = null) {
   return {
     id: entry.id,
     assetId: `${mapId}:${entry.id}`,
@@ -83,6 +85,7 @@ function makeObjectInstance(mapId, entry, owner) {
     depthMode: 'row-sliced',
     collisionMask: collisionMask(owner),
     door: doorFor(owner),
+    metatiles: stamp ? deepClone(stamp.cells) : null,
     gate: owner?.gate || null,
     interior: owner?.interior || owner?.to || null
   };
@@ -109,11 +112,26 @@ function makeActor(actor, mapId) {
 
 function makeMap(mapId, mapPackage, layout, type) {
   const interior = type === 'interior';
-  const originalTerrain = terrainRows(layout, interior);
+  const usesMetatiles = mapId === metatileBuild.map.id;
+  const originalTerrain = usesMetatiles ? deepClone(metatileBuild.map.terrain) : terrainRows(layout, interior);
   const objects = mapPackage.objects.map(entry => {
     const owner = findOwner(layout, entry);
-    return makeObjectInstance(mapId, entry, owner);
+    return makeObjectInstance(mapId, entry, owner, usesMetatiles ? metatileBuild.stamps[entry.id] : null);
   });
+  if (usesMetatiles) {
+    for (const patch of metatileBuild.patches || []) {
+      objects.push({
+        ...deepClone(patch),
+        assetId: null,
+        sourceKind: 'metatile',
+        depthMode: patch.depthMode || 'row-sliced',
+        gate: patch.gate || null,
+        interior: patch.interior || null,
+        metatiles: deepClone(patch.cells)
+      });
+      delete objects.at(-1).cells;
+    }
+  }
   return {
     id: mapId,
     name: layout.displayName,
@@ -121,7 +139,10 @@ function makeMap(mapId, mapPackage, layout, type) {
     width: layout.size.width,
     height: layout.size.height,
     cellSize: production.cellSize,
-    background: mapPackage.base,
+    renderModel: usesMetatiles ? 'metatile' : 'object',
+    background: usesMetatiles ? metatileBuild.map.ground : mapPackage.base,
+    metatileAtlas: usesMetatiles ? deepClone(metatileBuild.atlas) : null,
+    terrainVariants: usesMetatiles ? deepClone(metatileBuild.terrain.variants) : null,
     originalTerrain,
     terrain: deepClone(originalTerrain),
     objects,
@@ -139,7 +160,13 @@ export function createSeedProject() {
   const maps = {};
   const campLayout = layouts.maps[production.map.id];
   for (const entry of production.map.objects) {
-    objectAssets.push(makeObjectAsset(production.map.id, entry, findOwner(campLayout, entry), 'exterior'));
+    objectAssets.push(makeObjectAsset(
+      production.map.id,
+      entry,
+      findOwner(campLayout, entry),
+      'exterior',
+      metatileBuild.stamps[entry.id]
+    ));
   }
   maps[production.map.id] = makeMap(production.map.id, production.map, campLayout, 'exterior');
 
@@ -166,9 +193,20 @@ export function createSeedProject() {
     revision: 1,
     productionVersion: production.version,
     layoutRevision: production.layoutRevision,
-    createdFrom: 'camp-randall-production-pilot',
+    metatileVersion: metatileBuild.version,
+    createdFrom: 'camp-randall-metatile-pilot',
     activeMapId: production.map.id,
-    assets: {objects: objectAssets, actors: actorAssets},
+    assets: {
+      objects: objectAssets,
+      actors: actorAssets,
+      metatiles: Object.values(metatileBuild.metatiles).map(tile => ({
+        ...deepClone(tile),
+        atlasPath: metatileBuild.atlas.path,
+        atlasColumns: metatileBuild.atlas.columns,
+        cellSize: metatileBuild.cellSize,
+        palette: metatileBuild.palette.includes(tile.id)
+      }))
+    },
     maps
   };
 }
@@ -177,6 +215,7 @@ export function validateProject(project) {
   const errors = [];
   const warnings = [];
   if (project.schema !== PROJECT_SCHEMA) errors.push(`Unsupported schema: ${project.schema || 'missing'}`);
+  const metatileLibrary = new Map((project.assets?.metatiles || []).map(tile => [tile.id, tile]));
   for (const [mapId, map] of Object.entries(project.maps || {})) {
     if (!Number.isInteger(map.width) || !Number.isInteger(map.height) || map.width < 1 || map.height < 1) {
       errors.push(`${mapId}: invalid map dimensions`);
@@ -210,6 +249,27 @@ export function validateProject(project) {
         if (!inside) errors.push(`${mapId}.${object.id}: door is outside its footprint`);
         else if (object.collisionMask[object.door.y]?.[object.door.x] === '#') {
           errors.push(`${mapId}.${object.id}: door cell is still solid`);
+        }
+      }
+      if (map.renderModel === 'metatile') {
+        if (!Array.isArray(object.metatiles) || object.metatiles.length !== object.height
+          || object.metatiles.some(row => !Array.isArray(row) || row.length !== object.width)) {
+          errors.push(`${mapId}.${object.id}: metatile stamp must match the object footprint`);
+        } else {
+          for (let y = 0; y < object.height; y += 1) {
+            for (let x = 0; x < object.width; x += 1) {
+              const tile = metatileLibrary.get(object.metatiles[y][x]);
+              if (!tile) {
+                errors.push(`${mapId}.${object.id}: unknown metatile at ${x},${y}`);
+                continue;
+              }
+              const isDoor = object.door?.x === x && object.door?.y === y;
+              const expected = isDoor ? 'warp' : object.collisionMask[y][x] === '#' ? 'solid' : 'walkable';
+              if (tile.behavior !== expected) {
+                errors.push(`${mapId}.${object.id}: metatile behavior at ${x},${y} is ${tile.behavior}, expected ${expected}`);
+              }
+            }
+          }
         }
       }
       const asset = project.assets?.objects?.find(entry => entry.id === object.assetId);

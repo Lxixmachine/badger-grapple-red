@@ -1,5 +1,6 @@
 import layouts from '../data/seasonOneLayouts.json';
 import region from '../data/seasonOneRegion.json';
+import campMetatiles from '../data/campRandallMetatileBuild.json';
 import {setVirtualHandler} from '../systems/ui.js';
 
 const Phaser = window.Phaser;
@@ -143,6 +144,15 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.cellSize = CELL;
     this.cameraTilesWide = layouts.contract.cameraCellsWide;
     this.cameraTilesHigh = layouts.contract.cameraCellsHigh;
+    this.metatileVersion = campMetatiles.version;
+  }
+
+  preload() {
+    this.load.image('camp-metatile-ground', campMetatiles.map.ground.path);
+    this.load.spritesheet('camp-metatile-atlas', campMetatiles.atlas.path, {
+      frameWidth: campMetatiles.cellSize,
+      frameHeight: campMetatiles.cellSize
+    });
   }
 
   create() {
@@ -165,6 +175,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     setVirtualHandler(this);
 
     const params = new URLSearchParams(window.location.search);
+    this.playtestMode = params.has('play');
     const requested = ORDER.includes(params.get('area')) ? params.get('area') : ORDER[0];
     const requestedInterior = layouts.interiors[params.get('interior')] ? params.get('interior') : null;
     this.selectedIndex = ORDER.indexOf(requested);
@@ -404,6 +415,12 @@ export class WorldAtlasScene extends Phaser.Scene {
   }
 
   drawWorldBlockout(map) {
+    if (this.currentMapId === campMetatiles.map.id) {
+      this.drawCampRandallMetatiles(map);
+      return;
+    }
+    this.metatilePlacements = null;
+    this.metatileRenderCount = 0;
     const graphics = this.track(this.add.graphics().setDepth(0));
     const width = map.size.width * CELL;
     const height = map.size.height * CELL;
@@ -431,6 +448,69 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.drawConnections(graphics, map);
     this.drawEvents(map.events || []);
     this.drawOverlays(map);
+  }
+
+  drawCampRandallMetatiles(map) {
+    this.metatileRenderCount = 0;
+    this.track(this.add.image(0, 0, 'camp-metatile-ground').setOrigin(0).setDepth(0));
+    const terrain = campMetatiles.map.terrain;
+    const same = (material, x, y) => y >= 0 && y < terrain.length
+      && x >= 0 && x < terrain[0].length && terrain[y][x] === material;
+    for (let y = 0; y < terrain.length; y += 1) {
+      for (let x = 0; x < terrain[y].length; x += 1) {
+        const material = terrain[y][x];
+        if (material === 'grass') continue;
+        const mask = (same(material, x, y - 1) ? 1 : 0)
+          | (same(material, x + 1, y) ? 2 : 0)
+          | (same(material, x, y + 1) ? 4 : 0)
+          | (same(material, x - 1, y) ? 8 : 0);
+        const visual = campMetatiles.terrain.variants[material]?.[String(mask)];
+        if (Number.isInteger(visual)) {
+          this.track(this.add.image((x + 0.5) * CELL, (y + 0.5) * CELL, 'camp-metatile-atlas', visual).setDepth(1));
+          this.metatileRenderCount += 1;
+        }
+      }
+    }
+
+    const owners = [...(map.blockers || []), ...(map.buildings || []), ...(map.landmarks || [])];
+    this.metatilePlacements = owners.map(owner => ({...owner, stamp: campMetatiles.stamps[owner.id]}))
+      .filter(entry => entry.stamp);
+    for (const patch of campMetatiles.patches || []) {
+      this.metatilePlacements.push({...patch, stamp: {...patch, cells: patch.cells}});
+    }
+    for (const placement of this.metatilePlacements) {
+      for (let y = 0; y < placement.stamp.height; y += 1) {
+        for (let x = 0; x < placement.stamp.width; x += 1) {
+          const tile = campMetatiles.metatiles[placement.stamp.cells[y][x]];
+          if (!tile) continue;
+          const worldY = placement.y + y;
+          this.track(this.add.image(
+            (placement.x + x + 0.5) * CELL,
+            (worldY + 0.5) * CELL,
+            'camp-metatile-atlas',
+            tile.visual
+          ).setDepth((worldY + 1) * CELL - 1));
+          this.metatileRenderCount += 1;
+        }
+      }
+    }
+    if (!this.playtestMode || this.overlayMode > 0) {
+      this.drawConnections(this.track(this.add.graphics().setDepth(650)), map);
+      this.drawEvents(map.events || []);
+    }
+    this.drawOverlays(map);
+  }
+
+  campMetatileAt(x, y) {
+    if (!this.metatilePlacements) return null;
+    for (const placement of [...this.metatilePlacements].reverse()) {
+      if (!inRect(x, y, placement)) continue;
+      const localX = x - placement.x;
+      const localY = y - placement.y;
+      const tileId = placement.stamp.cells[localY]?.[localX];
+      if (tileId) return campMetatiles.metatiles[tileId] || null;
+    }
+    return null;
   }
 
   drawMaterialMarks(graphics, path, x, y, width, height) {
@@ -614,7 +694,9 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.track(this.add.text(16, 7, name.toUpperCase(), {
       fontFamily: 'monospace', fontSize: '11px', fontStyle: 'bold', color: '#fff0bc'
     }).setScrollFactor(0).setDepth(2001));
-    const overlay = ['CLEAN BLOCKOUT', 'OWNERSHIP', 'CAMERA WINDOWS'][this.overlayMode];
+    const overlay = this.playtestMode && this.currentMapId === campMetatiles.map.id && this.overlayMode === 0
+      ? 'METATILE PLAYTEST'
+      : ['CLEAN BLOCKOUT', 'OWNERSHIP', 'CAMERA WINDOWS'][this.overlayMode];
     this.track(this.add.text(466, 8, overlay, {
       fontFamily: 'monospace', fontSize: '8px', color: '#c8bea5'
     }).setOrigin(1, 0).setScrollFactor(0).setDepth(2001));
@@ -828,6 +910,9 @@ export class WorldAtlasScene extends Phaser.Scene {
   isWorldPassable(map, x, y) {
     if (x < 0 || y < 0 || x >= map.size.width || y >= map.size.height) return false;
     if ((map.connections || []).some(connection => connectionContains(map, connection, x, y))) return true;
+    if (this.currentMapId === campMetatiles.map.id) {
+      return this.campMetatileAt(x, y)?.behavior !== 'solid';
+    }
     if ((map.buildings || []).some(entry => doorAt(entry, x, y))) return true;
     if ((map.landmarks || []).some(entry => doorAt(entry, x, y))) return true;
     if ((map.blockers || []).some(entry => blocksAt(entry, x, y))) return false;

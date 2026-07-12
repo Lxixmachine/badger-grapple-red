@@ -202,9 +202,13 @@ def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material
             draw.line((right, top + 3, right, bottom - 3), fill=shadow, width=2)
 
 
-def make_exterior_base(layout: dict) -> Image.Image:
+def make_exterior_ground(layout: dict) -> Image.Image:
     size = (layout["size"]["width"] * CELL, layout["size"]["height"] * CELL)
-    canvas = tiled_texture(source_crop("terrain", "grass"), size, block=192)
+    return tiled_texture(source_crop("terrain", "grass"), size, block=192).convert("RGBA")
+
+
+def make_exterior_base(layout: dict) -> Image.Image:
+    canvas = make_exterior_ground(layout)
     material_groups: dict[str, set[tuple[int, int]]] = {}
     for path in layout.get("paths", []):
         material_groups.setdefault(path["material"], set()).update(path_cells(path))
@@ -500,6 +504,9 @@ def build() -> dict:
     VALIDATION_DIR.mkdir(parents=True, exist_ok=True)
 
     camp = LAYOUTS["maps"][MANIFEST["layoutId"]]
+    ground = make_exterior_ground(camp)
+    ground_path = OUTPUT_DIR / "camp_randall_ground.png"
+    save_png(ground, ground_path)
     base = make_exterior_base(camp)
     base_path = OUTPUT_DIR / "camp_randall_base.png"
     save_png(base, base_path)
@@ -524,6 +531,7 @@ def build() -> dict:
         "minimumBlockedCellCoverage": MIN_COVERAGE,
         "map": {
             "id": MANIFEST["layoutId"],
+            "ground": {"texture": "camp-prod-camp-randall-ground", "path": public_path(ground_path)},
             "base": {"texture": "camp-prod-camp-randall-base", "path": public_path(base_path)},
             "objects": [entry for entry, _image in exterior_entries],
             "actors": MANIFEST["exterior"].get("actors", []),

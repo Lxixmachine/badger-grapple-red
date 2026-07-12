@@ -19,7 +19,8 @@
       </label>
       <div class="tool-segments" id="toolSegments" aria-label="Editor tool">
         <button class="active" data-tool="select" title="Select and move objects">Select</button>
-        <button data-tool="terrain" title="Paint terrain cells">Terrain</button>
+        <button data-tool="terrain" title="Paint neighbor-aware ground metatiles">Ground</button>
+        <button data-tool="structure" title="Paint behavior-owned structure metatiles">Structure</button>
         <button data-tool="collision" title="Paint selected object collision">Collision</button>
         <button data-tool="door" title="Place selected object door">Door</button>
         <button data-tool="event" title="Move event markers">Events</button>
@@ -38,6 +39,7 @@
         <button id="zoomIn" class="icon-button" title="Zoom in" aria-label="Zoom in">+</button>
       </div>
       <div class="file-actions">
+        <a id="playtestButton" class="button-link" href="./?atlas=1&amp;play=1&amp;area=camp_randall" target="_blank" rel="noopener">Playtest</a>
         <button id="importButton">Import</button>
         <button id="resetButton">Reset Draft</button>
         <button id="pngButton">Review PNG</button>
@@ -51,7 +53,7 @@
           <strong>Palette</strong>
           <div class="palette-tabs" role="tablist">
             <button class="active" data-palette="terrain" role="tab">Tiles</button>
-            <button data-palette="objects" role="tab">Objects</button>
+            <button data-palette="objects" role="tab">Stamps</button>
             <button data-palette="actors" role="tab">Actors</button>
           </div>
         </div>
@@ -87,7 +89,7 @@
     <footer class="statusbar">
       <span id="saveStatus">Local draft ready</span>
       <span id="mapStatus">24 x 20 cells</span>
-      <span>32 px grid</span>
+      <span>32 px metatiles</span>
     </footer>
   </div>
   <input id="fileInput" type="file" accept="application/json,.json" hidden />

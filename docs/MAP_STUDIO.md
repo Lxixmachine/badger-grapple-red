@@ -22,25 +22,33 @@ The first editable pack contains:
 - Coach's Office
 - Camp Randall Tunnel
 
-The palette uses the compiled Camp production assets. Exterior terrain and
-interior floor editing are separate from object, actor, event, collision, door,
-and camera layers.
+The Camp Randall exterior uses a FireRed-style metatile authoring model. Ground
+brushes resolve to neighbor-aware edge/corner variants. Buildings and landmarks
+are matrices of 32px structure metatiles with behavior attached to each cell.
+Whole buildings remain available as placement stamps, but their roof, wall,
+window, doorway, foundation, vegetation, and water cells can be edited
+individually. Interiors remain on the previous object model during the pilot.
 
 ## Editing Workflow
 
 1. Choose a map.
-2. Use **Tiles** to paint whole 32px terrain cells.
-3. Use **Objects** or **Actors**, then tap the map or drag an item onto it.
-4. Use **Select** to move an existing item. Placement always snaps to cells.
-5. Select an object, then use **Collision** to paint only cells in its locked
-   footprint.
-6. Use **Door** to assign one exact threshold cell. A door is automatically
+2. Use **Tiles** to paint Ground brushes. Exposed edges and connected neighbors
+   are recomputed automatically.
+3. Choose a Structure family to paint or drag individual behavior-owned
+   metatiles. Use **Stamps** to place a complete building at once.
+4. Use **Actors**, then tap the map or drag an actor onto it.
+5. Use **Select** to move an existing stamp. Placement always snaps to cells.
+6. Select a stamp, then use **Collision** to change the behavior variant of a
+   metatile inside its locked footprint.
+7. Use **Door** to assign one exact warp metatile. A door is automatically
    cleared from collision.
-7. Use **Events** to move an event or create one on an empty cell.
-8. Use **Camera** to position the 15x10 review window.
-9. Keep Validation at zero errors. Warnings identify newly solid cells whose
+8. Use **Events** to move an event or create one on an empty cell.
+9. Use **Camera** to position the 15x10 review window.
+10. Use **Playtest** to open the same compiled metatiles in the 32px Phaser
+    runtime.
+11. Keep Validation at zero errors. Warnings identify newly solid cells whose
    visible art still needs coverage review.
-10. Export a clean review PNG and the validated JSON map pack.
+12. Export a clean review PNG and the validated JSON map pack.
 
 The browser keeps a local draft. **Reset Draft** returns to the current
 production seed. Undo and redo preserve a valid selection so small adjustments
@@ -60,8 +68,9 @@ After review, apply it with:
 npm run apply:map-editor -- path\to\badger-grapple-map-pack.json --write
 ```
 
-The importer updates `seasonOneLayouts.json` and the Camp production manifest,
-increments the layout revision, and recompiles audited runtime assets.
+The importer updates `seasonOneLayouts.json`, the Camp production manifest,
+and the metatile override source. It then increments the layout revision and
+recompiles both the production artwork and behavior-owned metatile package.
 
 ## Production Laws
 
@@ -71,5 +80,7 @@ increments the layout revision, and recompiles audited runtime assets.
 - Doors own exact cells and cannot remain solid.
 - Objects default to row-sliced depth so north/south occlusion behaves locally.
 - Walkable terrain is painted as terrain. Water, walls, hedges, and buildings
-  are collision-owning objects rather than deceptive floor paint.
+  are behavior-owning metatiles rather than deceptive floor paint.
+- The approved flat drawings are source art. Runtime buildings are compiled
+  cell-by-cell from those drawings; a large PNG is never the final map owner.
 - FireRed assets are reference material only. Runtime art remains original.

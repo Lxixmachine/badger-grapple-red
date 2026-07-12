@@ -1,7 +1,7 @@
 import {cloneProject, createSeedProject, PROJECT_SCHEMA, TERRAIN, validateProject} from './project.js';
 import {MapRenderer} from './renderer.js';
 
-const STORAGE_KEY = 'badger-grapple-map-studio-v1-r2-1';
+const STORAGE_KEY = 'badger-grapple-map-studio-v2-metatiles';
 const canvas = document.querySelector('#mapCanvas');
 const workspace = document.querySelector('#workspace');
 const mapSelect = document.querySelector('#mapSelect');
@@ -21,6 +21,8 @@ let project = loadDraft();
 let mode = 'select';
 let paletteTab = 'terrain';
 let selectedTerrain = 'brick';
+let selectedMetatile = null;
+let selectedMetatileFamily = 'team_building';
 let placingAsset = null;
 let selection = null;
 let hoverCell = null;
@@ -70,7 +72,8 @@ function renderState() {
     showCollision,
     cameraPreview,
     camera: currentCamera(),
-    selectedTerrain
+    selectedTerrain,
+    selectedMetatile
   };
 }
 
@@ -164,20 +167,63 @@ function setMode(nextMode) {
   requestRender();
 }
 
+function metatileThumb(tile) {
+  const cell = tile.cellSize;
+  const sourceX = (tile.visual % tile.atlasColumns) * cell;
+  const sourceY = Math.floor(tile.visual / tile.atlasColumns) * cell;
+  return `<div class="palette-thumb metatile-preview"><span style="width:${cell}px;height:${cell}px;background-image:url('${tile.atlasPath}');background-position:-${sourceX}px -${sourceY}px"></span></div>`;
+}
+
 function buildPalette() {
   document.querySelectorAll('[data-palette]').forEach(button => button.classList.toggle('active', button.dataset.palette === paletteTab));
   if (paletteTab === 'terrain') {
+    const map = activeMap();
     const terrainEntries = Object.entries(TERRAIN).filter(([id]) => activeMap().type === 'exterior' ? id !== 'floor' : id === 'floor');
-    paletteContent.innerHTML = `<div class="palette-grid">${terrainEntries.map(([id, terrain]) => `
+    const allStructureTiles = map.renderModel === 'metatile'
+      ? (project.assets.metatiles || []).filter(tile => tile.palette)
+      : [];
+    const structureFamilies = [...new Set(allStructureTiles.map(tile => tile.families?.[0]).filter(Boolean))];
+    if (!structureFamilies.includes(selectedMetatileFamily)) {
+      selectedMetatileFamily = structureFamilies.includes('team_building') ? 'team_building' : structureFamilies[0] || '';
+    }
+    const structureTiles = allStructureTiles.filter(tile => tile.families?.[0] === selectedMetatileFamily);
+    paletteContent.innerHTML = `<div class="palette-section-title">Ground brushes</div><div class="palette-grid">${terrainEntries.map(([id, terrain]) => `
       <div class="palette-item terrain-item ${selectedTerrain === id ? 'active' : ''}" data-terrain="${id}" role="button" tabindex="0">
         <div class="terrain-swatch ${id}"></div><span>${escapeHtml(terrain.label)}</span>
-      </div>`).join('')}</div>`;
+      </div>`).join('')}</div>${structureTiles.length ? `
+        <div class="palette-section-title structure-title">Structure metatiles</div>
+        <label class="metatile-family"><span>Family</span><select id="metatileFamily">${structureFamilies.map(family => `
+          <option value="${family}" ${family === selectedMetatileFamily ? 'selected' : ''}>${escapeHtml(family.replaceAll('_', ' '))}</option>`).join('')}</select></label>
+        <div class="palette-grid metatile-grid">${structureTiles.map(tile => `
+          <div class="palette-item metatile-item ${selectedMetatile === tile.id ? 'active' : ''}" draggable="true" data-metatile="${tile.id}" role="button" tabindex="0" title="${escapeHtml(tile.names?.[0] || tile.id)}">
+            ${metatileThumb(tile)}<span class="visually-hidden">${escapeHtml(tile.names?.[0] || tile.id)}</span>
+          </div>`).join('')}</div>` : ''}`;
+    paletteContent.querySelector('#metatileFamily')?.addEventListener('change', event => {
+      selectedMetatileFamily = event.currentTarget.value;
+      selectedMetatile = null;
+      buildPalette();
+    });
     paletteContent.querySelectorAll('[data-terrain]').forEach(item => {
       item.addEventListener('click', () => {
         selectedTerrain = item.dataset.terrain;
+        selectedMetatile = null;
         placingAsset = null;
         setMode('terrain');
         buildPalette();
+      });
+    });
+    paletteContent.querySelectorAll('[data-metatile]').forEach(item => {
+      const activate = () => {
+        selectedMetatile = item.dataset.metatile;
+        placingAsset = null;
+        setMode('structure');
+        buildPalette();
+      };
+      item.addEventListener('click', activate);
+      item.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') activate(); });
+      item.addEventListener('dragstart', event => {
+        event.dataTransfer.effectAllowed = 'copy';
+        event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: 'metatile', id: item.dataset.metatile}));
       });
     });
     return;
@@ -270,6 +316,10 @@ function updateObjectInspector(object) {
   }));
   inspectorContent.querySelector('[data-action="duplicate"]').addEventListener('click', () => duplicateSelection());
   inspectorContent.querySelector('[data-action="clear-door"]').addEventListener('click', () => {
+    if (object.door) {
+      const tileId = object.metatiles?.[object.door.y]?.[object.door.x];
+      if (tileId) object.metatiles[object.door.y][object.door.x] = behaviorVariant(tileId, 'walkable');
+    }
     object.door = null;
     recordHistory('Door cleared');
   });
@@ -351,12 +401,88 @@ function setTerrain(cell, material) {
   activeMap().terrain[cell.y][cell.x] = material;
 }
 
+function metatileById(tileId) {
+  return (project.assets.metatiles || []).find(tile => tile.id === tileId) || null;
+}
+
+function behaviorVariant(tileId, behavior) {
+  const current = metatileById(tileId);
+  if (!current) return tileId;
+  return (project.assets.metatiles || []).find(tile => tile.visual === current.visual && tile.behavior === behavior)?.id || tileId;
+}
+
+function setMaskMarker(object, localX, localY, marker) {
+  const row = object.collisionMask[localY].split('');
+  row[localX] = marker;
+  object.collisionMask[localY] = row.join('');
+}
+
+function applyMetatileBehavior(object, localX, localY, tileId) {
+  const tile = metatileById(tileId);
+  if (!tile) return;
+  const previousDoor = object.door ? {...object.door} : null;
+  if (tile.behavior === 'warp') {
+    if (previousDoor && (previousDoor.x !== localX || previousDoor.y !== localY)) {
+      const previousId = object.metatiles?.[previousDoor.y]?.[previousDoor.x];
+      if (previousId) object.metatiles[previousDoor.y][previousDoor.x] = behaviorVariant(previousId, 'walkable');
+      setMaskMarker(object, previousDoor.x, previousDoor.y, '.');
+    }
+    object.door = {x: localX, y: localY};
+    setMaskMarker(object, localX, localY, '.');
+  } else {
+    if (object.door?.x === localX && object.door?.y === localY) object.door = null;
+    setMaskMarker(object, localX, localY, tile.behavior === 'solid' ? '#' : '.');
+  }
+}
+
+function objectAtCell(cell) {
+  return [...activeMap().objects].reverse().find(object => (
+    cell.x >= object.x && cell.y >= object.y
+    && cell.x < object.x + object.width && cell.y < object.y + object.height
+  )) || null;
+}
+
+function paintStructureMetatile(cell, tileId) {
+  const tile = metatileById(tileId);
+  if (!tile || activeMap().renderModel !== 'metatile') return;
+  let object = objectAtCell(cell);
+  if (!object) {
+    object = {
+      id: uniqueId('metatile_patch', activeMap().objects),
+      assetId: null,
+      sourceKind: 'metatile',
+      name: tile.names?.[0] || 'Structure metatile',
+      x: cell.x,
+      y: cell.y,
+      width: 1,
+      height: 1,
+      depthMode: 'row-sliced',
+      collisionMask: ['.'],
+      door: null,
+      metatiles: [[tileId]],
+      gate: null,
+      interior: null
+    };
+    activeMap().objects.push(object);
+  } else {
+    const localX = cell.x - object.x;
+    const localY = cell.y - object.y;
+    if (!object.metatiles) return;
+    object.metatiles[localY][localX] = tileId;
+  }
+  const localX = cell.x - object.x;
+  const localY = cell.y - object.y;
+  applyMetatileBehavior(object, localX, localY, tileId);
+  selection = {kind: 'object', id: object.id};
+}
+
 function toggleCollisionCell(object, localX, localY, marker = null) {
   if (localX < 0 || localY < 0 || localX >= object.width || localY >= object.height) return;
   if (object.door?.x === localX && object.door?.y === localY) return;
-  const row = object.collisionMask[localY].split('');
-  row[localX] = marker || (row[localX] === '#' ? '.' : '#');
-  object.collisionMask[localY] = row.join('');
+  const next = marker || (object.collisionMask[localY][localX] === '#' ? '.' : '#');
+  setMaskMarker(object, localX, localY, next);
+  const tileId = object.metatiles?.[localY]?.[localX];
+  if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, next === '#' ? 'solid' : 'walkable');
 }
 
 function addObject(assetId, cell) {
@@ -374,6 +500,7 @@ function addObject(assetId, cell) {
     depthMode: 'row-sliced',
     collisionMask: [...asset.defaultCollisionMask],
     door: asset.defaultDoor ? {...asset.defaultDoor} : null,
+    metatiles: asset.metatiles ? cloneProject(asset.metatiles) : null,
     gate: null,
     interior: null
   };
@@ -460,6 +587,15 @@ function moveGesture(cell) {
     }
     return;
   }
+  if (gesture.type === 'paint-structure') {
+    const key = `${cell.x},${cell.y}`;
+    if (!gesture.visited.has(key)) {
+      gesture.visited.add(key);
+      paintStructureMetatile(cell, gesture.tileId);
+      requestRender();
+    }
+    return;
+  }
   if (gesture.type === 'paint-collision') {
     const object = gesture.object;
     const localX = cell.x - object.x;
@@ -511,6 +647,13 @@ canvas.addEventListener('pointerdown', event => {
     moveGesture(cell);
     return;
   }
+  if (mode === 'structure') {
+    if (!selectedMetatile || activeMap().renderModel !== 'metatile') return;
+    gesture = {type: 'paint-structure', pointerId: event.pointerId, tileId: selectedMetatile, visited: new Set()};
+    canvas.setPointerCapture(event.pointerId);
+    moveGesture(cell);
+    return;
+  }
   if (mode === 'collision') {
     const object = selection?.kind === 'object' ? selectedEntry() : null;
     if (!object) return;
@@ -531,12 +674,19 @@ canvas.addEventListener('pointerdown', event => {
     if (localX < 0 || localY < 0 || localX >= object.width || localY >= object.height) return;
     const same = object.door?.x === localX && object.door?.y === localY;
     if (same) {
+      const tileId = object.metatiles?.[localY]?.[localX];
+      if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, 'walkable');
       object.door = null;
     } else {
-      const row = object.collisionMask[localY].split('');
-      row[localX] = '.';
-      object.collisionMask[localY] = row.join('');
+      if (object.door) {
+        const previous = object.door;
+        const previousId = object.metatiles?.[previous.y]?.[previous.x];
+        if (previousId) object.metatiles[previous.y][previous.x] = behaviorVariant(previousId, 'walkable');
+      }
+      setMaskMarker(object, localX, localY, '.');
       object.door = {x: localX, y: localY};
+      const tileId = object.metatiles?.[localY]?.[localX];
+      if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, 'warp');
     }
     recordHistory(same ? 'Door cleared' : 'Door placed');
     return;
@@ -588,6 +738,7 @@ canvas.addEventListener('pointerleave', () => {
 function finishGesture(event) {
   if (!gesture || (gesture.pointerId !== undefined && event.pointerId !== gesture.pointerId)) return;
   const label = gesture.type === 'paint-terrain' ? 'Terrain painted'
+    : gesture.type === 'paint-structure' ? 'Structure metatiles painted'
     : gesture.type === 'paint-collision' ? 'Collision painted'
       : gesture.type === 'camera' ? 'Camera window moved' : 'Selection moved';
   gesture = null;
@@ -607,7 +758,10 @@ canvas.addEventListener('drop', event => {
   if (!cell) return;
   try {
     const asset = JSON.parse(event.dataTransfer.getData('application/x-badger-asset'));
-    if (asset.kind === 'object') addObject(asset.id, cell);
+    if (asset.kind === 'metatile') {
+      paintStructureMetatile(cell, asset.id);
+      recordHistory('Structure metatile placed');
+    } else if (asset.kind === 'object') addObject(asset.id, cell);
     else addActor(asset.id, cell);
   } catch {
     saveStatus.textContent = 'Unsupported drop data';
@@ -728,7 +882,7 @@ window.addEventListener('keydown', event => {
   if ((event.key === 'Delete' || event.key === 'Backspace') && document.activeElement === canvas) {
     event.preventDefault(); deleteSelection(); return;
   }
-  const toolKeys = {v: 'select', t: 'terrain', c: 'collision', d: 'door', e: 'event'};
+  const toolKeys = {v: 'select', t: 'terrain', s: 'structure', c: 'collision', d: 'door', e: 'event'};
   if (document.activeElement === canvas && toolKeys[event.key.toLowerCase()]) setMode(toolKeys[event.key.toLowerCase()]);
 });
 
