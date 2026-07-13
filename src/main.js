@@ -70,7 +70,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.77-mobile-menu-input';
+    : sliceMode ? '21.63-scale-slice' : '21.78-dpad-menu-fix';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -157,7 +157,7 @@ document.querySelectorAll('[data-key]').forEach(button => {
       window.clearInterval(repeat);
       repeat = null;
     }
-    routeVirtualButton(key, 'up');
+    if (modernMode) routeVirtualButton(key, 'up');
     if (button.hasPointerCapture?.(activePointer)) button.releasePointerCapture(activePointer);
     activePointer = null;
   };

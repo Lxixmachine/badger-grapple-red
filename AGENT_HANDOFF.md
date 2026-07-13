@@ -1,5 +1,13 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.78 D-pad Menu Fix)
+
+Normal-game D-pad taps were routed once on `pointerdown` and again on
+`pointerup`, making menu selection skip two rows. Release phases now go only to
+the atlas/slice modes that explicitly track held directions. Normal menus get
+one immediate step and the existing deliberate hold-repeat cadence. A browser
+regression test asserts that one Down tap advances exactly one menu entry.
+
 ## Latest Codex Turn (v21.77 Mobile Menu Input)
 
 iOS could suppress the synthetic `click` used by A/B/Menu/Start because the
