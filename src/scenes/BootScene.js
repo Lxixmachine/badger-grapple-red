@@ -1,8 +1,8 @@
-import {chooseStarter,saveState} from '../systems/save.js';
+import {chooseStarter,defaultState,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 const Phaser = window.Phaser;
-const V='263';
+const V='264';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
@@ -15,7 +15,8 @@ export class BootScene extends Phaser.Scene{
     this.load.spritesheet('npc',`./assets/sprites/npc_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});
     ['red','green','purple','gold','gray'].forEach(v=>this.load.spritesheet('npc_'+v,`./assets/sprites/npc_walk_${v}.png?v=${V}`,{frameWidth:24,frameHeight:36}));
     ['badger','neutral','top','scramble','pace'].forEach(k=>{this.load.image('battle_'+k,`./assets/sprites/battle_${k}.png?v=${V}`);this.load.image('battle_'+k+'_back',`./assets/sprites/battle_${k}_back.png?v=${V}`);this.load.image('portrait_'+k,`./assets/portraits/${k}.png?v=${V}`);});
-    this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('title_hero',`./assets/ui/title_hero.png?v=${V}`);this.load.image('coach_intro',`./assets/portraits/coach_intro.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena.png?v=${V}`);
+    this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('title_hero',`./assets/ui/title_hero.png?v=${V}`);this.load.image('coach_intro',`./assets/portraits/coach_intro.png?v=${V}`);this.load.image('trainer_intro',`./assets/portraits/trainer_intro.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena.png?v=${V}`);
+    ['shooter','rider','scrambler'].forEach(style=>this.load.image('singlet_'+style,`./assets/ui/singlet_${style}.png?v=${V}`));
   }
   create(){
     this.anims.create({key:'walk-down',frames:this.anims.generateFrameNumbers('player',{start:0,end:2}),frameRate:7,repeat:-1});
@@ -28,6 +29,17 @@ export class BootScene extends Phaser.Scene{
     this.anims.create({key:'npc-idle-up',frames:[{key:'npc',frame:10}],frameRate:1,repeat:0});
     setVirtualHandler(this);
     const params=new URLSearchParams(window.location.search);
+    if(params.has('test')&&params.get('scene')==='starter'){
+      const state=defaultState();state.flags.introDone=true;state.area='wrestlingroom';state.pos={x:10,y:6};saveState(state);
+      this.scene.start('StarterScene',{story:true,returnArea:'wrestlingroom',returnPos:{x:10,y:6}});
+      return;
+    }
+    if(params.has('test')&&params.get('scene')==='recovery'){
+      const state=chooseStarter(params.get('starter')||'buckshot',{story:true,rivalId:'fieldflyer',area:'wrestlingroom',pos:{x:10,y:6}});
+      state.flags.openingBattleReady=false;state.flags.openingBattleComplete=true;state.flags.openingBattleWon=true;state.opening.battleResult='win';saveState(state);
+      this.scene.start('OpeningRecoveryScene');
+      return;
+    }
     if(params.has('test')&&params.get('scene')==='scout'){
       this.scene.start('ScoutScene',{
         id:params.get('id')||'buckshot',

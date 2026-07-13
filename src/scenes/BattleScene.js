@@ -22,7 +22,9 @@ export class BattleScene extends Phaser.Scene{
     this.turn=1;this.sel=0;this.mode='command';this.over=false;this.recruit=false;this.forcedSwap=false;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;
     this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.moveStyle='';this.expGain=0;this.lastChooseAt=0;this.inputLocked=true;
     this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();
-    const openLine=this.type==='wild'?`${ROSTER[this.enemy().id].name} takes the mat as the ${personaFor(this.enemy().id)}!`:`${this.trainerName||'Opponent'} sends out ${ROSTER[this.enemy().id].name} - ${personaFor(this.enemy().id)} form!`;
+    const openLine=this.type==='opening'
+      ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
+      :this.type==='wild'?`${ROSTER[this.enemy().id].name} takes the mat as the ${personaFor(this.enemy().id)}!`:`${this.trainerName||'Opponent'} sends out ${ROSTER[this.enemy().id].name} - ${personaFor(this.enemy().id)} form!`;
     this.log=[openLine];
     const l=lead(this.state);if(l){const s=scaledStats(l.id,l.lvl,l);if(!Number.isFinite(l.hp)||l.hp<=0)l.hp=s.hp;if(!Number.isFinite(l.stamina)||l.stamina<=0)l.stamina=s.stamina;l.score=0;}this.participants=new Set(l?[l]:[]);this.enemyTeam.forEach(e=>e.score=0);
     this.progressMon=l;this.leadProgressStart=l?{lvl:l.lvl,xp:l.xp,id:l.id}:null;
@@ -287,13 +289,32 @@ export class BattleScene extends Phaser.Scene{
     }
     if(this.type==='wild'){this.recruit=false;this.log.unshift('The scouting match is over.');this.state.flags.scoutedBattle=true;}
     if(this.type==='gym'){this.state.flags.scoutedBattle=true;}
+    if(this.type==='opening'){
+      this.state.flags.openingBattleReady=false;this.state.flags.openingBattleComplete=true;this.state.flags.openingBattleWon=true;
+      this.state.opening={...(this.state.opening||{}),battleResult:'win'};
+      this.state.objective={id:'opening_recovery',stage:2,complete:false,log:["Recover in the Trainer's Room",'Wrestle Rex','Choose a mat persona']};
+      this.log.unshift('Rex nods. The lineup spot is yours for now.');
+    }
     if(this.enemyTeam.some(e=>e.id==='drillpartner')||this.type==='wild'){this.state.flags.wonSpar=true;}
     if(this.type==='wild'&&this.state.objective?.id==='scout_quad'){this.state.objective={id:'recruit_first',stage:3,complete:false,log:['Recruit your first wrestler',...(this.state.objective?.log||[])]};}
     if(this.state.objective?.id==='win_spar'){this.state.objective={id:'return_coach',stage:5,complete:false,log:['Return to Coach',...(this.state.objective?.log||[])]};}
-    this.state.message=this.type==='tournament'?(this.winMsg||`Won the ${this.roundLabel||'round'}.`):`Won vs ${this.trainerName||ROSTER[this.enemy().id].name}.`;
+    this.state.message=this.type==='opening'?'':this.type==='tournament'?(this.winMsg||`Won the ${this.roundLabel||'round'}.`):`Won vs ${this.trainerName||ROSTER[this.enemy().id].name}.`;
     saveState(this.state);this.drawBattle();
   }
-  lose(){this.over=true;this.inputLocked=false;this.recruit=false;this.mode='result';this.resultTitle='LOSS';this.state.stats.streak=0;this.state.grit+=4;this.state.rep+=2;this.state.party.forEach(mon=>delete mon.pendingDevelopment);restoreParty(this.state);this.addLog(['Team recovered. +4 Grit +2 Rep.']);this.state.message='Loss. Team recovered.';stopMusic();sfx.lose();saveState(this.state);this.drawBattle();}
+  lose(){
+    this.over=true;this.inputLocked=false;this.recruit=false;this.mode='result';this.resultTitle='LOSS';this.state.stats.streak=0;
+    this.state.party.forEach(mon=>delete mon.pendingDevelopment);
+    if(this.type==='opening'){
+      this.state.flags.openingBattleReady=false;this.state.flags.openingBattleComplete=true;this.state.flags.openingBattleWon=false;
+      this.state.opening={...(this.state.opening||{}),battleResult:'loss'};
+      this.state.objective={id:'opening_recovery',stage:2,complete:false,log:["Recover in the Trainer's Room",'Wrestle Rex','Choose a mat persona']};
+      this.addLog(["Wrestle-off complete. Report to the Trainer's Room."]);this.state.message='';
+    }else{
+      this.state.grit+=4;this.state.rep+=2;restoreParty(this.state);
+      this.addLog(['Team recovered. +4 Grit +2 Rep.']);this.state.message='Loss. Team recovered.';
+    }
+    stopMusic();sfx.lose();saveState(this.state);this.drawBattle();
+  }
   drawBattle(){this.children.removeAll();this.drawArenaBackdrop();const l=lead(this.state),lr=l?ROSTER[l.id]:ROSTER.buckshot,er=ROSTER[this.enemy().id];
     this.drawStatusPanels(l,lr,er);this.drawWrestlers(lr,er);this.drawBottom(lr);this.firstBattleDraw=false;}
   drawStatusPanels(l,lr,er){
@@ -401,7 +422,7 @@ export class BattleScene extends Phaser.Scene{
   }
   drawBag(){this.drawTextBox(7,86,305,132);this.add.text(18,94,'BAG',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0,x=18+(i>2?146:0),y=117+(i%3)*21;this.add.text(x,y,`${i===this.sel?'\u25b6':' '} ${ITEM_DEFS[it.key].short} x${n}`,{fontFamily:FONT,fontSize:11,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(18,188,it.desc,{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold',wordWrap:{width:284}});}
   drawParty(){this.drawTextBox(7,86,305,132);this.add.text(18,94,this.forcedSwap?'Choose next wrestler':'Choose wrestler',{fontFamily:FONT,fontSize:13,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const r=ROSTER[m.id],s=scaledStats(m.id,m.lvl,m),tag=m.hp<=0?' OUT':'';this.add.text(18,116+i*17,`${i===this.sel?'\u25b6':' '} ${r.name} L${m.lvl}  C ${m.hp}/${s.hp}${tag}`,{fontFamily:FONT,fontSize:11,color:i===this.sel?'#8a1720':m.hp<=0?'#888':'#111',fontStyle:'bold'});});}
-  drawResult(){this.drawTextBox(7,174,305,44);const isWin=this.resultTitle==='VICTORY'||this.resultTitle==='JOINED';const g=this.add.graphics();g.fillStyle(isWin?0x7b1d2a:0x25313a,.92);g.fillRoundedRect(77,179,166,20,3);g.lineStyle(1,0xd6a336,.95);g.strokeRoundedRect(77,179,166,20,3);this.add.text(160,184,this.resultTitle,{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5);const sub=this.resultTitle==='VICTORY'?`EXP +${this.expGain}`:'A/B RETURN';this.add.text(160,204,sub,{fontFamily:FONT,fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(.5);if(this.resultTitle==='VICTORY'){const star=this.add.text(282,187,'\u2605',{fontFamily:FONT,fontSize:16,color:'#d6a336',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:star,angle:360,scale:1.35,yoyo:true,duration:520,repeat:-1});}
+  drawResult(){this.drawTextBox(7,174,305,44);const isWin=this.resultTitle==='VICTORY'||this.resultTitle==='JOINED';const g=this.add.graphics();g.fillStyle(isWin?0x7b1d2a:0x25313a,.92);g.fillRoundedRect(77,179,166,20,3);g.lineStyle(1,0xd6a336,.95);g.strokeRoundedRect(77,179,166,20,3);this.add.text(160,184,this.resultTitle,{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5);const sub=this.type==='opening'?(this.resultTitle==='VICTORY'?`EXP +${this.expGain} / A CONTINUE`:'A CONTINUE'):this.resultTitle==='VICTORY'?`EXP +${this.expGain}`:'A/B RETURN';this.add.text(160,204,sub,{fontFamily:FONT,fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(.5);if(this.resultTitle==='VICTORY'){const star=this.add.text(282,187,'\u2605',{fontFamily:FONT,fontSize:16,color:'#d6a336',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);this.tweens.add({targets:star,angle:360,scale:1.35,yoyo:true,duration:520,repeat:-1});}
     if(this.resultTitle==='VICTORY'&&this.progress){this.add.text(40,205,'EXP',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});if(this.progress.played){this.drawExpBar(experienceProgress(this.progress.after),this.progress.after.lvl);}else{this.playProgress();}}
     }
   drawExpBar(p,lvl){const g=this.add.graphics();g.fillStyle(0x111111,1);g.fillRoundedRect(69,206,178,9,2);g.fillStyle(0x3aa5d1,1);g.fillRect(71,208,Math.max(1,174*Math.min(1,p)),5);g.lineStyle(1,0x080808,1);g.strokeRoundedRect(69,206,178,9,2);this.add.text(254,205,`Lv ${lvl}`,{fontFamily:FONT,fontSize:9,color:'#7b1d2a',fontStyle:'bold'});return g;}
@@ -453,5 +474,5 @@ export class BattleScene extends Phaser.Scene{
   drawCommandBox(x,y,w,h){const g=this.drawTextBox(x,y,w,h);g.fillStyle(0x7b1d2a,.9);g.fillRect(x+6,y+4,w-12,1);g.lineStyle(1,0xd6a336,.75);g.strokeRoundedRect(x+6,y+6,w-12,h-12,2);return g;}
   drawArenaBackdrop(){this.add.image(0,0,'battle_arena').setOrigin(0).setDisplaySize(GAME_W,GAME_H);const g=this.add.graphics();g.fillStyle(0xffffff,.05);g.fillRect(0,0,GAME_W,86);g.fillStyle(0x000000,.10);g.fillRect(0,166,GAME_W,58);g.lineStyle(3,0x7b1d2a,.9);g.strokeEllipse(160,128,232,70);g.lineStyle(1,0xd6a336,.55);g.strokeEllipse(160,128,191,55);g.lineStyle(1,0xffffff,.32);g.strokeEllipse(160,128,136,39);}
   playBattleIntro(){this.inputLocked=true;this.mode='resolving';this.sel=0;const cover=this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x000000,1).setDepth(999);this.tweens.add({targets:cover,alpha:0,duration:420,ease:'Cubic.Out',onComplete:()=>{cover.destroy();if(this.over)return;this.drawBattle();this.setResolveText(this.log[0]||'');this.time.delayedCall(900,()=>{if(this.over)return;this.inputLocked=false;this.mode='command';this.sel=0;this.drawBattle();});}});}
-  returnMap(){if(this.transitioning)return;this.transitioning=true;const cover=this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x000000,0).setDepth(999);this.tweens.add({targets:cover,alpha:1,duration:260,ease:'Sine.In',onComplete:()=>this.scene.start('OverworldScene')});}
+  returnMap(){if(this.transitioning)return;this.transitioning=true;const cover=this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x000000,0).setDepth(999);this.tweens.add({targets:cover,alpha:1,duration:260,ease:'Sine.In',onComplete:()=>this.scene.start(this.type==='opening'?'OpeningRecoveryScene':'OverworldScene')});}
 }

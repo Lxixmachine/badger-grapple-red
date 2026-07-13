@@ -1,7 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
-import {addXp,makeMon,scaledStats,xpNeed} from '../src/data/roster.js';
+import {addXp,counterStarterFor,makeMon,scaledStats,xpNeed} from '../src/data/roster.js';
 import {defaultState,defeatedWrestlerCount,normalizeState,rosterBookComplete} from '../src/systems/save.js';
 import {
   attemptRecruit,
@@ -33,6 +33,12 @@ test('six-style chart preserves the starter triangle and two advantages per styl
   expect(styleMultiplier('Scrambler','Shooter')).toBeGreaterThan(1);
   expect(styleMultiplier('Shooter','Wall')).toBeLessThan(1);
   expect(styleMultiplier('Shooter','Thrower')).toBe(1);
+});
+
+test('Rex selects the style counter to every opening persona',()=>{
+  expect(counterStarterFor('buckshot')).toBe('fieldflyer');
+  expect(counterStarterFor('matreturner')).toBe('buckshot');
+  expect(counterStarterFor('fieldflyer')).toBe('matreturner');
 });
 
 test('legacy saves migrate to Condition/Stamina and canonical inventory without duplication',()=>{

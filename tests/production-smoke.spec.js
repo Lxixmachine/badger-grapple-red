@@ -65,10 +65,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.82-opening-day');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.83-opening-wrestleoff');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'title_hero', 'coach_intro', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'title_hero', 'coach_intro', 'trainer_intro', 'singlet_shooter', 'singlet_rider', 'singlet_scrambler', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -374,7 +374,8 @@ test('captain blocks the actual wrestling-room doorway until the coach office is
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({area: 'fieldhouse', tilePos: {x: 10, y: 2}});
 });
 
-test('Head Coach awards the first mat persona in the wrestling room', async ({page}) => {
+test('Opening Day persona choice flows through Rex, recovery, and Coach assignment', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
   const save = seededSave({
     playerName: 'A',
     party: [],
@@ -394,13 +395,112 @@ test('Head Coach awards the first mat persona in the wrestling room', async ({pa
   });
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('StarterScene');
-  await page.waitForTimeout(180);
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('StarterScene').phase)).toBe('intro');
   await press(page, 'a');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('OverworldScene');
-  const updated = await page.evaluate(() => window.__badgerTest.storage());
-  expect(updated.party).toHaveLength(1);
-  expect(updated.flags.personaChosen).toBe(true);
-  expect(updated).toMatchObject({area: 'wrestlingroom', pos: {x: 10, y: 6}});
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('StarterScene').phase)).toBe('select');
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('StarterScene'))).toMatchObject({phase: 'confirm', confirmSelected: 0});
+  await press(page, 'right');
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('StarterScene').phase)).toBe('rival');
+  const selected = await page.evaluate(() => window.__badgerTest.storage());
+  expect(selected).toMatchObject({
+    area: 'wrestlingroom',
+    pos: {x: 10, y: 6},
+    opening: {playerPersona: 'buckshot', rivalPersona: 'fieldflyer', battleResult: null},
+    flags: {personaChosen: true, openingBattleReady: true, openingBattleComplete: false}
+  });
+  expect(selected.party).toHaveLength(1);
+  expect(selected.party[0]).toMatchObject({id: 'buckshot', lvl: 5});
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('StarterScene').rivalPage)).toBe(1);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('BattleScene');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene'))).toMatchObject({battleType: 'opening', trainerName: 'Rex', inputLocked: false});
+  await page.evaluate(() => window.__badgerTest.winBattle());
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene'))).toMatchObject({over: true, resultTitle: 'VICTORY'});
+  expect(await page.evaluate(() => window.__badgerTest.storage())).toMatchObject({
+    opening: {battleResult: 'win'},
+    flags: {openingBattleComplete: true, openingBattleWon: true, openingRecoveryDone: false}
+  });
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OpeningRecoveryScene'))).toMatchObject({active: true, phase: 'arrival', page: 0});
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OpeningRecoveryScene').phase)).toBe('restore');
+  await press(page, 'a');
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({active: true, area: 'wrestlingroom', tilePos: {x: 10, y: 6}});
+  let updated = await page.evaluate(() => window.__badgerTest.storage());
+  expect(updated).toMatchObject({flags: {openingRecoveryDone: true, assignment: false}, objective: {id: 'opening_return_coach'}});
+  await press(page, 'a'); // close the recovery message
+  await page.waitForTimeout(130);
+  await press(page, 'up');
+  await page.waitForTimeout(130);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.storage().flags.assignment)).toBe(true);
+  updated = await page.evaluate(() => window.__badgerTest.storage());
+  expect(updated).toMatchObject({
+    keyItems: {rosterBook: true},
+    flags: {recruitingUnlocked: true, lockerUnlocked: true, rosterBook: true},
+    objective: {id: 'scout_quad'}
+  });
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('losing the Rex wrestle-off still reaches Trainer recovery', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await page.goto('/?test=1&reset=1&scene=starter');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('StarterScene')?.phase)).toBe('intro');
+  await press(page, 'a');
+  await press(page, 'right'); // Rider
+  await press(page, 'a');
+  await press(page, 'right'); // YES
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.storage().opening)).toEqual({playerPersona: 'matreturner', rivalPersona: 'buckshot', battleResult: null});
+  await press(page, 'a');
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene'))).toMatchObject({active: true, battleType: 'opening', trainerName: 'Rex', inputLocked: false});
+  await page.evaluate(() => window.__badgerTest.loseBattle());
+  const depleted = await page.evaluate(() => window.__badgerTest.storage());
+  expect(depleted.party[0]).toMatchObject({hp: 0, stamina: 0});
+  expect(depleted).toMatchObject({opening: {battleResult: 'loss'}, flags: {openingBattleComplete: true, openingBattleWon: false, openingRecoveryDone: false}});
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OpeningRecoveryScene').active)).toBe(true);
+  await press(page, 'a');
+  const restored = await page.evaluate(() => window.__badgerTest.storage().party[0]);
+  expect(restored.hp).toBeGreaterThan(0);
+  expect(restored.stamina).toBeGreaterThan(0);
+  await press(page, 'a');
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').active)).toBe(true);
+  expect(await page.evaluate(() => window.__badgerTest.storage())).toMatchObject({
+    opening: {battleResult: 'loss'},
+    flags: {openingRecoveryDone: true, assignment: false},
+    objective: {id: 'opening_return_coach'}
+  });
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('Continue resumes an interrupted Opening Day recovery', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await continueIntoOverworld(page, seededSave({
+    playerName: 'A',
+    party: [{id: 'buckshot', lvl: 5, xp: 0, hp: 0, stamina: 0, score: 0, moves: ['single', 'sprawl']}],
+    badges: [],
+    area: 'wrestlingroom',
+    pos: {x: 10, y: 6},
+    opening: {playerPersona: 'buckshot', rivalPersona: 'fieldflyer', battleResult: 'loss'},
+    flags: {
+      introDone: true, coachIntro: true, personaChosen: true, assignment: false, rivalIntro: true,
+      openingBattleReady: false, openingBattleComplete: true, openingBattleWon: false, openingRecoveryDone: false
+    }
+  }));
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OpeningRecoveryScene').active)).toBe(true);
+  await press(page, 'a');
+  const restored = await page.evaluate(() => window.__badgerTest.storage().party[0]);
+  expect(restored.hp).toBeGreaterThan(0);
+  expect(restored.stamina).toBeGreaterThan(0);
+  expect(runtimeIssues).toEqual([]);
 });
 
 test('battle command screen renders and opens move selection', async ({page}) => {

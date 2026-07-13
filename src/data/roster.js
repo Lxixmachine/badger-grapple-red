@@ -40,6 +40,8 @@ export const ROSTER={
 export const PERSONAS={badger:'Badger',neutral:'Grizzly',top:'Gorilla',scramble:'Red Panda',pace:'Gator'};
 export function personaFor(id){return PERSONAS[(ROSTER[id]||ROSTER.buckshot).asset]||'Badger';}
 export const STARTERS=['buckshot','matreturner','fieldflyer'];
+export const STARTER_COUNTERS={buckshot:'fieldflyer',matreturner:'buckshot',fieldflyer:'matreturner'};
+export function counterStarterFor(id){return STARTER_COUNTERS[id]||STARTERS[1];}
 export function scaledStats(id,lvl,mon={}){const r=ROSTER[id]||ROSTER.buckshot,tr=mon?.training||{},iv=Number.isFinite(mon?.iv)?mon.iv:0;return {hp:r.stats.hp+lvl*5+iv,atk:r.stats.atk+Math.floor(lvl*1.6)+iv+(tr.strength||0)*2,def:r.stats.def+Math.floor(lvl*1.3)+iv+(tr.awareness||0)*2,spd:r.stats.spd+Math.floor(lvl*1.1)+iv+(tr.speed||0)*2,stamina:r.stats.stamina+lvl*2+(tr.conditioning||0)*4};}
 export function makeMon(id,lvl){const r=ROSTER[id]||ROSTER.buckshot;const seed=Math.floor(Math.random()*7)-3;const legalMoves=movesForLevel(id,lvl);const m={id,lvl,xp:experienceAtLevel(id,lvl),hp:1,stamina:1,score:0,boost:false,potential:{Common:'C+',Uncommon:'B',Rare:'A-',Elite:'A+'}[r.rarity]||'C',interest:45+Math.floor(Math.random()*38),training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},iv:seed,moves:legalMoves.length?legalMoves:[...(r.moves||[]).slice(0,1)],pendingMoves:[]};const s=scaledStats(id,lvl,m);m.hp=s.hp;m.stamina=s.stamina;return m;}
 export function xpNeed(m){

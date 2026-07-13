@@ -16,8 +16,11 @@ export function installTestHooks(game, routeVirtualButton) {
       id: scene.id ?? null,
       lvl: scene.lvl ?? null,
       page: scene.page ?? null,
+      phase: scene.phase ?? null,
       naming: scene.naming ?? null,
       selected: scene.sel ?? scene.nameCursor ?? scene.nameSel ?? null,
+      confirmSelected: scene.confirmSel ?? null,
+      rivalPage: scene.rivalPage ?? null,
       nameDraft: scene.nameDraft ?? null,
       tab: scene.tab ?? null,
       mode: scene.mode ?? null,
@@ -40,7 +43,8 @@ export function installTestHooks(game, routeVirtualButton) {
       messageOpen: scene.messageOpen ?? null,
       message: scene.message ?? null,
       trainerName: scene.trainerName ?? null,
-      battle: scene.battleDebugState?.() ?? null,
+      battleType: scene.type ?? null,
+      battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,
       moveLearning: scene.moveLearn ? {
         wrestlerId: scene.moveLearn.mon?.id ?? null,
         move: scene.moveLearn.move ?? null,
@@ -134,6 +138,13 @@ export function installTestHooks(game, routeVirtualButton) {
       const scene = game.scene.getScene('BattleScene');
       if (!scene?.scene?.isActive?.() || scene.over) return false;
       scene.win();
+      return true;
+    },
+    loseBattle() {
+      const scene = game.scene.getScene('BattleScene');
+      if (!scene?.scene?.isActive?.() || scene.over) return false;
+      scene.state.party.forEach(mon => { mon.hp = 0; mon.stamina = 0; });
+      scene.lose();
       return true;
     },
     queueMoveLearning(move) {

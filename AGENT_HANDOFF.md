@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.83 Opening Wrestle-Off)
+
+Opening Day is now a complete playable vertical slice. The Head Coach presents
+three physical singlets in the wrestling room, the player inspects one and
+confirms the matching persona, Rex deliberately chooses its style counter, and
+the Coach starts an immediate tutorial wrestle-off. The sequence uses original
+ImageGen singlet art for Shooter, Rider, and Scrambler; source images, transparent
+masters, runtime assets, and prompt records are all retained in the repository.
+
+Both match outcomes are canonical. A win awards normal trainer-match experience
+without unrelated currency rewards; a loss continues the story without a pity
+heal. Either result sends the player to the Trainer's Room, where the approved
+Trainer portrait presents Condition and Stamina recovery. Returning to the Coach
+then grants the Roster Book, recruiting access, the team locker, and the first
+Bascom Hill assignment. Save normalization and resume routing cover interruptions
+before the match, after the match, and during recovery.
+
+The three personas begin at level 5 with only their legal level-up techniques.
+Automated coverage verifies all three Rex counter-picks, win and loss branches,
+recovery, Coach progression, resume behavior, and every new runtime texture. The
+final Chromium suite passes all 81 tests; build, data validation, balance checks,
+and map linting also pass. Phone and desktop review confirmed readable staging,
+stable controls, and clean character and singlet composition.
+
+Tony's dirty State Street art and generated downtown/Map Studio files remain
+deliberately untouched and must not be included with this opening-flow commit.
+
 ## Latest Codex Turn (v21.82 Opening Day)
 
 The opening now follows the proven FireRed structure without copying its

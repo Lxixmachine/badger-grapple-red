@@ -4,6 +4,7 @@ import {BootScene} from './scenes/BootScene.js';
 import {TitleScene} from './scenes/TitleScene.js';
 import {IntroScene} from './scenes/IntroScene.js';
 import {StarterScene} from './scenes/StarterScene.js';
+import {OpeningRecoveryScene} from './scenes/OpeningRecoveryScene.js';
 import {OverworldScene} from './scenes/OverworldScene.js';
 import {ScoutScene} from './scenes/ScoutScene.js';
 import {BattleScene} from './scenes/BattleScene.js';
@@ -43,7 +44,7 @@ const scenes = atlasMode
   ? [WorldAtlasScene]
   : sliceMode
     ? [VisualSliceScene]
-    : [BootScene, TitleScene, IntroScene, StarterScene, OverworldScene, ScoutScene, BattleScene, MenuScene];
+    : [BootScene, TitleScene, IntroScene, StarterScene, OpeningRecoveryScene, OverworldScene, ScoutScene, BattleScene, MenuScene];
 
 if (modernMode) {
   document.body.classList.add('slice-mode');
@@ -79,7 +80,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.82-opening-day';
+    : sliceMode ? '21.63-scale-slice' : '21.83-opening-wrestleoff';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -92,6 +93,7 @@ function routeVirtualButton(key, phase = 'press') {
     'MenuScene',
     'BattleScene',
     'ScoutScene',
+    'OpeningRecoveryScene',
     'StarterScene',
     'TitleScene',
     'OverworldScene'

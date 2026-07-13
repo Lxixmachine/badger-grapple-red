@@ -1,5 +1,5 @@
 import {AREAS,areaFor,areaDimensions,defaultPos,isBlocked,isGrass,spotKind,signText,TRAINERS,TOURNAMENT,trainersInArea,trainerAt,trainerSeesTile,canUseExit,gateMessage,rollWild} from '../data/maps.js';
-import {ROSTER} from '../data/roster.js';
+import {ROSTER,counterStarterFor} from '../data/roster.js';
 import {loadState,saveState,caughtRecruitCount} from '../systems/save.js';
 import {restoreParty} from '../systems/mechanics.js';
 import {earnedBadgeCount,unlockRecruiting} from '../systems/progression.js';
@@ -28,7 +28,10 @@ export class OverworldScene extends Phaser.Scene{
   this.worldCamera.startFollow(this.player,true,1,1);this.applyAreaBounds();this.worldCamera.setDeadzone(0,0);
   this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);
   this.waterSprites=[];this.waterClock=null;
-  this.hud=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1000));this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.fadeSceneIn(140);setMuted(this.state.audioMuted);playMusic('overworld');}
+  this.hud=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1000));this.drawDepthDecor();this.drawWater();this.drawLayeredUpperDecor();this.drawActors();this.drawHud();this.showAreaToast(areaFor(this.area).name);this.fadeSceneIn(140);setMuted(this.state.audioMuted);playMusic('overworld');
+  const recoveryPending=this.state.flags.openingBattleComplete&&!this.state.flags.openingRecoveryDone;
+  const battlePending=this.state.flags.openingBattleReady&&!this.state.flags.openingBattleComplete;
+  if(recoveryPending||battlePending){this.sightLocked=true;this.time.delayedCall(230,()=>recoveryPending?this.scene.start('OpeningRecoveryScene'):this.startOpeningBattle());}}
  addWorld(obj){this.worldLayer.add(obj);return obj;}
  addUi(obj){this.uiLayer.add(obj);return obj;}
  createAreaBackground(){
@@ -188,6 +191,14 @@ recover(){restoreParty(this.state);this.savePos("The Trainer's Room restored Con
  startScout(){const {id,lvl,rare}=rollWild(this.area);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.fadeSceneOut(100);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area,rare}));} // Gen-1 slot odds: commons wade, blue chips hide at 1.2%
  battleTransition(cb){this.sightLocked=true;const cam=this.worldCamera;this.playSfx('bump');cam.flash(110,255,255,255);this.time.delayedCall(180,()=>cam.flash(110,255,255,255));this.time.delayedCall(380,()=>this.fadeSceneOut(240));this.time.delayedCall(640,cb);} // FireRed battle entry: double flash, then wipe to black
  startBattle(id,lvl,type){if(!this.state.party.length){this.showMessage('Coach: Choose your mat persona before you wrestle.');return;}this.savePos();this.battleTransition(()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type}));}
+ startOpeningBattle(){
+   if(!this.state.party.length)return;
+   const rivalId=this.state.opening?.rivalPersona||counterStarterFor(this.state.party[0].id);
+   this.state.opening={...(this.state.opening||{}),playerPersona:this.state.party[0].id,rivalPersona:rivalId,battleResult:null};
+   this.state.flags.openingBattleReady=true;this.state.message='';this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);
+   this.battleTransition(()=>this.scene.start('BattleScene',{team:[[rivalId,5]],battleType:'opening',trainerName:'Rex',reward:{grit:0,rep:0}}));
+ }
+ startOpeningRecovery(){this.sightLocked=true;this.fadeSceneOut(180);this.time.delayedCall(185,()=>this.scene.start('OpeningRecoveryScene'));}
  tournamentDesk(){
    const t=this.state.tournament||{round:0,champion:false};
    const missing=TOURNAMENT.requires.filter(b=>!this.state.badges.includes(b));
@@ -205,8 +216,37 @@ recover(){restoreParty(this.state);this.savePos("The Trainer's Room restored Con
  savePos(msg=null){this.state.area=this.area;this.state.pos={...this.tilePos};if(msg)this.state.message=msg;saveState(this.state);if(msg)this.showMessage(msg);}
  showMessage(msg){this.message=msg;this.messageOpen=!!msg;this.drawHud();}
  clearMessage(){this.message='';this.messageOpen=false;this.state.message='';saveState(this.state);this.drawHud();}
- objective(){const caught=caughtRecruitCount(this.state);if(!this.state.party.length)return 'Meet Coach in the wrestling room.';if(!this.state.flags?.coachIntro)return 'Meet Coach.';if(this.state.objective?.id==='scout_quad')return 'Scout Bascom Hill.';if(caught<2)return 'Recruit one more wrestler.';if(!this.state.flags.wonSpar)return 'Win first spar.';return 'Challenge The Opener at Field House.';}
-coachObjective(){if(!this.state.party.length){this.state.flags.coachIntro=true;this.state.area=this.area;this.state.pos={...this.tilePos};this.state.message='';saveState(this.state);this.fadeSceneOut(160);this.time.delayedCall(165,()=>this.scene.start('StarterScene',{story:true,returnArea:this.area,returnPos:{...this.tilePos}}));return;}this.state.flags.coachIntro=true;const caught=caughtRecruitCount(this.state);if(!this.state.flags.assignment){this.state.flags.assignment=true;unlockRecruiting(this.state);this.state.objective={id:'scout_quad',stage:2,complete:false,log:['Scout Bascom Hill','Roster Book and Locker unlocked','Meet the Head Coach']};saveState(this.state);this.showObjectivePopup('ROSTER BOOK OBTAINED','Recruiting and the Team Locker are now available.');return this.showMessage('Coach: The Roster Book and your Team Locker are ready. Scout Bascom Hill and offer one prospect a Wisconsin singlet.');}if(caught<2)return this.showMessage('Coach: Keep scouting Bascom Hill until one more wrestler joins the room.');if(!this.state.flags.wonSpar){this.state.objective={id:'win_spar',stage:4,complete:false,log:['Win your first sparring match','Recruit your first wrestler','Scout Bascom Hill','Meet the Head Coach']};saveState(this.state);return this.showMessage('Coach: Good recruit. Now win a sparring match on the Field House mat.');}this.state.objective={id:'challenge_opener',stage:6,complete:false,log:['Defeat The Opener at Field House','Win your first sparring match','Recruit your first wrestler']};saveState(this.state);return this.showMessage('Coach: You can build a room. Now prove it to The Opener at Field House. Badges are won from captains, not handed out here.');}
+ objective(){
+   const caught=caughtRecruitCount(this.state);
+   if(!this.state.party.length)return 'Meet Coach in the wrestling room.';
+   if(!this.state.flags.openingBattleComplete)return 'Wrestle Rex.';
+   if(!this.state.flags.openingRecoveryDone)return "Recover in the Trainer's Room.";
+   if(!this.state.flags.assignment)return 'Return to Coach.';
+   if(this.state.objective?.id==='scout_quad')return 'Scout Bascom Hill.';
+   if(caught<2)return 'Recruit one more wrestler.';
+   if(!this.state.flags.wonSpar)return 'Win first spar.';
+   return 'Challenge The Opener at Field House.';
+ }
+ coachObjective(){
+   if(!this.state.party.length){
+     this.state.flags.coachIntro=true;this.state.area=this.area;this.state.pos={...this.tilePos};this.state.message='';saveState(this.state);
+     this.fadeSceneOut(160);this.time.delayedCall(165,()=>this.scene.start('StarterScene',{story:true,returnArea:this.area,returnPos:{...this.tilePos}}));return;
+   }
+   this.state.flags.coachIntro=true;
+   if(!this.state.flags.openingBattleComplete){this.startOpeningBattle();return;}
+   if(!this.state.flags.openingRecoveryDone){this.startOpeningRecovery();return;}
+   const caught=caughtRecruitCount(this.state);
+   if(!this.state.flags.assignment){
+     this.state.flags.assignment=true;unlockRecruiting(this.state);
+     this.state.objective={id:'scout_quad',stage:4,complete:false,log:['Scout Bascom Hill','Roster Book and Team Locker unlocked','Return to Coach']};
+     saveState(this.state);this.showObjectivePopup('ROSTER BOOK OBTAINED','Recruiting and the Team Locker are now available.');
+     return this.showMessage('Coach: Win or lose, you came back ready. Take the Roster Book, scout Bascom Hill, and offer one prospect a Wisconsin singlet.');
+   }
+   if(caught<2)return this.showMessage('Coach: Keep scouting Bascom Hill until one more wrestler joins the room.');
+   if(!this.state.flags.wonSpar){this.state.objective={id:'win_spar',stage:4,complete:false,log:['Win your first sparring match','Recruit your first wrestler','Scout Bascom Hill','Meet the Head Coach']};saveState(this.state);return this.showMessage('Coach: Good recruit. Now win a sparring match on the Field House mat.');}
+   this.state.objective={id:'challenge_opener',stage:6,complete:false,log:['Defeat The Opener at Field House','Win your first sparring match','Recruit your first wrestler']};saveState(this.state);
+   return this.showMessage('Coach: You can build a room. Now prove it to The Opener at Field House. Badges are won from captains, not handed out here.');
+ }
 rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;saveState(this.state);this.showObjectivePopup('RIVAL','A future dual meet is waiting.');}return this.showMessage('Rival: Build your lineup. When you have depth, I want a dual meet.');}
  hiddenItem(flag,item,msg){this.state.flags.hiddenItems=this.state.flags.hiddenItems||{};if(this.state.flags.hiddenItems[flag])return this.showMessage('Nothing else here.');this.state.flags.hiddenItems[flag]=true;this.state.items[item]=(this.state.items[item]||0)+1;saveState(this.state);this.showObjectivePopup('ITEM FOUND',msg);return this.showMessage(msg);}
 showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1060));const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(39,43,242,58,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(36,40,242,58,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(36,40,242,58,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(40,44,234,50,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(45,93,269,93);const t=this.add.text(157,47,title,{fontFamily:FONT,fontSize:12,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(157,68,body,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',align:'center',wordWrap:{width:216}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
