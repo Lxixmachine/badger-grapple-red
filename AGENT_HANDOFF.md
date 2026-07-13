@@ -1,5 +1,29 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.79 Battle Tactics)
+
+The prior battle pass looked FireRed-like but still resolved almost every
+technique as power + accuracy + Stamina. This turn replaces that shallow layer
+with battle-only Attack/Defense/Speed/Accuracy stages, same-style form bonus,
+priority, counters, multi-hit sequences, Stamina drain, position breaks,
+critical-rate identities, and forced reset turns. Setup techniques now spend a
+real turn changing position rather than dealing normal damage at the same time.
+
+Every technique exposes its role in the Fight menu. Persistent stage changes
+appear beside each status panel, and each critical, matchup, hit count, stage,
+Stamina, position-break, counter, and reset result gets its own typed battle
+beat. Trainer AI values effects and current stages; wild opponents retain
+FireRed-style random move selection. Switching resets the incoming wrestler's
+battle stages, while items and voluntary switches consume a turn.
+
+Experience now arrives after every defeated opponent, including level and
+development messages before the next send-out. Leveling no longer heals prior
+Condition damage or spent Stamina. The production simulator now executes the
+same priority, stage, effect, item, switch, flinch, and reset rules as the game.
+
+Tony's dirty State Street art and generated downtown files remain deliberately
+untouched and must not be staged with this mechanics commit.
+
 ## Latest Codex Turn (v21.78 D-pad Menu Fix)
 
 Normal-game D-pad taps were routed once on `pointerdown` and again on

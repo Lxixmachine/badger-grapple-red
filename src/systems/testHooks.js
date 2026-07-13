@@ -39,6 +39,7 @@ export function installTestHooks(game, routeVirtualButton) {
       messageOpen: scene.messageOpen ?? null,
       message: scene.message ?? null,
       trainerName: scene.trainerName ?? null,
+      battle: scene.battleDebugState?.() ?? null,
       npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
       layered: scene.layeredMapVersion ? {
         version: scene.layeredMapVersion,

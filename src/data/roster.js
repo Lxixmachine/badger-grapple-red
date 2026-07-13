@@ -42,6 +42,7 @@ export function xpNeed(m){return 18+m.lvl*9;}
 export function addXp(m,amt){
   const out=[];m.xp+=amt;
   while(m.xp>=xpNeed(m)){
+    const before=scaledStats(m.id,m.lvl,m),condition=m.hp,stamina=m.stamina;
     m.xp-=xpNeed(m);m.lvl++;
     const r=ROSTER[m.id];
     if(r.evolvesTo&&m.lvl>=r.evolveLvl){
@@ -51,7 +52,9 @@ export function addXp(m,amt){
     }else{
       out.push(`${ROSTER[m.id].name} grew to Lv ${m.lvl}!`);
     }
-    const s=scaledStats(m.id,m.lvl,m);m.hp=s.hp;m.stamina=s.stamina;
+    const after=scaledStats(m.id,m.lvl,m);
+    m.hp=Math.min(after.hp,Math.max(0,condition+Math.max(0,after.hp-before.hp)));
+    m.stamina=Math.min(after.stamina,Math.max(0,stamina+Math.max(0,after.stamina-before.stamina)));
   }
   return out;
 }

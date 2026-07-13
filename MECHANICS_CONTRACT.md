@@ -10,6 +10,17 @@ recovery, roster, economy, or progression logic.
   compatibility; every player-facing label says `COND` or `Condition`.
 - Stamina is the technique resource. Every technique spends Stamina. Circle
   Out recovers it when no selected technique is affordable.
+- Same-style techniques receive a 1.2x form bonus. Style matchups remain the
+  locked six-style chart in `src/data/moves.js`.
+- Battle-only Attack, Defense, Speed, and Accuracy stages range from -6 to +6.
+  They persist against a multi-wrestler opponent and reset when their wrestler
+  leaves the mat or the battle ends.
+- Techniques have distinct tactical roles: direct, setup, priority, counter,
+  multi-hit, Stamina drain, position break, and forced reset. Items and lineup
+  changes consume the user's turn.
+- Experience is awarded after each opposing wrestler is defeated. Level and
+  development gains increase current Condition/Stamina only by the maximum-stat
+  increase; they never erase existing damage or fatigue.
 - The travel lineup holds at most six wrestlers. Every other signed wrestler
   is stored in the Team Locker.
 - Team Lockers are available in the home locker room and every Trainer's Room.

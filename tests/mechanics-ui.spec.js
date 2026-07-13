@@ -93,3 +93,36 @@ test('battle victory awards experience after runtime save normalization',async({
   await page.evaluate(()=>window.__badgerTest.winBattle());
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].xp)).toBeGreaterThan(0);
 });
+
+test('battle techniques expose persistent FireRed-style combat effects',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'spar'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
+  await press(page,'down');
+  await press(page,'right');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').selected)).toBe(3);
+  await page.waitForTimeout(180);
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battle?.player?.stages?.attack),{timeout:6000}).toBe(1);
+});
+
+test('B backs out of submenus but cannot silently leave a match',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
+  await press(page,'b');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({active:true,mode:'command'});
+  await press(page,'b');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({active:true,mode:'command'});
+});

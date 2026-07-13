@@ -1,14 +1,19 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
-import {addXp,makeMon,scaledStats} from '../src/data/roster.js';
+import {addXp,makeMon,scaledStats,xpNeed} from '../src/data/roster.js';
 import {defaultState,defeatedWrestlerCount,normalizeState,rosterBookComplete} from '../src/systems/save.js';
 import {
   attemptRecruit,
   chooseAiMove,
+  consumeActionBlock,
+  createBattleState,
   depositWrestler,
+  modifyBattleStage,
   normalizeItems,
   practiceWrestler,
+  previewDamage,
+  proficiencyMultiplier,
   recruitOdds,
   resolveTechnique,
   restoreWrestler,
@@ -77,6 +82,50 @@ test('speed controls turn order and trainer AI never selects an unaffordable mov
   expect(MOVES[choice].stamina).toBeLessThanOrEqual(5);
 });
 
+test('battle stages, form proficiency, and priority create distinct turn decisions',()=>{
+  const shooter=mon('buckshot'),rider=mon('matreturner');
+  const shooterState=createBattleState(),riderState=createBattleState();
+  const base=previewDamage(shooter,rider,'single',{attackerState:shooterState,defenderState:riderState});
+  expect(proficiencyMultiplier('Shooter','Shooter')).toBe(1.2);
+  expect(proficiencyMultiplier('Thrower','Shooter')).toBe(1);
+  modifyBattleStage(shooterState,'attack',1);
+  expect(previewDamage(shooter,rider,'single',{attackerState:shooterState,defenderState:riderState})).toBeGreaterThan(base);
+  expect(turnOrder(rider,shooter,'throwby','single',{playerState:riderState,enemyState:shooterState})).toEqual(['player','enemy']);
+});
+
+test('technique effects support setup, multi-hit pressure, counters, and forced reset turns',()=>{
+  const bull=mon('pacesetter'),foe=mon('drillpartner');
+  const bullState=createBattleState(),foeState=createBattleState();
+  const setup=resolveTechnique(bull,foe,'pace',()=>.5,{attackerState:bullState,defenderState:foeState});
+  expect(setup.events).toContainEqual(expect.objectContaining({type:'stage',target:'attacker',stat:'attack',delta:1}));
+  expect(bullState.stages.attack).toBe(1);
+
+  const flurry=resolveTechnique(bull,foe,'flurry',()=>.5,{attackerState:bullState,defenderState:foeState});
+  expect(flurry.hits).toBe(3);
+  expect(flurry.events[0]).toMatchObject({type:'multiHit',hits:3});
+
+  bullState.damageTakenThisTurn=8;
+  const counter=resolveTechnique(bull,foe,'reattack',()=>.5,{attackerState:bullState,defenderState:foeState});
+  expect(counter.countered).toBe(true);
+  expect(counter.events).toContainEqual(expect.objectContaining({type:'counter'}));
+
+  const reset=resolveTechnique(bull,foe,'pin',()=>.5,{attackerState:bullState,defenderState:foeState});
+  expect(reset.events).toContainEqual(expect.objectContaining({type:'recharge'}));
+  expect(consumeActionBlock(bullState)).toBe('recharge');
+  expect(consumeActionBlock(bullState)).toBeNull();
+});
+
+test('position-breaking and ride techniques deny actions and drain shared Stamina',()=>{
+  const attacker=mon('pacesetter'),defender=mon('drillpartner');
+  const attackerState=createBattleState(),defenderState=createBattleState();
+  resolveTechnique(attacker,defender,'double',()=>.1,{attackerState,defenderState});
+  expect(consumeActionBlock(defenderState)).toBe('flinch');
+  const before=defender.stamina;
+  const ride=resolveTechnique(attacker,defender,'grind',()=>.5,{attackerState,defenderState});
+  expect(defender.stamina).toBe(before-10);
+  expect(ride.events).toContainEqual(expect.objectContaining({type:'staminaDrain',amount:10}));
+});
+
 test('Singlet tiers, worn Condition, and Film Study change recruiting odds',()=>{
   const fresh=mon('drillpartner',8),worn={...fresh,hp:1};
   const practiceFresh=recruitOdds(fresh,'practiceSinglet');
@@ -127,6 +176,17 @@ test('development, key items, town unlocks, and season gates persist as data mec
   expect(missingSeasonBadges(state)).toEqual(SEASON_ONE_BADGES);
   state.badges=[...SEASON_ONE_BADGES];
   expect(canFlyToNationals(state)).toBe(true);
+});
+
+test('level gains increase maximums without healing battle damage or spent Stamina',()=>{
+  const wrestler=mon('buckshot',8),before=scaledStats(wrestler.id,wrestler.lvl,wrestler);
+  wrestler.hp=10;wrestler.stamina=12;
+  addXp(wrestler,xpNeed(wrestler));
+  const after=scaledStats(wrestler.id,wrestler.lvl,wrestler);
+  expect(wrestler.hp).toBe(10+(after.hp-before.hp));
+  expect(wrestler.stamina).toBe(12+(after.stamina-before.stamina));
+  expect(wrestler.hp).toBeLessThan(after.hp);
+  expect(wrestler.stamina).toBeLessThan(after.stamina);
 });
 
 test('legacy and canonical badge aliases count as one season win',()=>{

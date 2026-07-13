@@ -70,7 +70,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.78-dpad-menu-fix';
+    : sliceMode ? '21.63-scale-slice' : '21.79-battle-tactics';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
