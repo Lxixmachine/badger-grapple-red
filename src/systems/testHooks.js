@@ -23,6 +23,8 @@ export function installTestHooks(game, routeVirtualButton) {
       rivalPage: scene.rivalPage ?? null,
       nameDraft: scene.nameDraft ?? null,
       tab: scene.tab ?? null,
+      summaryPage: scene.summaryPage ?? null,
+      summaryIndex: scene.summaryIndex ?? null,
       mode: scene.mode ?? null,
       inputLocked: scene.inputLocked ?? null,
       over: scene.over ?? null,
@@ -143,7 +145,7 @@ export function installTestHooks(game, routeVirtualButton) {
     loseBattle() {
       const scene = game.scene.getScene('BattleScene');
       if (!scene?.scene?.isActive?.() || scene.over) return false;
-      scene.state.party.forEach(mon => { mon.hp = 0; mon.stamina = 0; });
+      scene.state.party.forEach(mon => { mon.hp = 0; });
       scene.lose();
       return true;
     },

@@ -2,9 +2,9 @@ import {counterStarterFor,makeMon} from '../data/roster.js';
 import {normalizeItems,normalizeWrestler} from './mechanics.js';
 import {canonicalBadge} from '../data/campaign.js';
 const KEY='badger_grapple_red_engine_v2';
-const SAVE_VERSION='22.0';
+const SAVE_VERSION='22.1';
 const PERIODS=['Morning','Afternoon','Evening','Night'];
-export function defaultState(){return {version:SAVE_VERSION,playerName:'Walk-On',party:[],box:[],active:0,dex:{seen:{},caught:{},defeated:{}},grit:12,rep:8,items:{sportsDrink:2,athleticTape:1,filmStudy:1,practiceSinglet:3,travelSinglet:0,starterSinglet:0},effects:{filmStudyAttempts:0},keyItems:{equipmentShipment:false,rosterBook:false,kayakVoucher:false,busPass:false,flightTicket:false},travel:{unlockedTowns:['campRandall'],destinations:{campRandall:{id:'campRandall',name:'Camp Randall',area:'campus',pos:{x:14,y:16}}}},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},opening:{playerPersona:null,rivalPersona:null,battleResult:null},flags:{introDone:false,coachIntro:false,personaChosen:false,assignment:false,rivalIntro:false,openingBattleReady:false,openingBattleComplete:false,openingBattleWon:false,openingRecoveryDone:false,studentIntro:false,wonSpar:false,firstBadge:false,officeChecked:false,hiddenItems:{},practiceCount:0,lockerUnlocked:false,rosterBook:false,recruitingUnlocked:false},training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
+export function defaultState(){return {version:SAVE_VERSION,playerName:'Walk-On',party:[],box:[],active:0,dex:{seen:{},caught:{},defeated:{}},grit:12,rep:8,items:{sportsDrink:2,athleticTape:1,filmStudy:1,practiceSinglet:3,travelSinglet:0,starterSinglet:0},effects:{filmStudyAttempts:0},keyItems:{equipmentShipment:false,rosterBook:false,kayakVoucher:false,busPass:false,flightTicket:false},travel:{unlockedTowns:['campRandall'],destinations:{campRandall:{id:'campRandall',name:'Camp Randall',area:'campus',pos:{x:14,y:16}}}},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},opening:{playerPersona:null,rivalPersona:null,battleResult:null},flags:{introDone:false,coachIntro:false,personaChosen:false,assignment:false,rivalIntro:false,openingBattleReady:false,openingBattleComplete:false,openingBattleWon:false,openingRecoveryDone:false,studentIntro:false,wonSpar:false,firstBadge:false,officeChecked:false,hiddenItems:{},practiceCount:0,lockerUnlocked:false,rosterBook:false,recruitingUnlocked:false},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
 export function normalizeState(state){
   const d=defaultState();
   if(!state||typeof state!=='object')return d;
@@ -43,7 +43,7 @@ export function normalizeState(state){
   state.flags={...d.flags,...incomingFlags};
   if(!Object.prototype.hasOwnProperty.call(incomingFlags,'recruitingUnlocked')&&incomingFlags.assignment){state.flags.recruitingUnlocked=true;state.flags.lockerUnlocked=true;state.flags.rosterBook=true;}
   state.flags.hiddenItems={...(d.flags.hiddenItems||{}),...(state.flags.hiddenItems||{})};
-  state.training={...d.training,...(state.training||{})};
+  delete state.training;
   state.day={...d.day,...(state.day||{})};
   state.day.periodIndex=Number.isInteger(state.day.periodIndex)?state.day.periodIndex:0;
   state.day.period=PERIODS[state.day.periodIndex%PERIODS.length]||state.day.period||'Morning';

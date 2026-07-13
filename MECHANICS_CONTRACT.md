@@ -8,11 +8,20 @@ recovery, roster, economy, or progression logic.
 
 - Condition is the match health resource. Internally it remains `hp` for save
   compatibility; every player-facing label says `COND` or `Condition`.
-- Stamina is the technique resource. Every technique spends Stamina. Circle
-  Out recovers it when no selected technique is affordable.
-- Same-style techniques receive a 1.2x form bonus. Style matchups remain the
-  locked six-style chart in `src/data/moves.js`.
-- Battle-only Attack, Defense, Speed, and Accuracy stages range from -6 to +6.
+- Stamina is stored per technique, directly paralleling FireRed PP. Every use
+  spends one point from that technique. A wrestler with no Stamina on any
+  technique uses Desperation Shot and takes recoil. Trainer's Rooms restore
+  all Condition and technique Stamina.
+- Wrestlers have six calculated stats: Condition, Strength, Defense,
+  Technique, Awareness, and Speed. Each individual has six independent 0-31
+  potential values, six 0-255 effort tracks with a 510 total cap, and one of
+  25 temperaments. Stat calculation uses the Gen III formula, including
+  `effort / 4` and 10% temperament modifiers.
+- Same-style techniques receive a 1.5x form bonus. Favorable and unfavorable
+  style matchups use FireRed's 2x and 0.5x multipliers through the locked
+  six-style chart in `src/data/moves.js`.
+- Battle-only Strength, Defense, Technique, Awareness, Speed, and Accuracy
+  stages range from -6 to +6.
   They persist against a multi-wrestler opponent and reset when their wrestler
   leaves the mat or the battle ends.
 - Techniques have distinct tactical roles: direct, setup, priority, counter,
@@ -23,8 +32,8 @@ recovery, roster, economy, or progression logic.
   Per-defeat awards use `base yield * defeated level / 7`, participant and EXP
   Share pools, then Lucky Egg, organized-match, and traded-wrestler modifiers
   in the researched FireRed order. Fainted and level-100 wrestlers receive no
-  award. Level and development gains increase current Condition/Stamina only
-  by the maximum-stat increase; they never erase existing damage or fatigue.
+  award. Level and development gains increase current Condition only by the
+  maximum-stat increase; they never erase existing damage or restore Stamina.
   Levels and technique prompts resolve after each defeated opponent, while a
   queued development resolves only after the full battle is won.
 - Techniques come from explicit level-up learnsets. A new wrestler receives
@@ -39,7 +48,8 @@ recovery, roster, economy, or progression logic.
   Low Condition, Film Study, prior scouting, and better Singlets improve odds.
   Captains are committed and cannot be recruited.
 - Developments use the existing level thresholds and replace a wrestler with
-  the next form in its line while preserving training and roster identity.
+  the next form in its line while preserving individual values, effort,
+  temperament, techniques, and roster identity.
 - Roster Book completion means defeating every registered wrestler. Seen,
   defeated, and signed are separate states because captains cannot be signed.
 
@@ -55,7 +65,7 @@ owns behavior.
 | Team Locker | `TRAINER_LOCKER` | Deposit, withdraw, or exchange wrestlers |
 | Home locker | `LOCKER_ROOM` | Same Team Locker system |
 | Bus board | `BUS_STOP` | Travel to any registered town after receiving the Bus Pass |
-| Practice station | `WEIGHT_ROOM` | Five meaningful training tracks |
+| Practice station | `WEIGHT_ROOM` | Six wrestler effort tracks |
 | Open mat | `g` | Scout report, recruit, wrestle, or leave |
 | Route trainer | `TRAINER` | Trainer team battle |
 | Captain | `C` | Captain battle and venue badge |
@@ -72,10 +82,12 @@ See `src/data/campaign.js` for the machine-readable contract.
 - `src/data/moves.js`: techniques and six-style advantage chart.
 - `src/data/roster.js`: wrestler species, development lines, stats, and
   wrestler-instance progression.
+- `src/data/stats.js`: Gen III stat calculation, individual potential, effort,
+  temperament, and caps.
 - `src/data/experience.js`: growth curves, base yields, cumulative thresholds,
   and per-defeat distribution.
 - `src/data/learnsets.js`: ordered level-up technique learnsets.
-- `src/systems/save.js`: v22 migration and persistence.
+- `src/systems/save.js`: v22.1 migration and persistence.
 
 Map changes must not edit these files. Mechanics changes must not edit map
 geometry, collision, layers, transitions, or artwork.

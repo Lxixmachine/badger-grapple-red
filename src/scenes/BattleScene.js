@@ -1,4 +1,4 @@
-import {ROSTER,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {MOVES} from '../data/moves.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,resolveTechnique,restoreParty,turnOrder,useFilmStudy} from '../systems/mechanics.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
+import {ROSTER,allMovesSpent,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,restoreTechniqueStamina,turnOrder,useFilmStudy} from '../systems/mechanics.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
 const Phaser = window.Phaser;
 const COMMANDS=['FIGHT','BAG','WRESTLER','RUN'];
 const BAG_ITEMS=BAG_ORDER.map(key=>({key,name:ITEM_DEFS[key].name,desc:ITEM_DEFS[key].description,kind:ITEM_DEFS[key].kind}));
@@ -9,7 +9,7 @@ export class BattleScene extends Phaser.Scene{
     setMuted(this.state.audioMuted);playMusic('battle');unlockAudio();
     this.type=data.battleType||'wild';
     const team=data.team&&data.team.length?data.team:[[data.enemyId||'pacesetter',data.enemyLevel||4]];
-    this.enemyTeam=team.map(([id,lvl])=>makeMon(id,lvl));
+    this.enemyTeam=data.enemyMon?[normalizeWrestler({...data.enemyMon})]:team.map(([id,lvl])=>makeMon(id,lvl));
     this.enemyIdx=0;
     this.trainerName=data.trainerName||null;
     this.reward=data.reward||null;
@@ -26,7 +26,7 @@ export class BattleScene extends Phaser.Scene{
       ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
       :this.type==='wild'?`${ROSTER[this.enemy().id].name} takes the mat as the ${personaFor(this.enemy().id)}!`:`${this.trainerName||'Opponent'} sends out ${ROSTER[this.enemy().id].name} - ${personaFor(this.enemy().id)} form!`;
     this.log=[openLine];
-    const l=lead(this.state);if(l){const s=scaledStats(l.id,l.lvl,l);if(!Number.isFinite(l.hp)||l.hp<=0)l.hp=s.hp;if(!Number.isFinite(l.stamina)||l.stamina<=0)l.stamina=s.stamina;l.score=0;}this.participants=new Set(l?[l]:[]);this.enemyTeam.forEach(e=>e.score=0);
+    const l=lead(this.state);if(l){const s=scaledStats(l.id,l.lvl,l);if(!Number.isFinite(l.hp)||l.hp<=0)l.hp=s.hp;l.score=0;}this.participants=new Set(l?[l]:[]);this.enemyTeam.forEach(e=>e.score=0);
     this.progressMon=l;this.leadProgressStart=l?{lvl:l.lvl,xp:l.xp,id:l.id}:null;
     this.state.stats={scouts:0,battles:0,wins:0,recruits:0,streak:0,...(this.state.stats||{})};this.state.stats.battles++;saveState(this.state);
     this.input.keyboard.on('keydown-LEFT',()=>this.move(-1,0));this.input.keyboard.on('keydown-RIGHT',()=>this.move(1,0));this.input.keyboard.on('keydown-UP',()=>this.move(0,-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(0,1));
@@ -67,7 +67,7 @@ export class BattleScene extends Phaser.Scene{
     this.playResolveSequence([line],()=>this.resolvePendingMoves(onDone));
   }
   chooseCommand(){const l=lead(this.state);if(l&&this.combatState(l).recharging)return this.resolveTurn(null);const cmd=COMMANDS[this.sel];if(cmd==='FIGHT'){this.mode='fight';this.sel=0;this.drawBattle();return;}if(cmd==='BAG'){this.mode='bag';this.sel=0;this.drawBattle();return;}if(cmd==='WRESTLER'){this.mode='party';this.sel=this.state.active||0;this.drawBattle();return;}if(cmd==='RUN'){if(this.type==='wild'){this.addLog(['Got away safely.']);this.over=true;this.resultTitle='LEFT';this.recruit=false;stopMusic();this.drawBattle();}else{this.addLog(['You cannot run from this match.']);this.drawBattle();}}}
-  chooseMove(){const l=lead(this.state);if(!l)return this.returnMap();const key=(l.moves||ROSTER[l.id]?.moves||[])[this.sel];if(key)this.resolveTurn(key);}
+  chooseMove(){const l=lead(this.state);if(!l)return this.returnMap();const key=(l.moves||ROSTER[l.id]?.moves||[])[this.sel];if(!key)return;if(currentMoveStamina(l,key)<=0){if(allMovesSpent(l))return this.resolveTurn('desperation');this.addLog([`No Stamina left for ${MOVES[key].name}.`]);this.drawBattle();return;}this.resolveTurn(key);}
   chooseBag(){
     const l=lead(this.state);if(!l)return this.returnMap();
     const item=BAG_ITEMS[this.sel];if(!item)return;
@@ -80,7 +80,7 @@ export class BattleScene extends Phaser.Scene{
     }
     let msg='';
     if(item.key==='sportsDrink'){
-      const max=scaledStats(l.id,l.lvl,l).stamina;if(l.stamina>=max)msg='Stamina is already full.';else{l.stamina=Phaser.Math.Clamp(l.stamina+24,0,max);this.state.items.sportsDrink--;msg=`${ROSTER[l.id].name} recovered Stamina.`;}
+      const restored=restoreTechniqueStamina(l,10);if(!restored)msg='Every technique already has full Stamina.';else{this.state.items.sportsDrink--;msg=`${ROSTER[l.id].name}'s techniques recovered ${restored} Stamina.`;}
     }else if(item.key==='athleticTape'){
       const max=scaledStats(l.id,l.lvl,l).hp;if(l.hp>=max)msg='Condition is already full.';else{l.hp=Phaser.Math.Clamp(l.hp+20,0,max);this.state.items.athleticTape--;msg=`${ROSTER[l.id].name} recovered Condition.`;}
     }else if(item.key==='filmStudy'){
@@ -141,10 +141,11 @@ export class BattleScene extends Phaser.Scene{
   }
   effectLine(event,attName,defName){
     const name=event.target==='attacker'?attName:defName;
-    const stat={attack:'Attack',defense:'Defense',speed:'Speed',accuracy:'Accuracy'}[event.stat]||event.stat;
+    const stat={attack:'Strength',defense:'Defense',technique:'Technique',awareness:'Awareness',speed:'Speed',accuracy:'Accuracy'}[event.stat]||event.stat;
     if(event.type==='multiHit')return `Hit ${event.hits} times!`;
     if(event.type==='counter')return `${attName} caught the opening with a re-attack!`;
-    if(event.type==='staminaDrain')return `${defName} lost ${event.amount} Stamina!`;
+    if(event.type==='staminaDrain')return `${event.moveName} lost ${event.amount} Stamina!`;
+    if(event.type==='recoil')return `${attName} took ${event.amount} recoil!`;
     if(event.type==='flinch')return `${defName} lost position!`;
     if(event.type==='recharge')return `${attName} must reset position next turn.`;
     if(event.type==='stageLimit')return `${name}'s ${stat} cannot shift any further.`;
@@ -171,19 +172,18 @@ export class BattleScene extends Phaser.Scene{
       const line=blocked==='recharge'?`${attName} is resetting position!`:`${attName} could not regain position!`;
       this.addLog([line]);this.setResolveText(line);this.playSafe('talk');this.time.delayedCall(660,onDone);return;
     }
-    const requested=MOVES[key]||MOVES.stall;
-    const actualKey=requested.stamina>0&&att.stamina<requested.stamina?'stall':(key||'stall');
+    const actualKey=key!=='desperation'&&currentMoveStamina(att,key)<=0&&allMovesSpent(att)?'desperation':(key||'stall');
     const mv=MOVES[actualKey]||MOVES.stall;
-    this.setResolveText(actualKey!==key?`${attName} is exhausted - CIRCLE OUT!`:`${attName} used ${mv.name.toUpperCase()}!`);
+    this.setResolveText(actualKey!==key?`${attName} has no Stamina - DESPERATION SHOT!`:`${attName} used ${mv.name.toUpperCase()}!`);
     const attacker=defIsEnemy?this.playerSprite:this.enemySprite;
     if(attacker&&attacker.scene)this.tweens.add({targets:attacker,x:defIsEnemy?'+=16':'-=16',duration:130,yoyo:true,ease:'Cubic.Out'});
     this.playSafe('talk');
     this.time.delayedCall(640,()=>{
       if(this.over)return;
       const l=lead(this.state);
-      const beforeDefHp=def.hp,beforeGas=l?.stamina??0;
+      const beforeDefHp=def.hp;
       const res=this.resolve(att,def,actualKey,attName);
-      this.prevMeters=defIsEnemy?this.captureMeters(l.hp,beforeGas,beforeDefHp):this.captureMeters(beforeDefHp,l.stamina,this.enemy().hp);
+      this.prevMeters=defIsEnemy?this.captureMeters(l.hp,beforeDefHp):this.captureMeters(beforeDefHp,this.enemy().hp);
       this.moveStyle=res.result.move.style;
       this.impact=res.hit?(res.dmg>0?`-${res.dmg}`:'SET'):'MISS';
       this.attackAnim=res.hit?(res.dmg>0?(defIsEnemy?'enemy':'player'):(defIsEnemy?'playerSetup':'enemySetup')):'miss';
@@ -194,6 +194,7 @@ export class BattleScene extends Phaser.Scene{
       this.playResolveSequence(feedback,()=>{
         if(this.over)return;
         if(def.hp<=0)return this.faintBeat(defIsEnemy,onKO);
+        if(att.hp<=0)return this.faintBeat(!defIsEnemy,()=>defIsEnemy?this.playerDown():this.enemyDown());
         onDone();
       });
     });
@@ -230,7 +231,7 @@ export class BattleScene extends Phaser.Scene{
     this.awardedEnemies.add(defeated);
     const {awards}=distributeDefeatExperience({defeated,party:this.state.party,participants:[...this.participants],trainerBattle:this.type!=='wild'});
     const messages=[];
-    awards.forEach(({mon,amount})=>{this.expGain+=amount;messages.push(`${ROSTER[mon.id].name.split(' ')[0]} gained ${amount} EXP!`);messages.push(...addXp(mon,amount,{deferDevelopment:true}));});
+    awards.forEach(({mon,amount})=>{awardEffortForDefeat(mon,defeated);this.expGain+=amount;messages.push(`${ROSTER[mon.id].name.split(' ')[0]} gained ${amount} EXP!`);messages.push(...addXp(mon,amount,{deferDevelopment:true}));});
     this.addLog(messages);
     return messages;
   }
@@ -324,7 +325,7 @@ export class BattleScene extends Phaser.Scene{
     if(l){this.drawStatusBox(170,109,142,57,`${lr.name.split(' ')[0]} Lv.${l.lvl}`,l,lr,true);this.drawStageSummary(170,96,this.combatState(l));}
   }
   drawStageSummary(x,y,state){
-    const labels={attack:'ATK',defense:'DEF',speed:'SPD',accuracy:'ACC'};
+    const labels={attack:'STR',defense:'DEF',technique:'TEC',awareness:'AWR',speed:'SPD',accuracy:'ACC'};
     const parts=Object.entries(state?.stages||{}).filter(([,value])=>value).map(([key,value])=>`${labels[key]}${value>0?'+':''}${value}`);
     if(state?.recharging)parts.unshift('RESET');
     if(!parts.length)return;
@@ -333,7 +334,7 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(x+5,y+1,value,{fontFamily:FONT,fontSize:8,color:'#f8f0d8',fontStyle:'bold'});
   }
   drawStatusBox(x,y,w,h,name,mon,rec,isPlayer){
-    const s=scaledStats(mon.id,mon.lvl,mon),hp=Math.max(0,Math.round(mon.hp)),gas=Math.max(0,Math.round(mon.stamina));
+    const s=scaledStats(mon.id,mon.lvl,mon),hp=Math.max(0,Math.round(mon.hp));
     const g=this.add.graphics();
     g.fillStyle(0x000000,.24);g.fillRoundedRect(x+3,y+3,w,h,3);
     g.fillStyle(isPlayer?0xf9f2dc:0xfff8e8,1);g.fillRoundedRect(x,y,w,h,3);
@@ -344,9 +345,9 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(x+8,y+20,'COND',{fontFamily:FONT,fontSize:9,color:'#333',fontStyle:'bold'});
     this.drawAnimatedMeter(x+39,y+23,w-49,6,this.prevMeters?.[isPlayer?'playerHp':'enemyHp'],mon.hp/s.hp,0x55b867);
     if(isPlayer){
-      this.add.text(x+8,y+32,'STA',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});
-      this.drawAnimatedMeter(x+39,y+35,w-49,5,this.prevMeters?.playerGas,mon.stamina/s.stamina,0x5aa4e6);
-      this.add.text(x+8,y+44,`C ${hp}/${s.hp}  S ${gas}/${s.stamina}`,{fontFamily:FONT,fontSize:10,color:'#222'});
+      this.add.text(x+8,y+32,'EXP',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});
+      this.drawAnimatedMeter(x+39,y+35,w-49,5,undefined,experienceProgress(mon),0x3aa5d1);
+      this.add.text(x+8,y+44,`CONDITION ${hp}/${s.hp}`,{fontFamily:FONT,fontSize:10,color:'#222'});
     }
   }
   drawWrestlers(lr,er){this.drawBattleBases();const eX=235,eY=88,pX=82,pY=146,eStart=this.firstBattleDraw?GAME_W+42:eX,pStart=this.firstBattleDraw?-54:pX;const eimg=this.add.image(eStart,eY,'battle_'+er.asset).setScale(.58).setFlipX(true);const pimg=this.add.image(pStart,pY,'battle_'+lr.asset+'_back').setScale(.67);this.enemySprite=eimg;this.playerSprite=pimg;if(this.firstBattleDraw){this.tweens.add({targets:eimg,x:eX,duration:420,ease:'Cubic.Out'});this.tweens.add({targets:pimg,x:pX,duration:420,ease:'Cubic.Out',delay:110});this.personaFlash(eimg,430);this.personaFlash(pimg,540);}if(this.attackAnim==='enemy'){this.tweens.add({targets:eimg,x:'+=5',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:pimg,x:'+=13',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.flash(82,255,255,255);this.drawImpactBurst(eX,eY,this.moveStyle);}if(this.attackAnim==='player'){this.tweens.add({targets:pimg,x:'-=5',yoyo:true,repeat:3,duration:35});this.tweens.add({targets:eimg,x:'-=11',yoyo:true,duration:80,ease:'Cubic.Out'});this.cameras.main.shake(100,.006);this.drawImpactBurst(pX,pY,this.moveStyle);}if(this.attackAnim==='playerSetup'){this.personaFlash(pimg);this.drawImpactBurst(pX,pY,this.moveStyle);}if(this.attackAnim==='enemySetup'){this.personaFlash(eimg);this.drawImpactBurst(eX,eY,this.moveStyle);}if(this.attackAnim==='miss'){this.tweens.add({targets:[pimg,eimg],alpha:.65,yoyo:true,duration:55});this.drawMissWhiff(160,98);}if(this.impact){const t=this.add.text(160,78,this.impact,{fontFamily:FONT,fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5);this.tweens.add({targets:t,y:62,alpha:0,duration:550,ease:'Cubic.Out'});}this.attackAnim=null;}
@@ -390,7 +391,7 @@ export class BattleScene extends Phaser.Scene{
   }
   drawLearnInspect(){
     const choice=this.moveLearn,mon=choice?.mon,newMove=MOVES[choice?.move],oldMove=MOVES[mon?.moves?.[choice?.replaceIndex]];if(!mon||!newMove||!oldMove)return;
-    const stats=move=>`${move.style.toUpperCase()}  PWR ${move.power||'--'}  ACC ${Math.round(move.acc*100)}%  STA ${move.stamina}`;
+    const stats=move=>`${move.style.toUpperCase()}  ${move.category.toUpperCase()}  PWR ${move.power||'--'}  ACC ${Math.round(move.acc*100)}%  STA ${move.pp}`;
     this.drawTextBox(7,96,305,122);
     this.add.text(18,104,'CONFIRM TECHNIQUE CHANGE',{fontFamily:FONT,fontSize:12,color:'#111',fontStyle:'bold'});
     this.add.text(18,126,`FORGET: ${oldMove.name.toUpperCase()}`,{fontFamily:FONT,fontSize:11,color:'#444',fontStyle:'bold'});
@@ -413,12 +414,12 @@ export class BattleScene extends Phaser.Scene{
   drawFight(r){
     this.drawCommandBox(7,174,205,44);this.drawCommandBox(216,174,96,44);
     const leadMon=lead(this.state),moves=leadMon?.moves||r.moves||[];
-    moves.forEach((key,i)=>{const m=MOVES[key],x=16+(i%2)*98,y=182+(i>1?18:0),affordable=m.stamina<=0||m.stamina<=leadMon.stamina;this.add.text(x,y,`${i===this.sel?'\u25b6':' '}${m.name}`,{fontFamily:FONT,fontSize:12,color:i===this.sel?'#8a1720':affordable?'#111':'#999',fontStyle:i===this.sel?'bold':'normal'});});
+    moves.forEach((key,i)=>{const m=MOVES[key],x=16+(i%2)*98,y=182+(i>1?18:0),available=currentMoveStamina(leadMon,key)>0;this.add.text(x,y,`${i===this.sel?'\u25b6':' '}${m.name}`,{fontFamily:FONT,fontSize:12,color:i===this.sel?'#8a1720':available?'#111':'#999',fontStyle:i===this.sel?'bold':'normal'});});
     const mv=MOVES[moves[this.sel]];if(!mv)return;
-    const sameForm=ROSTER[leadMon.id]?.style===mv.style,cost=mv.stamina<0?`+${Math.abs(mv.stamina)}`:`-${mv.stamina}`,power=mv.power>0?mv.power:'--';
-    this.add.text(224,178,`${mv.style.toUpperCase()}${sameForm?'*':''}`,{fontFamily:FONT,fontSize:11,color:sameForm?'#8a1720':'#111',fontStyle:'bold'});
+    const moveKey=moves[this.sel],sameForm=ROSTER[leadMon.id]?.style===mv.style,power=mv.power>0?mv.power:'--';
+    this.add.text(224,178,`${mv.style.toUpperCase()}${sameForm?'*':''} ${mv.category==='technique'?'TEC':mv.category==='strength'?'STR':'SET'}`,{fontFamily:FONT,fontSize:10,color:sameForm?'#8a1720':'#111',fontStyle:'bold'});
     this.add.text(224,193,`PWR ${power}  ACC ${Math.round(mv.acc*100)}%`,{fontFamily:FONT,fontSize:10,color:'#333'});
-    this.add.text(224,205,`STA ${cost}`,{fontFamily:FONT,fontSize:10,color:'#355f87'});
+    this.add.text(224,205,`STA ${currentMoveStamina(leadMon,moveKey)}/${moveStaminaMax(moveKey)}`,{fontFamily:FONT,fontSize:10,color:'#355f87'});
   }
   drawBag(){this.drawTextBox(7,86,305,132);this.add.text(18,94,'BAG',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0,x=18+(i>2?146:0),y=117+(i%3)*21;this.add.text(x,y,`${i===this.sel?'\u25b6':' '} ${ITEM_DEFS[it.key].short} x${n}`,{fontFamily:FONT,fontSize:11,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(18,188,it.desc,{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold',wordWrap:{width:284}});}
   drawParty(){this.drawTextBox(7,86,305,132);this.add.text(18,94,this.forcedSwap?'Choose next wrestler':'Choose wrestler',{fontFamily:FONT,fontSize:13,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const r=ROSTER[m.id],s=scaledStats(m.id,m.lvl,m),tag=m.hp<=0?' OUT':'';this.add.text(18,116+i*17,`${i===this.sel?'\u25b6':' '} ${r.name} L${m.lvl}  C ${m.hp}/${s.hp}${tag}`,{fontFamily:FONT,fontSize:11,color:i===this.sel?'#8a1720':m.hp<=0?'#888':'#111',fontStyle:'bold'});});}
@@ -468,7 +469,7 @@ export class BattleScene extends Phaser.Scene{
       this.typeText(txt,`${oldR.name} developed into ${newR.name}! The ${personaFor(pr.after.id)} spirit grows stronger!`);
     });
   }
-  captureMeters(playerHp,playerGas,enemyHp){const l=lead(this.state);return {playerHp:l?playerHp/scaledStats(l.id,l.lvl,l).hp:1,playerGas:l?playerGas/scaledStats(l.id,l.lvl,l).stamina:1,enemyHp:enemyHp/scaledStats(this.enemy().id,this.enemy().lvl,this.enemy()).hp};}
+  captureMeters(playerHp,enemyHp){const l=lead(this.state);return {playerHp:l?playerHp/scaledStats(l.id,l.lvl,l).hp:1,enemyHp:enemyHp/scaledStats(this.enemy().id,this.enemy().lvl,this.enemy()).hp};}
   drawAnimatedMeter(x,y,w,h,start,end,color){const g=this.add.graphics();const value={p:Phaser.Math.Clamp(start??end,0,1)};const draw=()=>{const p=Phaser.Math.Clamp(value.p,0,1);g.clear();g.fillStyle(0x111111,1);g.fillRoundedRect(x-1,y-1,w+2,h+2,1);g.fillStyle(0x3d3d3d,1);g.fillRect(x,y,w,h);g.fillStyle(p<.22?0xd84c35:p<.5?0xd6b545:color,1);g.fillRect(x,y,Math.max(1,w*p),h);g.fillStyle(0xffffff,.3);g.fillRect(x,y,Math.max(1,w*p),1);g.lineStyle(1,0x080808,1);g.strokeRect(x-1,y-1,w+2,h+2);};draw();if(start!==undefined&&Math.abs(start-end)>.01){this.tweens.add({targets:value,p:Phaser.Math.Clamp(end,0,1),duration:520,ease:'Sine.Out',onUpdate:draw,onComplete:()=>{this.prevMeters=null;}});}return g;}
   drawTextBox(x,y,w,h){const g=this.add.graphics();g.fillStyle(0x000000,.35);g.fillRoundedRect(x+3,y+3,w,h,4);g.fillStyle(0xf8f0d8,1);g.fillRoundedRect(x,y,w,h,4);g.lineStyle(2,0x101010,1);g.strokeRoundedRect(x,y,w,h,4);g.lineStyle(1,0xffffff,.45);g.strokeRoundedRect(x+2,y+2,w-4,h-4,3);g.lineStyle(1,0x847868,1);g.strokeRoundedRect(x+4,y+4,w-8,h-8,2);return g;}
   drawCommandBox(x,y,w,h){const g=this.drawTextBox(x,y,w,h);g.fillStyle(0x7b1d2a,.9);g.fillRect(x+6,y+4,w-12,1);g.lineStyle(1,0xd6a336,.75);g.strokeRoundedRect(x+6,y+6,w-12,h-12,2);return g;}

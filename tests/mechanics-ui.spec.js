@@ -11,7 +11,7 @@ async function bootWithSave(page,save,url){
   await expect(page.locator('canvas')).toBeVisible();
 }
 
-test('a legacy phone save enters battle with canonical Stamina and items',async({page})=>{
+test('a legacy phone save enters battle with per-technique Stamina and six stats',async({page})=>{
   await bootWithSave(page,{
     party:[legacyWrestler()],active:0,box:[],items:{invite:2,energy:1,tape:1,film:1},
     dex:{seen:{},caught:{buckshot:true}},flags:{introDone:true,assignment:true},stats:{},badges:[]
@@ -21,7 +21,10 @@ test('a legacy phone save enters battle with canonical Stamina and items',async(
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
   const save=await page.evaluate(()=>window.__badgerTest.storage());
   expect(save.party[0].gas).toBeUndefined();
-  expect(save.party[0].stamina).toBe(70);
+  expect(save.party[0].stamina).toBeUndefined();
+  expect(save.party[0].moveStamina).toMatchObject({single:35,highc:25,sprawl:20,pace:30});
+  expect(Object.keys(save.party[0].ivs)).toHaveLength(6);
+  expect(Object.keys(save.party[0].effort)).toHaveLength(6);
   expect(save.items).toMatchObject({practiceSinglet:2,sportsDrink:1,athleticTape:1,filmStudy:1});
 });
 
@@ -64,6 +67,22 @@ test('one mobile D-pad tap advances exactly one menu entry',async({page})=>{
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({active:true,tab:'main',selected:0});
   await page.locator('button[data-key="down"]').click();
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').selected)).toBe(1);
+});
+
+test('Travel Lineup exposes both wrestler stat and technique summary pages',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],box:[],active:0,items:{},badges:[],
+    flags:{introDone:true,assignment:true},stats:{}
+  },'/?test=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  await page.evaluate(()=>window.__badgerTest.startMenu({tab:'team'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'team',selected:0});
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'summary',summaryPage:0,summaryIndex:0});
+  await press(page,'right');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').summaryPage)).toBe(1);
+  await press(page,'b');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
 });
 
 test('Starter Singlet guarantees a recruit through the scouting UI',async({page})=>{
@@ -110,6 +129,8 @@ test('battle techniques expose persistent FireRed-style combat effects',async({p
   await page.waitForTimeout(180);
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battle?.player?.stages?.attack),{timeout:6000}).toBe(1);
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:8000}).toBe('command');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].moveStamina.pace)).toBe(29);
 });
 
 test('B backs out of submenus but cannot silently leave a match',async({page})=>{

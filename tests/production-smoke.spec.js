@@ -65,7 +65,7 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.84-character-cast');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.85-wrestler-stats');
 
   const textureReport = await page.evaluate(() => {
     const keys = ['title_bg', 'title_hero', 'coach_intro', 'trainer_intro', 'singlet_shooter', 'singlet_rider', 'singlet_scrambler', 'player', 'npc', 'npc_coach', 'npc_trainer', 'npc_rex', 'npc_captain', 'npc_wrestler', 'npc_manager', 'npc_scout', 'npc_student', 'npc_official', 'npc_athlete', 'npc_camper', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
@@ -465,14 +465,15 @@ test('losing the Rex wrestle-off still reaches Trainer recovery', async ({page})
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene'))).toMatchObject({active: true, battleType: 'opening', trainerName: 'Rex', inputLocked: false});
   await page.evaluate(() => window.__badgerTest.loseBattle());
   const depleted = await page.evaluate(() => window.__badgerTest.storage());
-  expect(depleted.party[0]).toMatchObject({hp: 0, stamina: 0});
+  expect(depleted.party[0]).toMatchObject({hp: 0});
+  expect(depleted.party[0].stamina).toBeUndefined();
   expect(depleted).toMatchObject({opening: {battleResult: 'loss'}, flags: {openingBattleComplete: true, openingBattleWon: false, openingRecoveryDone: false}});
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OpeningRecoveryScene').active)).toBe(true);
   await press(page, 'a');
   const restored = await page.evaluate(() => window.__badgerTest.storage().party[0]);
   expect(restored.hp).toBeGreaterThan(0);
-  expect(restored.stamina).toBeGreaterThan(0);
+  expect(Object.values(restored.moveStamina).every(value => value > 0)).toBe(true);
   await press(page, 'a');
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').active)).toBe(true);
@@ -502,7 +503,7 @@ test('Continue resumes an interrupted Opening Day recovery', async ({page}) => {
   await press(page, 'a');
   const restored = await page.evaluate(() => window.__badgerTest.storage().party[0]);
   expect(restored.hp).toBeGreaterThan(0);
-  expect(restored.stamina).toBeGreaterThan(0);
+  expect(Object.values(restored.moveStamina).every(value => value > 0)).toBe(true);
   expect(runtimeIssues).toEqual([]);
 });
 

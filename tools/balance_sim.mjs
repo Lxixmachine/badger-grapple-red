@@ -10,16 +10,16 @@ function resolve(att,def,key,attackerState,defenderState){
 function bestMove(att,def,attackerState,defenderState){return chooseAiMove(att,def,{rng,attackerState,defenderState});}
 function heal(m){restoreWrestler(m);}
 // simulate a full party-vs-team gym fight, with forced swap to next healthy party member on faint (free swap, no extra hit)
-function gymFight(party,team,chews){
-  let pi=0;const p=party.map(m=>({...m})),playerStates=p.map(()=>createBattleState());p.forEach(heal);
+function gymFight(party,team,tapes){
+  let pi=0;const p=party.map(m=>structuredClone(m)),playerStates=p.map(()=>createBattleState());p.forEach(heal);
   for(const foeSpec of team){
-    const e={...foeSpec},enemyState=createBattleState();heal(e);
+    const e=structuredClone(foeSpec),enemyState=createBattleState();heal(e);
     while(true){
       if(pi>=p.length)return false; // whole party fainted
       const me=p[pi],playerState=playerStates[pi],ms=scaledStats(me.id,me.lvl,me);
       const enemyMove=bestMove(e,me,enemyState,playerState);
-      if(chews.n>0&&me.hp<ms.hp*.3&&!playerState.recharging){
-        me.hp=Math.min(ms.hp,me.hp+20);chews.n--;
+      if(tapes.n>0&&me.hp<ms.hp*.3&&!playerState.recharging){
+        me.hp=Math.min(ms.hp,me.hp+20);tapes.n--;
         resolve(e,me,enemyMove,enemyState,playerState);
       }else{
         const playerMove=bestMove(me,e,playerState,enemyState);
@@ -37,28 +37,29 @@ function gymFight(party,team,chews){
   }
   return true;
 }
-function trial(gymKey,partyDef,lvl,chewCount){
+function trial(gymKey,partyDef,lvl,tapeCount){
   const cap=AREAS[gymKey].captain;
-  const party=partyDef.map(id=>makeMon(id,lvl));party.forEach(mon=>mon.iv=0);
-  const team=cap.team.map(([id,l])=>makeMon(id,l));team.forEach(mon=>mon.iv=0);
-  return gymFight(party,team,{n:chewCount});
+  const neutral=mon=>{mon.ivs={hp:15,attack:15,defense:15,technique:15,awareness:15,speed:15};mon.nature=0;};
+  const party=partyDef.map(id=>makeMon(id,lvl));party.forEach(neutral);
+  const team=cap.team.map(([id,l])=>makeMon(id,l));team.forEach(neutral);
+  return gymFight(party,team,{n:tapeCount});
 }
-function winRate(gymKey,partyDef,lvl,chewCount,N=300){
+function winRate(gymKey,partyDef,lvl,tapeCount,N=300){
   seed=0x21_79_2026;
-  let w=0;for(let i=0;i<N;i++)if(trial(gymKey,partyDef,lvl,chewCount))w++;return w/N;
+  let w=0;for(let i=0;i<N;i++)if(trial(gymKey,partyDef,lvl,tapeCount))w++;return w/N;
 }
 console.log('--- Field House Badge lineup calibration ---');
-console.log('  buckvarsity L9 solo, 2 chews:', (winRate('conference',['buckvarsity'],9,2)*100).toFixed(0)+'%');
-console.log('  buckvarsity + recruit L9, 2 chews:', (winRate('conference',['buckvarsity','drillpartner'],9,2)*100).toFixed(0)+'%');
-console.log('  buckvarsity + recruit L10, 2 chews:', (winRate('conference',['buckvarsity','drillpartner'],10,2)*100).toFixed(0)+'%');
-console.log('  buckshot L7 solo, 2 chews (underleveled check):', (winRate('conference',['buckshot'],7,2)*100).toFixed(0)+'%');
+console.log('  buckvarsity L9 solo, 2 tapes:', (winRate('conference',['buckvarsity'],9,2)*100).toFixed(0)+'%');
+console.log('  buckvarsity + recruit L9, 2 tapes:', (winRate('conference',['buckvarsity','drillpartner'],9,2)*100).toFixed(0)+'%');
+console.log('  buckvarsity + recruit L10, 2 tapes:', (winRate('conference',['buckvarsity','drillpartner'],10,2)*100).toFixed(0)+'%');
+console.log('  buckshot L7 solo, 2 tapes (underleveled check):', (winRate('conference',['buckshot'],7,2)*100).toFixed(0)+'%');
 console.log('--- Picnic Point Badge ---');
-console.log('  party of 2 L15, 3 chews:', (winRate('river',['funkflyer','matgeneral'],15,3)*100).toFixed(0)+'%');
-console.log('  solo L15, 3 chews (should be harder):', (winRate('river',['funkflyer'],15,3)*100).toFixed(0)+'%');
+console.log('  party of 2 L15, 3 tapes:', (winRate('river',['funkflyer','matgeneral'],15,3)*100).toFixed(0)+'%');
+console.log('  solo L15, 3 tapes (should be harder):', (winRate('river',['funkflyer'],15,3)*100).toFixed(0)+'%');
 console.log('--- Kohl Badge ---');
-console.log('  party of 3 L18, 4 chews:', (winRate('championship',['buckallam','scramblesaint','rideking'],18,4)*100).toFixed(0)+'%');
+console.log('  party of 3 L18, 4 tapes:', (winRate('championship',['buckallam','scramblesaint','rideking'],18,4)*100).toFixed(0)+'%');
 console.log('  party of 2 L16 (underleveled check):', (winRate('championship',['buckallam','scramblesaint'],16,3)*100).toFixed(0)+'%');
-console.log('--- Conference calibration across levels (solo buckshot line, 2 chews) ---');
+console.log('--- Conference calibration across levels (solo buckshot line, 2 tapes) ---');
 for(const lvl of [7,8,9,10,11,12]){
   const partyId = lvl>=10?'buckvarsity':'buckshot';
   console.log(`  ${partyId} L${lvl}:`, (winRate('conference',[partyId],lvl,2)*100).toFixed(0)+'%');

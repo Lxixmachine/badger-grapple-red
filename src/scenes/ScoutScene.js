@@ -1,5 +1,6 @@
-import {ROSTER,scaledStats,personaFor} from '../data/roster.js';
+import {ROSTER,makeMon,scaledStats,personaFor} from '../data/roster.js';
 import {MOVES} from '../data/moves.js';
+import {natureFor,potentialFor} from '../data/stats.js';
 import {loadState,saveState} from '../systems/save.js';
 import {attemptRecruit,ITEM_DEFS,recruitOdds,SINGLET_KEYS,STYLE_COLORS} from '../systems/mechanics.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
@@ -17,6 +18,7 @@ export class ScoutScene extends Phaser.Scene{
     this.lvl=data.lvl||4;
     this.area=data.area||'campus';
     this.state=loadState();
+    this.prospect=makeMon(this.id,this.lvl);
     this.sel=0;
     this.mode='main';
     this.note='';
@@ -34,22 +36,22 @@ export class ScoutScene extends Phaser.Scene{
     this.render();
   }
 
-  potential(r){return {Common:'C+',Uncommon:'B',Rare:'A-',Elite:'A+'}[r.rarity]||'C';}
-  odds(){const target={id:this.id,lvl:this.lvl,hp:scaledStats(this.id,this.lvl).hp,stamina:scaledStats(this.id,this.lvl).stamina};return recruitOdds(target,'practiceSinglet',{filmActive:(this.state.effects?.filmStudyAttempts||0)>0,seen:!!this.state.dex?.seen?.[this.id]});}
-  overall(s){return Math.round((s.hp+s.atk+s.def+s.spd+s.stamina)/12);}
+  potential(){return potentialFor(this.prospect.ivs);}
+  odds(){return recruitOdds(this.prospect,'practiceSinglet',{filmActive:(this.state.effects?.filmStudyAttempts||0)>0,seen:!!this.state.dex?.seen?.[this.id]});}
+  overall(s){return Math.round((s.hp+s.attack+s.defense+s.technique+s.awareness+s.speed)/6);}
   styleColor(style){return STYLE_COLORS[style]||0xb41820;}
 
   render(){
     this.children.removeAll();
     const r=ROSTER[this.id]||ROSTER.buckshot;
-    const s=scaledStats(this.id,this.lvl);
+    const s=scaledStats(this.id,this.lvl,this.prospect);
     const odds=Math.round(this.odds()*100);
     this.drawBackdrop(r);
     this.drawHeader(r);
     this.drawProspect(r,s,odds);
     this.drawMoves(r);
     this.drawOptions();
-    if(this.rare){const b=this.add.text(168,17,'★ BLUE-CHIP PROSPECT ★',{fontFamily:FONT,fontSize:10,color:'#ffd75e',fontStyle:'bold',stroke:'#4a2d00',strokeThickness:3}).setOrigin(.5,0).setDepth(50);this.tweens.add({targets:b,alpha:.55,duration:430,yoyo:true,repeat:-1});}
+    if(this.rare){const b=this.add.text(168,17,'BLUE-CHIP PROSPECT',{fontFamily:FONT,fontSize:10,color:'#ffd75e',fontStyle:'bold',stroke:'#4a2d00',strokeThickness:3}).setOrigin(.5,0).setDepth(50);this.tweens.add({targets:b,alpha:.55,duration:430,yoyo:true,repeat:-1});}
     if(this.note)this.drawNote(this.note);
   }
 
@@ -82,9 +84,11 @@ export class ScoutScene extends Phaser.Scene{
     this.add.text(132,46,r.name,{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'});
     this.add.text(132,63,`LV ${this.lvl}  ${r.style.toUpperCase()}`,{fontFamily:FONT,fontSize:10,color:'#333'});
     this.add.text(132,77,`${personaFor(this.id).toUpperCase()} PERSONA`,{fontFamily:FONT,fontSize:10,color:'#6b39b4'});
-    this.add.text(132,91,`POT ${this.potential(r)}  OVR ${this.overall(s)}`,{fontFamily:FONT,fontSize:10,color:'#333'});
-    this.drawMeter(133,106,76,6,s.hp/(s.hp+10),0x55b867,'COND',`${s.hp}`);
-    this.drawMeter(133,120,76,5,s.stamina/(s.stamina+10),0x5aa4e6,'STA',`${s.stamina}`);
+    this.add.text(132,91,`POT ${this.potential()}  OVR ${this.overall(s)}`,{fontFamily:FONT,fontSize:10,color:'#333'});
+    this.add.text(132,104,`STR ${s.attack}  DEF ${s.defense}  TEC ${s.technique}`,{fontFamily:FONT,fontSize:8,color:'#333',fontStyle:'bold'});
+    this.add.text(132,115,`AWR ${s.awareness}  SPD ${s.speed}`,{fontFamily:FONT,fontSize:8,color:'#333',fontStyle:'bold'});
+    this.drawMeter(164,128,48,4,1,0x55b867,'COND',`${s.hp}`);
+    this.add.text(294,80,natureFor(this.prospect.nature).name.toUpperCase(),{fontFamily:FONT,fontSize:8,color:'#555',fontStyle:'bold'}).setOrigin(1,0);
     this.drawOddsCard(238,96,odds);
   }
 
@@ -94,7 +98,7 @@ export class ScoutScene extends Phaser.Scene{
     r.moves.slice(0,4).forEach((key,i)=>{
       const m=MOVES[key];
       const x=24+(i%2)*142,y=159+(i>1?13:0);
-      this.add.text(x,y,`${m.name}`,{fontFamily:FONT,fontSize:10,color:'#111'});
+      this.add.text(x,y,`${m.name}  ${m.pp} STA`,{fontFamily:FONT,fontSize:9,color:'#111'});
     });
   }
 
@@ -160,14 +164,13 @@ export class ScoutScene extends Phaser.Scene{
 
   move(d){const count=this.mode==='singlet'?SINGLET_OPTS.length:MAIN_OPTS.length;this.sel=Phaser.Math.Wrap(this.sel+d,0,count);this.note='';this.render();}
   choose(){if(this.mode==='singlet'){const key=SINGLET_OPTS[this.sel];if(key==='back'){this.mode='main';this.sel=0;return this.render();}return this.tryRecruit(key);}if(this.sel===0){if(!this.state.flags?.recruitingUnlocked){this.note='Coach has not issued the Roster Book yet.';return this.render();}this.mode='singlet';this.sel=0;return this.render();}if(this.sel===1)return this.battle();this.leave();}
-  battle(){this.state.dex.seen[this.id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;saveState(this.state);this.scene.start('BattleScene',{enemyId:this.id,enemyLevel:this.lvl,battleType:'wild'});}
+  battle(){this.state.dex.seen[this.id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;saveState(this.state);this.scene.start('BattleScene',{enemyId:this.id,enemyLevel:this.lvl,enemyMon:this.prospect,battleType:'wild'});}
 
   tryRecruit(singletKey){
     const r=ROSTER[this.id];
     this.state.dex.seen[this.id]=true;
     if(this.state.dex.caught[this.id]){this.note='Already on roster.';return this.render();}
-    const target={id:this.id,lvl:this.lvl,hp:scaledStats(this.id,this.lvl).hp,stamina:scaledStats(this.id,this.lvl).stamina};
-    const result=attemptRecruit(this.state,target,singletKey);
+    const result=attemptRecruit(this.state,this.prospect,singletKey);
     if(result.reason==='empty'){this.note=`No ${ITEM_DEFS[singletKey].short.toLowerCase()} singlets.`;return this.render();}
     if(result.reason==='elite'){this.note='Committed wrestlers cannot be recruited.';return this.render();}
     if(result.success){

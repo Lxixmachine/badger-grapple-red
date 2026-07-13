@@ -1,7 +1,8 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
-import {addXp,counterStarterFor,makeMon,scaledStats,xpNeed} from '../src/data/roster.js';
+import {ROSTER,addXp,allMovesSpent,counterStarterFor,currentMoveStamina,makeMon,restoreMoveStamina,scaledStats,xpNeed} from '../src/data/roster.js';
+import {calculateStat,effortTotal,MAX_TOTAL_EFFORT,potentialFor,STAT_KEYS} from '../src/data/stats.js';
 import {defaultState,defeatedWrestlerCount,normalizeState,rosterBookComplete} from '../src/systems/save.js';
 import {
   attemptRecruit,
@@ -9,6 +10,7 @@ import {
   consumeActionBlock,
   createBattleState,
   depositWrestler,
+  effortYieldFor,
   modifyBattleStage,
   normalizeItems,
   practiceWrestler,
@@ -17,6 +19,7 @@ import {
   recruitOdds,
   resolveTechnique,
   restoreWrestler,
+  restoreTechniqueStamina,
   styleMultiplier,
   swapLockerWrestler,
   turnOrder,
@@ -27,14 +30,15 @@ import {NPC_LOOKS,npcTextureKey} from '../src/data/npcLooks.js';
 import {TRAINERS} from '../src/data/world.js';
 import {LAYERED_MAPS} from '../src/data/layeredMaps.js';
 
-function mon(id,lvl=10){const result=makeMon(id,lvl);result.iv=0;result.training={conditioning:0,technique:0,strength:0,speed:0,awareness:0};return restoreWrestler(result);}
+function mon(id,lvl=10){const result=makeMon(id,lvl);result.ivs=Object.fromEntries(STAT_KEYS.map(key=>[key,15]));result.effort=Object.fromEntries(STAT_KEYS.map(key=>[key,0]));result.nature=0;return restoreWrestler(result);}
+function setMoves(wrestler,moves){wrestler.moves=[...moves];restoreMoveStamina(wrestler);return wrestler;}
 
 test('six-style chart preserves the starter triangle and two advantages per style',()=>{
   for(const strengths of Object.values(ADV))expect(strengths).toHaveLength(2);
-  expect(styleMultiplier('Shooter','Rider')).toBeGreaterThan(1);
-  expect(styleMultiplier('Rider','Scrambler')).toBeGreaterThan(1);
-  expect(styleMultiplier('Scrambler','Shooter')).toBeGreaterThan(1);
-  expect(styleMultiplier('Shooter','Wall')).toBeLessThan(1);
+  expect(styleMultiplier('Shooter','Rider')).toBe(2);
+  expect(styleMultiplier('Rider','Scrambler')).toBe(2);
+  expect(styleMultiplier('Scrambler','Shooter')).toBe(2);
+  expect(styleMultiplier('Shooter','Wall')).toBe(.5);
   expect(styleMultiplier('Shooter','Thrower')).toBe(1);
 });
 
@@ -55,66 +59,89 @@ test('authored overworld characters use semantic generated identities',()=>{
   expect(npcs.every(npc=>!npc.look||NPC_LOOKS.includes(npc.look))).toBe(true);
 });
 
-test('legacy saves migrate to Condition/Stamina and canonical inventory without duplication',()=>{
+test('legacy saves migrate to six stats, per-technique Stamina, and canonical inventory',()=>{
   const state=normalizeState({
     party:[{id:'buckshot',lvl:6,hp:50,gas:60,moves:['single']}],
     items:{invite:3,energy:2,tape:1,film:4},
     flags:{assignment:true}
   });
-  expect(state.version).toBe('22.0');
+  expect(state.version).toBe('22.1');
   expect(state.party[0].gas).toBeUndefined();
-  expect(state.party[0].stamina).toBe(60);
+  expect(state.party[0].stamina).toBeUndefined();
+  expect(state.party[0].moveStamina).toEqual({single:MOVES.single.pp});
+  expect(Object.keys(state.party[0].ivs)).toEqual(STAT_KEYS);
+  expect(Object.keys(state.party[0].effort)).toEqual(STAT_KEYS);
   expect(state.items).toMatchObject({practiceSinglet:3,sportsDrink:2,athleticTape:1,filmStudy:4,travelSinglet:0,starterSinglet:0});
   expect(state.flags).toMatchObject({recruitingUnlocked:true,lockerUnlocked:true,rosterBook:true});
+  expect(state.training).toBeUndefined();
 });
 
-test('training has bounded, concrete battle effects',()=>{
-  const wrestler=mon('buckshot');
+test('Gen III stat math uses independent IVs, EV over four, and temperament modifiers',()=>{
+  expect(calculateStat(62,50,31,252,0,'hp')).toBe(169);
+  expect(calculateStat(54,50,31,252,0,'attack')).toBe(106);
+  expect(calculateStat(54,50,31,252,1,'attack')).toBe(116);
+  expect(calculateStat(42,50,31,252,1,'defense')).toBe(84);
+});
+
+test('individual potential and species effort yields come from authored stat data',()=>{
+  expect(potentialFor(Object.fromEntries(STAT_KEYS.map(key=>[key,31])))).toBe('S');
+  expect(potentialFor(Object.fromEntries(STAT_KEYS.map(key=>[key,0])))).toBe('D');
+  for(const record of Object.values(ROSTER)){
+    expect(record.effortYield).toMatchObject({stat:expect.stringMatching(/^(hp|attack|defense|technique|awareness|speed)$/),amount:expect.any(Number)});
+    expect(effortYieldFor({id:record.id})).toEqual(record.effortYield);
+  }
+});
+
+test('practice trains six effort tracks within FireRed per-stat and total caps',()=>{
+  const wrestler=mon('buckshot',50);
   const base=scaledStats(wrestler.id,wrestler.lvl,wrestler);
-  expect(practiceWrestler(wrestler,'conditioning').ok).toBe(true);
-  expect(practiceWrestler(wrestler,'strength').ok).toBe(true);
-  expect(practiceWrestler(wrestler,'speed').ok).toBe(true);
-  expect(practiceWrestler(wrestler,'awareness').ok).toBe(true);
+  for(const key of STAT_KEYS)expect(practiceWrestler(wrestler,key)).toMatchObject({ok:true,gain:16});
   const trained=scaledStats(wrestler.id,wrestler.lvl,wrestler);
-  expect(trained).toMatchObject({stamina:base.stamina+4,atk:base.atk+2,spd:base.spd+2,def:base.def+2});
-  for(let i=0;i<10;i++)practiceWrestler(wrestler,'technique');
-  expect(practiceWrestler(wrestler,'technique')).toMatchObject({ok:false,reason:'cap'});
+  for(const key of STAT_KEYS)expect(trained[key]).toBeGreaterThanOrEqual(base[key]);
+  expect(effortTotal(wrestler.effort)).toBe(96);
+  while(effortTotal(wrestler.effort)<MAX_TOTAL_EFFORT){const key=STAT_KEYS.find(stat=>wrestler.effort[stat]<255);if(!key)break;practiceWrestler(wrestler,key);}
+  expect(effortTotal(wrestler.effort)).toBe(MAX_TOTAL_EFFORT);
+  expect(practiceWrestler(wrestler,'speed')).toMatchObject({ok:false,reason:'totalCap'});
 });
 
-test('techniques spend Stamina, honor style edges, and fall back when exhausted',()=>{
+test('techniques spend their own Stamina and use Desperation Shot only when all are empty',()=>{
   const shooter=mon('buckshot'),rider=mon('matreturner');
-  shooter.stamina=20;
+  const before=currentMoveStamina(shooter,'single');
   const hit=resolveTechnique(shooter,rider,'single',()=>0);
-  expect(hit).toMatchObject({hit:true,key:'single',multiplier:1.22});
-  expect(shooter.stamina).toBe(12);
-  shooter.stamina=0;
-  const fallback=resolveTechnique(shooter,rider,'blast',()=>0);
-  expect(fallback.key).toBe('stall');
-  expect(shooter.stamina).toBe(10);
-  expect(MOVES[fallback.key].stamina).toBeLessThan(0);
+  expect(hit).toMatchObject({hit:true,key:'single',multiplier:2});
+  expect(currentMoveStamina(shooter,'single')).toBe(before-1);
+  shooter.moveStamina.single=0;
+  expect(resolveTechnique(shooter,rider,'single',()=>0)).toMatchObject({key:'single',usable:false});
+  shooter.moves.forEach(key=>shooter.moveStamina[key]=0);
+  expect(allMovesSpent(shooter)).toBe(true);
+  const fallback=resolveTechnique(shooter,rider,'single',()=>0);
+  expect(fallback).toMatchObject({key:'desperation',usable:true,hit:true});
+  expect(fallback.events).toContainEqual(expect.objectContaining({type:'recoil'}));
 });
 
-test('speed controls turn order and trainer AI never selects an unaffordable move',()=>{
+test('speed controls turn order and trainer AI never selects a spent technique',()=>{
   const fast=mon('fieldflyer'),slow=mon('matreturner');
   expect(turnOrder(fast,slow,'scramble','ride')).toEqual(['player','enemy']);
-  fast.stamina=5;
+  fast.moveStamina[fast.moves[0]]=0;
   const choice=chooseAiMove(fast,slow);
-  expect(MOVES[choice].stamina).toBeLessThanOrEqual(5);
+  expect(choice).not.toBe(fast.moves[0]);
+  fast.moves.forEach(key=>fast.moveStamina[key]=0);
+  expect(chooseAiMove(fast,slow)).toBe('desperation');
 });
 
 test('battle stages, form proficiency, and priority create distinct turn decisions',()=>{
   const shooter=mon('buckshot'),rider=mon('matreturner');
   const shooterState=createBattleState(),riderState=createBattleState();
   const base=previewDamage(shooter,rider,'single',{attackerState:shooterState,defenderState:riderState});
-  expect(proficiencyMultiplier('Shooter','Shooter')).toBe(1.2);
+  expect(proficiencyMultiplier('Shooter','Shooter')).toBe(1.5);
   expect(proficiencyMultiplier('Thrower','Shooter')).toBe(1);
-  modifyBattleStage(shooterState,'attack',1);
+  modifyBattleStage(shooterState,'technique',1);
   expect(previewDamage(shooter,rider,'single',{attackerState:shooterState,defenderState:riderState})).toBeGreaterThan(base);
   expect(turnOrder(rider,shooter,'throwby','single',{playerState:riderState,enemyState:shooterState})).toEqual(['player','enemy']);
 });
 
 test('technique effects support setup, multi-hit pressure, counters, and forced reset turns',()=>{
-  const bull=mon('pacesetter'),foe=mon('drillpartner');
+  const bull=setMoves(mon('pacesetter'),['pace','flurry','reattack','pin']),foe=mon('drillpartner');
   const bullState=createBattleState(),foeState=createBattleState();
   const setup=resolveTechnique(bull,foe,'pace',()=>.5,{attackerState:bullState,defenderState:foeState});
   expect(setup.events).toContainEqual(expect.objectContaining({type:'stage',target:'attacker',stat:'attack',delta:1}));
@@ -135,15 +162,22 @@ test('technique effects support setup, multi-hit pressure, counters, and forced 
   expect(consumeActionBlock(bullState)).toBeNull();
 });
 
-test('position-breaking and ride techniques deny actions and drain shared Stamina',()=>{
-  const attacker=mon('pacesetter'),defender=mon('drillpartner');
+test('position-breaking and ride techniques deny actions and drain the last-used technique',()=>{
+  const attacker=setMoves(mon('pacesetter'),['double','grind']),defender=mon('drillpartner');
   const attackerState=createBattleState(),defenderState=createBattleState();
   resolveTechnique(attacker,defender,'double',()=>.1,{attackerState,defenderState});
   expect(consumeActionBlock(defenderState)).toBe('flinch');
-  const before=defender.stamina;
+  defenderState.lastMove='single';const before=currentMoveStamina(defender,'single');
   const ride=resolveTechnique(attacker,defender,'grind',()=>.5,{attackerState,defenderState});
-  expect(defender.stamina).toBe(before-10);
-  expect(ride.events).toContainEqual(expect.objectContaining({type:'staminaDrain',amount:10}));
+  expect(currentMoveStamina(defender,'single')).toBe(before-3);
+  expect(ride.events).toContainEqual(expect.objectContaining({type:'staminaDrain',amount:3,moveKey:'single'}));
+});
+
+test('strength and technical techniques use separate offensive stats',()=>{
+  const strength=mon('buckshot',40),technical=mon('buckshot',40),defender=mon('matreturner',40);
+  strength.effort.attack=252;technical.effort.technique=252;
+  expect(previewDamage(strength,defender,'double')).toBeGreaterThan(previewDamage(technical,defender,'double'));
+  expect(previewDamage(technical,defender,'single')).toBeGreaterThan(previewDamage(strength,defender,'single'));
 });
 
 test('Singlet tiers, worn Condition, and Film Study change recruiting odds',()=>{
@@ -198,15 +232,16 @@ test('development, key items, town unlocks, and season gates persist as data mec
   expect(canFlyToNationals(state)).toBe(true);
 });
 
-test('level gains increase maximums without healing battle damage or spent Stamina',()=>{
+test('level gains increase Condition maximums without healing damage or technique Stamina',()=>{
   const wrestler=mon('buckshot',8),before=scaledStats(wrestler.id,wrestler.lvl,wrestler);
-  wrestler.hp=10;wrestler.stamina=12;
+  wrestler.hp=10;wrestler.moveStamina.single=12;
   addXp(wrestler,xpNeed(wrestler));
   const after=scaledStats(wrestler.id,wrestler.lvl,wrestler);
   expect(wrestler.hp).toBe(10+(after.hp-before.hp));
-  expect(wrestler.stamina).toBe(12+(after.stamina-before.stamina));
+  expect(currentMoveStamina(wrestler,'single')).toBe(12);
   expect(wrestler.hp).toBeLessThan(after.hp);
-  expect(wrestler.stamina).toBeLessThan(after.stamina);
+  expect(currentMoveStamina(wrestler,'single')).toBeLessThan(MOVES.single.pp);
+  expect(restoreTechniqueStamina(wrestler,10)).toBeGreaterThan(0);
 });
 
 test('legacy and canonical badge aliases count as one season win',()=>{

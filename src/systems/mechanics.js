@@ -1,15 +1,16 @@
-import {MOVES,ADV} from '../data/moves.js';
-import {ROSTER,makeMon,scaledStats} from '../data/roster.js';
+import {MOVES,ADV,moveStaminaMax} from '../data/moves.js';
+import {ROSTER,allMovesSpent,currentMoveStamina,restoreMoveStamina,scaledStats,syncMoveStamina} from '../data/roster.js';
 import {MAX_LEVEL,experienceAtLevel} from '../data/experience.js';
 import {movesForLevel} from '../data/learnsets.js';
+import {addEffort,effortTotal,MAX_EFFORT_PER_STAT,MAX_TOTAL_EFFORT,normalizeEffortValues,normalizeIndividualValues,normalizeNature,potentialFor,PRACTICE_EFFORT_GAIN,STAT_KEYS,wrestlerSeed} from '../data/stats.js';
 
 export const PARTY_LIMIT=6;
-export const TRAINING_CAP=10;
-export const TRAINING_KEYS=['conditioning','technique','strength','speed','awareness'];
+export const TRAINING_CAP=MAX_EFFORT_PER_STAT;
+export const TRAINING_KEYS=[...STAT_KEYS];
 export const STYLE_COLORS={Shooter:0xb41820,Rider:0x5f4cc8,Scrambler:0xe47c27,Bull:0x2e9c57,Wall:0x6d66c8,Thrower:0x3f8bb8};
 
 export const ITEM_DEFS={
- sportsDrink:{name:'SPORTS DRINK',short:'DRINK',description:'Restores 24 Stamina.',price:6,kind:'recovery'},
+ sportsDrink:{name:'SPORTS DRINK',short:'DRINK',description:'Restores 10 Stamina to every technique.',price:6,kind:'recovery'},
  athleticTape:{name:'ATHLETIC TAPE',short:'TAPE',description:'Restores 20 Condition.',price:9,kind:'recovery'},
  filmStudy:{name:'FILM STUDY',short:'FILM',description:'Improves the next three recruiting attempts.',price:12,kind:'scouting'},
  practiceSinglet:{name:'PRACTICE SINGLET',short:'PRACTICE',description:'A standard Wisconsin recruiting singlet.',price:18,kind:'singlet',modifier:1},
@@ -25,7 +26,7 @@ const LEGACY_STYLES={Neutral:'Shooter',Top:'Rider',Scramble:'Scrambler',Pace:'Bu
 const LEGACY_ITEMS={energy:'sportsDrink',tape:'athleticTape',film:'filmStudy',invite:'practiceSinglet'};
 const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
 
-export const BATTLE_STAGE_KEYS=['attack','defense','speed','accuracy'];
+export const BATTLE_STAGE_KEYS=['attack','defense','technique','awareness','speed','accuracy'];
 export const BATTLE_STAGE_LIMIT=6;
 
 export function createBattleState(){
@@ -33,7 +34,8 @@ export function createBattleState(){
     stages:Object.fromEntries(BATTLE_STAGE_KEYS.map(key=>[key,0])),
     flinched:false,
     recharging:false,
-    damageTakenThisTurn:0
+    damageTakenThisTurn:0,
+    lastMove:null
   };
 }
 
@@ -90,97 +92,112 @@ export function normalizeItems(items={}){
 export function normalizeWrestler(mon={}){
   const id=ROSTER[mon.id]?mon.id:'buckshot';
   const lvl=clamp(Math.floor(Number(mon.lvl)||1),1,MAX_LEVEL);
-  const training=Object.fromEntries(TRAINING_KEYS.map(key=>[key,clamp(Math.floor(Number(mon.training?.[key])||0),0,TRAINING_CAP)]));
   const levelFloor=experienceAtLevel(id,lvl),levelCap=experienceAtLevel(id,MAX_LEVEL);
-  const normalized={...mon,id,lvl,xp:clamp(Math.floor(Number(mon.xp)||levelFloor),levelFloor,levelCap),training,iv:clamp(Math.floor(Number(mon.iv)||0),-3,3)};
-  const stats=scaledStats(id,lvl,normalized);
-  normalized.hp=clamp(Number.isFinite(mon.hp)?mon.hp:stats.hp,0,stats.hp);
-  normalized.stamina=clamp(Number.isFinite(mon.stamina)?mon.stamina:(Number.isFinite(mon.gas)?mon.gas:stats.stamina),0,stats.stamina);
-  normalized.score=Math.max(0,Math.floor(Number(mon.score)||0));
-  normalized.moves=(Array.isArray(mon.moves)?mon.moves:movesForLevel(id,lvl)).filter(key=>MOVES[key]).slice(0,4);
+  const seed=wrestlerSeed({...mon,id,lvl});
+  const normalized={...mon,id,lvl,xp:clamp(Math.floor(Number(mon.xp)||levelFloor),levelFloor,levelCap),ivs:normalizeIndividualValues(mon.ivs,mon.iv,seed),effort:normalizeEffortValues(mon.effort,mon.training),nature:normalizeNature(mon.nature,seed)};
+  normalized.potential=potentialFor(normalized.ivs);
+  normalized.moves=(Array.isArray(mon.moves)?mon.moves:movesForLevel(id,lvl)).filter(key=>MOVES[key]&&key!=='desperation').slice(0,4);
   if(!normalized.moves.length)normalized.moves=movesForLevel(id,lvl).slice(0,4);
   if(!normalized.moves.length)normalized.moves=[...(ROSTER[id].moves||['stall']).slice(0,1)];
+  syncMoveStamina(normalized);
+  const stats=scaledStats(id,lvl,normalized);
+  normalized.hp=clamp(Number.isFinite(mon.hp)?mon.hp:stats.hp,0,stats.hp);
+  normalized.score=Math.max(0,Math.floor(Number(mon.score)||0));
   normalized.pendingMoves=(Array.isArray(mon.pendingMoves)?mon.pendingMoves:[]).filter(key=>MOVES[key]&&!normalized.moves.includes(key));
   normalized.pendingDevelopment=ROSTER[id].evolvesTo===mon.pendingDevelopment?mon.pendingDevelopment:null;
   if(!normalized.pendingDevelopment)delete normalized.pendingDevelopment;
-  delete normalized.gas;
-  if(mon&&typeof mon==='object'){Object.assign(mon,normalized);delete mon.gas;return mon;}
+  delete normalized.gas;delete normalized.stamina;delete normalized.iv;delete normalized.training;
+  if(mon&&typeof mon==='object'){Object.assign(mon,normalized);delete mon.gas;delete mon.stamina;delete mon.iv;delete mon.training;return mon;}
   return normalized;
 }
 
 export function restoreWrestler(mon){
   const stats=scaledStats(mon.id,mon.lvl,mon);
-  mon.hp=stats.hp;mon.stamina=stats.stamina;mon.score=0;
+  mon.hp=stats.hp;restoreMoveStamina(mon);mon.score=0;
   return mon;
 }
 
 export function restoreParty(state){(state.party||[]).forEach(restoreWrestler);return state.party;}
 
+export function totalMoveStamina(mon){syncMoveStamina(mon);return (mon.moves||[]).reduce((sum,key)=>sum+currentMoveStamina(mon,key),0);}
+export function totalMoveStaminaMax(mon){return (mon.moves||[]).reduce((sum,key)=>sum+moveStaminaMax(key),0);}
+export function restoreTechniqueStamina(mon,amount=10){
+  syncMoveStamina(mon);let restored=0;
+  for(const key of mon.moves||[]){const before=currentMoveStamina(mon,key),after=Math.min(moveStaminaMax(key),before+Math.max(0,Math.trunc(amount)));mon.moveStamina[key]=after;restored+=after-before;}
+  return restored;
+}
+
 export function styleMultiplier(attackStyle,defenderStyle){
   const atk=canonicalStyle(attackStyle),def=canonicalStyle(defenderStyle);
-  if((ADV[atk]||[]).includes(def))return 1.22;
-  if((ADV[def]||[]).includes(atk))return .88;
+  if((ADV[atk]||[]).includes(def))return 2;
+  if((ADV[def]||[]).includes(atk))return .5;
   return 1;
 }
 
 export function proficiencyMultiplier(moveStyle,wrestlerStyle){
-  return canonicalStyle(moveStyle)===canonicalStyle(wrestlerStyle)?1.2:1;
+  return canonicalStyle(moveStyle)===canonicalStyle(wrestlerStyle)?1.5:1;
 }
 
 export function effectiveBattleStat(mon,stat,state){
   const stats=scaledStats(mon.id,mon.lvl,mon);
-  const key={attack:'atk',defense:'def',speed:'spd'}[stat]||stat;
-  const raw=stats[key]||0;
-  if(!['attack','defense','speed'].includes(stat))return raw;
+  const raw=stats[stat]||0;
+  if(!BATTLE_STAGE_KEYS.includes(stat)||stat==='accuracy')return raw;
   return raw*stageMultiplier(battleState(state).stages[stat]);
 }
 
 export function accuracyFor(attacker,move,attackerState=null){
-  const stats=scaledStats(attacker.id,attacker.lvl,attacker);
-  const technique=Math.min(.12,(attacker.training?.technique||0)*.015);
-  const fatigue=attacker.stamina<Math.max(12,stats.stamina*.15)?.12:0;
-  const staged=(move.acc+technique-fatigue)*accuracyStageMultiplier(battleState(attackerState).stages.accuracy);
-  return clamp(staged,.25,.99);
+  const staged=move.acc*accuracyStageMultiplier(battleState(attackerState).stages.accuracy);
+  return clamp(staged,.01,1);
 }
 
 function expectedHitCount(move){return move.hits?(move.hits.min+move.hits.max)/2:1;}
+function damageStatKeys(move){return move.category==='technique'?['technique','awareness']:['attack','defense'];}
+export function baseTechniqueDamage(level,power,attack,defense){
+  const levelFactor=Math.floor((2*Math.max(1,Math.trunc(level)))/5)+2;
+  return Math.floor(Math.floor(levelFactor*Math.max(1,power)*Math.max(1,attack)/Math.max(1,defense))/50)+2;
+}
 
 export function previewDamage(attacker,defender,moveKey,{attackerState=null,defenderState=null,assumeCounter=false}={}){
   const move=MOVES[moveKey]||MOVES.stall;
   if(move.power<=0)return 0;
-  const atk=effectiveBattleStat(attacker,'attack',attackerState),def=effectiveBattleStat(defender,'defense',defenderState);
+  const [attackKey,defenseKey]=damageStatKeys(move);
+  const atk=effectiveBattleStat(attacker,attackKey,attackerState),def=effectiveBattleStat(defender,defenseKey,defenderState);
   const matchup=styleMultiplier(move.style,ROSTER[defender.id]?.style);
   const proficiency=proficiencyMultiplier(move.style,ROSTER[attacker.id]?.style);
   const countered=move.counterMultiplier&&(assumeCounter||battleState(attackerState).damageTakenThisTurn>0);
-  const powerScale=(move.hits?.scale||1)*expectedHitCount(move)*(countered?move.counterMultiplier:1);
-  return Math.max(3,Math.round((move.power+atk*.8-def*.38)*matchup*proficiency*.95*powerScale));
+  const powerScale=expectedHitCount(move)*(countered?move.counterMultiplier:1);
+  return Math.max(1,Math.floor(baseTechniqueDamage(attacker.lvl,move.power,atk,def)*matchup*proficiency*.925*powerScale));
 }
 
 export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,context={}){
   if(typeof rng!=='function'){context=rng||{};rng=Math.random;}
-  let key=moveKey,MOV=MOVES[key]||MOVES.stall;
+  let key=MOVES[moveKey]?moveKey:'stall',MOV=MOVES[key];
   const attackerState=battleState(context.attackerState),defenderState=battleState(context.defenderState);
   const as=scaledStats(attacker.id,attacker.lvl,attacker),ds=scaledStats(defender.id,defender.lvl,defender);
-  if(MOV.stamina>0&&attacker.stamina<MOV.stamina){key='stall';MOV=MOVES.stall;}
-  if(MOV.stamina>=0)attacker.stamina=clamp(attacker.stamina-MOV.stamina,0,as.stamina);
-  else attacker.stamina=clamp(attacker.stamina+Math.abs(MOV.stamina),0,as.stamina);
+  if(key!=='desperation'&&currentMoveStamina(attacker,key)<=0){
+    if(allMovesSpent(attacker)){key='desperation';MOV=MOVES.desperation;}
+    else return {key,move:MOV,usable:false,hit:false,damage:0,accuracy:accuracyFor(attacker,MOV,attackerState),multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,countered:false,events:[]};
+  }
+  if(key!=='desperation'){
+    const remaining=currentMoveStamina(attacker,key);attacker.moveStamina[key]=Math.max(0,remaining-1);attackerState.lastMove=key;
+  }
   const accuracy=accuracyFor(attacker,MOV,attackerState);
-  if(rng()>accuracy)return {key,move:MOV,hit:false,damage:0,accuracy,multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,countered:false,events:[]};
+  if(rng()>accuracy)return {key,move:MOV,usable:true,hit:false,damage:0,accuracy,multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,countered:false,events:[]};
   const multiplier=styleMultiplier(MOV.style,ROSTER[defender.id]?.style);
   const proficiency=proficiencyMultiplier(MOV.style,ROSTER[attacker.id]?.style);
   const hits=MOV.power>0&&MOV.hits?MOV.hits.min+Math.floor(rng()*(MOV.hits.max-MOV.hits.min+1)):1;
   const countered=!!(MOV.counterMultiplier&&attackerState.damageTakenThisTurn>0);
+  const [attackKey,defenseKey]=damageStatKeys(MOV);
   let damage=0,criticalHits=0;
   for(let i=0;i<(MOV.power>0?hits:0);i++){
     const critical=rng()<(MOV.criticalRate??.0625);
     if(critical)criticalHits++;
-    const atkStage=critical?Math.max(0,attackerState.stages.attack):attackerState.stages.attack;
-    const defStage=critical?Math.min(0,defenderState.stages.defense):defenderState.stages.defense;
-    const atk=as.atk*stageMultiplier(atkStage),def=ds.def*stageMultiplier(defStage);
-    const variance=.9+rng()*.1;
-    const hitScale=MOV.hits?.scale||1;
+    const atkStage=critical?Math.max(0,attackerState.stages[attackKey]):attackerState.stages[attackKey];
+    const defStage=critical?Math.min(0,defenderState.stages[defenseKey]):defenderState.stages[defenseKey];
+    const atk=as[attackKey]*stageMultiplier(atkStage),def=ds[defenseKey]*stageMultiplier(defStage);
+    const variance=.85+rng()*.15;
     const counterScale=countered?MOV.counterMultiplier:1;
-    damage+=Math.max(3,Math.round((MOV.power+atk*.8-def*.38)*multiplier*proficiency*(critical?1.5:1)*variance*hitScale*counterScale));
+    damage+=Math.max(1,Math.floor(baseTechniqueDamage(attacker.lvl,MOV.power,atk,def)*multiplier*proficiency*(critical?2:1)*variance*counterScale));
   }
   if(damage>0){defender.hp=clamp(defender.hp-damage,0,ds.hp);defenderState.damageTakenThisTurn+=damage;}
   attacker.score=(attacker.score||0)+MOV.points;
@@ -194,15 +211,16 @@ export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,conte
   applyStage(attackerState,'attacker',MOV.selfStage);
   if(defender.hp>0)applyStage(defenderState,'defender',MOV.targetStage);
   if(MOV.staminaDrain&&defender.hp>0){
-    const before=defender.stamina;
-    defender.stamina=clamp(defender.stamina-MOV.staminaDrain,0,ds.stamina);
-    const amount=before-defender.stamina;if(amount>0)events.push({type:'staminaDrain',target:'defender',amount});
+    syncMoveStamina(defender);
+    const targetKey=(defenderState.lastMove&&currentMoveStamina(defender,defenderState.lastMove)>0?defenderState.lastMove:null)||(defender.moves||[]).find(move=>currentMoveStamina(defender,move)>0);
+    if(targetKey){const before=currentMoveStamina(defender,targetKey),amount=Math.min(before,MOV.staminaDrain);defender.moveStamina[targetKey]=before-amount;if(amount>0)events.push({type:'staminaDrain',target:'defender',amount,moveKey:targetKey,moveName:MOVES[targetKey].name});}
   }
   if(MOV.flinchChance&&defender.hp>0&&rng()<MOV.flinchChance){defenderState.flinched=true;events.push({type:'flinch',target:'defender'});}
   if(MOV.recharge){attackerState.recharging=true;events.push({type:'recharge',target:'attacker'});}
+  if(MOV.recoil&&damage>0){const recoil=Math.max(1,Math.floor(damage*MOV.recoil));attacker.hp=clamp(attacker.hp-recoil,0,as.hp);events.push({type:'recoil',target:'attacker',amount:recoil});}
   if(hits>1)events.unshift({type:'multiHit',target:'defender',hits});
   if(countered)events.unshift({type:'counter',target:'attacker'});
-  return {key,move:MOV,hit:true,damage,accuracy,multiplier,proficiency,critical:criticalHits>0,criticalHits,hits,countered,events};
+  return {key,move:MOV,usable:true,hit:true,damage,accuracy,multiplier,proficiency,critical:criticalHits>0,criticalHits,hits,countered,events};
 }
 
 function stageEffectValue(spec,state,targetWeight=1){
@@ -216,8 +234,8 @@ function stageEffectValue(spec,state,targetWeight=1){
 
 export function chooseAiMove(attacker,defender,{wild=false,rng=Math.random,attackerState=null,defenderState=null}={}){
   const moves=(attacker.moves||ROSTER[attacker.id]?.moves||['stall']).filter(key=>MOVES[key]);
-  const viable=moves.filter(key=>MOVES[key].stamina<=attacker.stamina);
-  if(!viable.length)return 'stall';
+  const viable=moves.filter(key=>currentMoveStamina(attacker,key)>0);
+  if(!viable.length)return 'desperation';
   if(wild)return viable[Math.floor(rng()*viable.length)]||viable[0];
   const attackerSpeed=effectiveBattleStat(attacker,'speed',attackerState),defenderSpeed=effectiveBattleStat(defender,'speed',defenderState);
   const ranked=viable.map(key=>{
@@ -229,7 +247,7 @@ export function chooseAiMove(attacker,defender,{wild=false,rng=Math.random,attac
     const effectWeight=move.power<=0?3.25:1;
     value+=stageEffectValue(move.selfStage,attackerState)*setupWindow*effectWeight;
     value+=stageEffectValue(move.targetStage,defenderState)*setupWindow*effectWeight;
-    value+=(move.staminaDrain||0)*.65+(move.flinchChance||0)*(attackerSpeed>=defenderSpeed?10:2);
+    value+=(move.staminaDrain||0)*2.6+(move.flinchChance||0)*(attackerSpeed>=defenderSpeed?10:2);
     value+=(move.priority||0)>0&&damage>=defender.hp?12:0;
     if(move.recharge)value-=damage*.28;
     return {key,value};
@@ -269,7 +287,7 @@ export function attemptRecruit(state,target,singletKey,rng=Math.random){
   if(filmActive)state.effects.filmStudyAttempts--;
   const success=rng()<odds;
   if(!success)return {success:false,reason:'refused',odds};
-  const recruit=makeMon(target.id,target.lvl);
+  const recruit=normalizeWrestler({...target,ivs:{...(target.ivs||{})},effort:{...(target.effort||{})},moves:[...(target.moves||[])],moveStamina:{...(target.moveStamina||{})},pendingMoves:[]});
   recruit.hp=clamp(target.hp,1,scaledStats(recruit.id,recruit.lvl,recruit).hp);
   state.dex.caught[recruit.id]=true;
   const destination=(state.party||[]).length<PARTY_LIMIT?'party':'box';
@@ -306,12 +324,23 @@ export function swapLockerWrestler(state,partyIndex,boxIndex){
 
 export function practiceWrestler(mon,key){
   if(!TRAINING_KEYS.includes(key))return {ok:false,reason:'invalid'};
-  mon.training=mon.training||Object.fromEntries(TRAINING_KEYS.map(k=>[k,0]));
-  if((mon.training[key]||0)>=TRAINING_CAP)return {ok:false,reason:'cap'};
   const before=scaledStats(mon.id,mon.lvl,mon);
-  mon.training[key]=(mon.training[key]||0)+1;
+  const gain=addEffort(mon,key,PRACTICE_EFFORT_GAIN);
+  if(!gain)return {ok:false,reason:effortTotal(mon.effort)>=MAX_TOTAL_EFFORT?'totalCap':'cap'};
   const after=scaledStats(mon.id,mon.lvl,mon);
   mon.hp=Math.min(after.hp,mon.hp+Math.max(0,after.hp-before.hp));
-  mon.stamina=Math.min(after.stamina,mon.stamina+Math.max(0,after.stamina-before.stamina));
-  return {ok:true,before,after};
+  return {ok:true,before,after,gain};
+}
+
+export function effortYieldFor(defeated){
+  const record=ROSTER[defeated?.id]||ROSTER.buckshot;
+  if(record.effortYield)return {...record.effortYield};
+  const stat=STAT_KEYS.reduce((best,key)=>record.stats[key]>record.stats[best]?key:best,'hp');
+  const amount={Common:1,Uncommon:2,Rare:2,Elite:3}[record.rarity]||1;
+  return {stat,amount};
+}
+
+export function awardEffortForDefeat(mon,defeated){
+  const yieldValue=effortYieldFor(defeated);
+  return {...yieldValue,gained:addEffort(mon,yieldValue.stat,yieldValue.amount)};
 }

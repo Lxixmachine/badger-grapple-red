@@ -1,5 +1,34 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.85 Wrestler Stats)
+
+Wrestlers now use the complete FireRed-shaped six-stat model instead of the
+old five-stat plus shared-Stamina shortcut. Condition, Strength, Defense,
+Technique, Awareness, and Speed are calculated with the Gen III formula. Every
+individual has six independent 0-31 potential values, six effort tracks with
+the original 255-per-stat and 510-total caps, and one of 25 wrestling
+temperaments. Each species has an authored effort yield, and practice applies
+effort to the selected wrestler rather than a global weight-room counter.
+
+Stamina is now stored per technique, directly paralleling PP. Moves have
+authored category, power, accuracy, and Stamina; spent moves cannot be selected,
+AI avoids them, Trainer's Rooms restore all uses, Sports Drinks restore ten to
+every known technique, and complete exhaustion invokes recoil-producing
+Desperation Shot. Damage now uses Strength/Defense or Technique/Awareness,
+FireRed's level-based formula, 85-100% variance, 2x critical hits, 1.5x
+same-form proficiency, and 2x/0.5x style effectiveness.
+
+Travel Lineup opens a two-page summary for final stats, temperament, potential,
+effort, EXP, and full technique details. Scout Reports generate one persistent
+individual and carry that exact prospect into recruiting or battle. Save v22.1
+migrates legacy IV, training, gas, and shared-Stamina fields without retaining
+obsolete global training state. Phone and desktop browser review confirmed the
+summary, scouting, and battle HUD layouts. Build, balance, and all 86 Chromium
+tests pass.
+
+Tony's dirty State Street art and generated downtown/Map Studio files remain
+deliberately untouched and must not be included with this stats commit.
+
 ## Latest Codex Turn (v21.84 Character Cast)
 
 The overworld now uses named character identities instead of color-swapped
