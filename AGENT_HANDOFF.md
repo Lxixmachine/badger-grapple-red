@@ -1,5 +1,13 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.77 Mobile Menu Input)
+
+iOS could suppress the synthetic `click` used by A/B/Menu/Start because the
+control deck intentionally cancels native touch gestures. All action and system
+buttons now dispatch on `pointerdown`, matching the already reliable D-pad.
+`tests/mechanics-ui.spec.js` covers a touch-style A press selecting the active
+menu entry. The script cache key was advanced so deployed phones fetch the fix.
+
 ## Latest Codex Turn (v21.76 Mechanics Core)
 
 Tony is editing maps in parallel, so this turn established a hard mechanics/map

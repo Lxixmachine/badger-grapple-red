@@ -70,7 +70,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.76-mechanics-core';
+    : sliceMode ? '21.63-scale-slice' : '21.77-mobile-menu-input';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -114,10 +114,25 @@ if(controls){
 document.querySelectorAll('[data-key]').forEach(button => {
   const key = button.dataset.key;
   if (!['up', 'down', 'left', 'right'].includes(key)) {
-    button.addEventListener('click', event => {
+    let activePointer = null;
+    const start = event => {
       event.preventDefault();
-      routeVirtualButton(key);
-    }, {passive: false});
+      if (activePointer !== null) return;
+      activePointer = event.pointerId;
+      button.setPointerCapture?.(event.pointerId);
+      routeVirtualButton(key, 'down');
+    };
+    const stop = event => {
+      if (activePointer === null) return;
+      if (event?.pointerId !== undefined && event.pointerId !== activePointer) return;
+      event?.preventDefault?.();
+      if (button.hasPointerCapture?.(activePointer)) button.releasePointerCapture(activePointer);
+      activePointer = null;
+    };
+    button.addEventListener('pointerdown', start, {passive: false});
+    button.addEventListener('pointerup', stop, {passive: false});
+    button.addEventListener('pointercancel', stop, {passive: false});
+    button.addEventListener('lostpointercapture', stop, {passive: false});
     button.addEventListener('contextmenu', event => event.preventDefault());
     return;
   }

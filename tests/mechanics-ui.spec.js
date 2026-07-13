@@ -41,6 +41,19 @@ test('Team Locker moves a stored wrestler into the travel lineup',async({page})=
   expect(save.party[1].id).toBe('drillpartner');
 });
 
+test('mobile action buttons select menu entries on pointerdown',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],box:[],active:0,items:{},badges:[],
+    flags:{introDone:true,assignment:true},stats:{}
+  },'/?test=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  await page.evaluate(()=>window.__badgerTest.startMenu());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({active:true,tab:'main',selected:0});
+  await page.locator('button[data-key="a"]').dispatchEvent('pointerdown',{pointerId:1,pointerType:'touch',isPrimary:true});
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
+  await page.locator('button[data-key="a"]').dispatchEvent('pointerup',{pointerId:1,pointerType:'touch',isPrimary:true});
+});
+
 test('Starter Singlet guarantees a recruit through the scouting UI',async({page})=>{
   await bootWithSave(page,{
     party:[legacyWrestler()],box:[],active:0,
