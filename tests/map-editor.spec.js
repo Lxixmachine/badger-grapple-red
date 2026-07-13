@@ -34,7 +34,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 8});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 9});
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'r1', 'field_house', 'lakeshore_path', 'picnic_point', 'state_street',
     'bascom_hill', 'capitol_square', 'monona_shore', 'kohl_center', 'airport', 'st_louis',
@@ -61,6 +61,22 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   expect(camp.terrain[6][11]).toMatch(/^surface_stone_blob_/);
   await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '768');
   await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '640');
+  expect(issues).toEqual([]);
+});
+
+test('browser draft persistence omits immutable atlas catalogs', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  await page.getByRole('combobox', {name: 'Map'}).selectOption('state_street');
+  const stored = await page.evaluate(() => localStorage.getItem('badger-grapple-map-studio-v4-imagegen-tileset'));
+  const draft = JSON.parse(stored);
+  expect(stored.length).toBeLessThan(4_000_000);
+  expect(draft.assets).toBeUndefined();
+  expect(draft.maps.state_street.metatileAtlas).toBeUndefined();
+  expect(draft.maps.state_street.terrainTiles).toBeUndefined();
+  await page.reload();
+  await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.activeMapId)).toBe('state_street');
+  expect((await editorState(page)).project.assets.metatiles.length).toBeGreaterThan(1000);
   expect(issues).toEqual([]);
 });
 
@@ -101,6 +117,36 @@ test('every planned location is grid-native, editable, and linked to its playtes
     expect(asset.metatiles).toHaveLength(asset.height);
     expect(asset.defaultCollisionMask.some(row => row.includes('#'))).toBe(true);
     expect(asset.defaultCollisionMask.some(row => row.includes('.'))).toBe(true);
+  }
+  const dedicatedOrdinaryBuildings = {
+    'field_house:equipment_annex': 'equipment_annex_exterior',
+    'field_house:campus_housing': 'campus_housing_exterior',
+    'state_street:bookstore_row': 'bookstore_row_exterior',
+    'state_street:theater_marquee': 'theater_marquee_exterior',
+    'state_street:food_cart_row': 'food_cart_row_exterior',
+    'state_street:north_storefront_west': 'state_facade_11x5',
+    'state_street:north_storefront_mid': 'state_facade_10x3',
+    'state_street:north_storefront_east': 'state_facade_13x5',
+    'state_street:north_terminal_block': 'state_facade_8x5',
+    'state_street:south_storefront_mid_left': 'state_facade_8x4',
+    'state_street:south_storefront_mid_right': 'state_facade_10x5',
+    'state_street:south_storefront_east': 'state_facade_5x5',
+    'capitol_square:capitol_hotel': 'capitol_hotel_exterior',
+    'capitol_square:civic_offices': 'civic_offices_exterior',
+    'capitol_square:north_city_edge': 'city_edge_horizontal',
+    'capitol_square:east_city_edge': 'city_edge_vertical',
+    'kohl_center:transit_hotel': 'transit_hotel_exterior',
+    'st_louis:team_hotel': 'team_hotel_exterior',
+    'st_louis:riverfront_hotel': 'riverfront_hotel_exterior'
+  };
+  for (const [assetId, sourceName] of Object.entries(dedicatedOrdinaryBuildings)) {
+    const asset = project.assets.objects.find(entry => entry.id === assetId);
+    expect(asset.path).toContain(`season_one_${sourceName}.png`);
+    expect(asset.metatiles).toHaveLength(asset.height);
+    expect(asset.defaultCollisionMask.some(row => row.includes('#'))).toBe(true);
+  }
+  for (const assetId of ['camp_randall:team_building', 'camp_randall:coach_office']) {
+    expect(project.assets.objects.find(entry => entry.id === assetId).path).toContain('assets/camp-production/');
   }
   expect(project.maps.trainer_room).toMatchObject({type: 'interior', width: 15, height: 10, renderModel: 'metatile'});
   expect(project.maps.trainer_room.objects.some(object => object.id === 'recovery_counter')).toBe(true);
@@ -280,12 +326,17 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
     fieldHouse.x = 13;
     fieldHouse.metatiles = [];
     fieldHouse.collisionMask = Array.from({length: fieldHouse.height}, () => '#'.repeat(fieldHouse.width));
+    delete draft.assets;
+    for (const map of Object.values(draft.maps)) {
+      delete map.metatileAtlas;
+      delete map.terrainTiles;
+    }
     localStorage.setItem('badger-grapple-map-studio-v4-imagegen-tileset', JSON.stringify(draft));
   });
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 8});
+  expect(state.project).toMatchObject({layoutRevision: 5, metatileVersion: 9});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[11][5]).toMatch(/^surface_stone_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

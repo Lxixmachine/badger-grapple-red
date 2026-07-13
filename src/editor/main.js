@@ -18,7 +18,8 @@ const saveStatus = document.querySelector('#saveStatus');
 const zoomValue = document.querySelector('#zoomValue');
 const fileInput = document.querySelector('#fileInput');
 
-let project = loadDraft();
+const seedProject = createSeedProject();
+let project = loadDraft(seedProject);
 let mode = window.matchMedia('(pointer: coarse)').matches ? 'pan' : 'select';
 let paletteTab = 'terrain';
 let selectedTerrain = 'brick';
@@ -36,22 +37,30 @@ let cameraPreview = false;
 let zoom = 1;
 let gesture = null;
 let renderFrame = 0;
-let history = [JSON.stringify(project)];
+let history = [draftSnapshot(project)];
 let historyIndex = 0;
 
 const renderer = new MapRenderer(canvas, requestRender);
 
-function loadDraft() {
-  const seed = createSeedProject();
+function compactDraft(source) {
+  const compact = cloneProject(source);
+  delete compact.assets;
+  for (const map of Object.values(compact.maps || {})) {
+    delete map.metatileAtlas;
+    delete map.terrainTiles;
+  }
+  return compact;
+}
+
+function draftSnapshot(source) {
+  return JSON.stringify(compactDraft(source));
+}
+
+function loadDraft(seed) {
   try {
     const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
     if (saved?.schema === PROJECT_SCHEMA) {
-      if (saved.layoutRevision !== seed.layoutRevision || saved.metatileVersion !== seed.metatileVersion) {
-        const migrated = migrateDraft(saved, seed);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(migrated));
-        return migrated;
-      }
-      return saved;
+      return migrateDraft(saved, seed);
     }
   } catch {
     localStorage.removeItem(STORAGE_KEY);
@@ -61,6 +70,7 @@ function loadDraft() {
 
 function migrateDraft(saved, seed) {
   const migrated = cloneProject(saved);
+  migrated.maps ||= {};
   for (const [mapId, seedMap] of Object.entries(seed.maps)) {
     const savedMap = migrated.maps?.[mapId];
     if (!savedMap || savedMap.width !== seedMap.width || savedMap.height !== seedMap.height) {
@@ -92,10 +102,7 @@ function migrateDraft(saved, seed) {
   migrated.layoutRevision = seed.layoutRevision;
   migrated.metatileVersion = seed.metatileVersion;
   migrated.createdFrom = seed.createdFrom;
-  migrated.assets.objects = cloneProject(seed.assets.objects);
-  migrated.assets.groundTiles = cloneProject(seed.assets.groundTiles);
-  migrated.assets.groundStamps = cloneProject(seed.assets.groundStamps);
-  migrated.assets.metatiles = cloneProject(seed.assets.metatiles);
+  migrated.assets = cloneProject(seed.assets);
   return migrated;
 }
 
@@ -145,12 +152,16 @@ function applyZoom() {
 }
 
 function saveDraft(label = 'Draft saved') {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(project));
-  saveStatus.textContent = label;
+  try {
+    localStorage.setItem(STORAGE_KEY, draftSnapshot(project));
+    saveStatus.textContent = label;
+  } catch {
+    saveStatus.textContent = 'Draft is too large for browser storage; export JSON to preserve it';
+  }
 }
 
 function recordHistory(label) {
-  const snapshot = JSON.stringify(project);
+  const snapshot = draftSnapshot(project);
   if (snapshot === history[historyIndex]) return;
   history = history.slice(0, historyIndex + 1);
   history.push(snapshot);
@@ -167,7 +178,7 @@ function restoreHistory(index) {
   if (index < 0 || index >= history.length) return;
   const previousSelection = selection ? {...selection} : null;
   historyIndex = index;
-  project = JSON.parse(history[historyIndex]);
+  project = migrateDraft(JSON.parse(history[historyIndex]), seedProject);
   if (!project.maps[project.activeMapId]) project.activeMapId = Object.keys(project.maps)[0];
   selection = previousSelection;
   if (selection && !selectedEntry()) selection = null;
@@ -947,7 +958,7 @@ canvas.addEventListener('drop', event => {
 
 mapSelect.addEventListener('change', () => {
   project.activeMapId = mapSelect.value;
-  history[historyIndex] = JSON.stringify(project);
+  history[historyIndex] = draftSnapshot(project);
   selection = null;
   placingAsset = null;
   workspace.scrollTo({left: 0, top: 0});
@@ -1014,7 +1025,7 @@ document.querySelector('#importButton').addEventListener('click', () => fileInpu
 document.querySelector('#resetButton').addEventListener('click', () => {
   if (!window.confirm('Reset the local map draft to the current production seed?')) return;
   project = createSeedProject();
-  history = [JSON.stringify(project)];
+  history = [draftSnapshot(project)];
   historyIndex = 0;
   selection = null;
   placingAsset = null;
@@ -1033,7 +1044,7 @@ fileInput.addEventListener('change', async () => {
     const report = validateProject(imported);
     if (!report.valid) throw new Error(`${report.errors.length} validation errors`);
     project = imported;
-    history = [JSON.stringify(project)];
+    history = [draftSnapshot(project)];
     historyIndex = 0;
     selection = null;
     placingAsset = null;

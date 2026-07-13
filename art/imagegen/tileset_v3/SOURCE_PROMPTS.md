@@ -99,6 +99,33 @@ championship arena (14x8, door x7); academic Bascom Hall with book relief
 Brittingham boathouse with kayak bays (6x5, door x2).
 ```
 
+## Dedicated Ordinary Building Sources
+
+Ordinary buildings use the same direct-source rule as landmarks. Each source
+is generated separately on flat `#ff00ff`, normalized to its exact 16px
+logical footprint, then sliced into behavior-owned metatiles. No named
+building may be resized from the generic house or two-cell storefront stamp.
+
+```text
+Create one complete original south-facing exterior building or connected
+facade row for Badger Grapple Red. Match the established cardinal red, cream
+limestone, warm brick, charcoal roof, gold accent, and blue-glass palette.
+Use polished late-GBA pixel clusters and FireRed-like clarity without copying
+Pokemon art. Center one subject on perfectly flat #ff00ff with no scenery,
+ground plane, people, readable text, logo, cast shadow, blur, or watermark.
+Organize all architecture to the specified column-by-row logical grid so the
+base visibly occupies its blocked cells and transparent roof corners can own
+walkable cells.
+
+Named sources: Equipment Annex (7x5), Campus Housing (8x4), Bookstore Row
+(9x4), State Street Theater (8x4), Food Cart Row (9x4), Capitol Hotel (5x4),
+Civic Offices (5x7), Tournament Hotel (9x3), Team Hotel (8x6), and Riverfront
+Hotel (7x4).
+
+Facade modules: State Street rows at 11x5, 10x3, 13x5, 8x5, 8x4, 10x5, and
+5x5; city boundary roof/parapet modules at 8x2 horizontal and 2x8 vertical.
+```
+
 ## Transitions And Elevation Board
 
 ```text

@@ -593,7 +593,7 @@ def build() -> dict:
         image: Image.Image,
         width: int,
         height: int,
-        door: dict,
+        door: dict | None,
         minimum_coverage: float,
     ) -> list[str]:
         rows: list[str] = []
@@ -603,9 +603,9 @@ def build() -> dict:
                 tile = image.crop((x * cell, y * cell, (x + 1) * cell, (y + 1) * cell))
                 alpha = tile.getchannel("A")
                 visible = sum(value >= 32 for value in alpha.get_flattened_data()) / (cell * cell)
-                if door == {"x": x, "y": y}:
+                if door and door == {"x": x, "y": y}:
                     if visible < 0.25:
-                        raise SystemExit(f"landmark door {x},{y} has only {visible:.0%} visible coverage")
+                        raise SystemExit(f"building door {x},{y} has only {visible:.0%} visible coverage")
                     row.append(".")
                 else:
                     row.append("#" if visible >= minimum_coverage else ".")
@@ -656,6 +656,36 @@ def build() -> dict:
     service_building(
         "campus_house_exterior", "Campus House", "house",
     )
+
+    def ordinary_building(stamp_id: str, name: str, width: int, height: int) -> None:
+        image = export_2x(source_asset("ordinary_buildings", stamp_id))
+        minimum_coverage = contract["rules"]["visibleCollisionCoverage"]
+        mask = collision_mask_from_alpha(image, width, height, None, minimum_coverage)
+        register_stamp(
+            stamp_id, name, "ordinary_buildings", image, width, height,
+            mask, tags=["ordinary_building", "imagegen_direct", "authored16"],
+            minimum_coverage=minimum_coverage,
+        )
+
+    ordinary_building("equipment_annex_exterior", "Equipment Annex", 7, 5)
+    ordinary_building("campus_housing_exterior", "Campus Housing", 8, 4)
+    ordinary_building("bookstore_row_exterior", "Bookstore Row", 9, 4)
+    ordinary_building("theater_marquee_exterior", "State Street Theater", 8, 4)
+    ordinary_building("food_cart_row_exterior", "Food Cart Row", 9, 4)
+    ordinary_building("capitol_hotel_exterior", "Capitol Hotel", 5, 4)
+    ordinary_building("civic_offices_exterior", "Civic Offices", 5, 7)
+    ordinary_building("transit_hotel_exterior", "Tournament Hotel", 9, 3)
+    ordinary_building("team_hotel_exterior", "Team Hotel", 8, 6)
+    ordinary_building("riverfront_hotel_exterior", "Riverfront Hotel", 7, 4)
+    ordinary_building("state_facade_11x5", "State Street Facade 11x5", 11, 5)
+    ordinary_building("state_facade_10x3", "State Street Facade 10x3", 10, 3)
+    ordinary_building("state_facade_13x5", "State Street Facade 13x5", 13, 5)
+    ordinary_building("state_facade_8x5", "State Street Facade 8x5", 8, 5)
+    ordinary_building("state_facade_8x4", "State Street Facade 8x4", 8, 4)
+    ordinary_building("state_facade_10x5", "State Street Facade 10x5", 10, 5)
+    ordinary_building("state_facade_5x5", "State Street Facade 5x5", 5, 5)
+    ordinary_building("city_edge_horizontal", "City Edge Horizontal", 8, 2)
+    ordinary_building("city_edge_vertical", "City Edge Vertical", 2, 8)
 
     def landmark_building(stamp_id: str, name: str, width: int, height: int, door_x: int) -> None:
         image = export_2x(source_asset("landmarks", stamp_id))

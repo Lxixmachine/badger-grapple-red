@@ -13,7 +13,7 @@
     "visibleCollisionCoverage": 0.55,
     "doorFootprint": [1, 1],
     "imagegenSourceRequired": true,
-    "minimumPreparedImagegenAssets": 65,
+    "minimumPreparedImagegenAssets": 84,
     "exactNearestNeighborScale": true,
     "materialSpecificTransitions": true,
     "sceneCropStretching": false
@@ -104,6 +104,30 @@
     "town_landmarks": {
       "minimum": 6,
       "required": ["field_house_arena_exterior", "kohl_arena_exterior", "nationals_arena_exterior", "bascom_hall_exterior", "wisconsin_capitol_exterior", "brittingham_boats_exterior"]
+    },
+    "ordinary_buildings": {
+      "minimum": 19,
+      "required": [
+        "equipment_annex_exterior",
+        "campus_housing_exterior",
+        "bookstore_row_exterior",
+        "theater_marquee_exterior",
+        "food_cart_row_exterior",
+        "capitol_hotel_exterior",
+        "civic_offices_exterior",
+        "transit_hotel_exterior",
+        "team_hotel_exterior",
+        "riverfront_hotel_exterior",
+        "state_facade_11x5",
+        "state_facade_10x3",
+        "state_facade_13x5",
+        "state_facade_8x5",
+        "state_facade_8x4",
+        "state_facade_10x5",
+        "state_facade_5x5",
+        "city_edge_horizontal",
+        "city_edge_vertical"
+      ]
     }
   },
   "groundAssemblies": {

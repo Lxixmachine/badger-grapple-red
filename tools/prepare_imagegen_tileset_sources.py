@@ -134,6 +134,27 @@ STANDALONE_ASSETS = {
         ("wisconsin_capitol_exterior", SOURCE_DIR / "season_one_wisconsin_capitol_source_v1.png", (192, 128), 40),
         ("brittingham_boats_exterior", SOURCE_DIR / "season_one_brittingham_boats_source_v1.png", (96, 80), 32),
     ],
+    "ordinary_buildings": [
+        ("equipment_annex_exterior", SOURCE_DIR / "ordinary_buildings" / "equipment_annex_source_v1.png", (112, 80), 36),
+        ("campus_housing_exterior", SOURCE_DIR / "ordinary_buildings" / "campus_housing_source_v1.png", (128, 64), 36),
+        ("bookstore_row_exterior", SOURCE_DIR / "ordinary_buildings" / "bookstore_row_source_v1.png", (144, 64), 40),
+        ("theater_marquee_exterior", SOURCE_DIR / "ordinary_buildings" / "theater_marquee_source_v1.png", (128, 64), 40),
+        ("food_cart_row_exterior", SOURCE_DIR / "ordinary_buildings" / "food_cart_row_source_v1.png", (144, 64), 40),
+        ("capitol_hotel_exterior", SOURCE_DIR / "ordinary_buildings" / "capitol_hotel_source_v1.png", (80, 64), 36),
+        ("civic_offices_exterior", SOURCE_DIR / "ordinary_buildings" / "civic_offices_source_v1.png", (80, 112), 40),
+        ("transit_hotel_exterior", SOURCE_DIR / "ordinary_buildings" / "transit_hotel_source_v1.png", (144, 48), 36),
+        ("team_hotel_exterior", SOURCE_DIR / "ordinary_buildings" / "team_hotel_source_v1.png", (128, 96), 40),
+        ("riverfront_hotel_exterior", SOURCE_DIR / "ordinary_buildings" / "riverfront_hotel_source_v1.png", (112, 64), 40),
+        ("state_facade_11x5", SOURCE_DIR / "ordinary_buildings" / "state_facade_11x5_source_v1.png", (176, 80), 40),
+        ("state_facade_10x3", SOURCE_DIR / "ordinary_buildings" / "state_facade_10x3_source_v1.png", (160, 48), 40),
+        ("state_facade_13x5", SOURCE_DIR / "ordinary_buildings" / "state_facade_13x5_source_v1.png", (208, 80), 40),
+        ("state_facade_8x5", SOURCE_DIR / "ordinary_buildings" / "state_facade_8x5_source_v1.png", (128, 80), 40),
+        ("state_facade_8x4", SOURCE_DIR / "ordinary_buildings" / "state_facade_8x4_source_v1.png", (128, 64), 40),
+        ("state_facade_10x5", SOURCE_DIR / "ordinary_buildings" / "state_facade_10x5_source_v1.png", (160, 80), 40),
+        ("state_facade_5x5", SOURCE_DIR / "ordinary_buildings" / "state_facade_5x5_source_v1.png", (80, 80), 36),
+        ("city_edge_horizontal", SOURCE_DIR / "ordinary_buildings" / "city_edge_horizontal_source_v1.png", (128, 32), 36, "fit"),
+        ("city_edge_vertical", SOURCE_DIR / "ordinary_buildings" / "city_edge_vertical_source_v1.png", (32, 128), 36, "fit_dark_trim"),
+    ],
 }
 
 
@@ -181,6 +202,12 @@ def quantize_rgba(image: Image.Image, colors: int) -> Image.Image:
 
 
 def normalize(panel: Image.Image, size: tuple[int, int], mode: str, colors: int) -> Image.Image:
+    if mode == "fit_dark_trim":
+        visible = panel.convert("RGB").point(lambda value: 0 if value < 18 else 255).convert("L")
+        bbox = visible.getbbox()
+        if bbox:
+            panel = panel.crop(bbox)
+        mode = "fit"
     if mode == "fit":
         reduced = ImageOps.fit(panel, size, method=Image.Resampling.BOX, centering=(0.5, 0.5))
     elif mode == "contain":
@@ -246,14 +273,14 @@ def build() -> dict:
             }
 
     for category, entries in STANDALONE_ASSETS.items():
-        for asset_id, path, size, colors in entries:
+        for asset_id, path, size, colors, *options in entries:
             if not path.exists():
                 raise SystemExit(f"Missing Imagegen standalone source: {path}")
             source_key = f"{category}:{asset_id}"
             sources[source_key] = sha256(path)
             board = Image.open(path).convert("RGBA")
             panel = extract_panel(board, 1, 1, 0)
-            normalized = normalize(panel, size, "contain", colors)
+            normalized = normalize(panel, size, options[0] if options else "contain", colors)
             output_path = OUTPUT_DIR / category / f"{asset_id}.png"
             save_png(normalized, output_path)
             outputs[asset_id] = {

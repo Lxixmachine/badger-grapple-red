@@ -169,6 +169,30 @@ function sourceStampId(owner, group, layout) {
     brittingham_boats: 'brittingham_boats_exterior'
   };
   if (dedicatedLandmarks[id]) return dedicatedLandmarks[id];
+  const dedicatedOrdinaryBuildings = {
+    equipment_annex: 'equipment_annex_exterior',
+    campus_housing: 'campus_housing_exterior',
+    bookstore_row: 'bookstore_row_exterior',
+    theater_marquee: 'theater_marquee_exterior',
+    food_cart_row: 'food_cart_row_exterior',
+    capitol_hotel: 'capitol_hotel_exterior',
+    civic_offices: 'civic_offices_exterior',
+    transit_hotel: 'transit_hotel_exterior',
+    team_hotel: 'team_hotel_exterior',
+    riverfront_hotel: 'riverfront_hotel_exterior',
+    north_storefront_west: 'state_facade_11x5',
+    north_storefront_mid: 'state_facade_10x3',
+    north_storefront_east: 'state_facade_13x5',
+    north_terminal_block: 'state_facade_8x5',
+    south_storefront_west: 'state_facade_8x5',
+    south_storefront_mid_left: 'state_facade_8x4',
+    south_storefront_mid_right: 'state_facade_10x5',
+    south_storefront_east: 'state_facade_5x5'
+  };
+  if (dedicatedOrdinaryBuildings[id]) return dedicatedOrdinaryBuildings[id];
+  if (owner.kind === 'city') {
+    return owner.width > owner.height ? 'city_edge_horizontal' : 'city_edge_vertical';
+  }
   if (owner.editorStampId && metatileBuild.stamps[owner.editorStampId]) return owner.editorStampId;
   if (id.includes('trainer_room')) return 'trainer_room_exterior';
   if (id.includes('buckys')) return 'buckys_locker_room_exterior';
@@ -207,7 +231,8 @@ function sourceStampId(owner, group, layout) {
 function plannedObject(mapId, owner, group, layout, mapType = 'exterior') {
   const sourceStamp = metatileBuild.stamps[sourceStampId(owner, group, layout)];
   if (!sourceStamp) throw new Error(`${mapId}.${owner.id}: missing source stamp`);
-  const inheritsSourceMask = !owner.collisionMask && !owner.walkable && owner.door && sourceStamp.door
+  const matchingDoorContract = (!owner.door && !sourceStamp.door) || (owner.door && sourceStamp.door);
+  const inheritsSourceMask = !owner.collisionMask && !owner.walkable && matchingDoorContract
     && sourceStamp.width === owner.width && sourceStamp.height === owner.height;
   const effectiveOwner = inheritsSourceMask
     ? {...owner, collisionMask: [...sourceStamp.collisionMask]}

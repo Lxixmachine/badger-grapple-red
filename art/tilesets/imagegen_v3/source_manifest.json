@@ -15,7 +15,26 @@
     "landmarks:nationals_arena_exterior": "ca455a729265756657ba63fcdd81983032c4af4718c328f438947a963d28ab08",
     "landmarks:bascom_hall_exterior": "939d0b252dff7566b19a35cd6a4300cba649efe668530a5f9a8f8823ae21637d",
     "landmarks:wisconsin_capitol_exterior": "81820a0b81d28d7aa91e904b75f5c22f98f83fa1aec60faef36cb71d926f9ffc",
-    "landmarks:brittingham_boats_exterior": "75b7aaa260deb3a55ee935c914e778edd659a335e10297bfde2fdde8a98928bd"
+    "landmarks:brittingham_boats_exterior": "75b7aaa260deb3a55ee935c914e778edd659a335e10297bfde2fdde8a98928bd",
+    "ordinary_buildings:equipment_annex_exterior": "8043892e7403fc2827ca967b61a1fb4b8cf3c8afa9b7c025ea1a9097e32390ad",
+    "ordinary_buildings:campus_housing_exterior": "10dc3cd7b6df2c444d37752b06509fe347c3eeca5c3cb99a402343d4e8d26e39",
+    "ordinary_buildings:bookstore_row_exterior": "61bb28bffe5f9abaf4991e6e0720c258f7a11ae301df55b1c54ad75c802b9fef",
+    "ordinary_buildings:theater_marquee_exterior": "a31ba2991771377703f0d026b368a4b3787fe2cab11458d26139756bb9d164ee",
+    "ordinary_buildings:food_cart_row_exterior": "54dd183c79a9ca7538dd6d6d934ad8d751a6be36e990676b6535061663bb1961",
+    "ordinary_buildings:capitol_hotel_exterior": "9a1f83cc75006eb72cf1b9fb2157404fc6b0fbbf7b132b25988700b7dc421435",
+    "ordinary_buildings:civic_offices_exterior": "0c41772023ef751cecdcde9d6f8394760cbdea23a1bb6ca41c7162986bde8b82",
+    "ordinary_buildings:transit_hotel_exterior": "f30ad507aa6211941d67b74f9796e63a09ec98bce9963286d478c04ca8793ec7",
+    "ordinary_buildings:team_hotel_exterior": "2d7e5d29fd059c213c598a1805cfaeba8e2aa76cd39fb615c7e48f91a309d986",
+    "ordinary_buildings:riverfront_hotel_exterior": "6ca5410c9f79903d7bcec519c15d920e204acd63a55f559e9cce7654fff1de65",
+    "ordinary_buildings:state_facade_11x5": "e56d057ff227f156eb3d79b6e79af4524c31cb664651f9df14a759c0a1ec0fb0",
+    "ordinary_buildings:state_facade_10x3": "c1a9d68ddf612f3bebd71f734483f4ea8c647d0d9a05bc9d547e350598c49c08",
+    "ordinary_buildings:state_facade_13x5": "f7bb82c9e13f3df5bca265f624200efbf808eaee0e4b822374892da6ec1449a0",
+    "ordinary_buildings:state_facade_8x5": "94cdb0044381732513985462083acd404ab158e71e166eb59caba1e7d8c72740",
+    "ordinary_buildings:state_facade_8x4": "697e60903e3dc4ac26c80c18f310d56570c3b16d1e8f628f5ac7219339c0e6d2",
+    "ordinary_buildings:state_facade_10x5": "673fc4cf6b5a63e91980785865cd4d32ef9573250d5b23c575febfbde6232d92",
+    "ordinary_buildings:state_facade_5x5": "5c3068215f0969e6bcea437c93fd5a52c36dcfac442eebbc68cac7007787b68a",
+    "ordinary_buildings:city_edge_horizontal": "005322c068ee98c41938572d2636194b23e5219a8dc3f71ec8bedf7fe5643d44",
+    "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279"
   },
   "assets": {
     "grass": {
@@ -602,6 +621,177 @@
       "colors": 32,
       "sha256": "835d7f596763f5be67bb671426f786ae16ceb330eca26d774936162213123312",
       "sourceFile": "season_one_brittingham_boats_source_v1.png"
+    },
+    "equipment_annex_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/equipment_annex_exterior.png",
+      "width": 112,
+      "height": 80,
+      "colors": 36,
+      "sha256": "75736c89dba7e8aac58808f79f6f655d07506e17ae97f3f8f4ab59fa06cea4e9",
+      "sourceFile": "equipment_annex_source_v1.png"
+    },
+    "campus_housing_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/campus_housing_exterior.png",
+      "width": 128,
+      "height": 64,
+      "colors": 36,
+      "sha256": "7765110dbcae414309570de722f81d9dfefa6e20c46c990ed3200944b4a36cf0",
+      "sourceFile": "campus_housing_source_v1.png"
+    },
+    "bookstore_row_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/bookstore_row_exterior.png",
+      "width": 144,
+      "height": 64,
+      "colors": 40,
+      "sha256": "c9cbd6fe3d620468160c79739dbeddc8e9a2594d75e732d4059617edd3960186",
+      "sourceFile": "bookstore_row_source_v1.png"
+    },
+    "theater_marquee_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/theater_marquee_exterior.png",
+      "width": 128,
+      "height": 64,
+      "colors": 40,
+      "sha256": "39c15084045d27aa1b3a786d2c3408cf77f0f210226bf5959fca1367429bb04c",
+      "sourceFile": "theater_marquee_source_v1.png"
+    },
+    "food_cart_row_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/food_cart_row_exterior.png",
+      "width": 144,
+      "height": 64,
+      "colors": 40,
+      "sha256": "db5ba753f58d720614ee0ac91191d3802dfd8fa50b23978144c994c78c84af12",
+      "sourceFile": "food_cart_row_source_v1.png"
+    },
+    "capitol_hotel_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/capitol_hotel_exterior.png",
+      "width": 80,
+      "height": 64,
+      "colors": 36,
+      "sha256": "4fe14c9e1e95ddfabc5745f5237a1c972e93728b41a69db1fd24b6a566ae1051",
+      "sourceFile": "capitol_hotel_source_v1.png"
+    },
+    "civic_offices_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/civic_offices_exterior.png",
+      "width": 80,
+      "height": 112,
+      "colors": 40,
+      "sha256": "596a0107cc33899c3b5599f1524e27ffcec90ee724ed84382df92936c9b3845d",
+      "sourceFile": "civic_offices_source_v1.png"
+    },
+    "transit_hotel_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/transit_hotel_exterior.png",
+      "width": 144,
+      "height": 48,
+      "colors": 36,
+      "sha256": "7c1e5ec78082f033f2f0e4106a2d65e027abf87e97c6dafebe8c8448146c603e",
+      "sourceFile": "transit_hotel_source_v1.png"
+    },
+    "team_hotel_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/team_hotel_exterior.png",
+      "width": 128,
+      "height": 96,
+      "colors": 40,
+      "sha256": "e1c292cf63478270a2065e96c7b43e9d03291af414829030740f9834e579282e",
+      "sourceFile": "team_hotel_source_v1.png"
+    },
+    "riverfront_hotel_exterior": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/riverfront_hotel_exterior.png",
+      "width": 112,
+      "height": 64,
+      "colors": 40,
+      "sha256": "cf20b5e7621bacd40237d0027567046a6fb7af8cc10aa387658dc0f6b508ee6c",
+      "sourceFile": "riverfront_hotel_source_v1.png"
+    },
+    "state_facade_11x5": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_11x5.png",
+      "width": 176,
+      "height": 80,
+      "colors": 40,
+      "sha256": "c372e2ad9d730f3c60a4386295bf1bc8e6067716fd08a6b580b17d209efd8ae0",
+      "sourceFile": "state_facade_11x5_source_v1.png"
+    },
+    "state_facade_10x3": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_10x3.png",
+      "width": 160,
+      "height": 48,
+      "colors": 40,
+      "sha256": "c897ab4d29a978d3895e9099d0edd4e8d8511de790032a042820b817c45b476e",
+      "sourceFile": "state_facade_10x3_source_v1.png"
+    },
+    "state_facade_13x5": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_13x5.png",
+      "width": 208,
+      "height": 80,
+      "colors": 40,
+      "sha256": "f9a533d59f5b4bb66a308e5d9f3072272e307d900932540c2271be3630398dce",
+      "sourceFile": "state_facade_13x5_source_v1.png"
+    },
+    "state_facade_8x5": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_8x5.png",
+      "width": 128,
+      "height": 80,
+      "colors": 40,
+      "sha256": "1056cc9cea7191c4f49908183d5b668391ce5ce4bd2f2adbb21854c5099e9868",
+      "sourceFile": "state_facade_8x5_source_v1.png"
+    },
+    "state_facade_8x4": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_8x4.png",
+      "width": 128,
+      "height": 64,
+      "colors": 40,
+      "sha256": "0c9d2a8461993233981a80b94bad2049d7a6b0b1910d99ef786b5a73a57a1714",
+      "sourceFile": "state_facade_8x4_source_v1.png"
+    },
+    "state_facade_10x5": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_10x5.png",
+      "width": 160,
+      "height": 80,
+      "colors": 40,
+      "sha256": "36c5ee73e020db02676bcefacebcad9483abe27498c555f8e68ac744853f66e2",
+      "sourceFile": "state_facade_10x5_source_v1.png"
+    },
+    "state_facade_5x5": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_5x5.png",
+      "width": 80,
+      "height": 80,
+      "colors": 36,
+      "sha256": "0b5ba1b4124a3772945127d5a2a71dcf4b666df1ff4ec04d9ebb887cdb6ff9dc",
+      "sourceFile": "state_facade_5x5_source_v1.png"
+    },
+    "city_edge_horizontal": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/city_edge_horizontal.png",
+      "width": 128,
+      "height": 32,
+      "colors": 36,
+      "sha256": "9d3f32f7f63127dda59ddddfcbcd73e2a7a21e8dd1bd42c61f7ae9fa719c202d",
+      "sourceFile": "city_edge_horizontal_source_v1.png"
+    },
+    "city_edge_vertical": {
+      "category": "ordinary_buildings",
+      "path": "art/tilesets/imagegen_v3/ordinary_buildings/city_edge_vertical.png",
+      "width": 32,
+      "height": 128,
+      "colors": 36,
+      "sha256": "7fe23c9011e03a3b8475814acd1a38f9265760c370ed05b7407e2d244c42870d",
+      "sourceFile": "city_edge_vertical_source_v1.png"
     }
   }
 }

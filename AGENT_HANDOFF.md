@@ -2541,3 +2541,24 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   art while preserving their user-adjusted x/y positions. Current authority is
   65 prepared Imagegen assets, 102 shared world stamps, Camp metatile v8, and
   app v21.74.
+
+## Codex Ordinary Building Art Pack (v21.75)
+
+- Every named non-landmark exterior now has a verified Imagegen source path.
+  Existing Camp Randall Team Building/Coach Office and the familiar Trainer's
+  Room/Bucky's shop remain approved; ten generic-house fallbacks were replaced
+  with dedicated annex, housing, bookstore, theater, food-cart, office, and
+  hotel sources.
+- Seven exact-footprint State Street facade rows replace the repeated two-cell
+  storefront. Horizontal and vertical roof-only modules replace the stretched
+  storefront walls formerly used as Capitol/St. Louis city boundaries.
+- All 19 new sources normalize independently to their declared 16px logical
+  footprints. Per-cell alpha derives collision for exact-sized ordinary
+  buildings, so sparse roof corners can remain walk-behind instead of silently
+  blocking mostly empty cells.
+- Browser drafts no longer serialize immutable atlas/catalog data. Autosaves
+  are roughly 447 KB with the expanded atlas and rehydrate against the current
+  seed; exported JSON remains complete. This avoids Safari/Chromium storage
+  quota failures during map changes.
+- Current authority is 84 prepared Imagegen assets, 121 shared world stamps,
+  Camp metatile v9, and app v21.75.

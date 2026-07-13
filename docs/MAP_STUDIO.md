@@ -32,8 +32,8 @@ including nine complete 47-piece surface-transition families, three complete
 natural details. Every brush paints one fixed 32px tile; neighboring cells never
 change it implicitly.
 
-Those visuals originate in six modular Imagegen source boards plus six
-dedicated landmark sources, then pass through a
+Those visuals originate in six modular Imagegen source boards, six dedicated
+landmark sources, and 19 dedicated ordinary-building sources, then pass through a
 deterministic chroma-removal, palette-reduction, and 16px logical-grid build.
 Map Studio never paints from a raw generated board: every displayed palette
 entry is an exact nearest-neighbor 2x runtime tile.
@@ -46,8 +46,12 @@ Field House, Kohl Center, the national championship arena, Bascom Hall,
 Wisconsin Capitol, and Brittingham Boats also own dedicated Imagegen sources.
 They are no longer resized from Camp Randall Stadium or the generic campus
 house. Their collision masks are derived per cell from visible source coverage.
+Equipment Annex, Campus Housing, State Street's named venues and facade rows,
+the Capitol district offices/hotel, the tournament hotels, and the city-edge
+architecture use the same direct Imagegen source path. Named secondary
+buildings no longer fall back to the generic house or repeated storefront.
 
-The shared kit also provides 20 reusable ground assemblies and 96 structure
+The shared kit also provides 20 reusable ground assemblies and 121 structure
 stamps. These include connected forest masses, individual trees, cliffs,
 stairs, hedge and fence modules, campus props, architecture modules, and the
 familiar Trainer's Room and Bucky's Locker Room exteriors. Whole buildings

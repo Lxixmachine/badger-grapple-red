@@ -87,7 +87,7 @@ has a behavior variant and every assembly has an exact collision matrix.
 - Plaza straight edges and corners pass exact pixel-row and pixel-column seam
   comparisons for every transition family.
 - Every runtime atlas visual is an exact nearest-neighbor 2x export.
-- At least 65 prepared Imagegen assets cover ground, transitions, elevation,
+- At least 84 prepared Imagegen assets cover ground, transitions, elevation,
   vegetation, architecture, and campus props.
 - Every solid stamp cell contains visible art.
 - No path is hidden underneath a solid structure footprint.
