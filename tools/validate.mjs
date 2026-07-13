@@ -20,6 +20,18 @@ for(const look of NPC_LOOKS){
   if(bytes.length<24||bytes.readUInt32BE(16)!==72||bytes.readUInt32BE(20)!==144)errs.push(`semantic NPC sheet '${look}' must be exactly 72x144`);
 }
 
+for(const sourceUrl of [
+  new URL('../art/imagegen/camp_randall_object_manifest.json',import.meta.url),
+  new URL('../art/imagegen/world_composition_manifest.json',import.meta.url)
+]){
+  const source=JSON.parse(readFileSync(sourceUrl,'utf8'));
+  for(const [areaId,area] of Object.entries(source.areas||{})){
+    (area.npcs||[]).forEach((npc,index)=>{
+      if(npc.look&&!NPC_LOOKS.includes(npc.look))errs.push(`${sourceUrl.pathname.split('/').pop()} area ${areaId}: npc ${index} look '${npc.look}' is not semantic`);
+    });
+  }
+}
+
 // The Season One design graph is the authority for what the world is becoming.
 // The current runtime graph remains playable legacy data while maps are rebuilt.
 const seasonRegionPath=fileURLToPath(new URL('../src/data/seasonOneRegion.json',import.meta.url));

@@ -40,7 +40,7 @@
         "34,7": "BOATHOUSE - Locked for crew season. Rowers only.",
         "54,7": "LAKESHORE PATH - Picnic Point lies west along Mendota."
       },
-      "npcs": [{"x": 25, "y": 9, "frame": 4, "anim": "npc-idle-left", "dialogue": "Jogger: Every morning along Mendota. The open mats draw wrestlers from all over campus.", "look": "red", "route": [[25, 9], [26, 9], [26, 10], [25, 10]]}],
+      "npcs": [{"x": 25, "y": 9, "frame": 4, "anim": "npc-idle-left", "dialogue": "Jogger: Every morning along Mendota. The open mats draw wrestlers from all over campus.", "look": "athlete", "route": [[25, 9], [26, 9], [26, 10], [25, 10]]}],
       "actorScale": 0.78,
       "actorFootOffset": 16,
       "cameraZoom": 1.25
@@ -65,7 +65,7 @@
       "exitCells": [[47, 8]],
       "interactions": [{"kind": "HIDDEN_EMBER", "tiles": [[6, 9]]}],
       "signs": {"46,7": "PICNIC POINT - Mendota on both shores. Fire circle at the tip."},
-      "npcs": [{"x": 43, "y": 8, "frame": 1, "anim": "npc-idle-down", "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.", "look": "gray", "route": null}],
+      "npcs": [{"x": 43, "y": 8, "frame": 1, "anim": "npc-idle-down", "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.", "look": "camper", "route": null}],
       "actorScale": 0.78,
       "actorFootOffset": 16,
       "cameraZoom": 1.25
@@ -97,8 +97,8 @@
         "24,5": "CAPITOL SQUARE - State Street ends at the dome."
       },
       "npcs": [
-        {"x": 7, "y": 8, "frame": 1, "anim": "npc-idle-down", "dialogue": "Shopper: The familiar doors are easy to find. Everything else on State Street has its own story.", "look": "purple", "route": [[7, 8], [8, 8], [8, 9], [7, 9]]},
-        {"x": 22, "y": 8, "frame": 10, "anim": "npc-idle-up", "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.", "look": "green", "route": null}
+        {"x": 7, "y": 8, "frame": 1, "anim": "npc-idle-down", "dialogue": "Shopper: The familiar doors are easy to find. Everything else on State Street has its own story.", "look": "student", "route": [[7, 8], [8, 8], [8, 9], [7, 9]]},
+        {"x": 22, "y": 8, "frame": 10, "anim": "npc-idle-up", "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.", "look": "student", "route": null}
       ],
       "actorScale": 0.78,
       "actorFootOffset": 16,
@@ -160,7 +160,7 @@
       "exitCells": [[10, 11]],
       "interactions": [{"kind": "S", "tiles": [[10, 4]]}],
       "signs": {},
-      "npcs": [{"x": 10, "y": 4, "frame": 1, "anim": "npc-idle-down", "dialogue": "Equipment Manager: Same locker-room setup in every town. Stock up and get back on the road.", "look": "red", "route": null}],
+      "npcs": [{"x": 10, "y": 4, "frame": 1, "anim": "npc-idle-down", "dialogue": "Equipment Manager: Same locker-room setup in every town. Stock up and get back on the road.", "look": "manager", "route": null}],
       "actorScale": 0.78,
       "actorFootOffset": 16,
       "cameraZoom": 1.25
@@ -178,7 +178,7 @@
       "exitCells": [[10, 11]],
       "interactions": [{"kind": "R", "tiles": [[10, 4]]}],
       "signs": {},
-      "npcs": [{"x": 10, "y": 4, "frame": 1, "anim": "npc-idle-down", "dialogue": "Athletic Trainer: I can restore the whole lineup. You will find a Trainer's Room in every town after home.", "look": "green", "route": null}],
+      "npcs": [{"x": 10, "y": 4, "frame": 1, "anim": "npc-idle-down", "dialogue": "Athletic Trainer: I can restore the whole lineup. You will find a Trainer's Room in every town after home.", "look": "trainer", "route": null}],
       "actorScale": 0.78,
       "actorFootOffset": 16,
       "cameraZoom": 1.25
