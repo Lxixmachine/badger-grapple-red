@@ -12,9 +12,17 @@
     "locker": "art/imagegen/camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png",
     "office": "art/imagegen/camp_randall_office_objects_v1_alpha_2026-07-11.png",
     "player": "public/assets/sprites/player_walk.png",
-    "captain": "public/assets/sprites/npc_walk_red.png",
-    "coach": "public/assets/sprites/npc_walk_gray.png",
-    "rex": "public/assets/sprites/npc_walk_purple.png"
+    "captain": "public/assets/sprites/npc_captain_walk.png",
+    "coach": "public/assets/sprites/npc_coach_walk.png",
+    "rex": "public/assets/sprites/npc_rex_walk.png",
+    "trainer": "public/assets/sprites/npc_trainer_walk.png",
+    "wrestler": "public/assets/sprites/npc_wrestler_walk.png",
+    "manager": "public/assets/sprites/npc_manager_walk.png",
+    "scout": "public/assets/sprites/npc_scout_walk.png",
+    "student": "public/assets/sprites/npc_student_walk.png",
+    "official": "public/assets/sprites/npc_official_walk.png",
+    "athlete": "public/assets/sprites/npc_athlete_walk.png",
+    "camper": "public/assets/sprites/npc_camper_walk.png"
   },
   "sourceCrops": {
     "grass": [33, 65, 191, 221],

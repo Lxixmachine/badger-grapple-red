@@ -181,7 +181,8 @@
           "y": 4,
           "frame": 1,
           "anim": "npc-idle-left",
-          "dialogue": "Coach: Recruit one more wrestler, then win a spar."
+          "dialogue": "Coach: Recruit one more wrestler, then win a spar.",
+          "look": "coach"
         },
         {
           "x": 20,
@@ -189,7 +190,7 @@
           "frame": 4,
           "anim": "npc-idle-left",
           "dialogue": "Manager: The Team Shop has its own building on Bascom Hill.",
-          "look": "gray"
+          "look": "manager"
         },
         {
           "x": 2,
@@ -197,7 +198,7 @@
           "frame": 7,
           "anim": "npc-idle-left",
           "dialogue": "Trainer: The Recovery Center is its own building on Bascom Hill.",
-          "look": "green"
+          "look": "trainer"
         },
         {
           "x": 14,
@@ -205,7 +206,7 @@
           "frame": 10,
           "anim": "npc-idle-down",
           "dialogue": "Wrestler: Step onto the mat and press A to spar.",
-          "look": "red"
+          "look": "wrestler"
         }
       ]
     },
@@ -627,7 +628,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Scout: Open mats draw recruits looking for live wrestling. Step on and see who shows up.",
-          "look": "green",
+          "look": "scout",
           "route": [
             [
               5,
@@ -653,7 +654,7 @@
           "frame": 7,
           "anim": "npc-idle-right",
           "dialogue": "Manager: Save often before scouting.",
-          "look": "gray",
+          "look": "manager",
           "route": [
             [
               11,
@@ -679,7 +680,7 @@
           "frame": 1,
           "anim": "npc-idle-up",
           "dialogue": "Student: The lake path runs west, State Street east. Doors and paths connect the hub.",
-          "look": "red",
+          "look": "student",
           "route": [
             [
               14,
@@ -914,7 +915,7 @@
           "frame": 4,
           "anim": "npc-idle-left",
           "dialogue": "Jogger: Every morning along Mendota. Watch the open mats - the shore crew loves an ambush.",
-          "look": "red",
+          "look": "athlete",
           "route": [
             [
               22,
@@ -1136,7 +1137,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Shopper: Every storefront on State Street is somebody's game-day tradition.",
-          "look": "purple",
+          "look": "student",
           "route": [
             [
               7,
@@ -1162,7 +1163,7 @@
           "frame": 10,
           "anim": "npc-idle-up",
           "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.",
-          "look": "green",
+          "look": "student",
           "route": null
         }
       ]
@@ -1284,7 +1285,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.",
-          "look": "gray",
+          "look": "camper",
           "route": null
         }
       ],

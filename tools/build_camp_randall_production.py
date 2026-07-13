@@ -545,7 +545,10 @@ def build() -> dict:
         "interiors": {},
         "actorSheets": {
             actor_id: build_actor_sheet(actor_id)
-            for actor_id in ("player", "captain", "coach", "rex")
+            for actor_id in (
+                "player", "captain", "coach", "rex", "trainer", "wrestler",
+                "manager", "scout", "student", "official", "athlete", "camper",
+            )
         },
     }
 

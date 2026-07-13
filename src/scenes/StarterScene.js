@@ -117,7 +117,7 @@ export class StarterScene extends Phaser.Scene{
     this.add.image(88,47,SINGLET_KEYS[player.style]).setDisplaySize(36,36);
     this.add.image(232,47,SINGLET_KEYS[rival.style]).setDisplaySize(36,36);
     this.add.sprite(88,142,'player',1).setOrigin(.5,1).setScale(1.9);
-    this.add.sprite(232,142,'npc_purple',1).setOrigin(.5,1).setScale(1.9);
+    this.add.sprite(232,142,'npc_rex',1).setOrigin(.5,1).setScale(1.9);
     this.add.text(88,27,'YOU',{fontFamily:FONT,fontSize:9,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);
     this.add.text(232,27,'REX',{fontFamily:FONT,fontSize:9,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);
     uiBox(this,13,145,294,73);

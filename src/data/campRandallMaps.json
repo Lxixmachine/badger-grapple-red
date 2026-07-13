@@ -83,7 +83,7 @@
           "frame": 7,
           "anim": "npc-idle-down",
           "dialogue": "Captain: Coach is in the wrestling room. Check the office first, then come back.",
-          "look": "gray",
+          "look": "captain",
           "gate": {
             "flag": "officeChecked",
             "x": 8,
@@ -97,7 +97,7 @@
           "frame": 4,
           "anim": "npc-idle-left",
           "dialogue": "Rex: Same room. Same weight. We settle the spot on the mat.",
-          "look": "purple"
+          "look": "rex"
         }
       ],
       "manifestRuntime": "camp-randall-objects-v1"
@@ -182,7 +182,8 @@
           "y": 5,
           "frame": 1,
           "anim": "npc-idle-down",
-          "dialogue": "Coach: Practice starts on the mat. Build your lineup one wrestler at a time."
+          "dialogue": "Coach: Practice starts on the mat. Build your lineup one wrestler at a time.",
+          "look": "coach"
         }
       ],
       "manifestRuntime": "camp-randall-objects-v1"
@@ -390,7 +391,7 @@
           "frame": 1,
           "anim": "npc-idle-left",
           "dialogue": "Teammate: Lakeshore runs west, State Street runs east, and the Annex is through the stadium tunnel.",
-          "look": "red"
+          "look": "wrestler"
         }
       ],
       "manifestRuntime": "camp-randall-objects-v1"

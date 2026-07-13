@@ -380,6 +380,8 @@ test('terrain, events, actors, and camera reviews are editable layers', async ({
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.length).toBe(4);
 
   await page.getByRole('tab', {name: 'Actors'}).click();
+  const actorAssets = (await editorState(page)).project.assets.actors.map(asset => asset.sourceId);
+  expect(actorAssets).toEqual(expect.arrayContaining(['coach', 'trainer', 'rex', 'captain', 'wrestler', 'manager', 'scout', 'student', 'official', 'athlete', 'camper']));
   await page.getByRole('button', {name: 'Captain', exact: true}).click();
   await clickCell(page, 14, 14);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.actors.length).toBe(2);

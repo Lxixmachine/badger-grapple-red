@@ -75,7 +75,7 @@
           "frame": 4,
           "anim": "npc-idle-left",
           "dialogue": "Jogger: Every morning along Mendota. The open mats draw wrestlers from all over campus.",
-          "look": "red",
+          "look": "athlete",
           "route": [
             [
               25,
@@ -162,7 +162,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Camper: Water on both sides from here to the tip. The Funk Doctor holds court at the fire circle.",
-          "look": "gray",
+          "look": "camper",
           "route": null
         }
       ],
@@ -266,7 +266,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Shopper: The familiar doors are easy to find. Everything else on State Street has its own story.",
-          "look": "purple",
+          "look": "student",
           "route": [
             [
               7,
@@ -292,7 +292,7 @@
           "frame": 10,
           "anim": "npc-idle-up",
           "dialogue": "Fan: The season runs from the Capitol dome to the Kohl Center lights.",
-          "look": "green",
+          "look": "student",
           "route": null
         }
       ],
@@ -483,7 +483,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Equipment Manager: Same locker-room setup in every town. Stock up and get back on the road.",
-          "look": "red",
+          "look": "manager",
           "route": null
         }
       ],
@@ -549,7 +549,7 @@
           "frame": 1,
           "anim": "npc-idle-down",
           "dialogue": "Athletic Trainer: I can restore the whole lineup. You will find a Trainer's Room in every town after home.",
-          "look": "green",
+          "look": "trainer",
           "route": null
         }
       ],

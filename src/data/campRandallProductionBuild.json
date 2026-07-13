@@ -831,26 +831,138 @@
         "right": 2,
         "up": 3
       }
+    },
+    "trainer": {
+      "texture": "camp-prod-actor-trainer",
+      "path": "./assets/camp-production/actor_trainer.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "wrestler": {
+      "texture": "camp-prod-actor-wrestler",
+      "path": "./assets/camp-production/actor_wrestler.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "manager": {
+      "texture": "camp-prod-actor-manager",
+      "path": "./assets/camp-production/actor_manager.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "scout": {
+      "texture": "camp-prod-actor-scout",
+      "path": "./assets/camp-production/actor_scout.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "student": {
+      "texture": "camp-prod-actor-student",
+      "path": "./assets/camp-production/actor_student.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "official": {
+      "texture": "camp-prod-actor-official",
+      "path": "./assets/camp-production/actor_official.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "athlete": {
+      "texture": "camp-prod-actor-athlete",
+      "path": "./assets/camp-production/actor_athlete.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
+    },
+    "camper": {
+      "texture": "camp-prod-actor-camper",
+      "path": "./assets/camp-production/actor_camper.png",
+      "frameWidth": 32,
+      "frameHeight": 64,
+      "directions": {
+        "down": 0,
+        "left": 1,
+        "right": 2,
+        "up": 3
+      }
     }
   },
   "sources": {
-    "manifest": "3c9e675f412dcacd96fb65957c08d4f5e14d9c08d256d09e5e6081817f4c65d4",
+    "manifest": "4d0c444ad70cfe8c9080a84ab4218cf5a052cca33e317c54918e4450d1a2a77b",
     "layout": "cf7a52dfe1245045f887fa4247cc5622e624a274f5086762ea856eb445d731e8",
-    "worldTileset": "7b9cf05a1872866be1d43fd504074d0679d0848ae77591465a0104746734cd72",
+    "worldTileset": "ad934d5bf632b5be8a856b7b7562814942c7c92672faac2e35af8c54b75905fc",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
     "office": "8b5087925fe7e57c231463e64261b5f39bace9f33a7b83a2b57cb0a346851dea",
     "player": "5b31125c86b08730c61ad49fec5eba2b1bdc03f52c8bee957da287c9eb23e97f",
-    "captain": "e3eec53f5a25d91c702d3c4e58372dd70bb6a9db255c8585add0f91460ee3aa8",
-    "coach": "f5aecfe639c7e33a63283ffbd514acc07b0dfc7f7f1153530ed426fb187633fd",
-    "rex": "fe2a96f21ac2faf4701548d324a8f4d8af29d05fe52972443ed95f90512d348b"
+    "captain": "508f13aacece318231e06870ba1545caa40b438d672ea17bf266eb3a37f02948",
+    "coach": "33f444c401c30d11e23372887b54ad13db521481c95a1b956fdd6cb39ee389a7",
+    "rex": "9294959ba16668f56957f60c93740cfc359cf61f0559cbd2fe4ddec3b67267db",
+    "trainer": "ac8d2150aaf5eede6cd7467f402c3c0b11eb2a4baf0920c7fc78b8eb0d6dd950",
+    "wrestler": "06ceb110f72ca8b295431b06733554774c1c7fbec7ab5e2f77f72c288d5b07b5",
+    "manager": "45fe4ff5fc3dde20cefe5df3b40d2ed1e86d364a4bb536b09c1ba64248f6b634",
+    "scout": "a56e648229724b44eaead49833ea88f0d44d1c8a6bff5b4788c9478cf085d037",
+    "student": "bd0c8cc4e74255ab7516cee419dceb079152aafb0b979f1e0623073e274f5150",
+    "official": "b0a5736424b618128e31147c6a57886254643738db22b5ea07372775d9112697",
+    "athlete": "6a66f602cb6376331ecdacf1ad7c65f8fc3fcf655352910c579ed8697bc36f7e",
+    "camper": "019c355d0ac6072f15611ecc5c95ef997876ac8cf31994c96cab1a1344772698"
   },
   "outputs": {
-    "actor_captain.png": "cbecc3a268d8314ad44b610304b7212fed6119e56352c6bd30c0dcc2cb491250",
-    "actor_coach.png": "2d0110e931b054997fdb1850c14be24470f13307f0f915e663402d3ef40a4f5a",
+    "actor_athlete.png": "af48b78d9337f6235e085959fd83142bdb73908c2d6e8388e9c6efc206a6ab35",
+    "actor_camper.png": "30a758d88a0179290bb7ae89061a537d435a9af1fffdd6be1008a21306ff35cf",
+    "actor_captain.png": "8c5cc7e0b31d4472f078b1a7412bbe8dfa3cb623a91c4a7285c8763282386702",
+    "actor_coach.png": "3b4d122eea8699f577ce5395cf3656ab03f505457a481c3186fc9e391b043771",
+    "actor_manager.png": "fffdb31ce44325751505e2ac921b3ba879effe52e7e78cf47eb72ae81da46484",
+    "actor_official.png": "c2b1ea0cd162e6eaa8a4a6630054af92431314d7191fd3ac76de35654a5f5817",
     "actor_player.png": "a0a6cd9a8338e4d2aaf8275b09e1991cda2b217212fe806f32308bafb324c02c",
-    "actor_rex.png": "3dc3b1f9d520ee1626ebdb48da25211e4f5baba3ee6e8cf7dd76b72e0b925d13",
+    "actor_rex.png": "ac27505cf2138481b69a28f37536fc2df25e872749bc084ea78640468e0d7cc6",
+    "actor_scout.png": "8cd0c4dc1069b79a9b4bb9cf163cbf167b9c98c4222f69f42a7bf8a689df4004",
+    "actor_student.png": "fdad4ba0f9f750e2ec97214c1ba144e87ecaf74250dbe8c6f7ec555554ad0876",
+    "actor_trainer.png": "b3da3ceefc650b57e8dfa2dd94263eadaa5ccbbf8f71c9615b079a263955bced",
+    "actor_wrestler.png": "8abfde29cd5ffdbbf272885de54154592abe3b0b7feb0648e3629f18c1e2e0b5",
     "camp-randall__camp_randall_stadium.png": "ee9c429db38e2cec10a4cd09586ccad396752755172282c80743cc0c7510378e",
     "camp-randall__coach_office.png": "52788f1713f3a5bbc445597804066b061bdd6e54f1b21ad42b0095d22c3f423f",
     "camp-randall__east_forest_border.png": "e0f067cf7d3caa5fb4e9240258d6a178b1eb365b3014aa5463f7e083c9a69bfe",

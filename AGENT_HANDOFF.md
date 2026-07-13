@@ -1,5 +1,31 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.84 Character Cast)
+
+The overworld now uses named character identities instead of color-swapped
+generic NPCs. The Head Coach matches Tony's approved short-haired, close-bearded
+red-polo portrait, and the Trainer matches the approved bald-crown, glasses,
+gray-goatee, red-quarter-zip portrait. Rex, the captain, wrestlers, managers,
+scouts, students, officials, athletes, and campers also have distinct original
+designs so authored roles remain recognizable in the world.
+
+Each identity has a retained ImageGen chroma source and transparent master under
+`art/imagegen/`, with the complete prompt and output record in
+`art/imagegen/overworld_npc_cast_v1_2026-07-13.prompt.md`. The slicer compiles the
+same masters into 24x36 runtime walk sheets and 32x64 Map Studio actor sheets.
+It now rejects bad dimensions, missing frames, drifting foot baselines, undersized
+bodies, and opaque frame corners before an asset can ship.
+
+Runtime maps, route trainers, the opening, starter sequence, and tournament
+officials use semantic roles through `src/data/npcLooks.js`. Map Studio exposes
+the full cast in its Actors palette, and the Camp Randall production manifest
+uses those same sources. Phone and desktop review confirmed clear silhouettes,
+stable scale, and clean placement with no browser warnings. Build, validation,
+balance, map linting, and all 82 Chromium tests pass.
+
+Tony's dirty State Street art and generated downtown/Map Studio files remain
+deliberately untouched and must not be included with this character-cast commit.
+
 ## Latest Codex Turn (v21.83 Opening Wrestle-Off)
 
 Opening Day is now a complete playable vertical slice. The Head Coach presents

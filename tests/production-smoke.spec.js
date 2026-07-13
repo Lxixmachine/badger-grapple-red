@@ -65,10 +65,10 @@ async function completeOpeningToOverworld(page) {
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.83-opening-wrestleoff');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.84-character-cast');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'title_hero', 'coach_intro', 'trainer_intro', 'singlet_shooter', 'singlet_rider', 'singlet_scrambler', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'title_hero', 'coach_intro', 'trainer_intro', 'singlet_shooter', 'singlet_rider', 'singlet_scrambler', 'player', 'npc', 'npc_coach', 'npc_trainer', 'npc_rex', 'npc_captain', 'npc_wrestler', 'npc_manager', 'npc_scout', 'npc_student', 'npc_official', 'npc_athlete', 'npc_camper', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -85,6 +85,9 @@ test('production build boots with runtime assets', async ({page}) => {
     expect(texture, `texture ${texture.key} should be loaded`).toMatchObject({exists: true});
     expect(texture.width, `texture ${texture.key} width`).toBeGreaterThan(1);
     expect(texture.height, `texture ${texture.key} height`).toBeGreaterThan(1);
+  }
+  for (const texture of textureReport.filter(entry => entry.key === 'npc' || entry.key.startsWith('npc_'))) {
+    expect(texture, `sprite sheet ${texture.key}`).toMatchObject({width: 72, height: 144});
   }
   const campusTexture = textureReport.find(texture => texture.key === 'area_campus');
   expect(campusTexture).toMatchObject({width: 448, height: 288});

@@ -23,6 +23,9 @@ import {
   withdrawWrestler
 } from '../src/systems/mechanics.js';
 import {canFastTravel,canFlyToNationals,earnedBadgeCount,grantKeyItem,missingSeasonBadges,registerTravelDestination,travelTo,unlockTown} from '../src/systems/progression.js';
+import {NPC_LOOKS,npcTextureKey} from '../src/data/npcLooks.js';
+import {TRAINERS} from '../src/data/world.js';
+import {LAYERED_MAPS} from '../src/data/layeredMaps.js';
 
 function mon(id,lvl=10){const result=makeMon(id,lvl);result.iv=0;result.training={conditioning:0,technique:0,strength:0,speed:0,awareness:0};return restoreWrestler(result);}
 
@@ -39,6 +42,17 @@ test('Rex selects the style counter to every opening persona',()=>{
   expect(counterStarterFor('buckshot')).toBe('fieldflyer');
   expect(counterStarterFor('matreturner')).toBe('buckshot');
   expect(counterStarterFor('fieldflyer')).toBe('matreturner');
+});
+
+test('authored overworld characters use semantic generated identities',()=>{
+  expect(NPC_LOOKS).toEqual(expect.arrayContaining(['coach','trainer','rex','captain','wrestler','manager','scout','student','official','athlete','camper']));
+  for(const look of NPC_LOOKS)expect(npcTextureKey(look)).toBe(`npc_${look}`);
+  for(const trainer of Object.values(TRAINERS))expect(NPC_LOOKS).toContain(trainer.look);
+  const npcs=Object.values(LAYERED_MAPS).flatMap(area=>area.npcs||[]);
+  expect(npcs.find(npc=>npc.dialogue?.startsWith('Coach:'))?.look).toBe('coach');
+  expect(npcs.find(npc=>npc.dialogue?.startsWith('Athletic Trainer:'))?.look).toBe('trainer');
+  expect(npcs.find(npc=>npc.dialogue?.startsWith('Rex:'))?.look).toBe('rex');
+  expect(npcs.every(npc=>!npc.look||NPC_LOOKS.includes(npc.look))).toBe(true);
 });
 
 test('legacy saves migrate to Condition/Stamina and canonical inventory without duplication',()=>{

@@ -9,6 +9,17 @@ OUT = ROOT / "public" / "assets" / "sprites"
 SHEETS = {
     "player_walk.png": ART / "overworld_player_sheet_2026-07-09.png",
     "npc_walk.png": ART / "overworld_coach_sheet_2026-07-09.png",
+    "npc_coach_walk.png": ART / "overworld_head_coach_v1_2026-07-13_alpha.png",
+    "npc_trainer_walk.png": ART / "overworld_trainer_v1_2026-07-13_alpha.png",
+    "npc_rex_walk.png": ART / "overworld_rex_v1_2026-07-13_alpha.png",
+    "npc_captain_walk.png": ART / "overworld_captain_v1_2026-07-13_alpha.png",
+    "npc_wrestler_walk.png": ART / "overworld_wrestler_v1_2026-07-13_alpha.png",
+    "npc_manager_walk.png": ART / "overworld_manager_v1_2026-07-13_alpha.png",
+    "npc_scout_walk.png": ART / "overworld_scout_v1_2026-07-13_alpha.png",
+    "npc_student_walk.png": ART / "overworld_student_v1_2026-07-13_alpha.png",
+    "npc_official_walk.png": ART / "overworld_official_v1_2026-07-13_alpha.png",
+    "npc_athlete_walk.png": ART / "overworld_athlete_v1_2026-07-13_alpha.png",
+    "npc_camper_walk.png": ART / "overworld_camper_v1_2026-07-13_alpha.png",
 }
 
 FRAME_W = 24
@@ -104,6 +115,30 @@ def fit_frame(cell, row):
     return frame
 
 
+def validate_sheet(sheet, name):
+    if sheet.size != (FRAME_W * COLS, FRAME_H * ROWS):
+        raise ValueError(f"{name}: invalid runtime dimensions {sheet.size}")
+    alpha = sheet.getchannel("A")
+    for row in range(ROWS):
+        for col in range(COLS):
+            cell = alpha.crop((
+                col * FRAME_W,
+                row * FRAME_H,
+                (col + 1) * FRAME_W,
+                (row + 1) * FRAME_H,
+            ))
+            bbox = cell.getbbox()
+            label = f"{name}[{row},{col}]"
+            if not bbox:
+                raise ValueError(f"{label}: empty frame")
+            if bbox[3] != FRAME_H:
+                raise ValueError(f"{label}: feet do not share the cell baseline")
+            if bbox[2] - bbox[0] < 8 or bbox[3] - bbox[1] < 24:
+                raise ValueError(f"{label}: character became unreadably small")
+            if any(cell.getpixel(point) for point in ((0, 0), (FRAME_W - 1, 0))):
+                raise ValueError(f"{label}: sprite touches a top corner")
+
+
 def slice_sheet(src, dest):
     source = Image.open(src).convert("RGBA")
     result = Image.new("RGBA", (FRAME_W * COLS, FRAME_H * ROWS), (0, 0, 0, 0))
@@ -117,7 +152,12 @@ def slice_sheet(src, dest):
             frame = fit_frame(source.crop((left, top, right, bottom)), row)
             result.alpha_composite(frame, (col * FRAME_W, row * FRAME_H))
 
+    validate_sheet(result, dest.name)
     dest.parent.mkdir(parents=True, exist_ok=True)
+    if dest.exists():
+        current = Image.open(dest).convert("RGBA")
+        if current.size == result.size and current.tobytes() == result.tobytes():
+            return
     result.save(dest)
 
 

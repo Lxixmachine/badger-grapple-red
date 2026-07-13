@@ -7,10 +7,18 @@ import {fileURLToPath} from 'node:url';
 import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
 import {CAMP_TILE_RUNTIME_VERSION,campTilemap,campRuntimeStats,campRuntimeTile} from '../src/data/campRandallTilemaps.js';
 import {validateSeasonOneLayouts} from './validate_region_layouts.mjs';
+import {NPC_LOOKS} from '../src/data/npcLooks.js';
 
 let errs=[];
 const fileHash=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
+
+for(const look of NPC_LOOKS){
+  const sprite=fileURLToPath(new URL(`../public/assets/sprites/npc_${look}_walk.png`,import.meta.url));
+  if(!existsSync(sprite)){errs.push(`semantic NPC sheet '${look}' is missing`);continue;}
+  const bytes=readFileSync(sprite);
+  if(bytes.length<24||bytes.readUInt32BE(16)!==72||bytes.readUInt32BE(20)!==144)errs.push(`semantic NPC sheet '${look}' must be exactly 72x144`);
+}
 
 // The Season One design graph is the authority for what the world is becoming.
 // The current runtime graph remains playable legacy data while maps are rebuilt.
@@ -283,6 +291,9 @@ function bfsReach(area,sx,sy,tx,ty){
 }
 
 for(const [aid,a] of Object.entries(AREAS)){
+  (a.npcs||[]).forEach((npc,index)=>{
+    if(npc.look&&!NPC_LOOKS.includes(npc.look))errs.push(`area ${aid}: npc ${index} look '${npc.look}' has no generated semantic NPC sheet`);
+  });
   (a.exits||[]).forEach(e=>{
     if(!bfsReach(aid,a.start.x,a.start.y,e.x,e.y))errs.push(`area ${aid}: exit to '${e.to}' at (${e.x},${e.y}) is UNREACHABLE from spawn`);
     if(AREAS[e.to]&&isBlocked(e.to,e.tx,e.ty))errs.push(`area ${aid}: warp to '${e.to}' lands on BLOCKED tile (${e.tx},${e.ty})`);
@@ -295,7 +306,7 @@ for(const [tid,t] of Object.entries(TRAINERS)){
   if(AREAS[t.area]&&!inBounds(t.area,t.pos?.x,t.pos?.y))errs.push(`trainer ${tid}: position (${t.pos?.x},${t.pos?.y}) out of bounds`);
   if(AREAS[t.area]&&inBounds(t.area,t.pos?.x,t.pos?.y)&&isBlocked(t.area,t.pos.x,t.pos.y))errs.push(`trainer ${tid}: position (${t.pos.x},${t.pos.y}) is BLOCKED`);
   if(!['up','down','left','right'].includes(t.facing))errs.push(`trainer ${tid}: invalid facing '${t.facing}'`);
-  if(t.look&&!['red','green','purple','gold','gray'].includes(t.look))errs.push(`trainer ${tid}: look '${t.look}' has no generated npc_walk variant`);
+  if(t.look&&!NPC_LOOKS.includes(t.look))errs.push(`trainer ${tid}: look '${t.look}' has no generated semantic NPC sheet`);
   if(!Number.isInteger(t.sightRange)||t.sightRange<1)errs.push(`trainer ${tid}: sightRange must be a positive integer`);
   (t.team||[]).forEach(([id])=>{if(!ROSTER[id])errs.push(`trainer ${tid} team member '${id}' missing from ROSTER`);});
   if(!t.team||!t.team.length)errs.push(`trainer ${tid} has empty team`);
