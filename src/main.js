@@ -79,7 +79,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.81-readability';
+    : sliceMode ? '21.63-scale-slice' : '21.82-opening-day';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;

@@ -44,6 +44,8 @@ async function move(page, key) {
 
 async function completeOpeningToOverworld(page) {
   await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('TitleScene').mode)).toBe('menu');
+  await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
   // advance through however many intro pages exist until naming starts
   await expect.poll(async () => {
@@ -51,19 +53,22 @@ async function completeOpeningToOverworld(page) {
     if (!naming) { await press(page, 'a'); await page.waitForTimeout(120); }
     return page.evaluate(() => window.__badgerTest.sceneState('IntroScene').naming);
   }).toBe(true);
+  await press(page, 'a'); // enter A
+  await press(page, 'left');
+  await press(page, 'up'); // wrap from G to OK
   await press(page, 'a');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('StarterScene');
-  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('IntroScene').naming)).toBe(false);
+  await press(page, 'a'); // locker-room handoff
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('OverworldScene');
 }
 
 test('production build boots with runtime assets', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.81-readability');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('21.82-opening-day');
 
   const textureReport = await page.evaluate(() => {
-    const keys = ['title_bg', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
+    const keys = ['title_bg', 'title_hero', 'coach_intro', 'player', 'npc', 'area_fieldhouse', 'area_wrestlingroom', 'area_campus', 'area_studyhall', 'area_lakeshore', 'area_river', 'area_downtown', 'area_conference', 'area_championship', 'area_shop', 'area_recovery', 'camp_randall_runtime_tiles', 'battle_arena', 'battle_badger'];
     return keys.map(key => {
       const texture = window.badgerGame?.textures?.get(key);
       const source = texture?.getSourceImage?.();
@@ -99,6 +104,8 @@ test('production build boots with runtime assets', async ({page}) => {
   }
 
   await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('TitleScene').mode)).toBe('menu');
+  await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
   expect(runtimeIssues).toEqual([]);
 });
@@ -131,13 +138,14 @@ test('opening flow reaches the first controllable overworld moment', async ({pag
 
   const save = await page.evaluate(() => window.__badgerTest.storage());
   expect(save).toMatchObject({
-    playerName: 'Coach',
+    playerName: 'A',
     area: 'fieldhouse',
     pos: {x: 10, y: 10}
   });
-  expect(save.party).toHaveLength(1);
+  expect(save.party).toHaveLength(0);
   expect(save.flags.introDone).toBe(true);
-  expect(save.message).toContain('captain is waiting');
+  expect(save.flags.personaChosen).toBe(false);
+  expect(save.message).toContain('Opening Day');
   expect(runtimeIssues).toEqual([]);
 });
 
@@ -348,6 +356,9 @@ test('captain blocks the actual wrestling-room doorway until the coach office is
   await move(page, 'up');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').tilePos)).toEqual({x: 10, y: 3});
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').passable.up)).toBe(false);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene').message)).toContain('Check the office first');
+  await press(page, 'a');
   await page.goto('/?test=1&scene=overworld&area=campus&x=22&y=12');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
   await move(page, 'up');
@@ -361,6 +372,35 @@ test('captain blocks the actual wrestling-room doorway until the coach office is
   await move(page, 'down');
   await move(page, 'down');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({area: 'fieldhouse', tilePos: {x: 10, y: 2}});
+});
+
+test('Head Coach awards the first mat persona in the wrestling room', async ({page}) => {
+  const save = seededSave({
+    playerName: 'A',
+    party: [],
+    active: 0,
+    badges: [],
+    area: 'wrestlingroom',
+    pos: {x: 10, y: 6},
+    flags: {introDone: true, officeChecked: true, coachIntro: false, personaChosen: false}
+  });
+  await continueIntoOverworld(page, save);
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest?.sceneState('OverworldScene')?.active)).toBe(true);
+  await press(page, 'up');
+  await page.waitForTimeout(140);
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'))).toMatchObject({
+    tilePos: {x: 10, y: 6},
+    facing: 'up'
+  });
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('StarterScene');
+  await page.waitForTimeout(180);
+  await press(page, 'a');
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('OverworldScene');
+  const updated = await page.evaluate(() => window.__badgerTest.storage());
+  expect(updated.party).toHaveLength(1);
+  expect(updated.flags.personaChosen).toBe(true);
+  expect(updated).toMatchObject({area: 'wrestlingroom', pos: {x: 10, y: 6}});
 });
 
 test('battle command screen renders and opens move selection', async ({page}) => {
@@ -430,6 +470,8 @@ async function continueIntoOverworld(page, save) {
   await page.goto('/?test=1');
   await expect(page.locator('#bootError')).toBeHidden();
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || [])).toContain('TitleScene');
+  await press(page, 'a'); // leave the title splash
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('TitleScene').mode)).toBe('menu');
   await press(page, 'a'); // CONTINUE is preselected when a save exists
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys())).toContain('OverworldScene');
 }

@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.82 Opening Day)
+
+The opening now follows the proven FireRed structure without copying its
+protected material: a full-screen identity splash, explicit NEW GAME/CONTINUE
+menu, one-subject-at-a-time Coach introduction, player and rival framing,
+grid-based naming screen, and a short locker-room handoff into the first
+controllable moment. The player is correctly introduced as a freshman walk-on;
+the intro no longer grants a persona or casts the player as the coach.
+
+The in-world story gate now owns progression. The captain blocks the actual
+wrestling-room doorway and sends the player to the empty office. After that
+errand, the Head Coach offers the first mat persona in the wrestling room and
+the game returns to that exact map position. Saves with an empty party can now
+continue through this sequence. Generic map NPCs also speak their authored
+dialogue instead of falling through to `Nothing unusual here.`
+
+New original ImageGen art includes the title-tunnel badger and a Head Coach
+portrait based on Tony's approved mockup. A second portrait based on Tony's
+Trainer mockup is staged as `trainer_intro.png` for the future Trainer's Room
+recovery presentation; it is deliberately not inserted into the Coach-led
+opening. Licensed mockup marks and the ball-like prop were replaced with
+original Badger Grapple insignia and wrestling equipment.
+
+Automated coverage now verifies the full opening, captain dialogue gate, and
+Coach-to-persona handoff. Phone and desktop browser review confirmed readable
+text, stable composition, and correct control framing.
+
 ## Latest Codex Turn (v21.81 Readability)
 
 The game now ships Atkinson Hyperlegible locally in regular and bold weights
