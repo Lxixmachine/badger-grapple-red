@@ -1,5 +1,42 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.81 Readability)
+
+The game now ships Atkinson Hyperlegible locally in regular and bold weights
+instead of relying on a tiny generic monospace face. Player-facing screens use
+a 10px floor for secondary information and 11-14px text for decisions and
+headings. Main menu, roster, bag, practice, scouting, intro, starter selection,
+overworld prompts, battle commands, move details, and move-learning panels were
+recomposed around shorter lines and a clear bold-selection/regular-detail
+hierarchy. The Scout Report also removes low-value weight, interest, matchup,
+and move-power clutter from its first decision screen.
+
+The same turn replaces the remaining flat level counter with a source-grounded
+Gen III progression model. All 26 wrestlers now have explicit base EXP yields,
+one of six cumulative growth groups, and complete level-up learnsets. Wild and
+organized-match EXP is awarded per defeated opponent using the FireRed order:
+base yield and level, participant/EXP Share pools, then Lucky Egg, trainer, and
+traded bonuses. Fainted wrestlers and level-100 wrestlers receive no award.
+
+Wrestlers begin with only the legal techniques available at their level and
+can have fewer than four. Open move slots fill automatically; a fifth move
+opens an explicit replace-or-decline screen operated by the same D-pad/A/B
+contract as the rest of battle. Cumulative EXP bars, level thresholds, save
+normalization, and Condition/Stamina maximum increases use the same data.
+Levels and move prompts resolve between opposing wrestlers; development is
+deferred until the entire battle is won, so upgraded form stats never appear
+mid-match.
+
+`FIRERED_REFERENCE_AUDIT.md` now treats Tony's selected full-game walkthrough
+as a whole-game reference rather than a battle reference. The permanent rubric
+covers region flow, town composition, camera reveals, ImageGen-to-tile art,
+collision truth, character scale, interaction, menus, battles, progression,
+and audio. FireRed's methods are studied; none of its protected assets, maps,
+audio, text, or code are shipped or used as generation inputs.
+
+Tony's dirty State Street art and generated downtown files remain deliberately
+untouched and must not be staged with this mechanics commit.
+
 ## Latest Codex Turn (v21.79 Battle Tactics)
 
 The prior battle pass looked FireRed-like but still resolved almost every

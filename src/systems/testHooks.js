@@ -40,6 +40,11 @@ export function installTestHooks(game, routeVirtualButton) {
       message: scene.message ?? null,
       trainerName: scene.trainerName ?? null,
       battle: scene.battleDebugState?.() ?? null,
+      moveLearning: scene.moveLearn ? {
+        wrestlerId: scene.moveLearn.mon?.id ?? null,
+        move: scene.moveLearn.move ?? null,
+        moves: [...(scene.moveLearn.mon?.moves || [])]
+      } : null,
       npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
       layered: scene.layeredMapVersion ? {
         version: scene.layeredMapVersion,
@@ -128,6 +133,14 @@ export function installTestHooks(game, routeVirtualButton) {
       const scene = game.scene.getScene('BattleScene');
       if (!scene?.scene?.isActive?.() || scene.over) return false;
       scene.win();
+      return true;
+    },
+    queueMoveLearning(move) {
+      const scene = game.scene.getScene('BattleScene');
+      const mon = scene?.state?.party?.[0];
+      if (!scene?.scene?.isActive?.() || !mon || !move) return false;
+      mon.pendingMoves = [move];
+      scene.resolvePendingMoves(() => {});
       return true;
     }
   };

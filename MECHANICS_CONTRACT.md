@@ -18,9 +18,19 @@ recovery, roster, economy, or progression logic.
 - Techniques have distinct tactical roles: direct, setup, priority, counter,
   multi-hit, Stamina drain, position break, and forced reset. Items and lineup
   changes consume the user's turn.
-- Experience is awarded after each opposing wrestler is defeated. Level and
-  development gains increase current Condition/Stamina only by the maximum-stat
-  increase; they never erase existing damage or fatigue.
+- Experience is cumulative and uses the six Gen III growth groups through
+  level 100. Every wrestler has an explicit base yield and growth profile.
+  Per-defeat awards use `base yield * defeated level / 7`, participant and EXP
+  Share pools, then Lucky Egg, organized-match, and traded-wrestler modifiers
+  in the researched FireRed order. Fainted and level-100 wrestlers receive no
+  award. Level and development gains increase current Condition/Stamina only
+  by the maximum-stat increase; they never erase existing damage or fatigue.
+  Levels and technique prompts resolve after each defeated opponent, while a
+  queued development resolves only after the full battle is won.
+- Techniques come from explicit level-up learnsets. A new wrestler receives
+  only the legal techniques learned at or below its level, in learn order, and
+  may begin with fewer than four. Open slots learn automatically. A fifth
+  technique always requires the player to replace one of four or decline it.
 - The travel lineup holds at most six wrestlers. Every other signed wrestler
   is stored in the Team Locker.
 - Team Lockers are available in the home locker room and every Trainer's Room.
@@ -60,7 +70,11 @@ See `src/data/campaign.js` for the machine-readable contract.
 - `src/systems/progression.js`: key items, town unlocks, Bus Pass eligibility,
   badges, and Nationals gate.
 - `src/data/moves.js`: techniques and six-style advantage chart.
-- `src/data/roster.js`: wrestler species, development lines, stats, and moves.
+- `src/data/roster.js`: wrestler species, development lines, stats, and
+  wrestler-instance progression.
+- `src/data/experience.js`: growth curves, base yields, cumulative thresholds,
+  and per-defeat distribution.
+- `src/data/learnsets.js`: ordered level-up technique learnsets.
 - `src/systems/save.js`: v22 migration and persistence.
 
 Map changes must not edit these files. Mechanics changes must not edit map

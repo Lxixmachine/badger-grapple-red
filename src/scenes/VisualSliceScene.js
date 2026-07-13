@@ -6,7 +6,7 @@ import {
   SLICE_NATIVE_WIDTH,
   visualSliceMap
 } from '../data/visualSliceMaps.js';
-import {setVirtualHandler} from '../systems/ui.js';
+import {FONT,setVirtualHandler} from '../systems/ui.js';
 
 const Phaser = window.Phaser;
 
@@ -830,7 +830,7 @@ export class VisualSliceScene extends Phaser.Scene {
     fill(graphics, COLORS.white, 14, 236, 452, 70);
     stroke(graphics, COLORS.creamDark, 2, 18, 240, 444, 62);
     const text = this.add.text(30, 248, message, {
-      fontFamily: 'monospace',
+      fontFamily: FONT,
       fontSize: '14px',
       fontStyle: 'bold',
       color: '#292523',
@@ -838,7 +838,7 @@ export class VisualSliceScene extends Phaser.Scene {
       wordWrap: {width: 410}
     });
     const prompt = this.add.text(446, 286, 'A', {
-      fontFamily: 'monospace',
+      fontFamily: FONT,
       fontSize: '13px',
       fontStyle: 'bold',
       color: '#762823'
@@ -863,7 +863,7 @@ export class VisualSliceScene extends Phaser.Scene {
     fill(graphics, COLORS.white, 18, 16, width - 8, 30);
     stroke(graphics, COLORS.redDark, 2, 21, 19, width - 14, 24);
     const text = this.add.text(30, 23, label, {
-      fontFamily: 'monospace',
+      fontFamily: FONT,
       fontSize: '13px',
       fontStyle: 'bold',
       color: '#292523'

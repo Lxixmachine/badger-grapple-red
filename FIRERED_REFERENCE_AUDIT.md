@@ -7,6 +7,44 @@ Pokemon FireRed ROM in mGBA. The ROM, its code, and its assets are reference
 material only. Nothing from it may be shipped, traced, extracted into the
 project, or used as an image-generation input.
 
+The reference set also includes the user-selected full-game walkthrough
+([18.5-hour FireRed 100% walkthrough](https://youtu.be/M7HoLUoCM54)). Its
+chapter coverage spans the opening, every major town and route type, caves and
+indoor dungeons, service buildings, gyms, the League, ending, and postgame.
+It is a whole-game pacing and presentation reference, not a battle-only one.
+The same non-copying rule applies: learn the grammar and production methods;
+never reproduce Nintendo art, maps, text, audio, or code.
+
+## Whole-game application rubric
+
+Every feature and asset review must consider the complete play loop. A change
+is not FireRed-quality merely because its isolated screenshot looks polished.
+
+| Surface | Proven question to answer | Badger Grapple Red requirement |
+|---|---|---|
+| Region and routes | Does geography teach direction through terrain and gates? | Story beats determine connected routes; visible paths never lie about access or terminate without a readable boundary. |
+| Town composition | Are familiar services immediately legible while one local landmark creates identity? | Trainer's Room and Bucky's Locker Room use stable silhouettes, signs, doors, and approach lanes; the venue or civic X-factor gets primary hierarchy. |
+| Map framing | Does movement reveal the place rather than expose it as a board? | Each 16x11 camera region has one focal anchor, one obvious forward route, cropped continuation, and quiet connective ground. |
+| Tile and object art | Do repeated pieces form authored surfaces without exposing the grid? | Image-generated source art is converted into grid-native tile families, transitions, metatiles, and depth layers. Collision ownership follows visible footprints. |
+| Characters | Are feet, silhouettes, facing, and scale readable in motion? | One stable foot anchor and body scale per context; four-direction movement, shadows, doors, furniture, and NPCs share the same perspective contract. |
+| Interaction | Does every input cause one clear, short response? | D-pad, A, B, Start, and Menu behave consistently; doors, prompts, text, fades, and trainer approaches use one cadence and lock input only while feedback is active. |
+| Menus and services | Can repeated tasks be completed quickly from memory? | Stable selection geometry, persistent labels, clear back behavior, phone-readable type, and no decorative control that competes with the current choice. |
+| Battles | Does each turn expose state, choice, consequence, and recovery? | Condition/PP-like Stamina, four-technique limit, level learnsets, EXP, switching, items, AI, and feedback follow the researched Gen III sequence while using wrestling tactics. |
+| Progression | Does each short loop feed a visible season-long goal? | Defeats, recruiting, development, venue credentials, services, route gates, and the Roster Book form one coherent ladder to Nationals. |
+| Audio and polish | Do important actions have consistent identity and timing? | Reused action cues, area themes, brief transitions, restrained animation, and silence/quiet space support hierarchy instead of adding constant noise. |
+
+### Review order
+
+For maps and generated art, evaluate in this order: walkable route, collision
+truth, camera reveal, landmark/service hierarchy, object scale, depth and
+occlusion, value separation, tile transitions, texture, then decorative detail.
+An attractive image that fails an earlier layer is rejected rather than patched
+with invisible collision or extra signs.
+
+For systems, evaluate: input contract, state transition, readable consequence,
+persistence, edge cases, feedback cadence, then decoration. Every permanent
+mechanic needs a purpose in the minute loop, town loop, or season loop.
+
 ## Executive decision
 
 **Keep Phaser. Change the presentation and map architecture.** Phaser can

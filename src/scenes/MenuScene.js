@@ -1,4 +1,4 @@
-import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,xpNeed,personaFor} from '../data/roster.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,SHOP_STOCK,swapLockerWrestler,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
+import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,personaFor} from '../data/roster.js';import {experienceProgress} from '../data/experience.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,SHOP_STOCK,swapLockerWrestler,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['Field House Badge','Capitol Badge','Kohl Badge','Picnic Point Badge'];
 const MAIN_OPTS=[['TRAVEL LINEUP','team'],['BAG','bag'],['ROSTER BOOK','dex'],['TOWN MAP','map'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
@@ -31,11 +31,11 @@ export class MenuScene extends Phaser.Scene{
     if(this.tab==='main')return this.drawMainScreen();
     uiBox(this,10,10,300,204);
     const titles={shop:"BUCKY'S LOCKER ROOM",locker:'TEAM LOCKER',travel:'BUS PASS',dex:'ROSTER BOOK',team:'TRAVEL LINEUP',practice:'PRACTICE',objective:'OBJECTIVES',bag:'BAG',badges:'BADGES',options:'OPTIONS',map:'TOWN MAP'};
-    this.add.text(160,22,titles[this.tab]||'MENU',{fontFamily:'monospace',fontSize:12,color:'#111',fontStyle:'bold'}).setOrigin(.5);
+    this.add.text(160,21,titles[this.tab]||'MENU',{fontFamily:FONT,fontSize:14,color:'#111',fontStyle:'bold'}).setOrigin(.5);
     const singlets=(this.state.items.practiceSinglet||0)+(this.state.items.travelSinglet||0)+(this.state.items.starterSinglet||0);
-    this.add.text(22,36,`GR ${this.state.grit}  REP ${this.state.rep}  SNG ${singlets}  ${this.state.day?.period||'Morning'}`,{fontFamily:'monospace',fontSize:8,color:'#333'});
+    this.add.text(22,37,`GRIT ${this.state.grit}  REP ${this.state.rep}  SING ${singlets}`,{fontFamily:FONT,fontSize:10,color:'#333'});
     if(this.tab==='shop')this.drawShop();else if(this.tab==='locker')this.drawLocker();else if(this.tab==='travel')this.drawTravel();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawMap();
-    this.add.text(160,202,this.note||'A SELECT  B BACK',{fontFamily:'monospace',fontSize:8,color:'#555'}).setOrigin(.5);
+    if(this.note)this.add.text(160,200,this.note,{fontFamily:FONT,fontSize:10,color:'#8a1720',fontStyle:'bold'}).setOrigin(.5);
   }
   drawMap(){
     // The Town Map renders the validator-checked world plane: every outdoor
@@ -55,9 +55,9 @@ export class MenuScene extends Phaser.Scene{
       if(id==='lakeshore'||id==='river'){g.fillStyle(0x3a6ea8,1);g.fillRect(rx,ry,rw,Math.max(3,4*s));}
       g.lineStyle(1,0x111111,.8);g.strokeRect(rx,ry,rw,rh);
       const above=id==='downtown';
-      this.add.text(rx+rw/2,above?ry-8:ry+rh+3,LABELS[id],{fontFamily:'monospace',fontSize:7,color:'#333',fontStyle:'bold'}).setOrigin(.5,0);
+      this.add.text(rx+rw/2,above?ry-9:ry+rh+3,LABELS[id],{fontFamily:FONT,fontSize:8,color:'#333',fontStyle:'bold'}).setOrigin(.5,0);
     }
-    const mark=(aid,tx,ty,ch,color)=>{const p=pos[aid];if(!p)return;this.add.text(ox+(p.x+tx)*s,oy+(p.y+ty)*s,ch,{fontFamily:'monospace',fontSize:8,color,fontStyle:'bold'}).setOrigin(.5);};
+    const mark=(aid,tx,ty,ch,color)=>{const p=pos[aid];if(!p)return;this.add.text(ox+(p.x+tx)*s,oy+(p.y+ty)*s,ch,{fontFamily:FONT,fontSize:8,color,fontStyle:'bold'}).setOrigin(.5);};
     mark('downtown',21,4,'★','#d6a336');   // the Kohl Center marquee
     mark('campus',14,19,'▪','#7d1017');    // Field House
     // you-are-here: interiors anchor to the door they entered through
@@ -69,105 +69,116 @@ export class MenuScene extends Phaser.Scene{
       const dotO=this.add.circle(hx,hy,3.4,0xb41820,1);const dot=this.add.circle(hx,hy,2,0xffffff,1);
       this.tweens.add({targets:[dot,dotO],alpha:.25,duration:420,yoyo:true,repeat:-1});
     }
-    this.add.text(24,178,'WEST: GROW THE TEAM',{fontFamily:'monospace',fontSize:7,color:'#555',fontStyle:'bold'});
-    this.add.text(296,178,'EAST: WIN THE TITLE',{fontFamily:'monospace',fontSize:7,color:'#555',fontStyle:'bold'}).setOrigin(1,0);
+    this.add.text(24,178,'WEST: GROW THE TEAM',{fontFamily:FONT,fontSize:8,color:'#444',fontStyle:'bold'});
+    this.add.text(296,178,'EAST: WIN THE TITLE',{fontFamily:FONT,fontSize:8,color:'#444',fontStyle:'bold'}).setOrigin(1,0);
   }
   drawMainScreen(){
     // left: icon list panel. right: lead-wrestler card. Native 320x224 layout.
     uiBox(this,6,6,192,212);
-    this.add.text(16,14,'MENU',{fontFamily:'monospace',fontSize:11,color:'#b41820',fontStyle:'bold'});
+    this.add.text(16,12,'MENU',{fontFamily:FONT,fontSize:13,color:'#b41820',fontStyle:'bold'});
     this.add.line(0,0,16,30,182,30,0xa58d65,.7).setOrigin(0);
     MAIN_OPTS.forEach(([label],i)=>{
-      const y=42+i*19,active=i===this.sel;
-      if(i%2===0){const band=this.add.graphics();band.fillStyle(0x000000,.035);band.fillRect(12,y-8,180,19);}
-      if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.14);hi.fillRoundedRect(12,y-8,180,19,3);hi.lineStyle(1,0xb41820,.5);hi.strokeRoundedRect(12,y-8,180,19,3);}
+      const y=40+i*20,active=i===this.sel;
+      if(i%2===0){const band=this.add.graphics();band.fillStyle(0x000000,.035);band.fillRect(12,y-8,180,20);}
+      if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.14);hi.fillRoundedRect(12,y-8,180,20,3);hi.lineStyle(1,0xb41820,.5);hi.strokeRoundedRect(12,y-8,180,20,3);}
       icon(this,32,y+2,MAIN_OPTS[i][1],active);
-      this.add.text(52,y-3,label,{fontFamily:'monospace',fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});
-      this.add.text(188,y-3,'>',{fontFamily:'monospace',fontSize:9,color:active?'#b41820':'#999'}).setOrigin(1,0);
+      this.add.text(52,y-4,label,{fontFamily:FONT,fontSize:11,color:active?'#b41820':'#111',fontStyle:active?'bold':'normal'});
+      this.add.text(188,y-4,'>',{fontFamily:FONT,fontSize:11,color:active?'#b41820':'#999'}).setOrigin(1,0);
     });
     uiBox(this,206,6,108,212);
     const l=lead(this.state),r=l?ROSTER[l.id]:null;
-    if(r&&this.textures.exists('portrait_'+r.asset)){this.add.image(260,44,'portrait_'+r.asset).setScale(.3);}
-    this.add.text(260,76,l?r.name.split(' ')[0]:'No lead',{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(.5);
-    if(l)this.add.text(260,88,`Lv ${l.lvl}  ${personaFor(l.id)}`,{fontFamily:'monospace',fontSize:7,color:'#555'}).setOrigin(.5);
-    this.add.line(0,0,214,98,306,98,0xa58d65,.6).setOrigin(0);
-    this.add.text(214,104,'BADGES',{fontFamily:'monospace',fontSize:8,color:'#333',fontStyle:'bold'});
-    BADGE_ORDER.forEach((b,i)=>{const cx=224+i*22,cy=124,got=this.state.badges.includes(b);const g=this.add.graphics();g.lineStyle(1,0x8a6a42,1);g.fillStyle(got?0xd6a336:0xe8dcc0,1);g.fillCircle(cx,cy,7);g.strokeCircle(cx,cy,7);if(got)this.add.text(cx,cy,'★',{fontFamily:'monospace',fontSize:8,color:'#7d1017'}).setOrigin(.5);});
-    this.add.line(0,0,214,138,306,138,0xa58d65,.6).setOrigin(0);
+    if(r&&this.textures.exists('portrait_'+r.asset)){this.add.image(260,40,'portrait_'+r.asset).setScale(.3);}
+    this.add.text(260,69,l?r.name.split(' ')[0]:'No lead',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'}).setOrigin(.5);
+    if(l)this.add.text(260,84,`Lv ${l.lvl}  ${personaFor(l.id)}`,{fontFamily:FONT,fontSize:10,color:'#444'}).setOrigin(.5);
+    this.add.line(0,0,214,96,306,96,0xa58d65,.6).setOrigin(0);
+    this.add.text(214,100,'BADGES',{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
+    BADGE_ORDER.forEach((b,i)=>{const cx=224+i*22,cy=121,got=this.state.badges.includes(b);const g=this.add.graphics();g.lineStyle(1,0x8a6a42,1);g.fillStyle(got?0xd6a336:0xe8dcc0,1);g.fillCircle(cx,cy,7);g.strokeCircle(cx,cy,7);if(got)this.add.text(cx,cy,'★',{fontFamily:FONT,fontSize:9,color:'#7d1017'}).setOrigin(.5);});
+    this.add.line(0,0,214,136,306,136,0xa58d65,.6).setOrigin(0);
     const d=this.state.day||{name:'Saturday',period:'Morning'};
-    this.add.text(214,144,'DAY',{fontFamily:'monospace',fontSize:8,color:'#333',fontStyle:'bold'});
-    this.add.text(306,144,`${d.name} ${d.period}`,{fontFamily:'monospace',fontSize:7,color:'#111'}).setOrigin(1,0);
-    this.add.text(214,158,'GRIT',{fontFamily:'monospace',fontSize:8,color:'#333',fontStyle:'bold'});
-    this.add.text(306,158,`${this.state.grit}`,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(1,0);
-    this.add.text(214,172,'REP',{fontFamily:'monospace',fontSize:8,color:'#333',fontStyle:'bold'});
-    this.add.text(306,172,`${this.state.rep}`,{fontFamily:'monospace',fontSize:9,color:'#111',fontStyle:'bold'}).setOrigin(1,0);
-    if(this.state.tournament?.champion)this.add.text(260,188,'BIG TEN CHAMPION',{fontFamily:'monospace',fontSize:7,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);
-    this.add.text(214,198,`Roster ${caughtRecruitCount(this.state)}  Wins ${this.state.stats?.wins||0}`,{fontFamily:'monospace',fontSize:7,color:'#555'});
-    this.add.text(160,216,this.note||'A OPEN   B CLOSE',{fontFamily:'monospace',fontSize:8,color:'#c9c0aa'}).setOrigin(.5);
+    this.add.text(214,142,'DAY',{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
+    this.add.text(306,142,`${d.name.slice(0,3)} ${d.period}`,{fontFamily:FONT,fontSize:10,color:'#111'}).setOrigin(1,0);
+    this.add.text(214,158,'GRIT',{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
+    this.add.text(306,158,`${this.state.grit}`,{fontFamily:FONT,fontSize:10,color:'#111'}).setOrigin(1,0);
+    this.add.text(214,174,'REP',{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
+    this.add.text(306,174,`${this.state.rep}`,{fontFamily:FONT,fontSize:10,color:'#111'}).setOrigin(1,0);
+    if(this.state.tournament?.champion)this.add.text(260,190,'BIG TEN CHAMPION',{fontFamily:FONT,fontSize:9,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);
+    this.add.text(214,199,`TEAM ${caughtRecruitCount(this.state)}  WINS ${this.state.stats?.wins||0}`,{fontFamily:FONT,fontSize:10,color:'#444'});
+    if(this.note)this.add.text(160,210,this.note,{fontFamily:FONT,fontSize:10,color:'#8a1720',fontStyle:'bold'}).setOrigin(.5);
   }
   drawBag(){
-    this.add.text(24,52,'ITEMS',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
-    BAG_ROWS.forEach((it,i)=>{const n=this.state.items?.[it[0]]||0,y=64+i*22,active=i===this.sel;
-      this.add.text(26,y,`${active?'▶':' '} ${it[1]}`,{fontFamily:'monospace',fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});
-      this.add.text(296,y,`x${n}`,{fontFamily:'monospace',fontSize:9,color:'#111'}).setOrigin(1,0);
-      this.add.text(32,y+10,it[2],{fontFamily:'monospace',fontSize:6,color:'#555'});
+    this.add.text(24,52,'ITEMS',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
+    BAG_ROWS.forEach((it,i)=>{const n=this.state.items?.[it[0]]||0,y=68+i*20,active=i===this.sel;
+      this.add.text(26,y,`${active?'▶':' '} ${it[1]}`,{fontFamily:FONT,fontSize:11,color:active?'#b41820':'#111',fontStyle:active?'bold':'normal'});
+      this.add.text(296,y,`x${n}`,{fontFamily:FONT,fontSize:11,color:'#111'}).setOrigin(1,0);
     });
+    const selected=BAG_ROWS[this.sel];
+    if(selected&&!this.note)this.add.text(26,190,selected[2],{fontFamily:FONT,fontSize:10,color:'#333',wordWrap:{width:266}});
   }
   drawBadges(){
-    this.add.text(24,52,'CONFERENCE BADGES',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
+    this.add.text(24,52,'CONFERENCE BADGES',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
     const names={'Field House Badge':'Defeat The Opener','Capitol Badge':'Defeat The Senator','Kohl Badge':'Defeat The Anchor','Picnic Point Badge':'Defeat The Funk Doctor'};
     BADGE_ORDER.forEach((b,i)=>{const y=78+i*30,got=this.state.badges.includes(b);
       const g=this.add.graphics();g.lineStyle(1,0x8a6a42,1);g.fillStyle(got?0xd6a336:0xe8dcc0,1);g.fillCircle(40,y,10);g.strokeCircle(40,y,10);
-      if(got)this.add.text(40,y,'★',{fontFamily:'monospace',fontSize:11,color:'#7d1017'}).setOrigin(.5);
-      this.add.text(60,y-10,b,{fontFamily:'monospace',fontSize:9,color:got?'#111':'#999',fontStyle:'bold'});
-      this.add.text(60,y+2,got?names[b]:'Not yet earned.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:230}});
+      if(got)this.add.text(40,y,'★',{fontFamily:FONT,fontSize:11,color:'#7d1017'}).setOrigin(.5);
+      this.add.text(60,y-11,b,{fontFamily:FONT,fontSize:11,color:got?'#111':'#999',fontStyle:'bold'});
+      this.add.text(60,y+3,got?names[b]:'Not yet earned.',{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:230}});
     });
   }
   drawOptions(){
-    this.add.text(24,52,'OPTIONS',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
+    this.add.text(24,52,'OPTIONS',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
     const muted=isMuted();
-    this.add.text(26,74,`${this.sel===0?'▶ ':'  '}SOUND: ${muted?'OFF':'ON'}`,{fontFamily:'monospace',fontSize:9,color:this.sel===0?'#b41820':'#111',fontStyle:'bold'});
-    this.add.text(26,88,'A to toggle. Music and sound effects.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:270}});
-    this.add.text(26,140,`${this.sel===1?'▶ ':'  '}ERASE SAVE DATA`,{fontFamily:'monospace',fontSize:9,color:this.sel===1?'#b41820':'#111',fontStyle:'bold'});
-    this.add.text(26,154,this.sel===1&&this.confirmReset?'Press A again to confirm. This cannot be undone.':'Press A to erase this save and start over.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:270}});
+    this.add.text(26,76,`${this.sel===0?'▶ ':'  '}SOUND: ${muted?'OFF':'ON'}`,{fontFamily:FONT,fontSize:11,color:this.sel===0?'#b41820':'#111',fontStyle:'bold'});
+    this.add.text(26,93,'Music and sound effects.',{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:270}});
+    this.add.text(26,140,`${this.sel===1?'▶ ':'  '}ERASE SAVE DATA`,{fontFamily:FONT,fontSize:11,color:this.sel===1?'#b41820':'#111',fontStyle:'bold'});
+    this.add.text(26,157,this.sel===1&&this.confirmReset?'Confirm erase? This cannot be undone.':'Erase this save and start over.',{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:270}});
   }
-  drawObjective(){const log=this.state.objective?.log||['Meet the Head Coach'];this.add.text(24,52,'CURRENT GOAL',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});this.add.text(28,68,log[0]||'Opening complete.',{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold',wordWrap:{width:260}});this.add.text(24,96,'PROGRESSION',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});log.slice(0,6).forEach((x,i)=>this.add.text(30,112+i*13,`${i===0?'▶':'✓'} ${x}`,{fontFamily:'monospace',fontSize:8,color:i===0?'#111':'#555'}));}
+  drawObjective(){const log=this.state.objective?.log||['Meet the Head Coach'];this.add.text(24,52,'CURRENT GOAL',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});this.add.text(28,70,log[0]||'Opening complete.',{fontFamily:FONT,fontSize:12,color:'#111',fontStyle:'bold',wordWrap:{width:260}});this.add.text(24,101,'PROGRESSION',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});log.slice(0,5).forEach((x,i)=>this.add.text(30,119+i*17,`${i===0?'▶':'✓'} ${x}`,{fontFamily:FONT,fontSize:10,color:i===0?'#111':'#444',fontStyle:'bold'}));}
   drawTeam(){
-    this.add.text(24,50,'SIX-WRESTLER TRAVEL LINEUP',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
-    if(!this.state.party.length){this.add.text(30,74,'No wrestlers yet.',{fontFamily:'monospace',fontSize:9,color:'#111'});return;}
+    this.add.text(24,50,'SIX-WRESTLER TRAVEL LINEUP',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
+    if(!this.state.party.length){this.add.text(30,74,'No wrestlers yet.',{fontFamily:FONT,fontSize:11,color:'#111'});return;}
     this.state.party.slice(0,6).forEach((m,i)=>{
       const r=ROSTER[m.id],st=scaledStats(m.id,m.lvl,m),y=66+i*20,active=i===this.sel;
       if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.1);hi.fillRoundedRect(18,y-8,284,20,3);}
       if(this.textures.exists('portrait_'+r.asset))this.add.image(32,y+2,'portrait_'+r.asset).setScale(.14);
-      this.add.text(46,y-6,`${active?'▶':' '}${r.name.split(' ')[0]} L${m.lvl}${i===0?' ★':''}`,{fontFamily:'monospace',fontSize:8,color:active?'#b41820':'#111',fontStyle:'bold'});
-      this.add.text(46,y+4,personaFor(m.id),{fontFamily:'monospace',fontSize:6,color:'#7a4ac9',fontStyle:'bold'});
-      this.add.text(134,y-6,`${r.style}`,{fontFamily:'monospace',fontSize:7,color:'#333'});
-      this.add.text(134,y+3,'COND',{fontFamily:'monospace',fontSize:5,color:'#3a8a52',fontStyle:'bold'});
-      hpBar(this,146,y+3,58,4,m.hp/st.hp,0x55b867);
-      this.add.text(210,y+3,'STA',{fontFamily:'monospace',fontSize:5,color:'#355f87',fontStyle:'bold'});
-      hpBar(this,222,y+3,58,4,m.stamina/st.stamina,0x5aa4e6);
-      this.add.text(288,y-6,'XP',{fontFamily:'monospace',fontSize:5,color:'#777',fontStyle:'bold'});
-      hpBar(this,288,y+3,14,4,Math.min(1,m.xp/xpNeed(m)),0x3aa5d1);
+      this.add.text(46,y-7,`${active?'▶':' '}${r.name.split(' ')[0]} L${m.lvl}${i===0?' ★':''}`,{fontFamily:FONT,fontSize:10,color:active?'#b41820':'#111',fontStyle:active?'bold':'normal'});
+      this.add.text(137,y-7,'C',{fontFamily:FONT,fontSize:9,color:'#3a8a52',fontStyle:'bold'});
+      hpBar(this,148,y-3,65,4,m.hp/st.hp,0x55b867);
+      this.add.text(137,y+3,'S',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});
+      hpBar(this,148,y+7,65,4,m.stamina/st.stamina,0x5aa4e6);
+      this.add.text(224,y-7,'XP',{fontFamily:FONT,fontSize:9,color:'#555',fontStyle:'bold'});
+      hpBar(this,244,y-3,54,4,experienceProgress(m),0x3aa5d1);
     });
     const m=this.state.party[this.sel],r=m&&ROSTER[m.id];
-    if(r)this.add.text(24,190,`A SET LEAD • ${r.rarity} • ${r.bio}`,{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:275}});
+    if(r)this.add.text(24,188,`${personaFor(m.id)} / ${r.style} / ${r.rarity}`,{fontFamily:FONT,fontSize:10,color:'#444',wordWrap:{width:275}});
   }
   travelDestinations(){return (this.state.travel?.unlockedTowns||[]).map(id=>this.state.travel?.destinations?.[id]).filter(Boolean);}
-  drawTravel(){const destinations=this.travelDestinations();if(!this.state.keyItems?.busPass){this.add.text(24,64,'BUS PASS REQUIRED',{fontFamily:'monospace',fontSize:10,color:'#b41820',fontStyle:'bold'});this.add.text(24,84,"The Senator's staff issues the Bus Pass after the Capitol Badge.",{fontFamily:'monospace',fontSize:8,color:'#555',wordWrap:{width:270}});return;}this.add.text(24,52,'UNLOCKED TOWNS',{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'});destinations.forEach((destination,i)=>this.add.text(28,72+i*20,`${i===this.sel?'>':' '} ${destination.name}`,{fontFamily:'monospace',fontSize:9,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));}
-  drawLocker(){const rows=[...this.state.party.map((m,i)=>({m,i,where:'LINEUP'})),...this.state.box.map((m,i)=>({m,i,where:'LOCKER'}))];this.add.text(24,50,`TRAVEL ${this.state.party.length}/6   LOCKER ${this.state.box.length}`,{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'});if(!rows.length){this.add.text(24,78,'No wrestlers stored.',{fontFamily:'monospace',fontSize:9,color:'#111'});return;}const start=Math.max(0,Math.min(this.sel-3,Math.max(0,rows.length-7)));rows.slice(start,start+7).forEach((row,j)=>{const i=start+j,r=ROSTER[row.m.id],y=68+j*17,active=i===this.sel;if(active){const g=this.add.graphics();g.fillStyle(0xb41820,.1);g.fillRoundedRect(18,y-5,284,16,2);}this.add.text(24,y,`${active?'>':' '} ${row.where==='LINEUP'?'L':'K'} ${r.name} Lv${row.m.lvl}`,{fontFamily:'monospace',fontSize:8,color:active?'#b41820':'#111',fontStyle:'bold'});this.add.text(294,y,`${r.style}`,{fontFamily:'monospace',fontSize:7,color:'#555'}).setOrigin(1,0);});this.add.text(24,190,this.lockerSwapBoxIndex!==null?'Choose a lineup slot to exchange.':'A moves a wrestler between lineup and locker.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:275}});}
-  drawPractice(){const opts=[['CONDITIONING','Stamina +4'],['TECHNIQUE','Accuracy +1.5%'],['STRENGTH','Attack +2'],['SPEED','Speed +2'],['MAT AWARENESS','Defense +2']];this.add.text(24,52,'PRACTICE PLAN',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});const l=lead(this.state);opts.forEach((o,i)=>{this.add.text(28,72+i*20,`${i===this.sel?'>':' '} ${o[0]} +1`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'});this.add.text(148,74+i*20,o[1],{fontFamily:'monospace',fontSize:6,color:'#555'});});if(l){const tr=l.training||{};this.add.text(228,72,`Lead: ${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:'monospace',fontSize:7,color:'#111'});this.add.text(228,88,`COND ${tr.conditioning||0}\nTECH ${tr.technique||0}\nSTR  ${tr.strength||0}\nSPD  ${tr.speed||0}\nAWR  ${tr.awareness||0}`,{fontFamily:'monospace',fontSize:7,color:'#333',lineSpacing:3});this.add.text(228,158,'3 GR\nTime +1',{fontFamily:'monospace',fontSize:7,color:'#555'});}else this.add.text(220,80,'No lead.',{fontFamily:'monospace',fontSize:8,color:'#111'});}
+  drawTravel(){const destinations=this.travelDestinations();if(!this.state.keyItems?.busPass){this.add.text(24,64,'BUS PASS REQUIRED',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});this.add.text(24,84,"The Senator's staff issues the Bus Pass after the Capitol Badge.",{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:270}});return;}this.add.text(24,52,'UNLOCKED TOWNS',{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'});destinations.forEach((destination,i)=>this.add.text(28,72+i*22,`${i===this.sel?'>':' '} ${destination.name}`,{fontFamily:FONT,fontSize:10,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));}
+  drawLocker(){const rows=[...this.state.party.map((m,i)=>({m,i,where:'LINEUP'})),...this.state.box.map((m,i)=>({m,i,where:'LOCKER'}))];this.add.text(24,50,`TRAVEL ${this.state.party.length}/6   LOCKER ${this.state.box.length}`,{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'});if(!rows.length){this.add.text(24,78,'No wrestlers stored.',{fontFamily:FONT,fontSize:10,color:'#111'});return;}const start=Math.max(0,Math.min(this.sel-3,Math.max(0,rows.length-7)));rows.slice(start,start+7).forEach((row,j)=>{const i=start+j,r=ROSTER[row.m.id],y=68+j*17,active=i===this.sel;if(active){const g=this.add.graphics();g.fillStyle(0xb41820,.1);g.fillRoundedRect(18,y-5,284,16,2);}this.add.text(24,y,`${active?'>':' '} ${row.where==='LINEUP'?'L':'K'} ${r.name} Lv${row.m.lvl}`,{fontFamily:FONT,fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});this.add.text(294,y,`${r.style}`,{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold'}).setOrigin(1,0);});this.add.text(24,189,this.lockerSwapBoxIndex!==null?'Choose a lineup slot to exchange.':'Move between lineup and team locker.',{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold',wordWrap:{width:275}});}
+  drawPractice(){
+    const opts=[['CONDITIONING','Stamina +4'],['TECHNIQUE','Accuracy +1.5%'],['STRENGTH','Attack +2'],['SPEED','Speed +2'],['MAT AWARENESS','Defense +2']];
+    this.add.text(24,52,'PRACTICE PLAN',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
+    const l=lead(this.state);
+    opts.forEach((o,i)=>this.add.text(28,73+i*23,`${i===this.sel?'>':' '} ${o[0]}`,{fontFamily:FONT,fontSize:11,color:i===this.sel?'#b41820':'#111',fontStyle:i===this.sel?'bold':'normal'}));
+    this.add.line(0,0,198,66,198,181,0xa58d65,.6).setOrigin(0);
+    if(l){
+      const tr=l.training||{};
+      this.add.text(208,70,`${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold'});
+      this.add.text(208,91,`COND ${tr.conditioning||0}\nTECH ${tr.technique||0}\nSTR  ${tr.strength||0}\nSPD  ${tr.speed||0}\nAWR  ${tr.awareness||0}`,{fontFamily:FONT,fontSize:10,color:'#333',lineSpacing:4});
+    }else this.add.text(208,82,'No lead.',{fontFamily:FONT,fontSize:10,color:'#111'});
+    this.add.text(28,191,`3 GRIT - ${opts[this.sel][1]} - TIME +1`,{fontFamily:FONT,fontSize:10,color:'#444'});
+  }
   doPractice(){const opts=['conditioning','technique','strength','speed','awareness'];const l=lead(this.state);if(!l){this.note='NO WRESTLER.';return this.draw();}if(this.state.grit<3){this.note='NEED 3 GRIT.';return this.draw();}const k=opts[this.sel],result=practiceWrestler(l,k);if(!result.ok){this.note=result.reason==='cap'?'TRAINING CAP REACHED.':'CANNOT PRACTICE.';return this.draw();}this.state.training=this.state.training||{};this.state.training[k]=(this.state.training[k]||0)+1;this.state.grit-=3;this.state.stats.practices=(this.state.stats.practices||0)+1;this.state.flags.practiceCount=(this.state.flags.practiceCount||0)+1;const period=advancePeriod(this.state);saveState(this.state);this.note=`${k.toUpperCase()} +1. NOW ${period.toUpperCase()}.`;this.draw();}
-  drawShop(){[...SHOP_STOCK,{key:'close',name:'CLOSE',price:0}].forEach((it,i)=>this.add.text(26,58+i*22,`${i===this.sel?'>':' '} ${it.name} ${it.price?it.price+' RP':''}`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));const it=SHOP_STOCK[this.sel];if(it)this.add.text(190,58,it.description,{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:105}});}
+  drawShop(){[...SHOP_STOCK,{key:'close',name:'CLOSE',price:0}].forEach((it,i)=>this.add.text(26,58+i*23,`${i===this.sel?'>':' '} ${it.name} ${it.price?it.price+' RP':''}`,{fontFamily:FONT,fontSize:10,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));const it=SHOP_STOCK[this.sel];if(it)this.add.text(190,58,it.description,{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold',wordWrap:{width:105}});}
   drawDex(){
-    const ids=Object.keys(ROSTER),start=Math.max(0,Math.min(this.sel-3,ids.length-8));
-    this.add.text(22,50,`SEEN ${Object.values(this.state.dex.seen).filter(Boolean).length}/${ids.length}  BEAT ${defeatedWrestlerCount(this.state)}/${ids.length}  SIGN ${caughtRecruitCount(this.state)}`,{fontFamily:'monospace',fontSize:7,color:'#b41820',fontStyle:'bold'});
-    ids.slice(start,start+8).forEach((id,j)=>{const i=start+j,r=ROSTER[id],known=this.state.dex.seen[id],caught=this.state.dex.caught[id],defeated=this.state.dex.defeated[id],y=66+j*16,active=i===this.sel;this.add.text(24,y,`${active?'>':' '} ${caught?'+':defeated?'x':known?'.':'?'} ${known?r.name:'UNKNOWN'}`,{fontFamily:'monospace',fontSize:7,color:active?'#b41820':known?'#111':'#777',fontStyle:active?'bold':'normal'});});
+    const ids=Object.keys(ROSTER),start=Math.max(0,Math.min(this.sel-3,ids.length-7));
+    this.add.text(22,50,`SEEN ${Object.values(this.state.dex.seen).filter(Boolean).length}/${ids.length}  BEAT ${defeatedWrestlerCount(this.state)}/${ids.length}  SIGN ${caughtRecruitCount(this.state)}`,{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'});
+    ids.slice(start,start+7).forEach((id,j)=>{const i=start+j,r=ROSTER[id],known=this.state.dex.seen[id],caught=this.state.dex.caught[id],defeated=this.state.dex.defeated[id],y=68+j*18,active=i===this.sel;this.add.text(24,y,`${active?'>':' '} ${caught?'+':defeated?'x':known?'.':'?'} ${known?r.name:'UNKNOWN'}`,{fontFamily:FONT,fontSize:10,color:active?'#b41820':known?'#111':'#777',fontStyle:active?'bold':'normal'});});
     const id=ids[this.sel],r=ROSTER[id],known=this.state.dex.seen[id];
-    if(!known){this.add.text(210,82,'NO SCOUT REPORT',{fontFamily:'monospace',fontSize:8,color:'#777',fontStyle:'bold'});this.add.text(210,98,'Meet this wrestler in the world to add an entry.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:88}});return;}
+    if(!known){this.add.text(206,82,'NO SCOUT REPORT',{fontFamily:FONT,fontSize:10,color:'#777',fontStyle:'bold'});this.add.text(206,101,'Meet this wrestler to add an entry.',{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:96}});return;}
     if(this.textures.exists('portrait_'+r.asset))this.add.image(252,78,'portrait_'+r.asset).setScale(.22);
-    this.add.text(208,105,r.name,{fontFamily:'monospace',fontSize:8,color:'#111',fontStyle:'bold',wordWrap:{width:90}});
-    this.add.text(208,126,`${r.style} / ${personaFor(id)}\n${r.weight} lb / ${r.rarity}`,{fontFamily:'monospace',fontSize:7,color:'#555',lineSpacing:3});
-    this.add.text(208,158,r.bio,{fontFamily:'monospace',fontSize:6,color:'#333',wordWrap:{width:90}});
+    this.add.text(204,104,r.name,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',wordWrap:{width:98}});
+    this.add.text(204,130,`${r.style}\n${personaFor(id)} / ${r.rarity}`,{fontFamily:FONT,fontSize:10,color:'#444',lineSpacing:4});
+    this.add.text(204,166,r.bio,{fontFamily:FONT,fontSize:9,color:'#333',wordWrap:{width:98}});
   }
   move(d){this.note='';this.confirmReset=false;this.sel=Phaser.Math.Wrap(this.sel+d,0,this.optionCount());this.draw();}
   choose(){

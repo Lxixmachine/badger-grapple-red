@@ -126,3 +126,26 @@ test('B backs out of submenus but cannot silently leave a match',async({page})=>
   await press(page,'b');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({active:true,mode:'command'});
 });
+
+test('a fifth level-up technique requires an explicit replacement choice',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler('buckvarsity',13)],active:0,box:[],items:{},dex:{seen:{},caught:{buckvarsity:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await page.evaluate(()=>window.__badgerTest.queueMoveLearning('reattack'));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
+    mode:'learnMove',selected:0,moveLearning:{wrestlerId:'buckvarsity',move:'reattack'}
+  });
+  await press(page,'down');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
+    mode:'learnInspect',selected:1
+  });
+  await page.waitForTimeout(180);
+  await press(page,'left');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].moves)).toEqual(['single','reattack','sprawl','pace']);
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].pendingMoves)).toEqual([]);
+});

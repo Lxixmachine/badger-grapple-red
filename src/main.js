@@ -1,3 +1,5 @@
+import '@fontsource/atkinson-hyperlegible/latin-400.css';
+import '@fontsource/atkinson-hyperlegible/latin-700.css';
 import {BootScene} from './scenes/BootScene.js';
 import {TitleScene} from './scenes/TitleScene.js';
 import {IntroScene} from './scenes/IntroScene.js';
@@ -9,6 +11,13 @@ import {MenuScene} from './scenes/MenuScene.js';
 import {VisualSliceScene} from './scenes/VisualSliceScene.js';
 import {WorldAtlasScene} from './scenes/WorldAtlasScene.js';
 import {installTestHooks} from './systems/testHooks.js';
+
+if(document.fonts?.load){
+  await Promise.all([
+    document.fonts.load('400 16px "Atkinson Hyperlegible"'),
+    document.fonts.load('700 16px "Atkinson Hyperlegible"')
+  ]);
+}
 
 const fail = msg => {
   console.error(msg);
@@ -70,7 +79,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.79-battle-tactics';
+    : sliceMode ? '21.63-scale-slice' : '21.81-readability';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;

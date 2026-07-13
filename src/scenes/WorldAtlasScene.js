@@ -1,7 +1,7 @@
 import layouts from '../data/seasonOneLayouts.json';
 import region from '../data/seasonOneRegion.json';
 import campMetatiles from '../data/campRandallMetatileBuild.json';
-import {setVirtualHandler} from '../systems/ui.js';
+import {FONT,setVirtualHandler} from '../systems/ui.js';
 
 const Phaser = window.Phaser;
 const CELL = layouts.contract.cellSize;
@@ -340,7 +340,7 @@ export class WorldAtlasScene extends Phaser.Scene {
       if (selected) stroke(graphics, COLORS.event, 3, x - 3, y - 3, width + 6, height + 6);
       const fontSize = width < 34 ? 6 : 7;
       const label = this.track(this.add.text(x + width / 2, y + height / 2, SHORT_NAMES[entry.id], {
-        fontFamily: 'monospace',
+        fontFamily: FONT,
         fontSize: `${fontSize}px`,
         fontStyle: 'bold',
         color: '#fff7dd',
@@ -360,17 +360,17 @@ export class WorldAtlasScene extends Phaser.Scene {
     fill(graphics, COLORS.red, 0, 0, 8, 40);
     fill(graphics, COLORS.ink, 0, 284, WIDTH, 36, 0.98);
     this.track(this.add.text(18, 7, 'SEASON ONE WORLD ATLAS', {
-      fontFamily: 'monospace', fontSize: '13px', fontStyle: 'bold', color: '#f7e7b5'
+      fontFamily: FONT, fontSize: '13px', fontStyle: 'bold', color: '#f7e7b5'
     }).setDepth(1001).setScrollFactor(0));
     this.track(this.add.text(462, 8, `${String(this.selectedIndex + 1).padStart(2, '0')} / ${ORDER.length}`, {
-      fontFamily: 'monospace', fontSize: '11px', fontStyle: 'bold', color: '#d3a52f'
+      fontFamily: FONT, fontSize: '11px', fontStyle: 'bold', color: '#d3a52f'
     }).setOrigin(1, 0).setDepth(1001).setScrollFactor(0));
     this.track(this.add.text(18, 291, map.displayName.toUpperCase(), {
-      fontFamily: 'monospace', fontSize: '11px', fontStyle: 'bold', color: '#fff6dc'
+      fontFamily: FONT, fontSize: '11px', fontStyle: 'bold', color: '#fff6dc'
     }).setDepth(1001).setScrollFactor(0));
     const status = `${map.size.width}x${map.size.height}  |  ${map.kind.replaceAll('_', ' ').toUpperCase()}  |  ${map.cameraReviews.length} VIEWS`;
     this.track(this.add.text(462, 292, status, {
-      fontFamily: 'monospace', fontSize: '8px', color: '#bfb399'
+      fontFamily: FONT, fontSize: '8px', color: '#bfb399'
     }).setOrigin(1, 0).setDepth(1001).setScrollFactor(0));
   }
 
@@ -561,7 +561,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     }
     const maxWidth = Math.max(44, width - 8);
     this.track(this.add.text(x + width / 2, y + height / 2 - (landmark ? 1 : 0), structure.name.toUpperCase(), {
-      fontFamily: 'monospace',
+      fontFamily: FONT,
       fontSize: `${width < 150 ? 7 : 8}px`,
       fontStyle: 'bold',
       color: structure.kind === 'decision_required' ? '#fff1a8' : '#211f24',
@@ -595,7 +595,7 @@ export class WorldAtlasScene extends Phaser.Scene {
       const marker = this.track(this.add.circle(x, y, 9, COLORS.event, 0.95).setDepth(700));
       marker.setStrokeStyle(2, COLORS.ink, 1);
       this.track(this.add.text(x, y, String(index + 1), {
-        fontFamily: 'monospace', fontSize: '9px', fontStyle: 'bold', color: '#211f24'
+        fontFamily: FONT, fontSize: '9px', fontStyle: 'bold', color: '#211f24'
       }).setOrigin(0.5).setDepth(701));
     });
   }
@@ -614,7 +614,7 @@ export class WorldAtlasScene extends Phaser.Scene {
       for (const review of map.cameraReviews || []) {
         stroke(graphics, COLORS.camera, 3, review.x * CELL + 2, review.y * CELL + 2, review.width * CELL - 4, review.height * CELL - 4, 0.9);
         this.track(this.add.text(review.x * CELL + 7, review.y * CELL + 7, review.label.toUpperCase(), {
-          fontFamily: 'monospace', fontSize: '8px', fontStyle: 'bold', color: '#d8f5ff', backgroundColor: '#1b3542'
+          fontFamily: FONT, fontSize: '8px', fontStyle: 'bold', color: '#d8f5ff', backgroundColor: '#1b3542'
         }).setDepth(602));
       }
     }
@@ -638,7 +638,7 @@ export class WorldAtlasScene extends Phaser.Scene {
       fill(graphics, COLORS.ink, x - 2, y - 2, fixtureWidth + 4, fixtureHeight + 4);
       fill(graphics, fixture.to ? COLORS.connection : COLORS.building, x, y, fixtureWidth, fixtureHeight);
       this.track(this.add.text(x + fixtureWidth / 2, y + fixtureHeight / 2, fixture.name.toUpperCase(), {
-        fontFamily: 'monospace', fontSize: '8px', fontStyle: 'bold', color: '#211f24', align: 'center', wordWrap: {width: fixtureWidth - 8}
+        fontFamily: FONT, fontSize: '8px', fontStyle: 'bold', color: '#211f24', align: 'center', wordWrap: {width: fixtureWidth - 8}
       }).setOrigin(0.5).setDepth(4));
     }
     const exitX = interior.exit.x * CELL;
@@ -691,20 +691,20 @@ export class WorldAtlasScene extends Phaser.Scene {
     fill(graphics, COLORS.ink, 0, 294, WIDTH, 26, 0.94);
     const name = this.mode === 'interior' ? this.layout.displayName : layouts.maps[this.currentMapId].displayName;
     this.track(this.add.text(16, 7, name.toUpperCase(), {
-      fontFamily: 'monospace', fontSize: '11px', fontStyle: 'bold', color: '#fff0bc'
+      fontFamily: FONT, fontSize: '11px', fontStyle: 'bold', color: '#fff0bc'
     }).setScrollFactor(0).setDepth(2001));
     const overlay = this.playtestMode && this.currentMapId === campMetatiles.map.id && this.overlayMode === 0
       ? 'METATILE PLAYTEST'
       : ['CLEAN BLOCKOUT', 'OWNERSHIP', 'CAMERA WINDOWS'][this.overlayMode];
     this.track(this.add.text(466, 8, overlay, {
-      fontFamily: 'monospace', fontSize: '8px', color: '#c8bea5'
+      fontFamily: FONT, fontSize: '8px', color: '#c8bea5'
     }).setOrigin(1, 0).setScrollFactor(0).setDepth(2001));
     const position = this.tilePos ? `${this.tilePos.x},${this.tilePos.y}` : '';
     this.track(this.add.text(14, 301, `${this.mapWidth}x${this.mapHeight} CELLS`, {
-      fontFamily: 'monospace', fontSize: '8px', color: '#bfb399'
+      fontFamily: FONT, fontSize: '8px', color: '#bfb399'
     }).setScrollFactor(0).setDepth(2001));
     this.positionText = this.track(this.add.text(466, 301, position, {
-      fontFamily: 'monospace', fontSize: '8px', color: '#d3a52f'
+      fontFamily: FONT, fontSize: '8px', color: '#d3a52f'
     }).setOrigin(1, 0).setScrollFactor(0).setDepth(2001));
   }
 
@@ -991,7 +991,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     fill(graphics, COLORS.paper, 14, 242, 452, 62);
     stroke(graphics, COLORS.red, 2, 18, 246, 444, 54);
     const text = this.add.text(30, 259, message, {
-      fontFamily: 'monospace', fontSize: '13px', fontStyle: 'bold', color: '#211f24', wordWrap: {width: 410}
+      fontFamily: FONT, fontSize: '13px', fontStyle: 'bold', color: '#211f24', wordWrap: {width: 410}
     });
     container.add([graphics, text]);
     this.messageBox = container;

@@ -3,7 +3,7 @@ import {ROSTER} from '../data/roster.js';
 import {loadState,saveState,caughtRecruitCount} from '../systems/save.js';
 import {restoreParty} from '../systems/mechanics.js';
 import {earnedBadgeCount,unlockRecruiting} from '../systems/progression.js';
-import {uiBox,setVirtualHandler} from '../systems/ui.js';
+import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
 import {unlockAudio,sfx,playMusic,setMuted} from '../systems/audio.js';
 import {GAME_W,GAME_H,OVERWORLD_ZOOM} from '../systems/resolution.js';
 import {LAYERED_MAP_VERSION,layeredNpcs,layeredUpperDecor,layeredWaterRects} from '../data/layeredMaps.js';
@@ -24,7 +24,7 @@ export class OverworldScene extends Phaser.Scene{
   this.decor=this.addWorld(this.add.container(0,0).setDepth(13));this.actors=[];this.upperObjects=[];this.layeredMapVersion=LAYERED_MAP_VERSION;
   this.shadow=this.addWorld(this.add.ellipse(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y)-2,17,6,0x000000,.34).setDepth(20));
   this.player=this.addWorld(this.add.sprite(this.worldX(this.tilePos.x),this.actorWorldY(this.tilePos.y),'player',DIRS.down.frame).setDepth(40).setOrigin(.5,1));this.applyPlayerPresentation();
-  this.marker=this.addWorld(this.add.text(0,0,'▼',{fontFamily:'monospace',fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80));
+  this.marker=this.addWorld(this.add.text(0,0,'▼',{fontFamily:FONT,fontSize:9,color:'#ffe28a',stroke:'#111',strokeThickness:2}).setOrigin(.5).setDepth(80));
   this.worldCamera.startFollow(this.player,true,1,1);this.applyAreaBounds();this.worldCamera.setDeadzone(0,0);
   this.cursors=this.input.keyboard.createCursorKeys();this.keys=this.input.keyboard.addKeys('W,A,S,D,ENTER,SPACE,M');this.input.keyboard.on('keydown-ENTER',()=>this.interact());this.input.keyboard.on('keydown-SPACE',()=>this.interact());this.input.keyboard.on('keydown-M',()=>this.openMenu());setVirtualHandler(this);
   this.waterSprites=[];this.waterClock=null;
@@ -92,7 +92,7 @@ export class OverworldScene extends Phaser.Scene{
    // tile by tile, the player turns to face them, THEN the challenge lands.
    this.sightLocked=true;this.moving=true;
    const wx=this.worldX(tr.pos.x),wy=this.actorWorldY(tr.pos.y);
-   const bang=this.addWorld(this.add.text(wx,wy-30,'!',{fontFamily:'monospace',fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5).setDepth(90));
+   const bang=this.addWorld(this.add.text(wx,wy-30,'!',{fontFamily:FONT,fontSize:14,color:'#ffe28a',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5).setDepth(90));
    this.tweens.add({targets:bang,y:wy-40,duration:260,yoyo:true,repeat:1});
    this.playSfx('bump');
    const v={left:[-1,0],right:[1,0],up:[0,-1],down:[0,1]}[tr.facing]||[0,1];
@@ -167,7 +167,7 @@ recover(){restoreParty(this.state);this.savePos("The Trainer's Room restored Con
 coachObjective(){this.state.flags.coachIntro=true;const caught=caughtRecruitCount(this.state);if(!this.state.flags.assignment){this.state.flags.assignment=true;unlockRecruiting(this.state);this.state.objective={id:'scout_quad',stage:2,complete:false,log:['Scout Bascom Hill','Roster Book and Locker unlocked','Meet the Head Coach']};saveState(this.state);this.showObjectivePopup('ROSTER BOOK OBTAINED','Recruiting and the Team Locker are now available.');return this.showMessage('Coach: The Roster Book and your Team Locker are ready. Scout Bascom Hill and offer one prospect a Wisconsin singlet.');}if(caught<2)return this.showMessage('Coach: Keep scouting Bascom Hill until one more wrestler joins the room.');if(!this.state.flags.wonSpar){this.state.objective={id:'win_spar',stage:4,complete:false,log:['Win your first sparring match','Recruit your first wrestler','Scout Bascom Hill','Meet the Head Coach']};saveState(this.state);return this.showMessage('Coach: Good recruit. Now win a sparring match on the Field House mat.');}this.state.objective={id:'challenge_opener',stage:6,complete:false,log:['Defeat The Opener at Field House','Win your first sparring match','Recruit your first wrestler']};saveState(this.state);return this.showMessage('Coach: You can build a room. Now prove it to The Opener at Field House. Badges are won from captains, not handed out here.');}
 rivalIntro(){if(!this.state.flags.rivalIntro){this.state.flags.rivalIntro=true;saveState(this.state);this.showObjectivePopup('RIVAL','A future dual meet is waiting.');}return this.showMessage('Rival: Build your lineup. When you have depth, I want a dual meet.');}
  hiddenItem(flag,item,msg){this.state.flags.hiddenItems=this.state.flags.hiddenItems||{};if(this.state.flags.hiddenItems[flag])return this.showMessage('Nothing else here.');this.state.flags.hiddenItems[flag]=true;this.state.items[item]=(this.state.items[item]||0)+1;saveState(this.state);this.showObjectivePopup('ITEM FOUND',msg);return this.showMessage(msg);}
-showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1060));const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(45,47,236,48,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(42,44,236,48,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(42,44,236,48,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(46,48,228,40,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(51,87,269,87);const t=this.add.text(160,51,title,{fontFamily:'monospace',fontSize:10,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(160,68,body,{fontFamily:'monospace',fontSize:8,color:'#111',align:'center',wordWrap:{width:210}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
+showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScrollFactor(0).setDepth(1060));const g=this.add.graphics().setScrollFactor(0);g.fillStyle(0x000000,.35);g.fillRoundedRect(39,43,242,58,4);g.fillStyle(0xfff6dc,1);g.fillRoundedRect(36,40,242,58,4);g.lineStyle(2,0x111111,1);g.strokeRoundedRect(36,40,242,58,4);g.lineStyle(1,0xb41820,1);g.strokeRoundedRect(40,44,234,50,2);g.lineStyle(1,0xd6a336,.65);g.lineBetween(45,93,269,93);const t=this.add.text(157,47,title,{fontFamily:FONT,fontSize:12,color:'#b41820',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);const b=this.add.text(157,68,body,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',align:'center',wordWrap:{width:216}}).setOrigin(.5).setScrollFactor(0);c.add([g,t,b]);this.tweens.add({targets:c,y:-8,alpha:0,delay:1250,duration:480,onComplete:()=>c.destroy(true)});}
  promptFor(ch){if(ch==='R')return 'A RECOVER';if(ch==='S')return 'A SHOP';if(ch==='C')return 'A BATTLE';if(ch==='g')return 'A SCOUT';if(ch==='M')return 'A SPAR';if(ch==='N')return 'A TALK';if(ch==='STATUE')return 'A READ';if(ch==='SCOUT_NPC')return 'A TALK';if(ch==='TRAINER'){const tr=this.trainerNearby();return this.state.trainersDefeated?.[tr?.id]?'A TALK':'A BATTLE';}if(ch==='SAVE_NPC')return 'A TALK';if(ch==='BATTLE_NPC')return 'A TALK';if(ch==='STUDY_NPC')return 'A TALK';if(ch==='HIDDEN_TAPE'||ch==='HIDDEN_FILM'||ch==='HIDDEN_DRINK'||ch==='HIDDEN_SHORE'||ch==='HIDDEN_EMBER')return 'A CHECK';if(ch==='TROPHY')return 'A READ';if(ch==='DOOR')return 'A DOOR';if(ch==='NATIONALS')return 'A CHECK';if(ch==='CAPITOL')return 'A READ';if(ch==='SIGN')return 'A READ';if(ch==='TOURNEY')return (this.state.tournament?.champion)?'A TALK':'A ENTER';if(ch==='LOCKER_ROOM'||ch==='TRAINER_LOCKER')return 'A LOCKER';if(ch==='BUS_STOP')return 'A TRAVEL';if(['WEIGHT_ROOM','EQUIP_ROOM','COACH_OFFICE','RECEPTION','MEETING_ROOM'].includes(ch))return 'A CHECK';return '';}
  drawDepthDecor(){this.decor.removeAll(true);const add=(obj)=>this.decor.add(obj);if(this.area==='campus'){const {width,height}=areaDimensions(this.area);const g=this.add.graphics().setDepth(8);g.fillStyle(0x000000,.14);g.fillRect(0,0,width*16,8);g.fillRect(0,height*16-8,width*16,8);add(g);return;}if(this.area!=='fieldhouse')return;const light=this.add.graphics().setDepth(8);light.fillStyle(0xffffff,.045);light.fillEllipse(224,104,360,150);light.fillStyle(0x000000,.10);light.fillRect(0,0,448,8);light.fillRect(0,208,448,16);add(light);}
  drawWater(){
@@ -202,7 +202,7 @@ showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScr
   g.fillStyle(0x141217,.94);g.fillRoundedRect(94,6,132,24,3);
   g.lineStyle(1,0xf0d784,1);g.strokeRoundedRect(94,6,132,24,3);
   g.lineStyle(1,0x7b1d2a,1);g.strokeRoundedRect(97,9,126,18,2);
-  const t=this.add.text(160,11,name,{fontFamily:'monospace',fontSize:9,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);
+  const t=this.add.text(160,9,name,{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5).setScrollFactor(0);
   this.areaToast.add([g,t]);
   this.tweens.add({targets:this.areaToast,alpha:0,delay:1050,duration:420,onComplete:()=>{this.areaToast?.destroy(true);this.areaToast=null;}});
  }
@@ -212,8 +212,8 @@ showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScr
   if(this.messageOpen&&this.message){
     const box=uiBox(this,5,150,310,68).setScrollFactor(0);
     this.hud.add(box);
-    this.hud.add(this.add.text(14,158,this.message,{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold',lineSpacing:2,wordWrap:{width:286}}).setScrollFactor(0));
-    this.hud.add(this.add.text(291,203,'A',{fontFamily:'monospace',fontSize:10,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(this.add.text(14,157,this.message,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:2,wordWrap:{width:286}}).setScrollFactor(0));
+    this.hud.add(this.add.text(291,203,'A',{fontFamily:FONT,fontSize:10,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
   }else{
     const kind=this.kindHere();
     const prompt=this.promptFor(kind);
@@ -225,7 +225,7 @@ showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScr
       pg.fillStyle(0x151318,.9);pg.fillRoundedRect(x,4,width,20,2);
       pg.lineStyle(1,0xd6a336,.9);pg.strokeRoundedRect(x,4,width,20,2);
       this.hud.add(pg);
-      this.hud.add(this.add.text(x+width-7,8,prompt,{fontFamily:'monospace',fontSize:8,color:'#ffe28a',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
+      this.hud.add(this.add.text(x+width-7,7,prompt,{fontFamily:FONT,fontSize:10,color:'#ffe28a',fontStyle:'bold'}).setOrigin(1,0).setScrollFactor(0));
     }
   }
  }

@@ -1,3 +1,7 @@
+import {MAX_LEVEL,experienceAtLevel,experienceSpan} from './experience.js';
+import {MOVES} from './moves.js';
+import {movesForLevel,movesLearnedAtLevel} from './learnsets.js';
+
 export const ROSTER={
  // ---- STARTER LINE: SHOOTER ----
  buckshot:{id:'buckshot',name:'Bucky Shotmaker',weight:'125',style:'Shooter',rarity:'Common',asset:'badger',color:0xc81f2b,stats:{hp:62,atk:18,def:14,spd:19,stamina:74},moves:['single','highc','sprawl','pace'],bio:'Fast first attack. Great starter.',strengths:'Quick entries',weaknesses:'Can get ridden',personality:'Eager',evolvesTo:'buckvarsity',evolveLvl:10},
@@ -37,24 +41,59 @@ export const PERSONAS={badger:'Badger',neutral:'Grizzly',top:'Gorilla',scramble:
 export function personaFor(id){return PERSONAS[(ROSTER[id]||ROSTER.buckshot).asset]||'Badger';}
 export const STARTERS=['buckshot','matreturner','fieldflyer'];
 export function scaledStats(id,lvl,mon={}){const r=ROSTER[id]||ROSTER.buckshot,tr=mon?.training||{},iv=Number.isFinite(mon?.iv)?mon.iv:0;return {hp:r.stats.hp+lvl*5+iv,atk:r.stats.atk+Math.floor(lvl*1.6)+iv+(tr.strength||0)*2,def:r.stats.def+Math.floor(lvl*1.3)+iv+(tr.awareness||0)*2,spd:r.stats.spd+Math.floor(lvl*1.1)+iv+(tr.speed||0)*2,stamina:r.stats.stamina+lvl*2+(tr.conditioning||0)*4};}
-export function makeMon(id,lvl){const r=ROSTER[id]||ROSTER.buckshot;const seed=Math.floor(Math.random()*7)-3;const m={id,lvl,xp:0,hp:1,stamina:1,score:0,boost:false,potential:{Common:'C+',Uncommon:'B',Rare:'A-',Elite:'A+'}[r.rarity]||'C',interest:45+Math.floor(Math.random()*38),training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},iv:seed,moves:[...(r.moves||[]).slice(0,4)]};const s=scaledStats(id,lvl,m);m.hp=s.hp;m.stamina=s.stamina;return m;}
-export function xpNeed(m){return 18+m.lvl*9;}
-export function addXp(m,amt){
-  const out=[];m.xp+=amt;
-  while(m.xp>=xpNeed(m)){
+export function makeMon(id,lvl){const r=ROSTER[id]||ROSTER.buckshot;const seed=Math.floor(Math.random()*7)-3;const legalMoves=movesForLevel(id,lvl);const m={id,lvl,xp:experienceAtLevel(id,lvl),hp:1,stamina:1,score:0,boost:false,potential:{Common:'C+',Uncommon:'B',Rare:'A-',Elite:'A+'}[r.rarity]||'C',interest:45+Math.floor(Math.random()*38),training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},iv:seed,moves:legalMoves.length?legalMoves:[...(r.moves||[]).slice(0,1)],pendingMoves:[]};const s=scaledStats(id,lvl,m);m.hp=s.hp;m.stamina=s.stamina;return m;}
+export function xpNeed(m){
+  if(!m||m.lvl>=MAX_LEVEL)return 0;
+  return Math.max(0,experienceAtLevel(m.id,m.lvl+1)-Math.max(experienceAtLevel(m.id,m.lvl),Number(m.xp)||0));
+}
+function tryLearnLevelMove(m,move,out){
+  if(!MOVES[move]||m.moves.includes(move)||m.pendingMoves.includes(move))return;
+  if(m.moves.length<4){m.moves.push(move);out.push(`${ROSTER[m.id].name} learned ${MOVES[move].name}!`);return;}
+  m.pendingMoves.push(move);out.push(`${ROSTER[m.id].name} wants to learn ${MOVES[move].name}!`);
+}
+export function resolvePendingMove(m,move,replaceIndex=null){
+  const pendingIndex=m?.pendingMoves?.indexOf(move)??-1;
+  if(pendingIndex<0)return {ok:false};
+  if(Number.isInteger(replaceIndex)&&(replaceIndex<0||replaceIndex>=m.moves.length))return {ok:false};
+  m.pendingMoves.splice(pendingIndex,1);
+  if(!Number.isInteger(replaceIndex))return {ok:true,learned:false,move};
+  const forgotten=m.moves[replaceIndex];m.moves[replaceIndex]=move;
+  return {ok:true,learned:true,move,forgotten};
+}
+export function applyPendingDevelopment(m){
+  const from=ROSTER[m?.id],target=m?.pendingDevelopment;
+  if(!from||from.evolvesTo!==target||!ROSTER[target]){if(m)delete m.pendingDevelopment;return null;}
+  const before=scaledStats(m.id,m.lvl,m),condition=m.hp,stamina=m.stamina;
+  m.id=target;delete m.pendingDevelopment;
+  const after=scaledStats(m.id,m.lvl,m);
+  m.hp=Math.min(after.hp,Math.max(0,condition+Math.max(0,after.hp-before.hp)));
+  m.stamina=Math.min(after.stamina,Math.max(0,stamina+Math.max(0,after.stamina-before.stamina)));
+  return {from:from.id,to:target,fromName:from.name,toName:ROSTER[target].name};
+}
+export function addXp(m,amt,{deferDevelopment=false}={}){
+  const out=[];
+  if(!m||m.lvl>=MAX_LEVEL)return out;
+  m.moves=Array.isArray(m.moves)?m.moves.filter(move=>MOVES[move]).slice(0,4):[];
+  m.pendingMoves=Array.isArray(m.pendingMoves)?m.pendingMoves.filter(move=>MOVES[move]&&!m.moves.includes(move)):[];
+  m.xp=Math.max(experienceAtLevel(m.id,m.lvl),Math.floor(Number(m.xp)||0))+Math.max(0,Math.floor(Number(amt)||0));
+  while(m.lvl<MAX_LEVEL&&m.xp>=experienceAtLevel(m.id,m.lvl+1)){
     const before=scaledStats(m.id,m.lvl,m),condition=m.hp,stamina=m.stamina;
-    m.xp-=xpNeed(m);m.lvl++;
-    const r=ROSTER[m.id];
+    const levelUpId=m.id,levelUpName=ROSTER[levelUpId].name;
+    m.lvl++;
+    out.push(`${levelUpName} grew to Lv ${m.lvl}!`);
+    movesLearnedAtLevel(levelUpId,m.lvl).forEach(move=>tryLearnLevelMove(m,move,out));
+    const r=ROSTER[levelUpId];
     if(r.evolvesTo&&m.lvl>=r.evolveLvl){
-      const oldName=r.name;m.id=r.evolvesTo;const nr=ROSTER[m.id];
-      m.moves=[...(nr.moves||[]).slice(0,4)];
-      out.push(`${oldName} developed into ${nr.name}!`);
-    }else{
-      out.push(`${ROSTER[m.id].name} grew to Lv ${m.lvl}!`);
+      if(deferDevelopment)m.pendingDevelopment=m.pendingDevelopment||r.evolvesTo;
+      else{
+        m.id=r.evolvesTo;const nr=ROSTER[m.id];
+        out.push(`${levelUpName} developed into ${nr.name}!`);
+      }
     }
     const after=scaledStats(m.id,m.lvl,m);
     m.hp=Math.min(after.hp,Math.max(0,condition+Math.max(0,after.hp-before.hp)));
     m.stamina=Math.min(after.stamina,Math.max(0,stamina+Math.max(0,after.stamina-before.stamina)));
   }
+  if(m.lvl>=MAX_LEVEL)m.xp=experienceAtLevel(m.id,MAX_LEVEL);
   return out;
 }

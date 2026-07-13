@@ -1,5 +1,7 @@
 import {MOVES,ADV} from '../data/moves.js';
 import {ROSTER,makeMon,scaledStats} from '../data/roster.js';
+import {MAX_LEVEL,experienceAtLevel} from '../data/experience.js';
+import {movesForLevel} from '../data/learnsets.js';
 
 export const PARTY_LIMIT=6;
 export const TRAINING_CAP=10;
@@ -87,15 +89,20 @@ export function normalizeItems(items={}){
 
 export function normalizeWrestler(mon={}){
   const id=ROSTER[mon.id]?mon.id:'buckshot';
-  const lvl=clamp(Math.floor(Number(mon.lvl)||1),1,100);
+  const lvl=clamp(Math.floor(Number(mon.lvl)||1),1,MAX_LEVEL);
   const training=Object.fromEntries(TRAINING_KEYS.map(key=>[key,clamp(Math.floor(Number(mon.training?.[key])||0),0,TRAINING_CAP)]));
-  const normalized={...mon,id,lvl,xp:Math.max(0,Math.floor(Number(mon.xp)||0)),training,iv:clamp(Math.floor(Number(mon.iv)||0),-3,3)};
+  const levelFloor=experienceAtLevel(id,lvl),levelCap=experienceAtLevel(id,MAX_LEVEL);
+  const normalized={...mon,id,lvl,xp:clamp(Math.floor(Number(mon.xp)||levelFloor),levelFloor,levelCap),training,iv:clamp(Math.floor(Number(mon.iv)||0),-3,3)};
   const stats=scaledStats(id,lvl,normalized);
   normalized.hp=clamp(Number.isFinite(mon.hp)?mon.hp:stats.hp,0,stats.hp);
   normalized.stamina=clamp(Number.isFinite(mon.stamina)?mon.stamina:(Number.isFinite(mon.gas)?mon.gas:stats.stamina),0,stats.stamina);
   normalized.score=Math.max(0,Math.floor(Number(mon.score)||0));
-  normalized.moves=(Array.isArray(mon.moves)?mon.moves:ROSTER[id].moves).filter(key=>MOVES[key]).slice(0,4);
-  if(!normalized.moves.length)normalized.moves=[...(ROSTER[id].moves||['stall']).slice(0,4)];
+  normalized.moves=(Array.isArray(mon.moves)?mon.moves:movesForLevel(id,lvl)).filter(key=>MOVES[key]).slice(0,4);
+  if(!normalized.moves.length)normalized.moves=movesForLevel(id,lvl).slice(0,4);
+  if(!normalized.moves.length)normalized.moves=[...(ROSTER[id].moves||['stall']).slice(0,1)];
+  normalized.pendingMoves=(Array.isArray(mon.pendingMoves)?mon.pendingMoves:[]).filter(key=>MOVES[key]&&!normalized.moves.includes(key));
+  normalized.pendingDevelopment=ROSTER[id].evolvesTo===mon.pendingDevelopment?mon.pendingDevelopment:null;
+  if(!normalized.pendingDevelopment)delete normalized.pendingDevelopment;
   delete normalized.gas;
   if(mon&&typeof mon==='object'){Object.assign(mon,normalized);delete mon.gas;return mon;}
   return normalized;
