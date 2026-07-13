@@ -1,8 +1,10 @@
 import {makeMon} from '../data/roster.js';
+import {normalizeItems,normalizeWrestler} from './mechanics.js';
+import {canonicalBadge} from '../data/campaign.js';
 const KEY='badger_grapple_red_engine_v2';
-const SAVE_VERSION='19.0';
+const SAVE_VERSION='22.0';
 const PERIODS=['Morning','Afternoon','Evening','Night'];
-export function defaultState(){return {version:SAVE_VERSION,playerName:'Coach',party:[],box:[],active:0,dex:{seen:{},caught:{}},grit:12,rep:8,items:{invite:3,energy:2,tape:1,film:1},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},flags:{introDone:false,coachIntro:false,assignment:false,rivalIntro:false,studentIntro:false,wonSpar:false,firstBadge:false,officeChecked:false,hiddenItems:{},practiceCount:0},training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
+export function defaultState(){return {version:SAVE_VERSION,playerName:'Coach',party:[],box:[],active:0,dex:{seen:{},caught:{},defeated:{}},grit:12,rep:8,items:{sportsDrink:2,athleticTape:1,filmStudy:1,practiceSinglet:3,travelSinglet:0,starterSinglet:0},effects:{filmStudyAttempts:0},keyItems:{equipmentShipment:false,rosterBook:false,kayakVoucher:false,busPass:false,flightTicket:false},travel:{unlockedTowns:['campRandall'],destinations:{campRandall:{id:'campRandall',name:'Camp Randall',area:'campus',pos:{x:14,y:16}}}},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},flags:{introDone:false,coachIntro:false,assignment:false,rivalIntro:false,studentIntro:false,wonSpar:false,firstBadge:false,officeChecked:false,hiddenItems:{},practiceCount:0,lockerUnlocked:false,rosterBook:false,recruitingUnlocked:false},training:{conditioning:0,technique:0,strength:0,speed:0,awareness:0},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
 export function normalizeState(state){
   const d=defaultState();
   if(!state||typeof state!=='object')return d;
@@ -10,17 +12,30 @@ export function normalizeState(state){
   state.expansion=(state.expansion&&typeof state.expansion==='object')?{unlocked:!!state.expansion.unlocked,flags:state.expansion.flags||{}}:{unlocked:false,flags:{}}; // v21.2 Season Two seam
   state.tournament=(state.tournament&&typeof state.tournament==='object')?{round:Number.isInteger(state.tournament.round)?state.tournament.round:0,champion:!!state.tournament.champion}:{round:0,champion:false}; // v21.12 Big Ten Championship
   state.playerName=typeof state.playerName==='string'&&state.playerName.trim()?state.playerName:d.playerName;
-  state.party=Array.isArray(state.party)?state.party:[];
-  state.box=Array.isArray(state.box)?state.box:[];
-  state.active=Number.isInteger(state.active)?state.active:0;
-  state.dex={seen:{...(state.dex?.seen||{})},caught:{...(state.dex?.caught||{})}};
-  state.items={...d.items,...(state.items||{})};
-  state.badges=Array.isArray(state.badges)?state.badges:[];
+  const incomingParty=(Array.isArray(state.party)?state.party:[]).map(normalizeWrestler);
+  const incomingBox=(Array.isArray(state.box)?state.box:[]).map(normalizeWrestler);
+  state.party=incomingParty.slice(0,6);
+  state.box=[...incomingParty.slice(6),...incomingBox];
+  if(!state.party.length&&state.box.length)state.party.push(state.box.shift());
+  const active=Number.isInteger(state.active)&&state.active>=0&&state.active<state.party.length?state.active:0;
+  if(active>0){const [lead]=state.party.splice(active,1);state.party.unshift(lead);}
+  state.active=0;
+  state.dex={seen:{...(state.dex?.seen||{})},caught:{...(state.dex?.caught||{})},defeated:{...(state.dex?.defeated||{})}};
+  state.items=state.items&&typeof state.items==='object'?normalizeItems(state.items):{...d.items};
+  state.effects={...d.effects,...(state.effects||{})};
+  state.effects.filmStudyAttempts=Math.max(0,Math.floor(Number(state.effects.filmStudyAttempts)||0));
+  state.keyItems={...d.keyItems,...(state.keyItems||{})};
+  state.travel={...d.travel,...(state.travel||{})};
+  state.travel.unlockedTowns=Array.isArray(state.travel.unlockedTowns)?[...new Set(state.travel.unlockedTowns)]:[...d.travel.unlockedTowns];
+  state.travel.destinations={...d.travel.destinations,...(state.travel.destinations||{})};
+  state.badges=Array.isArray(state.badges)?[...new Set(state.badges.flatMap(badge=>[badge,canonicalBadge(badge)]))]:[];
   state.trainersDefeated={...(d.trainersDefeated||{}),...(state.trainersDefeated||{})};
   state.audioMuted=typeof state.audioMuted==='boolean'?state.audioMuted:d.audioMuted;
   state.objective={...d.objective,...(state.objective||{})};
   state.objective.log=Array.isArray(state.objective.log)?state.objective.log:[...(d.objective.log||[])];
-  state.flags={...d.flags,...(state.flags||{})};
+  const incomingFlags=state.flags&&typeof state.flags==='object'?state.flags:{};
+  state.flags={...d.flags,...incomingFlags};
+  if(!Object.prototype.hasOwnProperty.call(incomingFlags,'recruitingUnlocked')&&incomingFlags.assignment){state.flags.recruitingUnlocked=true;state.flags.lockerUnlocked=true;state.flags.rosterBook=true;}
   state.flags.hiddenItems={...(d.flags.hiddenItems||{}),...(state.flags.hiddenItems||{})};
   state.training={...d.training,...(state.training||{})};
   state.day={...d.day,...(state.day||{})};
@@ -40,5 +55,7 @@ export function resetState(){try{localStorage.removeItem(KEY);}catch{}}
 export function chooseStarter(id){const existing=loadState();const s=normalizeState({...defaultState(),...existing});s.party=[makeMon(id,6)];s.box=[];s.active=0;s.dex.seen[id]=true;s.dex.caught[id]=true;s.flags.introDone=true;s.flags.coachIntro=false;s.flags.assignment=false;s.objective={id:'meet_coach',stage:1,complete:false,log:['Meet the Head Coach']};s.area='fieldhouse';s.pos={x:10,y:10};s.message='Coach is in the wrestling room. The captain is waiting at the trophy threshold.';saveState(s);return s;}
 export function lead(state){if(!state.party.length)return null;if(!state.party[state.active])state.active=0;return state.party[state.active];}
 export function caughtRecruitCount(state){return Object.keys(state.dex?.caught||{}).filter(id=>state.dex.caught[id]).length;}
+export function defeatedWrestlerCount(state){return Object.keys(state.dex?.defeated||{}).filter(id=>state.dex.defeated[id]).length;}
+export function rosterBookComplete(state,total){return defeatedWrestlerCount(state)>=total;}
 export function advancePeriod(state){state.day=state.day||{periodIndex:0,period:'Morning',turn:0,name:'Saturday'};state.day.turn=(state.day.turn||0)+1;state.day.periodIndex=((state.day.periodIndex||0)+1)%PERIODS.length;state.day.period=PERIODS[state.day.periodIndex];return state.day.period;}
 export function setObjective(state,id,stage,label){state.objective={...(state.objective||{}),id,stage,complete:false,log:[label,...(state.objective?.log||[]).filter(x=>x!==label)].slice(0,8)};return state.objective;}

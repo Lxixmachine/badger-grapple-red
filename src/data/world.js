@@ -53,21 +53,21 @@ export const AREAS = {
     ...LAYERED_MAPS.river,
     encounters: true,
     wildLevels: [11, 14],
-    captain: { x: 7, y: 8, id: 'scrambleboss', lvl: 14, type: 'gym', badge: 'Scramble Badge', team: [['funklord', 13], ['scrambleboss', 14]], reward: { grit: 26, rep: 16 }, intro: 'The Funk Doctor: You walked all the way out to the Point for this. Solve the scramble or get solved.', beaten: 'The Funk Doctor: Scramble Badge earned. Take it east, kid - the Kohl Center marquee opens for badge holders.' }
+    captain: { x: 7, y: 8, id: 'scrambleboss', lvl: 14, type: 'gym', badge: 'Scramble Badge', team: [['funklord', 13], ['scrambleboss', 14]], reward: { grit: 26, rep: 16 }, intro: 'The Funk Doctor: You walked all the way out to the Point for this. Solve the scramble or get solved.', beaten: 'The Funk Doctor: Picnic Point Badge earned. Take it east, kid - the Kohl Center marquee opens for badge holders.' }
   },
   conference: {
     name: 'ANNEX ARENA',
     bg: 'area_conference',
     ...LAYERED_MAPS.conference,
     encounters: false,
-    captain: { x: 14, y: 5, id: 'captainneutral', lvl: 8, type: 'gym', badge: 'Neutral Badge', team: [['drillpartner', 7], ['captainneutral', 8]], reward: { grit: 22, rep: 14 }, intro: 'Captain Neutral: Show me you can win one real varsity dual.', beaten: 'Captain Neutral: Neutral Badge earned. The Lakeshore Path runs west; State Street runs east. Both are yours now.' }
+    captain: { x: 14, y: 5, id: 'captainneutral', lvl: 8, type: 'gym', badge: 'Neutral Badge', team: [['drillpartner', 7], ['captainneutral', 8]], reward: { grit: 22, rep: 14 }, intro: 'The Opener: Show me you can win one real varsity dual.', beaten: 'The Opener: Field House Badge earned. The Lakeshore Path runs west; State Street runs east. Both are yours now.' }
   },
   championship: {
     name: 'KOHL CENTER',
     bg: 'area_championship',
     ...LAYERED_MAPS.championship,
     encounters: false,
-    captain: { x: 19, y: 6, id: 'topboss', lvl: 17, type: 'gym', badge: 'Top Badge', team: [['lockthrow', 15], ['rideking', 16], ['topboss', 17]], reward: { grit: 34, rep: 26 }, intro: 'The Anchor: Everyone who walks in here gets ridden. Prove me wrong.', beaten: 'The Anchor: Top Badge earned. The Big Ten Championship desk is open - win the bracket and this hall hangs your banner.' }
+    captain: { x: 19, y: 6, id: 'topboss', lvl: 17, type: 'gym', badge: 'Top Badge', team: [['lockthrow', 15], ['rideking', 16], ['topboss', 17]], reward: { grit: 34, rep: 26 }, intro: 'The Anchor: Everyone who walks in here gets ridden. Prove me wrong.', beaten: 'The Anchor: Kohl Badge earned. The Big Ten Championship desk is open - win the bracket and this hall hangs your banner.' }
   }
 };
 

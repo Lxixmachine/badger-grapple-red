@@ -1,8 +1,8 @@
-import {loadState,saveState,lead,resetState,caughtRecruitCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,addXp,xpNeed,personaFor} from '../data/roster.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
+import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,scaledStats,xpNeed,personaFor} from '../data/roster.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,SHOP_STOCK,swapLockerWrestler,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
 const Phaser = window.Phaser;
-const BADGE_ORDER=['W Badge','Neutral Badge','Scramble Badge','Top Badge'];
-const MAIN_OPTS=[['WRESTLERS','team'],['BAG','bag'],['ROSTERDEX','dex'],['TOWN MAP','map'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
-const BAG_ROWS=[['energy','SPORTS DRINK','+24 EP'],['tape','ATHLETIC TAPE','+20 HP'],['film','FILM STUDY','Recruit odds'],['invite','RECRUIT FLYER','Sign a recruit']];
+const BADGE_ORDER=['Field House Badge','Capitol Badge','Kohl Badge','Picnic Point Badge'];
+const MAIN_OPTS=[['TRAVEL LINEUP','team'],['BAG','bag'],['ROSTER BOOK','dex'],['TOWN MAP','map'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
+const BAG_ROWS=BAG_ORDER.map(key=>[key,ITEM_DEFS[key].name,ITEM_DEFS[key].description]);
 const ICON_COLOR={team:0x3a6ea8,bag:0x3a8a52,dex:0x7a4ac9,map:0x4a8a9a,badges:0xc9962e,practice:0xc9622e,objective:0x2e9a95,save:0x555f6e,options:0x7d1017};
 function icon(scene,x,y,kind,active){
   const bg=ICON_COLOR[kind]||0x555;const g=scene.add.graphics();
@@ -23,17 +23,18 @@ function icon(scene,x,y,kind,active){
 }
 export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
-  create(data={}){this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.confirmReset=false;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
+  create(data={}){this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='a')this.choose();if(k==='b')this.back();}
-  optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 5;if(this.tab==='shop')return 5;if(this.tab==='dex')return 1;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
+  optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 5;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
     this.children.removeAll();
     if(this.tab==='main')return this.drawMainScreen();
     uiBox(this,10,10,300,204);
-    const titles={shop:'SHOP',dex:'ROSTERDEX',team:'WRESTLERS',practice:'PRACTICE',objective:'OBJECTIVES',bag:'BAG',badges:'BADGES',options:'OPTIONS',map:'TOWN MAP'};
+    const titles={shop:"BUCKY'S LOCKER ROOM",locker:'TEAM LOCKER',travel:'BUS PASS',dex:'ROSTER BOOK',team:'TRAVEL LINEUP',practice:'PRACTICE',objective:'OBJECTIVES',bag:'BAG',badges:'BADGES',options:'OPTIONS',map:'TOWN MAP'};
     this.add.text(160,22,titles[this.tab]||'MENU',{fontFamily:'monospace',fontSize:12,color:'#111',fontStyle:'bold'}).setOrigin(.5);
-    this.add.text(22,36,`GR ${this.state.grit}  REP ${this.state.rep}  INV ${this.state.items.invite}  ${this.state.day?.period||'Morning'}`,{fontFamily:'monospace',fontSize:8,color:'#333'});
-    if(this.tab==='shop')this.drawShop();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawMap();
+    const singlets=(this.state.items.practiceSinglet||0)+(this.state.items.travelSinglet||0)+(this.state.items.starterSinglet||0);
+    this.add.text(22,36,`GR ${this.state.grit}  REP ${this.state.rep}  SNG ${singlets}  ${this.state.day?.period||'Morning'}`,{fontFamily:'monospace',fontSize:8,color:'#333'});
+    if(this.tab==='shop')this.drawShop();else if(this.tab==='locker')this.drawLocker();else if(this.tab==='travel')this.drawTravel();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawMap();
     this.add.text(160,202,this.note||'A SELECT  B BACK',{fontFamily:'monospace',fontSize:8,color:'#555'}).setOrigin(.5);
   }
   drawMap(){
@@ -106,16 +107,15 @@ export class MenuScene extends Phaser.Scene{
   }
   drawBag(){
     this.add.text(24,52,'ITEMS',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
-    BAG_ROWS.forEach((it,i)=>{const n=this.state.items?.[it[0]]||0,y=70+i*26,active=i===this.sel;
+    BAG_ROWS.forEach((it,i)=>{const n=this.state.items?.[it[0]]||0,y=64+i*22,active=i===this.sel;
       this.add.text(26,y,`${active?'▶':' '} ${it[1]}`,{fontFamily:'monospace',fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});
       this.add.text(296,y,`x${n}`,{fontFamily:'monospace',fontSize:9,color:'#111'}).setOrigin(1,0);
-      this.add.text(32,y+12,it[2],{fontFamily:'monospace',fontSize:7,color:'#555'});
+      this.add.text(32,y+10,it[2],{fontFamily:'monospace',fontSize:6,color:'#555'});
     });
-    this.add.text(24,182,'Flyers and consumables are used mid-match. Buy more at the Shop.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:270}});
   }
   drawBadges(){
     this.add.text(24,52,'CONFERENCE BADGES',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
-    const names={'W Badge':'Wrestling Badge — Field House opening loop','Neutral Badge':'Neutral Badge — Annex Arena','Scramble Badge':'Scramble Badge — Picnic Point','Top Badge':'Top Badge — Kohl Center'};
+    const names={'Field House Badge':'Defeat The Opener','Capitol Badge':'Defeat The Senator','Kohl Badge':'Defeat The Anchor','Picnic Point Badge':'Defeat The Funk Doctor'};
     BADGE_ORDER.forEach((b,i)=>{const y=78+i*30,got=this.state.badges.includes(b);
       const g=this.add.graphics();g.lineStyle(1,0x8a6a42,1);g.fillStyle(got?0xd6a336:0xe8dcc0,1);g.fillCircle(40,y,10);g.strokeCircle(40,y,10);
       if(got)this.add.text(40,y,'★',{fontFamily:'monospace',fontSize:11,color:'#7d1017'}).setOrigin(.5);
@@ -133,36 +133,41 @@ export class MenuScene extends Phaser.Scene{
   }
   drawObjective(){const log=this.state.objective?.log||['Meet the Head Coach'];this.add.text(24,52,'CURRENT GOAL',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});this.add.text(28,68,log[0]||'Opening complete.',{fontFamily:'monospace',fontSize:10,color:'#111',fontStyle:'bold',wordWrap:{width:260}});this.add.text(24,96,'PROGRESSION',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});log.slice(0,6).forEach((x,i)=>this.add.text(30,112+i*13,`${i===0?'▶':'✓'} ${x}`,{fontFamily:'monospace',fontSize:8,color:i===0?'#111':'#555'}));}
   drawTeam(){
-    this.add.text(24,50,'SIX-SLOT ROSTER',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
+    this.add.text(24,50,'SIX-WRESTLER TRAVEL LINEUP',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});
     if(!this.state.party.length){this.add.text(30,74,'No wrestlers yet.',{fontFamily:'monospace',fontSize:9,color:'#111'});return;}
     this.state.party.slice(0,6).forEach((m,i)=>{
-      const r=ROSTER[m.id],st=scaledStats(m.id,m.lvl),y=66+i*20,active=i===this.sel;
+      const r=ROSTER[m.id],st=scaledStats(m.id,m.lvl,m),y=66+i*20,active=i===this.sel;
       if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.1);hi.fillRoundedRect(18,y-8,284,20,3);}
       if(this.textures.exists('portrait_'+r.asset))this.add.image(32,y+2,'portrait_'+r.asset).setScale(.14);
       this.add.text(46,y-6,`${active?'▶':' '}${r.name.split(' ')[0]} L${m.lvl}${i===0?' ★':''}`,{fontFamily:'monospace',fontSize:8,color:active?'#b41820':'#111',fontStyle:'bold'});
       this.add.text(46,y+4,personaFor(m.id),{fontFamily:'monospace',fontSize:6,color:'#7a4ac9',fontStyle:'bold'});
       this.add.text(134,y-6,`${r.style}`,{fontFamily:'monospace',fontSize:7,color:'#333'});
-      this.add.text(134,y+3,'HP',{fontFamily:'monospace',fontSize:5,color:'#3a8a52',fontStyle:'bold'});
+      this.add.text(134,y+3,'COND',{fontFamily:'monospace',fontSize:5,color:'#3a8a52',fontStyle:'bold'});
       hpBar(this,146,y+3,58,4,m.hp/st.hp,0x55b867);
-      this.add.text(210,y+3,'EP',{fontFamily:'monospace',fontSize:5,color:'#355f87',fontStyle:'bold'});
-      hpBar(this,222,y+3,58,4,m.gas/st.gas,0x5aa4e6);
+      this.add.text(210,y+3,'STA',{fontFamily:'monospace',fontSize:5,color:'#355f87',fontStyle:'bold'});
+      hpBar(this,222,y+3,58,4,m.stamina/st.stamina,0x5aa4e6);
       this.add.text(288,y-6,'XP',{fontFamily:'monospace',fontSize:5,color:'#777',fontStyle:'bold'});
       hpBar(this,288,y+3,14,4,Math.min(1,m.xp/xpNeed(m)),0x3aa5d1);
     });
     const m=this.state.party[this.sel],r=m&&ROSTER[m.id];
     if(r)this.add.text(24,190,`A SET LEAD • ${r.rarity} • ${r.bio}`,{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:275}});
   }
-  drawPractice(){const opts=[['CONDITIONING','conditioning','EP and grind'],['TECHNIQUE','technique','accuracy and technique'],['STRENGTH','strength','attack power'],['SPEED','speed','first move'],['MAT AWARENESS','awareness','defense and IQ']];this.add.text(24,52,'PRACTICE PLAN',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});const l=lead(this.state);opts.forEach((o,i)=>this.add.text(28,72+i*20,`${i===this.sel?'▶':' '} ${o[0]} +1`,{fontFamily:'monospace',fontSize:9,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));if(l){const tr=l.training||{};this.add.text(184,72,`Lead: ${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:'monospace',fontSize:8,color:'#111'});this.add.text(184,88,`COND ${tr.conditioning||0}\nTECH ${tr.technique||0}\nSTR  ${tr.strength||0}\nSPD  ${tr.speed||0}\nAWR  ${tr.awareness||0}`,{fontFamily:'monospace',fontSize:8,color:'#333',lineSpacing:3});this.add.text(184,158,`Cost 3 GR\nAdvances time`,{fontFamily:'monospace',fontSize:8,color:'#555'});}else this.add.text(184,80,'No wrestler selected.',{fontFamily:'monospace',fontSize:8,color:'#111'});}
-  doPractice(){const opts=['conditioning','technique','strength','speed','awareness'];const l=lead(this.state);if(!l){this.note='NO WRESTLER.';return this.draw();}if(this.state.grit<3){this.note='NEED 3 GRIT.';return this.draw();}const k=opts[this.sel];l.training=l.training||{conditioning:0,technique:0,strength:0,speed:0,awareness:0};l.training[k]=(l.training[k]||0)+1;this.state.training=this.state.training||{};this.state.training[k]=(this.state.training[k]||0)+1;this.state.grit-=3;this.state.stats.practices=(this.state.stats.practices||0)+1;this.state.flags.practiceCount=(this.state.flags.practiceCount||0)+1;const period=advancePeriod(this.state);saveState(this.state);this.note=`${k.toUpperCase()} +1. NOW ${period.toUpperCase()}.`;this.draw();}
-  drawShop(){const stock=[['ENERGY','energy',6],['TAPE','tape',9],['FILM','film',12],['INVITE','invite',18],['CLOSE','close',0]];stock.forEach((it,i)=>this.add.text(32,60+i*24,`${i===this.sel?'▶':' '} ${it[0]} ${it[2]?it[2]+'RP':''}`,{fontFamily:'monospace',fontSize:10,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));}
+  travelDestinations(){return (this.state.travel?.unlockedTowns||[]).map(id=>this.state.travel?.destinations?.[id]).filter(Boolean);}
+  drawTravel(){const destinations=this.travelDestinations();if(!this.state.keyItems?.busPass){this.add.text(24,64,'BUS PASS REQUIRED',{fontFamily:'monospace',fontSize:10,color:'#b41820',fontStyle:'bold'});this.add.text(24,84,"The Senator's staff issues the Bus Pass after the Capitol Badge.",{fontFamily:'monospace',fontSize:8,color:'#555',wordWrap:{width:270}});return;}this.add.text(24,52,'UNLOCKED TOWNS',{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'});destinations.forEach((destination,i)=>this.add.text(28,72+i*20,`${i===this.sel?'>':' '} ${destination.name}`,{fontFamily:'monospace',fontSize:9,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));}
+  drawLocker(){const rows=[...this.state.party.map((m,i)=>({m,i,where:'LINEUP'})),...this.state.box.map((m,i)=>({m,i,where:'LOCKER'}))];this.add.text(24,50,`TRAVEL ${this.state.party.length}/6   LOCKER ${this.state.box.length}`,{fontFamily:'monospace',fontSize:8,color:'#b41820',fontStyle:'bold'});if(!rows.length){this.add.text(24,78,'No wrestlers stored.',{fontFamily:'monospace',fontSize:9,color:'#111'});return;}const start=Math.max(0,Math.min(this.sel-3,Math.max(0,rows.length-7)));rows.slice(start,start+7).forEach((row,j)=>{const i=start+j,r=ROSTER[row.m.id],y=68+j*17,active=i===this.sel;if(active){const g=this.add.graphics();g.fillStyle(0xb41820,.1);g.fillRoundedRect(18,y-5,284,16,2);}this.add.text(24,y,`${active?'>':' '} ${row.where==='LINEUP'?'L':'K'} ${r.name} Lv${row.m.lvl}`,{fontFamily:'monospace',fontSize:8,color:active?'#b41820':'#111',fontStyle:'bold'});this.add.text(294,y,`${r.style}`,{fontFamily:'monospace',fontSize:7,color:'#555'}).setOrigin(1,0);});this.add.text(24,190,this.lockerSwapBoxIndex!==null?'Choose a lineup slot to exchange.':'A moves a wrestler between lineup and locker.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:275}});}
+  drawPractice(){const opts=[['CONDITIONING','Stamina +4'],['TECHNIQUE','Accuracy +1.5%'],['STRENGTH','Attack +2'],['SPEED','Speed +2'],['MAT AWARENESS','Defense +2']];this.add.text(24,52,'PRACTICE PLAN',{fontFamily:'monospace',fontSize:9,color:'#b41820',fontStyle:'bold'});const l=lead(this.state);opts.forEach((o,i)=>{this.add.text(28,72+i*20,`${i===this.sel?'>':' '} ${o[0]} +1`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'});this.add.text(148,74+i*20,o[1],{fontFamily:'monospace',fontSize:6,color:'#555'});});if(l){const tr=l.training||{};this.add.text(228,72,`Lead: ${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:'monospace',fontSize:7,color:'#111'});this.add.text(228,88,`COND ${tr.conditioning||0}\nTECH ${tr.technique||0}\nSTR  ${tr.strength||0}\nSPD  ${tr.speed||0}\nAWR  ${tr.awareness||0}`,{fontFamily:'monospace',fontSize:7,color:'#333',lineSpacing:3});this.add.text(228,158,'3 GR\nTime +1',{fontFamily:'monospace',fontSize:7,color:'#555'});}else this.add.text(220,80,'No lead.',{fontFamily:'monospace',fontSize:8,color:'#111'});}
+  doPractice(){const opts=['conditioning','technique','strength','speed','awareness'];const l=lead(this.state);if(!l){this.note='NO WRESTLER.';return this.draw();}if(this.state.grit<3){this.note='NEED 3 GRIT.';return this.draw();}const k=opts[this.sel],result=practiceWrestler(l,k);if(!result.ok){this.note=result.reason==='cap'?'TRAINING CAP REACHED.':'CANNOT PRACTICE.';return this.draw();}this.state.training=this.state.training||{};this.state.training[k]=(this.state.training[k]||0)+1;this.state.grit-=3;this.state.stats.practices=(this.state.stats.practices||0)+1;this.state.flags.practiceCount=(this.state.flags.practiceCount||0)+1;const period=advancePeriod(this.state);saveState(this.state);this.note=`${k.toUpperCase()} +1. NOW ${period.toUpperCase()}.`;this.draw();}
+  drawShop(){[...SHOP_STOCK,{key:'close',name:'CLOSE',price:0}].forEach((it,i)=>this.add.text(26,58+i*22,`${i===this.sel?'>':' '} ${it.name} ${it.price?it.price+' RP':''}`,{fontFamily:'monospace',fontSize:8,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));const it=SHOP_STOCK[this.sel];if(it)this.add.text(190,58,it.description,{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:105}});}
   drawDex(){
-    const ids=Object.keys(ROSTER);
-    ids.forEach((id,i)=>{
-      const r=ROSTER[id],known=this.state.dex.seen[id];
-      const col=i<12?0:1,x=24+col*146,y=54+(i%12)*12;
-      this.add.text(x,y,known?`${this.state.dex.caught[id]?'✓':'•'} ${r.name}`:'????',{fontFamily:'monospace',fontSize:7,color:known?'#111':'#777'});
-      if(known)this.add.text(x+136,y,personaFor(id),{fontFamily:'monospace',fontSize:6,color:'#7a4ac9'}).setOrigin(1,0);
-    });
+    const ids=Object.keys(ROSTER),start=Math.max(0,Math.min(this.sel-3,ids.length-8));
+    this.add.text(22,50,`SEEN ${Object.values(this.state.dex.seen).filter(Boolean).length}/${ids.length}  BEAT ${defeatedWrestlerCount(this.state)}/${ids.length}  SIGN ${caughtRecruitCount(this.state)}`,{fontFamily:'monospace',fontSize:7,color:'#b41820',fontStyle:'bold'});
+    ids.slice(start,start+8).forEach((id,j)=>{const i=start+j,r=ROSTER[id],known=this.state.dex.seen[id],caught=this.state.dex.caught[id],defeated=this.state.dex.defeated[id],y=66+j*16,active=i===this.sel;this.add.text(24,y,`${active?'>':' '} ${caught?'+':defeated?'x':known?'.':'?'} ${known?r.name:'UNKNOWN'}`,{fontFamily:'monospace',fontSize:7,color:active?'#b41820':known?'#111':'#777',fontStyle:active?'bold':'normal'});});
+    const id=ids[this.sel],r=ROSTER[id],known=this.state.dex.seen[id];
+    if(!known){this.add.text(210,82,'NO SCOUT REPORT',{fontFamily:'monospace',fontSize:8,color:'#777',fontStyle:'bold'});this.add.text(210,98,'Meet this wrestler in the world to add an entry.',{fontFamily:'monospace',fontSize:7,color:'#555',wordWrap:{width:88}});return;}
+    if(this.textures.exists('portrait_'+r.asset))this.add.image(252,78,'portrait_'+r.asset).setScale(.22);
+    this.add.text(208,105,r.name,{fontFamily:'monospace',fontSize:8,color:'#111',fontStyle:'bold',wordWrap:{width:90}});
+    this.add.text(208,126,`${r.style} / ${personaFor(id)}\n${r.weight} lb / ${r.rarity}`,{fontFamily:'monospace',fontSize:7,color:'#555',lineSpacing:3});
+    this.add.text(208,158,r.bio,{fontFamily:'monospace',fontSize:6,color:'#333',wordWrap:{width:90}});
   }
   move(d){this.note='';this.confirmReset=false;this.sel=Phaser.Math.Wrap(this.sel+d,0,this.optionCount());this.draw();}
   choose(){
@@ -171,20 +176,24 @@ export class MenuScene extends Phaser.Scene{
     if(this.tab==='map')return this.back();
     if(this.tab==='practice')return this.doPractice();
     if(this.tab==='shop')return this.chooseShop();
+    if(this.tab==='locker')return this.chooseLocker();
+    if(this.tab==='travel')return this.chooseTravel();
     if(this.tab==='team')return this.chooseTeam();
-    if(this.tab==='dex')return this.back();
+    if(this.tab==='dex')return;
     if(this.tab==='badges')return;
-    if(this.tab==='bag')return;
+    if(this.tab==='bag')return this.chooseBag();
     if(this.tab==='options')return this.chooseOptions();
   }
-  chooseTeam(){if(!this.state.party.length)return this.back();this.state.active=this.sel;saveState(this.state);this.note='LEAD WRESTLER SET.';this.draw();}
-  chooseShop(){const stock=[['Energy Chew','energy',6],['Mat Tape','tape',9],['Film Notes','film',12],['Roster Invite','invite',18],['Close','close',0]],it=stock[this.sel];if(it[1]==='close')return this.close();if(this.state.rep>=it[2]){this.state.rep-=it[2];this.state.items[it[1]]++;saveState(this.state);this.note=`BOUGHT ${it[0].toUpperCase()}.`;}else this.note=`NEED ${it[2]} REP.`;this.draw();}
-  energy(){const l=lead(this.state);if(!l){this.note='NO STARTER.';return this.draw();}if(this.state.items.energy<=0){this.note='NO ENERGY.';return this.draw();}this.state.items.energy--;const s=scaledStats(l.id,l.lvl);l.hp=Math.min(s.hp,l.hp+35);saveState(this.state);this.note='ENERGY USED.';this.draw();}
+  chooseTeam(){if(!this.state.party.length)return this.back();if(this.sel>0){const [picked]=this.state.party.splice(this.sel,1);this.state.party.unshift(picked);}this.state.active=0;this.sel=0;saveState(this.state);this.note='LEAD WRESTLER SET.';this.draw();}
+  chooseLocker(){const partyCount=this.state.party.length;if(this.lockerSwapBoxIndex!==null){if(this.sel>=partyCount){this.note='CHOOSE A LINEUP SLOT.';return this.draw();}const result=swapLockerWrestler(this.state,this.sel,this.lockerSwapBoxIndex);this.lockerSwapBoxIndex=null;if(result.ok){saveState(this.state);this.note='LINEUP AND LOCKER EXCHANGED.';}this.sel=0;return this.draw();}if(this.sel<partyCount){const result=depositWrestler(this.state,this.sel);if(!result.ok){this.note='YOUR LINEUP NEEDS ONE WRESTLER.';return this.draw();}saveState(this.state);this.sel=Math.min(this.sel,this.optionCount()-1);this.note='MOVED TO TEAM LOCKER.';return this.draw();}const boxIndex=this.sel-partyCount,result=withdrawWrestler(this.state,boxIndex);if(result.ok){saveState(this.state);this.sel=0;this.note='ADDED TO TRAVEL LINEUP.';return this.draw();}if(result.reason==='full'){this.lockerSwapBoxIndex=boxIndex;this.sel=0;this.note='LINEUP FULL. CHOOSE A SLOT TO EXCHANGE.';return this.draw();}}
+  chooseTravel(){if(!this.state.keyItems?.busPass){this.note='BUS PASS REQUIRED.';return this.draw();}const destination=this.travelDestinations()[this.sel];if(!destination||!travelTo(this.state,destination.id)){this.note='DESTINATION UNAVAILABLE.';return this.draw();}saveState(this.state);this.scene.stop();if(this.parent?.scene?.restart)this.parent.scene.restart();}
+  chooseShop(){const it=SHOP_STOCK[this.sel];if(!it)return this.close();if(this.state.rep>=it.price){this.state.rep-=it.price;this.state.items[it.key]=(this.state.items[it.key]||0)+1;saveState(this.state);this.note=`BOUGHT ${it.name}.`;}else this.note=`NEED ${it.price} REP.`;this.draw();}
+  chooseBag(){const key=BAG_ROWS[this.sel]?.[0],l=lead(this.state);if(!key)return;if((this.state.items[key]||0)<=0){this.note='NONE LEFT.';return this.draw();}if(key==='filmStudy'){if(useFilmStudy(this.state)){saveState(this.state);this.note='NEXT THREE RECRUIT ATTEMPTS IMPROVED.';}return this.draw();}if(ITEM_DEFS[key].kind==='singlet'){this.note='USE SINGLETS WHILE SCOUTING.';return this.draw();}if(!l){this.note='NO WRESTLER.';return this.draw();}const stats=scaledStats(l.id,l.lvl,l);if(key==='sportsDrink'){if(l.stamina>=stats.stamina){this.note='STAMINA IS FULL.';return this.draw();}l.stamina=Math.min(stats.stamina,l.stamina+24);}else if(key==='athleticTape'){if(l.hp>=stats.hp){this.note='CONDITION IS FULL.';return this.draw();}l.hp=Math.min(stats.hp,l.hp+20);}this.state.items[key]--;saveState(this.state);this.note=`USED ${ITEM_DEFS[key].name}.`;this.draw();}
   chooseOptions(){
     if(this.sel===0){const next=!isMuted();setMuted(next);this.state.audioMuted=next;saveState(this.state);this.note=next?'SOUND OFF.':'SOUND ON.';return this.draw();}
     return this.resetDemo();
   }
   resetDemo(){if(!this.confirmReset){this.confirmReset=true;this.note='A AGAIN TO ERASE.';return this.draw();}resetState();this.scene.stop('OverworldScene');this.scene.start('TitleScene');}
-  back(){if(this.tab!=='main'){this.tab='main';this.sel=0;this.confirmReset=false;this.draw();return;}this.close();}
+  back(){if(this.tab==='locker'&&this.lockerSwapBoxIndex!==null){this.lockerSwapBoxIndex=null;this.sel=0;this.note='EXCHANGE CANCELED.';this.draw();return;}if(this.tab!=='main'){this.tab='main';this.sel=0;this.confirmReset=false;this.draw();return;}this.close();}
   close(){this.scene.stop();if(this.parent?.drawHud)this.parent.drawHud();if(this.parent?.handleVirtualButton)setVirtualHandler(this.parent);}
 }

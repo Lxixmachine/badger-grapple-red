@@ -70,7 +70,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.62-world-compositions';
+    : sliceMode ? '21.63-scale-slice' : '21.76-mechanics-core';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -100,6 +100,16 @@ function routeVirtualButton(key, phase = 'press') {
 
 window.engineControl = routeVirtualButton;
 installTestHooks(game, routeVirtualButton);
+
+const controls=document.querySelector('.controls');
+if(controls){
+  const stopNativeGesture=event=>event.preventDefault();
+  controls.addEventListener('touchstart',stopNativeGesture,{passive:false});
+  controls.addEventListener('touchmove',stopNativeGesture,{passive:false});
+  controls.addEventListener('gesturestart',stopNativeGesture,{passive:false});
+  controls.addEventListener('selectstart',stopNativeGesture);
+  controls.addEventListener('dragstart',stopNativeGesture);
+}
 
 document.querySelectorAll('[data-key]').forEach(button => {
   const key = button.dataset.key;

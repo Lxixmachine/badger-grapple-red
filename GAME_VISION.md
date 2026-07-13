@@ -72,14 +72,16 @@ Geometry law: one plane, validator-checked, Town Map generated from it.
 
 ## 6. Systems: built vs needed
 
-BUILT: legacy personas/styles/ADV, scouting+recruiting, encounter slots +
-blue chips, development, badges/gates, tournament bracket, Town Map,
-one-plane law, FireRed cadence, open mats, day/period clock.
-NEEDED (the infrastructure gap Tony named): the LOCKER (roster storage),
-travel lineup cap (6), the flight gate, map verbs (Film Study /
-Conditioning / Bus Pass), Roster Book presentation upgrade of the dex,
-captain-at-home + locker-room opening sequence, player-as-freshman
-fiction pass (dialogue, intro, naming), and the ratified six-style code rework.
+BUILT: ratified six-style combat, Condition/Stamina, opponent AI,
+scouting + three-tier Singlet recruiting, encounter slots + blue chips,
+development, meaningful practice tracks, six-wrestler travel lineup,
+Team Locker storage, Trainer's Room recovery, shop and Bag economy,
+venue badges/gates, tournament bracket, Bus Pass travel, flight gate,
+Roster Book seen/defeated/signed tracking, Town Map, one-plane law,
+FireRed cadence, open mats, day/period clock, and save migration.
+NEEDED: captain-at-home + locker-room opening sequence,
+player-as-freshman fiction pass (dialogue, intro, naming), final map event
+placement, encounter/team balance against the approved maps, and art polish.
 
 ## 7. Remaining open calls (Tony)
 

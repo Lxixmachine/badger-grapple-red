@@ -19,30 +19,33 @@ Phaser 3 (vendored), Vite, native 320x224 canvas, 16px tiles. Tony
    numbered beats, Camp Randall to the field. This is where the
    six-style rework (Shooter/Rider/Scrambler/Bull/Thrower/Wall, new
    asymmetric ADV chart) and every captain's name/venue/badge live —
-   **not yet implemented in code**, see its closing section.
-4. **CAMP_RANDALL_MOCKUP.md** — the home town's actual room-by-room
+   implemented in v21.76.
+4. **MECHANICS_CONTRACT.md** — the stable boundary between Map Studio
+   and game systems: semantic events, Condition/Stamina, Singlets,
+   travel lineup/Team Locker, services, progression, and saves.
+5. **CAMP_RANDALL_MOCKUP.md** — the home town's actual room-by-room
    layout (Design Bible Vol. XII Stages 1-4: goals → route graph →
    terrain blockout → architecture placement), built before any art —
    what goes where and why, ahead of what it looks like. Template for
    how every future town gets designed.
-5. **docs/PROVEN_RPG_ENGINEERING_AUDIT.md** — source-level techniques
+6. **docs/PROVEN_RPG_ENGINEERING_AUDIT.md** — source-level techniques
    measured from FireRed, Emerald, HeartGold, and Platinum and translated into
    original Badger architecture. No code, data, layouts, or art are copied.
-6. **WORLD_MAP_MANIFESTO.md** + **src/data/seasonOneRegion.json** — the
+7. **WORLD_MAP_MANIFESTO.md** + **src/data/seasonOneRegion.json** — the
    ratified v2 world and its validator-enforced design graph. State Street is
    R2, Capitol Square is Town 2, and Camp Randall has one physical route exit.
-7. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
+8. **CITY_DESIGN_MANIFESTO.md** — Tony's intentionality doctrine: every
    town a thesis, every route a micro-story, gates seen before solved,
    the first area matters late. Judge all map work against it.
    **docs/design_bible/** (28 volumes) is its deep companion: tile
    grammar, anti-patterns, the staged production pipeline (Vol XII), and
    the map-linter spec (Vol XV) that `npm run lint-maps` implements.
-8. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
+9. **VISUAL_OVERHAUL_GUIDE.md** — how art is produced (imagegen pipeline,
    compositor contract, work packages). **VISUAL_STYLE_SPEC.md** is the
    measured bar all new art is generated against;
    **VISUAL_REBUILD_PLAN.md** stages the rebuild;
    **VISUAL_CRITIQUE_LOG.md** tracks Tony's-eye findings.
-9. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
+10. **FIRERED_FEEL_NOTES.md** / **FIRERED_MAP_ART_NOTES.md** — measured
    FireRed design parameters (timing, sequences, map structure) that we
    build against.
 

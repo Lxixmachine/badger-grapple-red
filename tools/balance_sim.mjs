@@ -1,21 +1,9 @@
-import {ROSTER,makeMon,scaledStats,addXp} from '../src/data/roster.js';
-import {MOVES,ADV} from '../src/data/moves.js';
+import {makeMon,scaledStats} from '../src/data/roster.js';
+import {chooseAiMove,resolveTechnique,restoreWrestler} from '../src/systems/mechanics.js';
 import {AREAS} from '../src/data/maps.js';
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
-function resolve(att,def,key){
-  let mv=MOVES[key]||MOVES.stall;const as=scaledStats(att.id,att.lvl),ds=scaledStats(def.id,def.lvl);
-  if(mv.gas>0&&att.gas<mv.gas)mv=MOVES.stall;
-  att.gas=clamp(att.gas-Math.max(0,mv.gas),0,as.gas);
-  if(mv.gas<0)att.gas=clamp(att.gas+Math.abs(mv.gas),0,as.gas);
-  let acc=mv.acc;if(att.gas<12)acc-=.12;
-  if(Math.random()>acc)return false;
-  const mult=ADV[mv.style]===ROSTER[def.id]?.style?1.22:ADV[ROSTER[def.id]?.style]===mv.style?.88:1;
-  const dmg=Math.max(3,Math.round((mv.power+as.atk*.8-ds.def*.38)*mult));
-  def.hp=clamp(def.hp-dmg,0,ds.hp);return true;
-}
-function bestMove(att,def){let best='stall',bv=-1;for(const k of ROSTER[att.id].moves){const m=MOVES[k];if(m.gas>0&&att.gas<m.gas)continue;
- const mult=ADV[m.style]===ROSTER[def.id]?.style?1.22:ADV[ROSTER[def.id]?.style]===m.style?.88:1;const v=m.power*m.acc*mult;if(v>bv){bv=v;best=k;}}return best;}
-function heal(m){const s=scaledStats(m.id,m.lvl);m.hp=s.hp;m.gas=s.gas;}
+function resolve(att,def,key){return resolveTechnique(att,def,key).hit;}
+function bestMove(att,def){return chooseAiMove(att,def);}
+function heal(m){restoreWrestler(m);}
 // simulate a full party-vs-team gym fight, with forced swap to next healthy party member on faint (free swap, no extra hit)
 function gymFight(party,team,chews){
   let pi=0;const p=party.map(m=>({...m}));p.forEach(heal);
@@ -26,9 +14,9 @@ function gymFight(party,team,chews){
       const me=p[pi];
       resolve(me,e,bestMove(me,e));
       if(e.hp<=0)break; // this foe down, move to next foe (no extra swap needed, same wrestler continues)
-      const ms=scaledStats(me.id,me.lvl);
+      const ms=scaledStats(me.id,me.lvl,me);
       if(chews.n>0&&me.hp<ms.hp*.3){me.hp=Math.min(ms.hp,me.hp+20);chews.n--;}
-      else resolve(e,me,ROSTER[e.id].moves[Math.floor(Math.random()*ROSTER[e.id].moves.length)]);
+      else resolve(e,me,chooseAiMove(e,me));
       if(me.hp<=0)pi++; // faint -> forced swap to next party member, free (no extra enemy hit this turn)
     }
   }
@@ -43,13 +31,13 @@ function trial(gymKey,partyDef,lvl,chewCount){
 function winRate(gymKey,partyDef,lvl,chewCount,N=300){
   let w=0;for(let i=0;i<N;i++)if(trial(gymKey,partyDef,lvl,chewCount))w++;return w/N;
 }
-console.log('--- Conference (Neutral Badge) vs solo starter at gym-recommended level ---');
+console.log('--- Field House Badge vs solo starter at captain-recommended level ---');
 console.log('  buckvarsity L9 solo, 2 chews:', (winRate('conference',['buckvarsity'],9,2)*100).toFixed(0)+'%');
 console.log('  buckshot L7 solo, 2 chews (underleveled check):', (winRate('conference',['buckshot'],7,2)*100).toFixed(0)+'%');
-console.log('--- River (Scramble Badge) ---');
+console.log('--- Picnic Point Badge ---');
 console.log('  party of 2 L15, 3 chews:', (winRate('river',['funkflyer','matgeneral'],15,3)*100).toFixed(0)+'%');
 console.log('  solo L15, 3 chews (should be harder):', (winRate('river',['funkflyer'],15,3)*100).toFixed(0)+'%');
-console.log('--- Championship (Top Badge, final) ---');
+console.log('--- Kohl Badge ---');
 console.log('  party of 3 L18, 4 chews:', (winRate('championship',['buckallam','scramblesaint','rideking'],18,4)*100).toFixed(0)+'%');
 console.log('  party of 2 L16 (underleveled check):', (winRate('championship',['buckallam','scramblesaint'],16,3)*100).toFixed(0)+'%');
 console.log('--- Conference calibration across levels (solo buckshot line, 2 chews) ---');

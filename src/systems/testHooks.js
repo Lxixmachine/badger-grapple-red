@@ -18,6 +18,7 @@ export function installTestHooks(game, routeVirtualButton) {
       page: scene.page ?? null,
       naming: scene.naming ?? null,
       selected: scene.sel ?? scene.nameSel ?? null,
+      tab: scene.tab ?? null,
       mode: scene.mode ?? null,
       inputLocked: scene.inputLocked ?? null,
       over: scene.over ?? null,
@@ -105,6 +106,11 @@ export function installTestHooks(game, routeVirtualButton) {
     },
     startScout(data = {}) {
       game.scene.start('ScoutScene', data);
+      return activeSceneKeys();
+    },
+    startMenu(data = {}) {
+      const parent=game.scene.scenes.find(scene=>scene.scene?.isActive?.()&&scene.scene.key!=='MenuScene');
+      parent?.scene?.launch('MenuScene',{parent,...data});
       return activeSceneKeys();
     },
     storage() {

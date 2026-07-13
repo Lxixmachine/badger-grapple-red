@@ -1,5 +1,43 @@
 # Agent Handoff
 
+## Latest Codex Turn (v21.76 Mechanics Core)
+
+Tony is editing maps in parallel, so this turn established a hard mechanics/map
+boundary and did not modify, stage, or regenerate his dirty State Street art,
+composition manifest, or generated downtown data.
+
+`src/systems/mechanics.js` is now the single production rules module for the
+six-style asymmetric chart, Condition/Stamina combat, trained stats, accuracy,
+speed order, opponent AI, item turns, three Wisconsin Singlet tiers, Film Study,
+recruiting, recovery, and the six-wrestler travel lineup/Team Locker. The five
+practice tracks now have real capped effects. Failed Singlets, item use, and
+lineup switches consume a battle turn; defeated prospects can no longer be
+signed after the match; participating wrestlers split experience.
+
+`src/systems/progression.js` and `src/data/campaign.js` own the four canonical
+venue badges, all six captains/styles, key items, Bus Pass town registration and
+travel, Nationals eligibility, and semantic Map Studio service events. Existing
+generated maps still reference legacy badge keys, so an explicit alias adapter
+keeps them playable while all UI and future maps use Field House / Capitol /
+Kohl / Picnic Point badge names.
+
+The Team Locker UI supports deposit, withdrawal, and full-lineup exchange at
+home and in Trainer's Rooms. Bucky's Locker Room remains only the shop. The Bag
+works in and out of battle. The Roster Book now scales to all 26 entries and
+tracks seen, defeated, and signed separately; completion means defeating every
+registered wrestler because captains cannot be signed.
+
+Save schema v22 migrates `gas`, flyers, old items, active slots, overfull parties,
+and old badge keys without losing wrestlers. Mobile controls now suppress native
+touch/selection gestures during held D-pad input. `MECHANICS_CONTRACT.md` is the
+map/mechanics integration contract for both agents.
+
+Verification in the active worktree: validator, production balance simulation,
+map linter, Vite build, and 55 Chromium tests all pass. New tests cover migration,
+styles, AI, Stamina, every training effect, recruiting tiers, Film Study, locker
+invariants/UI, developments, key items, fast travel, badge gates, Roster Book
+completion, and battle experience persistence.
+
 ## Latest Codex Turn (v21.66 Map Studio)
 
 Tony identified the missing production loop: when generated composition is

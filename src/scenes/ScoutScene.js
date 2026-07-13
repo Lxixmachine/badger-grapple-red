@@ -1,11 +1,12 @@
-import {ROSTER,scaledStats,makeMon,personaFor} from '../data/roster.js';
+import {ROSTER,scaledStats,personaFor} from '../data/roster.js';
 import {MOVES,ADV} from '../data/moves.js';
 import {loadState,saveState} from '../systems/save.js';
+import {attemptRecruit,ITEM_DEFS,recruitOdds,SINGLET_KEYS,STYLE_COLORS} from '../systems/mechanics.js';
 import {uiBox,setVirtualHandler} from '../systems/ui.js';
 
 const Phaser = window.Phaser;
-const OPTS=['RECRUIT','SCOUT FURTHER','LEAVE'];
-const STYLE_COLORS={Neutral:0xb41820,Top:0x5f4cc8,Scramble:0xe47c27,Pace:0x2e9c57,Defense:0x6d66c8,Upperbody:0x3f8bb8};
+const MAIN_OPTS=['RECRUIT','WRESTLE','LEAVE'];
+const SINGLET_OPTS=[...SINGLET_KEYS,'back'];
 
 export class ScoutScene extends Phaser.Scene{
   constructor(){super('ScoutScene');}
@@ -17,6 +18,7 @@ export class ScoutScene extends Phaser.Scene{
     this.area=data.area||'campus';
     this.state=loadState();
     this.sel=0;
+    this.mode='main';
     this.note='';
     this.result='';
     this.tempInterest=Phaser.Math.Between(45,88);
@@ -33,16 +35,16 @@ export class ScoutScene extends Phaser.Scene{
   }
 
   potential(r){return {Common:'C+',Uncommon:'B',Rare:'A-',Elite:'A+'}[r.rarity]||'C';}
-  odds(r){const base={Common:.50,Uncommon:.38,Rare:.24,Elite:.12}[r.rarity]||.34;const gr=Math.min(.22,(this.state.grit||0)*.01);const interest=(this.tempInterest||62)/500;const seen=this.state.dex?.seen?.[this.id]?.05:0;const film=(this.state.items?.film||0)>0?.04:0;return Math.max(.05,Math.min(.9,base+gr+interest+seen+film));}
-  overall(s){return Math.round((s.hp+s.atk+s.def+s.spd+s.gas)/12);}
+  odds(){const target={id:this.id,lvl:this.lvl,hp:scaledStats(this.id,this.lvl).hp,stamina:scaledStats(this.id,this.lvl).stamina};return recruitOdds(target,'practiceSinglet',{filmActive:(this.state.effects?.filmStudyAttempts||0)>0,seen:!!this.state.dex?.seen?.[this.id]});}
+  overall(s){return Math.round((s.hp+s.atk+s.def+s.spd+s.stamina)/12);}
   styleColor(style){return STYLE_COLORS[style]||0xb41820;}
-  tip(style){const a=Object.keys(ADV).find(k=>ADV[k]===style);return `${a||'Neutral'} attacks`;}
+  tip(style){const a=Object.keys(ADV).find(k=>(ADV[k]||[]).includes(style));return `${a||'Shooter'} attacks`;}
 
   render(){
     this.children.removeAll();
     const r=ROSTER[this.id]||ROSTER.buckshot;
     const s=scaledStats(this.id,this.lvl);
-    const odds=Math.round(this.odds(r)*100);
+    const odds=Math.round(this.odds()*100);
     this.drawBackdrop(r);
     this.drawHeader(r);
     this.drawProspect(r,s,odds);
@@ -82,8 +84,8 @@ export class ScoutScene extends Phaser.Scene{
     this.add.text(132,64,`${r.weight} lb  ${r.style}  Lv ${this.lvl}`,{fontFamily:'monospace',fontSize:8,color:'#333',fontStyle:'bold'});
     this.add.text(132,77,`${personaFor(this.id).toUpperCase()} PERSONA`,{fontFamily:'monospace',fontSize:8,color:'#7a4ac9',fontStyle:'bold'});
     this.add.text(132,90,`POT ${this.potential(r)}  OVR ${this.overall(s)}  INT ${this.tempInterest}%`,{fontFamily:'monospace',fontSize:8,color:'#333'});
-    this.drawMeter(133,106,76,6,s.hp/(s.hp+10),0x55b867,'HP',`${s.hp}`);
-    this.drawMeter(133,120,76,5,s.gas/(s.gas+10),0x5aa4e6,'EP',`${s.gas}`);
+    this.drawMeter(133,106,76,6,s.hp/(s.hp+10),0x55b867,'COND',`${s.hp}`);
+    this.drawMeter(133,120,76,5,s.stamina/(s.stamina+10),0x5aa4e6,'STA',`${s.stamina}`);
     this.drawOddsCard(238,96,odds);
   }
 
@@ -100,15 +102,19 @@ export class ScoutScene extends Phaser.Scene{
   }
 
   drawOptions(){
-    const widths=[78,108,62];
-    let x=18;
-    OPTS.forEach((label,i)=>{
+    const options=this.mode==='singlet'?SINGLET_OPTS:MAIN_OPTS;
+    const labels=this.mode==='singlet'?['PRACTICE','TRAVEL','STARTER','BACK']:MAIN_OPTS;
+    const widths=this.mode==='singlet'?[68,62,68,48]:[78,108,62];
+    let x=this.mode==='singlet'?12:18;
+    options.forEach((option,i)=>{
+      const label=labels[i];
       const w=widths[i],active=i===this.sel;
       const g=this.add.graphics();
       g.fillStyle(0x000000,.2);g.fillRoundedRect(x+2,196,w,20,2);
       g.fillStyle(active?0x7b1d2a:0xf8f0d8,1);g.fillRoundedRect(x,194,w,20,2);
       g.lineStyle(1,active?0xd6a336:0x847868,1);g.strokeRoundedRect(x,194,w,20,2);
       this.add.text(x+w/2,200,`${active?'> ':''}${label}`,{fontFamily:'monospace',fontSize:7,color:active?'#fff2c7':'#111',fontStyle:'bold'}).setOrigin(.5,0);
+      if(this.mode==='singlet'&&option!=='back')this.add.text(x+w/2,187,`x${this.state.items?.[option]||0}`,{fontFamily:'monospace',fontSize:6,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
       x+=w+11;
     });
   }
@@ -155,32 +161,29 @@ export class ScoutScene extends Phaser.Scene{
     this.add.text(160,178,msg,{fontFamily:'monospace',fontSize:7,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
   }
 
-  move(d){this.sel=Phaser.Math.Wrap(this.sel+d,0,OPTS.length);this.note='';this.render();}
-  choose(){if(this.sel===0)return this.tryRecruit();if(this.sel===1)return this.battle();this.leave();}
+  move(d){const count=this.mode==='singlet'?SINGLET_OPTS.length:MAIN_OPTS.length;this.sel=Phaser.Math.Wrap(this.sel+d,0,count);this.note='';this.render();}
+  choose(){if(this.mode==='singlet'){const key=SINGLET_OPTS[this.sel];if(key==='back'){this.mode='main';this.sel=0;return this.render();}return this.tryRecruit(key);}if(this.sel===0){if(!this.state.flags?.recruitingUnlocked){this.note='Coach has not issued the Roster Book yet.';return this.render();}this.mode='singlet';this.sel=0;return this.render();}if(this.sel===1)return this.battle();this.leave();}
   battle(){this.state.dex.seen[this.id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;saveState(this.state);this.scene.start('BattleScene',{enemyId:this.id,enemyLevel:this.lvl,battleType:'wild'});}
 
-  tryRecruit(){
+  tryRecruit(singletKey){
     const r=ROSTER[this.id];
     this.state.dex.seen[this.id]=true;
     if(this.state.dex.caught[this.id]){this.note='Already on roster.';return this.render();}
-    if((this.state.items.invite||0)<=0){this.note='No invites left.';return this.render();}
-    this.state.items.invite--;
-    const success=Math.random()<this.odds(r);
-    if(success){
-      const m=makeMon(this.id,this.lvl);
-      this.state.dex.caught[this.id]=true;
-      if(this.state.party.length<6)this.state.party.push(m);else this.state.box.push(m);
-      this.state.stats.recruits=(this.state.stats.recruits||0)+1;
+    const target={id:this.id,lvl:this.lvl,hp:scaledStats(this.id,this.lvl).hp,stamina:scaledStats(this.id,this.lvl).stamina};
+    const result=attemptRecruit(this.state,target,singletKey);
+    if(result.reason==='empty'){this.note=`No ${ITEM_DEFS[singletKey].short.toLowerCase()} singlets.`;return this.render();}
+    if(result.reason==='elite'){this.note='Committed wrestlers cannot be recruited.';return this.render();}
+    if(result.success){
       this.state.message=`${r.name} joined the room!`;
       if((Object.keys(this.state.dex.caught||{}).filter(k=>this.state.dex.caught[k]).length)>=2){
         this.state.objective={id:'first_recruit_done',stage:2,complete:true};
       }
       saveState(this.state);
-      this.obtainAnim(`${r.name} joined! The ${personaFor(this.id)} spirit wrestles for Wisconsin now.`);
+      this.obtainAnim(`${r.name} joined the ${result.destination==='party'?'travel lineup':'locker'}! The ${personaFor(this.id)} spirit wrestles for Wisconsin now.`);
     }else{
       this.state.message=`${r.name} wants to see more.`;
       saveState(this.state);
-      this.note='Recruit passed. Try battle.';
+      this.mode='main';this.sel=0;this.note='Singlet declined. Try wrestling first.';
       this.render();
     }
   }
