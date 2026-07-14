@@ -657,6 +657,48 @@ def build() -> dict:
         "campus_house_exterior", "Campus House", "house",
     )
 
+    story_prop_specs = [
+        ("outdoor_wrestling_mat", "Outdoor Wrestling Mat", 4, 3, ["....", "....", "...."], "practice_mat"),
+        ("campfire_ring", "Campfire Ring", 3, 3, ["###", "###", "###"], "campfire"),
+        ("kayak_rack", "Kayak Rack", 3, 2, ["###", "###"], "kayak_rack"),
+        ("timber_dock", "Timber Dock", 4, 2, ["....", "...."], "dock"),
+        ("recovery_counter", "Trainer's Room Recovery Counter", 4, 2, ["####", "####"], "recovery_counter"),
+        ("medical_cabinet", "Medical Cabinet", 2, 2, ["##", "##"], "medical_storage"),
+        ("gear_shop_counter", "Bucky's Gear Counter", 4, 2, ["####", "####"], "shop_counter"),
+        ("singlet_shelf", "Singlet Shelf", 3, 2, ["###", "###"], "shop_shelf"),
+        ("airport_gate_desk", "Airport Gate Desk", 4, 2, ["####", "####"], "travel_desk"),
+        ("airport_departure_seats", "Airport Departure Seats", 4, 2, ["####", "####"], "seating"),
+        ("championship_trophy_case", "Championship Trophy Case", 4, 2, ["####", "####"], "trophy_case"),
+        ("tournament_bracket_board", "Tournament Bracket Board", 3, 2, ["###", "###"], "bracket_board"),
+    ]
+    for stamp_id, name, width, height, mask, semantic in story_prop_specs:
+        image = export_2x(source_asset("story_props", stamp_id))
+        effective_mask = mask if semantic in {"practice_mat", "dock"} else collision_mask_from_alpha(
+            image, width, height, None, 0.08,
+        )
+        register_stamp(
+            stamp_id, name, "story_props",
+            image, width, height, effective_mask,
+            tags=["story_prop", "imagegen_direct", "authored16"],
+            semantic_behavior=semantic,
+            minimum_coverage=0.08,
+        )
+
+    arena_mat_specs = [
+        ("field_house_competition_mat", "Field House Competition Mat"),
+        ("capitol_exhibition_mat", "Capitol Exhibition Mat"),
+        ("kohl_conference_mat", "Kohl Conference Mat"),
+        ("nationals_championship_mat", "Nationals Championship Mat"),
+    ]
+    for stamp_id, name in arena_mat_specs:
+        image = export_2x(source_asset("arena_mats", stamp_id))
+        register_stamp(
+            stamp_id, name, "arena_mats", image, 9, 7, ["........."] * 7,
+            tags=["arena_mat", "imagegen_direct", "authored16"],
+            semantic_behavior="competition_mat",
+            minimum_coverage=0.08,
+        )
+
     def ordinary_building(stamp_id: str, name: str, width: int, height: int) -> None:
         image = export_2x(source_asset("ordinary_buildings", stamp_id))
         minimum_coverage = contract["rules"]["visibleCollisionCoverage"]
@@ -704,6 +746,22 @@ def build() -> dict:
     landmark_building("bascom_hall_exterior", "Bascom Hall", 10, 5, 4)
     landmark_building("wisconsin_capitol_exterior", "Wisconsin State Capitol", 12, 8, 6)
     landmark_building("brittingham_boats_exterior", "Brittingham Boats", 6, 5, 2)
+
+    gateway_arch = export_2x(source_asset("landmarks", "gateway_arch_landmark"))
+    gateway_mask = collision_mask_from_alpha(
+        gateway_arch, 10, 8, None, contract["rules"]["visibleCollisionCoverage"],
+    )
+    # Preserve the ceremonial route beneath the Arch even when the generated
+    # highlight pixels touch the middle cells.
+    gateway_mask[-2] = gateway_mask[-2][:3] + "...." + gateway_mask[-2][7:]
+    gateway_mask[-1] = gateway_mask[-1][:3] + "...." + gateway_mask[-1][7:]
+    register_stamp(
+        "gateway_arch_landmark", "Gateway Arch Championship Landmark", "town_landmarks",
+        gateway_arch, 10, 8, gateway_mask,
+        tags=["landmark", "st_louis", "imagegen_direct", "authored16"],
+        semantic_behavior="walk_under_landmark",
+        minimum_coverage=contract["rules"]["visibleCollisionCoverage"],
+    )
 
     register_stamp("cliff_run", "Cliff Run", "elevation", export_2x(cliff(5, 2)), 5, 2, ["#####", "#####"], tags=["cliff", "elevation_1", "authored16"], semantic_behavior="ledge")
     register_stamp("cliff_corner_left", "Cliff Corner Left", "elevation", export_2x(cliff(3, 2, "left")), 3, 2, ["###", "###"], tags=["cliff", "corner", "authored16"], semantic_behavior="ledge")

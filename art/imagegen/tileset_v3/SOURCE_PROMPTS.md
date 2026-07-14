@@ -138,3 +138,44 @@ join points. Isolate panels with flat #ff00ff gutters. Match the other boards'
 late-GBA palette, upper-left light, hard pixel clusters, and clear 16px logical
 readability. No text, copied assets, logos, characters, blur, or antialiasing.
 ```
+
+## Season One Story Props Board
+
+```text
+Create one original production pixel-art source board for a top-down wrestling
+RPG as a strict 4-by-3 grid on flat #ff00ff. Exact order: worn 4x3 outdoor
+wrestling mat, 3x3 campfire ring, 3x2 kayak rack, 4x2 timber dock; 4x2
+Trainer's Room recovery counter, 2x2 medical cabinet, 4x2 Bucky's gear counter,
+3x2 singlet shelf; 4x2 airport gate desk, 4x2 departure seats, 4x2 trophy and
+banner case, 3x2 tournament bracket board. Use thick uninterrupted gutters,
+no labels or people, clean logical-grid footprints, polished late-GBA hard
+pixel clusters, shared cardinal/cream/charcoal/silver/wood palette, and no
+copied assets, blur, antialiasing, or watermark.
+```
+
+## Gateway Arch Landmark Source
+
+```text
+Create one original Gateway Arch-inspired St. Louis championship landmark on
+perfectly flat #ff00ff. Use polished late-GBA pixel art in a south-facing
+top-down three-quarter view, aligned to a 10x8 logical grid. Keep the central
+four bottom columns visibly open so the player can walk beneath the Arch;
+place solid silver bases and warm stone plinths at the sides, with restrained
+cardinal championship banners and no text, people, scenery, copied assets,
+blur, antialiasing, or watermark.
+```
+
+## Competition Mat Board
+
+```text
+Create one strict 2-by-2 source board of four original, straight top-down
+collegiate wrestling mats on flat #ff00ff. Top-left: historic Wisconsin Field
+House cardinal mat with cream regulation circles and restrained wood-floor
+edge cues. Top-right: Wisconsin Capitol exhibition mat with limestone and
+brass perimeter details. Bottom-left: conference championship mat in cardinal,
+charcoal, cream, and muted gold. Bottom-right: national championship mat in
+navy, cardinal, cream, and muted gold. Keep every full rectangular mat inside
+an equal quadrant with clean tile-friendly interior regions. Polished late-GBA
+hard pixel clusters; no words, letters, logos, people, furniture, perspective,
+copied assets, blur, antialiasing, or watermark.
+```

@@ -95,8 +95,8 @@ test('every planned location is grid-native, editable, and linked to its playtes
     expect(project.maps[mapId].terrain).toHaveLength(height);
     expect(project.maps[mapId].terrain.every(row => row.length === width)).toBe(true);
   }
-  expect(project.maps.picnic_point.terrain[4][4]).toMatch(/^surface_brick_blob_/);
-  expect(project.maps.monona_shore.terrain[10][0]).toMatch(/^shore_water_blob_/);
+  expect(project.maps.picnic_point.terrain[5][10]).toMatch(/^surface_dirt_blob_/);
+  expect(project.maps.monona_shore.terrain[0][0]).toMatch(/^shore_water_blob_/);
   expect(project.maps.field_house.objects.find(object => object.id === 'trainer_room_field')).toMatchObject({
     width: 5, height: 4, door: {x: 2, y: 3}, interior: 'trainer_room',
     collisionMask: ['.###.', '#####', '#####', '##.##']
@@ -382,9 +382,10 @@ test('terrain, events, actors, and camera reviews are editable layers', async ({
   await page.getByRole('tab', {name: 'Actors'}).click();
   const actorAssets = (await editorState(page)).project.assets.actors.map(asset => asset.sourceId);
   expect(actorAssets).toEqual(expect.arrayContaining(['coach', 'trainer', 'rex', 'captain', 'wrestler', 'manager', 'scout', 'student', 'official', 'athlete', 'camper']));
+  const actorCount = (await editorState(page)).project.maps.camp_randall.actors.length;
   await page.getByRole('button', {name: 'Captain', exact: true}).click();
   await clickCell(page, 14, 14);
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.actors.length).toBe(2);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.actors.length).toBe(actorCount + 1);
 
   await page.getByRole('button', {name: 'Camera', exact: true}).click();
   await clickCell(page, 12, 12);

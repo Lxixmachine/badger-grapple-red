@@ -3,6 +3,7 @@ import {restoreParty} from '../systems/mechanics.js';
 import {ROSTER} from '../data/roster.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
 import {playMusic,setMuted,sfx,unlockAudio} from '../systems/audio.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
 
 const Phaser=window.Phaser;
 const PAGES=[
@@ -23,6 +24,7 @@ const PAGES=[
 export class OpeningRecoveryScene extends Phaser.Scene{
   constructor(){super('OpeningRecoveryScene');}
   create(){
+    fitLegacyViewport(this);
     this.state=loadState();this.page=0;this.phase='arrival';this.restored=false;this.finishing=false;
     setMuted(this.state.audioMuted);playMusic('overworld');
     this.cameras.main.setBackgroundColor('#111c2d');
@@ -48,7 +50,7 @@ export class OpeningRecoveryScene extends Phaser.Scene{
   finish(){
     this.finishing=true;this.restoreLineup();
     this.state.flags.openingBattleReady=false;this.state.flags.openingRecoveryDone=true;
-    this.state.area='wrestlingroom';this.state.pos={x:10,y:6};
+    this.state.area='wrestling_room';this.state.pos={x:7,y:7};
     this.state.objective={id:'opening_return_coach',stage:3,complete:false,log:['Return to Coach','Recover in the Trainer\'s Room','Wrestle Rex']};
     this.state.message='The Trainer restored your lineup. Coach is waiting on the mat.';
     saveState(this.state);this.cameras.main.fadeOut(300,0,0,0);

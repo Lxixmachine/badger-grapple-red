@@ -2,12 +2,15 @@ import {counterStarterFor,makeMon} from '../data/roster.js';
 import {normalizeItems,normalizeWrestler} from './mechanics.js';
 import {canonicalBadge} from '../data/campaign.js';
 const KEY='badger_grapple_red_engine_v2';
-const SAVE_VERSION='22.1';
+const SAVE_VERSION='22.2';
 const PERIODS=['Morning','Afternoon','Evening','Night'];
-export function defaultState(){return {version:SAVE_VERSION,playerName:'Walk-On',party:[],box:[],active:0,dex:{seen:{},caught:{},defeated:{}},grit:12,rep:8,items:{sportsDrink:2,athleticTape:1,filmStudy:1,practiceSinglet:3,travelSinglet:0,starterSinglet:0},effects:{filmStudyAttempts:0},keyItems:{equipmentShipment:false,rosterBook:false,kayakVoucher:false,busPass:false,flightTicket:false},travel:{unlockedTowns:['campRandall'],destinations:{campRandall:{id:'campRandall',name:'Camp Randall',area:'campus',pos:{x:14,y:16}}}},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},opening:{playerPersona:null,rivalPersona:null,battleResult:null},flags:{introDone:false,coachIntro:false,personaChosen:false,assignment:false,rivalIntro:false,openingBattleReady:false,openingBattleComplete:false,openingBattleWon:false,openingRecoveryDone:false,studentIntro:false,wonSpar:false,firstBadge:false,officeChecked:false,hiddenItems:{},practiceCount:0,lockerUnlocked:false,rosterBook:false,recruitingUnlocked:false},day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'fieldhouse',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
+const AREA_ALIASES={fieldhouse:'team_locker_room',wrestlingroom:'wrestling_room',campus:'camp_randall',studyhall:'coach_office',lakeshore:'lakeshore_path',downtown:'state_street',river:'picnic_point',conference:'kohl_bracket_floor',championship:'kohl_center',shop:'buckys_locker_room',recovery:'trainer_room'};
+const resolveArea=area=>AREA_ALIASES[area]||area;
+export function defaultState(){return {version:SAVE_VERSION,playerName:'Walk-On',party:[],box:[],active:0,dex:{seen:{},caught:{},defeated:{}},grit:12,rep:8,items:{sportsDrink:2,athleticTape:1,filmStudy:1,practiceSinglet:3,travelSinglet:0,starterSinglet:0},effects:{filmStudyAttempts:0},keyItems:{equipmentShipment:false,rosterBook:false,kayakVoucher:false,busPass:false,flightTicket:false},travel:{unlockedTowns:['campRandall'],destinations:{campRandall:{id:'campRandall',name:'Camp Randall',area:'camp_randall',pos:{x:11,y:18}}}},badges:[],trainersDefeated:{},audioMuted:false,objective:{id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']},opening:{playerPersona:null,rivalPersona:null,battleResult:null},flags:{introDone:false,coachIntro:false,personaChosen:false,assignment:false,rivalIntro:false,openingBattleReady:false,openingBattleComplete:false,openingBattleWon:false,openingRecoveryDone:false,studentIntro:false,wonSpar:false,firstBadge:false,officeChecked:false,equipmentDelivered:false,kayakVoucherRedeemed:false,sendoffComplete:false,flightComplete:false,nationalsComplete:false,homecoming:false,seasonOneComplete:false,hiddenItems:{},practiceCount:0,lockerUnlocked:false,rosterBook:false,recruitingUnlocked:false},visitedMaps:{team_locker_room:true},mapReturnStack:[],facing:'up',day:{name:'Saturday',periodIndex:0,period:'Morning',turn:0},stats:{scouts:0,battles:0,wins:0,recruits:0,streak:0,practices:0},area:'team_locker_room',pos:null,message:'',tournament:{round:0,champion:false},expansion:{unlocked:false,flags:{}}};}
 export function normalizeState(state){
   const d=defaultState();
   if(!state||typeof state!=='object')return d;
+  const incomingVersion=state.version;
   state.version=SAVE_VERSION;
   state.expansion=(state.expansion&&typeof state.expansion==='object')?{unlocked:!!state.expansion.unlocked,flags:state.expansion.flags||{}}:{unlocked:false,flags:{}}; // v21.2 Season Two seam
   state.tournament=(state.tournament&&typeof state.tournament==='object')?{round:Number.isInteger(state.tournament.round)?state.tournament.round:0,champion:!!state.tournament.champion}:{round:0,champion:false}; // v21.12 Big Ten Championship
@@ -33,7 +36,7 @@ export function normalizeState(state){
   state.keyItems={...d.keyItems,...(state.keyItems||{})};
   state.travel={...d.travel,...(state.travel||{})};
   state.travel.unlockedTowns=Array.isArray(state.travel.unlockedTowns)?[...new Set(state.travel.unlockedTowns)]:[...d.travel.unlockedTowns];
-  state.travel.destinations={...d.travel.destinations,...(state.travel.destinations||{})};
+  state.travel.destinations=Object.fromEntries(Object.entries({...d.travel.destinations,...(state.travel.destinations||{})}).map(([id,destination])=>[id,{...destination,area:resolveArea(destination.area)}]));
   state.badges=Array.isArray(state.badges)?[...new Set(state.badges.flatMap(badge=>[badge,canonicalBadge(badge)]))]:[];
   state.trainersDefeated={...(d.trainersDefeated||{}),...(state.trainersDefeated||{})};
   state.audioMuted=typeof state.audioMuted==='boolean'?state.audioMuted:d.audioMuted;
@@ -50,8 +53,11 @@ export function normalizeState(state){
   state.stats={...d.stats,...(state.stats||{})};
   state.grit=Number.isFinite(state.grit)?state.grit:d.grit;
   state.rep=Number.isFinite(state.rep)?state.rep:d.rep;
-  state.area=typeof state.area==='string'?state.area:d.area;
-  state.pos=state.pos||null;
+  state.area=resolveArea(typeof state.area==='string'?state.area:d.area);
+  state.pos=incomingVersion===SAVE_VERSION&&state.pos?state.pos:null;
+  state.facing=['up','down','left','right'].includes(state.facing)?state.facing:d.facing;
+  state.mapReturnStack=incomingVersion===SAVE_VERSION&&Array.isArray(state.mapReturnStack)?state.mapReturnStack:[];
+  state.visitedMaps={...d.visitedMaps,...(state.visitedMaps||{}),[state.area]:true};
   state.message=typeof state.message==='string'?state.message:'';
   return state;
 }
@@ -68,11 +74,11 @@ export function chooseStarter(id,options={}){
     s.flags.coachIntro=true;s.flags.assignment=false;s.flags.rivalIntro=true;
     s.flags.openingBattleReady=true;s.flags.openingBattleComplete=false;s.flags.openingBattleWon=false;s.flags.openingRecoveryDone=false;
     s.objective={id:'opening_wrestleoff',stage:1,complete:false,log:['Wrestle Rex','Choose a mat persona','Meet the Head Coach']};
-    s.area=options.area||existing.area||'wrestlingroom';s.pos=options.pos||existing.pos||{x:10,y:6};s.message='';
+    s.area=resolveArea(options.area||existing.area||'wrestling_room');s.pos=options.pos||existing.pos||{x:7,y:7};s.message='';
   }else{
     s.flags.coachIntro=false;s.flags.assignment=false;
     s.objective={id:'meet_coach',stage:1,complete:false,log:['Meet the Head Coach']};
-    s.area='fieldhouse';s.pos={x:10,y:10};s.message='Coach is in the wrestling room. The captain is waiting at the trophy threshold.';
+    s.area='team_locker_room';s.pos={x:7,y:7};s.message='Coach is missing. The captain wants you to check his office outside.';
   }
   saveState(s);return s;
 }

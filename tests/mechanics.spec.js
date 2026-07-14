@@ -65,7 +65,7 @@ test('legacy saves migrate to six stats, per-technique Stamina, and canonical in
     items:{invite:3,energy:2,tape:1,film:4},
     flags:{assignment:true}
   });
-  expect(state.version).toBe('22.1');
+  expect(state.version).toBe('22.2');
   expect(state.party[0].gas).toBeUndefined();
   expect(state.party[0].stamina).toBeUndefined();
   expect(state.party[0].moveStamina).toEqual({single:MOVES.single.pp});

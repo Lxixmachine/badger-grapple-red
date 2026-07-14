@@ -22,7 +22,7 @@ export function registerTravelDestination(state,destination){
 export function travelTo(state,destinationId){
   if(!canFastTravel(state)||!state.travel?.unlockedTowns?.includes(destinationId))return false;
   const destination=state.travel.destinations?.[destinationId];if(!destination)return false;
-  state.area=destination.area;state.pos={...destination.pos};state.message=`Arrived at ${destination.name}.`;return true;
+  state.area=destination.area;state.pos={...destination.pos};state.facing='down';state.mapReturnStack=[];state.visitedMaps={...(state.visitedMaps||{}),[destination.area]:true};state.message=`Arrived at ${destination.name}.`;return true;
 }
 
 export function awardBadge(state,badge){

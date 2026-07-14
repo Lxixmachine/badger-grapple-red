@@ -29,12 +29,14 @@ export function installTestHooks(game, routeVirtualButton) {
       inputLocked: scene.inputLocked ?? null,
       over: scene.over ?? null,
       resultTitle: scene.resultTitle ?? null,
-      area: scene.area ?? null,
+      area: scene.currentMapId ?? scene.area ?? null,
       tilePos: scene.tilePos ?? null,
       facing: scene.facing ?? null,
+      objectIds: scene.map?.objects?.map(object => object.id) ?? null,
       playerScale: scene.player?.scaleX ?? null,
       playerWorldY: scene.player?.y ?? null,
-      npcScales: scene.npcList ? scene.npcList.map(e => e.npc.scaleX) : null,
+      actorIds: scene.actorEntries ? scene.actorEntries.map(e => e.data.id) : null,
+      npcScales: scene.actorEntries ? scene.actorEntries.map(e => e.sprite.scaleX) : scene.npcList ? scene.npcList.map(e => e.npc.scaleX) : null,
       passable: scene.pass && scene.tilePos ? {
         left: scene.pass(scene.tilePos.x - 1, scene.tilePos.y),
         right: scene.pass(scene.tilePos.x + 1, scene.tilePos.y),
@@ -52,7 +54,7 @@ export function installTestHooks(game, routeVirtualButton) {
         move: scene.moveLearn.move ?? null,
         moves: [...(scene.moveLearn.mon?.moves || [])]
       } : null,
-      npcTiles: scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
+      npcTiles: scene.actorEntries ? scene.actorEntries.map(e => ({x: e.data.x, y: e.data.y})) : scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
       layered: scene.layeredMapVersion ? {
         version: scene.layeredMapVersion,
         upperCount: scene.upperObjects?.length || 0,
@@ -110,7 +112,8 @@ export function installTestHooks(game, routeVirtualButton) {
     activeSceneKeys,
     sceneState,
     press(key) {
-      routeVirtualButton(key);
+      routeVirtualButton(key, 'down');
+      if (['up', 'down', 'left', 'right'].includes(key)) routeVirtualButton(key, 'up');
       return activeSceneKeys();
     },
     startBattle(data = {}) {
@@ -132,6 +135,28 @@ export function installTestHooks(game, routeVirtualButton) {
       } catch {
         return null;
       }
+    },
+    patchStorage(patch = {}) {
+      let current = {};
+      try {
+        current = JSON.parse(localStorage.getItem('badger_grapple_red_engine_v2') || '{}');
+      } catch {}
+      const merged = {
+        ...current,
+        ...patch,
+        flags: {...(current.flags || {}), ...(patch.flags || {})},
+        keyItems: {...(current.keyItems || {}), ...(patch.keyItems || {})},
+        trainersDefeated: {...(current.trainersDefeated || {}), ...(patch.trainersDefeated || {})},
+        visitedMaps: {...(current.visitedMaps || {}), ...(patch.visitedMaps || {})}
+      };
+      localStorage.setItem('badger_grapple_red_engine_v2', JSON.stringify(merged));
+      return merged;
+    },
+    restartOverworld() {
+      const scene = game.scene.getScene('OverworldScene');
+      if (scene?.scene?.isActive?.()) scene.scene.restart();
+      else game.scene.start('OverworldScene');
+      return activeSceneKeys();
     },
     clearSave() {
       localStorage.removeItem('badger_grapple_red_engine_v2');

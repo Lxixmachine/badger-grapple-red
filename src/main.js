@@ -5,7 +5,7 @@ import {TitleScene} from './scenes/TitleScene.js';
 import {IntroScene} from './scenes/IntroScene.js';
 import {StarterScene} from './scenes/StarterScene.js';
 import {OpeningRecoveryScene} from './scenes/OpeningRecoveryScene.js';
-import {OverworldScene} from './scenes/OverworldScene.js';
+import {SeasonOneOverworldScene} from './scenes/SeasonOneOverworldScene.js';
 import {ScoutScene} from './scenes/ScoutScene.js';
 import {BattleScene} from './scenes/BattleScene.js';
 import {MenuScene} from './scenes/MenuScene.js';
@@ -38,13 +38,14 @@ const params = new URLSearchParams(window.location.search);
 const sliceMode = params.has('slice');
 const atlasMode = params.has('atlas');
 const modernMode = sliceMode || atlasMode;
-const width = modernMode ? 480 : 320;
-const height = modernMode ? 320 : 224;
+const heldInputMode = true;
+const width = 480;
+const height = 320;
 const scenes = atlasMode
   ? [WorldAtlasScene]
   : sliceMode
     ? [VisualSliceScene]
-    : [BootScene, TitleScene, IntroScene, StarterScene, OpeningRecoveryScene, OverworldScene, ScoutScene, BattleScene, MenuScene];
+    : [BootScene, TitleScene, IntroScene, StarterScene, OpeningRecoveryScene, SeasonOneOverworldScene, ScoutScene, BattleScene, MenuScene];
 
 if (modernMode) {
   document.body.classList.add('slice-mode');
@@ -80,7 +81,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '21.85-wrestler-stats';
+    : sliceMode ? '21.63-scale-slice' : '22.2-season-one-world';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -95,12 +96,15 @@ function routeVirtualButton(key, phase = 'press') {
     'ScoutScene',
     'OpeningRecoveryScene',
     'StarterScene',
+    'IntroScene',
     'TitleScene',
     'OverworldScene'
   ];
   for (const sceneKey of priority) {
     const scene = game.scene.getScene(sceneKey);
     if (scene?.scene?.isActive?.() && scene.handleVirtualButton) {
+      const supportsHeldDirections = ['OverworldScene', 'WorldAtlasScene', 'VisualSliceScene'].includes(sceneKey);
+      if (phase === 'up' && !supportsHeldDirections) return;
       scene.handleVirtualButton(key, phase);
       return;
     }
@@ -156,7 +160,7 @@ document.querySelectorAll('[data-key]').forEach(button => {
     activePointer = event.pointerId;
     button.setPointerCapture?.(event.pointerId);
     routeVirtualButton(key, 'down');
-    if (!modernMode) {
+    if (!heldInputMode) {
       repeat = window.setInterval(() => routeVirtualButton(key, 'repeat'), 140);
     }
   };
@@ -168,7 +172,7 @@ document.querySelectorAll('[data-key]').forEach(button => {
       window.clearInterval(repeat);
       repeat = null;
     }
-    if (modernMode) routeVirtualButton(key, 'up');
+    if (heldInputMode) routeVirtualButton(key, 'up');
     if (button.hasPointerCapture?.(activePointer)) button.releasePointerCapture(activePointer);
     activePointer = null;
   };

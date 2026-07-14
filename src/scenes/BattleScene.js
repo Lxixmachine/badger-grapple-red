@@ -1,10 +1,12 @@
 import {ROSTER,allMovesSpent,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,restoreTechniqueStamina,turnOrder,useFilmStudy} from '../systems/mechanics.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';import {GAME_W,GAME_H} from '../systems/resolution.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
 const Phaser = window.Phaser;
 const COMMANDS=['FIGHT','BAG','WRESTLER','RUN'];
 const BAG_ITEMS=BAG_ORDER.map(key=>({key,name:ITEM_DEFS[key].name,desc:ITEM_DEFS[key].description,kind:ITEM_DEFS[key].kind}));
 export class BattleScene extends Phaser.Scene{
   constructor(){super('BattleScene');}
   create(data={}){
+    fitLegacyViewport(this);
     this.state=loadState();
     setMuted(this.state.audioMuted);playMusic('battle');unlockAudio();
     this.type=data.battleType||'wild';

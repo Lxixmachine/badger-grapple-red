@@ -1,5 +1,6 @@
 import {loadState,saveState} from '../systems/save.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
 const Phaser=window.Phaser;
 
 const PAGES=[
@@ -15,6 +16,7 @@ const NAME_COLS=7;
 export class IntroScene extends Phaser.Scene{
   constructor(){super('IntroScene');}
   create(){
+    fitLegacyViewport(this);
     this.state=loadState();
     this.page=0;
     this.phase='story';
@@ -34,7 +36,8 @@ export class IntroScene extends Phaser.Scene{
     this.draw();
   }
   setPhase(phase){this.phase=phase;this.naming=phase==='naming';}
-  handleVirtualButton(k){
+  handleVirtualButton(k,phase='press'){
+    if(phase==='up')return;
     if(k==='up')this.moveName(0,-1);
     if(k==='down')this.moveName(0,1);
     if(k==='left')this.moveName(-1,0);
@@ -86,8 +89,8 @@ export class IntroScene extends Phaser.Scene{
     this.state.party=[];
     this.state.box=[];
     this.state.active=0;
-    this.state.area='fieldhouse';
-    this.state.pos={x:10,y:10};
+    this.state.area='team_locker_room';
+    this.state.pos={x:7,y:7};
     this.state.objective={id:'intro_meet_coach',stage:0,complete:false,log:['Meet the Head Coach']};
     this.state.message='Opening Day. The captain is waiting at the wrestling-room doorway.';
     saveState(this.state);

@@ -9,6 +9,8 @@
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
     "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
     "props": "be9a7a8cbb13c2ce3aec6faad80ef04b2dc2d60816065229b2bb677b16af6f0e",
+    "story_props": "510bba6cc671b6a6c72683e0ea9419ad143432a766d89f1b60aadf65de573134",
+    "arena_mats": "8bd9b3ec79c47f6d39bfa01e451ada4915345629bf93201e780430506733da8b",
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
     "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
     "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
@@ -16,6 +18,7 @@
     "landmarks:bascom_hall_exterior": "939d0b252dff7566b19a35cd6a4300cba649efe668530a5f9a8f8823ae21637d",
     "landmarks:wisconsin_capitol_exterior": "81820a0b81d28d7aa91e904b75f5c22f98f83fa1aec60faef36cb71d926f9ffc",
     "landmarks:brittingham_boats_exterior": "75b7aaa260deb3a55ee935c914e778edd659a335e10297bfde2fdde8a98928bd",
+    "landmarks:gateway_arch_landmark": "7b55edeffcc3dddd9c47124cdf093c49650952af6dbfa9ea15ce938f7d11183d",
     "ordinary_buildings:equipment_annex_exterior": "8043892e7403fc2827ca967b61a1fb4b8cf3c8afa9b7c025ea1a9097e32390ad",
     "ordinary_buildings:campus_housing_exterior": "10dc3cd7b6df2c444d37752b06509fe347c3eeca5c3cb99a402343d4e8d26e39",
     "ordinary_buildings:bookstore_row_exterior": "61bb28bffe5f9abaf4991e6e0720c258f7a11ae301df55b1c54ad75c802b9fef",
@@ -460,6 +463,150 @@
       "sha256": "a1f386870a1293f53d88f19b73265f7604bb3f61363964f8550b95f62cc81449",
       "sourcePanel": 11
     },
+    "outdoor_wrestling_mat": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/outdoor_wrestling_mat.png",
+      "width": 64,
+      "height": 48,
+      "colors": 28,
+      "sha256": "3f0bc6c6b28d304fc77eda4fce407dec41315271af66150febcf03d515002d3e",
+      "sourcePanel": 0
+    },
+    "campfire_ring": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/campfire_ring.png",
+      "width": 48,
+      "height": 48,
+      "colors": 28,
+      "sha256": "522f97b90c9f8199fb8cbb7b7caa0c4e5a16734fdb00f5ac7ac4c78ecd216275",
+      "sourcePanel": 1
+    },
+    "kayak_rack": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/kayak_rack.png",
+      "width": 48,
+      "height": 32,
+      "colors": 28,
+      "sha256": "160899079dc4b83f1db6ed8301420f7993340455ff99596f67f61de661cd60cb",
+      "sourcePanel": 2
+    },
+    "timber_dock": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/timber_dock.png",
+      "width": 64,
+      "height": 32,
+      "colors": 26,
+      "sha256": "7aa0135da75a9e9f1785682b3c6a4efd1b8607d738c1256d161eca08006d37c5",
+      "sourcePanel": 3
+    },
+    "recovery_counter": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/recovery_counter.png",
+      "width": 64,
+      "height": 32,
+      "colors": 28,
+      "sha256": "1d1ee04bb9915637a72146c487e2e47fe00f2203d6eb78bcc7aa5cbe5137baad",
+      "sourcePanel": 4
+    },
+    "medical_cabinet": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/medical_cabinet.png",
+      "width": 32,
+      "height": 32,
+      "colors": 26,
+      "sha256": "ad8d862067f4acd49c3d5ff1afe783c6bc0b2de46b4efe4cc64d219fdcd7cbc6",
+      "sourcePanel": 5
+    },
+    "gear_shop_counter": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/gear_shop_counter.png",
+      "width": 64,
+      "height": 32,
+      "colors": 28,
+      "sha256": "4cf4cb4faf238fd518709a8621c5be9d7217fa3f29e03cd5fcb67e02d455d8ca",
+      "sourcePanel": 6
+    },
+    "singlet_shelf": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/singlet_shelf.png",
+      "width": 48,
+      "height": 32,
+      "colors": 28,
+      "sha256": "fa83580f160410d03a266f74f4421a7dc667e41f2365c73dbfda425787c236d2",
+      "sourcePanel": 7
+    },
+    "airport_gate_desk": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/airport_gate_desk.png",
+      "width": 64,
+      "height": 32,
+      "colors": 26,
+      "sha256": "6df88adfec3f2743797c709f70ba18ccc9126d15afd976ec8626d35f40098b3b",
+      "sourcePanel": 8
+    },
+    "airport_departure_seats": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/airport_departure_seats.png",
+      "width": 64,
+      "height": 32,
+      "colors": 24,
+      "sha256": "ed35b791e3f77a083a6eb899ceb6a3b23797a9de7b1a0f8c88589757955d315d",
+      "sourcePanel": 9
+    },
+    "championship_trophy_case": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/championship_trophy_case.png",
+      "width": 64,
+      "height": 32,
+      "colors": 28,
+      "sha256": "e7fee482957165eb4ffbe89e0ab87e93b483516504ecf59c1b82f3bf94c171e1",
+      "sourcePanel": 10
+    },
+    "tournament_bracket_board": {
+      "category": "story_props",
+      "path": "art/tilesets/imagegen_v3/story_props/tournament_bracket_board.png",
+      "width": 48,
+      "height": 32,
+      "colors": 24,
+      "sha256": "462f8fd98072b4533f3a98cf143d8464f907460b35f51054b2cca3804ec93f06",
+      "sourcePanel": 11
+    },
+    "field_house_competition_mat": {
+      "category": "arena_mats",
+      "path": "art/tilesets/imagegen_v3/arena_mats/field_house_competition_mat.png",
+      "width": 144,
+      "height": 112,
+      "colors": 32,
+      "sha256": "e91b962da12a21b275a7304559dbf05fac5b2d807d2382b83bc6fa8177b419bf",
+      "sourcePanel": 0
+    },
+    "capitol_exhibition_mat": {
+      "category": "arena_mats",
+      "path": "art/tilesets/imagegen_v3/arena_mats/capitol_exhibition_mat.png",
+      "width": 144,
+      "height": 112,
+      "colors": 32,
+      "sha256": "557982a48b94d2e892e3b1793be7a83bc8ce82b411d083ca40cbb7ff39bea2c9",
+      "sourcePanel": 1
+    },
+    "kohl_conference_mat": {
+      "category": "arena_mats",
+      "path": "art/tilesets/imagegen_v3/arena_mats/kohl_conference_mat.png",
+      "width": 144,
+      "height": 112,
+      "colors": 32,
+      "sha256": "82e3bdaed9ff05b128e018ebf043692bec0998ad618817960cd26f9bcece796f",
+      "sourcePanel": 2
+    },
+    "nationals_championship_mat": {
+      "category": "arena_mats",
+      "path": "art/tilesets/imagegen_v3/arena_mats/nationals_championship_mat.png",
+      "width": 144,
+      "height": 112,
+      "colors": 32,
+      "sha256": "7a670c0289244226f222729c216838a8dc900f2bb0f301ef9b91026ff4b2c5dc",
+      "sourcePanel": 3
+    },
     "dirt_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/dirt_edge.png",
@@ -621,6 +768,15 @@
       "colors": 32,
       "sha256": "835d7f596763f5be67bb671426f786ae16ceb330eca26d774936162213123312",
       "sourceFile": "season_one_brittingham_boats_source_v1.png"
+    },
+    "gateway_arch_landmark": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/gateway_arch_landmark.png",
+      "width": 160,
+      "height": 128,
+      "colors": 36,
+      "sha256": "e4b01583ab73af22d06699039da72d29f6b1e3ed8bb650621cb071fe10d2a0bc",
+      "sourceFile": "season_one_gateway_arch_source_v1.png"
     },
     "equipment_annex_exterior": {
       "category": "ordinary_buildings",

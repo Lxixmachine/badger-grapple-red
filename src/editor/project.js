@@ -1,6 +1,7 @@
 import layouts from '../data/seasonOneLayouts.json';
 import production from '../data/campRandallProductionBuild.json';
 import metatileBuild from '../data/campRandallMetatileBuild.json';
+import {mapPolish} from '../data/seasonOneMapPolish.js';
 
 export const PROJECT_SCHEMA = 'badger-grapple-map-pack/v2';
 export const TERRAIN = {
@@ -158,15 +159,39 @@ function forestStamp(owner, mapWidth, mapHeight) {
   return 'forest_mass_core';
 }
 
+const DEDICATED_FIXTURE_STAMPS = {
+  funk_mat: 'outdoor_wrestling_mat',
+  competition_mat: 'field_house_competition_mat',
+  rotunda: 'capitol_exhibition_mat',
+  conference_mat: 'kohl_conference_mat',
+  nationals_mat: 'nationals_championship_mat',
+  fire_circle: 'campfire_ring',
+  west_seating: 'airport_departure_seats',
+  east_seating: 'airport_departure_seats',
+  departure_gate: 'airport_gate_desk',
+  recovery_counter: 'recovery_counter',
+  treatment_bench: 'recovery_counter',
+  shop_counter: 'gear_shop_counter',
+  singlet_wall: 'singlet_shelf',
+  supply_wall: 'singlet_shelf',
+  kayak_rack: 'kayak_rack',
+  bracket_board: 'tournament_bracket_board',
+  bracket_desk: 'tournament_bracket_board',
+  trophy_case_west: 'championship_trophy_case',
+  trophy_case_east: 'championship_trophy_case'
+};
+
 function sourceStampId(owner, group, layout) {
   const id = owner.id || '';
+  if (DEDICATED_FIXTURE_STAMPS[id]) return DEDICATED_FIXTURE_STAMPS[id];
   const dedicatedLandmarks = {
     field_house_arena: 'field_house_arena_exterior',
     kohl_arena: 'kohl_arena_exterior',
     nationals_arena: 'nationals_arena_exterior',
     bascom_hall: 'bascom_hall_exterior',
     wisconsin_capitol: 'wisconsin_capitol_exterior',
-    brittingham_boats: 'brittingham_boats_exterior'
+    brittingham_boats: 'brittingham_boats_exterior',
+    gateway_arch: 'gateway_arch_landmark'
   };
   if (dedicatedLandmarks[id]) return dedicatedLandmarks[id];
   const dedicatedOrdinaryBuildings = {
@@ -264,6 +289,12 @@ function plannedExterior(mapId, layout, objectAssets) {
       objects.push(built.object);
     }
   }
+  const polish = mapPolish(mapId);
+  for (const owner of polish.objects || []) {
+    const built = plannedObject(mapId, owner, 'decorations', layout);
+    objectAssets.push(built.asset);
+    objects.push(built.object);
+  }
   for (const patch of layout.editorObjects || []) objects.push(deepClone(patch));
   const planned = metatileBuild.plannedMaps[mapId];
   return {
@@ -280,8 +311,9 @@ function plannedExterior(mapId, layout, objectAssets) {
     originalTerrain: deepClone(planned.terrain),
     terrain: deepClone(planned.terrain),
     objects,
-    actors: [],
-    events: deepClone(layout.events || []),
+    actors: [...(layout.actors || []), ...(polish.actors || [])].map(actor => makeActor(actor, mapId)),
+    events: deepClone([...(layout.events || []), ...(polish.events || [])]),
+    waterRoutes: deepClone((layout.paths || []).filter(path => path.material === 'water_lane')),
     connections: deepClone(layout.connections || []),
     cameraReviews: deepClone(layout.cameraReviews || []),
     start: deepClone(layout.start || null),
@@ -325,10 +357,13 @@ function plannedInterior(mapId, layout, objectAssets) {
           for (let x = fixture.x; x < fixture.x + fixture.width; x += 1) terrain[y][x] = material;
         }
       }
+      if (DEDICATED_FIXTURE_STAMPS[fixture.id]) add(fixture);
     } else {
       add(fixture);
     }
   }
+  const polish = mapPolish(mapId);
+  for (const owner of polish.objects || []) add(owner, 'decorations');
   for (const patch of layout.editorObjects || []) objects.push(deepClone(patch));
   return {
     id: mapId,
@@ -344,8 +379,8 @@ function plannedInterior(mapId, layout, objectAssets) {
     originalTerrain: deepClone(terrain),
     terrain,
     objects,
-    actors: [],
-    events: deepClone(layout.events || []),
+    actors: [...(layout.actors || []), ...(polish.actors || [])].map(actor => makeActor(actor, mapId)),
+    events: deepClone([...(layout.events || []), ...(polish.events || [])]),
     connections: [],
     cameraReviews: [],
     start: null,
@@ -437,6 +472,7 @@ export function createSeedProject() {
     }
   }
   maps[production.map.id] = makeMap(production.map.id, production.map, campLayout, 'exterior');
+  maps[production.map.id].actors.push(...(mapPolish(production.map.id).actors || []).map(actor => makeActor(actor, production.map.id)));
 
   for (const mapId of layouts.region.reviewOrder) {
     if (mapId === production.map.id) continue;
@@ -501,6 +537,7 @@ export function validateProject(project) {
   if (project.schema !== PROJECT_SCHEMA) errors.push(`Unsupported schema: ${project.schema || 'missing'}`);
   const metatileLibrary = new Map((project.assets?.metatiles || []).map(tile => [tile.id, tile]));
   const groundLibrary = new Set((project.assets?.groundTiles || []).map(tile => tile.id));
+  const groundBehavior = new Map((project.assets?.groundTiles || []).map(tile => [tile.id, tile.behavior]));
   for (const [mapId, map] of Object.entries(project.maps || {})) {
     if (!Number.isInteger(map.width) || !Number.isInteger(map.height) || map.width < 1 || map.height < 1) {
       errors.push(`${mapId}: invalid map dimensions`);
@@ -586,6 +623,72 @@ export function validateProject(project) {
       const asset = project.assets?.objects?.find(entry => entry.id === object.assetId);
       if (asset && asset.minimumCoverage < 0.55) {
         warnings.push(`${mapId}.${object.id}: source art does not visibly fill every default solid cell`);
+      }
+    }
+
+    const inBounds = (x, y) => Number.isInteger(x) && Number.isInteger(y)
+      && x >= 0 && y >= 0 && x < map.width && y < map.height;
+    const blockedByObject = (x, y) => (map.objects || []).some(object => {
+      if (x < object.x || y < object.y || x >= object.x + object.width || y >= object.y + object.height) return false;
+      return object.collisionMask?.[y - object.y]?.[x - object.x] === '#';
+    });
+    const inWaterRoute = (x, y) => (map.waterRoutes || []).some(route => x >= route.x && y >= route.y
+      && x < route.x + route.width && y < route.y + route.height);
+    const passable = (x, y) => inBounds(x, y)
+      && (groundBehavior.get(map.terrain?.[y]?.[x]) !== 'water' || inWaterRoute(x, y))
+      && !blockedByObject(x, y);
+    const requestedStart = map.start || (map.exit
+      ? {x: map.exit.x, y: Math.max(0, map.exit.y - 1)}
+      : {x: Math.floor(map.width / 2), y: Math.max(0, map.height - 2)});
+    const reachable = new Set();
+    if (passable(requestedStart.x, requestedStart.y)) {
+      reachable.add(`${requestedStart.x},${requestedStart.y}`);
+      const queue = [[requestedStart.x, requestedStart.y]];
+      while (queue.length) {
+        const [x, y] = queue.shift();
+        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+          const nx = x + dx;
+          const ny = y + dy;
+          const key = `${nx},${ny}`;
+          if (reachable.has(key) || !passable(nx, ny)) continue;
+          reachable.add(key);
+          queue.push([nx, ny]);
+        }
+      }
+    } else {
+      errors.push(`${mapId}: live spawn cell ${requestedStart.x},${requestedStart.y} is blocked`);
+    }
+    const reachableOrAdjacent = (x, y) => reachable.has(`${x},${y}`)
+      || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => reachable.has(`${x + dx},${y + dy}`));
+    for (const object of map.objects || []) {
+      if (!object.interior || !object.door) continue;
+      const x = object.x + object.door.x;
+      const y = object.y + object.door.y;
+      if (!reachable.has(`${x},${y}`)) errors.push(`${mapId}.${object.id}: live doorway is unreachable`);
+    }
+    if (map.exit && !reachable.has(`${map.exit.x},${map.exit.y}`)) {
+      errors.push(`${mapId}: live exit is unreachable`);
+    }
+    for (const connection of map.connections || []) {
+      const cells = Array.from({length: connection.span}, (_, offset) => connection.edge === 'north'
+        ? [connection.start + offset, 0]
+        : connection.edge === 'south'
+          ? [connection.start + offset, map.height - 1]
+          : connection.edge === 'west'
+            ? [0, connection.start + offset]
+            : [map.width - 1, connection.start + offset]);
+      if (!cells.some(([x, y]) => reachable.has(`${x},${y}`))) {
+        errors.push(`${mapId}: live connection to ${connection.to} is unreachable`);
+      }
+    }
+    for (const actor of map.actors || []) {
+      if (!inBounds(actor.x, actor.y)) continue;
+      if (!passable(actor.x, actor.y)) errors.push(`${mapId}.${actor.id}: actor stands on blocked art`);
+      else if (!reachableOrAdjacent(actor.x, actor.y)) errors.push(`${mapId}.${actor.id}: actor cannot be approached`);
+    }
+    for (const event of map.events || []) {
+      if (inBounds(event.x, event.y) && !reachableOrAdjacent(event.x, event.y)) {
+        errors.push(`${mapId}.${event.id}: event cannot be reached or approached`);
       }
     }
   }

@@ -1,11 +1,13 @@
 import {loadState,resetState,caughtRecruitCount} from '../systems/save.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
 import {unlockAudio,playMusic,setMuted} from '../systems/audio.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
 const Phaser=window.Phaser;
 
 export class TitleScene extends Phaser.Scene{
   constructor(){super('TitleScene');}
   create(){
+    fitLegacyViewport(this);
     this.state=loadState();
     this.mode='splash';
     this.sel=0;

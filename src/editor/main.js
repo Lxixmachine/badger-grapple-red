@@ -19,7 +19,9 @@ const zoomValue = document.querySelector('#zoomValue');
 const fileInput = document.querySelector('#fileInput');
 
 const seedProject = createSeedProject();
-let project = loadDraft(seedProject);
+let project = new URLSearchParams(window.location.search).has('seed')
+  ? cloneProject(seedProject)
+  : loadDraft(seedProject);
 let mode = window.matchMedia('(pointer: coarse)').matches ? 'pan' : 'select';
 let paletteTab = 'terrain';
 let selectedTerrain = 'brick';

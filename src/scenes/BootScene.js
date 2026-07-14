@@ -2,11 +2,13 @@ import {chooseStarter,defaultState,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 import {NPC_LOOKS} from '../data/npcLooks.js';
+import {preloadSeasonOneAssets, SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
 const Phaser = window.Phaser;
 const V='265';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
+    preloadSeasonOneAssets(this);
     ['fieldhouse','wrestlingroom','campus','studyhall','lakeshore','downtown','river','conference','championship','shop','recovery'].forEach(a=>this.load.image('area_'+a,`./assets/ui/area_${a}.png?v=${V}`));
     this.load.image('camp_randall_runtime_tiles',`./assets/tiles/camp_randall_runtime_tiles.png?v=${V}`);
     LAYERED_UPPER_TEXTURES.forEach(key=>this.load.image(key,`./assets/layers/${key}.png?v=${V}`));
@@ -31,12 +33,12 @@ export class BootScene extends Phaser.Scene{
     setVirtualHandler(this);
     const params=new URLSearchParams(window.location.search);
     if(params.has('test')&&params.get('scene')==='starter'){
-      const state=defaultState();state.flags.introDone=true;state.area='wrestlingroom';state.pos={x:10,y:6};saveState(state);
-      this.scene.start('StarterScene',{story:true,returnArea:'wrestlingroom',returnPos:{x:10,y:6}});
+      const state=defaultState();state.flags.introDone=true;state.area='wrestling_room';state.pos={x:7,y:7};saveState(state);
+      this.scene.start('StarterScene',{story:true,returnArea:'wrestling_room',returnPos:{x:7,y:7}});
       return;
     }
     if(params.has('test')&&params.get('scene')==='recovery'){
-      const state=chooseStarter(params.get('starter')||'buckshot',{story:true,rivalId:'fieldflyer',area:'wrestlingroom',pos:{x:10,y:6}});
+      const state=chooseStarter(params.get('starter')||'buckshot',{story:true,rivalId:'fieldflyer',area:'wrestling_room',pos:{x:7,y:7}});
       state.flags.openingBattleReady=false;state.flags.openingBattleComplete=true;state.flags.openingBattleWon=true;state.opening.battleResult='win';saveState(state);
       this.scene.start('OpeningRecoveryScene');
       return;
@@ -45,7 +47,7 @@ export class BootScene extends Phaser.Scene{
       this.scene.start('ScoutScene',{
         id:params.get('id')||'buckshot',
         lvl:Number(params.get('lvl')||5),
-        area:params.get('area')||'campus'
+        area:params.get('area')||'r1'
       });
       return;
     }
@@ -59,11 +61,11 @@ export class BootScene extends Phaser.Scene{
       return;
     }
     if(params.has('test')&&params.get('scene')==='overworld'){
-      const allowed=['fieldhouse','wrestlingroom','campus','studyhall','lakeshore','downtown','river','conference','championship','shop','recovery'];
+      const allowed=Object.keys(SEASON_ONE_PROJECT.maps);
       const state=chooseStarter(params.get('starter')||'buckshot');
-      const area=allowed.includes(params.get('area'))?params.get('area'):'fieldhouse';
+      const area=allowed.includes(params.get('area'))?params.get('area'):'camp_randall';
       state.area=area;
-      state.pos={x:Number(params.get('x')||14),y:Number(params.get('y')||(area==='campus'?16:11))};
+      state.pos=params.has('x')&&params.has('y')?{x:Number(params.get('x')),y:Number(params.get('y'))}:null;
       state.message='';
       saveState(state);
       this.scene.start('OverworldScene');

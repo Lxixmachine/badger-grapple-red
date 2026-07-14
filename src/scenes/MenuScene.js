@@ -1,4 +1,6 @@
 import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,currentMoveStamina,scaledStats,personaFor} from '../data/roster.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {experienceProgress} from '../data/experience.js';import {effortTotal,MAX_TOTAL_EFFORT,natureFor,STAT_LABELS} from '../data/stats.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,restoreTechniqueStamina,SHOP_STOCK,swapLockerWrestler,totalMoveStamina,totalMoveStaminaMax,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
+import seasonLayouts from '../data/seasonOneLayouts.json';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['Field House Badge','Capitol Badge','Kohl Badge','Picnic Point Badge'];
 const MAIN_OPTS=[['TRAVEL LINEUP','team'],['BAG','bag'],['ROSTER BOOK','dex'],['TOWN MAP','map'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
@@ -23,7 +25,7 @@ function icon(scene,x,y,kind,active){
 }
 export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
-  create(data={}){this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
+  create(data={}){fitLegacyViewport(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='left')this.side(-1);if(k==='right')this.side(1);if(k==='a')this.choose();if(k==='b')this.back();}
   optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map'||this.tab==='summary')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 6;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
@@ -35,7 +37,7 @@ export class MenuScene extends Phaser.Scene{
     this.add.text(160,21,titles[this.tab]||'MENU',{fontFamily:FONT,fontSize:14,color:'#111',fontStyle:'bold'}).setOrigin(.5);
     const singlets=(this.state.items.practiceSinglet||0)+(this.state.items.travelSinglet||0)+(this.state.items.starterSinglet||0);
     this.add.text(22,37,`GRIT ${this.state.grit}  REP ${this.state.rep}  SING ${singlets}`,{fontFamily:FONT,fontSize:10,color:'#333'});
-    if(this.tab==='shop')this.drawShop();else if(this.tab==='locker')this.drawLocker();else if(this.tab==='travel')this.drawTravel();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawMap();
+    if(this.tab==='shop')this.drawShop();else if(this.tab==='locker')this.drawLocker();else if(this.tab==='travel')this.drawTravel();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawSeasonMap();
     if(this.note)this.add.text(160,200,this.note,{fontFamily:FONT,fontSize:10,color:'#8a1720',fontStyle:'bold'}).setOrigin(.5);
   }
   drawMap(){
@@ -152,6 +154,30 @@ export class MenuScene extends Phaser.Scene{
     const m=this.state.party[this.sel],r=m&&ROSTER[m.id];
     if(r)this.add.text(24,188,`${personaFor(m.id)} / ${r.style} / ${r.rarity}   A: SUMMARY`,{fontFamily:FONT,fontSize:10,color:'#444',wordWrap:{width:275}});
   }
+  drawSeasonMap(){
+    const maps=seasonLayouts.maps;
+    const madisonIds=seasonLayouts.region.reviewOrder.filter(id=>maps[id]?.plane==='madison');
+    const bounds=seasonLayouts.region.madisonBounds;
+    const chart={x:22,y:52,width:224,height:112};
+    const sx=chart.width/bounds.width,sy=chart.height/bounds.height;
+    const center=id=>{const map=maps[id],origin=map.origin,size=map.size;return{x:chart.x+(origin.x+size.width/2-bounds.x)*sx,y:chart.y+(origin.y+size.height/2-bounds.y)*sy};};
+    const currentArea=maps[this.state.area]?.plane?this.state.area:this.state.mapReturnStack?.at(-1)?.mapId;
+    const g=this.add.graphics();
+    g.fillStyle(0xd8ead1,1);g.fillRoundedRect(chart.x-5,chart.y-5,chart.width+10,chart.height+10,4);
+    g.fillStyle(0x6ea7c9,1);g.fillRoundedRect(chart.x-2,chart.y+chart.height-21,chart.width+4,23,2);
+    g.lineStyle(2,0xbca66f,1);g.strokeRoundedRect(chart.x-5,chart.y-5,chart.width+10,chart.height+10,4);
+    const edges=new Set();
+    for(const id of madisonIds){for(const connection of maps[id].connections||[]){if(!madisonIds.includes(connection.to))continue;const key=[id,connection.to].sort().join(':');if(edges.has(key))continue;edges.add(key);const a=center(id),b=center(connection.to);g.lineStyle(4,0xf7e8b2,1);g.lineBetween(a.x,a.y,b.x,b.y);g.lineStyle(1,0x8c774b,1);g.lineBetween(a.x,a.y,b.x,b.y);}}
+    const colors={home_town:0xb51d30,town:0xd6a336,badge_venue:0xd6a336,optional_venue:0x7d5aa6,route:0x4e8a56};
+    for(const id of madisonIds){const map=maps[id],p=center(id),major=map.kind!=='route';g.fillStyle(colors[map.kind]||0x59626c,1);if(major){g.fillRect(p.x-4,p.y-4,8,8);g.lineStyle(1,0x222222,1);g.strokeRect(p.x-4,p.y-4,8,8);}else{g.fillCircle(p.x,p.y,3);g.lineStyle(1,0x222222,1);g.strokeCircle(p.x,p.y,3);}}
+    const labels={camp_randall:['CAMP',7,-7],field_house:['FIELD',0,7],picnic_point:['PICNIC',0,-8],state_street:['STATE',0,-9],bascom_hill:['BASCOM',0,-9],capitol_square:['CAPITOL',5,-9],kohl_center:['KOHL',0,7]};
+    for(const [id,[label,dx,dy]] of Object.entries(labels)){const p=center(id);this.add.text(p.x+dx,p.y+dy,label,{fontFamily:FONT,fontSize:7,color:'#242424',fontStyle:'bold'}).setOrigin(.5,dy>0?0:1);}
+    const remote=[['airport','AIR',267,73],['st_louis','STL',286,129]];
+    for(const [id,label,x,y] of remote){g.lineStyle(2,0xbca66f,1);g.fillStyle(id===currentArea?0xb51d30:0xd6a336,1);g.fillRoundedRect(x-14,y-10,28,20,3);g.strokeRoundedRect(x-14,y-10,28,20,3);this.add.text(x,y,label,{fontFamily:FONT,fontSize:8,color:'#222',fontStyle:'bold'}).setOrigin(.5);}
+    if(currentArea&&maps[currentArea]){let p=maps[currentArea].plane==='madison'?center(currentArea):remote.find(row=>row[0]===currentArea);if(Array.isArray(p))p={x:p[2],y:p[3]};if(p){const ring=this.add.circle(p.x,p.y,6).setStrokeStyle(2,0xffffff,1);const core=this.add.circle(p.x,p.y,2.5,0xb51d30,1);this.tweens.add({targets:[ring,core],alpha:.25,duration:420,yoyo:true,repeat:-1});}}
+    this.add.text(24,177,'MADISON SEASON ROUTE',{fontFamily:FONT,fontSize:8,color:'#444',fontStyle:'bold'});
+    this.add.text(296,177,this.state.keyItems?.busPass?'A: BUS TRAVEL':'A: BACK',{fontFamily:FONT,fontSize:8,color:this.state.keyItems?.busPass?'#b41820':'#444',fontStyle:'bold'}).setOrigin(1,0);
+  }
   drawSummary(){
     uiBox(this,8,8,304,208);
     const mon=this.state.party[this.summaryIndex];if(!mon){this.tab='team';this.sel=0;return this.draw();}
@@ -213,7 +239,7 @@ export class MenuScene extends Phaser.Scene{
   choose(){
     if(this.tab==='main'){const key=MAIN_OPTS[this.sel][1];if(key==='save'){saveState(this.state);this.note='SAVED.';return this.draw();}this.tab=key;this.sel=0;return this.draw();}
     if(this.tab==='objective')return this.back();
-    if(this.tab==='map')return this.back();
+    if(this.tab==='map'){if(this.state.keyItems?.busPass){this.tab='travel';this.sel=0;return this.draw();}return this.back();}
     if(this.tab==='practice')return this.doPractice();
     if(this.tab==='shop')return this.chooseShop();
     if(this.tab==='locker')return this.chooseLocker();

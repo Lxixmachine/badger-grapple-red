@@ -4,6 +4,7 @@ import {natureFor,potentialFor} from '../data/stats.js';
 import {loadState,saveState} from '../systems/save.js';
 import {attemptRecruit,ITEM_DEFS,recruitOdds,SINGLET_KEYS,STYLE_COLORS} from '../systems/mechanics.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
 
 const Phaser = window.Phaser;
 const MAIN_OPTS=['RECRUIT','WRESTLE','LEAVE'];
@@ -13,10 +14,11 @@ export class ScoutScene extends Phaser.Scene{
   constructor(){super('ScoutScene');}
 
   create(data={}){
+    fitLegacyViewport(this);
     this.id=data.id||'buckshot';
     this.rare=!!data.rare;
     this.lvl=data.lvl||4;
-    this.area=data.area||'campus';
+    this.area=data.area||'r1';
     this.state=loadState();
     this.prospect=makeMon(this.id,this.lvl);
     this.sel=0;

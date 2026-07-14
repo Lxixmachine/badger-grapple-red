@@ -3,7 +3,7 @@
   "tileSize": 16,
   "objectCount": 37,
   "inputSha256": {
-    "art/imagegen/camp_randall_object_manifest.json": "807b969ecca94f73e3568698b1456a29c375c00fa6ac17b6b4a691688ffa563c",
+    "art/imagegen/camp_randall_object_manifest.json": "fbd207207e2fd3bd87ab7543d1ff8bcc48367daed304008e04521d7b4db20ec0",
     "art/imagegen/camp_randall_terrain_kit_v2_alpha_2026-07-11.png": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "art/imagegen/camp_randall_exterior_objects_v1_alpha_2026-07-11.png": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "art/imagegen/camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",

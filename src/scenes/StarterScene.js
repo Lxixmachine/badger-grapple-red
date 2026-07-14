@@ -1,6 +1,7 @@
 import {STARTERS,ROSTER,counterStarterFor,personaFor} from '../data/roster.js';
 import {chooseStarter} from '../systems/save.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
+import {fitLegacyViewport} from '../systems/legacyViewport.js';
 
 const Phaser=window.Phaser;
 const SINGLET_KEYS={Shooter:'singlet_shooter',Rider:'singlet_rider',Scrambler:'singlet_scrambler'};
@@ -8,9 +9,10 @@ const SINGLET_KEYS={Shooter:'singlet_shooter',Rider:'singlet_rider',Scrambler:'s
 export class StarterScene extends Phaser.Scene{
   constructor(){super('StarterScene');}
   create(data={}){
+    fitLegacyViewport(this);
     this.story=!!data.story;
-    this.returnArea=data.returnArea||'wrestlingroom';
-    this.returnPos=data.returnPos||{x:10,y:6};
+    this.returnArea=data.returnArea||'wrestling_room';
+    this.returnPos=data.returnPos||{x:7,y:7};
     this.phase='intro';this.sel=0;this.confirmSel=0;this.rivalPage=0;this.launching=false;
     this.cameras.main.setBackgroundColor('#111c2d');
     this.input.keyboard.on('keydown-LEFT',()=>this.move(-1,0));
