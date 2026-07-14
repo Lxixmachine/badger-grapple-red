@@ -82,6 +82,30 @@ export const sfx = {
   warp: () => { tone(300, 0.12, { type: 'sawtooth', gainStart: 0.2, slideTo: 700 }); tone(700, 0.1, { type: 'sawtooth', gainStart: 0.16, slideTo: 1200, delay: 0.1 }); },
   hit: () => { noiseThud(0.12, { gain: 0.35, filterFreq: 500 }); tone(180, 0.1, { type: 'square', gainStart: 0.25, slideTo: 80, delay: 0.02 }); },
   miss: () => tone(300, 0.15, { type: 'sine', gainStart: 0.18, slideTo: 200 }),
+  technique: (style = 'Open', phase = 'windup') => {
+    const impact = phase === 'impact';
+    if (style === 'Shooter') {
+      tone(impact ? 190 : 620, impact ? 0.1 : 0.13, {type: 'square', gainStart: impact ? 0.2 : 0.13, slideTo: impact ? 80 : 260});
+      if (impact) noiseThud(0.08, {gain: 0.22, filterFreq: 620});
+    } else if (style === 'Rider') {
+      tone(impact ? 105 : 260, impact ? 0.15 : 0.12, {type: 'triangle', gainStart: impact ? 0.23 : 0.12, slideTo: impact ? 62 : 190});
+      if (impact) noiseThud(0.16, {gain: 0.28, filterFreq: 260});
+    } else if (style === 'Scrambler') {
+      tone(impact ? 360 : 540, 0.08, {type: 'square', gainStart: 0.14, slideTo: impact ? 210 : 760});
+      tone(impact ? 220 : 760, 0.07, {type: 'triangle', gainStart: 0.12, slideTo: impact ? 150 : 420, delay: 0.065});
+    } else if (style === 'Bull') {
+      tone(impact ? 82 : 130, impact ? 0.18 : 0.16, {type: 'sawtooth', gainStart: impact ? 0.25 : 0.13, slideTo: impact ? 46 : 88});
+      if (impact) noiseThud(0.18, {gain: 0.34, filterFreq: 190});
+    } else if (style === 'Wall') {
+      tone(impact ? 230 : 340, 0.12, {type: 'triangle', gainStart: 0.15, slideTo: impact ? 150 : 280});
+      if (impact) tone(345, 0.1, {type: 'square', gainStart: 0.1, slideTo: 220, delay: 0.035});
+    } else if (style === 'Thrower') {
+      tone(impact ? 120 : 190, impact ? 0.2 : 0.16, {type: 'sawtooth', gainStart: impact ? 0.24 : 0.13, slideTo: impact ? 55 : 430});
+      if (impact) noiseThud(0.2, {gain: 0.32, filterFreq: 230});
+    } else {
+      tone(impact ? 150 : 400, 0.12, {type: 'square', gainStart: 0.15, slideTo: impact ? 80 : 250});
+    }
+  },
   win: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.16, { type: 'square', gainStart: 0.22, delay: i * 0.1 })); },
   lose: () => { [392, 349, 294].forEach((f, i) => tone(f, 0.22, { type: 'sine', gainStart: 0.2, delay: i * 0.13 })); },
   badge: () => { [392, 523, 659, 784, 987].forEach((f, i) => tone(f, 0.2, { type: 'square', gainStart: 0.24, delay: i * 0.09 })); },

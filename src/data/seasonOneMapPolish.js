@@ -73,7 +73,7 @@ export const SEASON_ONE_MAP_POLISH = {
     actors: [
       actor('equipment_manager', 'manager', 11, 18, 'right', 'The shipment is inside. Coach wants your roster ready.'),
       actor('field_house_regular', 'wrestler', 6, 13, 'down', 'The Field House rewards wrestlers who pressure first.'),
-      actor('field_house_student', 'student', 35, 16, 'left', "Bucky's Locker Room has the gear counter."),
+      actor('field_house_student', 'student', 35, 16, 'left', "Bucky's Locker Room has the gear counter.", {patrol: {axis: 'vertical', radius: 1, interval: 1550}}),
       actor('field_house_trainer', 'trainer', 4, 8, 'down', "The Trainer's Room restores Condition and Stamina.")
     ]
   },
@@ -93,7 +93,7 @@ export const SEASON_ONE_MAP_POLISH = {
     actors: [
       actor('lakeshore_scout', 'scout', 13, 5, 'down', 'Open mats are where overlooked wrestlers get noticed.'),
       actor('blue_chip_scout', 'athlete', 19, 9, 'right', 'Some recruits only appear off the main trail.'),
-      actor('lakeshore_runner', 'student', 8, 7, 'right', 'Picnic Point is west along the shore.')
+      actor('lakeshore_runner', 'student', 8, 7, 'right', 'Picnic Point is west along the shore.', {patrol: {axis: 'horizontal', radius: 2, interval: 1250}})
     ]
   },
   picnic_point: {
@@ -108,7 +108,7 @@ export const SEASON_ONE_MAP_POLISH = {
     ],
     actors: [
       actor('funk_doctor_actor', 'wrestler', 7, 7, 'down', 'The Funk Doctor: Balance disappears when rhythm changes.'),
-      actor('picnic_camper', 'camper', 15, 8, 'left', 'The fire circle marks the point. The trail back is east.'),
+      actor('picnic_camper', 'camper', 15, 8, 'left', 'The fire circle marks the point. The trail back is east.', {patrol: {axis: 'horizontal', radius: 1, interval: 1750}}),
       actor('picnic_scout', 'scout', 11, 9, 'up', 'Win here and the Picnic Point credential is yours.')
     ]
   },
@@ -132,7 +132,7 @@ export const SEASON_ONE_MAP_POLISH = {
     actors: [
       actor('deion_actor', 'wrestler', 9, 9, 'right', 'Deion: Throws start with footwork, not force.'),
       actor('state_thrower', 'athlete', 28, 9, 'left', 'Own the center before you reach for the body lock.'),
-      actor('state_vendor', 'student', 24, 11, 'up', 'The Capitol is east. Bascom Hill branches north.'),
+      actor('state_vendor', 'student', 24, 11, 'up', 'The Capitol is east. Bascom Hill branches north.', {patrol: {axis: 'horizontal', radius: 2, interval: 1650}}),
       actor('state_official', 'official', 40, 9, 'left', 'Capitol Square begins beyond this block.')
     ]
   },
@@ -174,7 +174,7 @@ export const SEASON_ONE_MAP_POLISH = {
       actor('capitol_booster', 'manager', 9, 15, 'right', 'I can get you onto Monona. Earn the voucher first.'),
       actor('capitol_trainer', 'trainer', 5, 7, 'down', "The Trainer's Room is northwest of the square."),
       actor('capitol_shopkeeper', 'student', 31, 20, 'right', "Bucky's Locker Room is southeast."),
-      actor('capitol_citizen', 'student', 13, 18, 'up', 'The square is a loop. Every landmark returns you to the axis.')
+      actor('capitol_citizen', 'student', 13, 18, 'up', 'The square is a loop. Every landmark returns you to the axis.', {patrol: {axis: 'horizontal', radius: 1, interval: 1700}})
     ]
   },
   monona_shore: {
@@ -213,7 +213,7 @@ export const SEASON_ONE_MAP_POLISH = {
     actors: [
       actor('conference_official', 'official', 20, 18, 'down', 'Check in here. The bracket is posted inside.'),
       actor('kohl_trainer', 'trainer', 5, 23, 'up', 'Recover before you enter a bracket.'),
-      actor('kohl_fan', 'student', 8, 8, 'left', 'Championship Plaza keeps the district human-sized.'),
+      actor('kohl_fan', 'student', 8, 8, 'left', 'Championship Plaza keeps the district human-sized.', {patrol: {axis: 'horizontal', radius: 1, interval: 1450}}),
       actor('bus_manager', 'manager', 28, 18, 'right', 'The team bus returns to Camp Randall after the bracket.')
     ]
   },
@@ -250,7 +250,7 @@ export const SEASON_ONE_MAP_POLISH = {
     ],
     actors: [
       actor('stl_trainer', 'trainer', 5, 25, 'up', "The Trainer's Room is west of the arena district."),
-      actor('stl_fan', 'student', 31, 10, 'up', 'The Arch passage opens after the final.')
+      actor('stl_fan', 'student', 31, 10, 'up', 'The Arch passage opens after the final.', {patrol: {axis: 'horizontal', radius: 2, interval: 1350}})
     ]
   },
   wrestling_room: {

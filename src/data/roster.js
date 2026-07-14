@@ -37,6 +37,20 @@ export const ROSTER={
  professor:{id:'professor',name:'The Professor',weight:'174',style:'Wall',rarity:'Elite',asset:'neutral',tint:0xc8c4ff,stats:{hp:106,attack:72,defense:96,technique:59,awareness:98,speed:54},moves:['whizzer','sprawl','reattack','single'],bio:'Bascom captain. Every attack has already been studied.',strengths:'Counter wrestling',weaknesses:'None obvious',personality:'Analytical'},
  closer:{id:'closer',name:'The Closer',weight:'184',style:'Bull',rarity:'Elite',asset:'pace',tint:0x9ff0b6,stats:{hp:118,attack:96,defense:78,technique:77,awareness:80,speed:87},moves:['flurry','grind','double','pace'],bio:'St. Louis captain. His pace ends seasons.',strengths:'Relentless pressure',weaknesses:'None obvious',personality:'Unyielding'}
 };
+export const BATTLE_SPIRITS={
+  buckshot:'Badger',buckvarsity:'Badger',buckallam:'Badger',
+  matreturner:'Gorilla',matgeneral:'Gorilla',rideking:'Gorilla',
+  fieldflyer:'Red Panda',funkflyer:'Red Panda',scramblesaint:'Red Panda',
+  pacesetter:'Gator',pacecommand:'Gator',drillpartner:'River Otter',drillveteran:'River Otter',
+  lakechain:'Timber Wolf',chainmaster:'Timber Wolf',whizzkid:'Porcupine',lockthrow:'Bighorn Ram',
+  riverroller:'Beaver',tilttech:'Lynx',funklord:'Ring-tailed Lemur',
+  captainneutral:'Cougar',scrambleboss:'Capuchin',topboss:'Bison',
+  senator:'Red Deer',professor:'Snapping Turtle',closer:'Wolverine'
+};
+Object.entries(ROSTER).forEach(([id,record])=>{
+  record.battleAsset=id;
+  record.spirit=BATTLE_SPIRITS[id];
+});
 const EFFORT_YIELDS={
   buckshot:{stat:'technique',amount:1},buckvarsity:{stat:'technique',amount:2},buckallam:{stat:'technique',amount:3},
   matreturner:{stat:'defense',amount:1},matgeneral:{stat:'defense',amount:2},rideking:{stat:'defense',amount:3},
@@ -51,7 +65,9 @@ const EFFORT_YIELDS={
 Object.entries(EFFORT_YIELDS).forEach(([id,effortYield])=>{ROSTER[id].effortYield=effortYield;});
 // The battle-persona canon: on the mat, wrestlers take their spirit form.
 export const PERSONAS={badger:'Badger',neutral:'Grizzly',top:'Gorilla',scramble:'Red Panda',pace:'Gator'};
-export function personaFor(id){return PERSONAS[(ROSTER[id]||ROSTER.buckshot).asset]||'Badger';}
+export function personaFor(id){return (ROSTER[id]||ROSTER.buckshot).spirit||'Badger';}
+export function battleAssetFor(id){return (ROSTER[id]||ROSTER.buckshot).battleAsset;}
+export function battleTextureFor(id,back=false){return `battle_${battleAssetFor(id)}${back?'_back':''}`;}
 export const STARTERS=['buckshot','matreturner','fieldflyer'];
 export const STARTER_COUNTERS={buckshot:'fieldflyer',matreturner:'buckshot',fieldflyer:'matreturner'};
 export function counterStarterFor(id){return STARTER_COUNTERS[id]||STARTERS[1];}

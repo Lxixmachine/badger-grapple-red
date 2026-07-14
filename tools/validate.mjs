@@ -347,7 +347,20 @@ TOURNAMENT.rounds.forEach((r,i)=>{
   (r.team||[]).forEach(([id])=>{if(!ROSTER[id])errs.push(`tournament round ${i} team member '${id}' missing from ROSTER`);});
   if(!r.trainerName||!r.intro||!r.win)errs.push(`tournament round ${i} is missing trainerName/intro/win text`);
 });
-for(const [id,r] of Object.entries(ROSTER)){if(!PERSONAS[r.asset])errs.push(`roster ${id}: asset '${r.asset}' has no persona name (battle-form fiction breaks)`);}
+const battleAssets=new Set();
+for(const [id,r] of Object.entries(ROSTER)){
+  if(!PERSONAS[r.asset])errs.push(`roster ${id}: asset '${r.asset}' has no persona family (battle-form fiction breaks)`);
+  if(!r.spirit)errs.push(`roster ${id}: spirit identity is missing`);
+  if(!r.battleAsset)errs.push(`roster ${id}: battleAsset is missing`);
+  if(battleAssets.has(r.battleAsset))errs.push(`roster ${id}: battleAsset '${r.battleAsset}' is not unique`);
+  battleAssets.add(r.battleAsset);
+  for(const suffix of ['', '_back']){
+    const sprite=fileURLToPath(new URL(`../public/assets/sprites/battle_${r.battleAsset}${suffix}_v3.png`,import.meta.url));
+    if(!existsSync(sprite)){errs.push(`roster ${id}: battle sprite '${sprite}' is missing`);continue;}
+    const bytes=readFileSync(sprite);
+    if(bytes.length<24||bytes.readUInt32BE(16)!==144||bytes.readUInt32BE(20)!==144)errs.push(`roster ${id}: ${suffix?'back':'front'} battle sprite must be exactly 144x144`);
+  }
+}
 
 // v21.43 Gen-1 encounter slots: every encounter area needs a 10-slot table,
 // canonical 256-sum chances, roster-valid ids, and levels inside the band.

@@ -1,5 +1,39 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.4 Roster Motion)
+
+The full 26-wrestler roster now has an original Imagegen-authored visual
+identity instead of sharing ten generic persona portraits. Every wrestler owns
+a 144x144 front and back battle asset, a named animal spirit, and a stable
+runtime texture key. Eight retained source boards, transparent masters, and the
+prompt record live under `art/imagegen/`; `tools/prepare_roster_battle_assets.py`
+is the deterministic manifest-driven compiler and rejects bad dimensions,
+opaque corners, and undersized crops. Boot, scouting, battles, the intro, and
+development ceremonies all resolve art through the roster contract.
+
+Generated fronts are authored facing screen-left and generated backs face
+screen-right. BattleScene must not blanket-flip opponents: the enemy occupies
+the upper-right and already looks toward the player, while the player back
+sprite already looks toward the enemy. This is now asserted in the battle
+presentation test after Tony caught the reversed opponent poses.
+
+Technique presentation now has style-specific windups, trails, impact bursts,
+camera response, brief hit-stop, setup/miss treatment, and synthesized audio
+signatures for Shooter, Rider, Scrambler, Bull, Wall, and Thrower techniques.
+Seven ambient Season One actors opt into bounded, deterministic, grid-safe
+patrols using their authored directional walk sheets. Patrol runtime state is
+cloned on map entry so repeated visits cannot drift authored actor coordinates.
+The first assigned Field House arrival also gets a short venue camera reveal
+before the equipment objective returns control.
+
+Production build passes. The complete Chromium suite passes deterministically:
+83/83 tests with one worker. A parallel run had two load-contention timeouts;
+both exact cases passed immediately in isolation. Phone QA covered regular and
+elite battles, inward sprite facing, readable move panels, and an ambient route
+with no browser warnings. The repository validator still stops on Tony's
+pre-existing State Street composition draft; do not regenerate or include the
+dirty downtown composition files when handling this release.
+
 ## Latest Codex Turn (v22.3 Battle Presentation)
 
 The Season One runtime now treats every 3x4 actor sheet as a real directional

@@ -145,10 +145,15 @@ test('battle presentation is native resolution and preserves FireRed-style actio
     return {
       width:scene.cameras.main.width,height:scene.cameras.main.height,zoom:scene.cameras.main.zoom,
       playerTexture:scene.playerSprite.texture.key,enemyTexture:scene.enemySprite.texture.key,
-      playerWidth:scene.playerSprite.displayWidth,enemyWidth:scene.enemySprite.displayWidth
+      playerWidth:scene.playerSprite.displayWidth,enemyWidth:scene.enemySprite.displayWidth,
+      playerFlipX:scene.playerSprite.flipX,enemyFlipX:scene.enemySprite.flipX
     };
   });
-  expect(presentation).toMatchObject({width:480,height:320,zoom:1,playerTexture:'battle_badger_back',enemyTexture:'battle_neutral'});
+  expect(presentation).toMatchObject({
+    width:480,height:320,zoom:1,
+    playerTexture:'battle_buckshot_back',enemyTexture:'battle_drillpartner',
+    playerFlipX:false,enemyFlipX:false
+  });
   expect(presentation.playerWidth).toBeGreaterThanOrEqual(140);
   expect(presentation.enemyWidth).toBeGreaterThanOrEqual(140);
 

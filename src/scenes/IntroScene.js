@@ -109,7 +109,7 @@ export class IntroScene extends Phaser.Scene{
   }
   drawSubject(subject){
     if(subject==='coach')this.add.image(160,9,'coach_intro').setOrigin(.5,0);
-    if(subject==='spirit')this.add.image(160,88,'battle_badger').setDisplaySize(104,104);
+    if(subject==='spirit')this.add.image(160,88,'battle_buckshot').setDisplaySize(104,104);
     if(subject==='player')this.add.sprite(160,140,'player',1).setOrigin(.5,1).setScale(2.65);
     if(subject==='rex')this.add.sprite(160,140,'npc_rex',1).setOrigin(.5,1).setScale(2.65);
   }

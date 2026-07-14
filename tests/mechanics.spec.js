@@ -1,7 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
-import {ROSTER,addXp,allMovesSpent,counterStarterFor,currentMoveStamina,makeMon,restoreMoveStamina,scaledStats,xpNeed} from '../src/data/roster.js';
+import {ROSTER,addXp,allMovesSpent,battleAssetFor,battleTextureFor,counterStarterFor,currentMoveStamina,makeMon,personaFor,restoreMoveStamina,scaledStats,xpNeed} from '../src/data/roster.js';
 import {calculateStat,effortTotal,MAX_TOTAL_EFFORT,potentialFor,STAT_KEYS} from '../src/data/stats.js';
 import {defaultState,defeatedWrestlerCount,normalizeState,rosterBookComplete} from '../src/systems/save.js';
 import {
@@ -46,6 +46,19 @@ test('Rex selects the style counter to every opening persona',()=>{
   expect(counterStarterFor('buckshot')).toBe('fieldflyer');
   expect(counterStarterFor('matreturner')).toBe('buckshot');
   expect(counterStarterFor('fieldflyer')).toBe('matreturner');
+});
+
+test('every roster entry owns a unique front and back battle identity',()=>{
+  const assets=Object.values(ROSTER).map(record=>record.battleAsset);
+  expect(new Set(assets).size).toBe(Object.keys(ROSTER).length);
+  for(const record of Object.values(ROSTER)){
+    expect(battleAssetFor(record.id)).toBe(record.id);
+    expect(battleTextureFor(record.id)).toBe(`battle_${record.id}`);
+    expect(battleTextureFor(record.id,true)).toBe(`battle_${record.id}_back`);
+    expect(personaFor(record.id)).toBe(record.spirit);
+  }
+  expect(personaFor('professor')).toBe('Snapping Turtle');
+  expect(personaFor('closer')).toBe('Wolverine');
 });
 
 test('authored overworld characters use semantic generated identities',()=>{

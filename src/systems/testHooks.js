@@ -41,6 +41,16 @@ export function installTestHooks(game, routeVirtualButton) {
       playerAnimation: scene.player?.anims?.currentAnim?.key ?? null,
       playerAnimationPlaying: scene.player?.anims?.isPlaying ?? null,
       actorIds: scene.actorEntries ? scene.actorEntries.map(e => e.data.id) : null,
+      actorStates: scene.actorEntries ? scene.actorEntries.map(e => ({
+        id: e.data.id,
+        x: e.data.x,
+        y: e.data.y,
+        facing: e.data.facing,
+        moving: Boolean(e.moving),
+        animation: e.sprite.anims?.currentAnim?.key || null,
+        animationPlaying: Boolean(e.sprite.anims?.isPlaying),
+        frame: e.sprite.frame?.name ?? null
+      })) : null,
       npcScales: scene.actorEntries ? scene.actorEntries.map(e => e.sprite.scaleX) : scene.npcList ? scene.npcList.map(e => e.npc.scaleX) : null,
       passable: scene.pass && scene.tilePos ? {
         left: scene.pass(scene.tilePos.x - 1, scene.tilePos.y),
@@ -54,6 +64,12 @@ export function installTestHooks(game, routeVirtualButton) {
       trainerName: scene.trainerName ?? null,
       battleType: scene.type ?? null,
       battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,
+      battleSprites: scene.enemySprite && scene.playerSprite ? {
+        enemyTexture: scene.enemySprite.texture?.key ?? null,
+        enemyFlipX: Boolean(scene.enemySprite.flipX),
+        playerTexture: scene.playerSprite.texture?.key ?? null,
+        playerFlipX: Boolean(scene.playerSprite.flipX)
+      } : null,
       moveLearning: scene.moveLearn ? {
         wrestlerId: scene.moveLearn.mon?.id ?? null,
         move: scene.moveLearn.move ?? null,

@@ -400,6 +400,7 @@ function makeActor(actor, mapId) {
     facing: actor.facing || 'down',
     solid: actor.solid !== false,
     condition: actor.condition || null,
+    patrol: deepClone(actor.patrol || null),
     dialogue: actor.dialogue || '',
     path: sheet.path,
     frameWidth: sheet.frameWidth,

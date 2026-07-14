@@ -121,6 +121,31 @@ test('Season One movement plays a directional walk cycle and lands on its idle f
   expect((await sceneState(page)).playerFrame).toBe(7);
 });
 
+test('opt-in ambient actors patrol on the grid with their walk animation', async ({page}) => {
+  await bootMap(page, 'lakeshore_path');
+  const initial = (await sceneState(page)).actorStates.find(actor => actor.id === 'lakeshore_runner');
+  expect(initial).toBeTruthy();
+  await expect.poll(async () => {
+    const runner = (await sceneState(page)).actorStates.find(actor => actor.id === 'lakeshore_runner');
+    return runner && (runner.x !== initial.x || runner.y !== initial.y || runner.animationPlaying);
+  }, {timeout: 6000, intervals: [80, 100, 120]}).toBe(true);
+  const runner = (await sceneState(page)).actorStates.find(actor => actor.id === 'lakeshore_runner');
+  expect(Math.abs(runner.x - initial.x)).toBeLessThanOrEqual(2);
+  expect(runner.y).toBe(initial.y);
+});
+
+test('first assigned Field House arrival reveals the venue before returning control', async ({page}) => {
+  await bootMap(page, 'field_house', {x: 20, y: 1});
+  await page.evaluate(() => {
+    window.__badgerTest.patchStorage({flags: {assignment: true, fieldHouseArrival: false}, message: ''});
+    window.__badgerTest.restartOverworld();
+  });
+  await expect.poll(async () => (await sceneState(page))?.inputLocked).toBe(true);
+  await expect.poll(async () => (await sceneState(page))?.message, {timeout: 5000}).toContain("Deliver Coach's equipment");
+  expect(await page.evaluate(() => window.__badgerTest.storage().flags.fieldHouseArrival)).toBe(true);
+  expect((await sceneState(page)).inputLocked).toBe(false);
+});
+
 test('exterior venue doors enter and return through their exact grid cell', async ({page}) => {
   await bootMap(page, 'field_house', {x: 20, y: 17});
   await press(page, 'a');

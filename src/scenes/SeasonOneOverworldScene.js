@@ -150,6 +150,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.ensureWalkAnimations();
     this.renderCurrentMap();
     this.drawHud();
+    this.actorPatrolClock = this.time.addEvent({delay: 200, loop: true, callback: () => this.updateActorPatrols()});
 
     const recoveryPending = this.state.flags.openingBattleComplete && !this.state.flags.openingRecoveryDone;
     const battlePending = this.state.flags.openingBattleReady && !this.state.flags.openingBattleComplete;
@@ -245,7 +246,10 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   renderCurrentMap() {
     this.clearWorld();
     this.map = seasonMap(this.currentMapId);
-    this.visibleActors = actorsForMap(this.map, this.state);
+    this.visibleActors = actorsForMap(this.map, this.state).map((actor) => ({
+      ...actor,
+      patrol: actor.patrol ? { ...actor.patrol } : null,
+    }));
     this.tilePos = this.findSafeSpawn(this.tilePos);
     this.renderGround();
     this.renderStructures();
@@ -255,6 +259,35 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.cameras.main.startFollow(this.player, true, 1, 1, 0, -18);
     this.cameras.main.setDeadzone(16, 16);
     this.showAreaToast(this.map.name);
+    this.time.delayedCall(220, () => this.maybePlayArrivalReveal());
+  }
+
+  maybePlayArrivalReveal() {
+    if (this.currentMapId !== 'field_house' || this.state.flags.fieldHouseArrival || !this.state.flags.assignment || !this.player?.scene) return;
+    this.state.flags.fieldHouseArrival = true;
+    saveState(this.state);
+    this.inputLocked = true;
+    this.heldDirection = null;
+    this.cameras.main.stopFollow();
+    const topBar = this.add.rectangle(VIEW_W / 2, -12, VIEW_W, 24, 0x08080a, 1).setScrollFactor(0).setDepth(4901);
+    const bottomBar = this.add.rectangle(VIEW_W / 2, VIEW_H + 12, VIEW_W, 24, 0x08080a, 1).setScrollFactor(0).setDepth(4901);
+    this.tweens.add({targets: topBar, y: 12, duration: 180, ease: 'Cubic.Out'});
+    this.tweens.add({targets: bottomBar, y: VIEW_H - 12, duration: 180, ease: 'Cubic.Out'});
+    this.cameras.main.pan(20.5 * CELL_SIZE, 13 * CELL_SIZE, 720, 'Sine.easeInOut');
+    this.time.delayedCall(920, () => {
+      if (this.currentMapId !== 'field_house' || !this.player?.scene) return;
+      this.cameras.main.pan(this.player.x, this.player.y - 18, 520, 'Sine.easeInOut');
+      this.tweens.add({targets: topBar, y: -12, delay: 330, duration: 180, ease: 'Cubic.In', onComplete: () => topBar.destroy()});
+      this.tweens.add({targets: bottomBar, y: VIEW_H + 12, delay: 330, duration: 180, ease: 'Cubic.In', onComplete: () => bottomBar.destroy()});
+    });
+    this.time.delayedCall(1490, () => {
+      if (this.currentMapId !== 'field_house' || !this.player?.scene) return;
+      this.cameras.main.startFollow(this.player, true, 1, 1, 0, -18);
+      this.cameras.main.setDeadzone(16, 16);
+      this.inputLocked = false;
+      sfx.open?.();
+      this.showMessage("The Field House. Deliver Coach's equipment to the manager in the west forecourt.");
+    });
   }
 
   renderGround() {
@@ -309,8 +342,74 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       const shadow = this.trackWorld(this.add.ellipse(position.x, position.y - 3, 24, 8, 0x10120f, 0.38).setDepth(position.y - 2));
       const sprite = this.trackWorld(this.add.sprite(position.x, position.y, texture, DIRS[actor.facing]?.idle ?? DIRS.down.idle)
         .setOrigin(0.5, 1).setDepth(position.y));
-      this.actorEntries.push({data: actor, sprite, shadow});
+      const stagger = [...actor.id].reduce((sum, char) => sum + char.charCodeAt(0), 0) % 520;
+      this.actorEntries.push({
+        data: actor,
+        sprite,
+        shadow,
+        texture,
+        origin: {x: actor.x, y: actor.y},
+        patrolDirection: 1,
+        nextPatrolAt: this.time.now + (actor.patrol?.interval || 1600) + stagger,
+        moving: false
+      });
     }
+  }
+
+  updateActorPatrols() {
+    if (this.inputLocked || this.messageOpen || this.moving || !this.player) return;
+    const now = this.time.now || 0;
+    for (const entry of this.actorEntries) {
+      const patrol = entry.data.patrol;
+      if (!patrol || entry.moving || now < entry.nextPatrolAt) continue;
+      const horizontal = patrol.axis !== 'vertical';
+      const radius = Math.max(1, Number(patrol.radius) || 1);
+      const current = horizontal ? entry.data.x : entry.data.y;
+      const origin = horizontal ? entry.origin.x : entry.origin.y;
+      if (current - origin >= radius) entry.patrolDirection = -1;
+      if (current - origin <= -radius) entry.patrolDirection = 1;
+      const direction = horizontal
+        ? (entry.patrolDirection > 0 ? 'right' : 'left')
+        : (entry.patrolDirection > 0 ? 'down' : 'up');
+      const config = DIRS[direction];
+      const target = {x: entry.data.x + config.dx, y: entry.data.y + config.dy};
+      const others = this.actorEntries.filter(other => other !== entry).map(other => other.data);
+      const playerOccupies = this.tilePos.x === target.x && this.tilePos.y === target.y;
+      if (playerOccupies || !isSeasonPassable(this.map, target.x, target.y, this.state, others)) {
+        entry.patrolDirection *= -1;
+        entry.nextPatrolAt = now + 500;
+        continue;
+      }
+      this.moveActor(entry, target, direction);
+      entry.nextPatrolAt = now + (Number(patrol.interval) || 1600);
+    }
+  }
+
+  moveActor(entry, target, direction) {
+    const position = this.worldPosition(target.x, target.y);
+    entry.moving = true;
+    entry.data.x = target.x;
+    entry.data.y = target.y;
+    entry.data.facing = direction;
+    entry.sprite.play(`${entry.texture}:walk-${direction}`, true);
+    this.tweens.add({targets: entry.shadow, x: position.x, y: position.y - 3, duration: STEP_MS, ease: 'Linear'});
+    this.tweens.add({
+      targets: entry.sprite,
+      x: position.x,
+      y: position.y,
+      duration: STEP_MS,
+      ease: 'Linear',
+      onUpdate: () => {
+        entry.sprite.setDepth(entry.sprite.y);
+        entry.shadow.setDepth(entry.sprite.y - 2);
+      },
+      onComplete: () => {
+        if (!entry.sprite.scene) return;
+        entry.sprite.stop();
+        entry.sprite.setFrame(DIRS[direction].idle);
+        entry.moving = false;
+      }
+    });
   }
 
   createPlayer() {
