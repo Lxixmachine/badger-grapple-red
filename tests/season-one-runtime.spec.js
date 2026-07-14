@@ -113,7 +113,7 @@ test('Season One movement plays a directional walk cycle and lands on its idle f
   await press(page, 'right');
   await page.waitForTimeout(70);
   const walking = await sceneState(page);
-  expect(walking.playerAnimation).toBe('season-actor:player:walk-right');
+  expect(['season-actor:player:step-right-0', 'season-actor:player:step-right-1']).toContain(walking.playerAnimation);
   expect(walking.playerAnimationPlaying).toBe(true);
   expect([6, 7, 8]).toContain(Number(walking.playerFrame));
 

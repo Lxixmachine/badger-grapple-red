@@ -31,7 +31,7 @@ import {playMusic, setMuted, sfx, unlockAudio} from '../systems/audio.js';
 const Phaser = window.Phaser;
 const VIEW_W = 480;
 const VIEW_H = 320;
-const STEP_MS = 165;
+const STEP_MS = 240; // FireRed walks ~266ms/tile; held steps chain seamlessly from the tween's onComplete
 const DIRS = {
   down: {dx: 0, dy: 1, idle: 1, frames: [0, 1, 2]},
   left: {dx: -1, dy: 0, idle: 4, frames: [3, 4, 5]},
@@ -220,16 +220,22 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   }
 
   ensureWalkAnimations() {
+    // FireRed gait: one tile = step frame then idle frame, alternating feet each tile.
+    // Two frames spanning exactly STEP_MS keeps the animation locked to the movement tween.
+    const frameRate = 2000 / STEP_MS;
     for (const asset of SEASON_ONE_PROJECT.assets.actors) {
       const texture = `season-actor:${asset.sourceId}`;
       for (const [direction, config] of Object.entries(DIRS)) {
-        const key = `${texture}:walk-${direction}`;
-        if (this.anims.exists(key)) continue;
-        this.anims.create({
-          key,
-          frames: config.frames.map(frame => ({key: texture, frame})),
-          frameRate: 18,
-          repeat: -1
+        const stepFrames = [config.frames[0], config.frames[2]];
+        stepFrames.forEach((stepFrame, parity) => {
+          const key = `${texture}:step-${direction}-${parity}`;
+          if (this.anims.exists(key)) return;
+          this.anims.create({
+            key,
+            frames: [stepFrame, config.idle].map(frame => ({key: texture, frame})),
+            frameRate,
+            repeat: 0
+          });
         });
       }
     }
@@ -257,7 +263,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.createPlayer();
     this.cameras.main.setBounds(0, 0, this.map.width * CELL_SIZE, this.map.height * CELL_SIZE);
     this.cameras.main.startFollow(this.player, true, 1, 1, 0, -18);
-    this.cameras.main.setDeadzone(16, 16);
+    this.cameras.main.setDeadzone(0, 0); // FireRed locks the player to screen center
     this.showAreaToast(this.map.name);
     this.time.delayedCall(220, () => this.maybePlayArrivalReveal());
   }
@@ -283,7 +289,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.time.delayedCall(1490, () => {
       if (this.currentMapId !== 'field_house' || !this.player?.scene) return;
       this.cameras.main.startFollow(this.player, true, 1, 1, 0, -18);
-      this.cameras.main.setDeadzone(16, 16);
+      this.cameras.main.setDeadzone(0, 0); // FireRed locks the player to screen center
       this.inputLocked = false;
       sfx.open?.();
       this.showMessage("The Field House. Deliver Coach's equipment to the manager in the west forecourt.");
@@ -391,7 +397,8 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     entry.data.x = target.x;
     entry.data.y = target.y;
     entry.data.facing = direction;
-    entry.sprite.play(`${entry.texture}:walk-${direction}`, true);
+    entry.stepParity = entry.stepParity ? 0 : 1;
+    entry.sprite.play(`${entry.texture}:step-${direction}-${entry.stepParity}`, true);
     this.tweens.add({targets: entry.shadow, x: position.x, y: position.y - 3, duration: STEP_MS, ease: 'Linear'});
     this.tweens.add({
       targets: entry.sprite,
@@ -473,9 +480,10 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     }
     this.tilePos = next;
     this.moving = true;
+    this.stepParity = this.stepParity ? 0 : 1;
     const position = this.worldPosition(next.x, next.y);
     sfx.step?.();
-    this.player.play(`season-actor:player:walk-${direction}`, true);
+    this.player.play(`season-actor:player:step-${direction}-${this.stepParity}`, true);
     this.tweens.add({targets: this.shadow, x: position.x, y: position.y - 3, duration: STEP_MS, ease: 'Linear'});
     this.tweens.add({
       targets: this.player,
@@ -488,10 +496,13 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         this.shadow.setDepth(this.player.y - 2);
       },
       onComplete: () => {
-        this.player.stop();
         this.moving = false;
         this.setFacing(direction);
         this.afterStep();
+        // Held walking chains the next step immediately; waiting for holdClock leaves dead gaps.
+        if (this.heldDirection && !this.moving && !this.inputLocked && !this.messageOpen) {
+          this.tryMove(this.heldDirection);
+        }
       }
     });
   }
