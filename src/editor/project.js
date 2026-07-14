@@ -473,7 +473,14 @@ export function createSeedProject() {
     }
   }
   maps[production.map.id] = makeMap(production.map.id, production.map, campLayout, 'exterior');
-  maps[production.map.id].actors.push(...(mapPolish(production.map.id).actors || []).map(actor => makeActor(actor, production.map.id)));
+  const campPolish = mapPolish(production.map.id);
+  for (const owner of campPolish.objects || []) {
+    const built = plannedObject(production.map.id, owner, 'decorations', campLayout);
+    objectAssets.push(built.asset);
+    maps[production.map.id].objects.push(built.object);
+  }
+  maps[production.map.id].actors.push(...(campPolish.actors || []).map(actor => makeActor(actor, production.map.id)));
+  maps[production.map.id].events.push(...deepClone(campPolish.events || []));
 
   for (const mapId of layouts.region.reviewOrder) {
     if (mapId === production.map.id) continue;

@@ -51,7 +51,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'shore_water_blob_n_e_s_w_ne_se_sw_nw').behavior).toBe('water');
   expect(state.project.assets.objects.some(asset => asset.id === 'world:tree_oak_a')).toBe(true);
   expect(state.project.maps.camp_randall.objects.every(object => object.metatiles?.length === object.height)).toBe(true);
-  expect(state.project.maps.camp_randall.objects).toHaveLength(8);
+  expect(state.project.maps.camp_randall.objects).toHaveLength(28);
   const camp = state.project.maps.camp_randall;
   expect(camp.terrain[10][5]).toBe('grass');
   expect(camp.terrain[11][5]).toMatch(/^surface_stone_blob_/);
@@ -168,14 +168,14 @@ test('assets place on whole cells and undo restores the prior map', async ({page
   await page.getByRole('button', {name: 'memory garden', exact: true}).click();
   await clickCell(page, 10, 8);
 
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(9);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(29);
   let state = await editorState(page);
   const placed = state.project.maps.camp_randall.objects.find(entry => entry.id === 'memory_garden_2');
   expect(placed).toMatchObject({x: 10, y: 8, width: 6, height: 4, depthMode: 'row-sliced'});
   expect(placed.metatiles).toHaveLength(4);
 
   await page.getByRole('button', {name: 'Undo'}).click();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(8);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(28);
   expect(issues).toEqual([]);
 });
 
@@ -377,7 +377,7 @@ test('terrain, events, actors, and camera reviews are editable layers', async ({
 
   await page.getByRole('button', {name: 'Events', exact: true}).click();
   await clickCell(page, 10, 14);
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.length).toBe(4);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.length).toBe(7);
 
   await page.getByRole('tab', {name: 'Actors'}).click();
   const actorAssets = (await editorState(page)).project.assets.actors.map(asset => asset.sourceId);
