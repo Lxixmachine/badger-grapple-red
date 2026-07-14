@@ -121,6 +121,53 @@ test('Season One movement plays a directional walk cycle and lands on its idle f
   expect((await sceneState(page)).playerFrame).toBe(7);
 });
 
+test('data-driven message events trigger on step and respect their once flag', async ({page}) => {
+  const spawn = await bootMap(page, 'camp_randall');
+  const direction = ['down', 'up', 'left', 'right'].find(key => spawn.passable[key]);
+  expect(direction).toBeTruthy();
+  const delta = {down: [0, 1], up: [0, -1], left: [-1, 0], right: [1, 0]}[direction];
+  await page.evaluate(({delta}) => {
+    const scene = window.badgerGame.scene.getScene('OverworldScene');
+    scene.map.events.push({
+      id: 'studio_smoke_event',
+      label: 'Studio smoke event',
+      x: scene.tilePos.x + delta[0],
+      y: scene.tilePos.y + delta[1],
+      kind: 'message',
+      text: 'Chalk dust hangs in the morning air.',
+      once: true
+    });
+  }, {delta});
+
+  const stepDone = async () => expect.poll(async () => (await sceneState(page)).playerAnimationPlaying).toBe(false);
+  if (spawn.facing !== direction) {
+    await press(page, direction);
+    await expect.poll(async () => (await sceneState(page)).facing).toBe(direction);
+  }
+  await press(page, direction);
+  await expect.poll(async () => (await sceneState(page)).messageOpen).toBe(true);
+  expect((await sceneState(page)).message).toContain('Chalk dust');
+  await stepDone();
+
+  // A once event does not replay after leaving and returning.
+  await press(page, 'b');
+  const opposite = {down: 'up', up: 'down', left: 'right', right: 'left'}[direction];
+  await press(page, opposite);
+  await expect.poll(async () => (await sceneState(page)).facing).toBe(opposite);
+  await press(page, opposite);
+  await expect.poll(async () => (await sceneState(page)).tilePos).toEqual(spawn.tilePos);
+  await stepDone();
+  await press(page, direction);
+  await expect.poll(async () => (await sceneState(page)).facing).toBe(direction);
+  await press(page, direction);
+  await expect.poll(async () => (await sceneState(page)).tilePos).toEqual({
+    x: spawn.tilePos.x + delta[0],
+    y: spawn.tilePos.y + delta[1]
+  });
+  await stepDone();
+  expect((await sceneState(page)).messageOpen).toBeFalsy();
+});
+
 test('opt-in ambient actors patrol on the grid with their walk animation', async ({page}) => {
   await bootMap(page, 'lakeshore_path');
   const initial = (await sceneState(page)).actorStates.find(actor => actor.id === 'lakeshore_runner');

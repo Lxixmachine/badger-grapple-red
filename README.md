@@ -18,9 +18,10 @@ The source tree is now canonical. The old zip-only workflow was useful for deplo
 pilot. Its shared authoring kit now contains 129 deterministic full-cell ground
 tiles and 68 original grid-native vegetation, prop, and architecture stamps.
 Whole buildings remain editable stamps rather than indivisible pictures. The
-editor also provides family filters, exact door cells, event and camera editing,
-undo/redo, local drafts, Playtest, and validated JSON/PNG export. See
-[`docs/MAP_STUDIO.md`](docs/MAP_STUDIO.md).
+editor also provides family filters, exact door cells with editable interior
+destinations, map-to-map edge connection editing, playable message events
+(kind/text/once), camera editing, undo/redo, local drafts, Playtest, and
+validated JSON/PNG export. See [`docs/MAP_STUDIO.md`](docs/MAP_STUDIO.md).
 
 ## Development
 

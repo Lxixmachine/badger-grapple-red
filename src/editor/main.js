@@ -417,12 +417,65 @@ function updateInspector() {
         <label class="field-label"><span>Objects</span><span class="read-only-value">${map.objects.length}</span></label>
         <label class="field-label"><span>Actors</span><span class="read-only-value">${map.actors.length}</span></label>
         <label class="field-label"><span>Events</span><span class="read-only-value">${map.events.length}</span></label>
-      </div>`;
+      </div>${map.type === 'exterior' ? connectionsSection(map) : ''}`;
+    if (map.type === 'exterior') bindConnectionsSection(map);
     return;
   }
   if (selection.kind === 'object') updateObjectInspector(entry);
   else if (selection.kind === 'actor') updateActorInspector(entry);
   else updateEventInspector(entry);
+}
+
+const CONNECTION_EDGES = ['north', 'south', 'east', 'west'];
+
+function exteriorMapOptions(selected, excludeId) {
+  return Object.values(project.maps)
+    .filter(map => map.type === 'exterior' && map.id !== excludeId)
+    .map(map => `<option value="${map.id}" ${selected === map.id ? 'selected' : ''}>${escapeHtml(map.name)}</option>`)
+    .join('');
+}
+
+function connectionsSection(map) {
+  const rows = (map.connections || []).map((connection, index) => `
+    <div class="field-group connection-row">
+      <label class="field-label"><span>Edge</span><select data-connection="${index}" data-connection-field="edge">${CONNECTION_EDGES.map(edge => `<option value="${edge}" ${connection.edge === edge ? 'selected' : ''}>${edge}</option>`).join('')}</select></label>
+      <div class="coordinate-row">
+        <label class="field-label"><span>Start</span><input type="number" data-connection="${index}" data-connection-field="start" value="${connection.start}" /></label>
+        <label class="field-label"><span>Span</span><input type="number" data-connection="${index}" data-connection-field="span" value="${connection.span}" /></label>
+      </div>
+      <label class="field-label"><span>Leads to</span><select data-connection="${index}" data-connection-field="to">${exteriorMapOptions(connection.to, map.id)}</select></label>
+      <label class="field-label"><span>To edge</span><select data-connection="${index}" data-connection-field="toEdge">${CONNECTION_EDGES.map(edge => `<option value="${edge}" ${connection.toEdge === edge ? 'selected' : ''}>${edge}</option>`).join('')}</select></label>
+      <label class="field-label"><span>To start</span><input type="number" data-connection="${index}" data-connection-field="toStart" value="${connection.toStart}" /></label>
+      <div class="inspector-actions"><button data-action="remove-connection" data-index="${index}">Remove connection</button></div>
+    </div>`).join('');
+  return `
+    <div class="field-group">
+      <strong>Edge connections</strong>
+      ${rows || '<span class="read-only-value">No connections yet.</span>'}
+      <div class="inspector-actions"><button data-action="add-connection">Add connection</button></div>
+    </div>`;
+}
+
+function bindConnectionsSection(map) {
+  inspectorContent.querySelectorAll('[data-connection]').forEach(input => input.addEventListener('change', () => {
+    const connection = map.connections[Number(input.dataset.connection)];
+    if (!connection) return;
+    const field = input.dataset.connectionField;
+    connection[field] = input.type === 'number' ? Math.max(0, Math.round(Number(input.value) || 0)) : input.value;
+    if (field === 'span') connection.span = Math.max(1, connection.span);
+    recordHistory('Connection updated');
+  }));
+  inspectorContent.querySelectorAll('[data-action="remove-connection"]').forEach(button => button.addEventListener('click', () => {
+    map.connections.splice(Number(button.dataset.index), 1);
+    recordHistory('Connection removed');
+  }));
+  inspectorContent.querySelector('[data-action="add-connection"]')?.addEventListener('click', () => {
+    const firstOther = Object.values(project.maps).find(entry => entry.type === 'exterior' && entry.id !== map.id);
+    if (!firstOther) return;
+    map.connections = map.connections || [];
+    map.connections.push({edge: 'east', start: 1, span: 2, to: firstOther.id, toEdge: 'west', toStart: 1});
+    recordHistory('Connection added');
+  });
 }
 
 function coordinateFields(entry) {
@@ -440,7 +493,7 @@ function updateObjectInspector(object) {
       ${coordinateFields(object)}
       <label class="field-label"><span>Footprint</span><span class="read-only-value">${object.width} x ${object.height} locked</span></label>
       <label class="field-label"><span>Depth</span><select data-field="depthMode"><option value="row-sliced" ${object.depthMode === 'row-sliced' ? 'selected' : ''}>Row sliced</option><option value="flat" ${object.depthMode === 'flat' ? 'selected' : ''}>Flat object</option></select></label>
-      <label class="field-label"><span>Destination</span><span class="read-only-value">${escapeHtml(object.interior || 'None')}</span></label>
+      <label class="field-label"><span>Destination</span><select data-field="interior"><option value="">None</option>${Object.values(project.maps).filter(map => map.type === 'interior').map(map => `<option value="${map.id}" ${object.interior === map.id ? 'selected' : ''}>${escapeHtml(map.name)}</option>`).join('')}</select></label>
     </div>
     <div class="field-group">
       <strong>Collision mask</strong>
@@ -489,6 +542,9 @@ function updateEventInspector(eventEntry) {
       <label class="field-label"><span>Label</span><input data-field="label" value="${escapeHtml(eventEntry.label)}" /></label>
       ${coordinateFields(eventEntry)}
       <label class="field-label"><span>Story beat</span><input type="number" data-field="beat" value="${eventEntry.beat ?? ''}" /></label>
+      <label class="field-label"><span>Kind</span><select data-field="kind"><option value="">Marker (no effect)</option><option value="message" ${eventEntry.kind === 'message' ? 'selected' : ''}>Message on step</option></select></label>
+      <label class="field-label"><span>Text</span><textarea data-field="text">${escapeHtml(eventEntry.text || '')}</textarea></label>
+      <label class="field-label"><span>Once</span><input type="checkbox" data-field="once" ${eventEntry.once ? 'checked' : ''} /></label>
     </div>`;
   bindInspectorFields('event', eventEntry);
 }
@@ -503,7 +559,8 @@ function bindInspectorFields(kind, entry) {
       const extent = kind === 'object' ? (field === 'x' ? entry.width : entry.height) : 1;
       value = clamp(Math.round(value || 0), 0, (field === 'x' ? map.width : map.height) - extent);
     }
-    if (field === 'condition' && value === '') value = null;
+    if (['condition', 'interior', 'kind', 'text'].includes(field) && value === '') value = null;
+    if (field === 'once' && !value) value = null;
     entry[field] = value;
     recordHistory(`${kind} updated`);
   }));

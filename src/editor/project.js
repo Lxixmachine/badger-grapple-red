@@ -619,6 +619,20 @@ export function validateProject(project) {
         || event.x < 0 || event.y < 0 || event.x >= map.width || event.y >= map.height) {
         errors.push(`${mapId}.${event.id}: event is off-grid or out of bounds`);
       }
+      if (event.kind && event.kind !== 'message') {
+        errors.push(`${mapId}.${event.id}: unknown event kind "${event.kind}"`);
+      }
+      if (event.kind === 'message' && !event.text) {
+        warnings.push(`${mapId}.${event.id}: message event has no text and will do nothing in game`);
+      }
+    }
+    for (const object of map.objects || []) {
+      if (object.interior && !project.maps?.[object.interior]) {
+        errors.push(`${mapId}.${object.id}: door destination "${object.interior}" is not a map in this project`);
+      }
+      if (object.interior && project.maps?.[object.interior] && !object.door) {
+        warnings.push(`${mapId}.${object.id}: has a destination but no door cell; the whole non-solid footprint will warp`);
+      }
     }
     for (const object of map.objects || []) {
       const asset = project.assets?.objects?.find(entry => entry.id === object.assetId);
@@ -670,7 +684,33 @@ export function validateProject(project) {
     if (map.exit && !reachable.has(`${map.exit.x},${map.exit.y}`)) {
       errors.push(`${mapId}: live exit is unreachable`);
     }
+    const EDGES = ['north', 'south', 'east', 'west'];
+    const edgeLength = (dims, edge) => (edge === 'north' || edge === 'south' ? dims.width : dims.height);
     for (const connection of map.connections || []) {
+      const target = project.maps?.[connection.to];
+      let structural = true;
+      if (!EDGES.includes(connection.edge) || !EDGES.includes(connection.toEdge)) {
+        errors.push(`${mapId}: connection to ${connection.to} has an invalid edge`);
+        structural = false;
+      }
+      if (!Number.isInteger(connection.start) || !Number.isInteger(connection.span)
+        || connection.start < 0 || connection.span < 1 || !Number.isInteger(connection.toStart) || connection.toStart < 0) {
+        errors.push(`${mapId}: connection to ${connection.to} has non-grid start/span values`);
+        structural = false;
+      }
+      if (!target || target.type !== 'exterior') {
+        errors.push(`${mapId}: connection target "${connection.to}" is not an exterior map`);
+        structural = false;
+      }
+      if (!structural) continue;
+      if (connection.start + connection.span > edgeLength(map, connection.edge)) {
+        errors.push(`${mapId}: connection to ${connection.to} overruns the ${connection.edge} edge`);
+        continue;
+      }
+      if (connection.toStart + connection.span > edgeLength(target, connection.toEdge)) {
+        errors.push(`${mapId}: connection to ${connection.to} overruns the target's ${connection.toEdge} edge`);
+        continue;
+      }
       const cells = Array.from({length: connection.span}, (_, offset) => connection.edge === 'north'
         ? [connection.start + offset, 0]
         : connection.edge === 'south'

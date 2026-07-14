@@ -514,9 +514,25 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       && this.tilePos.x === this.map.exit.x && this.tilePos.y === this.map.exit.y) return this.leaveInterior();
     this.savePosition();
     const event = mapEventAt(this.map, this.tilePos.x, this.tilePos.y);
-    if (event && ['capitol_reveal', 'field_threshold'].includes(event.id)) this.handleStoryKey(`${this.currentMapId}:${event.id}`, event);
+    if (event) this.triggerTileEvent(event);
     if (this.isOpenMatCell() && this.state.flags.recruitingUnlocked && Math.random() < 0.08) this.startScout();
     this.drawHud();
+  }
+
+  triggerTileEvent(event) {
+    // Scripted story beats keep their dedicated flows; everything else is data-driven
+    // so events placed in Map Studio work without code changes.
+    if (['capitol_reveal', 'field_threshold'].includes(event.id)) {
+      return this.handleStoryKey(`${this.currentMapId}:${event.id}`, event);
+    }
+    if (event.kind !== 'message' || !event.text) return;
+    const onceFlag = `event_${this.currentMapId}_${event.id}`;
+    if (event.once && this.state.flags[onceFlag]) return;
+    if (event.once) {
+      this.state.flags[onceFlag] = true;
+      saveState(this.state);
+    }
+    this.showMessage(event.text);
   }
 
   connectionGate(from, to) {

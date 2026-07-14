@@ -396,6 +396,47 @@ test('terrain, events, actors, and camera reviews are editable layers', async ({
   expect(issues).toEqual([]);
 });
 
+test('door destinations, message events, and edge connections are editable', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+
+  // Door destination dropdown rewires where a building leads.
+  await clickCell(page, 3, 8);
+  const before = (await editorState(page)).project.maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior;
+  await page.getByRole('combobox', {name: 'Destination'}).selectOption('trainer_room');
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior).toBe('trainer_room');
+  expect((await editorState(page)).state.validation.valid).toBe(true);
+  await page.getByRole('button', {name: 'Undo'}).click();
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior).toBe(before);
+
+  // Events carry a kind, text, and once flag the runtime can execute.
+  await page.getByRole('button', {name: 'Events', exact: true}).click();
+  await clickCell(page, 10, 14);
+  await page.getByRole('combobox', {name: 'Kind'}).selectOption('message');
+  await page.getByRole('textbox', {name: 'Text'}).fill('Chalk dust hangs in the air.');
+  await page.getByRole('textbox', {name: 'Text'}).blur();
+  await page.getByRole('checkbox', {name: 'Once'}).check();
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.at(-1)).toMatchObject({
+    kind: 'message',
+    text: 'Chalk dust hangs in the air.',
+    once: true
+  });
+  expect((await editorState(page)).state.validation.valid).toBe(true);
+
+  // Edge connections are listed on the map inspector and can be added, edited, and removed.
+  await page.getByRole('button', {name: 'Select', exact: true}).click();
+  await clickCell(page, 10, 16);
+  const connectionCount = (await editorState(page)).project.maps.camp_randall.connections.length;
+  await page.getByRole('button', {name: 'Add connection'}).click();
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.connections.length).toBe(connectionCount + 1);
+  await page.getByRole('combobox', {name: 'To edge'}).last().selectOption('north');
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.connections.at(-1).toEdge).toBe('north');
+  await page.getByRole('button', {name: 'Remove connection'}).last().click();
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.connections.length).toBe(connectionCount);
+  expect((await editorState(page)).state.validation.valid).toBe(true);
+  expect(issues).toEqual([]);
+});
+
 test('mobile layout keeps the canvas and touch palette usable', async ({page}) => {
   const issues = runtimeIssues(page);
   await page.setViewportSize({width: 390, height: 844});

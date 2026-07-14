@@ -131,6 +131,30 @@ def validate_project(project: dict, build: dict, metatile_build: dict) -> None:
                     fail(f"{map_id}.{entry.get('id')}: {collection_name} entry is off-grid")
                 if entry["x"] < 0 or entry["y"] < 0 or entry["x"] >= width or entry["y"] >= height:
                     fail(f"{map_id}.{entry.get('id')}: {collection_name} entry leaves the map")
+        for event in map_data.get("events", []):
+            if event.get("kind") not in (None, "message"):
+                fail(f"{map_id}.{event.get('id')}: unknown event kind {event.get('kind')!r}")
+        for instance in map_data.get("objects", []):
+            destination = instance.get("interior")
+            if destination and destination not in project.get("maps", {}):
+                fail(f"{map_id}.{instance.get('id')}: door destination {destination!r} is not a map")
+        edges = {"north", "south", "east", "west"}
+        for connection in map_data.get("connections", []):
+            target = project.get("maps", {}).get(connection.get("to"))
+            if connection.get("edge") not in edges or connection.get("toEdge") not in edges:
+                fail(f"{map_id}: connection to {connection.get('to')} has an invalid edge")
+            if not all(isinstance(connection.get(key), int) for key in ("start", "span", "toStart")):
+                fail(f"{map_id}: connection to {connection.get('to')} has non-grid start/span values")
+            if connection["span"] < 1 or connection["start"] < 0 or connection["toStart"] < 0:
+                fail(f"{map_id}: connection to {connection.get('to')} has non-grid start/span values")
+            if not target or target.get("type") != "exterior":
+                fail(f"{map_id}: connection target {connection.get('to')!r} is not an exterior map")
+            edge_length = width if connection["edge"] in ("north", "south") else height
+            if connection["start"] + connection["span"] > edge_length:
+                fail(f"{map_id}: connection to {connection['to']} overruns the {connection['edge']} edge")
+            target_edge_length = target["width"] if connection["toEdge"] in ("north", "south") else target["height"]
+            if connection["toStart"] + connection["span"] > target_edge_length:
+                fail(f"{map_id}: connection to {connection['to']} overruns the target's {connection['toEdge']} edge")
 
 
 def rectangles_for_material(terrain: list[list[str]], material: str) -> list[dict]:
@@ -275,6 +299,7 @@ def apply_exterior(project: dict, layouts: dict, manifest: dict, map_data: dict)
     manifest["exterior"]["actors"] = [actor_for_manifest(actor) for actor in map_data.get("actors", [])]
     layout["events"] = copy.deepcopy(map_data.get("events", []))
     layout["cameraReviews"] = copy.deepcopy(map_data.get("cameraReviews", []))
+    layout["connections"] = copy.deepcopy(map_data.get("connections", []))
     apply_terrain(layout, map_data)
 
 
