@@ -26,6 +26,8 @@ export function installTestHooks(game, routeVirtualButton) {
       summaryPage: scene.summaryPage ?? null,
       summaryIndex: scene.summaryIndex ?? null,
       mode: scene.mode ?? null,
+      battlePhase: scene.battlePhase ?? null,
+      battlePhaseHistory: [...(scene.battlePhaseHistory || [])],
       inputLocked: scene.inputLocked ?? null,
       over: scene.over ?? null,
       resultTitle: scene.resultTitle ?? null,
@@ -35,6 +37,9 @@ export function installTestHooks(game, routeVirtualButton) {
       objectIds: scene.map?.objects?.map(object => object.id) ?? null,
       playerScale: scene.player?.scaleX ?? null,
       playerWorldY: scene.player?.y ?? null,
+      playerFrame: scene.player?.frame?.name ?? null,
+      playerAnimation: scene.player?.anims?.currentAnim?.key ?? null,
+      playerAnimationPlaying: scene.player?.anims?.isPlaying ?? null,
       actorIds: scene.actorEntries ? scene.actorEntries.map(e => e.data.id) : null,
       npcScales: scene.actorEntries ? scene.actorEntries.map(e => e.sprite.scaleX) : scene.npcList ? scene.npcList.map(e => e.npc.scaleX) : null,
       passable: scene.pass && scene.tilePos ? {

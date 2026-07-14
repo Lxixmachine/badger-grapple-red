@@ -81,7 +81,7 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '22.2-season-one-world';
+    : sliceMode ? '21.63-scale-slice' : '22.3-battle-presentation';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;

@@ -12,6 +12,7 @@ import {
   objectsAt,
   resolveSeasonMapId,
   seasonMap,
+  SEASON_ONE_PROJECT,
   terrainVisual,
   validSeasonPosition,
   metatile
@@ -32,10 +33,10 @@ const VIEW_W = 480;
 const VIEW_H = 320;
 const STEP_MS = 165;
 const DIRS = {
-  down: {dx: 0, dy: 1, frame: 0},
-  left: {dx: -1, dy: 0, frame: 1},
-  right: {dx: 1, dy: 0, frame: 2},
-  up: {dx: 0, dy: -1, frame: 3}
+  down: {dx: 0, dy: 1, idle: 1, frames: [0, 1, 2]},
+  left: {dx: -1, dy: 0, idle: 4, frames: [3, 4, 5]},
+  right: {dx: 1, dy: 0, idle: 7, frames: [6, 7, 8]},
+  up: {dx: 0, dy: -1, idle: 10, frames: [9, 10, 11]}
 };
 const OPPOSITE = {down: 'up', up: 'down', left: 'right', right: 'left'};
 
@@ -146,6 +147,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     playMusic('overworld');
     this.bindInput();
     setVirtualHandler(this);
+    this.ensureWalkAnimations();
     this.renderCurrentMap();
     this.drawHud();
 
@@ -214,6 +216,22 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   trackWorld(object) {
     this.worldObjects.push(object);
     return object;
+  }
+
+  ensureWalkAnimations() {
+    for (const asset of SEASON_ONE_PROJECT.assets.actors) {
+      const texture = `season-actor:${asset.sourceId}`;
+      for (const [direction, config] of Object.entries(DIRS)) {
+        const key = `${texture}:walk-${direction}`;
+        if (this.anims.exists(key)) continue;
+        this.anims.create({
+          key,
+          frames: config.frames.map(frame => ({key: texture, frame})),
+          frameRate: 18,
+          repeat: -1
+        });
+      }
+    }
   }
 
   clearWorld() {
@@ -289,7 +307,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       const texture = `season-actor:${actor.assetId.split(':').at(-1)}`;
       const position = this.worldPosition(actor.x, actor.y);
       const shadow = this.trackWorld(this.add.ellipse(position.x, position.y - 3, 24, 8, 0x10120f, 0.38).setDepth(position.y - 2));
-      const sprite = this.trackWorld(this.add.sprite(position.x, position.y, texture, DIRS[actor.facing]?.frame || 0)
+      const sprite = this.trackWorld(this.add.sprite(position.x, position.y, texture, DIRS[actor.facing]?.idle ?? DIRS.down.idle)
         .setOrigin(0.5, 1).setDepth(position.y));
       this.actorEntries.push({data: actor, sprite, shadow});
     }
@@ -298,7 +316,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   createPlayer() {
     const position = this.worldPosition(this.tilePos.x, this.tilePos.y);
     this.shadow = this.trackWorld(this.add.ellipse(position.x, position.y - 3, 25, 8, 0x10120f, 0.42).setDepth(position.y - 2));
-    this.player = this.trackWorld(this.add.sprite(position.x, position.y, 'season-actor:player', DIRS[this.facing].frame)
+    this.player = this.trackWorld(this.add.sprite(position.x, position.y, 'season-actor:player', DIRS[this.facing].idle)
       .setOrigin(0.5, 1).setDepth(position.y));
   }
 
@@ -308,7 +326,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   setFacing(direction) {
     this.facing = direction;
-    if (this.player) this.player.setFrame(DIRS[direction].frame);
+    if (this.player && !this.moving) this.player.setFrame(DIRS[direction].idle);
   }
 
   findSafeSpawn(requested) {
@@ -358,6 +376,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.moving = true;
     const position = this.worldPosition(next.x, next.y);
     sfx.step?.();
+    this.player.play(`season-actor:player:walk-${direction}`, true);
     this.tweens.add({targets: this.shadow, x: position.x, y: position.y - 3, duration: STEP_MS, ease: 'Linear'});
     this.tweens.add({
       targets: this.player,
@@ -370,6 +389,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         this.shadow.setDepth(this.player.y - 2);
       },
       onComplete: () => {
+        this.player.stop();
         this.moving = false;
         this.setFacing(direction);
         this.afterStep();
@@ -473,7 +493,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     sfx.talk?.();
     if (target.type === 'door') return this.enterDoor(target.door);
     if (target.type === 'actor') {
-      target.actor.sprite.setFrame(DIRS[OPPOSITE[this.facing]].frame);
+      target.actor.sprite.setFrame(DIRS[OPPOSITE[this.facing]].idle);
       const storyKey = ACTOR_STORY_KEYS[target.actor.data.id];
       if (storyKey) return this.handleStoryKey(storyKey, target.actor.data);
       return this.showMessage(target.actor.data.dialogue || 'Keep working.');

@@ -104,6 +104,23 @@ test('service buildings are recognizable, staffed, and reusable', async ({page})
   expect(shop.objectIds).toEqual(expect.arrayContaining(['shop_counter', 'singlet_wall']));
 });
 
+test('Season One movement plays a directional walk cycle and lands on its idle frame', async ({page}) => {
+  await bootMap(page, 'camp_randall');
+  await press(page, 'right');
+  await expect.poll(async () => (await sceneState(page))?.facing).toBe('right');
+  expect((await sceneState(page)).playerFrame).toBe(7);
+
+  await press(page, 'right');
+  await page.waitForTimeout(70);
+  const walking = await sceneState(page);
+  expect(walking.playerAnimation).toBe('season-actor:player:walk-right');
+  expect(walking.playerAnimationPlaying).toBe(true);
+  expect([6, 7, 8]).toContain(Number(walking.playerFrame));
+
+  await expect.poll(async () => (await sceneState(page))?.playerAnimationPlaying).toBe(false);
+  expect((await sceneState(page)).playerFrame).toBe(7);
+});
+
 test('exterior venue doors enter and return through their exact grid cell', async ({page}) => {
   await bootMap(page, 'field_house', {x: 20, y: 17});
   await press(page, 'a');

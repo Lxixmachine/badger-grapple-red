@@ -129,8 +129,50 @@ test('battle techniques expose persistent FireRed-style combat effects',async({p
   await page.waitForTimeout(180);
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battle?.player?.stages?.attack),{timeout:6000}).toBe(1);
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:8000}).toBe('command');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:15000}).toBe('command');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].moveStamina.pace)).toBe(29);
+});
+
+test('battle presentation is native resolution and preserves FireRed-style action beats',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  const presentation=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    return {
+      width:scene.cameras.main.width,height:scene.cameras.main.height,zoom:scene.cameras.main.zoom,
+      playerTexture:scene.playerSprite.texture.key,enemyTexture:scene.enemySprite.texture.key,
+      playerWidth:scene.playerSprite.displayWidth,enemyWidth:scene.enemySprite.displayWidth
+    };
+  });
+  expect(presentation).toMatchObject({width:480,height:320,zoom:1,playerTexture:'battle_badger_back',enemyTexture:'battle_neutral'});
+  expect(presentation.playerWidth).toBeGreaterThanOrEqual(140);
+  expect(presentation.enemyWidth).toBeGreaterThanOrEqual(140);
+
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
+  await page.waitForTimeout(180);
+  const started=Date.now();
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
+  await page.waitForTimeout(300);
+  expect(await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:10000}).toBe('command');
+  const phases=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory);
+  expect(phases).toEqual(expect.arrayContaining(['announce','impact','message','between','command']));
+  expect(Date.now()-started).toBeGreaterThan(4200);
+});
+
+test('legacy 320px scenes render text at higher internal resolution',async({page})=>{
+  await page.goto('/?test=1&reset=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  const resolutions=await page.evaluate(()=>window.badgerGame.scene.getScene('TitleScene').children.list
+    .filter(child=>child.type==='Text').map(child=>child.style.resolution));
+  expect(resolutions.length).toBeGreaterThan(0);
+  expect(resolutions.every(value=>value>=2)).toBe(true);
 });
 
 test('B backs out of submenus but cannot silently leave a match',async({page})=>{

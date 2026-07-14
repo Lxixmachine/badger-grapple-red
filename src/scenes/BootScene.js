@@ -4,7 +4,7 @@ import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 import {NPC_LOOKS} from '../data/npcLooks.js';
 import {preloadSeasonOneAssets, SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
 const Phaser = window.Phaser;
-const V='265';
+const V='266';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
@@ -17,8 +17,8 @@ export class BootScene extends Phaser.Scene{
     this.load.spritesheet('player',`./assets/sprites/player_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});
     this.load.spritesheet('npc',`./assets/sprites/npc_walk.png?v=${V}`,{frameWidth:24,frameHeight:36});
     NPC_LOOKS.forEach(look=>this.load.spritesheet(`npc_${look}`,`./assets/sprites/npc_${look}_walk.png?v=${V}`,{frameWidth:24,frameHeight:36}));
-    ['badger','neutral','top','scramble','pace'].forEach(k=>{this.load.image('battle_'+k,`./assets/sprites/battle_${k}.png?v=${V}`);this.load.image('battle_'+k+'_back',`./assets/sprites/battle_${k}_back.png?v=${V}`);this.load.image('portrait_'+k,`./assets/portraits/${k}.png?v=${V}`);});
-    this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('title_hero',`./assets/ui/title_hero.png?v=${V}`);this.load.image('coach_intro',`./assets/portraits/coach_intro.png?v=${V}`);this.load.image('trainer_intro',`./assets/portraits/trainer_intro.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena.png?v=${V}`);
+    ['badger','neutral','top','scramble','pace'].forEach(k=>{this.load.image('battle_'+k,`./assets/sprites/battle_${k}_v2.png?v=${V}`);this.load.image('battle_'+k+'_back',`./assets/sprites/battle_${k}_back_v2.png?v=${V}`);this.load.image('portrait_'+k,`./assets/portraits/${k}.png?v=${V}`);});
+    this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('title_hero',`./assets/ui/title_hero.png?v=${V}`);this.load.image('coach_intro',`./assets/portraits/coach_intro.png?v=${V}`);this.load.image('trainer_intro',`./assets/portraits/trainer_intro.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena_v2.png?v=${V}`);
     ['shooter','rider','scrambler'].forEach(style=>this.load.image('singlet_'+style,`./assets/ui/singlet_${style}.png?v=${V}`));
   }
   create(){

@@ -1,5 +1,33 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.3 Battle Presentation)
+
+The Season One runtime now treats every 3x4 actor sheet as a real directional
+walk sheet: frames 0-2 down, 3-5 left, 6-8 right, and 9-11 up, with the center
+frame as the directional idle. Player movement plays all three frames during a
+grid step and returns to the correct idle without changing footprint, scale, or
+collision. The runtime registers the same animation contract for every authored
+actor texture so future moving NPC behavior can reuse it directly.
+
+Battle no longer authors a tiny 320x224 scene and fractionally enlarges it. It
+is native 480x320 with a 480x238 original Imagegen field-house arena, ten new
+144x144 front/back persona sprites, larger status and command panels, readable
+Atkinson Hyperlegible text, animated Condition/EXP meters, and style-specific
+impact effects. Turns now expose distinct announce, lunge, impact, meter-drain,
+result-message, between-action, faint, and send-out phases. A full exchange is
+deliberately several seconds long; do not restore the old sub-second resolution
+or collapse effect messages into one debug line.
+
+Legacy title, intro, menu, scouting, and recovery scenes retain their 320x224
+composition but render text textures at 2x internal resolution before camera
+scaling. The Imagegen chroma/alpha masters, prompt record, deterministic sprite
+slicer, and arena compiler are retained under `art/imagegen/` and `tools/`.
+Phone and desktop screenshots were reviewed with no browser warnings. Build and
+the 19 focused mechanics/runtime tests pass; the full suite should remain green.
+
+Tony's dirty State Street art and generated downtown/Map Studio files remain
+deliberately untouched and must not be included with this release.
+
 ## Latest Codex Turn (v21.85 Wrestler Stats)
 
 Wrestlers now use the complete FireRed-shaped six-stat model instead of the
