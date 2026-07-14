@@ -399,15 +399,20 @@ test('terrain, events, actors, and camera reviews are editable layers', async ({
 test('door destinations, message events, and edge connections are editable', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
+  // Narrow in-page reads: serializing the whole project per poll is too slow for CI.
+  const teamBuildingInterior = () => page.evaluate(() => window.__badgerMapEditorTest.project().maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior);
+  const lastEvent = () => page.evaluate(() => window.__badgerMapEditorTest.project().maps.camp_randall.events.at(-1));
+  const connections = () => page.evaluate(() => window.__badgerMapEditorTest.project().maps.camp_randall.connections);
+  const validationValid = () => page.evaluate(() => window.__badgerMapEditorTest.state().validation.valid);
 
   // Door destination dropdown rewires where a building leads.
   await clickCell(page, 3, 8);
-  const before = (await editorState(page)).project.maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior;
+  const before = await teamBuildingInterior();
   await page.getByRole('combobox', {name: 'Destination'}).selectOption('trainer_room');
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior).toBe('trainer_room');
-  expect((await editorState(page)).state.validation.valid).toBe(true);
+  await expect.poll(teamBuildingInterior).toBe('trainer_room');
+  expect(await validationValid()).toBe(true);
   await page.getByRole('button', {name: 'Undo'}).click();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.find(entry => entry.id === 'team_building').interior).toBe(before);
+  await expect.poll(teamBuildingInterior).toBe(before);
 
   // Events carry a kind, text, and once flag the runtime can execute.
   await page.getByRole('button', {name: 'Events', exact: true}).click();
@@ -416,24 +421,23 @@ test('door destinations, message events, and edge connections are editable', asy
   await page.getByRole('textbox', {name: 'Text'}).fill('Chalk dust hangs in the air.');
   await page.getByRole('textbox', {name: 'Text'}).blur();
   await page.getByRole('checkbox', {name: 'Once'}).check();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.at(-1)).toMatchObject({
+  await expect.poll(lastEvent).toMatchObject({
     kind: 'message',
     text: 'Chalk dust hangs in the air.',
     once: true
   });
-  expect((await editorState(page)).state.validation.valid).toBe(true);
 
   // Edge connections are listed on the map inspector and can be added, edited, and removed.
   await page.getByRole('button', {name: 'Select', exact: true}).click();
   await clickCell(page, 10, 16);
-  const connectionCount = (await editorState(page)).project.maps.camp_randall.connections.length;
+  const connectionCount = (await connections()).length;
   await page.getByRole('button', {name: 'Add connection'}).click();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.connections.length).toBe(connectionCount + 1);
+  await expect.poll(async () => (await connections()).length).toBe(connectionCount + 1);
   await page.getByRole('combobox', {name: 'To edge'}).last().selectOption('north');
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.connections.at(-1).toEdge).toBe('north');
+  await expect.poll(async () => (await connections()).at(-1).toEdge).toBe('north');
   await page.getByRole('button', {name: 'Remove connection'}).last().click();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.connections.length).toBe(connectionCount);
-  expect((await editorState(page)).state.validation.valid).toBe(true);
+  await expect.poll(async () => (await connections()).length).toBe(connectionCount);
+  expect(await validationValid()).toBe(true);
   expect(issues).toEqual([]);
 });
 
