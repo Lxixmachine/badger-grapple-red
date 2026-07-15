@@ -2,6 +2,10 @@ import {expect,test} from '@playwright/test';
 
 async function press(page,key){await page.evaluate(name=>window.__badgerTest.press(name),key);}
 
+async function waitForBattleCommand(page){
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:15000}).toBe('command');
+}
+
 function legacyWrestler(id='buckshot',lvl=8){return {id,lvl,xp:0,hp:90,gas:70,score:0,moves:['single','highc','sprawl','pace']};}
 
 async function bootWithSave(page,save,url){
@@ -18,7 +22,7 @@ test('a legacy phone save enters battle with per-technique Stamina and six stats
   },'/?test=1');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'wild'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await waitForBattleCommand(page);
   const save=await page.evaluate(()=>window.__badgerTest.storage());
   expect(save.party[0].gas).toBeUndefined();
   expect(save.party[0].stamina).toBeUndefined();
@@ -120,7 +124,7 @@ test('Travel Lineup naming persists a nickname and battle HUD uses it',async({pa
   await page.keyboard.press('Enter');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].nickname)).toBe('ACE');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:15000}).toBe('command');
+  await waitForBattleCommand(page);
   const labels=await page.evaluate(()=>window.badgerGame.scene.getScene('BattleScene').children.list.filter(child=>child.type==='Text').map(child=>child.text));
   expect(labels).toContain('ACE');
   expect(labels).toContain('ACE do?');
@@ -132,7 +136,7 @@ test('rear-view sprite exceptions face the opponent from the player side',async(
     dex:{seen:{},caught:{fieldflyer:true}},flags:{introDone:true,assignment:true},stats:{}
   },'/?test=1');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'scrambleboss',enemyLevel:8,battleType:'trainer'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await waitForBattleCommand(page);
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battleSprites)).toMatchObject({
     playerTexture:'battle_fieldflyer_back',playerFlipX:true,
     enemyTexture:'battle_scrambleboss',enemyFlipX:false
@@ -180,7 +184,7 @@ test('battle techniques expose persistent FireRed-style combat effects',async({p
   },'/?test=1');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'spar'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await waitForBattleCommand(page);
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
   await press(page,'down');
@@ -189,7 +193,7 @@ test('battle techniques expose persistent FireRed-style combat effects',async({p
   await page.waitForTimeout(180);
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battle?.player?.stages?.attack),{timeout:6000}).toBe(1);
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:15000}).toBe('command');
+  await waitForBattleCommand(page);
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].moveStamina.pace)).toBe(29);
 });
 
@@ -199,7 +203,7 @@ test('battle presentation is native resolution and preserves FireRed-style actio
     flags:{introDone:true,assignment:true},stats:{},badges:[]
   },'/?test=1');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:12,battleType:'trainer'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await waitForBattleCommand(page);
   const presentation=await page.evaluate(()=>{
     const scene=window.badgerGame.scene.getScene('BattleScene');
     return {
@@ -225,7 +229,7 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
   await page.waitForTimeout(300);
   expect(await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:10000}).toBe('command');
+  await waitForBattleCommand(page);
   const phases=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory);
   expect(phases).toEqual(expect.arrayContaining(['announce','impact','message','between','command']));
   expect(Date.now()-started).toBeGreaterThan(4200);
@@ -246,7 +250,7 @@ test('B backs out of submenus but cannot silently leave a match',async({page})=>
     flags:{introDone:true,assignment:true},stats:{},badges:[]
   },'/?test=1');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await waitForBattleCommand(page);
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
   await press(page,'b');
@@ -261,7 +265,7 @@ test('a fifth level-up technique requires an explicit replacement choice',async(
     flags:{introDone:true,assignment:true},stats:{},badges:[]
   },'/?test=1');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await waitForBattleCommand(page);
   await page.evaluate(()=>window.__badgerTest.queueMoveLearning('reattack'));
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
     mode:'learnMove',selected:0,moveLearning:{wrestlerId:'buckvarsity',move:'reattack'}
