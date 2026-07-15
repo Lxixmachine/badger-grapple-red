@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "status": "production-pilot",
   "layoutId": "camp_randall",
-  "layoutRevision": 5,
+  "layoutRevision": 6,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "law": "Every solid gameplay cell must visibly read as occupied. Collision comes from seasonOneLayouts.json; this manifest only assigns original art to those owners. Roof and trim pixels may decorate an owner but may not silently expand collision.",
@@ -55,17 +55,14 @@
   "exterior": {
     "baseStyle": "campus_lawn",
     "objects": [
-      {"ownerGroup": "blockers", "ownerId": "west_forest_border", "art": "world_stamp", "stamp": "forest_border_west_long"},
-      {"ownerGroup": "blockers", "ownerId": "west_south_shrub", "art": "world_stamp", "stamp": "shrub_flowering"},
-      {"ownerGroup": "blockers", "ownerId": "east_forest_border", "art": "world_stamp", "stamp": "forest_border_east_long"},
-      {"ownerGroup": "blockers", "ownerId": "east_south_shrub", "art": "world_stamp", "stamp": "shrub_round"},
-      {"ownerGroup": "blockers", "ownerId": "memory_garden", "art": "memory_garden", "source": "exterior"},
+      {"ownerGroup": "blockers", "ownerId": "memory_garden_west", "art": "memory_garden", "source": "exterior"},
+      {"ownerGroup": "blockers", "ownerId": "memory_garden_east", "art": "memory_garden", "source": "exterior"},
       {"ownerGroup": "buildings", "ownerId": "team_building", "art": "team_building", "source": "exterior"},
       {"ownerGroup": "buildings", "ownerId": "coach_office", "art": "coach_office", "source": "exterior"},
       {"ownerGroup": "landmarks", "ownerId": "camp_randall_stadium", "art": "stadium_grid_native"}
     ],
     "actors": [
-      {"id": "assistant_coach", "sheet": "coach", "x": 20, "y": 14, "facing": "left", "solid": true, "dialogue": "Camp Randall is home. The season starts in the Team Building."}
+      {"id": "assistant_coach", "sheet": "coach", "x": 26, "y": 20, "facing": "left", "solid": true, "dialogue": "Camp Randall is home. The Team Building is west across the quad."}
     ]
   },
   "interiors": {

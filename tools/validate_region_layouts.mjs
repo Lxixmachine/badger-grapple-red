@@ -354,9 +354,9 @@ export function validateSeasonOneLayouts(region, layouts) {
       }
     }
   }
-  if (maps.camp_randall?.size.width !== 24 || maps.camp_randall?.size.height !== 20
+  if (maps.camp_randall?.size.width !== 48 || maps.camp_randall?.size.height !== 31
     || (maps.camp_randall?.cameraReviews || []).length < 4) {
-    errors.push('Camp Randall must retain the approved 24x20 small-town scale and four camera compositions');
+    errors.push('Camp Randall must retain the approved 48x31 grid-owned campus scale and four camera compositions');
   }
   if (maps.state_street?.size.width < 40 || maps.state_street?.size.height < 18
     || [...(maps.state_street?.buildings || []), ...(maps.state_street?.landmarks || [])].length < 5) {

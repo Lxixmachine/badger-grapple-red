@@ -56,7 +56,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 5, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 6, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
@@ -64,10 +64,10 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await press(page, 'left');
   await press(page, 'a');
   await expect.poll(() => state(page)).toMatchObject({
-    tilePos: {x: 5, y: 12},
+    tilePos: {x: 23, y: 29},
     atlas: {
-      mode: 'map', mapId: 'camp_randall', mapWidth: 24, mapHeight: 20,
-      metatileVersion: 9, metatilePlacementCount: 8
+      mode: 'map', mapId: 'camp_randall', mapWidth: 48, mapHeight: 31,
+      metatileVersion: 9, metatilePlacementCount: 42
     }
   });
   expect((await state(page)).atlas.metatileRenderCount).toBeGreaterThan(200);
@@ -78,21 +78,20 @@ test('world atlas boots at the approved scale and opens the selected map', async
 
 test('Camp Randall runtime collision comes from the rendered metatiles', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=4&y=11&facing=up');
-  await expect.poll(async () => (await state(page)).passable.up).toBe(false);
-  await openAtlas(page, '&play=1&area=camp_randall&x=5&y=11&facing=up');
-  await expect.poll(async () => (await state(page)).passable.up).toBe(true);
-  await openAtlas(page, '&play=1&area=camp_randall&x=15&y=15&facing=right');
+  await openAtlas(page, '&play=1&area=camp_randall&x=23&y=29&facing=left');
+  await expect.poll(async () => (await state(page)).passable.left).toBe(false);
+  await expect.poll(async () => (await state(page)).passable.right).toBe(true);
+  await openAtlas(page, '&play=1&area=camp_randall&x=10&y=24&facing=right');
   await expect.poll(async () => (await state(page)).passable.right).toBe(false);
   const camp = await state(page);
-  expect(camp.atlas).toMatchObject({metatileVersion: 9, metatilePlacementCount: 8});
+  expect(camp.atlas).toMatchObject({metatileVersion: 9, metatilePlacementCount: 42});
   expect(camp.atlas.metatileRenderCount).toBeGreaterThan(200);
   expect(issues).toEqual([]);
 });
 
 test('physical atlas edges transition through reciprocal two-cell thresholds', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=11&y=18&facing=down');
+  await openAtlas(page, '&play=1&area=camp_randall&x=23&y=29&facing=down');
   await press(page, 'down');
   await expect.poll(async () => (await state(page)).atlas.mapId).toBe('r1');
   await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 8, y: 0});
@@ -101,7 +100,7 @@ test('physical atlas edges transition through reciprocal two-cell thresholds', a
 
 test('blockout doors enter planned interiors and return to their exact exterior', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=5&y=11&facing=up');
+  await openAtlas(page, '&play=1&area=camp_randall&x=8&y=18&facing=up');
   await press(page, 'up');
   await expect.poll(async () => (await state(page)).atlas.interiorId).toBe('team_locker_room');
   await expect.poll(async () => (await state(page)).atlas.returnDepth).toBe(1);
@@ -110,7 +109,7 @@ test('blockout doors enter planned interiors and return to their exact exterior'
   await press(page, 'down');
   await press(page, 'down');
   await expect.poll(async () => (await state(page)).atlas.mapId).toBe('camp_randall');
-  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 5, y: 11});
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 8, y: 18});
   expect(issues).toEqual([]);
 });
 
@@ -149,7 +148,7 @@ test('interiors can be opened directly for layout review', async ({page}) => {
 test('every planned exterior and interior boots through its direct review route', async ({page}) => {
   const issues = runtimeIssues(page);
   const exteriors = {
-    camp_randall: [24, 20],
+    camp_randall: [48, 31],
     r1: [18, 24],
     field_house: [40, 28],
     lakeshore_path: [30, 14],

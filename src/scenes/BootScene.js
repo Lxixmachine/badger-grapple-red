@@ -1,9 +1,9 @@
-import {chooseStarter,defaultState,saveState} from '../systems/save.js';
+import {chooseStarter,defaultState,loadState,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 import {NPC_LOOKS} from '../data/npcLooks.js';
 import {preloadSeasonOneAssets, SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
-import {ROSTER} from '../data/roster.js';
+import {makeMon, ROSTER} from '../data/roster.js';
 const Phaser = window.Phaser;
 const V='267';
 export class BootScene extends Phaser.Scene{
@@ -37,6 +37,38 @@ export class BootScene extends Phaser.Scene{
     this.anims.create({key:'npc-idle-up',frames:[{key:'npc',frame:10}],frameRate:1,repeat:0});
     setVirtualHandler(this);
     const params=new URLSearchParams(window.location.search);
+    const campDemoMode=window.BADGER_ENTRY_MODE==='camp-randall'||params.get('demo')==='camp-randall';
+    if(campDemoMode){
+      const state=loadState();
+      if(!state.party.length){state.party=[makeMon('buckshot',6)];state.active=0;}
+      state.area='camp_randall';
+      state.pos=null;
+      state.message='';
+      state.mapReturnStack=[];
+      state.flags={
+        ...state.flags,
+        introDone:true,
+        coachIntro:true,
+        personaChosen:true,
+        openingBattleReady:false,
+        openingBattleComplete:true,
+        openingBattleWon:true,
+        openingRecoveryDone:true,
+        assignment:true
+      };
+      const position=params.has('x')&&params.has('y')
+        ?{x:Number(params.get('x')),y:Number(params.get('y'))}
+        :{x:23,y:29};
+      this.scene.start('OverworldScene',{
+        state,
+        mapId:'camp_randall',
+        position,
+        facing:params.get('facing')||'up',
+        demoMode:true,
+        gridDebug:params.has('debug-grid')
+      });
+      return;
+    }
     if(params.has('test')&&params.get('scene')==='starter'){
       const state=defaultState();state.flags.introDone=true;state.area='wrestling_room';state.pos={x:7,y:7};saveState(state);
       this.scene.start('StarterScene',{story:true,returnArea:'wrestling_room',returnPos:{x:7,y:7}});

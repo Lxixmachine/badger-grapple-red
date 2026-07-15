@@ -112,6 +112,15 @@ export function installTestHooks(game, routeVirtualButton) {
           };
         })
       } : null,
+      grid: scene.gridContractVersion ? {
+        version: scene.gridContractVersion,
+        cellSize: scene.cellSize ?? null,
+        mapWidth: scene.mapWidth ?? null,
+        mapHeight: scene.mapHeight ?? null,
+        renderModel: scene.map?.renderModel ?? null,
+        authority: scene.gridAuthority ?? null,
+        debugVisible: Boolean(scene.gridOverlay?.active)
+      } : null,
       atlas: scene.atlasVersion ? {
         version: scene.atlasVersion,
         mode: scene.mode,

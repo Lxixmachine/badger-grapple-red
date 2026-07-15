@@ -2,7 +2,7 @@
   "schema": "badger-grapple-metatiles/v2",
   "version": 9,
   "status": "season-one-map-atlas",
-  "layoutRevision": 5,
+  "layoutRevision": 6,
   "cellSize": 32,
   "atlas": {
     "path": "./assets/metatiles/camp_randall_metatiles_v9.png",
@@ -13105,146 +13105,146 @@
       {
         "index": 2182,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 1,1"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 1,1"
       },
       {
         "index": 2183,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 2,1"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 2,1"
       },
       {
         "index": 2184,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 3,1"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 3,1"
       },
       {
         "index": 2185,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 4,1"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 4,1"
       },
       {
         "index": 2186,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 5,1"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 5,1"
       },
       {
         "index": 2187,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 6,1"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 6,1"
       },
       {
         "index": 2188,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 1,2"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 1,2"
       },
       {
         "index": 2189,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 2,2"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 2,2"
       },
       {
         "index": 2190,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 3,2"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 3,2"
       },
       {
         "index": 2191,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 4,2"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 4,2"
       },
       {
         "index": 2192,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 5,2"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 5,2"
       },
       {
         "index": 2193,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 6,2"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 6,2"
       },
       {
         "index": 2194,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 1,3"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 1,3"
       },
       {
         "index": 2195,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 2,3"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 2,3"
       },
       {
         "index": 2196,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 3,3"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 3,3"
       },
       {
         "index": 2197,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 4,3"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 4,3"
       },
       {
         "index": 2198,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 5,3"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 5,3"
       },
       {
         "index": 2199,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 6,3"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 6,3"
       },
       {
         "index": 2200,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 1,4"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 1,4"
       },
       {
         "index": 2201,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 2,4"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 2,4"
       },
       {
         "index": 2202,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 3,4"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 3,4"
       },
       {
         "index": 2203,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 4,4"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 4,4"
       },
       {
         "index": 2204,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 5,4"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 5,4"
       },
       {
         "index": 2205,
         "kind": "structure",
-        "family": "memory_garden",
-        "name": "Memory Garden 6,4"
+        "family": "memory_garden_west",
+        "name": "Memory Garden West 6,4"
       },
       {
         "index": 2206,
@@ -24880,12 +24880,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,1",
-        "West Forest Border 1,1"
+        "Dense Forest Core 1,1"
       ]
     },
     "mt_4ebd704b373e": {
@@ -24895,12 +24893,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,1",
-        "West Forest Border 1,1"
+        "Dense Forest Core 1,1"
       ]
     },
     "mt_15ab0f501ec7": {
@@ -24910,12 +24906,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,1",
-        "West Forest Border 1,1"
+        "Dense Forest Core 1,1"
       ]
     },
     "mt_47e5e608c7ba": {
@@ -24925,12 +24919,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,1",
-        "West Forest Border 2,1"
+        "Dense Forest Core 2,1"
       ]
     },
     "mt_d653886b777c": {
@@ -24940,12 +24932,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,1",
-        "West Forest Border 2,1"
+        "Dense Forest Core 2,1"
       ]
     },
     "mt_25dd8ba7263f": {
@@ -24955,12 +24945,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,1",
-        "West Forest Border 2,1"
+        "Dense Forest Core 2,1"
       ]
     },
     "mt_6c1908276a04": {
@@ -24970,12 +24958,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,2",
-        "West Forest Border 1,2"
+        "Dense Forest Core 1,2"
       ]
     },
     "mt_33ad29bd2ee4": {
@@ -24985,12 +24971,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,2",
-        "West Forest Border 1,2"
+        "Dense Forest Core 1,2"
       ]
     },
     "mt_f8f5a1d85879": {
@@ -25000,12 +24984,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,2",
-        "West Forest Border 1,2"
+        "Dense Forest Core 1,2"
       ]
     },
     "mt_c7defdee174c": {
@@ -25015,12 +24997,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,2",
-        "West Forest Border 2,2"
+        "Dense Forest Core 2,2"
       ]
     },
     "mt_fe301af684f5": {
@@ -25030,12 +25010,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,2",
-        "West Forest Border 2,2"
+        "Dense Forest Core 2,2"
       ]
     },
     "mt_f8f9316e1cbc": {
@@ -25045,12 +25023,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,2",
-        "West Forest Border 2,2"
+        "Dense Forest Core 2,2"
       ]
     },
     "mt_2364e7bb7f9d": {
@@ -25060,12 +25036,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,3",
-        "West Forest Border 1,3"
+        "Dense Forest Core 1,3"
       ]
     },
     "mt_0d0f316282fd": {
@@ -25075,12 +25049,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,3",
-        "West Forest Border 1,3"
+        "Dense Forest Core 1,3"
       ]
     },
     "mt_5f39213dea2b": {
@@ -25090,12 +25062,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,3",
-        "West Forest Border 1,3"
+        "Dense Forest Core 1,3"
       ]
     },
     "mt_5cedaf8c220c": {
@@ -25105,12 +25075,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,3",
-        "West Forest Border 2,3"
+        "Dense Forest Core 2,3"
       ]
     },
     "mt_a052353f1c84": {
@@ -25120,12 +25088,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,3",
-        "West Forest Border 2,3"
+        "Dense Forest Core 2,3"
       ]
     },
     "mt_2f9461a98639": {
@@ -25135,12 +25101,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,3",
-        "West Forest Border 2,3"
+        "Dense Forest Core 2,3"
       ]
     },
     "mt_920afb74fbb4": {
@@ -25150,15 +25114,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,4",
-        "East Forest Border 1,4",
-        "East Forest Border 1,7",
-        "East Forest Border 1,10",
-        "East Forest Border 1,13"
+        "Dense Forest Core 1,4"
       ]
     },
     "mt_c02cbf200646": {
@@ -25168,15 +25127,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,4",
-        "East Forest Border 1,4",
-        "East Forest Border 1,7",
-        "East Forest Border 1,10",
-        "East Forest Border 1,13"
+        "Dense Forest Core 1,4"
       ]
     },
     "mt_119c9e378b0d": {
@@ -25186,15 +25140,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,4",
-        "East Forest Border 1,4",
-        "East Forest Border 1,7",
-        "East Forest Border 1,10",
-        "East Forest Border 1,13"
+        "Dense Forest Core 1,4"
       ]
     },
     "mt_245ea5632e8b": {
@@ -25204,15 +25153,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,4",
-        "East Forest Border 2,4",
-        "East Forest Border 2,7",
-        "East Forest Border 2,10",
-        "East Forest Border 2,13"
+        "Dense Forest Core 2,4"
       ]
     },
     "mt_b7edcaeacc1a": {
@@ -25222,15 +25166,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,4",
-        "East Forest Border 2,4",
-        "East Forest Border 2,7",
-        "East Forest Border 2,10",
-        "East Forest Border 2,13"
+        "Dense Forest Core 2,4"
       ]
     },
     "mt_e4f2384f40fe": {
@@ -25240,15 +25179,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,4",
-        "East Forest Border 2,4",
-        "East Forest Border 2,7",
-        "East Forest Border 2,10",
-        "East Forest Border 2,13"
+        "Dense Forest Core 2,4"
       ]
     },
     "mt_5345fa459110": {
@@ -25258,15 +25192,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,5",
-        "East Forest Border 1,5",
-        "East Forest Border 1,8",
-        "East Forest Border 1,11",
-        "East Forest Border 1,14"
+        "Dense Forest Core 1,5"
       ]
     },
     "mt_06eb2fd17434": {
@@ -25276,15 +25205,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,5",
-        "East Forest Border 1,5",
-        "East Forest Border 1,8",
-        "East Forest Border 1,11",
-        "East Forest Border 1,14"
+        "Dense Forest Core 1,5"
       ]
     },
     "mt_3e59e82e06fc": {
@@ -25294,15 +25218,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,5",
-        "East Forest Border 1,5",
-        "East Forest Border 1,8",
-        "East Forest Border 1,11",
-        "East Forest Border 1,14"
+        "Dense Forest Core 1,5"
       ]
     },
     "mt_fa11a658c31d": {
@@ -25312,15 +25231,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,5",
-        "East Forest Border 2,5",
-        "East Forest Border 2,8",
-        "East Forest Border 2,11",
-        "East Forest Border 2,14"
+        "Dense Forest Core 2,5"
       ]
     },
     "mt_fc6a3baf33ec": {
@@ -25330,15 +25244,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,5",
-        "East Forest Border 2,5",
-        "East Forest Border 2,8",
-        "East Forest Border 2,11",
-        "East Forest Border 2,14"
+        "Dense Forest Core 2,5"
       ]
     },
     "mt_af65305ff120": {
@@ -25348,15 +25257,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,5",
-        "East Forest Border 2,5",
-        "East Forest Border 2,8",
-        "East Forest Border 2,11",
-        "East Forest Border 2,14"
+        "Dense Forest Core 2,5"
       ]
     },
     "mt_30d13672876e": {
@@ -25366,12 +25270,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,6",
-        "West Forest Border 1,16"
+        "Dense Forest Core 1,6"
       ]
     },
     "mt_a5eca173e83a": {
@@ -25381,12 +25283,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,6",
-        "West Forest Border 1,16"
+        "Dense Forest Core 1,6"
       ]
     },
     "mt_cae8fa4a1744": {
@@ -25396,12 +25296,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,6",
-        "West Forest Border 1,16"
+        "Dense Forest Core 1,6"
       ]
     },
     "mt_ea5a35468c76": {
@@ -25411,12 +25309,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,6",
-        "West Forest Border 2,16"
+        "Dense Forest Core 2,6"
       ]
     },
     "mt_818b798cd87f": {
@@ -25426,12 +25322,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,6",
-        "West Forest Border 2,16"
+        "Dense Forest Core 2,6"
       ]
     },
     "mt_dfe1742ee107": {
@@ -25441,12 +25335,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,6",
-        "West Forest Border 2,16"
+        "Dense Forest Core 2,6"
       ]
     },
     "mt_774d27f45f92": {
@@ -25456,12 +25348,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,7",
-        "West Forest Border 1,17"
+        "Dense Forest Core 1,7"
       ]
     },
     "mt_2f87b5ca9ae9": {
@@ -25471,12 +25361,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,7",
-        "West Forest Border 1,17"
+        "Dense Forest Core 1,7"
       ]
     },
     "mt_a97759b68682": {
@@ -25486,12 +25374,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,7",
-        "West Forest Border 1,17"
+        "Dense Forest Core 1,7"
       ]
     },
     "mt_c25852044caf": {
@@ -25501,12 +25387,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,7",
-        "West Forest Border 2,17"
+        "Dense Forest Core 2,7"
       ]
     },
     "mt_c93f0850f794": {
@@ -25516,12 +25400,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,7",
-        "West Forest Border 2,17"
+        "Dense Forest Core 2,7"
       ]
     },
     "mt_f6da48546349": {
@@ -25531,12 +25413,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,7",
-        "West Forest Border 2,17"
+        "Dense Forest Core 2,7"
       ]
     },
     "mt_51c5cf6364c2": {
@@ -25546,12 +25426,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,8",
-        "West Forest Border 1,18"
+        "Dense Forest Core 1,8"
       ]
     },
     "mt_fbd6f51fb16e": {
@@ -25561,12 +25439,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,8",
-        "West Forest Border 1,18"
+        "Dense Forest Core 1,8"
       ]
     },
     "mt_7a81707dacf7": {
@@ -25576,12 +25452,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 1,8",
-        "West Forest Border 1,18"
+        "Dense Forest Core 1,8"
       ]
     },
     "mt_784ec0dd27d6": {
@@ -25591,12 +25465,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,8",
-        "West Forest Border 2,18"
+        "Dense Forest Core 2,8"
       ]
     },
     "mt_1a02c016f3b7": {
@@ -25606,12 +25478,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,8",
-        "West Forest Border 2,18"
+        "Dense Forest Core 2,8"
       ]
     },
     "mt_f081c7d564bb": {
@@ -25621,12 +25491,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Dense Forest Core 2,8",
-        "West Forest Border 2,18"
+        "Dense Forest Core 2,8"
       ]
     },
     "mt_8b68e4388639": {
@@ -25636,15 +25504,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest South Edge 1,1",
-        "West Forest Border 1,4",
-        "West Forest Border 1,7",
-        "West Forest Border 1,10",
-        "West Forest Border 1,13"
+        "Forest South Edge 1,1"
       ]
     },
     "mt_c6133e650bc7": {
@@ -25654,15 +25517,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest South Edge 1,1",
-        "West Forest Border 1,4",
-        "West Forest Border 1,7",
-        "West Forest Border 1,10",
-        "West Forest Border 1,13"
+        "Forest South Edge 1,1"
       ]
     },
     "mt_8923d29daf2a": {
@@ -25672,15 +25530,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest South Edge 1,1",
-        "West Forest Border 1,4",
-        "West Forest Border 1,7",
-        "West Forest Border 1,10",
-        "West Forest Border 1,13"
+        "Forest South Edge 1,1"
       ]
     },
     "mt_2fe26b2fc57d": {
@@ -25690,15 +25543,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest South Edge 2,1",
-        "West Forest Border 2,4",
-        "West Forest Border 2,7",
-        "West Forest Border 2,10",
-        "West Forest Border 2,13"
+        "Forest South Edge 2,1"
       ]
     },
     "mt_f07125bb04c6": {
@@ -25708,15 +25556,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest South Edge 2,1",
-        "West Forest Border 2,4",
-        "West Forest Border 2,7",
-        "West Forest Border 2,10",
-        "West Forest Border 2,13"
+        "Forest South Edge 2,1"
       ]
     },
     "mt_c3c0f04f8cb7": {
@@ -25726,15 +25569,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest South Edge 2,1",
-        "West Forest Border 2,4",
-        "West Forest Border 2,7",
-        "West Forest Border 2,10",
-        "West Forest Border 2,13"
+        "Forest South Edge 2,1"
       ]
     },
     "mt_68b39b5b1e25": {
@@ -25744,12 +25582,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,1",
-        "East Forest Border 1,1"
+        "Forest East Edge 1,1"
       ]
     },
     "mt_e14577bcdc0b": {
@@ -25759,12 +25595,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,1",
-        "East Forest Border 1,1"
+        "Forest East Edge 1,1"
       ]
     },
     "mt_f8042fd5b14a": {
@@ -25774,12 +25608,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,1",
-        "East Forest Border 1,1"
+        "Forest East Edge 1,1"
       ]
     },
     "mt_8c5623c483b1": {
@@ -25789,12 +25621,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,1",
-        "East Forest Border 2,1"
+        "Forest East Edge 2,1"
       ]
     },
     "mt_97f8eb82f8a4": {
@@ -25804,12 +25634,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,1",
-        "East Forest Border 2,1"
+        "Forest East Edge 2,1"
       ]
     },
     "mt_3040b7f304a9": {
@@ -25819,12 +25647,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,1",
-        "East Forest Border 2,1"
+        "Forest East Edge 2,1"
       ]
     },
     "mt_a9c2fcb79a92": {
@@ -25834,12 +25660,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,2",
-        "East Forest Border 1,2"
+        "Forest East Edge 1,2"
       ]
     },
     "mt_8fbc23de41eb": {
@@ -25849,12 +25673,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,2",
-        "East Forest Border 1,2"
+        "Forest East Edge 1,2"
       ]
     },
     "mt_c9dfc284669c": {
@@ -25864,12 +25686,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,2",
-        "East Forest Border 1,2"
+        "Forest East Edge 1,2"
       ]
     },
     "mt_1e502308e6e2": {
@@ -25879,12 +25699,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,2",
-        "East Forest Border 2,2"
+        "Forest East Edge 2,2"
       ]
     },
     "mt_a26c162479e8": {
@@ -25894,12 +25712,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,2",
-        "East Forest Border 2,2"
+        "Forest East Edge 2,2"
       ]
     },
     "mt_a8afb27cc5a3": {
@@ -25909,12 +25725,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,2",
-        "East Forest Border 2,2"
+        "Forest East Edge 2,2"
       ]
     },
     "mt_a83187000a75": {
@@ -25924,12 +25738,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,3",
-        "East Forest Border 1,3"
+        "Forest East Edge 1,3"
       ]
     },
     "mt_2f87b4374420": {
@@ -25939,12 +25751,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,3",
-        "East Forest Border 1,3"
+        "Forest East Edge 1,3"
       ]
     },
     "mt_dcf82c6629cd": {
@@ -25954,12 +25764,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,3",
-        "East Forest Border 1,3"
+        "Forest East Edge 1,3"
       ]
     },
     "mt_b832ccea03a6": {
@@ -25969,12 +25777,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,3",
-        "East Forest Border 2,3"
+        "Forest East Edge 2,3"
       ]
     },
     "mt_7bc4ba35637c": {
@@ -25984,12 +25790,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,3",
-        "East Forest Border 2,3"
+        "Forest East Edge 2,3"
       ]
     },
     "mt_07f9a1301d25": {
@@ -25999,12 +25803,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,3",
-        "East Forest Border 2,3"
+        "Forest East Edge 2,3"
       ]
     },
     "mt_760937fd8e56": {
@@ -26014,12 +25816,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,4",
-        "East Forest Border 1,16"
+        "Forest East Edge 1,4"
       ]
     },
     "mt_82c1e2ba42f4": {
@@ -26029,12 +25829,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,4",
-        "East Forest Border 1,16"
+        "Forest East Edge 1,4"
       ]
     },
     "mt_9fd0de50160d": {
@@ -26044,12 +25842,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,4",
-        "East Forest Border 1,16"
+        "Forest East Edge 1,4"
       ]
     },
     "mt_45350d6e26c1": {
@@ -26059,12 +25855,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,4",
-        "East Forest Border 2,16"
+        "Forest East Edge 2,4"
       ]
     },
     "mt_a9e2b4e138c8": {
@@ -26074,12 +25868,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,4",
-        "East Forest Border 2,16"
+        "Forest East Edge 2,4"
       ]
     },
     "mt_2e9bbd9feccf": {
@@ -26089,12 +25881,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,4",
-        "East Forest Border 2,16"
+        "Forest East Edge 2,4"
       ]
     },
     "mt_98a5447f03f3": {
@@ -26104,12 +25894,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,5",
-        "East Forest Border 1,17"
+        "Forest East Edge 1,5"
       ]
     },
     "mt_bcc956f592e9": {
@@ -26119,12 +25907,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,5",
-        "East Forest Border 1,17"
+        "Forest East Edge 1,5"
       ]
     },
     "mt_dffb58a48ac2": {
@@ -26134,12 +25920,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,5",
-        "East Forest Border 1,17"
+        "Forest East Edge 1,5"
       ]
     },
     "mt_44a19e9688cd": {
@@ -26149,12 +25933,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,5",
-        "East Forest Border 2,17"
+        "Forest East Edge 2,5"
       ]
     },
     "mt_c51b7c38bad9": {
@@ -26164,12 +25946,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,5",
-        "East Forest Border 2,17"
+        "Forest East Edge 2,5"
       ]
     },
     "mt_28e41693a4ec": {
@@ -26179,12 +25959,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,5",
-        "East Forest Border 2,17"
+        "Forest East Edge 2,5"
       ]
     },
     "mt_ef68ac0257db": {
@@ -26194,12 +25972,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,6",
-        "East Forest Border 1,18"
+        "Forest East Edge 1,6"
       ]
     },
     "mt_3136b831b4f5": {
@@ -26209,12 +25985,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,6",
-        "East Forest Border 1,18"
+        "Forest East Edge 1,6"
       ]
     },
     "mt_7570af9e30f0": {
@@ -26224,12 +25998,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 1,6",
-        "East Forest Border 1,18"
+        "Forest East Edge 1,6"
       ]
     },
     "mt_617fd60ced36": {
@@ -26239,12 +26011,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,6",
-        "East Forest Border 2,18"
+        "Forest East Edge 2,6"
       ]
     },
     "mt_58d885b72fda": {
@@ -26254,12 +26024,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,6",
-        "East Forest Border 2,18"
+        "Forest East Edge 2,6"
       ]
     },
     "mt_a78a75525d3e": {
@@ -26269,12 +26037,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest East Edge 2,6",
-        "East Forest Border 2,18"
+        "Forest East Edge 2,6"
       ]
     },
     "mt_94feb0e20e61": {
@@ -26419,15 +26185,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 4,2",
-        "West Forest Border 2,5",
-        "West Forest Border 2,8",
-        "West Forest Border 2,11",
-        "West Forest Border 2,14"
+        "Forest Inner Corner NW 4,2"
       ]
     },
     "mt_19e06f6a6f68": {
@@ -26437,15 +26198,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 4,2",
-        "West Forest Border 2,5",
-        "West Forest Border 2,8",
-        "West Forest Border 2,11",
-        "West Forest Border 2,14"
+        "Forest Inner Corner NW 4,2"
       ]
     },
     "mt_c780df5ac41f": {
@@ -26455,15 +26211,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 4,2",
-        "West Forest Border 2,5",
-        "West Forest Border 2,8",
-        "West Forest Border 2,11",
-        "West Forest Border 2,14"
+        "Forest Inner Corner NW 4,2"
       ]
     },
     "mt_ef543dadb07d": {
@@ -26473,15 +26224,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 5,2",
-        "West Forest Border 1,5",
-        "West Forest Border 1,8",
-        "West Forest Border 1,11",
-        "West Forest Border 1,14"
+        "Forest Inner Corner NW 5,2"
       ]
     },
     "mt_fc52912e13b0": {
@@ -26491,15 +26237,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 5,2",
-        "West Forest Border 1,5",
-        "West Forest Border 1,8",
-        "West Forest Border 1,11",
-        "West Forest Border 1,14"
+        "Forest Inner Corner NW 5,2"
       ]
     },
     "mt_39201db24142": {
@@ -26509,15 +26250,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 5,2",
-        "West Forest Border 1,5",
-        "West Forest Border 1,8",
-        "West Forest Border 1,11",
-        "West Forest Border 1,14"
+        "Forest Inner Corner NW 5,2"
       ]
     },
     "mt_a0db4d457e3e": {
@@ -26644,15 +26380,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 4,3",
-        "West Forest Border 2,6",
-        "West Forest Border 2,9",
-        "West Forest Border 2,12",
-        "West Forest Border 2,15"
+        "Forest Inner Corner NW 4,3"
       ]
     },
     "mt_c47768ac9ab4": {
@@ -26662,15 +26393,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 4,3",
-        "West Forest Border 2,6",
-        "West Forest Border 2,9",
-        "West Forest Border 2,12",
-        "West Forest Border 2,15"
+        "Forest Inner Corner NW 4,3"
       ]
     },
     "mt_666e3b44e79c": {
@@ -26680,15 +26406,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 4,3",
-        "West Forest Border 2,6",
-        "West Forest Border 2,9",
-        "West Forest Border 2,12",
-        "West Forest Border 2,15"
+        "Forest Inner Corner NW 4,3"
       ]
     },
     "mt_02e7d8ca01a3": {
@@ -26698,15 +26419,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 5,3",
-        "West Forest Border 1,6",
-        "West Forest Border 1,9",
-        "West Forest Border 1,12",
-        "West Forest Border 1,15"
+        "Forest Inner Corner NW 5,3"
       ]
     },
     "mt_d7da8bb952ce": {
@@ -26716,15 +26432,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 5,3",
-        "West Forest Border 1,6",
-        "West Forest Border 1,9",
-        "West Forest Border 1,12",
-        "West Forest Border 1,15"
+        "Forest Inner Corner NW 5,3"
       ]
     },
     "mt_6e6656eb60c6": {
@@ -26734,15 +26445,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "west_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Forest Inner Corner NW 5,3",
-        "West Forest Border 1,6",
-        "West Forest Border 1,9",
-        "West Forest Border 1,12",
-        "West Forest Border 1,15"
+        "Forest Inner Corner NW 5,3"
       ]
     },
     "mt_3e45be6b7d16": {
@@ -27376,12 +27082,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "shrubs",
-        "east_south_shrub"
+        "shrubs"
       ],
       "names": [
-        "Round Shrub 1,1",
-        "East South Shrub 1,1"
+        "Round Shrub 1,1"
       ]
     },
     "mt_3ea4ca857fea": {
@@ -27391,12 +27095,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "shrubs",
-        "east_south_shrub"
+        "shrubs"
       ],
       "names": [
-        "Round Shrub 1,1",
-        "East South Shrub 1,1"
+        "Round Shrub 1,1"
       ]
     },
     "mt_ea7ee80e96ce": {
@@ -27406,12 +27108,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "shrubs",
-        "east_south_shrub"
+        "shrubs"
       ],
       "names": [
-        "Round Shrub 1,1",
-        "East South Shrub 1,1"
+        "Round Shrub 1,1"
       ]
     },
     "mt_b23d2c952801": {
@@ -27421,12 +27121,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "shrubs",
-        "west_south_shrub"
+        "shrubs"
       ],
       "names": [
-        "Flowering Shrub 1,1",
-        "West South Shrub 1,1"
+        "Flowering Shrub 1,1"
       ]
     },
     "mt_0b8e9755c1d3": {
@@ -27436,12 +27134,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "shrubs",
-        "west_south_shrub"
+        "shrubs"
       ],
       "names": [
-        "Flowering Shrub 1,1",
-        "West South Shrub 1,1"
+        "Flowering Shrub 1,1"
       ]
     },
     "mt_10e5ec3e5b6c": {
@@ -27451,12 +27147,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "shrubs",
-        "west_south_shrub"
+        "shrubs"
       ],
       "names": [
-        "Flowering Shrub 1,1",
-        "West South Shrub 1,1"
+        "Flowering Shrub 1,1"
       ]
     },
     "mt_ffb7325e08c5": {
@@ -32575,15 +32269,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Long Forest Border East 1,6",
-        "East Forest Border 1,6",
-        "East Forest Border 1,9",
-        "East Forest Border 1,12",
-        "East Forest Border 1,15"
+        "Long Forest Border East 1,6"
       ]
     },
     "mt_e9a72be1ba76": {
@@ -32593,15 +32282,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Long Forest Border East 1,6",
-        "East Forest Border 1,6",
-        "East Forest Border 1,9",
-        "East Forest Border 1,12",
-        "East Forest Border 1,15"
+        "Long Forest Border East 1,6"
       ]
     },
     "mt_e30bcae92f26": {
@@ -32611,15 +32295,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Long Forest Border East 1,6",
-        "East Forest Border 1,6",
-        "East Forest Border 1,9",
-        "East Forest Border 1,12",
-        "East Forest Border 1,15"
+        "Long Forest Border East 1,6"
       ]
     },
     "mt_0d9e421faa49": {
@@ -32629,15 +32308,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Long Forest Border East 2,6",
-        "East Forest Border 2,6",
-        "East Forest Border 2,9",
-        "East Forest Border 2,12",
-        "East Forest Border 2,15"
+        "Long Forest Border East 2,6"
       ]
     },
     "mt_ad78c5e56c26": {
@@ -32647,15 +32321,10 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Long Forest Border East 2,6",
-        "East Forest Border 2,6",
-        "East Forest Border 2,9",
-        "East Forest Border 2,12",
-        "East Forest Border 2,15"
+        "Long Forest Border East 2,6"
       ]
     },
     "mt_579c0b67fabe": {
@@ -32665,15 +32334,10 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "forest_masses",
-        "east_forest_border"
+        "forest_masses"
       ],
       "names": [
-        "Long Forest Border East 2,6",
-        "East Forest Border 2,6",
-        "East Forest Border 2,9",
-        "East Forest Border 2,12",
-        "East Forest Border 2,15"
+        "Long Forest Border East 2,6"
       ]
     },
     "mt_3e8b0b4d27fe": {
@@ -87790,10 +87454,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,1"
+        "Memory Garden West 1,1",
+        "Memory Garden East 1,1"
       ]
     },
     "mt_77696564674c": {
@@ -87803,10 +87469,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,1"
+        "Memory Garden West 1,1",
+        "Memory Garden East 1,1"
       ]
     },
     "mt_d49f58a43332": {
@@ -87816,10 +87484,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,1"
+        "Memory Garden West 1,1",
+        "Memory Garden East 1,1"
       ]
     },
     "mt_62a8610e2560": {
@@ -87829,10 +87499,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,1"
+        "Memory Garden West 2,1",
+        "Memory Garden East 2,1"
       ]
     },
     "mt_bf2ac43d5d39": {
@@ -87842,10 +87514,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,1"
+        "Memory Garden West 2,1",
+        "Memory Garden East 2,1"
       ]
     },
     "mt_fb84201615ab": {
@@ -87855,10 +87529,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,1"
+        "Memory Garden West 2,1",
+        "Memory Garden East 2,1"
       ]
     },
     "mt_61fcf0d87964": {
@@ -87868,10 +87544,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,1"
+        "Memory Garden West 3,1",
+        "Memory Garden East 3,1"
       ]
     },
     "mt_1ec8c7bc446f": {
@@ -87881,10 +87559,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,1"
+        "Memory Garden West 3,1",
+        "Memory Garden East 3,1"
       ]
     },
     "mt_92b41aadff30": {
@@ -87894,10 +87574,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,1"
+        "Memory Garden West 3,1",
+        "Memory Garden East 3,1"
       ]
     },
     "mt_3fb9fb322b7e": {
@@ -87907,10 +87589,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,1"
+        "Memory Garden West 4,1",
+        "Memory Garden East 4,1"
       ]
     },
     "mt_f93bfe5de197": {
@@ -87920,10 +87604,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,1"
+        "Memory Garden West 4,1",
+        "Memory Garden East 4,1"
       ]
     },
     "mt_87b7491f60b1": {
@@ -87933,10 +87619,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,1"
+        "Memory Garden West 4,1",
+        "Memory Garden East 4,1"
       ]
     },
     "mt_8497f487aff0": {
@@ -87946,10 +87634,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,1"
+        "Memory Garden West 5,1",
+        "Memory Garden East 5,1"
       ]
     },
     "mt_b7655b3a719c": {
@@ -87959,10 +87649,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,1"
+        "Memory Garden West 5,1",
+        "Memory Garden East 5,1"
       ]
     },
     "mt_3ad0c2eb8578": {
@@ -87972,10 +87664,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,1"
+        "Memory Garden West 5,1",
+        "Memory Garden East 5,1"
       ]
     },
     "mt_810fd44ed17e": {
@@ -87985,10 +87679,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,1"
+        "Memory Garden West 6,1",
+        "Memory Garden East 6,1"
       ]
     },
     "mt_d97686d05d07": {
@@ -87998,10 +87694,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,1"
+        "Memory Garden West 6,1",
+        "Memory Garden East 6,1"
       ]
     },
     "mt_1af16c6d77a6": {
@@ -88011,10 +87709,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,1"
+        "Memory Garden West 6,1",
+        "Memory Garden East 6,1"
       ]
     },
     "mt_d1349006f0c6": {
@@ -88024,10 +87724,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,2"
+        "Memory Garden West 1,2",
+        "Memory Garden East 1,2"
       ]
     },
     "mt_8617056da9ce": {
@@ -88037,10 +87739,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,2"
+        "Memory Garden West 1,2",
+        "Memory Garden East 1,2"
       ]
     },
     "mt_97bf8f25e9ca": {
@@ -88050,10 +87754,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,2"
+        "Memory Garden West 1,2",
+        "Memory Garden East 1,2"
       ]
     },
     "mt_8246cb3c43ff": {
@@ -88063,10 +87769,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,2"
+        "Memory Garden West 2,2",
+        "Memory Garden East 2,2"
       ]
     },
     "mt_63697ff0d2fd": {
@@ -88076,10 +87784,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,2"
+        "Memory Garden West 2,2",
+        "Memory Garden East 2,2"
       ]
     },
     "mt_1bcb4e7b2bc6": {
@@ -88089,10 +87799,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,2"
+        "Memory Garden West 2,2",
+        "Memory Garden East 2,2"
       ]
     },
     "mt_768ee460ef42": {
@@ -88102,10 +87814,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,2"
+        "Memory Garden West 3,2",
+        "Memory Garden East 3,2"
       ]
     },
     "mt_59a3c3a38646": {
@@ -88115,10 +87829,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,2"
+        "Memory Garden West 3,2",
+        "Memory Garden East 3,2"
       ]
     },
     "mt_f9d86a59ef1c": {
@@ -88128,10 +87844,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,2"
+        "Memory Garden West 3,2",
+        "Memory Garden East 3,2"
       ]
     },
     "mt_d37c10000e65": {
@@ -88141,10 +87859,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,2"
+        "Memory Garden West 4,2",
+        "Memory Garden East 4,2"
       ]
     },
     "mt_6da1ac72973e": {
@@ -88154,10 +87874,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,2"
+        "Memory Garden West 4,2",
+        "Memory Garden East 4,2"
       ]
     },
     "mt_517b7319a686": {
@@ -88167,10 +87889,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,2"
+        "Memory Garden West 4,2",
+        "Memory Garden East 4,2"
       ]
     },
     "mt_374af6610cd5": {
@@ -88180,10 +87904,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,2"
+        "Memory Garden West 5,2",
+        "Memory Garden East 5,2"
       ]
     },
     "mt_df9e56eca9bd": {
@@ -88193,10 +87919,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,2"
+        "Memory Garden West 5,2",
+        "Memory Garden East 5,2"
       ]
     },
     "mt_7affd3dc36f7": {
@@ -88206,10 +87934,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,2"
+        "Memory Garden West 5,2",
+        "Memory Garden East 5,2"
       ]
     },
     "mt_911b681fe601": {
@@ -88219,10 +87949,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,2"
+        "Memory Garden West 6,2",
+        "Memory Garden East 6,2"
       ]
     },
     "mt_2961febfdfff": {
@@ -88232,10 +87964,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,2"
+        "Memory Garden West 6,2",
+        "Memory Garden East 6,2"
       ]
     },
     "mt_f35b4d28f681": {
@@ -88245,10 +87979,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,2"
+        "Memory Garden West 6,2",
+        "Memory Garden East 6,2"
       ]
     },
     "mt_04a4dea1fa88": {
@@ -88258,10 +87994,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,3"
+        "Memory Garden West 1,3",
+        "Memory Garden East 1,3"
       ]
     },
     "mt_e58e97251b26": {
@@ -88271,10 +88009,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,3"
+        "Memory Garden West 1,3",
+        "Memory Garden East 1,3"
       ]
     },
     "mt_e8411e0309fc": {
@@ -88284,10 +88024,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,3"
+        "Memory Garden West 1,3",
+        "Memory Garden East 1,3"
       ]
     },
     "mt_6239c2432050": {
@@ -88297,10 +88039,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,3"
+        "Memory Garden West 2,3",
+        "Memory Garden East 2,3"
       ]
     },
     "mt_9751aea52bc1": {
@@ -88310,10 +88054,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,3"
+        "Memory Garden West 2,3",
+        "Memory Garden East 2,3"
       ]
     },
     "mt_6d0f50dc8020": {
@@ -88323,10 +88069,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,3"
+        "Memory Garden West 2,3",
+        "Memory Garden East 2,3"
       ]
     },
     "mt_4d5ba5033161": {
@@ -88336,10 +88084,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,3"
+        "Memory Garden West 3,3",
+        "Memory Garden East 3,3"
       ]
     },
     "mt_8cc66c360a3d": {
@@ -88349,10 +88099,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,3"
+        "Memory Garden West 3,3",
+        "Memory Garden East 3,3"
       ]
     },
     "mt_453d4ef56487": {
@@ -88362,10 +88114,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,3"
+        "Memory Garden West 3,3",
+        "Memory Garden East 3,3"
       ]
     },
     "mt_477ebaca35ec": {
@@ -88375,10 +88129,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,3"
+        "Memory Garden West 4,3",
+        "Memory Garden East 4,3"
       ]
     },
     "mt_9868afa1afe6": {
@@ -88388,10 +88144,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,3"
+        "Memory Garden West 4,3",
+        "Memory Garden East 4,3"
       ]
     },
     "mt_160dc40544a6": {
@@ -88401,10 +88159,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,3"
+        "Memory Garden West 4,3",
+        "Memory Garden East 4,3"
       ]
     },
     "mt_14f84220838c": {
@@ -88414,10 +88174,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,3"
+        "Memory Garden West 5,3",
+        "Memory Garden East 5,3"
       ]
     },
     "mt_a767860c26ac": {
@@ -88427,10 +88189,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,3"
+        "Memory Garden West 5,3",
+        "Memory Garden East 5,3"
       ]
     },
     "mt_5290858308f8": {
@@ -88440,10 +88204,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,3"
+        "Memory Garden West 5,3",
+        "Memory Garden East 5,3"
       ]
     },
     "mt_0fdb41767439": {
@@ -88453,10 +88219,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,3"
+        "Memory Garden West 6,3",
+        "Memory Garden East 6,3"
       ]
     },
     "mt_151a1b3df5c1": {
@@ -88466,10 +88234,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,3"
+        "Memory Garden West 6,3",
+        "Memory Garden East 6,3"
       ]
     },
     "mt_599fd8e2bf4d": {
@@ -88479,10 +88249,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,3"
+        "Memory Garden West 6,3",
+        "Memory Garden East 6,3"
       ]
     },
     "mt_01cf24884a07": {
@@ -88492,10 +88264,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,4"
+        "Memory Garden West 1,4",
+        "Memory Garden East 1,4"
       ]
     },
     "mt_d8c74fa85607": {
@@ -88505,10 +88279,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,4"
+        "Memory Garden West 1,4",
+        "Memory Garden East 1,4"
       ]
     },
     "mt_139140911cfe": {
@@ -88518,10 +88294,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 1,4"
+        "Memory Garden West 1,4",
+        "Memory Garden East 1,4"
       ]
     },
     "mt_db5e573290f3": {
@@ -88531,10 +88309,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,4"
+        "Memory Garden West 2,4",
+        "Memory Garden East 2,4"
       ]
     },
     "mt_1d4123e35178": {
@@ -88544,10 +88324,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,4"
+        "Memory Garden West 2,4",
+        "Memory Garden East 2,4"
       ]
     },
     "mt_f6c8bb4012a5": {
@@ -88557,10 +88339,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 2,4"
+        "Memory Garden West 2,4",
+        "Memory Garden East 2,4"
       ]
     },
     "mt_d19424369894": {
@@ -88570,10 +88354,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,4"
+        "Memory Garden West 3,4",
+        "Memory Garden East 3,4"
       ]
     },
     "mt_9fdcb54a14b3": {
@@ -88583,10 +88369,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,4"
+        "Memory Garden West 3,4",
+        "Memory Garden East 3,4"
       ]
     },
     "mt_9ee8fe60cbbf": {
@@ -88596,10 +88384,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 3,4"
+        "Memory Garden West 3,4",
+        "Memory Garden East 3,4"
       ]
     },
     "mt_52310f328020": {
@@ -88609,10 +88399,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,4"
+        "Memory Garden West 4,4",
+        "Memory Garden East 4,4"
       ]
     },
     "mt_82bad8654561": {
@@ -88622,10 +88414,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,4"
+        "Memory Garden West 4,4",
+        "Memory Garden East 4,4"
       ]
     },
     "mt_06dbdeb96725": {
@@ -88635,10 +88429,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 4,4"
+        "Memory Garden West 4,4",
+        "Memory Garden East 4,4"
       ]
     },
     "mt_404f80a139cc": {
@@ -88648,10 +88444,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,4"
+        "Memory Garden West 5,4",
+        "Memory Garden East 5,4"
       ]
     },
     "mt_cfaf36a97adb": {
@@ -88661,10 +88459,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,4"
+        "Memory Garden West 5,4",
+        "Memory Garden East 5,4"
       ]
     },
     "mt_13f92d7cbe5a": {
@@ -88674,10 +88474,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 5,4"
+        "Memory Garden West 5,4",
+        "Memory Garden East 5,4"
       ]
     },
     "mt_9cd2c5bcfea0": {
@@ -88687,10 +88489,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,4"
+        "Memory Garden West 6,4",
+        "Memory Garden East 6,4"
       ]
     },
     "mt_028f10ae0ef0": {
@@ -88700,10 +88504,12 @@
       "layer": "structure",
       "layerType": "covered",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,4"
+        "Memory Garden West 6,4",
+        "Memory Garden East 6,4"
       ]
     },
     "mt_8fb80d4258cf": {
@@ -88713,10 +88519,12 @@
       "layer": "structure",
       "layerType": "normal",
       "families": [
-        "memory_garden"
+        "memory_garden_west",
+        "memory_garden_east"
       ],
       "names": [
-        "Memory Garden 6,4"
+        "Memory Garden West 6,4",
+        "Memory Garden East 6,4"
       ]
     },
     "mt_bf3dbf14c7ec": {
@@ -104344,259 +104152,62 @@
         "authored16"
       ]
     },
-    "west_forest_border": {
-      "id": "west_forest_border",
-      "name": "West Forest Border",
+    "memory_garden_west": {
+      "id": "memory_garden_west",
+      "name": "Memory Garden West",
       "category": "blockers",
-      "thumbnail": "./assets/camp-production/camp-randall__west_forest_border.png",
-      "width": 2,
-      "height": 18,
+      "thumbnail": "./assets/camp-production/camp-randall__memory_garden_west.png",
+      "width": 6,
+      "height": 4,
       "cells": [
         [
-          "mt_69347e85c2f9",
-          "mt_47e5e608c7ba"
+          "mt_9465c51ab8ec",
+          "mt_62a8610e2560",
+          "mt_61fcf0d87964",
+          "mt_3fb9fb322b7e",
+          "mt_8497f487aff0",
+          "mt_810fd44ed17e"
         ],
         [
-          "mt_6c1908276a04",
-          "mt_c7defdee174c"
+          "mt_d1349006f0c6",
+          "mt_8246cb3c43ff",
+          "mt_768ee460ef42",
+          "mt_d37c10000e65",
+          "mt_374af6610cd5",
+          "mt_911b681fe601"
         ],
         [
-          "mt_2364e7bb7f9d",
-          "mt_5cedaf8c220c"
+          "mt_04a4dea1fa88",
+          "mt_6239c2432050",
+          "mt_4d5ba5033161",
+          "mt_477ebaca35ec",
+          "mt_14f84220838c",
+          "mt_0fdb41767439"
         ],
         [
-          "mt_8b68e4388639",
-          "mt_2fe26b2fc57d"
-        ],
-        [
-          "mt_ef543dadb07d",
-          "mt_be4ece1dc2eb"
-        ],
-        [
-          "mt_02e7d8ca01a3",
-          "mt_111745a08872"
-        ],
-        [
-          "mt_8b68e4388639",
-          "mt_2fe26b2fc57d"
-        ],
-        [
-          "mt_ef543dadb07d",
-          "mt_be4ece1dc2eb"
-        ],
-        [
-          "mt_02e7d8ca01a3",
-          "mt_111745a08872"
-        ],
-        [
-          "mt_8b68e4388639",
-          "mt_2fe26b2fc57d"
-        ],
-        [
-          "mt_ef543dadb07d",
-          "mt_be4ece1dc2eb"
-        ],
-        [
-          "mt_02e7d8ca01a3",
-          "mt_111745a08872"
-        ],
-        [
-          "mt_8b68e4388639",
-          "mt_2fe26b2fc57d"
-        ],
-        [
-          "mt_ef543dadb07d",
-          "mt_be4ece1dc2eb"
-        ],
-        [
-          "mt_02e7d8ca01a3",
-          "mt_111745a08872"
-        ],
-        [
-          "mt_30d13672876e",
-          "mt_ea5a35468c76"
-        ],
-        [
-          "mt_774d27f45f92",
-          "mt_c25852044caf"
-        ],
-        [
-          "mt_51c5cf6364c2",
-          "mt_784ec0dd27d6"
+          "mt_01cf24884a07",
+          "mt_db5e573290f3",
+          "mt_d19424369894",
+          "mt_52310f328020",
+          "mt_404f80a139cc",
+          "mt_9cd2c5bcfea0"
         ]
       ],
       "collisionMask": [
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##"
+        "######",
+        "#....#",
+        "#....#",
+        "######"
       ],
       "door": null,
       "interior": null,
       "gate": null
     },
-    "west_south_shrub": {
-      "id": "west_south_shrub",
-      "name": "West South Shrub",
+    "memory_garden_east": {
+      "id": "memory_garden_east",
+      "name": "Memory Garden East",
       "category": "blockers",
-      "thumbnail": "./assets/camp-production/camp-randall__west_south_shrub.png",
-      "width": 1,
-      "height": 1,
-      "cells": [
-        [
-          "mt_b23d2c952801"
-        ]
-      ],
-      "collisionMask": [
-        "#"
-      ],
-      "door": null,
-      "interior": null,
-      "gate": null
-    },
-    "east_forest_border": {
-      "id": "east_forest_border",
-      "name": "East Forest Border",
-      "category": "blockers",
-      "thumbnail": "./assets/camp-production/camp-randall__east_forest_border.png",
-      "width": 2,
-      "height": 18,
-      "cells": [
-        [
-          "mt_68b39b5b1e25",
-          "mt_8c5623c483b1"
-        ],
-        [
-          "mt_a9c2fcb79a92",
-          "mt_1e502308e6e2"
-        ],
-        [
-          "mt_a83187000a75",
-          "mt_b832ccea03a6"
-        ],
-        [
-          "mt_920afb74fbb4",
-          "mt_245ea5632e8b"
-        ],
-        [
-          "mt_5345fa459110",
-          "mt_fa11a658c31d"
-        ],
-        [
-          "mt_9328d0c4fccc",
-          "mt_0d9e421faa49"
-        ],
-        [
-          "mt_920afb74fbb4",
-          "mt_245ea5632e8b"
-        ],
-        [
-          "mt_5345fa459110",
-          "mt_fa11a658c31d"
-        ],
-        [
-          "mt_9328d0c4fccc",
-          "mt_0d9e421faa49"
-        ],
-        [
-          "mt_920afb74fbb4",
-          "mt_245ea5632e8b"
-        ],
-        [
-          "mt_5345fa459110",
-          "mt_fa11a658c31d"
-        ],
-        [
-          "mt_9328d0c4fccc",
-          "mt_0d9e421faa49"
-        ],
-        [
-          "mt_920afb74fbb4",
-          "mt_245ea5632e8b"
-        ],
-        [
-          "mt_5345fa459110",
-          "mt_fa11a658c31d"
-        ],
-        [
-          "mt_9328d0c4fccc",
-          "mt_0d9e421faa49"
-        ],
-        [
-          "mt_760937fd8e56",
-          "mt_45350d6e26c1"
-        ],
-        [
-          "mt_98a5447f03f3",
-          "mt_44a19e9688cd"
-        ],
-        [
-          "mt_ef68ac0257db",
-          "mt_617fd60ced36"
-        ]
-      ],
-      "collisionMask": [
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##",
-        "##"
-      ],
-      "door": null,
-      "interior": null,
-      "gate": null
-    },
-    "east_south_shrub": {
-      "id": "east_south_shrub",
-      "name": "East South Shrub",
-      "category": "blockers",
-      "thumbnail": "./assets/camp-production/camp-randall__east_south_shrub.png",
-      "width": 1,
-      "height": 1,
-      "cells": [
-        [
-          "mt_dfb983deae00"
-        ]
-      ],
-      "collisionMask": [
-        "#"
-      ],
-      "door": null,
-      "interior": null,
-      "gate": null
-    },
-    "memory_garden": {
-      "id": "memory_garden",
-      "name": "Memory Garden",
-      "category": "blockers",
-      "thumbnail": "./assets/camp-production/camp-randall__memory_garden.png",
+      "thumbnail": "./assets/camp-production/camp-randall__memory_garden_east.png",
       "width": 6,
       "height": 4,
       "cells": [
@@ -104886,8 +104497,8 @@
   "plannedMaps": {
     "camp_randall": {
       "id": "camp_randall",
-      "width": 24,
-      "height": 20,
+      "width": 48,
+      "height": 31,
       "terrain": [
         [
           "grass",
@@ -104913,9 +104524,7 @@
           "grass",
           "grass",
           "grass",
-          "grass"
-        ],
-        [
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -104965,9 +104574,7 @@
           "grass",
           "grass",
           "grass",
-          "grass"
-        ],
-        [
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105017,9 +104624,7 @@
           "grass",
           "grass",
           "grass",
-          "grass"
-        ],
-        [
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105053,16 +104658,40 @@
           "grass",
           "grass",
           "grass",
-          "surface_stone_blob_e",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_w",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105072,6 +104701,168 @@
           "grass"
         ],
         [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105095,9 +104886,33 @@
           "grass",
           "grass",
           "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass"
         ],
         [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105121,9 +104936,33 @@
           "grass",
           "grass",
           "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass"
         ],
         [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105147,48 +104986,8 @@
           "grass",
           "grass",
           "grass",
-          "grass"
-        ],
-        [
           "grass",
           "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "surface_brick_blob_n_e_ne",
-          "surface_brick_blob_n_w_nw",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass"
-        ],
-        [
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "surface_stone_blob_e",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_w",
           "grass",
           "grass",
           "grass",
@@ -105213,8 +105012,32 @@
           "grass",
           "grass",
           "grass",
-          "surface_brick_blob_e",
-          "surface_brick_blob_w",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105239,13 +105062,37 @@
           "grass",
           "grass",
           "grass",
-          "surface_stone_blob_e",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_e_w",
-          "surface_stone_blob_w",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105257,6 +105104,303 @@
           "grass",
           "grass",
           "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
           "grass",
           "grass",
           "grass",
@@ -105266,10 +105410,37 @@
           "grass",
           "grass",
           "surface_brick_blob_e_s_se",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_n_e_s_w_ne_se_sw",
+          "surface_brick_blob_n_e_s_w_se_sw_nw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
+          "surface_brick_blob_e_s_w_se_sw",
           "surface_brick_blob_s_w_sw",
-          "grass",
-          "grass",
-          "grass",
           "grass",
           "grass",
           "grass",
@@ -105280,6 +105451,68 @@
           "grass"
         ],
         [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_ne",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_s_w_ne_se_nw",
+          "surface_brick_blob_n_e_s_w_ne_sw_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_e_w_ne_nw",
+          "surface_brick_blob_n_w_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105296,16 +105529,490 @@
           "grass",
           "grass",
           "grass",
-          "shore_water_blob_e_s_se",
-          "shore_water_blob_e_s_w_se_sw",
-          "shore_water_blob_e_s_w_se_sw",
-          "shore_water_blob_s_w_sw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
           "grass"
         ],
         [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "surface_brick_blob_n_e_s_ne_se",
+          "surface_brick_blob_n_s_w_sw_nw",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass"
+        ],
+        [
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
+          "grass",
           "grass",
           "grass",
           "grass",
@@ -105322,16 +106029,6 @@
           "grass",
           "grass",
           "grass",
-          "shore_water_blob_n_e_s_ne_se",
-          "shore_water_blob_n_e_s_w_ne_se_sw_nw",
-          "shore_water_blob_n_e_s_w_ne_se_sw_nw",
-          "shore_water_blob_n_s_w_sw_nw",
-          "grass",
-          "grass",
-          "grass",
-          "grass"
-        ],
-        [
           "grass",
           "grass",
           "grass",
@@ -105341,64 +106038,8 @@
           "grass",
           "grass",
           "grass",
-          "surface_dirt_blob_e_s_se",
-          "surface_dirt_blob_e_s_w_se_sw",
-          "surface_dirt_blob_e_s_w_se_sw",
-          "surface_dirt_blob_e_s_w_se_sw",
-          "surface_dirt_blob_e_s_w_se_sw",
-          "surface_dirt_blob_s_w_sw",
-          "grass",
-          "shore_water_blob_n_e_ne",
-          "shore_water_blob_n_e_w_ne_nw",
-          "shore_water_blob_n_e_w_ne_nw",
-          "shore_water_blob_n_w_nw",
           "grass",
           "grass",
-          "grass",
-          "grass"
-        ],
-        [
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "surface_dirt_blob_n_e_s_ne_se",
-          "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-          "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-          "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-          "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-          "surface_dirt_blob_n_s_w_sw_nw",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass"
-        ],
-        [
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "grass",
-          "surface_dirt_blob_n_e_ne",
-          "surface_dirt_blob_n_e_w_ne_nw",
-          "surface_dirt_blob_n_e_w_ne_nw",
-          "surface_dirt_blob_n_e_w_ne_nw",
-          "surface_dirt_blob_n_e_w_ne_nw",
-          "surface_dirt_blob_n_w_nw",
           "grass",
           "grass",
           "grass",
@@ -113573,8 +114214,8 @@
   },
   "map": {
     "id": "camp_randall",
-    "width": 24,
-    "height": 20,
+    "width": 48,
+    "height": 31,
     "ground": {
       "texture": "camp-metatile-ground",
       "path": "./assets/metatiles/camp_randall_ground_v3.png"
@@ -113604,9 +114245,7 @@
         "grass",
         "grass",
         "grass",
-        "grass"
-      ],
-      [
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113656,9 +114295,7 @@
         "grass",
         "grass",
         "grass",
-        "grass"
-      ],
-      [
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113708,9 +114345,7 @@
         "grass",
         "grass",
         "grass",
-        "grass"
-      ],
-      [
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113744,16 +114379,40 @@
         "grass",
         "grass",
         "grass",
-        "surface_stone_blob_e",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_w",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113763,6 +114422,168 @@
         "grass"
       ],
       [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113786,9 +114607,33 @@
         "grass",
         "grass",
         "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass"
       ],
       [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113812,9 +114657,33 @@
         "grass",
         "grass",
         "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass"
       ],
       [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113838,48 +114707,8 @@
         "grass",
         "grass",
         "grass",
-        "grass"
-      ],
-      [
         "grass",
         "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "surface_brick_blob_n_e_ne",
-        "surface_brick_blob_n_w_nw",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass"
-      ],
-      [
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "surface_stone_blob_e",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_w",
         "grass",
         "grass",
         "grass",
@@ -113904,8 +114733,32 @@
         "grass",
         "grass",
         "grass",
-        "surface_brick_blob_e",
-        "surface_brick_blob_w",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113930,13 +114783,37 @@
         "grass",
         "grass",
         "grass",
-        "surface_stone_blob_e",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_e_w",
-        "surface_stone_blob_w",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113948,6 +114825,303 @@
         "grass",
         "grass",
         "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
         "grass",
         "grass",
         "grass",
@@ -113957,10 +115131,37 @@
         "grass",
         "grass",
         "surface_brick_blob_e_s_se",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_n_e_s_w_ne_se_sw",
+        "surface_brick_blob_n_e_s_w_se_sw_nw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
+        "surface_brick_blob_e_s_w_se_sw",
         "surface_brick_blob_s_w_sw",
-        "grass",
-        "grass",
-        "grass",
         "grass",
         "grass",
         "grass",
@@ -113971,6 +115172,68 @@
         "grass"
       ],
       [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_ne",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_s_w_ne_se_nw",
+        "surface_brick_blob_n_e_s_w_ne_sw_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_e_w_ne_nw",
+        "surface_brick_blob_n_w_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -113987,16 +115250,490 @@
         "grass",
         "grass",
         "grass",
-        "shore_water_blob_e_s_se",
-        "shore_water_blob_e_s_w_se_sw",
-        "shore_water_blob_e_s_w_se_sw",
-        "shore_water_blob_s_w_sw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
         "grass"
       ],
       [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "surface_brick_blob_n_e_s_ne_se",
+        "surface_brick_blob_n_s_w_sw_nw",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass"
+      ],
+      [
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
+        "grass",
         "grass",
         "grass",
         "grass",
@@ -114013,16 +115750,6 @@
         "grass",
         "grass",
         "grass",
-        "shore_water_blob_n_e_s_ne_se",
-        "shore_water_blob_n_e_s_w_ne_se_sw_nw",
-        "shore_water_blob_n_e_s_w_ne_se_sw_nw",
-        "shore_water_blob_n_s_w_sw_nw",
-        "grass",
-        "grass",
-        "grass",
-        "grass"
-      ],
-      [
         "grass",
         "grass",
         "grass",
@@ -114032,64 +115759,8 @@
         "grass",
         "grass",
         "grass",
-        "surface_dirt_blob_e_s_se",
-        "surface_dirt_blob_e_s_w_se_sw",
-        "surface_dirt_blob_e_s_w_se_sw",
-        "surface_dirt_blob_e_s_w_se_sw",
-        "surface_dirt_blob_e_s_w_se_sw",
-        "surface_dirt_blob_s_w_sw",
-        "grass",
-        "shore_water_blob_n_e_ne",
-        "shore_water_blob_n_e_w_ne_nw",
-        "shore_water_blob_n_e_w_ne_nw",
-        "shore_water_blob_n_w_nw",
         "grass",
         "grass",
-        "grass",
-        "grass"
-      ],
-      [
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "surface_dirt_blob_n_e_s_ne_se",
-        "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-        "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-        "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-        "surface_dirt_blob_n_e_s_w_ne_se_sw_nw",
-        "surface_dirt_blob_n_s_w_sw_nw",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass"
-      ],
-      [
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "grass",
-        "surface_dirt_blob_n_e_ne",
-        "surface_dirt_blob_n_e_w_ne_nw",
-        "surface_dirt_blob_n_e_w_ne_nw",
-        "surface_dirt_blob_n_e_w_ne_nw",
-        "surface_dirt_blob_n_e_w_ne_nw",
-        "surface_dirt_blob_n_w_nw",
         "grass",
         "grass",
         "grass",
@@ -114103,8 +115774,8 @@
     ]
   },
   "sources": {
-    "layout": "4f94db14bef5ad7442d16688ec43b8d712958d96d2b7eeb9ac48a9d1513c0a2a",
-    "production": "66332d5dc5d23e44a816298801b82b740ad533f2fd1602e0b6fe31700f2e2c30",
+    "layout": "673a6388715bde28f7948f0fd08b5e3ba2998cef4e23b7bb5ace7c9cbc54eb84",
+    "production": "1bfe5816a34017a69eb911b71231aacd879786fb9103cf47b44145729d5eb854",
     "overrides": "866eea668a472d64e6d18b1b2f9c85ae9710832e694e5587d30abd9f5196e3bd",
     "worldTileset": "13c026f1849d0e09c439412d98f0d28882bb5493b6d55ba6660b703e82e94d54",
     "worldAtlas": "72dadef72ab9a3df5de886aa13fe11adbf0735f90473f4748e7a0d12aa54d8a6"

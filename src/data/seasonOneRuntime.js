@@ -66,12 +66,16 @@ export function objectCell(object, x, y) {
   if (x < object.x || y < object.y || x >= object.x + object.width || y >= object.y + object.height) return null;
   const localX = x - object.x;
   const localY = y - object.y;
+  const tileId = object.metatiles?.[localY]?.[localX] || null;
+  const behavior = tileId ? metatileById.get(tileId)?.behavior || null : null;
+  const explicitDoor = object.door?.x === localX && object.door?.y === localY;
   return {
     localX,
     localY,
-    solid: object.collisionMask?.[localY]?.[localX] === '#',
-    tileId: object.metatiles?.[localY]?.[localX] || null,
-    door: object.door?.x === localX && object.door?.y === localY
+    behavior,
+    solid: behavior ? behavior === 'solid' : object.collisionMask?.[localY]?.[localX] === '#',
+    tileId,
+    door: behavior === 'warp' || explicitDoor
   };
 }
 
@@ -115,7 +119,9 @@ export function actorsForMap(map, state) {
 
 export function isSeasonPassable(map, x, y, state, actors = []) {
   if (x < 0 || y < 0 || x >= map.width || y >= map.height) return false;
-  if (terrainBehavior(map, x, y) === 'water') {
+  const groundBehavior = terrainBehavior(map, x, y);
+  if (groundBehavior === 'solid') return false;
+  if (groundBehavior === 'water') {
     const inKayakLane = (map.waterRoutes || []).some(route => x >= route.x && y >= route.y
       && x < route.x + route.width && y < route.y + route.height);
     if (!inKayakLane || !state.flags?.kayakVoucherRedeemed) return false;

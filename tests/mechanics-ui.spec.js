@@ -138,7 +138,7 @@ test('battle presentation is native resolution and preserves FireRed-style actio
     party:[legacyWrestler()],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
     flags:{introDone:true,assignment:true},stats:{},badges:[]
   },'/?test=1');
-  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:12,battleType:'trainer'}));
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
   const presentation=await page.evaluate(()=>{
     const scene=window.badgerGame.scene.getScene('BattleScene');

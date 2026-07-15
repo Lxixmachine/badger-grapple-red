@@ -17,10 +17,6 @@ function campRandallDemoEntry() {
           '<title>Badger Grapple Red - Camp Randall Demo</title>'
         )
         .replace(
-          '<div id="note">v22.4 Roster Motion</div>',
-          '<div id="note">v22.6 Camp Randall Collision</div>'
-        )
-        .replace(
           '</head>',
           '<script>window.BADGER_ENTRY_MODE = "camp-randall";</script>\n</head>'
         );

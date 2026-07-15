@@ -51,17 +51,16 @@ and every review is a vibe check.
 
 ### WP-V1 — Migrate the live game to the approved integer contract
 
-> **STATUS: substantially SHIPPED while this brief was in flight.**
-> Codex's v21.86-v22.4 run (`25d05dc "launch Season One tiled world
-> runtime"`, plus the native 480x320 battle scene in v22.3) migrated
-> the default game onto the integer contract — tests now assert the
-> 480x320 canvas and actor scale 1. What remains of WP-V1 is
-> VERIFICATION, not construction: (a) standing regression tests for
-> the full invariant set below (integer camera zoom ONLY, actor scale
-> exactly 1 in every area, one final CSS fit as the sole non-integer
-> stage, including the legacy 320x224 scenes noted in v22.3); (b)
-> Tony's phone verdict — his eye opened this finding, only his eye
-> closes it. Then WP-V2 becomes the top item.
+> **STATUS: CODE COMPLETE IN v22.7; TONY VERIFICATION REMAINS.**
+> The default game and Camp Randall demo now share the 480x320,
+> 32px-cell product runtime. Actor scale is 1, the final CSS fit is the
+> only non-integer stage, and the failed flat-image Camp prototype is
+> retired from playable routes. Camp navigation is grid-owned: the
+> same rendered metatile behavior drives collision in the game, Map
+> Studio, and World Atlas. Regression tests cover native dimensions,
+> collision ownership, door alignment, route connectivity, flood-fill
+> reachability, save isolation, and phone controls. Tony's phone verdict
+> still closes WP-V1; after that, WP-V2 is the top visual package.
 
 The single largest visual jump available, and it costs zero new art.
 `VISUAL_SLICE_CONTRACT.md` is the authority; `?slice=1` and `?atlas=1`

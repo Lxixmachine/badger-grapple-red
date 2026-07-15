@@ -11,7 +11,6 @@ import {BattleScene} from './scenes/BattleScene.js';
 import {MenuScene} from './scenes/MenuScene.js';
 import {VisualSliceScene} from './scenes/VisualSliceScene.js';
 import {WorldAtlasScene} from './scenes/WorldAtlasScene.js';
-import {CampRandallDemoScene} from './scenes/CampRandallDemoScene.js';
 import {installTestHooks} from './systems/testHooks.js';
 
 if(document.fonts?.load){
@@ -44,13 +43,12 @@ const modernMode = sliceMode || atlasMode || campDemoMode;
 const heldInputMode = true;
 const width = 480;
 const height = 320;
-const scenes = campDemoMode
-  ? [CampRandallDemoScene]
-  : atlasMode
+const productScenes = [BootScene, TitleScene, IntroScene, StarterScene, OpeningRecoveryScene, SeasonOneOverworldScene, ScoutScene, BattleScene, MenuScene];
+const scenes = atlasMode
   ? [WorldAtlasScene]
   : sliceMode
     ? [VisualSliceScene]
-    : [BootScene, TitleScene, IntroScene, StarterScene, OpeningRecoveryScene, SeasonOneOverworldScene, ScoutScene, BattleScene, MenuScene];
+    : productScenes;
 
 if (modernMode) {
   document.body.classList.add('slice-mode');
@@ -59,7 +57,7 @@ if (modernMode) {
     : atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
   if (note) note.textContent = campDemoMode
-    ? 'v22.6 Camp Randall Collision'
+    ? 'v22.7 Grid-Owned Camp Randall'
     : atlasMode ? 'v21.75 Building Art Pack' : 'v21.63 Scale Slice';
 }
 
@@ -91,7 +89,7 @@ try {
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
     : sliceMode ? '21.63-scale-slice'
-      : campDemoMode ? '22.6-camp-randall-collision' : '22.4-roster-motion';
+      : '22.7-grid-owned-camp-randall';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -99,7 +97,6 @@ try {
 
 function routeVirtualButton(key, phase = 'press') {
   const priority = [
-    'CampRandallDemoScene',
     'WorldAtlasScene',
     'VisualSliceScene',
     'MenuScene',
@@ -114,7 +111,7 @@ function routeVirtualButton(key, phase = 'press') {
   for (const sceneKey of priority) {
     const scene = game.scene.getScene(sceneKey);
     if (scene?.scene?.isActive?.() && scene.handleVirtualButton) {
-      const supportsHeldDirections = ['OverworldScene', 'WorldAtlasScene', 'VisualSliceScene', 'CampRandallDemoScene'].includes(sceneKey);
+      const supportsHeldDirections = ['OverworldScene', 'WorldAtlasScene', 'VisualSliceScene'].includes(sceneKey);
       if (phase === 'up' && !supportsHeldDirections) return;
       scene.handleVirtualButton(key, phase);
       return;

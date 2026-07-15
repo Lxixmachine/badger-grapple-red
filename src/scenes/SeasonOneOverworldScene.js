@@ -13,11 +13,12 @@ import {
   resolveSeasonMapId,
   seasonMap,
   SEASON_ONE_PROJECT,
+  terrainBehavior,
   terrainVisual,
   validSeasonPosition,
   metatile
 } from '../data/seasonOneRuntime.js';
-import {loadState, saveState} from '../systems/save.js';
+import {loadState, saveState as writeState} from '../systems/save.js';
 import {restoreParty} from '../systems/mechanics.js';
 import {
   canFlyToNationals,
@@ -123,14 +124,18 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     super('OverworldScene');
   }
 
-  create() {
-    this.state = loadState();
+  create(data = {}) {
+    this.demoMode = Boolean(data.demoMode);
+    this.gridDebug = Boolean(data.gridDebug);
+    this.gridContractVersion = 'metatile-behavior-v1';
+    this.state = data.state || loadState();
     this.reconcileStoryState();
-    this.currentMapId = resolveSeasonMapId(this.state.area);
+    this.currentMapId = resolveSeasonMapId(data.mapId || this.state.area);
     this.returnStack = Array.isArray(this.state.mapReturnStack) ? [...this.state.mapReturnStack] : [];
-    this.facing = DIRS[this.state.facing] ? this.state.facing : 'down';
-    const initialSpawn = validSeasonPosition(this.currentMapId, this.state.pos)
-      ? this.state.pos
+    this.facing = DIRS[data.facing] ? data.facing : DIRS[this.state.facing] ? this.state.facing : 'down';
+    const requestedSpawn = data.position || this.state.pos;
+    const initialSpawn = validSeasonPosition(this.currentMapId, requestedSpawn)
+      ? requestedSpawn
       : defaultSeasonSpawn(this.currentMapId);
     this.tilePos = {x: initialSpawn.x, y: initialSpawn.y};
     this.message = this.state.message || '';
@@ -152,12 +157,16 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.drawHud();
     this.actorPatrolClock = this.time.addEvent({delay: 200, loop: true, callback: () => this.updateActorPatrols()});
 
-    const recoveryPending = this.state.flags.openingBattleComplete && !this.state.flags.openingRecoveryDone;
-    const battlePending = this.state.flags.openingBattleReady && !this.state.flags.openingBattleComplete;
+    const recoveryPending = !this.demoMode && this.state.flags.openingBattleComplete && !this.state.flags.openingRecoveryDone;
+    const battlePending = !this.demoMode && this.state.flags.openingBattleReady && !this.state.flags.openingBattleComplete;
     if (recoveryPending || battlePending) {
       this.inputLocked = true;
       this.time.delayedCall(250, () => recoveryPending ? this.scene.start('OpeningRecoveryScene') : this.startOpeningBattle());
     }
+  }
+
+  persistState() {
+    if (!this.demoMode) writeState(this.state);
   }
 
   bindInput() {
@@ -211,6 +220,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     if (key === 'a') this.interact();
     else if (key === 'b') this.messageOpen ? this.closeMessage() : null;
     else if (key === 'menu') this.openMenu();
+    else if (key === 'select' && this.demoMode) this.toggleGridOverlay();
     else if (key === 'save') this.savePosition('Game saved.');
   }
 
@@ -242,6 +252,8 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   }
 
   clearWorld() {
+    this.gridOverlay?.destroy?.();
+    this.gridOverlay = null;
     this.worldObjects.forEach(object => object?.destroy?.());
     this.worldObjects = [];
     this.actorEntries = [];
@@ -252,6 +264,10 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   renderCurrentMap() {
     this.clearWorld();
     this.map = seasonMap(this.currentMapId);
+    this.cellSize = CELL_SIZE;
+    this.mapWidth = this.map.width;
+    this.mapHeight = this.map.height;
+    this.gridAuthority = this.map.gridAuthority || 'legacy-mask-fallback';
     this.visibleActors = actorsForMap(this.map, this.state).map((actor) => ({
       ...actor,
       patrol: actor.patrol ? { ...actor.patrol } : null,
@@ -261,6 +277,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.renderStructures();
     this.renderActors();
     this.createPlayer();
+    if (this.gridDebug) this.renderGridOverlay();
     this.cameras.main.setBounds(0, 0, this.map.width * CELL_SIZE, this.map.height * CELL_SIZE);
     this.cameras.main.startFollow(this.player, true, 1, 1, 0, -18);
     this.cameras.main.setDeadzone(0, 0); // FireRed locks the player to screen center
@@ -271,7 +288,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   maybePlayArrivalReveal() {
     if (this.currentMapId !== 'field_house' || this.state.flags.fieldHouseArrival || !this.state.flags.assignment || !this.player?.scene) return;
     this.state.flags.fieldHouseArrival = true;
-    saveState(this.state);
+    this.persistState();
     this.inputLocked = true;
     this.heldDirection = null;
     this.cameras.main.stopFollow();
@@ -315,17 +332,21 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   renderStructures() {
     for (const object of this.map.objects || []) {
       if (object.metatiles) {
+        const ownerDepth = (object.y + object.height) * CELL_SIZE - 1;
         for (let y = 0; y < object.height; y += 1) {
           for (let x = 0; x < object.width; x += 1) {
             const tile = metatile(object.metatiles[y]?.[x]);
             if (!tile) continue;
             const worldY = object.y + y;
+            const depth = object.depthMode === 'owner'
+              ? ownerDepth
+              : (worldY + 1) * CELL_SIZE - 1;
             this.trackWorld(this.add.image(
               (object.x + x + 0.5) * CELL_SIZE,
               (worldY + 0.5) * CELL_SIZE,
               'season-one-metatiles',
               tile.visual
-            ).setDepth((worldY + 1) * CELL_SIZE - 1));
+            ).setDepth(depth));
           }
         }
         continue;
@@ -338,6 +359,31 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         `season-object:${asset.id}`
       ).setOrigin(0).setDisplaySize(object.width * CELL_SIZE, object.height * CELL_SIZE)
         .setDepth((object.y + object.height) * CELL_SIZE - 1));
+    }
+  }
+
+  renderGridOverlay() {
+    this.gridOverlay?.destroy?.();
+    const graphics = this.add.graphics().setDepth(3990);
+    for (let y = 0; y < this.map.height; y += 1) {
+      for (let x = 0; x < this.map.width; x += 1) {
+        const door = mapDoorAt(this.map, x, y);
+        const passable = isSeasonPassable(this.map, x, y, this.state, []);
+        graphics.fillStyle(door ? 0xffcf33 : passable ? 0x2ecc71 : 0xe53935, door ? 0.28 : 0.12);
+        graphics.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        graphics.lineStyle(1, 0xffffff, 0.22);
+        graphics.strokeRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      }
+    }
+    this.gridOverlay = graphics;
+  }
+
+  toggleGridOverlay() {
+    this.gridDebug = !this.gridDebug;
+    if (this.gridDebug) this.renderGridOverlay();
+    else {
+      this.gridOverlay?.destroy?.();
+      this.gridOverlay = null;
     }
   }
 
@@ -530,7 +576,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     if (event.once && this.state.flags[onceFlag]) return;
     if (event.once) {
       this.state.flags[onceFlag] = true;
-      saveState(this.state);
+      this.persistState();
     }
     this.showMessage(event.text);
   }
@@ -555,8 +601,8 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   leaveInterior() {
     const fallback = {
-      team_locker_room: {mapId: 'camp_randall', x: 5, y: 11, facing: 'down'},
-      coach_office: {mapId: 'camp_randall', x: 17, y: 13, facing: 'down'},
+      team_locker_room: {mapId: 'camp_randall', x: 8, y: 18, facing: 'down'},
+      coach_office: {mapId: 'camp_randall', x: 38, y: 18, facing: 'down'},
       wrestling_room: {mapId: 'team_locker_room', x: 7, y: 1, facing: 'down'}
     }[this.currentMapId] || {mapId: 'camp_randall', ...defaultSeasonSpawn('camp_randall')};
     const destination = this.returnStack.pop() || fallback;
@@ -575,7 +621,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       this.state.visitedMaps = {...(this.state.visitedMaps || {}), [this.currentMapId]: true};
       this.state.pos = {...this.tilePos};
       this.state.facing = this.facing;
-      if (options.save !== false) saveState(this.state);
+      if (options.save !== false) this.persistState();
       this.renderCurrentMap();
       this.cameras.main.fadeIn(160, 0, 0, 0);
       this.inputLocked = false;
@@ -596,6 +642,25 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     return isSeasonPassable(this.map, x, y, this.state, this.visibleActors || []);
   }
 
+  gridCellState(x, y) {
+    return {
+      x,
+      y,
+      terrainId: this.map.terrain[y]?.[x] || null,
+      terrainBehavior: x >= 0 && y >= 0 && x < this.map.width && y < this.map.height
+        ? terrainBehavior(this.map, x, y)
+        : 'outside',
+      passable: isSeasonPassable(this.map, x, y, this.state, []),
+      objects: objectsAt(this.map, x, y).map(({object, cell}) => ({
+        id: object.id,
+        tileId: cell.tileId,
+        behavior: cell.behavior,
+        solid: cell.solid,
+        door: cell.door
+      }))
+    };
+  }
+
   interactionTarget() {
     const front = this.frontTile();
     const actor = this.actorAt(front);
@@ -606,8 +671,10 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     if (frontEvent) return {type: 'event', event: frontEvent};
     const hereEvent = mapEventAt(this.map, this.tilePos.x, this.tilePos.y);
     if (hereEvent) return {type: 'event', event: hereEvent};
-    const object = objectsAt(this.map, front.x, front.y).at(-1)?.object;
-    if (object) return {type: 'object', object};
+    const objectEntry = objectsAt(this.map, front.x, front.y).at(-1);
+    if (objectEntry && (objectEntry.object.interior || objectEntry.cell.solid)) {
+      return {type: 'object', object: objectEntry.object};
+    }
     return null;
   }
 
@@ -641,7 +708,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!this.state.flags.officeChecked) {
           this.state.flags.officeChecked = true;
           this.setObjective('Find Coach in the wrestling room.');
-          saveState(this.state);
+          this.persistState();
           this.renderCurrentMap();
         }
         return this.showMessage('The office is empty. The depth chart points you back to the wrestling room.');
@@ -655,7 +722,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (this.state.flags.openingRecoveryDone && !this.state.flags.assignment) {
           this.state.flags.assignment = true;
           this.setObjective('Take R1 to the Field House equipment manager.');
-          saveState(this.state);
+          this.persistState();
           return this.showMessage('Coach: Carry the equipment shipment through R1. Meet the manager outside the Field House.');
         }
         return this.showMessage('Coach: Win positions, build the room, and return when the season changes.');
@@ -671,7 +738,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
           grantKeyItem(this.state, 'equipmentShipment');
           this.state.flags.equipmentDelivered = true;
           this.setObjective("Check Bucky's Locker Room beside the Field House.");
-          saveState(this.state);
+          this.persistState();
           return this.showMessage("Equipment Manager: Shipment received. Your locker authorization is waiting at Bucky's Locker Room.");
         }
         return this.showMessage('Equipment Manager: The room is stocked. Finish your assignment.');
@@ -680,20 +747,20 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!this.state.flags.lockerUnlocked) {
           this.state.flags.lockerUnlocked = true;
           this.setObjective('Return to Coach for the Roster Book.');
-          saveState(this.state);
+          this.persistState();
         }
         return this.showMessage('Your team locker is active. Coach has the Roster Book back at Camp Randall.');
       case 'coach_office:progress_review':
         if (this.state.flags.lockerUnlocked && !this.state.flags.rosterBook) {
           unlockRecruiting(this.state);
           this.setObjective('Challenge The Opener inside the Field House.');
-          saveState(this.state);
+          this.persistState();
           return this.showMessage('Coach: This Roster Book records every wrestler you defeat. Open mats can now become recruits.');
         }
         if (canFlyToNationals(this.state) && !this.state.keyItems.flightTicket) {
           grantKeyItem(this.state, 'flightTicket');
           this.setObjective('Meet the team bus at the Camp Randall south landing.');
-          saveState(this.state);
+          this.persistState();
           this.renderCurrentMap();
           return this.showMessage('Coach: Four credentials. One ticket. The team bus is waiting at the south landing.');
         }
@@ -708,7 +775,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!this.state.keyItems.kayakVoucher) {
           grantKeyItem(this.state, 'kayakVoucher');
           this.setObjective('Challenge The Senator inside the Capitol.');
-          saveState(this.state);
+          this.persistState();
         }
         return this.showMessage('Booster: This Kayak Voucher opens Brittingham and the Monona crossing.');
       case 'capitol_square:bus_pass':
@@ -717,7 +784,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
           grantKeyItem(this.state, 'busPass');
           this.registerSeasonTravel();
           this.setObjective('Redeem the Kayak Voucher at Brittingham Boats.');
-          saveState(this.state);
+          this.persistState();
         }
         return this.showMessage('Bus Pass received. START now lists unlocked town stops.');
       case 'brittingham_boats:redeem_voucher':
@@ -725,7 +792,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!this.state.keyItems.kayakVoucher) return this.showMessage('Brittingham requires the Kayak Voucher from Capitol Square.');
         this.state.flags.kayakVoucherRedeemed = true;
         this.setObjective('Cross Monona Shore to the Kohl Center district.');
-        saveState(this.state);
+        this.persistState();
         return this.showMessage('Brittingham Attendant: Voucher redeemed. Stay inside the marked channel.');
       case 'monona_shore:kayak_gate':
         return this.state.flags.kayakVoucherRedeemed
@@ -736,15 +803,15 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       case 'kohl_center:bus_return':
         if (!canFlyToNationals(this.state)) return this.showMessage(`The team bus leaves after all four credentials. Missing: ${this.missingBadges().join(', ')}.`);
         this.setObjective('Report to Coach in the Camp Randall office.');
-        saveState(this.state);
+        this.persistState();
         return this.showMessage('Bus Manager: All credentials verified. Returning to Camp Randall.', () => {
-          this.changeMap('camp_randall', {x: 11, y: 18, facing: 'up'});
+          this.changeMap('camp_randall', {x: 23, y: 25, facing: 'up'});
         });
       case 'camp_randall:team_bus':
         if (!this.state.keyItems.flightTicket) return this.showMessage('Coach still has the flight packet.');
         this.state.flags.sendoffComplete = true;
         this.setObjective('Board the team flight.');
-        saveState(this.state);
+        this.persistState();
         return this.showMessage('Manager: Bags loaded. Next stop, St. Louis.', () => this.changeMap('airport', defaultSeasonSpawn('airport')));
       case 'airport:team_sendoff':
         return this.showMessage('Coach: Stay together. Nationals is a tournament before it is a final.');
@@ -752,7 +819,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!canFlyToNationals(this.state) || !this.state.keyItems.flightTicket) return this.showMessage('Four credentials and the team flight ticket are required.');
         this.state.flags.flightComplete = true;
         this.setObjective('Enter the Nationals arena in St. Louis.');
-        saveState(this.state);
+        this.persistState();
         return this.showMessage('Boarding complete. Wisconsin is headed to St. Louis.', () => this.changeMap('st_louis', defaultSeasonSpawn('st_louis')));
       case 'st_louis:nationals_round_one':
       case 'st_louis:closer_semifinal':
@@ -762,8 +829,8 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!this.state.flags.nationalsComplete) return this.showMessage('The championship procession waits for the final result.');
         this.state.flags.homecoming = true;
         this.setObjective('Carry the title through the Camp Randall stadium tunnel.');
-        saveState(this.state);
-        return this.showMessage('The team walks beneath the Arch with the national trophy.', () => this.changeMap('camp_randall', {x: 12, y: 8, facing: 'up'}));
+        this.persistState();
+        return this.showMessage('The team walks beneath the Arch with the national trophy.', () => this.changeMap('camp_randall', {x: 23, y: 8, facing: 'up'}));
       case 'camp_randall:homecoming':
         return this.showMessage('Captain: The tunnel is open. Bring the trophy home.');
       case 'team_locker_room:homecoming_case':
@@ -772,11 +839,11 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         if (!this.state.flags.nationalsComplete) return this.showMessage('The field is reserved for the championship homecoming.');
         this.state.flags.seasonOneComplete = true;
         this.setObjective('Season One complete. The roster remains ready for expansion.');
-        saveState(this.state);
+        this.persistState();
         return this.showMessage('Camp Randall erupts as Wisconsin carries the national title onto the field. Season One complete.');
       case 'trainer_room:recover':
         restoreParty(this.state);
-        saveState(this.state);
+        this.persistState();
         sfx.open?.();
         return this.showMessage('The Trainer restored every wrestler to full Condition and Stamina.');
       case 'trainer_room:locker_access':
@@ -876,12 +943,12 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       this.setObjective('Walk beneath the Arch with the national trophy.');
     }
     this.registerSeasonTravel();
-    saveState(this.state);
+    this.persistState();
   }
 
   registerSeasonTravel() {
     const destinations = [
-      {id: 'campRandall', name: 'Camp Randall', area: 'camp_randall', pos: {x: 11, y: 18}},
+      {id: 'campRandall', name: 'Camp Randall', area: 'camp_randall', pos: {x: 23, y: 25}},
       {id: 'fieldHouse', name: 'Field House', area: 'field_house', pos: {x: 20, y: 8}},
       {id: 'capitolSquare', name: 'Capitol Square', area: 'capitol_square', pos: {x: 9, y: 14}},
       {id: 'kohlCenter', name: 'Kohl Center', area: 'kohl_center', pos: {x: 20, y: 18}}
@@ -926,7 +993,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.state.facing = this.facing;
     this.state.mapReturnStack = [...this.returnStack];
     if (message) this.state.message = message;
-    saveState(this.state);
+    this.persistState();
     if (message) this.showMessage(message);
   }
 
@@ -935,7 +1002,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.messageOpen = Boolean(message);
     this.messageAction = action;
     this.state.message = message || '';
-    saveState(this.state);
+    this.persistState();
     this.drawHud();
   }
 
@@ -945,7 +1012,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.messageOpen = false;
     this.messageAction = null;
     this.state.message = '';
-    saveState(this.state);
+    this.persistState();
     this.drawHud();
     if (action) this.time.delayedCall(40, action);
   }

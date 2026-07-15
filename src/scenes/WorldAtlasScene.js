@@ -1,6 +1,7 @@
 import layouts from '../data/seasonOneLayouts.json';
 import region from '../data/seasonOneRegion.json';
 import campMetatiles from '../data/campRandallMetatileBuild.json';
+import {SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
 import {FONT,setVirtualHandler} from '../systems/ui.js';
 
 const Phaser = window.Phaser;
@@ -8,6 +9,24 @@ const CELL = layouts.contract.cellSize;
 const WIDTH = layouts.contract.canvasWidth;
 const HEIGHT = layouts.contract.canvasHeight;
 const ORDER = layouts.region.reviewOrder;
+const CAMP_GRID_MAP = SEASON_ONE_PROJECT.maps.camp_randall;
+const CAMP_ATLAS_LAYOUT = {
+  ...layouts.maps.camp_randall,
+  size: {width: CAMP_GRID_MAP.width, height: CAMP_GRID_MAP.height},
+  start: {...CAMP_GRID_MAP.start},
+  events: CAMP_GRID_MAP.events,
+  connections: CAMP_GRID_MAP.connections,
+  cameraReviews: CAMP_GRID_MAP.cameraReviews,
+  terrain: CAMP_GRID_MAP.terrain,
+  gridObjects: CAMP_GRID_MAP.objects,
+  buildings: CAMP_GRID_MAP.objects.filter(object => object.interior).map(object => ({
+    ...object,
+    door: object.door ? {x: object.x + object.door.x, y: object.y + object.door.y} : null
+  })),
+  landmarks: [],
+  blockers: []
+};
+const worldLayout = id => id === 'camp_randall' ? CAMP_ATLAS_LAYOUT : layouts.maps[id];
 
 const COLORS = {
   ink: 0x211f24,
@@ -183,7 +202,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     const requestedY = Number(params.get('y'));
     const requestedSpawn = params.has('x') && params.has('y')
       && Number.isInteger(requestedX) && Number.isInteger(requestedY)
-      ? {x: requestedX, y: requestedY, facing: params.get('facing') || layouts.maps[requested].start.facing}
+      ? {x: requestedX, y: requestedY, facing: params.get('facing') || worldLayout(requested).start.facing}
       : null;
     if (requestedInterior) this.loadInterior(requestedInterior);
     else if (params.has('play')) this.loadWorldMap(requested, requestedSpawn);
@@ -379,7 +398,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.mode = 'map';
     this.currentMapId = id;
     this.currentInteriorId = null;
-    this.layout = layouts.maps[id];
+    this.layout = worldLayout(id);
     this.mapWidth = this.layout.size.width;
     this.mapHeight = this.layout.size.height;
     this.returnStack = [];
@@ -452,38 +471,36 @@ export class WorldAtlasScene extends Phaser.Scene {
 
   drawCampRandallMetatiles(map) {
     this.metatileRenderCount = 0;
-    this.track(this.add.image(0, 0, 'camp-metatile-ground').setOrigin(0).setDepth(0));
-    const terrain = campMetatiles.map.terrain;
+    const terrain = map.terrain;
     for (let y = 0; y < terrain.length; y += 1) {
       for (let x = 0; x < terrain[y].length; x += 1) {
         const material = terrain[y][x];
-        if (material === 'grass') continue;
         const visual = campMetatiles.terrain.tiles[material];
         if (Number.isInteger(visual)) {
-          this.track(this.add.image((x + 0.5) * CELL, (y + 0.5) * CELL, 'camp-metatile-atlas', visual).setDepth(1));
+          this.track(this.add.image((x + 0.5) * CELL, (y + 0.5) * CELL, 'camp-metatile-atlas', visual).setDepth(0));
           this.metatileRenderCount += 1;
         }
       }
     }
 
-    const owners = [...(map.blockers || []), ...(map.buildings || []), ...(map.landmarks || [])];
-    this.metatilePlacements = owners.map(owner => ({...owner, stamp: campMetatiles.stamps[owner.id]}))
-      .filter(entry => entry.stamp);
-    for (const patch of campMetatiles.patches || []) {
-      this.metatilePlacements.push({...patch, stamp: {...patch, cells: patch.cells}});
-    }
+    this.metatilePlacements = (map.gridObjects || []).map(object => ({
+      ...object,
+      stamp: {width: object.width, height: object.height, cells: object.metatiles}
+    }));
     for (const placement of this.metatilePlacements) {
+      const ownerDepth = (placement.y + placement.height) * CELL - 1;
       for (let y = 0; y < placement.stamp.height; y += 1) {
         for (let x = 0; x < placement.stamp.width; x += 1) {
           const tile = campMetatiles.metatiles[placement.stamp.cells[y][x]];
           if (!tile) continue;
           const worldY = placement.y + y;
+          const depth = placement.depthMode === 'owner' ? ownerDepth : (worldY + 1) * CELL - 1;
           this.track(this.add.image(
             (placement.x + x + 0.5) * CELL,
             (worldY + 0.5) * CELL,
             'camp-metatile-atlas',
             tile.visual
-          ).setDepth((worldY + 1) * CELL - 1));
+          ).setDepth(depth));
           this.metatileRenderCount += 1;
         }
       }
@@ -508,7 +525,7 @@ export class WorldAtlasScene extends Phaser.Scene {
   }
 
   campGroundBehaviorAt(x, y) {
-    const tileId = campMetatiles.map.terrain[y]?.[x];
+    const tileId = this.layout.terrain[y]?.[x];
     return campMetatiles.terrain.behaviors?.[tileId] || 'walkable';
   }
 
@@ -689,7 +706,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     fill(graphics, COLORS.ink, 0, 0, WIDTH, 28, 0.95);
     fill(graphics, COLORS.red, 0, 0, 7, 28);
     fill(graphics, COLORS.ink, 0, 294, WIDTH, 26, 0.94);
-    const name = this.mode === 'interior' ? this.layout.displayName : layouts.maps[this.currentMapId].displayName;
+    const name = this.layout.displayName;
     this.track(this.add.text(16, 7, name.toUpperCase(), {
       fontFamily: FONT, fontSize: '11px', fontStyle: 'bold', color: '#fff0bc'
     }).setScrollFactor(0).setDepth(2001));
@@ -847,7 +864,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     }
     const connection = (this.layout.connections || []).find(entry => connectionContains(this.layout, entry, target.x, target.y));
     if (!connection) return false;
-    const destination = layouts.maps[connection.to];
+    const destination = worldLayout(connection.to);
     const offset = connection.edge === 'north' || connection.edge === 'south'
       ? target.x - connection.start : target.y - connection.start;
     const spawn = this.connectionSpawn(destination, connection.toEdge, connection.toStart + offset);

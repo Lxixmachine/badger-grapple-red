@@ -2910,3 +2910,29 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
 - Next decision: Tony should play the prototype and approve camera/scale/art
   direction. If approved, extract this scene contract into a reusable layered
   overworld runtime before rebuilding the remaining locations.
+
+## Codex Grid-Owned Camp Randall Runtime (v22.7)
+
+- Tony rejected the v22.5 flat-composition prototype because its independent
+  collision mask did not reliably match the visible world. That prototype is
+  retired from every playable route. `?demo=camp-randall` now boots the same
+  `SeasonOneOverworldScene` used by the product.
+- Camp Randall is one canonical 48x31 map of 32x32 metatiles. The game, Map
+  Studio, and World Atlas all consume `createCampRandallGridMap()`; there is no
+  second Camp layout or demo-only collision model.
+- Rendered metatile behavior is the collision authority. `solid` blocks,
+  `walkable` passes, and `warp` owns an exact visible door cell. Legacy masks
+  are fallback metadata only when an object has no metatile behavior.
+- Stadium, Team Building, Coach Office, paths, thresholds, forest walls,
+  actors, events, and route connections are authored on the same grid. The
+  south exit is two cells wide and reciprocally aligned with Route 1.
+- Demo mode is save-isolated and supports `x`, `y`, `facing`, and
+  `debug-grid` query parameters. SELECT toggles an in-game diagnostic overlay:
+  green cells pass, red cells block, and gold cells warp.
+- Regression coverage flood-fills the canonical map, reaches every door,
+  event, and exit, checks visible object behavior against collision, verifies
+  exact door entry, and exercises the 390x844 touch layout.
+- This closes the navigation architecture problem, not visual parity. WP-V2
+  ground-value retuning is the next visual package after Tony verifies v22.7.
+- Current authority is Season One layout revision 6, Camp metatile v9, and app
+  v22.7. The old 24x20 Camp geometry is no longer present in region metadata.
