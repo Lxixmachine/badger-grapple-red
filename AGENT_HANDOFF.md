@@ -1,5 +1,40 @@
 # Agent Handoff
 
+## Latest Claude Turn (VISUAL_PARITY_PLAN.md — diagnosis ratified; WP-V1 landed mid-flight)
+
+Tony, after v21.85: "I'm struggling because our visuals are not
+matching fire red and I don't know how we can get there." The machine
+metrics all pass and his eye still says no — the metrics were measuring
+the wrong things. **VISUAL_PARITY_PLAN.md** (repo root, also handed to
+Tony directly) is the ratified diagnosis: D1 pixel-integrity (the live
+game rendered 16px art through fractional zooms with sub-pixel actor
+scaling — three pixel sizes on one screen, vs FireRed's
+integer-everywhere), D2 saturation budget spent on the ground, D3
+derived-vs-placed pixels, D4 no A/B calibration ritual.
+
+**While this brief was being written, Codex shipped v21.86-v22.4 —
+including `25d05dc "launch Season One tiled world runtime"` and the
+native 480x320 battle scene — which lands WP-V1's substance.** The
+plan file carries a status note to match. What remains:
+
+- **WP-V1 verification**: assert the acceptance invariants on the
+  DEFAULT URL (integer camera zoom only, actor scale exactly 1
+  everywhere, one CSS fit as the only non-integer stage) as standing
+  regression tests, and get Tony's phone verdict — his eye opened this
+  finding; only his eye closes it.
+- **WP-V2** (ground-value retune: pale limestone paths, brighter
+  grass, cardinal RESERVED for roofs/banners/mats) — now the top
+  visual work item.
+- **WP-V3** (per-material posterize/outline pass via the manifest
+  zones — Claude owns).
+- **WP-V4** (the standing A/B board ritual vs Tony's four FireRed
+  reference screens — the critique-log wish list, still unfilled).
+- Build determinism is still broken for everyone but the authoring
+  environment (PNG byte hashes; `npm run validate` fails elsewhere —
+  it also stops on Tony's dirty State Street draft per v22.4's note).
+  This blocked the check gate for this very commit: lint-maps, build,
+  and the full smoke suite were run green here instead; docs-only.
+
 ## Latest Codex Turn (v22.4 Roster Motion)
 
 The full 26-wrestler roster now has an original Imagegen-authored visual
