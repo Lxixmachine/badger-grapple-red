@@ -55,7 +55,7 @@ export class CampRandallDemoScene extends Phaser.Scene {
       && Number.isInteger(requestedSpawn.x)
       && Number.isInteger(requestedSpawn.y)
       && CAMP_DEMO_WALKABLE.has(campDemoCellKey(requestedSpawn.x, requestedSpawn.y));
-    this.demoContractVersion = 'camp-randall-25d-v1';
+    this.demoContractVersion = 'camp-randall-25d-v2';
     this.layeredMapVersion = this.demoContractVersion;
     this.currentMapId = 'camp_randall_25d_demo';
     this.mapWidth = CAMP_DEMO_WIDTH;
@@ -157,12 +157,14 @@ export class CampRandallDemoScene extends Phaser.Scene {
     const params = new URLSearchParams(window.location.search);
     if (!params.has('debug-grid')) return;
     const graphics = this.add.graphics().setDepth(80);
-    CAMP_DEMO_WALKABLE.forEach(key => {
-      const [x, y] = key.split(',').map(Number);
-      const position = campDemoWorldPosition(x, y);
-      graphics.fillStyle(0x32e071, 0.18);
-      graphics.fillRect(position.x - 15, position.y - 15, 30, 30);
-    });
+    for (let y = 0; y < CAMP_DEMO_HEIGHT; y += 1) {
+      for (let x = 0; x < CAMP_DEMO_WIDTH; x += 1) {
+        const position = campDemoWorldPosition(x, y);
+        const walkable = CAMP_DEMO_WALKABLE.has(campDemoCellKey(x, y));
+        graphics.fillStyle(walkable ? 0x32e071 : 0xd12f3f, walkable ? 0.18 : 0.1);
+        graphics.fillRect(position.x - 15, position.y - 15, 30, 30);
+      }
+    }
     graphics.lineStyle(1, 0xffd24a, 0.42);
     for (let x = CAMP_DEMO_ORIGIN; x < CAMP_DEMO_WORLD_WIDTH; x += CAMP_DEMO_GRID) {
       graphics.lineBetween(x, 0, x, CAMP_DEMO_WORLD_HEIGHT);

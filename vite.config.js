@@ -18,7 +18,7 @@ function campRandallDemoEntry() {
         )
         .replace(
           '<div id="note">v22.4 Roster Motion</div>',
-          '<div id="note">v22.5 Camp Randall 2.5D Demo</div>'
+          '<div id="note">v22.6 Camp Randall Collision</div>'
         )
         .replace(
           '</head>',

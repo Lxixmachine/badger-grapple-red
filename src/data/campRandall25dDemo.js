@@ -7,33 +7,56 @@ export const CAMP_DEMO_WORLD_HEIGHT = 992;
 
 export const campDemoCellKey = (x, y) => `${x},${y}`;
 
-function addRect(cells, left, top, right, bottom) {
-  for (let y = top; y <= bottom; y += 1) {
-    for (let x = left; x <= right; x += 1) cells.add(campDemoCellKey(x, y));
+// Each character is one 32px feet-space cell in the rendered composition.
+// '.' is walkable and '#' is solid. Keeping the full rows authored prevents
+// broad lawn rectangles from silently making trees and fixtures passable.
+export const CAMP_DEMO_NAVIGATION_ROWS = Object.freeze([
+  '################################################', // 0
+  '################################################', // 1
+  '################################################', // 2
+  '################################################', // 3
+  '################################################', // 4
+  '################################################', // 5
+  '################################################', // 6
+  '################################################', // 7
+  '################################################', // 8
+  '################################################', // 9
+  '################################################', // 10
+  '######################....######################', // 11 stadium threshold
+  '######################....######################', // 12
+  '######################....######################', // 13
+  '#######################..#######################', // 14 garden promenade
+  '#######################..#######################', // 15
+  '#######################..#######################', // 16
+  '#######################..#######################', // 17
+  '#######################..#######################', // 18
+  '#########..............................#########', // 19 campus crosswalk
+  '#########...####..###......###...###...#########', // 20 door courts and standard crowns
+  '#########.........###......###.........#########', // 21 standards
+  '#########.........###......###.........#########', // 22
+  '#########.........###......###.........#########', // 23
+  '#########.........####.....####........#########', // 24 standard bases and shrubs
+  '#######################..#######################', // 25 south tree-line gate
+  '#######################..#######################', // 26
+  '#######################..#######################', // 27
+  '#######################..#######################', // 28
+  '#######################..#######################', // 29
+  '#######################..#######################' // 30 south arrival
+]);
+
+function createWalkableCells(rows) {
+  if (rows.length !== CAMP_DEMO_HEIGHT
+    || rows.some(row => row.length !== CAMP_DEMO_WIDTH || /[^.#]/.test(row))) {
+    throw new Error('Camp Randall navigation rows must be a 48x31 map of . and # cells.');
   }
-}
-
-function createWalkableCells() {
   const cells = new Set();
-
-  // The art is continuous. These cells are only the invisible navigation contract.
-  addRect(cells, 23, 11, 24, 30); // South arrival and main promenade.
-  addRect(cells, 22, 11, 25, 14); // Stadium forecourt.
-  addRect(cells, 9, 19, 38, 19); // East-west campus walk.
-  addRect(cells, 9, 19, 11, 21); // Team Building forecourt.
-  addRect(cells, 36, 19, 38, 21); // Coach's Office forecourt.
-  addRect(cells, 9, 21, 38, 24); // Open lower campus lawn.
-
-  // Poles and clipped shrubs occupy feet-space while their upper art remains visual.
-  [
-    [18, 23], [19, 22], [19, 23], [20, 23],
-    [27, 23], [28, 22], [28, 23], [29, 23]
-  ].forEach(([x, y]) => cells.delete(campDemoCellKey(x, y)));
-
+  rows.forEach((row, y) => [...row].forEach((marker, x) => {
+    if (marker === '.') cells.add(campDemoCellKey(x, y));
+  }));
   return cells;
 }
 
-export const CAMP_DEMO_WALKABLE = createWalkableCells();
+export const CAMP_DEMO_WALKABLE = createWalkableCells(CAMP_DEMO_NAVIGATION_ROWS);
 
 export const CAMP_DEMO_DOORS = [
   {

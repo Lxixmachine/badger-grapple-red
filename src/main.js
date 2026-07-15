@@ -59,7 +59,7 @@ if (modernMode) {
     : atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
   if (note) note.textContent = campDemoMode
-    ? 'v22.5 Camp Randall 2.5D Demo'
+    ? 'v22.6 Camp Randall Collision'
     : atlasMode ? 'v21.75 Building Art Pack' : 'v21.63 Scale Slice';
 }
 
@@ -91,7 +91,7 @@ try {
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
     : sliceMode ? '21.63-scale-slice'
-      : campDemoMode ? '22.5-camp-randall-25d-demo' : '22.4-roster-motion';
+      : campDemoMode ? '22.6-camp-randall-collision' : '22.4-roster-motion';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;

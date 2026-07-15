@@ -1,4 +1,14 @@
 import {expect, test} from '@playwright/test';
+import {
+  CAMP_DEMO_ACTORS,
+  CAMP_DEMO_DOORS,
+  CAMP_DEMO_HEIGHT,
+  CAMP_DEMO_NAVIGATION_ROWS,
+  CAMP_DEMO_SPAWN,
+  CAMP_DEMO_WALKABLE,
+  CAMP_DEMO_WIDTH,
+  campDemoCellKey
+} from '../src/data/campRandall25dDemo.js';
 
 function collectRuntimeIssues(page) {
   const runtimeIssues = [];
@@ -18,7 +28,7 @@ async function openDemo(page, query = '') {
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('#game canvas')).toBeVisible();
   await expect(page).toHaveTitle('Badger Grapple Red - Camp Randall Demo');
-  await expect(page.locator('#note')).toHaveText('v22.5 Camp Randall 2.5D Demo');
+  await expect(page.locator('#note')).toHaveText('v22.6 Camp Randall Collision');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || []))
     .toContain('CampRandallDemoScene');
 }
@@ -45,7 +55,7 @@ test('Camp Randall demo keeps continuous art separate from its navigation contra
     facing: 'up',
     playerScale: 1,
     layered: {
-      version: 'camp-randall-25d-v1',
+      version: 'camp-randall-25d-v2',
       upperCount: 3,
       directActorDepth: false
     }
@@ -56,6 +66,55 @@ test('Camp Randall demo keeps continuous art separate from its navigation contra
   await press(page, 'up');
   await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 23, y: 29});
   await expect.poll(async () => (await state(page)).playerAnimationPlaying).toBe(false);
+  expect(runtimeIssues).toEqual([]);
+});
+
+test('navigation cells are authored, connected, and agree with every gameplay anchor', () => {
+  expect(CAMP_DEMO_NAVIGATION_ROWS).toHaveLength(CAMP_DEMO_HEIGHT);
+  CAMP_DEMO_NAVIGATION_ROWS.forEach(row => expect(row).toHaveLength(CAMP_DEMO_WIDTH));
+
+  const visited = new Set();
+  const queue = [[CAMP_DEMO_SPAWN.x, CAMP_DEMO_SPAWN.y]];
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    const key = campDemoCellKey(x, y);
+    if (visited.has(key) || !CAMP_DEMO_WALKABLE.has(key)) continue;
+    visited.add(key);
+    queue.push([x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]);
+  }
+
+  expect(visited.size).toBe(CAMP_DEMO_WALKABLE.size);
+  CAMP_DEMO_DOORS.flatMap(door => door.approaches).forEach(({x, y}) => {
+    expect(CAMP_DEMO_WALKABLE.has(campDemoCellKey(x, y))).toBe(true);
+  });
+  CAMP_DEMO_ACTORS.forEach(({x, y}) => {
+    expect(CAMP_DEMO_WALKABLE.has(campDemoCellKey(x, y))).toBe(true);
+  });
+});
+
+test('standards, shrubs, and the south tree line own their complete feet-space', async ({page}) => {
+  const runtimeIssues = collectRuntimeIssues(page);
+  await openDemo(page, '&x=17&y=20&facing=down');
+
+  expect((await state(page)).passable.right).toBe(false);
+  await press(page, 'right');
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 17, y: 20});
+  await press(page, 'down');
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 17, y: 21});
+  await expect.poll(async () => (await state(page)).playerAnimationPlaying).toBe(false);
+  expect((await state(page)).passable.right).toBe(false);
+  await press(page, 'right');
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 17, y: 21});
+
+  await openDemo(page, '&x=22&y=24&facing=down');
+  expect((await state(page)).passable).toMatchObject({right: true, down: false});
+  await press(page, 'down');
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 22, y: 24});
+  await press(page, 'right');
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 23, y: 24});
+  await expect.poll(async () => (await state(page)).playerAnimationPlaying).toBe(false);
+  await press(page, 'down');
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 23, y: 25});
   expect(runtimeIssues).toEqual([]);
 });
 test('Team Building art, door cell, prompt, and foreground depth agree', async ({page}) => {
