@@ -11,6 +11,7 @@ import {BattleScene} from './scenes/BattleScene.js';
 import {MenuScene} from './scenes/MenuScene.js';
 import {VisualSliceScene} from './scenes/VisualSliceScene.js';
 import {WorldAtlasScene} from './scenes/WorldAtlasScene.js';
+import {CampRandallDemoScene} from './scenes/CampRandallDemoScene.js';
 import {installTestHooks} from './systems/testHooks.js';
 
 if(document.fonts?.load){
@@ -37,11 +38,14 @@ const Phaser = window.Phaser;
 const params = new URLSearchParams(window.location.search);
 const sliceMode = params.has('slice');
 const atlasMode = params.has('atlas');
-const modernMode = sliceMode || atlasMode;
+const campDemoMode = params.get('demo') === 'camp-randall';
+const modernMode = sliceMode || atlasMode || campDemoMode;
 const heldInputMode = true;
 const width = 480;
 const height = 320;
-const scenes = atlasMode
+const scenes = campDemoMode
+  ? [CampRandallDemoScene]
+  : atlasMode
   ? [WorldAtlasScene]
   : sliceMode
     ? [VisualSliceScene]
@@ -49,9 +53,13 @@ const scenes = atlasMode
 
 if (modernMode) {
   document.body.classList.add('slice-mode');
-  document.title = atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
+  document.title = campDemoMode
+    ? 'Badger Grapple Red - Camp Randall Demo'
+    : atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
-  if (note) note.textContent = atlasMode ? 'v21.75 Building Art Pack' : 'v21.63 Scale Slice';
+  if (note) note.textContent = campDemoMode
+    ? 'v22.5 Camp Randall 2.5D Demo'
+    : atlasMode ? 'v21.75 Building Art Pack' : 'v21.63 Scale Slice';
 }
 
 const config = {
@@ -81,7 +89,8 @@ try {
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
-    : sliceMode ? '21.63-scale-slice' : '22.4-roster-motion';
+    : sliceMode ? '21.63-scale-slice'
+      : campDemoMode ? '22.5-camp-randall-25d-demo' : '22.4-roster-motion';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -89,6 +98,7 @@ try {
 
 function routeVirtualButton(key, phase = 'press') {
   const priority = [
+    'CampRandallDemoScene',
     'WorldAtlasScene',
     'VisualSliceScene',
     'MenuScene',
@@ -103,7 +113,7 @@ function routeVirtualButton(key, phase = 'press') {
   for (const sceneKey of priority) {
     const scene = game.scene.getScene(sceneKey);
     if (scene?.scene?.isActive?.() && scene.handleVirtualButton) {
-      const supportsHeldDirections = ['OverworldScene', 'WorldAtlasScene', 'VisualSliceScene'].includes(sceneKey);
+      const supportsHeldDirections = ['OverworldScene', 'WorldAtlasScene', 'VisualSliceScene', 'CampRandallDemoScene'].includes(sceneKey);
       if (phase === 'up' && !supportsHeldDirections) return;
       scene.handleVirtualButton(key, phase);
       return;

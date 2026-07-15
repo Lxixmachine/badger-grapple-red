@@ -2848,3 +2848,30 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   quota failures during map changes.
 - Current authority is 84 prepared Imagegen assets, 121 shared world stamps,
   Camp metatile v9, and app v21.75.
+
+## Codex Camp Randall 2.5D Demo (v22.5)
+
+- A separate playable prototype now lives at `?demo=camp-randall`. It does not
+  replace the Season One overworld until Tony approves the approach.
+- The visual source is a dedicated ChatGPT Imagegen composition preserved at
+  `art/imagegen/camp_randall_25d_demo_v1_2026-07-14.png`. Runtime uses an exact
+  center crop at 1536x992, or 48x31 logical 32px cells, without rescaling.
+- `src/data/campRandall25dDemo.js` is the gameplay contract. Walkability is
+  blocked by default and explicitly opened beneath visually clear paths and
+  lawns. Door approaches, actors, occluder ownership, and camera zones are
+  independent metadata; none are inferred from artwork pixels.
+- `CampRandallDemoScene` renders one continuous background, 24x36 animated
+  actors, Y-sorted feet/shadows, three independent entrance foreground layers,
+  exact grid movement, patrols, readable dialogue, and authored stadium/team/
+  office camera reveals. The foreground layers occlude the player's upper body
+  only when entering a threshold.
+- The approved visual principle is Black/White-like separation of systems:
+  invisible deterministic navigation underneath authored continuous scenery.
+  Do not cut the background back into visibly isolated single-cell terrain or
+  derive collision from alpha coverage.
+- Test-only `x`, `y`, and `facing` query values allow deterministic geometry
+  checks. `tests/camp-randall-demo.spec.js` covers the arrival lane, Team
+  Building threshold/depth, and 390x844 touch layout. Full suite: 86/86.
+- Next decision: Tony should play the prototype and approve camera/scale/art
+  direction. If approved, extract this scene contract into a reusable layered
+  overworld runtime before rebuilding the remaining locations.
