@@ -82,19 +82,38 @@ Acceptance:
 - Regression tests assert the integer invariants so this can never
   silently regress.
 
-### WP-V2 — Ground-value retune (make law 4 true in the palette)
-Operate on the 32px assets after WP-V1 — never retune the doomed 16px
-set (standing rule: never repaint the old world twice).
-- Brick path -> pale limestone/warm tan family; cardinal becomes an
-  ACCENT (banner stripes, edging), not the field.
-- Grass one step brighter/higher-key, toward the measured FireRed
-  ground language (base + <=5% stipple, VISUAL_STYLE_SPEC facts).
-- Cardinal red RESERVED for identity objects: roofs, banners, mats,
-  badges. Nothing else gets it.
+### WP-V2 — Make the ground a SYSTEM: connected paths + edge tiles + values
+
+> **REVISED after inspecting v22.4 on screen (D1 confirmed fixed
+> there).** With crisp pixels, the loudest remaining non-FireRed
+> signal in the overworld is that the ground is not a legible
+> circulation system: path material sits in DISCONNECTED rectangles
+> on the lawn, the stone walk starts and stops, the dirt patch and
+> pond are hard-edged squares, and every material meets every other
+> in a raw straight cut. FireRed never ships a raw cut — F-003 has
+> been open since the first critique pass and is still unaddressed at
+> the new scale. Priority inside this package, in order:
+
+1. **Connectivity**: every path cell belongs to one continuous
+   network that visibly links door aprons, gates, and route mouths.
+   One primary path material per town (not brick AND stone AND dirt
+   fragments competing); secondary materials only with a purpose.
+2. **Transitions (law 5, finally)**: every ground material ships and
+   USES its full 3x3 edge block against every material it touches —
+   grass|path, grass|water, grass|dirt. Shorelines get real shore
+   tiles. Raw cuts bounce at review.
+3. **Values (the original D2)**: path family pale
+   limestone/warm-tan; grass one step higher-key toward the measured
+   FireRed ground language (base + <=5% stipple); cardinal red
+   RESERVED for identity objects — roofs, banners, mats, badges.
+4. **Texture loudness**: interior floors included — the locker-room
+   plank pattern currently out-contrasts FireRed floors; quiet it to
+   the base+accent formula.
 
 Acceptance: A/B board (WP-V4 format) vs the FireRed reference at
-identical framing; Tony verdict "closer"; ground zones' mean
-saturation measurably below object zones'.
+identical framing; zero raw material cuts on any shipped screen; Tony
+verdict "closer"; ground zones' mean saturation measurably below
+object zones'.
 
 ### WP-V3 — Per-material pixel-discipline pass (compositor; Claude owns)
 Mechanical, scriptable, not artistry: for each manifest material zone,

@@ -35,6 +35,17 @@ plan file carries a status note to match. What remains:
   This blocked the check gate for this very commit: lint-maps, build,
   and the full smoke suite were run green here instead; docs-only.
 
+**Addendum after inspecting v22.4 on screen** (Tony asked whether the
+diagnosis considered the latest update — it hadn't; corrected): D1 is
+confirmed FIXED in the shipped game — crisp uniform pixels, and the
+new battle scene is the strongest screen in the game. With that gone,
+the loudest remaining overworld gap is that the ground is not a
+SYSTEM: disconnected path rectangles, hard-edged dirt/pond squares,
+raw material cuts everywhere (F-003/law 5, still unaddressed at the
+new scale). WP-V2 in the plan is REVISED to lead with connectivity and
+mandatory 3x3 edge blocks, then values, then interior texture
+loudness (the locker-room planks out-contrast FireRed floors).
+
 ## Latest Codex Turn (v22.4 Roster Motion)
 
 The full 26-wrestler roster now has an original Imagegen-authored visual
