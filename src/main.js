@@ -38,7 +38,8 @@ const Phaser = window.Phaser;
 const params = new URLSearchParams(window.location.search);
 const sliceMode = params.has('slice');
 const atlasMode = params.has('atlas');
-const campDemoMode = params.get('demo') === 'camp-randall';
+const campDemoMode = window.BADGER_ENTRY_MODE === 'camp-randall'
+  || params.get('demo') === 'camp-randall';
 const modernMode = sliceMode || atlasMode || campDemoMode;
 const heldInputMode = true;
 const width = 480;

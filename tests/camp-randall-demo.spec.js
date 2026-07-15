@@ -14,9 +14,11 @@ function collectRuntimeIssues(page) {
 }
 
 async function openDemo(page, query = '') {
-  await page.goto(`/?demo=camp-randall&test=1${query}`);
+  await page.goto(`/camp-randall-demo.html?test=1${query}`);
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('#game canvas')).toBeVisible();
+  await expect(page).toHaveTitle('Badger Grapple Red - Camp Randall Demo');
+  await expect(page.locator('#note')).toHaveText('v22.5 Camp Randall 2.5D Demo');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || []))
     .toContain('CampRandallDemoScene');
 }
