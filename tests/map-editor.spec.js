@@ -34,7 +34,27 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 6, metatileVersion: 9});
+  expect(state.project).toMatchObject({layoutRevision: 6, metatileVersion: 10});
+  expect(state.project.groundSystem).toMatchObject({
+    primaryMaterial: 'brick',
+    connectedComponentCount: 1,
+    anchorCount: 5,
+    transitionFamily: 'surface_brick',
+    rawCutCount: 0
+  });
+  expect(state.project.groundMaterialMetrics.grass).toMatchObject({
+    uniqueColors: 2,
+    cardinalPixelCount: 0
+  });
+  expect(state.project.groundMaterialMetrics.grass.dominantCoverage).toBeGreaterThanOrEqual(0.95);
+  expect(state.project.groundMaterialMetrics.campusPavers).toMatchObject({
+    uniqueColors: 3,
+    cardinalPixelCount: 0
+  });
+  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThan(0.7);
+  expect(state.project.visualHierarchyMetrics.saturationDifference).toBeGreaterThan(0);
+  expect(state.project.visualHierarchyMetrics.ground.meanSaturation)
+    .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanSaturation);
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'r1', 'field_house', 'lakeshore_path', 'picnic_point', 'state_street',
     'bascom_hill', 'capitol_square', 'monona_shore', 'kohl_center', 'airport', 'st_louis',
@@ -341,7 +361,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 6, metatileVersion: 9});
+  expect(state.project).toMatchObject({layoutRevision: 6, metatileVersion: 10});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
@@ -376,7 +396,7 @@ test('structure metatiles can be placed independently and retain behavior owners
 test('terrain, events, actors, and camera reviews are editable layers', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
-  await page.getByRole('button', {name: 'Brick', exact: true}).click();
+  await page.getByRole('button', {name: 'Warm Campus Pavers', exact: true}).click();
   await clickCell(page, 10, 15);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.terrain[15][10]).toBe('brick');
 

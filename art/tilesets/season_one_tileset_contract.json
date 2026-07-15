@@ -1,6 +1,6 @@
 {
   "schema": "badger-grapple-tileset-contract/v1",
-  "version": 2,
+  "version": 3,
   "cellSize": 32,
   "logicalCellSize": 16,
   "renderScale": 2,
@@ -16,6 +16,8 @@
     "minimumPreparedImagegenAssets": 84,
     "exactNearestNeighborScale": true,
     "materialSpecificTransitions": true,
+    "quietGroundPalette": true,
+    "cardinalGroundReserved": true,
     "sceneCropStretching": false
   },
   "behaviorVocabulary": [

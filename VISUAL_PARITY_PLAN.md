@@ -84,6 +84,18 @@ Acceptance:
 
 ### WP-V2 — Make the ground a SYSTEM: connected paths + edge tiles + values
 
+> **STATUS: CODE COMPLETE IN v22.8; TONY VISUAL VERDICT REMAINS.**
+> Camp Randall now has one 108-cell primary path network joining all
+> three door approaches and both south-route cells. Every occupied
+> path cell resolves through the 47-signature `surface_brick` edge
+> grammar; the compiler rejects disconnected components, missing
+> anchors, and raw cuts. Grass is a two-color, 3.9% stipple material;
+> warm campus pavers use three colors with zero cardinal pixels.
+> Locker-room and office floors use quieter fixed-ramp patterns. These
+> contracts are enforced by `npm run validate`, and SELECT exposes the
+> same grid/collision ownership used by the runtime. Tony's phone eye
+> still closes the package through the WP-V4 comparison ritual.
+
 > **REVISED after inspecting v22.4 on screen (D1 confirmed fixed
 > there).** With crisp pixels, the loudest remaining non-FireRed
 > signal in the overworld is that the ground is not a legible
@@ -136,12 +148,13 @@ the fixed reference, never on metrics alone.
 
 ## Known blocker to fix alongside WP-V1
 
-Build determinism: regenerated PNGs hash differently across machines,
-so `npm run validate` currently fails everywhere except the
-environment that produced the committed artifacts. This blocks every
-other contributor from running the required pre-push gate. Fix by
-canonicalizing the PNG encoding (fixed encoder settings) or hashing
-decoded pixel content rather than file bytes.
+> **FIXED IN v22.8.** Generated PNGs now use one explicit encoder
+> contract (`optimize=False`, compression level 9) instead of Pillow's
+> adaptive optimizer. Two complete rebuilds of 74 generated artifacts
+> produced byte-identical aggregate SHA-256 hashes. The only remaining
+> validator finding in the authoring worktree is Tony's separate dirty
+> State Street composition draft; do not rebuild or include it with
+> this package.
 
 ## What NOT to do
 

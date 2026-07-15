@@ -12,7 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from PIL import Image, ImageOps
+from PIL import Image, ImageDraw, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -155,6 +155,69 @@ BOARDS = {
     },
 }
 
+
+# Imagegen establishes the material idea, but a 16px gameplay tile cannot keep
+# painterly micro-variation. These material-specific targets preserve the source
+# role while enforcing the quiet-ground value structure used by the game.
+GROUND_RAMPS = {
+    "grass": ((138, 201, 165, 255), (117, 190, 154, 255)),
+    "mowed_grass": ((145, 198, 143, 255), (124, 183, 127, 255)),
+    "brick": ((222, 211, 181, 255), (239, 231, 204, 255), (190, 178, 145, 255)),
+}
+
+
+def _luma(pixel: tuple[int, int, int, int]) -> int:
+    red, green, blue, _alpha = pixel
+    return red * 299 + green * 587 + blue * 114
+
+
+def quiet_stipple(source: Image.Image, base, accent, count: int = 10) -> Image.Image:
+    """Reduce a source texture to one field color and <=5% spaced detail."""
+    output = Image.new("RGBA", source.size, base)
+    source_pixels = source.convert("RGBA").load()
+    candidates = sorted(
+        (
+            (_luma(source_pixels[x, y]), y, x)
+            for y in range(1, source.height - 1)
+            for x in range(1, source.width - 1)
+        ),
+        key=lambda entry: (entry[0], entry[1], entry[2]),
+    )
+    selected: list[tuple[int, int]] = []
+    for _value, y, x in candidates:
+        if all(abs(x - other_x) + abs(y - other_y) >= 4 for other_x, other_y in selected):
+            selected.append((x, y))
+        if len(selected) == count:
+            break
+    draw = ImageDraw.Draw(output)
+    for x, y in selected:
+        draw.point((x, y), fill=accent)
+    return output
+
+
+def quiet_pavers(source: Image.Image, ramp) -> Image.Image:
+    """Convert the former cardinal brick field into low-contrast campus pavers."""
+    base, light, joint = ramp
+    output = Image.new("RGBA", source.size, base)
+    draw = ImageDraw.Draw(output)
+    # All four outer edges stay base-colored. That makes every rotated edge and
+    # corner metatile reciprocal while the internal joints retain the material.
+    draw.line((1, 7, source.width - 2, 7), fill=joint)
+    draw.line((1, 8, source.width - 2, 8), fill=light)
+    draw.line((7, 1, 7, 6), fill=joint)
+    draw.line((3, 9, 3, source.height - 2), fill=joint)
+    return output
+
+
+def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image:
+    """Apply the declared per-material value grammar after source extraction."""
+    if asset_id in {"grass", "mowed_grass"}:
+        base, accent = GROUND_RAMPS[asset_id]
+        return quiet_stipple(image, base, accent)
+    if asset_id == "brick":
+        return quiet_pavers(image, GROUND_RAMPS[asset_id])
+    return image
+
 STANDALONE_ASSETS = {
     "landmarks": [
         ("field_house_arena_exterior", SOURCE_DIR / "season_one_field_house_arena_source_v1.png", (192, 112), 36),
@@ -271,7 +334,7 @@ def make_ground_seamless(image: Image.Image) -> Image.Image:
 
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    image.save(path, optimize=True)
+    image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
 def build() -> dict:
@@ -290,7 +353,10 @@ def build() -> dict:
             panel = extract_panel(board, spec["columns"], spec["rows"], index)
             normalized = normalize(panel, size, mode, colors)
             if category == "ground":
-                normalized = make_ground_seamless(normalized)
+                normalized = discipline_ground_material(
+                    asset_id,
+                    make_ground_seamless(normalized),
+                )
             output_path = OUTPUT_DIR / category / f"{asset_id}.png"
             save_png(normalized, output_path)
             outputs[asset_id] = {

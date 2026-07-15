@@ -13,6 +13,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageOps
 
+from season_one_pixel_art import export_2x, material_tile
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "imagegen" / "camp_randall_production_manifest.json"
@@ -38,7 +40,7 @@ def public_path(path: Path) -> str:
 
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    image.save(path, optimize=True)
+    image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
 def load_sources() -> dict[str, Image.Image]:
@@ -140,31 +142,12 @@ def path_cells(path: dict) -> set[tuple[int, int]]:
 
 
 def path_pattern(size: tuple[int, int], material: str) -> Image.Image:
-    if material == "brick":
-        output = Image.new("RGB", size, (173, 71, 61))
-        draw = ImageDraw.Draw(output)
-        for row, y in enumerate(range(0, size[1], 8)):
-            draw.line((0, y, size[0], y), fill=(112, 48, 44), width=2)
-            offset = 8 if row % 2 else 0
-            for x in range(offset, size[0], 16):
-                draw.line((x, y, x, min(y + 7, size[1] - 1)), fill=(124, 50, 45))
-        return output
-    if material == "dirt":
-        output = Image.new("RGB", size, (205, 178, 122))
-        draw = ImageDraw.Draw(output)
-        for y in range(5, size[1], 19):
-            for x in range(9 + (y % 7), size[0], 29):
-                draw.ellipse((x, y, x + 2, y + 1), fill=(154, 124, 82))
-        return output
-    output = Image.new("RGB", size, (196, 188, 165))
-    draw = ImageDraw.Draw(output)
-    for y in range(0, size[1], 16):
-        draw.line((0, y, size[0], y), fill=(159, 153, 137))
-    for row, y in enumerate(range(0, size[1], 16)):
-        offset = 16 if row % 2 else 0
-        for x in range(offset, size[0], 32):
-            draw.line((x, y, x, min(y + 15, size[1] - 1)), fill=(169, 163, 147))
-    return output
+    output = Image.new("RGBA", size, (0, 0, 0, 0))
+    for y in range(0, size[1], CELL):
+        for x in range(0, size[0], CELL):
+            phase = (x // CELL * 5 + y // CELL * 3) % 4
+            output.paste(export_2x(material_tile(material, phase)), (x, y))
+    return output.convert("RGB")
 
 
 def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material: str) -> None:
@@ -181,7 +164,31 @@ def draw_path_network(canvas: Image.Image, cells: set[tuple[int, int]], material
 
 def make_exterior_ground(layout: dict) -> Image.Image:
     size = (layout["size"]["width"] * CELL, layout["size"]["height"] * CELL)
-    return tiled_texture(source_crop("terrain", "grass"), size, block=192).convert("RGBA")
+    return path_pattern(size, "grass").convert("RGBA")
+
+
+def quiet_interior_floor(size: tuple[int, int], material: str) -> Image.Image:
+    logical_size = (size[0] // 2, size[1] // 2)
+    if material == "wood":
+        base, accent = (194, 174, 132, 255), (163, 144, 107, 255)
+        logical = Image.new("RGBA", logical_size, base)
+        draw = ImageDraw.Draw(logical)
+        for row, y in enumerate(range(7, logical_size[1], 8)):
+            draw.line((0, y, logical_size[0] - 1, y), fill=accent)
+            top = y - 7
+            offset = 7 if row % 2 == 0 else 15
+            for x in range(offset, logical_size[0], 16):
+                draw.line((x, top, x, y - 1), fill=accent)
+    elif material == "carpet":
+        base, accent = (165, 158, 141, 255), (142, 136, 120, 255)
+        logical = Image.new("RGBA", logical_size, base)
+        draw = ImageDraw.Draw(logical)
+        for y in range(3, logical_size[1] - 1, 7):
+            for x in range(2 + (y * 3 % 6), logical_size[0] - 1, 13):
+                draw.point((x, y), fill=accent)
+    else:
+        raise ValueError(material)
+    return logical.resize(size, Image.Resampling.NEAREST)
 
 
 def make_exterior_base(layout: dict) -> Image.Image:
@@ -228,9 +235,9 @@ def carpet_runner(canvas: Image.Image, rect: tuple[int, int, int, int]) -> None:
 def make_interior_base(interior_id: str, interior: dict, style: str) -> Image.Image:
     size = (interior["size"]["width"] * CELL, interior["size"]["height"] * CELL)
     if style in {"locker_room", "wrestling_room"}:
-        canvas = tiled_texture(source_crop("terrain", "wood"), size, block=160).convert("RGBA")
+        canvas = quiet_interior_floor(size, "wood")
     elif style == "coach_office":
-        canvas = tiled_texture(source_crop("terrain", "office_carpet"), size, block=160).convert("RGBA")
+        canvas = quiet_interior_floor(size, "carpet")
     else:
         canvas = Image.new("RGBA", size, (49, 49, 54, 255))
 
@@ -511,10 +518,10 @@ def build() -> dict:
 
     camp = LAYOUTS["maps"][MANIFEST["layoutId"]]
     ground = make_exterior_ground(camp)
-    ground_path = OUTPUT_DIR / "camp_randall_ground.png"
+    ground_path = OUTPUT_DIR / "camp_randall_ground_v2.png"
     save_png(ground, ground_path)
     base = make_exterior_base(camp)
-    base_path = OUTPUT_DIR / "camp_randall_base.png"
+    base_path = OUTPUT_DIR / "camp_randall_base_v2.png"
     save_png(base, base_path)
     exterior_entries: list[tuple[dict, Image.Image]] = []
     exterior_owners: list[dict] = []
@@ -530,8 +537,8 @@ def build() -> dict:
     save_png(ownership_overlay(exterior_preview, exterior_owners), VALIDATION_DIR / "camp_randall_production_ownership.png")
 
     runtime = {
-        "version": 1,
-        "status": "production-pilot",
+        "version": 2,
+        "status": "quiet-ground-production-pilot",
         "layoutRevision": LAYOUTS["revision"],
         "cellSize": CELL,
         "minimumBlockedCellCoverage": MIN_COVERAGE,
@@ -555,7 +562,7 @@ def build() -> dict:
     for interior_id, art_spec in MANIFEST["interiors"].items():
         interior = LAYOUTS["interiors"][interior_id]
         interior_base = make_interior_base(interior_id, interior, art_spec["baseStyle"])
-        base_output = OUTPUT_DIR / f"{interior_id}_base.png"
+        base_output = OUTPUT_DIR / f"{interior_id}_base_v2.png"
         save_png(interior_base, base_output)
         object_entries: list[tuple[dict, Image.Image]] = []
         object_owners: list[dict] = []

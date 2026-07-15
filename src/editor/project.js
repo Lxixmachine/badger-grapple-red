@@ -5,8 +5,8 @@ import {mapPolish} from '../data/seasonOneMapPolish.js';
 
 export const PROJECT_SCHEMA = 'badger-grapple-map-pack/v2';
 export const TERRAIN = {
-  grass: {label: 'Grass', color: '#5f9f58'},
-  brick: {label: 'Brick', color: '#ad473d'},
+  grass: {label: 'Grass', color: '#8ac9a5'},
+  brick: {label: 'Campus Pavers', color: '#ded3b5'},
   stone: {label: 'Stone', color: '#c4bca5'},
   dirt: {label: 'Dirt', color: '#cdb27a'},
   floor: {label: 'Floor', color: '#b99669'}
@@ -675,6 +675,9 @@ export function createSeedProject() {
     productionVersion: production.version,
     layoutRevision: production.layoutRevision,
     metatileVersion: metatileBuild.version,
+    groundSystem: deepClone(metatileBuild.groundSystem),
+    groundMaterialMetrics: deepClone(metatileBuild.groundMaterialMetrics),
+    visualHierarchyMetrics: deepClone(metatileBuild.visualHierarchyMetrics),
     createdFrom: 'season-one-map-studio-atlas',
     activeMapId: production.map.id,
     assets: {

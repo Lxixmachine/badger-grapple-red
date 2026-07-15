@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "status": "production-pilot",
+  "version": 2,
+  "status": "quiet-ground-production-pilot",
   "layoutRevision": 6,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
@@ -8,11 +8,11 @@
     "id": "camp_randall",
     "ground": {
       "texture": "camp-prod-camp-randall-ground",
-      "path": "./assets/camp-production/camp_randall_ground.png"
+      "path": "./assets/camp-production/camp_randall_ground_v2.png"
     },
     "base": {
       "texture": "camp-prod-camp-randall-base",
-      "path": "./assets/camp-production/camp_randall_base.png"
+      "path": "./assets/camp-production/camp_randall_base_v2.png"
     },
     "objects": [
       {
@@ -288,7 +288,7 @@
     "team_locker_room": {
       "base": {
         "texture": "camp-prod-team_locker_room-base",
-        "path": "./assets/camp-production/team_locker_room_base.png"
+        "path": "./assets/camp-production/team_locker_room_base_v2.png"
       },
       "objects": [
         {
@@ -473,7 +473,7 @@
     "wrestling_room": {
       "base": {
         "texture": "camp-prod-wrestling_room-base",
-        "path": "./assets/camp-production/wrestling_room_base.png"
+        "path": "./assets/camp-production/wrestling_room_base_v2.png"
       },
       "objects": [
         {
@@ -560,7 +560,7 @@
     "coach_office": {
       "base": {
         "texture": "camp-prod-coach_office-base",
-        "path": "./assets/camp-production/coach_office_base.png"
+        "path": "./assets/camp-production/coach_office_base_v2.png"
       },
       "objects": [
         {
@@ -668,7 +668,7 @@
     "stadium_tunnel": {
       "base": {
         "texture": "camp-prod-stadium_tunnel-base",
-        "path": "./assets/camp-production/stadium_tunnel_base.png"
+        "path": "./assets/camp-production/stadium_tunnel_base_v2.png"
       },
       "objects": [],
       "actors": []
@@ -823,7 +823,7 @@
   "sources": {
     "manifest": "cb67cc3c1df1d8add2652975d333a2821b221f51b17b0f5f5f3c8cdf93bff0f9",
     "layout": "673a6388715bde28f7948f0fd08b5e3ba2998cef4e23b7bb5ace7c9cbc54eb84",
-    "worldTileset": "13c026f1849d0e09c439412d98f0d28882bb5493b6d55ba6660b703e82e94d54",
+    "worldTileset": "c875b4b3ca5743ad2b3f161a3718b9f1d5f05c19942838a6b3c75c0aef613f85",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
@@ -856,18 +856,18 @@
     "actor_wrestler.png": "8abfde29cd5ffdbbf272885de54154592abe3b0b7feb0648e3629f18c1e2e0b5",
     "camp-randall__camp_randall_stadium.png": "ee9c429db38e2cec10a4cd09586ccad396752755172282c80743cc0c7510378e",
     "camp-randall__coach_office.png": "52788f1713f3a5bbc445597804066b061bdd6e54f1b21ad42b0095d22c3f423f",
-    "camp-randall__memory_garden_east.png": "a2f1f555986a8677928f606fa1e59cd3bf01a8796e02860317a0904872963c38",
-    "camp-randall__memory_garden_west.png": "a2f1f555986a8677928f606fa1e59cd3bf01a8796e02860317a0904872963c38",
+    "camp-randall__memory_garden_east.png": "b5e9797dbd10f7893b4e475d477fa61cbd6cca5e22778b635bf4ff67b91edd4f",
+    "camp-randall__memory_garden_west.png": "b5e9797dbd10f7893b4e475d477fa61cbd6cca5e22778b635bf4ff67b91edd4f",
     "camp-randall__team_building.png": "4732964a1601ac26fda4e9ec285e4d4f788d90f13d32e783eca8ccafa11761a2",
-    "camp_randall_base.png": "cd1d625cb729229d0cc4229fefe0bc7eb311d6793a128eba2c288ac55021c090",
-    "camp_randall_ground.png": "921f67b3b91ef52e62eb25d2db7ad8f232cf5c1dee116e853b3634a9b41f98c1",
+    "camp_randall_base_v2.png": "31050b6a1e1ec8792a0b29da1ef29b5e14c4b95785f5b65e63eb088d734f5894",
+    "camp_randall_ground_v2.png": "5c64c59e2c688e80f054c4251cceca68553a4413e81a2f6f56eb905187a7009e",
     "coach-office__coach_desk.png": "b1b8defeb67c4cb051662ce50477d7b2e16379617032904d1aa2d4a5dfeb3e6a",
     "coach-office__depth_chart.png": "0b765670a0215cdee843785d6b008b2164ee0d0805e1bc14c0c045c601b10c73",
     "coach-office__office_exit_frame.png": "35f99d18bf469bd636ffff9b6a30848196c7945647b19500f8bc355f1a044e94",
-    "coach-office__office_plant.png": "3adac93c113fa1398c1454762ac464edfad571e18a09d95729757360df333a94",
+    "coach-office__office_plant.png": "064b70ad3abc8d353c33ced94a77a9e6f199756f1764c87259b95a2c11e6dfbf",
     "coach-office__recruit_board.png": "146acae348954a45a68a9003ee530e7633b23a34b031373218a4f3c60e8d7a4f",
-    "coach_office_base.png": "9a924e58f6e1c1d1b858f4eaddcdb09ba501b078ced20fd3c18bf1ce8d092d20",
-    "stadium_tunnel_base.png": "330e6d8db5a2abdab85e063c0c64b54e199a67252cb859a0eb06f7c0d015b1d8",
+    "coach_office_base_v2.png": "4781fa9e35de4d034564e2ec7bf933eae0f6fec2155fd531e1b9d3b2209730f3",
+    "stadium_tunnel_base_v2.png": "330e6d8db5a2abdab85e063c0c64b54e199a67252cb859a0eb06f7c0d015b1d8",
     "team-locker-room__bench_east.png": "28c810cbfb3e98ede7c6e98d1088636f2442216b3f89821550572b1e5c269080",
     "team-locker-room__bench_west.png": "5c028dbc24fbdea0a46b590e0b569ba25e47ced7bb2a904c9589c4db98ebee4b",
     "team-locker-room__locker_exit_frame.png": "35f99d18bf469bd636ffff9b6a30848196c7945647b19500f8bc355f1a044e94",
@@ -876,10 +876,10 @@
     "team-locker-room__trophy_case_east.png": "bf82a3fb3f22bd58fc8bd89ce18611d7bd3856c2c350d7b93cd48695b7b0d188",
     "team-locker-room__trophy_case_west.png": "beb01eeecaa4e39caa08939fe99f65aa5db2e81000a558dd0de5c442b9f4586b",
     "team-locker-room__wrestling_door.png": "c34615719891e1ec69cbee7cfc25b9430ea027f5442fa2b3ecdc94383eb78e4b",
-    "team_locker_room_base.png": "de41bf1693de6bccbc253983fe217273076c7697fb598c8395a8605ff664678e",
+    "team_locker_room_base_v2.png": "d621a4c81253a4e7789fd2a45e0fad9d52510caf2aaa89bf7a3850581c463ab8",
     "wrestling-room__practice_station.png": "bfc017ffbd6d844ee0f2e24c59e25466f61deadb917022c479274f4972f83d8d",
     "wrestling-room__weights.png": "7ba68638bb1e283ef64490af7f6960d03615411c2af0a07f162a74cb2dada463",
     "wrestling-room__wrestling_exit_frame.png": "35f99d18bf469bd636ffff9b6a30848196c7945647b19500f8bc355f1a044e94",
-    "wrestling_room_base.png": "1a765b091131b8aece733279d66e9a64b230e079da2fa93b258aeabd15c19576"
+    "wrestling_room_base_v2.png": "8498cc5d07a99791be42d2dcceaed41561b4e67fbbc6c0d32ec75ab85b4db25a"
   }
 }

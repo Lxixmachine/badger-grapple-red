@@ -51,7 +51,7 @@ else{
   const production=JSON.parse(readFileSync(productionBuildPath,'utf8'));
   const productionManifest=JSON.parse(readFileSync(productionManifestPath,'utf8'));
   const hashFile=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
-  if(production.version!==1||production.status!=='production-pilot')errs.push('Camp production build version/status is unsupported');
+  if(production.version!==2||production.status!=='quiet-ground-production-pilot')errs.push('Camp production build version/status is unsupported');
   if(production.layoutRevision!==seasonLayouts.revision||production.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp production build diverges from the Season One layout contract');
   if(production.minimumBlockedCellCoverage!==productionManifest.minimumBlockedCellCoverage)errs.push('Camp production visual-coverage threshold diverges from its manifest');
   if(production.sources?.manifest!==hashFile(productionManifestPath))errs.push('Camp production manifest is stale; run npm run build:camp-production');
@@ -84,9 +84,9 @@ else{
   const world=JSON.parse(readFileSync(worldTilesetBuildPath,'utf8'));
   const manifest=JSON.parse(readFileSync(worldTilesetManifestPath,'utf8'));
   const contract=JSON.parse(readFileSync(worldTilesetContractPath,'utf8'));
-  if(world.schema!=='badger-grapple-world-tileset/v3'||world.version!==3||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  if(world.schema!=='badger-grapple-world-tileset/v4'||world.version!==4||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
   if(manifest.schema!=='badger-grapple-world-tileset-manifest/v2'||manifest.version!==2||manifest.logicalCellSize!==16||manifest.renderScale!==2)errs.push('Season One world tileset manifest must use the authored 16px/2x pipeline');
-  if(contract.version!==2||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
+  if(contract.version!==3||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false||contract.rules?.quietGroundPalette!==true||contract.rules?.cardinalGroundReserved!==true)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
   if(world.artPipeline?.logicalCellSize!==16||world.artPipeline?.renderScale!==2||world.artPipeline?.resampling!=='nearest'||world.artPipeline?.pixelPerfect!==true)errs.push('Season One world tileset is not an exact nearest-neighbor logical-grid export');
   if(world.sources?.manifest!==fileHash(worldTilesetManifestPath))errs.push('Season One world tileset manifest is stale');
   if(!existsSync(worldTilesetContractPath)||world.sources?.contract!==fileHash(worldTilesetContractPath)||world.contract?.sha256!==fileHash(worldTilesetContractPath))errs.push('Season One world tileset contract is missing or stale');
@@ -116,6 +116,9 @@ else{
   }
   for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
   if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<84||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
+  const groundMetrics=world.coverage?.groundMaterialMetrics||{};
+  if(!groundMetrics.grass||groundMetrics.grass.uniqueColors>2||groundMetrics.grass.dominantCoverage<0.95||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the quiet-ground palette contract');
+  if(!groundMetrics.campusPavers||groundMetrics.campusPavers.uniqueColors>3||groundMetrics.campusPavers.meanLightness<0.7||groundMetrics.campusPavers.cardinalPixelCount!==0)errs.push('Season One campus pavers violate the quiet-ground palette contract');
   for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
     if((world.coverage?.groundFamilyCounts?.[family]||0)<47)errs.push(`Season One world transition family ${family} is incomplete`);
   }
@@ -127,12 +130,14 @@ else{
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==9)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==10)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==metatileBuild.atlas.sha256)errs.push('Camp metatile atlas is missing or stale');
   if(metatileBuild.atlas.visualCount!==metatileBuild.atlas.entries?.length)errs.push('Camp metatile visual catalog is incomplete');
+  if(metatileBuild.groundSystem?.primaryMaterial!=='brick'||metatileBuild.groundSystem?.connectedComponentCount!==1||metatileBuild.groundSystem?.anchorCount!==5||metatileBuild.groundSystem?.rawCutCount!==0||metatileBuild.groundSystem?.transitionFamily!=='surface_brick')errs.push('Camp Randall ground system is not one connected, transition-safe authored grid');
+  if(!metatileBuild.visualHierarchyMetrics||metatileBuild.visualHierarchyMetrics.saturationDifference<=0||metatileBuild.visualHierarchyMetrics.ground?.meanSaturation>=metatileBuild.visualHierarchyMetrics.identityObjects?.meanSaturation)errs.push('Camp Randall ground is not visually quieter than its identity architecture');
   const terrainTiles=metatileBuild.terrain?.tiles||{};
   if(Object.keys(terrainTiles).length<500||metatileBuild.terrain?.catalog?.length!==Object.keys(terrainTiles).length)errs.push('Camp metatile ground catalog did not merge the Season One authoring kit');
   for(const required of ['grass','brick','dirt','stone','water','asphalt'])if(!Object.hasOwn(terrainTiles,required))errs.push(`Camp metatile ground catalog is missing ${required}`);

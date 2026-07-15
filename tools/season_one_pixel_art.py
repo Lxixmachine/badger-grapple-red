@@ -24,12 +24,12 @@ _SOURCE_CACHE: dict[tuple[str, str], Image.Image] = {}
 PALETTE = {
     "outline": (43, 50, 42, 255),
     "outline_soft": (64, 70, 55, 255),
-    "grass": (105, 165, 78, 255),
-    "grass_light": (134, 186, 88, 255),
-    "grass_dark": (75, 130, 65, 255),
-    "grass_shadow": (57, 105, 59, 255),
-    "mowed": (119, 173, 75, 255),
-    "mowed_light": (143, 190, 86, 255),
+    "grass": (138, 201, 165, 255),
+    "grass_light": (177, 223, 195, 255),
+    "grass_dark": (101, 180, 140, 255),
+    "grass_shadow": (63, 132, 106, 255),
+    "mowed": (145, 198, 143, 255),
+    "mowed_light": (178, 217, 173, 255),
     "dirt": (213, 187, 127, 255),
     "dirt_light": (235, 211, 155, 255),
     "dirt_dark": (169, 133, 84, 255),
@@ -37,6 +37,9 @@ PALETTE = {
     "brick_light": (205, 91, 71, 255),
     "brick_dark": (112, 53, 51, 255),
     "mortar": (213, 154, 117, 255),
+    "paver": (222, 211, 181, 255),
+    "paver_light": (239, 231, 204, 255),
+    "paver_dark": (190, 178, 145, 255),
     "stone": (200, 194, 170, 255),
     "stone_light": (227, 219, 190, 255),
     "stone_dark": (143, 140, 127, 255),
@@ -149,7 +152,9 @@ def material_tile(name: str, phase: int = 0) -> Image.Image:
         "asphalt": "asphalt",
     }.get(name)
     if source_name:
-        return _phase_transform(source_asset("ground", source_name), phase)
+        source = source_asset("ground", source_name)
+        # Paver joints keep one phase so adjacent edge metatiles join exactly.
+        return source if name == "brick" else _phase_transform(source, phase)
     if name == "grass":
         image = canvas(fill=p["grass"])
         draw = ImageDraw.Draw(image)
@@ -180,20 +185,12 @@ def material_tile(name: str, phase: int = 0) -> Image.Image:
                 _dot(draw, min(15, x + 1), y, color)
         return image
     if name == "brick":
-        image = canvas(fill=p["brick"])
+        image = canvas(fill=p["paver"])
         draw = ImageDraw.Draw(image)
-        for y in (7, 15):
-            draw.line((0, y, 15, y), fill=p["brick_dark"])
-            if y > 0:
-                draw.line((0, y - 1, 15, y - 1), fill=p["mortar"])
-        for row, y in enumerate((0, 8)):
-            offset = 4 if (row + phase) % 2 else 0
-            for x in range(offset, 16, 8):
-                draw.line((x, y, x, y + 5), fill=p["brick_dark"])
-                if x < 15:
-                    _dot(draw, x + 1, y, p["brick_light"])
-        _dot(draw, 2 + phase % 3, 3, p["brick_light"], 2)
-        _dot(draw, 10, 11, p["brick_light"], 2)
+        draw.line((1, 7, 14, 7), fill=p["paver_dark"])
+        draw.line((1, 8, 14, 8), fill=p["paver_light"])
+        draw.line((7, 1, 7, 6), fill=p["paver_dark"])
+        draw.line((3, 9, 3, 14), fill=p["paver_dark"])
         return image
     if name in {"stone", "concrete"}:
         base = p["concrete"] if name == "concrete" else p["stone"]
@@ -268,7 +265,7 @@ class EdgeStyle:
 
 EDGE_STYLES = {
     "surface_dirt": EdgeStyle("grass", "dirt", (4, 4, 3, 3, 4, 5, 4, 3, 3, 4, 5, 4, 3, 3, 4, 4), None, PALETTE["dirt_dark"]),
-    "surface_brick": EdgeStyle("grass", "brick", (3,) * 16, PALETTE["curb"], PALETTE["brick_dark"]),
+    "surface_brick": EdgeStyle("grass", "brick", (3,) * 16, PALETTE["curb"], PALETTE["paver_dark"]),
     "surface_stone": EdgeStyle("grass", "stone", (3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3), PALETTE["stone_light"], PALETTE["stone_dark"]),
     "surface_sand": EdgeStyle("grass", "sand", (4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 5, 4, 3, 3, 4), None, PALETTE["sand_dark"]),
     "surface_gravel": EdgeStyle("grass", "gravel", (3, 4, 3, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 3, 4, 3), None, PALETTE["gravel_dark"]),

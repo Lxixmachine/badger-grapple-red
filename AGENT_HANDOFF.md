@@ -1,5 +1,38 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.8 Connected Ground)
+
+WP-V2 is code-complete, but remains visually open until Tony reviews it on
+his phone. Camp Randall now uses one connected 108-cell warm-limestone path
+network. It reaches the Stadium, Team Building, Coach Office, and both cells
+of the south route mouth. The metatile compiler flood-fills the path and fails
+on disconnected components, missing anchors, non-`surface_brick` cells, or raw
+cuts. SELECT exposes the same 32px behavior grid used by collision: green is
+walkable, red is solid, and gold is a warp. There is no independent demo mask.
+
+Ground materials are disciplined before atlas construction. Grass uses two
+colors with 3.9% stipple and mean lightness 0.6623; campus pavers use three
+colors, mean lightness 0.7809, and zero cardinal pixels. Cardinal remains on
+identity objects. Locker-room wood and Coach Office carpet now use quiet,
+fixed-ramp patterns. Map Studio calls the primary material "Warm Campus
+Pavers" and still authors the underlying `brick` behavior id for compatibility.
+
+The build gate enforces these facts. Current authority is world tileset v4,
+Camp production v2, Camp metatiles v10, and app v22.8. PNG output now uses one
+fixed encoder contract rather than adaptive optimization; two full rebuilds of
+74 generated artifacts produced the same aggregate SHA-256. `npm run build`,
+`npm run balance`, `npm run lint-maps`, and all 91 Chromium tests pass. The
+validator passes every owned check and stops only on Tony's pre-existing dirty
+State Street composition draft. Do not regenerate, stage, or revert these
+unrelated files:
+
+- `art/imagegen/validation/world_downtown_ownership_overlay.png`
+- `art/imagegen/world_composition_manifest.json`
+- `public/assets/ui/area_downtown.png`
+- `src/data/worldCompositionBuild.json`
+- `art/imagegen/state_street_full_v2_2026-07-11.png`
+- `art/imagegen/state_street_full_v2_2026-07-11.prompt.md`
+
 ## Latest Claude Turn (VISUAL_PARITY_PLAN.md — diagnosis ratified; WP-V1 landed mid-flight)
 
 Tony, after v21.85: "I'm struggling because our visuals are not

@@ -7,8 +7,10 @@ never infer or mutate a tile from its neighbours.
 
 from __future__ import annotations
 
+import colorsys
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont, ImageOps
@@ -38,9 +40,9 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v3.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v4.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v3"
-GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v4"
+GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v5"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
 SEAM_PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_tileset_seam_test.png"
 
@@ -57,14 +59,34 @@ def public_path(path: Path) -> str:
     return "./" + path.relative_to(ROOT / "public").as_posix()
 
 
+def material_metrics(image: Image.Image) -> dict:
+    pixels = list(image.convert("RGB").get_flattened_data())
+    counts = Counter(pixels)
+    total = len(pixels)
+    saturation_sum = 0.0
+    lightness_sum = 0.0
+    cardinal_pixels = 0
+    for (red, green, blue), count in counts.items():
+        hue, lightness, saturation = colorsys.rgb_to_hls(red / 255, green / 255, blue / 255)
+        saturation_sum += saturation * count
+        lightness_sum += lightness * count
+        degrees = hue * 360
+        if saturation >= 0.35 and (degrees <= 15 or degrees >= 345):
+            cardinal_pixels += count
+    dominant = max(counts.values())
+    return {
+        "uniqueColors": len(counts),
+        "dominantCoverage": round(dominant / total, 4),
+        "meanSaturation": round(saturation_sum / total, 4),
+        "meanLightness": round(lightness_sum / total, 4),
+        "cardinalPixelCount": cardinal_pixels,
+    }
+
+
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     normalized = image.convert("RGBA")
-    if path.exists():
-        current = Image.open(path).convert("RGBA")
-        if current.size == normalized.size and current.tobytes() == normalized.tobytes():
-            return
-    normalized.save(path, optimize=True)
+    normalized.save(path, format="PNG", optimize=False, compress_level=9)
 
 
 def texture_from_crop(source: Image.Image, box: list[int], size: tuple[int, int], phase: int = 0) -> Image.Image:
@@ -432,7 +454,7 @@ def build() -> dict:
     add_ground("grass_c", "Grass C", "grass", grass_c, ["base", "natural", "variation"])
     add_ground("mowed_grass", "Mowed Grass", "lawn_mowed", mowed, ["base", "campus", "maintained"])
     add_ground("mowed_grass_b", "Mowed Grass B", "lawn_mowed", mowed_b, ["base", "campus", "maintained", "variation"])
-    add_ground("brick", "Brick", "path_brick", brick, ["base", "paving"])
+    add_ground("brick", "Warm Campus Pavers", "path_brick", brick, ["base", "paving", "quiet-ground"])
     add_ground("stone", "Stone", "path_stone", stone, ["base", "paving"])
     add_ground("concrete", "Concrete", "sidewalks", concrete, ["base", "paving", "urban"])
     add_ground("dirt", "Dirt", "path_dirt", dirt, ["base", "natural"])
@@ -441,6 +463,21 @@ def build() -> dict:
     add_ground("water", "Open Water", "water", water, ["base", "water"], "water")
     add_ground("asphalt", "Asphalt", "roads", asphalt, ["base", "road"])
     add_ground("asphalt_b", "Asphalt B", "roads", export_2x(material_tile("asphalt", 1)), ["base", "road", "variation"])
+
+    ground_material_metrics = {
+        "grass": material_metrics(material_tile("grass")),
+        "mowedGrass": material_metrics(material_tile("mowed_grass")),
+        "campusPavers": material_metrics(material_tile("brick")),
+    }
+    if ground_material_metrics["grass"]["uniqueColors"] > 2:
+        raise SystemExit("Grass must be a two-color quiet field")
+    if ground_material_metrics["grass"]["dominantCoverage"] < 0.95:
+        raise SystemExit("Grass stipple exceeds the five-percent visual budget")
+    paver_metrics = ground_material_metrics["campusPavers"]
+    if paver_metrics["uniqueColors"] > 3 or paver_metrics["meanLightness"] < 0.70:
+        raise SystemExit("Campus pavers must remain a pale three-color material")
+    if paver_metrics["cardinalPixelCount"]:
+        raise SystemExit("Cardinal red is reserved for identity objects, not ground")
 
     for overlay in manifest["groundOverlays"]:
         add_ground(
@@ -904,6 +941,7 @@ def build() -> dict:
         "preparedImagegenAssetCount": len(prepared_sources["assets"]),
         "exactNearestNeighborVisualCount": len(visuals),
         "logicalCellSize": LOGICAL_CELL,
+        "groundMaterialMetrics": ground_material_metrics,
         "contractSatisfied": True,
     }
 
@@ -1021,9 +1059,9 @@ def build() -> dict:
     save_png(preview, PREVIEW_PATH)
 
     result = {
-        "schema": "badger-grapple-world-tileset/v3",
-        "version": 3,
-        "status": "season-one-authored-pixel-kit",
+        "schema": "badger-grapple-world-tileset/v4",
+        "version": 4,
+        "status": "season-one-quiet-ground-pixel-kit",
         "cellSize": cell,
         "artPipeline": {
             "logicalCellSize": LOGICAL_CELL,

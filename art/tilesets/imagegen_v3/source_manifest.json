@@ -45,8 +45,8 @@
       "path": "art/tilesets/imagegen_v3/ground/grass.png",
       "width": 16,
       "height": 16,
-      "colors": 16,
-      "sha256": "7129896d817e4de1aa0f58280037c67b5c29d4bbd66d23850c34194f12991772",
+      "colors": 2,
+      "sha256": "53e7f3f04fe883c819701f6f6049cef1b30e75449ac0568abe1372c219b6b594",
       "sourcePanel": 0
     },
     "mowed_grass": {
@@ -54,8 +54,8 @@
       "path": "art/tilesets/imagegen_v3/ground/mowed_grass.png",
       "width": 16,
       "height": 16,
-      "colors": 16,
-      "sha256": "a9f00215df919645d66ade88d1f9063127ffdbb2e98dea623d9b6608520c387a",
+      "colors": 2,
+      "sha256": "c07e610aa4c758a2fdc94ded1173c0f3a4f3f80655fa530073b9536dca1f24b4",
       "sourcePanel": 1
     },
     "dirt": {
@@ -72,8 +72,8 @@
       "path": "art/tilesets/imagegen_v3/ground/brick.png",
       "width": 16,
       "height": 16,
-      "colors": 16,
-      "sha256": "6257fcd22ff986fb40e4ba82ed160bdbfe9d01c9e3b42eff0fe03c39a4a47a13",
+      "colors": 3,
+      "sha256": "22e8b4b2d475f60b08d5a073a7b3fa00e1727751af960d18ce7470f0b82eb0d7",
       "sourcePanel": 3
     },
     "stone": {
@@ -127,7 +127,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "08610424f4056880ab8c2e6a54e3737c44e11914ed65bda18c71430383872f98",
+      "sha256": "a655cb25fdc94d34fb9488354898bc769ca9977228c269011d297c432175b2db",
       "sourcePanel": 0
     },
     "tree_oak_autumn": {
@@ -136,7 +136,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "201ab36ccb466854bf32e9d4f28701bf56a2721fc99f42c97ed4478b16f1f094",
+      "sha256": "0d84b9091c9242461651cefed850157636c3eb00997f795bcc31d32275bebf36",
       "sourcePanel": 1
     },
     "tree_pine": {
@@ -145,7 +145,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "9a1bc83bfb05945102feb288178002c75e487e88e8748cdb3d2c2614251daad9",
+      "sha256": "3f69f41951289d253965ecbb10135efc16457b001ca7a7ae5b5c1b2a6d8d2d14",
       "sourcePanel": 2
     },
     "tree_ornamental": {
@@ -154,7 +154,7 @@
       "width": 16,
       "height": 32,
       "colors": 24,
-      "sha256": "e08469f4425b0d4202f1c3c3719cd1945569ea600ad726c09babbf0fcad95d26",
+      "sha256": "1aac0e21f98ec4e1bc0d4b45753eec7c6cee15d16963dd09ac1a76ae86b3e818",
       "sourcePanel": 3
     },
     "forest_top": {
@@ -163,7 +163,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "ef7b5221d944317eebeea1e4f469871e880e0bdd246d1a8b7478be4db8497710",
+      "sha256": "47bcc3d7991d2d81c9953277af7bd267a2f3c1292b719c4f682f79e8b0594ada",
       "sourcePanel": 4
     },
     "forest_middle": {
@@ -172,7 +172,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "612ff618b1898d6afcd924b89747ebc30e52ec3dcf90198b32e9fe778052b3ba",
+      "sha256": "287a1ad648166318058b8e9ed752d08184bf287a2092262ef779be441c3e9037",
       "sourcePanel": 5
     },
     "forest_bottom": {
@@ -181,7 +181,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "67c0aee784fc2ba39b960a0120a3357a522168e15fd3f56874838354cd7b5a40",
+      "sha256": "42cd48ddea6ca59e42280fcf46a4861e8c6a4f9c6ccdf877dcf7124ac1f28c15",
       "sourcePanel": 6
     },
     "forest_corner": {
@@ -190,7 +190,7 @@
       "width": 32,
       "height": 48,
       "colors": 24,
-      "sha256": "641858b4542386eab23e92f908714688c39e3892e22892dcf506f20485b3d350",
+      "sha256": "94cd59f13f413abb75a7e9bf6db270063a6db0624a877080690b0649f28f2dad",
       "sourcePanel": 7
     },
     "hedge_horizontal": {
@@ -199,7 +199,7 @@
       "width": 48,
       "height": 16,
       "colors": 20,
-      "sha256": "3f87b472f832312053af9fa318fcc2e0979843cd691d4020bf4118d3bf370320",
+      "sha256": "78b182e2e2fa7895b277e9d00ef37f81a2231f0f708cb67326e3aa89e2cfe454",
       "sourcePanel": 8
     },
     "shrub_flowering": {
@@ -208,7 +208,7 @@
       "width": 16,
       "height": 16,
       "colors": 20,
-      "sha256": "db98acebf7e72ae7672e7f28e405aaa31b85424eda4a4d1437aab76e8d102070",
+      "sha256": "c3624e99e012a4e73bc2fb99e9df72aa4356a13ad9fc99a9addcaefcdc2e2c9a",
       "sourcePanel": 9
     },
     "rock_cluster": {
@@ -352,7 +352,7 @@
       "width": 80,
       "height": 64,
       "colors": 32,
-      "sha256": "6836e4c8b2c4579f31898aee5e90c58ac1c6e1759085c5b2299380aa08b1aa88",
+      "sha256": "f21541f6f1ab32c5c7c51dee8eaf86a00bdab028acb7cb0eefc53096e903d8bb",
       "sourcePanel": 1
     },
     "campus_lamp": {
@@ -415,7 +415,7 @@
       "width": 48,
       "height": 16,
       "colors": 18,
-      "sha256": "31910991dab56d41111f11fa83efc7569158072832a85341ecf904b2ccba0ed4",
+      "sha256": "46571f7a29cfade5ee7c382bed986ee6921aca15904fde767ef0c44fe240114a",
       "sourcePanel": 6
     },
     "trash_can": {
@@ -478,7 +478,7 @@
       "width": 48,
       "height": 48,
       "colors": 28,
-      "sha256": "522f97b90c9f8199fb8cbb7b7caa0c4e5a16734fdb00f5ac7ac4c78ecd216275",
+      "sha256": "40c62320658abacdaf1e3ae4e94d5ab9ee5e654775b3002b489f8ec420f52615",
       "sourcePanel": 1
     },
     "kayak_rack": {
@@ -532,7 +532,7 @@
       "width": 48,
       "height": 32,
       "colors": 28,
-      "sha256": "fa83580f160410d03a266f74f4421a7dc667e41f2365c73dbfda425787c236d2",
+      "sha256": "9e0a507a72bb4eded75c4715a3ae28703b86fe84f013df682291b99df9c4ae5c",
       "sourcePanel": 7
     },
     "airport_gate_desk": {
@@ -604,7 +604,7 @@
       "width": 144,
       "height": 112,
       "colors": 32,
-      "sha256": "7a670c0289244226f222729c216838a8dc900f2bb0f301ef9b91026ff4b2c5dc",
+      "sha256": "d075a7248c58e9c0bb6d2c07624fd884cf6afaeccad11918d79b8a5c5759cc44",
       "sourcePanel": 3
     },
     "dirt_edge": {
@@ -685,7 +685,7 @@
       "width": 48,
       "height": 32,
       "colors": 23,
-      "sha256": "3a998c95daf488198a4462db4fc6b980d70e88cac71ac26367f7836a43c60810",
+      "sha256": "437cc09c5a6fcf1082c93d8aa5862d1789c618c253017adb52566b009cde1f75",
       "sourcePanel": 8
     },
     "cliff_corner": {
@@ -739,7 +739,7 @@
       "width": 224,
       "height": 128,
       "colors": 40,
-      "sha256": "bb98324280356eebdb608c98d4ef8433d318b70088038d25c397f25d62ff0e42",
+      "sha256": "7ccb51bce9924631ab760b24043b7dbd0ffba00fe9b3c1f7606dd0732fe1e570",
       "sourceFile": "season_one_nationals_arena_source_v1.png"
     },
     "bascom_hall_exterior": {
@@ -748,7 +748,7 @@
       "width": 160,
       "height": 80,
       "colors": 32,
-      "sha256": "2e68883ebab44b5e4d08651bd5a5134d4b4f98ac98ad98eabc7b9a67b56ce27a",
+      "sha256": "e84e817965b0f07ef5d79fd062c12ed72355c5210022c7ab344afd28949793f5",
       "sourceFile": "season_one_bascom_hall_source_v1.png"
     },
     "wisconsin_capitol_exterior": {
@@ -757,7 +757,7 @@
       "width": 192,
       "height": 128,
       "colors": 40,
-      "sha256": "8660b5dc09fc314f5a6b1a89e492e70d318b66fa0715a354832b59654d974dd7",
+      "sha256": "975653f0791f6a614dae0f71dfc5ee4cf4d951d5b6a88b5e0f6b1ea9a4940f55",
       "sourceFile": "season_one_wisconsin_capitol_source_v1.png"
     },
     "brittingham_boats_exterior": {
@@ -775,7 +775,7 @@
       "width": 160,
       "height": 128,
       "colors": 36,
-      "sha256": "e4b01583ab73af22d06699039da72d29f6b1e3ed8bb650621cb071fe10d2a0bc",
+      "sha256": "032c776f4c38d30c5e8db669949565043280df2bdbe572dfb7fea3e983ee0003",
       "sourceFile": "season_one_gateway_arch_source_v1.png"
     },
     "equipment_annex_exterior": {
@@ -784,7 +784,7 @@
       "width": 112,
       "height": 80,
       "colors": 36,
-      "sha256": "75736c89dba7e8aac58808f79f6f655d07506e17ae97f3f8f4ab59fa06cea4e9",
+      "sha256": "1d4931ef8e85f18e64f43d4eb560ed6100541b6db2dae68bab091c1e7d704329",
       "sourceFile": "equipment_annex_source_v1.png"
     },
     "campus_housing_exterior": {
@@ -793,7 +793,7 @@
       "width": 128,
       "height": 64,
       "colors": 36,
-      "sha256": "7765110dbcae414309570de722f81d9dfefa6e20c46c990ed3200944b4a36cf0",
+      "sha256": "aaf6cd0e17092622afa5cca20fc73ca5d55cafcd1dbfd1d16b02cdbf94d3eb35",
       "sourceFile": "campus_housing_source_v1.png"
     },
     "bookstore_row_exterior": {
@@ -865,7 +865,7 @@
       "width": 112,
       "height": 64,
       "colors": 40,
-      "sha256": "cf20b5e7621bacd40237d0027567046a6fb7af8cc10aa387658dc0f6b508ee6c",
+      "sha256": "5f5566f6ff4293dc50a2cab7c4b33eba7698e54867bdac7f554742a02279a8f1",
       "sourceFile": "riverfront_hotel_source_v1.png"
     },
     "state_facade_11x5": {

@@ -8,8 +8,10 @@ full-cell tile. Edge and corner art must be authored as explicit tiles.
 
 from __future__ import annotations
 
+import colorsys
 import hashlib
 import json
+from collections import deque
 from pathlib import Path
 
 from PIL import Image
@@ -27,13 +29,14 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v9.png"
-GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v3.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v10.png"
+GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v4.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
 WORLD_BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
 ATLAS_COLUMNS = 16
 MATERIALS = ("brick", "stone", "dirt")
+IDENTITY_OBJECT_IDS = {"camp_randall_stadium", "team_building", "coach_office"}
 
 
 def load_json(path: Path) -> dict:
@@ -50,11 +53,22 @@ def public_path(path: Path) -> str:
 
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    if path.exists():
-        current = Image.open(path).convert(image.mode)
-        if current.size == image.size and current.tobytes() == image.tobytes():
-            return
-    image.save(path, optimize=True)
+    image.save(path, format="PNG", optimize=False, compress_level=9)
+
+
+def saturation_metric(images: list[Image.Image]) -> dict:
+    saturation = 0.0
+    pixel_count = 0
+    for image in images:
+        for red, green, blue, alpha in image.convert("RGBA").get_flattened_data():
+            if alpha < 128:
+                continue
+            saturation += colorsys.rgb_to_hls(red / 255, green / 255, blue / 255)[2]
+            pixel_count += 1
+    return {
+        "meanSaturation": round(saturation / max(pixel_count, 1), 4),
+        "opaquePixelCount": pixel_count,
+    }
 
 
 def owner_by_id(layout: dict, entry: dict) -> dict:
@@ -176,6 +190,82 @@ def validate_path_clearance(layout: dict, rows: list[list[str]]) -> None:
                 f"{owner['id']}: terrain paths overlap structure cells {', '.join(covered)}; "
                 "approaches must begin south of the doorway"
             )
+
+
+def validate_ground_system(layout: dict, rows: list[list[str]]) -> dict:
+    """Prove Camp Randall has one connected, edge-authored circulation grid."""
+    materials = {path["material"] for path in layout.get("paths", [])}
+    if len(materials) != 1:
+        raise SystemExit(
+            f"{layout['displayName']}: expected one primary path material, found {sorted(materials)}"
+        )
+    material = next(iter(materials))
+    cells = {
+        (x, y)
+        for path in layout.get("paths", [])
+        for y in range(path["y"], path["y"] + path["height"])
+        for x in range(path["x"], path["x"] + path["width"])
+    }
+    if not cells:
+        raise SystemExit(f"{layout['displayName']}: circulation network is empty")
+
+    visited = {next(iter(cells))}
+    queue = deque(visited)
+    while queue:
+        x, y = queue.popleft()
+        for neighbor in ((x, y - 1), (x + 1, y), (x, y + 1), (x - 1, y)):
+            if neighbor in cells and neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+    if visited != cells:
+        raise SystemExit(
+            f"{layout['displayName']}: path network has {len(cells) - len(visited)} disconnected cells"
+        )
+
+    anchors: dict[str, tuple[int, int]] = {}
+    for owner in [*layout.get("buildings", []), *layout.get("landmarks", [])]:
+        door = owner.get("door")
+        if door:
+            anchors[f"door:{owner['id']}"] = (door["x"], door["y"] + 1)
+    width, height = layout["size"]["width"], layout["size"]["height"]
+    for connection in layout.get("connections", []):
+        edge = connection["edge"]
+        for offset in range(connection["span"]):
+            if edge == "south":
+                cell = (connection["start"] + offset, height - 1)
+            elif edge == "north":
+                cell = (connection["start"] + offset, 0)
+            elif edge == "east":
+                cell = (width - 1, connection["start"] + offset)
+            else:
+                cell = (0, connection["start"] + offset)
+            anchors[f"connection:{connection['to']}:{offset}"] = cell
+    missing_anchors = {name: cell for name, cell in anchors.items() if cell not in cells}
+    if missing_anchors:
+        details = ", ".join(f"{name}={cell[0]},{cell[1]}" for name, cell in missing_anchors.items())
+        raise SystemExit(f"{layout['displayName']}: circulation misses {details}")
+
+    family = {"brick": "surface_brick", "stone": "surface_stone", "dirt": "surface_dirt"}.get(material)
+    if not family:
+        raise SystemExit(f"{layout['displayName']}: unsupported primary path material {material}")
+    raw_cuts = {
+        (x, y): rows[y][x]
+        for x, y in cells
+        if not rows[y][x].startswith(f"{family}_blob_")
+    }
+    if raw_cuts:
+        details = ", ".join(f"{x},{y}={tile}" for (x, y), tile in sorted(raw_cuts.items())[:8])
+        raise SystemExit(f"{layout['displayName']}: path cells bypass edge grammar ({details})")
+
+    return {
+        "primaryMaterial": material,
+        "pathCellCount": len(cells),
+        "connectedComponentCount": 1,
+        "anchorCount": len(anchors),
+        "anchors": {name: {"x": cell[0], "y": cell[1]} for name, cell in anchors.items()},
+        "transitionFamily": family,
+        "rawCutCount": 0,
+    }
 
 
 def build() -> dict:
@@ -352,6 +442,7 @@ def build() -> dict:
             raise SystemExit(f"Camp terrain override references unavailable tiles {sorted(unavailable)}")
         terrain = override_terrain
     validate_path_clearance(layout, terrain)
+    ground_system = validate_ground_system(layout, terrain)
 
     def validate_cells(label: str, cells: list[list[str]], width: int, height: int) -> None:
         if len(cells) != height or any(len(row) != width for row in cells):
@@ -398,6 +489,15 @@ def build() -> dict:
                 continue
             index = terrain_tiles[material]
             preview.alpha_composite(visuals[index], (x * CELL, y * CELL))
+    ground_hierarchy = saturation_metric([preview])
+    identity_images = [
+        Image.open(ROOT / "public" / entry["path"].removeprefix("./")).convert("RGBA")
+        for entry in production["map"]["objects"]
+        if entry["id"] in IDENTITY_OBJECT_IDS
+    ]
+    identity_hierarchy = saturation_metric(identity_images)
+    if identity_hierarchy["meanSaturation"] <= ground_hierarchy["meanSaturation"]:
+        raise SystemExit("Camp Randall ground spends more saturation than its identity architecture")
     for object_entry in sorted(production["map"]["objects"], key=lambda entry: entry["depth"]):
         stamp = stamps[object_entry["id"]]
         for y, row in enumerate(stamp["cells"]):
@@ -430,8 +530,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 9,
-        "status": "season-one-map-atlas",
+        "version": 10,
+        "status": "season-one-connected-ground-atlas",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
         "atlas": {
@@ -459,6 +559,15 @@ def build() -> dict:
             "height": layout["size"]["height"],
             "ground": {"texture": "camp-metatile-ground", "path": public_path(ground_path)},
             "terrain": terrain,
+        },
+        "groundSystem": ground_system,
+        "groundMaterialMetrics": world["coverage"]["groundMaterialMetrics"],
+        "visualHierarchyMetrics": {
+            "ground": ground_hierarchy,
+            "identityObjects": identity_hierarchy,
+            "saturationDifference": round(
+                identity_hierarchy["meanSaturation"] - ground_hierarchy["meanSaturation"], 4
+            ),
         },
         "sources": {
             "layout": sha256(LAYOUT_PATH),

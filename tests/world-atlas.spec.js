@@ -67,7 +67,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
     tilePos: {x: 23, y: 29},
     atlas: {
       mode: 'map', mapId: 'camp_randall', mapWidth: 48, mapHeight: 31,
-      metatileVersion: 9, metatilePlacementCount: 42
+      metatileVersion: 10, metatilePlacementCount: 42
     }
   });
   expect((await state(page)).atlas.metatileRenderCount).toBeGreaterThan(200);
@@ -84,7 +84,7 @@ test('Camp Randall runtime collision comes from the rendered metatiles', async (
   await openAtlas(page, '&play=1&area=camp_randall&x=10&y=24&facing=right');
   await expect.poll(async () => (await state(page)).passable.right).toBe(false);
   const camp = await state(page);
-  expect(camp.atlas).toMatchObject({metatileVersion: 9, metatilePlacementCount: 42});
+  expect(camp.atlas).toMatchObject({metatileVersion: 10, metatilePlacementCount: 42});
   expect(camp.atlas.metatileRenderCount).toBeGreaterThan(200);
   expect(issues).toEqual([]);
 });
