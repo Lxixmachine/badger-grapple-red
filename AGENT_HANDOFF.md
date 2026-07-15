@@ -1,5 +1,29 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.9 Named Roster)
+
+Wrestlers now support FireRed-length nicknames as persistent save data. The
+starter choice and every successful recruit offer an optional YES/NO naming
+prompt, while START on a Travel Lineup summary or Team Locker entry renames an
+existing teammate. Names are sanitized to ten characters and appear in the
+lineup, summary, battle HUD, commands, recovery, experience, development, and
+move-learning text; the Roster Book continues to identify the underlying
+wrestler species. The phone controls route START independently from MENU.
+
+Battle facing is now an explicit roster contract instead of a blanket flip.
+All enemy front sprites stay authored toward the lower-left player position;
+the eight rear assets that were authored toward screen-left are flipped only
+when drawn on the player side. Tests assert both the complete facing table and
+the live player/enemy sprite state.
+
+Final phone-sized browser QA exposed a render-order issue hidden by state-only
+tests: NamingScene was active but behind the still-running overworld when
+launched from the overlay menu. MenuScene now promotes NamingScene, and the
+return scene is promoted in the same way. The tested live flow is Travel Lineup
+-> summary -> START -> YES -> type `ACE` -> ENTER -> Travel Lineup displaying
+`ACE`. Browser logs were clean. `npm run build` and all 94 Chromium tests pass.
+The pre-existing State Street draft listed below remains untouched.
+
 ## Latest Codex Turn (v22.8 Connected Ground)
 
 WP-V2 is code-complete, but remains visually open until Tony reviews it on

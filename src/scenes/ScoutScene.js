@@ -25,6 +25,7 @@ export class ScoutScene extends Phaser.Scene{
     this.mode='main';
     this.note='';
     this.result='';
+    this.pendingNickname=null;
     this.tempInterest=Phaser.Math.Between(45,88);
     this.cameras.main.setBackgroundColor('#1b1d21');
     this.input.keyboard.on('keydown-UP',()=>this.move(-1));
@@ -164,8 +165,8 @@ export class ScoutScene extends Phaser.Scene{
     this.add.text(160,175,msg,{fontFamily:FONT,fontSize:10,color:'#fff2c7',fontStyle:'bold'}).setOrigin(.5,0);
   }
 
-  move(d){const count=this.mode==='singlet'?SINGLET_OPTS.length:MAIN_OPTS.length;this.sel=Phaser.Math.Wrap(this.sel+d,0,count);this.note='';this.render();}
-  choose(){if(this.mode==='singlet'){const key=SINGLET_OPTS[this.sel];if(key==='back'){this.mode='main';this.sel=0;return this.render();}return this.tryRecruit(key);}if(this.sel===0){if(!this.state.flags?.recruitingUnlocked){this.note='Coach has not issued the Roster Book yet.';return this.render();}this.mode='singlet';this.sel=0;return this.render();}if(this.sel===1)return this.battle();this.leave();}
+  move(d){if(this.mode==='obtained')return;const count=this.mode==='singlet'?SINGLET_OPTS.length:MAIN_OPTS.length;this.sel=Phaser.Math.Wrap(this.sel+d,0,count);this.note='';this.render();}
+  choose(){if(this.mode==='obtained')return this.leave();if(this.mode==='singlet'){const key=SINGLET_OPTS[this.sel];if(key==='back'){this.mode='main';this.sel=0;return this.render();}return this.tryRecruit(key);}if(this.sel===0){if(!this.state.flags?.recruitingUnlocked){this.note='Coach has not issued the Roster Book yet.';return this.render();}this.mode='singlet';this.sel=0;return this.render();}if(this.sel===1)return this.battle();this.leave();}
   battle(){this.state.dex.seen[this.id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;saveState(this.state);this.scene.start('BattleScene',{enemyId:this.id,enemyLevel:this.lvl,enemyMon:this.prospect,battleType:'wild'});}
 
   tryRecruit(singletKey){
@@ -176,6 +177,7 @@ export class ScoutScene extends Phaser.Scene{
     if(result.reason==='empty'){this.note=`No ${ITEM_DEFS[singletKey].short.toLowerCase()} singlets.`;return this.render();}
     if(result.reason==='elite'){this.note='Committed wrestlers cannot be recruited.';return this.render();}
     if(result.success){
+      this.pendingNickname={container:result.destination,index:this.state[result.destination].indexOf(result.recruit),targetId:result.recruit.id};
       this.state.message=`${r.name} joined the room!`;
       if((Object.keys(this.state.dex.caught||{}).filter(k=>this.state.dex.caught[k]).length)>=2){
         this.state.objective={id:'first_recruit_done',stage:2,complete:true};
@@ -192,6 +194,7 @@ export class ScoutScene extends Phaser.Scene{
 
   obtainAnim(msg){
     this.children.removeAll();
+    this.mode='obtained';
     this.cameras.main.flash(160,255,255,255);
     uiBox(this,24,68,272,88);
     this.add.text(160,88,'RECRUIT OBTAINED',{fontFamily:FONT,fontSize:13,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);
@@ -202,6 +205,6 @@ export class ScoutScene extends Phaser.Scene{
     this.sel=2;
   }
 
-  leave(){this.scene.start('OverworldScene');}
+  leave(){if(this.pendingNickname){this.scene.start('NamingScene',{target:this.pendingNickname,next:{scene:'OverworldScene'}});return;}this.scene.start('OverworldScene');}
   handleVirtualButton(k){if(k==='left'||k==='up')this.move(-1);if(k==='right'||k==='down')this.move(1);if(k==='a')this.choose();if(k==='b')this.leave();}
 }

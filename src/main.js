@@ -4,6 +4,7 @@ import {BootScene} from './scenes/BootScene.js';
 import {TitleScene} from './scenes/TitleScene.js';
 import {IntroScene} from './scenes/IntroScene.js';
 import {StarterScene} from './scenes/StarterScene.js';
+import {NamingScene} from './scenes/NamingScene.js';
 import {OpeningRecoveryScene} from './scenes/OpeningRecoveryScene.js';
 import {SeasonOneOverworldScene} from './scenes/SeasonOneOverworldScene.js';
 import {ScoutScene} from './scenes/ScoutScene.js';
@@ -43,7 +44,7 @@ const modernMode = sliceMode || atlasMode || campDemoMode;
 const heldInputMode = true;
 const width = 480;
 const height = 320;
-const productScenes = [BootScene, TitleScene, IntroScene, StarterScene, OpeningRecoveryScene, SeasonOneOverworldScene, ScoutScene, BattleScene, MenuScene];
+const productScenes = [BootScene, TitleScene, IntroScene, StarterScene, NamingScene, OpeningRecoveryScene, SeasonOneOverworldScene, ScoutScene, BattleScene, MenuScene];
 const scenes = atlasMode
   ? [WorldAtlasScene]
   : sliceMode
@@ -57,7 +58,7 @@ if (modernMode) {
     : atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
   if (note) note.textContent = campDemoMode
-    ? 'v22.8 Connected Ground'
+    ? 'v22.9 Named Roster'
     : atlasMode ? 'v21.75 Building Art Pack' : 'v21.63 Scale Slice';
 }
 
@@ -89,7 +90,7 @@ try {
   window.BADGER_VERSION = atlasMode
     ? '21.75-building-art-pack'
     : sliceMode ? '21.63-scale-slice'
-      : '22.8-connected-ground';
+      : '22.9-named-roster';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;
@@ -99,6 +100,7 @@ function routeVirtualButton(key, phase = 'press') {
   const priority = [
     'WorldAtlasScene',
     'VisualSliceScene',
+    'NamingScene',
     'MenuScene',
     'BattleScene',
     'ScoutScene',

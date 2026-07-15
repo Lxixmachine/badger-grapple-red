@@ -219,7 +219,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     if (phase === 'up') return;
     if (key === 'a') this.interact();
     else if (key === 'b') this.messageOpen ? this.closeMessage() : null;
-    else if (key === 'menu') this.openMenu();
+    else if (key === 'menu' || key === 'start') this.openMenu();
     else if (key === 'select' && this.demoMode) this.toggleGridOverlay();
     else if (key === 'save') this.savePosition('Game saved.');
   }

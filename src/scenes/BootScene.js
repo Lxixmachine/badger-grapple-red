@@ -5,7 +5,7 @@ import {NPC_LOOKS} from '../data/npcLooks.js';
 import {preloadSeasonOneAssets, SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
 import {makeMon, ROSTER} from '../data/roster.js';
 const Phaser = window.Phaser;
-const V='267';
+const V='268';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){

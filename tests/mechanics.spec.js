@@ -1,7 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
-import {ROSTER,addXp,allMovesSpent,battleAssetFor,battleTextureFor,counterStarterFor,currentMoveStamina,makeMon,personaFor,restoreMoveStamina,scaledStats,xpNeed} from '../src/data/roster.js';
+import {BATTLE_BACK_FLIP_IDS,ROSTER,addXp,allMovesSpent,battleAssetFor,battleFlipXFor,battleTextureFor,counterStarterFor,currentMoveStamina,makeMon,normalizeWrestlerNickname,personaFor,restoreMoveStamina,scaledStats,setWrestlerNickname,wrestlerName,xpNeed} from '../src/data/roster.js';
 import {calculateStat,effortTotal,MAX_TOTAL_EFFORT,potentialFor,STAT_KEYS} from '../src/data/stats.js';
 import {defaultState,defeatedWrestlerCount,normalizeState,rosterBookComplete} from '../src/systems/save.js';
 import {
@@ -55,10 +55,27 @@ test('every roster entry owns a unique front and back battle identity',()=>{
     expect(battleAssetFor(record.id)).toBe(record.id);
     expect(battleTextureFor(record.id)).toBe(`battle_${record.id}`);
     expect(battleTextureFor(record.id,true)).toBe(`battle_${record.id}_back`);
+    expect(battleFlipXFor(record.id)).toBe(false);
+    expect(battleFlipXFor(record.id,true)).toBe(BATTLE_BACK_FLIP_IDS.includes(record.id));
     expect(personaFor(record.id)).toBe(record.spirit);
   }
   expect(personaFor('professor')).toBe('Snapping Turtle');
   expect(personaFor('closer')).toBe('Wolverine');
+});
+
+test('wrestler nicknames are FireRed-length, save-safe, and override species labels',()=>{
+  const wrestler=makeMon('buckshot',6);
+  expect(wrestlerName(wrestler)).toBe('Bucky Shotmaker');
+  expect(wrestlerName(wrestler,{short:true})).toBe('Bucky');
+  expect(normalizeWrestlerNickname("  CAPTAIN!!!  ")).toBe('CAPTAIN');
+  expect(setWrestlerNickname(wrestler,'MAT LEGEND 12')).toBe('MAT LEGEND');
+  expect(wrestler.nickname).toBe('MAT LEGEND');
+  expect(wrestlerName(wrestler,{short:true})).toBe('MAT LEGEND');
+  const state=normalizeState({party:[wrestler],box:[]});
+  expect(state.party[0].nickname).toBe('MAT LEGEND');
+  setWrestlerNickname(state.party[0],'');
+  expect(state.party[0].nickname).toBeUndefined();
+  expect(wrestlerName(state.party[0])).toBe('Bucky Shotmaker');
 });
 
 test('authored overworld characters use semantic generated identities',()=>{

@@ -13,7 +13,8 @@ export class StarterScene extends Phaser.Scene{
     this.story=!!data.story;
     this.returnArea=data.returnArea||'wrestling_room';
     this.returnPos=data.returnPos||{x:7,y:7};
-    this.phase='intro';this.sel=0;this.confirmSel=0;this.rivalPage=0;this.launching=false;
+    this.phase=data.resume==='rival'?'rival':'intro';this.sel=0;this.confirmSel=0;this.rivalPage=0;this.launching=false;
+    if(this.phase==='rival'){this.playerId=data.playerId;this.rivalId=data.rivalId;}
     this.cameras.main.setBackgroundColor('#111c2d');
     this.input.keyboard.on('keydown-LEFT',()=>this.move(-1,0));
     this.input.keyboard.on('keydown-RIGHT',()=>this.move(1,0));
@@ -59,9 +60,10 @@ export class StarterScene extends Phaser.Scene{
   }
   commitChoice(){
     this.playerId=STARTERS[this.sel];this.rivalId=counterStarterFor(this.playerId);
-    if(!this.story){chooseStarter(this.playerId);this.scene.start('OverworldScene');return;}
+    const target={container:'party',index:0,targetId:this.playerId};
+    if(!this.story){chooseStarter(this.playerId);this.scene.start('NamingScene',{target,next:{scene:'OverworldScene'}});return;}
     chooseStarter(this.playerId,{story:true,rivalId:this.rivalId,area:this.returnArea,pos:this.returnPos});
-    this.phase='rival';this.rivalPage=0;this.draw();
+    this.scene.start('NamingScene',{target,next:{scene:'StarterScene',data:{story:true,returnArea:this.returnArea,returnPos:this.returnPos,resume:'rival',playerId:this.playerId,rivalId:this.rivalId}}});
   }
   launchOpeningBattle(){
     this.launching=true;this.cameras.main.fadeOut(240,0,0,0);

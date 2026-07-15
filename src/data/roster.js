@@ -68,6 +68,32 @@ export const PERSONAS={badger:'Badger',neutral:'Grizzly',top:'Gorilla',scramble:
 export function personaFor(id){return (ROSTER[id]||ROSTER.buckshot).spirit||'Badger';}
 export function battleAssetFor(id){return (ROSTER[id]||ROSTER.buckshot).battleAsset;}
 export function battleTextureFor(id,back=false){return `battle_${battleAssetFor(id)}${back?'_back':''}`;}
+// Imagegen kept these rear poses looking toward screen-left. The player owns
+// the lower-left battle position, so its back sprite must look screen-right.
+export const BATTLE_BACK_FLIP_IDS=Object.freeze([
+  'matreturner','matgeneral','rideking',
+  'fieldflyer','funkflyer','scramblesaint',
+  'whizzkid','scrambleboss'
+]);
+const BATTLE_BACK_FLIPS=new Set(BATTLE_BACK_FLIP_IDS);
+export function battleFlipXFor(id,back=false){return !!back&&BATTLE_BACK_FLIPS.has(battleAssetFor(id));}
+export const MAX_WRESTLER_NICKNAME_LENGTH=10;
+export function normalizeWrestlerNickname(value){
+  if(typeof value!=='string')return '';
+  return value.replace(/[^A-Za-z0-9 .'-]/g,'').replace(/\s+/g,' ').trim().slice(0,MAX_WRESTLER_NICKNAME_LENGTH);
+}
+export function wrestlerName(mon,{short=false}={}){
+  const nickname=normalizeWrestlerNickname(mon?.nickname);
+  if(nickname)return nickname;
+  const species=(ROSTER[mon?.id]||ROSTER.buckshot).name;
+  return short?species.split(' ')[0]:species;
+}
+export function setWrestlerNickname(mon,value){
+  if(!mon)return '';
+  const nickname=normalizeWrestlerNickname(value);
+  if(nickname)mon.nickname=nickname;else delete mon.nickname;
+  return nickname;
+}
 export const STARTERS=['buckshot','matreturner','fieldflyer'];
 export const STARTER_COUNTERS={buckshot:'fieldflyer',matreturner:'buckshot',fieldflyer:'matreturner'};
 export function counterStarterFor(id){return STARTER_COUNTERS[id]||STARTERS[1];}
@@ -97,8 +123,8 @@ export function xpNeed(m){
 }
 function tryLearnLevelMove(m,move,out){
   if(!MOVES[move]||m.moves.includes(move)||m.pendingMoves.includes(move))return;
-  if(m.moves.length<4){m.moves.push(move);syncMoveStamina(m);m.moveStamina[move]=moveStaminaMax(move);out.push(`${ROSTER[m.id].name} learned ${MOVES[move].name}!`);return;}
-  m.pendingMoves.push(move);out.push(`${ROSTER[m.id].name} wants to learn ${MOVES[move].name}!`);
+  if(m.moves.length<4){m.moves.push(move);syncMoveStamina(m);m.moveStamina[move]=moveStaminaMax(move);out.push(`${wrestlerName(m)} learned ${MOVES[move].name}!`);return;}
+  m.pendingMoves.push(move);out.push(`${wrestlerName(m)} wants to learn ${MOVES[move].name}!`);
 }
 export function resolvePendingMove(m,move,replaceIndex=null){
   const pendingIndex=m?.pendingMoves?.indexOf(move)??-1;
@@ -127,7 +153,7 @@ export function addXp(m,amt,{deferDevelopment=false}={}){
   m.xp=Math.max(experienceAtLevel(m.id,m.lvl),Math.floor(Number(m.xp)||0))+Math.max(0,Math.floor(Number(amt)||0));
   while(m.lvl<MAX_LEVEL&&m.xp>=experienceAtLevel(m.id,m.lvl+1)){
     const before=scaledStats(m.id,m.lvl,m),condition=m.hp;
-    const levelUpId=m.id,levelUpName=ROSTER[levelUpId].name;
+    const levelUpId=m.id,levelUpName=wrestlerName(m);
     m.lvl++;
     out.push(`${levelUpName} grew to Lv ${m.lvl}!`);
     movesLearnedAtLevel(levelUpId,m.lvl).forEach(move=>tryLearnLevelMove(m,move,out));

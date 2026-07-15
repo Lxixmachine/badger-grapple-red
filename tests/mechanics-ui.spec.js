@@ -85,6 +85,44 @@ test('Travel Lineup exposes both wrestler stat and technique summary pages',asyn
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
 });
 
+test('Travel Lineup naming persists a nickname and battle HUD uses it',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],box:[],active:0,items:{},badges:[],
+    flags:{introDone:true,assignment:true},stats:{}
+  },'/?test=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  await page.evaluate(()=>window.__badgerTest.startMenu({tab:'team'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
+  await press(page,'a');
+  await press(page,'start');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene'))).toMatchObject({active:true,phase:'confirm',confirmSelected:0});
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys().at(-1))).toBe('NamingScene');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene').phase)).toBe('naming');
+  await page.keyboard.type('ACE');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene').nameDraft)).toBe('ACE');
+  await page.keyboard.press('Enter');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].nickname)).toBe('ACE');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  const labels=await page.evaluate(()=>window.badgerGame.scene.getScene('BattleScene').children.list.filter(child=>child.type==='Text').map(child=>child.text));
+  expect(labels).toContain('ACE');
+  expect(labels).toContain('ACE do?');
+});
+
+test('rear-view sprite exceptions face the opponent from the player side',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler('fieldflyer',8)],active:0,box:[],items:{},badges:[],
+    dex:{seen:{},caught:{fieldflyer:true}},flags:{introDone:true,assignment:true},stats:{}
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'scrambleboss',enemyLevel:8,battleType:'trainer'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battleSprites)).toMatchObject({
+    playerTexture:'battle_fieldflyer_back',playerFlipX:true,
+    enemyTexture:'battle_scrambleboss',enemyFlipX:false
+  });
+});
+
 test('Starter Singlet guarantees a recruit through the scouting UI',async({page})=>{
   await bootWithSave(page,{
     party:[legacyWrestler()],box:[],active:0,
@@ -99,6 +137,12 @@ test('Starter Singlet guarantees a recruit through the scouting UI',async({page}
   const save=await page.evaluate(()=>window.__badgerTest.storage());
   expect(save.items.starterSinglet).toBe(0);
   expect(save.party.some(mon=>mon.id==='drillpartner')).toBe(true);
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene'))).toMatchObject({active:true,phase:'confirm'});
+  await press(page,'a');
+  await page.keyboard.type('RUDY');
+  await page.keyboard.press('Enter');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party.find(mon=>mon.id==='drillpartner')?.nickname)).toBe('RUDY');
 });
 
 test('battle victory awards experience after runtime save normalization',async({page})=>{

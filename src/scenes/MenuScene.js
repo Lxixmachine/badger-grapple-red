@@ -1,4 +1,4 @@
-import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,currentMoveStamina,scaledStats,personaFor} from '../data/roster.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {experienceProgress} from '../data/experience.js';import {effortTotal,MAX_TOTAL_EFFORT,natureFor,STAT_LABELS} from '../data/stats.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,restoreTechniqueStamina,SHOP_STOCK,swapLockerWrestler,totalMoveStamina,totalMoveStaminaMax,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
+import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,currentMoveStamina,scaledStats,personaFor,wrestlerName} from '../data/roster.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {experienceProgress} from '../data/experience.js';import {effortTotal,MAX_TOTAL_EFFORT,natureFor,STAT_LABELS} from '../data/stats.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,restoreTechniqueStamina,SHOP_STOCK,swapLockerWrestler,totalMoveStamina,totalMoveStaminaMax,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
 import {fitLegacyViewport} from '../systems/legacyViewport.js';
 import seasonLayouts from '../data/seasonOneLayouts.json';
 const Phaser = window.Phaser;
@@ -25,8 +25,8 @@ function icon(scene,x,y,kind,active){
 }
 export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
-  create(data={}){fitLegacyViewport(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
-  handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='left')this.side(-1);if(k==='right')this.side(1);if(k==='a')this.choose();if(k==='b')this.back();}
+  create(data={}){fitLegacyViewport(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-N',()=>this.renameSelected());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
+  handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='left')this.side(-1);if(k==='right')this.side(1);if(k==='a')this.choose();if(k==='start')this.renameSelected();if(k==='b')this.back();}
   optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map'||this.tab==='summary')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 6;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
     this.children.removeAll();
@@ -91,7 +91,7 @@ export class MenuScene extends Phaser.Scene{
     uiBox(this,206,6,108,212);
     const l=lead(this.state),r=l?ROSTER[l.id]:null;
     if(r&&this.textures.exists('portrait_'+r.asset)){this.add.image(260,40,'portrait_'+r.asset).setScale(.3);}
-    this.add.text(260,69,l?r.name.split(' ')[0]:'No lead',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'}).setOrigin(.5);
+    this.add.text(260,69,l?wrestlerName(l,{short:true}):'No lead',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'}).setOrigin(.5);
     if(l)this.add.text(260,84,`Lv ${l.lvl}  ${personaFor(l.id)}`,{fontFamily:FONT,fontSize:10,color:'#444'}).setOrigin(.5);
     this.add.line(0,0,214,96,306,96,0xa58d65,.6).setOrigin(0);
     this.add.text(214,100,'BADGES',{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
@@ -143,7 +143,7 @@ export class MenuScene extends Phaser.Scene{
       const r=ROSTER[m.id],st=scaledStats(m.id,m.lvl,m),y=76+i*18,active=i===this.sel;
       if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.1);hi.fillRoundedRect(18,y-8,284,18,3);}
       if(this.textures.exists('portrait_'+r.asset))this.add.image(32,y+1,'portrait_'+r.asset).setScale(.13);
-      this.add.text(46,y-7,`${active?'▶':' '}${r.name.split(' ')[0]} L${m.lvl}${i===0?' ★':''}`,{fontFamily:FONT,fontSize:10,color:active?'#b41820':'#111',fontStyle:active?'bold':'normal'});
+      this.add.text(46,y-7,`${active?'▶':' '}${wrestlerName(m,{short:true})} L${m.lvl}${i===0?' ★':''}`,{fontFamily:FONT,fontSize:10,color:active?'#b41820':'#111',fontStyle:active?'bold':'normal'});
       this.add.text(137,y-7,'C',{fontFamily:FONT,fontSize:9,color:'#3a8a52',fontStyle:'bold'});
       hpBar(this,148,y-3,65,4,m.hp/st.hp,0x55b867);
       this.add.text(137,y+3,'XP',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});
@@ -186,10 +186,11 @@ export class MenuScene extends Phaser.Scene{
     this.add.line(0,0,18,35,302,35,0xa58d65,.7).setOrigin(0);
     if(this.summaryPage===0){
       if(this.textures.exists('portrait_'+record.asset))this.add.image(47,68,'portrait_'+record.asset).setScale(.24);
-      this.add.text(79,42,record.name,{fontFamily:FONT,fontSize:13,color:'#8a1720',fontStyle:'bold',wordWrap:{width:135}});
-      this.add.text(79,61,`Lv ${mon.lvl}  ${record.style}`,{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
-      this.add.text(79,76,`${personaFor(mon.id)} persona`,{fontFamily:FONT,fontSize:10,color:'#555'});
-      this.add.text(79,89,'EXP',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});hpBar(this,105,94,91,5,experienceProgress(mon),0x3aa5d1);
+      this.add.text(79,42,wrestlerName(mon),{fontFamily:FONT,fontSize:13,color:'#8a1720',fontStyle:'bold',wordWrap:{width:135}});
+      if(mon.nickname)this.add.text(79,56,record.name,{fontFamily:FONT,fontSize:9,color:'#555',fontStyle:'bold',wordWrap:{width:135}});
+      this.add.text(79,mon.nickname?69:61,`Lv ${mon.lvl}  ${record.style}`,{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
+      this.add.text(79,mon.nickname?82:76,`${personaFor(mon.id)} persona`,{fontFamily:FONT,fontSize:10,color:'#555'});
+      this.add.text(79,93,'EXP',{fontFamily:FONT,fontSize:9,color:'#355f87',fontStyle:'bold'});hpBar(this,105,98,91,5,experienceProgress(mon),0x3aa5d1);
       this.add.text(218,45,`POT ${mon.potential||'C'}`,{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
       this.add.text(218,63,`EFF ${effortTotal(mon.effort)}/${MAX_TOTAL_EFFORT}`,{fontFamily:FONT,fontSize:9,color:'#333',fontStyle:'bold'});
       this.add.text(22,105,`TEMPERAMENT  ${nature.name.toUpperCase()}`,{fontFamily:FONT,fontSize:10,color:'#111',fontStyle:'bold'});
@@ -199,14 +200,25 @@ export class MenuScene extends Phaser.Scene{
       const rows=[[['hp','COND'],['technique','TEC']],[['attack','STR'],['awareness','AWR']],[['defense','DEF'],['speed','SPD']]];
       rows.forEach((pair,row)=>pair.forEach(([key,label],column)=>{const x=column?170:22,valueX=column?291:141,y=141+row*19,changed=nature.raised===key||nature.lowered===key;this.add.text(x,y,label,{fontFamily:FONT,fontSize:10,color:changed?(nature.raised===key?'#b41820':'#355f87'):'#444',fontStyle:'bold'});this.add.text(valueX,y,key==='hp'?`${Math.round(mon.hp)}/${stats.hp}`:`${stats[key]}`,{fontFamily:FONT,fontSize:12,color:'#111',fontStyle:'bold'}).setOrigin(1,0);}));
     }else{
-      this.add.text(20,41,`${record.name}  Lv ${mon.lvl}`,{fontFamily:FONT,fontSize:11,color:'#8a1720',fontStyle:'bold'});
+      this.add.text(20,41,`${wrestlerName(mon)}  Lv ${mon.lvl}`,{fontFamily:FONT,fontSize:11,color:'#8a1720',fontStyle:'bold'});
       (mon.moves||[]).forEach((key,i)=>{const move=MOVES[key],y=57+i*34,current=currentMoveStamina(mon,key),category=move.category==='strength'?'STR':move.category==='technique'?'TEC':'SET';if(i>0)this.add.line(0,0,18,y-4,302,y-4,0xc9bda4,.55).setOrigin(0);this.add.text(22,y,move.name.toUpperCase(),{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold'});this.add.text(296,y,`STA ${current}/${moveStaminaMax(key)}`,{fontFamily:FONT,fontSize:10,color:current?'#355f87':'#999',fontStyle:'bold'}).setOrigin(1,0);this.add.text(22,y+13,`${move.style.toUpperCase()}  ${category}  PWR ${move.power||'--'}  ACC ${Math.round(move.acc*100)}%`,{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold'});this.add.text(22,y+24,move.summary,{fontFamily:FONT,fontSize:8,color:'#555'});});
     }
-    this.add.text(160,201,this.note||'LEFT/RIGHT: PAGE   A: SET LEAD   B: BACK',{fontFamily:FONT,fontSize:9,color:this.note?'#8a1720':'#555',fontStyle:'bold'}).setOrigin(.5,0);
+    this.add.text(160,201,this.note||'LEFT/RIGHT: PAGE  A: LEAD  START: NAME',{fontFamily:FONT,fontSize:9,color:this.note?'#8a1720':'#555',fontStyle:'bold'}).setOrigin(.5,0);
+  }
+  renameSelected(){
+    let container=null,index=-1,returnTab='team';
+    if(this.tab==='summary'){container='party';index=this.summaryIndex;}
+    else if(this.tab==='locker'){
+      const partyCount=this.state.party.length;
+      container=this.sel<partyCount?'party':'box';index=this.sel<partyCount?this.sel:this.sel-partyCount;returnTab='locker';
+    }
+    const mon=this.state[container]?.[index];if(!mon)return;
+    this.scene.start('NamingScene',{target:{container,index,targetId:mon.id},rename:true,next:{scene:'MenuScene',data:{parent:this.parent,tab:returnTab}}});
+    this.scene.bringToTop('NamingScene');
   }
   travelDestinations(){return (this.state.travel?.unlockedTowns||[]).map(id=>this.state.travel?.destinations?.[id]).filter(Boolean);}
   drawTravel(){const destinations=this.travelDestinations();if(!this.state.keyItems?.busPass){this.add.text(24,64,'BUS PASS REQUIRED',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});this.add.text(24,84,"The Senator's staff issues the Bus Pass after the Capitol Badge.",{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:270}});return;}this.add.text(24,52,'UNLOCKED TOWNS',{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'});destinations.forEach((destination,i)=>this.add.text(28,72+i*22,`${i===this.sel?'>':' '} ${destination.name}`,{fontFamily:FONT,fontSize:10,color:i===this.sel?'#b41820':'#111',fontStyle:'bold'}));}
-  drawLocker(){const rows=[...this.state.party.map((m,i)=>({m,i,where:'LINEUP'})),...this.state.box.map((m,i)=>({m,i,where:'LOCKER'}))];this.add.text(24,50,`TRAVEL ${this.state.party.length}/6   LOCKER ${this.state.box.length}`,{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'});if(!rows.length){this.add.text(24,78,'No wrestlers stored.',{fontFamily:FONT,fontSize:10,color:'#111'});return;}const start=Math.max(0,Math.min(this.sel-3,Math.max(0,rows.length-7)));rows.slice(start,start+7).forEach((row,j)=>{const i=start+j,r=ROSTER[row.m.id],y=68+j*17,active=i===this.sel;if(active){const g=this.add.graphics();g.fillStyle(0xb41820,.1);g.fillRoundedRect(18,y-5,284,16,2);}this.add.text(24,y,`${active?'>':' '} ${row.where==='LINEUP'?'L':'K'} ${r.name} Lv${row.m.lvl}`,{fontFamily:FONT,fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});this.add.text(294,y,`${r.style}`,{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold'}).setOrigin(1,0);});this.add.text(24,189,this.lockerSwapBoxIndex!==null?'Choose a lineup slot to exchange.':'Move between lineup and team locker.',{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold',wordWrap:{width:275}});}
+  drawLocker(){const rows=[...this.state.party.map((m,i)=>({m,i,where:'LINEUP'})),...this.state.box.map((m,i)=>({m,i,where:'LOCKER'}))];this.add.text(24,50,`TRAVEL ${this.state.party.length}/6   LOCKER ${this.state.box.length}`,{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'});if(!rows.length){this.add.text(24,78,'No wrestlers stored.',{fontFamily:FONT,fontSize:10,color:'#111'});return;}const start=Math.max(0,Math.min(this.sel-3,Math.max(0,rows.length-7)));rows.slice(start,start+7).forEach((row,j)=>{const i=start+j,r=ROSTER[row.m.id],y=68+j*17,active=i===this.sel;if(active){const g=this.add.graphics();g.fillStyle(0xb41820,.1);g.fillRoundedRect(18,y-5,284,16,2);}this.add.text(24,y,`${active?'>':' '} ${row.where==='LINEUP'?'L':'K'} ${wrestlerName(row.m)} Lv${row.m.lvl}`,{fontFamily:FONT,fontSize:9,color:active?'#b41820':'#111',fontStyle:'bold'});this.add.text(294,y,`${r.style}`,{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold'}).setOrigin(1,0);});this.add.text(24,189,this.lockerSwapBoxIndex!==null?'Choose a lineup slot to exchange.':'A: MOVE   START: NAME',{fontFamily:FONT,fontSize:9,color:'#444',fontStyle:'bold',wordWrap:{width:275}});}
   drawPractice(){
     const opts=[['CONDITION','Condition effort'],['STRENGTH','Strength effort'],['DEFENSE','Defense effort'],['TECHNIQUE','Technique effort'],['AWARENESS','Awareness effort'],['SPEED','Speed effort']];
     this.add.text(24,52,'PRACTICE PLAN',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
@@ -215,7 +227,7 @@ export class MenuScene extends Phaser.Scene{
     this.add.line(0,0,198,66,198,181,0xa58d65,.6).setOrigin(0);
     if(l){
       const effort=l.effort||{};
-      this.add.text(208,70,`${ROSTER[l.id].name.split(' ')[0]} L${l.lvl}`,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold'});
+      this.add.text(208,70,`${wrestlerName(l,{short:true})} L${l.lvl}`,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold'});
       this.add.text(208,89,`COND ${effort.hp||0}\nSTR  ${effort.attack||0}\nDEF  ${effort.defense||0}\nTECH ${effort.technique||0}\nAWR  ${effort.awareness||0}\nSPD  ${effort.speed||0}`,{fontFamily:FONT,fontSize:9,color:'#333',lineSpacing:2});
       this.add.text(208,171,`TOTAL ${effortTotal(effort)}/${MAX_TOTAL_EFFORT}`,{fontFamily:FONT,fontSize:9,color:'#555',fontStyle:'bold'});
     }else this.add.text(208,82,'No lead.',{fontFamily:FONT,fontSize:10,color:'#111'});

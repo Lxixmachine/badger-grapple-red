@@ -1,5 +1,5 @@
 import {MOVES,ADV,moveStaminaMax} from '../data/moves.js';
-import {ROSTER,allMovesSpent,currentMoveStamina,restoreMoveStamina,scaledStats,syncMoveStamina} from '../data/roster.js';
+import {ROSTER,allMovesSpent,currentMoveStamina,normalizeWrestlerNickname,restoreMoveStamina,scaledStats,syncMoveStamina} from '../data/roster.js';
 import {MAX_LEVEL,experienceAtLevel} from '../data/experience.js';
 import {movesForLevel} from '../data/learnsets.js';
 import {addEffort,effortTotal,MAX_EFFORT_PER_STAT,MAX_TOTAL_EFFORT,normalizeEffortValues,normalizeIndividualValues,normalizeNature,potentialFor,PRACTICE_EFFORT_GAIN,STAT_KEYS,wrestlerSeed} from '../data/stats.js';
@@ -95,6 +95,8 @@ export function normalizeWrestler(mon={}){
   const levelFloor=experienceAtLevel(id,lvl),levelCap=experienceAtLevel(id,MAX_LEVEL);
   const seed=wrestlerSeed({...mon,id,lvl});
   const normalized={...mon,id,lvl,xp:clamp(Math.floor(Number(mon.xp)||levelFloor),levelFloor,levelCap),ivs:normalizeIndividualValues(mon.ivs,mon.iv,seed),effort:normalizeEffortValues(mon.effort,mon.training),nature:normalizeNature(mon.nature,seed)};
+  normalized.nickname=normalizeWrestlerNickname(mon.nickname);
+  if(!normalized.nickname)delete normalized.nickname;
   normalized.potential=potentialFor(normalized.ivs);
   normalized.moves=(Array.isArray(mon.moves)?mon.moves:movesForLevel(id,lvl)).filter(key=>MOVES[key]&&key!=='desperation').slice(0,4);
   if(!normalized.moves.length)normalized.moves=movesForLevel(id,lvl).slice(0,4);

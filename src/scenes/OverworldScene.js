@@ -47,7 +47,7 @@ export class OverworldScene extends Phaser.Scene{
  fadeSceneOut(duration){this.worldCamera.fadeOut(duration,0,0,0);this.uiCamera.fadeOut(duration,0,0,0);}
  fadeSceneIn(duration){this.worldCamera.fadeIn(duration,0,0,0);this.uiCamera.fadeIn(duration,0,0,0);}
  okInput(){const now=this.time.now||performance.now();if(now-this.lastInputAt<95)return false;this.lastInputAt=now;return true;}
- handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.clearMessage();if(k==='menu')this.openMenu();if(k==='save')this.savePos('Saved.');}
+ handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.clearMessage();if(k==='menu'||k==='start')this.openMenu();if(k==='save')this.savePos('Saved.');}
  update(){this.updateDepths();this.updateMarker();this.updateNpcPatrols();if(this.moving)return;const c=this.cursors,k=this.keys;
   if(this.messageOpen){if([c.left,c.right,c.up,c.down].some(x=>Phaser.Input.Keyboard.JustDown(x)))this.clearMessage();return;}
   // Held keys walk continuously (FireRed): each completed tile re-triggers the next step.
