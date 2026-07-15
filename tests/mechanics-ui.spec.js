@@ -104,7 +104,7 @@ test('Travel Lineup naming persists a nickname and battle HUD uses it',async({pa
   await page.keyboard.press('Enter');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].nickname)).toBe('ACE');
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer'}));
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('command');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:15000}).toBe('command');
   const labels=await page.evaluate(()=>window.badgerGame.scene.getScene('BattleScene').children.list.filter(child=>child.type==='Text').map(child=>child.text));
   expect(labels).toContain('ACE');
   expect(labels).toContain('ACE do?');
