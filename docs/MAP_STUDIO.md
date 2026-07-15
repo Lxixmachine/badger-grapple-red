@@ -26,11 +26,13 @@ Bucky's Locker Room, Field House Floor, Capitol Interior, Brittingham Boats,
 Kohl Bracket Floor, Nationals Floor, Bascom Classroom, and Stadium Tunnel.
 
 The Camp Randall exterior uses a FireRed-style metatile authoring model with
-original project art. The Season One kit provides 567 explicit ground tiles,
-including nine complete 47-piece surface-transition families, three complete
+original project art. The Season One kit provides 695 explicit ground tiles,
+including eleven complete 47-piece surface-transition families, five complete
 16-piece narrow-path families, roads, curbs, shorelines, maintained lawns, and
-natural details. Every brush paints one fixed 32px tile; neighboring cells never
-change it implicitly.
+natural details. Concrete sidewalks and timber boardwalks now have the same
+complete edge, corner, connector, and assembly vocabulary as the core paths.
+Every brush paints one fixed 32px tile; neighboring cells never change it
+implicitly.
 
 Those visuals originate in six modular Imagegen source boards, six dedicated
 landmark sources, and 19 dedicated ordinary-building sources, then pass through a
@@ -51,7 +53,7 @@ the Capitol district offices/hotel, the tournament hotels, and the city-edge
 architecture use the same direct Imagegen source path. Named secondary
 buildings no longer fall back to the generic house or repeated storefront.
 
-The shared kit also provides 20 reusable ground assemblies and 121 structure
+The shared kit also provides 28 reusable ground assemblies and 143 structure
 stamps. These include connected forest masses, individual trees, cliffs,
 stairs, hedge and fence modules, campus props, architecture modules, and the
 familiar Trainer's Room and Bucky's Locker Room exteriors. Whole buildings
@@ -68,28 +70,32 @@ changing map geometry or behavior.
 1. Choose a map. On a phone, **Pan** is selected automatically; drag the map to
    change the visible area. On desktop, **Pan** or middle-mouse drag does the
    same without editing the map.
-2. Use **Tiles** to choose a core Ground material or filter a transition/detail
-   family. Every painted cell retains exactly the selected tile until you
-   replace it.
-   Ground assemblies appear below these families. Select or drag a path, pond,
-   crossing, or courtyard assembly to stamp its exact tile matrix. Transparent
-   assembly cells leave the existing ground unchanged.
-3. Choose a Structure family to paint individual behavior-owned metatiles. Use
-   the family filter under **Stamps** to place trees, props, architecture
-   modules, or complete buildings.
-4. Use **Actors**, then tap the map or drag an actor onto it.
-5. Use **Select** to move an existing stamp. Placement always snaps to cells.
-6. Select a stamp, then use **Collision** to change the behavior variant of a
+2. Use **Tiles** to choose a surface. Ready-made path and area assemblies appear
+   immediately below the surfaces; select or drag one to stamp its exact tile
+   matrix. Transparent assembly cells leave the existing ground unchanged.
+3. Search by material, shape, building, or prop name. Star recurring assets;
+   starred and recently used entries sort first, and the star filter hides the
+   rest of the catalog.
+4. Open **Individual transitions** only for one-cell edge or corner repair.
+   Open **Advanced structure cells** only for exact building-cell repair. Normal
+   structure work belongs under **Stamps**, where trees, props, architecture
+   modules, and complete buildings retain coherent footprints.
+5. Use **Pick** to sample an existing ground or structure cell, **Fill** to
+   replace one connected ground region, and **Erase** to restore authored ground
+   or remove a placed object. All three operate on explicit grid ownership.
+6. Use **Actors**, then tap the map or drag an actor onto it.
+7. Use **Select** to move an existing stamp. Placement always snaps to cells.
+8. Select a stamp, then use **Collision** to change the behavior variant of a
    metatile inside its locked footprint.
-7. Use **Door** to assign one exact warp metatile. A door is automatically
+9. Use **Door** to assign one exact warp metatile. A door is automatically
    cleared from collision.
-8. Use **Events** to move an event or create one on an empty cell.
-9. Use **Camera** to position the 15x10 review window.
-10. Use **Playtest** to open the same compiled metatiles in the 32px Phaser
+10. Use **Events** to move an event or create one on an empty cell.
+11. Use **Camera** to position the 15x10 review window.
+12. Use **Playtest** to open the same compiled metatiles in the 32px Phaser
     runtime.
-11. Keep Validation at zero errors. Warnings identify newly solid cells whose
+13. Keep Validation at zero errors. Warnings identify newly solid cells whose
    visible art still needs coverage review.
-12. Export a clean review PNG and the validated JSON map pack.
+14. Export a clean review PNG and the validated JSON map pack.
 
 The browser keeps a local draft. Atlas upgrades add missing maps and corrected
 defaults without discarding explicitly repainted terrain on existing maps.

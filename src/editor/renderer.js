@@ -94,6 +94,7 @@ export class MapRenderer {
     if (state.showCollision) this.drawCollision(map, cell, project);
     if (state.showGrid) this.drawGrid(map, cell);
     this.drawSelection(state, cell);
+    this.drawPlacementPreview(state, cell);
     if (state.cameraPreview) this.drawCameraPreview(state, cell);
     if (state.hoverCell) {
       context.strokeStyle = '#fff1a8';
@@ -302,6 +303,49 @@ export class MapRenderer {
       if (entry) context.strokeRect(entry.x * cell + 2, entry.y * cell + 2, cell - 4, cell - 4);
     }
     context.setLineDash([]);
+  }
+
+  drawPlacementPreview(state, cell) {
+    const {placingAsset, hoverCell, map, project} = state;
+    if (!placingAsset || !hoverCell) return;
+    const context = this.context;
+    const drawCell = (x, y, solid = false, door = false) => {
+      context.fillStyle = door
+        ? 'rgba(67, 198, 112, .44)'
+        : solid ? 'rgba(208, 43, 57, .34)' : 'rgba(255, 226, 124, .28)';
+      context.fillRect(x * cell + 2, y * cell + 2, cell - 4, cell - 4);
+      context.strokeStyle = door ? '#9df2bb' : solid ? '#e96876' : '#ffe27c';
+      context.lineWidth = 2;
+      context.strokeRect(x * cell + 2, y * cell + 2, cell - 4, cell - 4);
+    };
+    if (placingAsset.kind === 'groundStamp') {
+      const stamp = (project.assets.groundStamps || []).find(entry => entry.id === placingAsset.id);
+      if (!stamp) return;
+      const originX = Math.max(0, Math.min(hoverCell.x, map.width - stamp.width));
+      const originY = Math.max(0, Math.min(hoverCell.y, map.height - stamp.height));
+      stamp.cells.forEach((row, y) => row.forEach((tileId, x) => {
+        if (tileId) drawCell(originX + x, originY + y);
+      }));
+      return;
+    }
+    if (placingAsset.kind === 'object') {
+      const asset = project.assets.objects.find(entry => entry.id === placingAsset.id);
+      if (!asset) return;
+      const originX = Math.max(0, Math.min(hoverCell.x, map.width - asset.width));
+      const originY = Math.max(0, Math.min(hoverCell.y, map.height - asset.height));
+      for (let y = 0; y < asset.height; y += 1) {
+        for (let x = 0; x < asset.width; x += 1) {
+          drawCell(
+            originX + x,
+            originY + y,
+            asset.defaultCollisionMask?.[y]?.[x] === '#',
+            asset.defaultDoor?.x === x && asset.defaultDoor?.y === y
+          );
+        }
+      }
+      return;
+    }
+    drawCell(hoverCell.x, hoverCell.y, true);
   }
 
   drawCameraPreview(state, cell) {

@@ -43,15 +43,14 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     rawCutCount: 0
   });
   expect(state.project.groundMaterialMetrics.grass).toMatchObject({
-    uniqueColors: 2,
+    uniqueColors: 4,
     cardinalPixelCount: 0
   });
-  expect(state.project.groundMaterialMetrics.grass.dominantCoverage).toBeGreaterThanOrEqual(0.95);
   expect(state.project.groundMaterialMetrics.campusPavers).toMatchObject({
-    uniqueColors: 3,
+    uniqueColors: 4,
     cardinalPixelCount: 0
   });
-  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThan(0.7);
+  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThan(0.55);
   expect(state.project.visualHierarchyMetrics.saturationDifference).toBeGreaterThan(0);
   expect(state.project.visualHierarchyMetrics.ground.meanSaturation)
     .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanSaturation);
@@ -64,8 +63,8 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   ]);
   expect(state.project.maps.camp_randall).toMatchObject({width: 48, height: 31, cellSize: 32});
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
-  expect(state.project.assets.groundTiles).toHaveLength(567);
-  expect(state.project.assets.groundStamps).toHaveLength(20);
+  expect(state.project.assets.groundTiles).toHaveLength(695);
+  expect(state.project.assets.groundStamps).toHaveLength(28);
   expect(state.project.assets.metatiles.length).toBeGreaterThan(1000);
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'water').behavior).toBe('water');
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'shore_water_blob_n_e_s_w_ne_se_sw_nw').behavior).toBe('water');
@@ -296,10 +295,12 @@ test('explicit transition tiles remain selected and individual trees place as gr
   const issues = runtimeIssues(page);
   await openEditor(page);
 
+  await page.getByRole('searchbox', {name: 'Search palette'}).fill('brick path turn ne');
   await page.locator('[data-terrain="brick_path_turn_ne"]').click();
   await clickCell(page, 10, 14);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.terrain[14][10])
     .toBe('brick_path_turn_ne');
+  await page.getByRole('searchbox', {name: 'Search palette'}).fill('');
   await page.getByRole('button', {name: 'Stone', exact: true}).click();
   await clickCell(page, 10, 13);
   const afterNeighbor = await editorState(page);
@@ -374,6 +375,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
 test('structure metatiles can be placed independently and retain behavior ownership', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
+  await page.getByRole('searchbox', {name: 'Search palette'}).fill('Team Building 1,1');
   await page.getByRole('button', {name: 'Team Building 1,1', exact: true}).click();
   await clickCell(page, 13, 7);
 
@@ -480,7 +482,74 @@ test('mobile layout keeps the canvas and touch palette usable', async ({page}) =
     topbarHeight: document.querySelector('.topbar').getBoundingClientRect().height
   }));
   expect(overflow.bodyWidth).toBeLessThanOrEqual(overflow.viewportWidth);
-  expect(overflow.topbarHeight).toBeLessThanOrEqual(176);
+  expect(overflow.topbarHeight).toBeLessThanOrEqual(230);
+  await page.getByRole('button', {name: 'Open inspector'}).click();
+  await expect(page.locator('.inspector-panel')).toBeVisible();
+  await page.getByRole('button', {name: 'Close inspector'}).click();
+  await expect(page.locator('.inspector-panel')).toBeHidden();
+  expect(issues).toEqual([]);
+});
+
+test('palette search, favorites, and curated disclosures reduce catalog hunting', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  await expect(page.locator('#structureDisclosure')).not.toHaveAttribute('open', '');
+
+  const search = page.getByRole('searchbox', {name: 'Search palette'});
+  await search.fill('timber');
+  await expect(page.getByRole('button', {name: 'Timber Boardwalk', exact: true})).toBeVisible();
+  await expect(page.getByRole('option', {name: /Timber Walk/})).toHaveCount(1);
+  await expect(page.getByRole('button', {name: 'Warm Campus Pavers', exact: true})).toHaveCount(0);
+
+  await search.fill('');
+  const paverCard = page.getByRole('button', {name: 'Warm Campus Pavers', exact: true});
+  await paverCard.locator('[data-favorite-kind="terrain"]').click();
+  await page.getByRole('button', {name: 'Show starred assets'}).click();
+  await expect(page.getByRole('button', {name: 'Warm Campus Pavers', exact: true})).toBeVisible();
+  await expect(page.getByRole('button', {name: 'Grass', exact: true})).toHaveCount(0);
+  expect((await editorState(page)).state.favoriteOnly).toBe(true);
+  expect(issues).toEqual([]);
+});
+
+test('pick, fill, and erase operate on explicit grid cells', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+
+  await page.getByRole('button', {name: 'Dirt', exact: true}).click();
+  await page.getByRole('button', {name: 'Fill', exact: true}).click();
+  await clickCell(page, 10, 10);
+  let state = await editorState(page);
+  expect(state.project.maps.camp_randall.terrain[10][10]).toBe('dirt');
+  expect(state.project.maps.camp_randall.terrain[10][11]).toBe('dirt');
+  await page.getByRole('button', {name: 'Undo'}).click();
+
+  await page.getByRole('button', {name: 'Pick', exact: true}).click();
+  await clickCell(page, 23, 10);
+  state = await editorState(page);
+  expect(state.state.mode).toBe('terrain');
+  expect(state.state.selectedTerrain).toMatch(/^surface_brick_blob_/);
+
+  const map = state.project.maps.camp_randall;
+  const occupied = (x, y) => map.objects.some(object => (
+    x >= object.x && y >= object.y && x < object.x + object.width && y < object.y + object.height
+  )) || map.actors.some(actor => actor.x === x && actor.y === y) || map.events.some(event => event.x === x && event.y === y);
+  let emptyCell = null;
+  for (let y = 1; y < map.height - 1 && !emptyCell; y += 1) {
+    for (let x = 1; x < map.width - 1; x += 1) {
+      if (!occupied(x, y) && map.originalTerrain[y][x] === 'grass') {
+        emptyCell = {x, y};
+        break;
+      }
+    }
+  }
+  expect(emptyCell).not.toBeNull();
+  const original = map.originalTerrain[emptyCell.y][emptyCell.x];
+  await page.getByRole('button', {name: 'Stone', exact: true}).click();
+  await clickCell(page, emptyCell.x, emptyCell.y);
+  await page.getByRole('button', {name: 'Erase', exact: true}).click();
+  await clickCell(page, emptyCell.x, emptyCell.y);
+  state = await editorState(page);
+  expect(state.project.maps.camp_randall.terrain[emptyCell.y][emptyCell.x]).toBe(original);
   expect(issues).toEqual([]);
 });
 

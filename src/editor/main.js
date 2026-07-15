@@ -2,7 +2,9 @@ import {cloneProject, createSeedProject, PROJECT_SCHEMA, TERRAIN, validateProjec
 import {MapRenderer} from './renderer.js';
 
 const STORAGE_KEY = 'badger-grapple-map-studio-v4-imagegen-tileset';
+const PALETTE_PREFS_KEY = 'badger-grapple-map-studio-palette-v1';
 const canvas = document.querySelector('#mapCanvas');
+const editorShell = document.querySelector('.editor-shell');
 const workspace = document.querySelector('#workspace');
 const mapSelect = document.querySelector('#mapSelect');
 const paletteContent = document.querySelector('#paletteContent');
@@ -13,10 +15,14 @@ const deleteButton = document.querySelector('#deleteButton');
 const playtestButton = document.querySelector('#playtestButton');
 const cellReadout = document.querySelector('#cellReadout');
 const modeReadout = document.querySelector('#modeReadout');
+const brushReadout = document.querySelector('#brushReadout');
 const mapStatus = document.querySelector('#mapStatus');
 const saveStatus = document.querySelector('#saveStatus');
 const zoomValue = document.querySelector('#zoomValue');
 const fileInput = document.querySelector('#fileInput');
+const paletteSearch = document.querySelector('#paletteSearch');
+const favoriteFilter = document.querySelector('#favoriteFilter');
+const inspectorPanel = document.querySelector('#inspectorPanel');
 
 const seedProject = createSeedProject();
 let project = new URLSearchParams(window.location.search).has('seed')
@@ -30,6 +36,12 @@ let selectedGroundStampFamily = 'brick_walk';
 let selectedMetatile = null;
 let selectedMetatileFamily = 'team_building';
 let selectedObjectFamily = 'trees';
+let paletteQuery = '';
+let favoriteOnly = false;
+let showAdvancedStructure = false;
+const palettePreferences = loadPalettePreferences();
+let favoriteAssets = new Set(palettePreferences.favorites);
+let recentAssets = [...palettePreferences.recents];
 let placingAsset = null;
 let selection = null;
 let hoverCell = null;
@@ -134,7 +146,8 @@ function renderState() {
     cameraPreview,
     camera: currentCamera(),
     selectedTerrain,
-    selectedMetatile
+    selectedMetatile,
+    placingAsset
   };
 }
 
@@ -204,6 +217,104 @@ function escapeHtml(value) {
     .replaceAll('"', '&quot;');
 }
 
+function loadPalettePreferences() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(PALETTE_PREFS_KEY));
+    return {
+      favorites: Array.isArray(saved?.favorites) ? saved.favorites : [],
+      recents: Array.isArray(saved?.recents) ? saved.recents : []
+    };
+  } catch {
+    localStorage.removeItem(PALETTE_PREFS_KEY);
+    return {favorites: [], recents: []};
+  }
+}
+
+function savePalettePreferences() {
+  localStorage.setItem(PALETTE_PREFS_KEY, JSON.stringify({
+    favorites: [...favoriteAssets],
+    recents: recentAssets.slice(0, 16)
+  }));
+}
+
+function paletteKey(kind, id) {
+  return `${kind}:${id}`;
+}
+
+function trackRecent(kind, id) {
+  const key = paletteKey(kind, id);
+  recentAssets = [key, ...recentAssets.filter(entry => entry !== key)].slice(0, 16);
+  savePalettePreferences();
+}
+
+function toggleFavorite(kind, id) {
+  const key = paletteKey(kind, id);
+  if (favoriteAssets.has(key)) favoriteAssets.delete(key);
+  else favoriteAssets.add(key);
+  savePalettePreferences();
+  buildPalette();
+}
+
+function favoriteButton(kind, id) {
+  const starred = favoriteAssets.has(paletteKey(kind, id));
+  return `<button class="favorite-button ${starred ? 'starred' : ''}" data-favorite-kind="${kind}" data-favorite-id="${escapeHtml(id)}" aria-label="${starred ? 'Remove from' : 'Add to'} favorites" title="${starred ? 'Remove from' : 'Add to'} favorites">${starred ? '&#9733;' : '&#9734;'}</button>`;
+}
+
+function bindFavoriteButtons() {
+  paletteContent.querySelectorAll('[data-favorite-kind]').forEach(button => button.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleFavorite(button.dataset.favoriteKind, button.dataset.favoriteId);
+  }));
+}
+
+function friendlyName(value) {
+  return String(value || '').replaceAll('_', ' ').replace(/\b\w/g, letter => letter.toUpperCase());
+}
+
+function paletteMatches(entry, kind, extra = []) {
+  const key = paletteKey(kind, entry.id);
+  if (favoriteOnly && !favoriteAssets.has(key)) return false;
+  if (!paletteQuery) return true;
+  const haystack = [entry.id, entry.name, entry.family, entry.category, ...(entry.tags || []), ...extra]
+    .filter(Boolean).join(' ').toLowerCase();
+  return haystack.includes(paletteQuery);
+}
+
+function sortPaletteEntries(entries, kind) {
+  return [...entries].sort((first, second) => {
+    const firstKey = paletteKey(kind, first.id);
+    const secondKey = paletteKey(kind, second.id);
+    const favoriteDelta = Number(favoriteAssets.has(secondKey)) - Number(favoriteAssets.has(firstKey));
+    if (favoriteDelta) return favoriteDelta;
+    const firstRecent = recentAssets.indexOf(firstKey);
+    const secondRecent = recentAssets.indexOf(secondKey);
+    if (firstRecent >= 0 || secondRecent >= 0) {
+      if (firstRecent < 0) return 1;
+      if (secondRecent < 0) return -1;
+      if (firstRecent !== secondRecent) return firstRecent - secondRecent;
+    }
+    return String(first.name || first.id).localeCompare(String(second.name || second.id));
+  });
+}
+
+function updateBrushReadout() {
+  if (placingAsset) {
+    const collection = placingAsset.kind === 'groundStamp'
+      ? project.assets.groundStamps
+      : placingAsset.kind === 'object' ? project.assets.objects : project.assets.actors;
+    brushReadout.textContent = collection?.find(entry => entry.id === placingAsset.id)?.name || placingAsset.id;
+    return;
+  }
+  if (mode === 'terrain' || mode === 'fill') {
+    brushReadout.textContent = (project.assets.groundTiles || []).find(entry => entry.id === selectedTerrain)?.name || friendlyName(selectedTerrain);
+  } else if (mode === 'structure') {
+    brushReadout.textContent = metatileById(selectedMetatile)?.names?.[0] || 'Choose a structure cell';
+  } else {
+    brushReadout.textContent = friendlyName(mode);
+  }
+}
+
 function uniqueId(base, entries) {
   const ids = new Set(entries.map(entry => entry.id));
   if (!ids.has(base)) return base;
@@ -217,7 +328,10 @@ function clamp(value, minimum, maximum) {
 }
 
 function cursorForMode(value = mode) {
-  return value === 'pan' ? 'grab' : value === 'select' || value === 'event' ? 'default' : 'crosshair';
+  if (value === 'pan') return 'grab';
+  if (value === 'pick') return 'copy';
+  if (value === 'erase') return 'not-allowed';
+  return value === 'select' || value === 'event' ? 'default' : 'crosshair';
 }
 
 function buildMapSelect() {
@@ -235,6 +349,7 @@ function setMode(nextMode) {
   document.querySelectorAll('[data-tool]').forEach(button => button.classList.toggle('active', button.dataset.tool === mode));
   modeReadout.textContent = mode[0].toUpperCase() + mode.slice(1);
   canvas.style.cursor = cursorForMode();
+  updateBrushReadout();
   requestRender();
 }
 
@@ -245,7 +360,7 @@ function metatileThumb(tile) {
   return `<div class="palette-thumb metatile-preview"><span style="width:${cell}px;height:${cell}px;background-image:url('${tile.atlasPath}');background-position:-${sourceX}px -${sourceY}px"></span></div>`;
 }
 
-function buildPalette() {
+function buildPaletteLegacy() {
   document.querySelectorAll('[data-palette]').forEach(button => button.classList.toggle('active', button.dataset.palette === paletteTab));
   if (paletteTab === 'terrain') {
     const map = activeMap();
@@ -394,6 +509,186 @@ function buildPalette() {
       event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: item.dataset.assetKind, id: item.dataset.asset}));
     });
   });
+}
+
+function buildPalette() {
+  document.querySelectorAll('[data-palette]').forEach(button => button.classList.toggle('active', button.dataset.palette === paletteTab));
+  const familyOptions = (families, selected, entries, property) => families.map(family => {
+    const count = entries.filter(entry => entry[property] === family).length;
+    return `<option value="${escapeHtml(family)}" ${family === selected ? 'selected' : ''}>${escapeHtml(friendlyName(family))} (${count})</option>`;
+  }).join('');
+  const emptyMarkup = message => `<div class="palette-empty">${escapeHtml(message)}</div>`;
+
+  if (paletteTab === 'terrain') {
+    const map = activeMap();
+    const terrainEntries = Object.entries(TERRAIN)
+      .filter(([id]) => map.type === 'exterior' ? id !== 'floor' : id === 'floor')
+      .map(([id, terrain]) => ({id, name: terrain.label, family: 'base'}));
+    const allGroundTiles = map.renderModel === 'metatile' ? (project.assets.groundTiles || []) : [];
+    const allGroundStamps = map.renderModel === 'metatile' ? (project.assets.groundStamps || []) : [];
+    const allStructureTiles = map.renderModel === 'metatile'
+      ? (project.assets.metatiles || []).filter(tile => tile.palette)
+      : [];
+    const groundFamilies = [...new Set(allGroundTiles.map(tile => tile.family).filter(Boolean))].sort();
+    const groundStampFamilies = [...new Set(allGroundStamps.map(stamp => stamp.family).filter(Boolean))].sort();
+    const structureFamilies = [...new Set(allStructureTiles.map(tile => tile.families?.[0]).filter(Boolean))].sort();
+    if (!groundFamilies.includes(selectedGroundFamily)) selectedGroundFamily = groundFamilies.includes('path_brick') ? 'path_brick' : groundFamilies[0] || '';
+    if (!groundStampFamilies.includes(selectedGroundStampFamily)) selectedGroundStampFamily = groundStampFamilies.includes('brick_walk') ? 'brick_walk' : groundStampFamilies[0] || '';
+    if (!structureFamilies.includes(selectedMetatileFamily)) selectedMetatileFamily = structureFamilies.includes('team_building') ? 'team_building' : structureFamilies[0] || '';
+
+    const surfaceSource = allGroundTiles.length ? allGroundTiles.filter(tile => tile.tags?.includes('base')) : terrainEntries;
+    const surfaces = sortPaletteEntries(surfaceSource.filter(tile => paletteMatches(tile, 'terrain')), 'terrain');
+    const groundSource = paletteQuery || favoriteOnly
+      ? allGroundTiles.filter(tile => !tile.tags?.includes('base'))
+      : allGroundTiles.filter(tile => tile.family === selectedGroundFamily && !tile.tags?.includes('base'));
+    const groundTiles = sortPaletteEntries(groundSource.filter(tile => paletteMatches(tile, 'terrain')), 'terrain');
+    const stampSource = paletteQuery || favoriteOnly
+      ? allGroundStamps
+      : allGroundStamps.filter(stamp => stamp.family === selectedGroundStampFamily);
+    const groundStamps = sortPaletteEntries(stampSource.filter(stamp => paletteMatches(stamp, 'groundStamp')), 'groundStamp');
+    const structureSource = paletteQuery || favoriteOnly
+      ? allStructureTiles
+      : allStructureTiles.filter(tile => tile.families?.[0] === selectedMetatileFamily);
+    const structureTiles = sortPaletteEntries(
+      structureSource.filter(tile => paletteMatches(tile, 'metatile', tile.names || [])),
+      'metatile'
+    );
+
+    const surfaceCards = surfaces.map(tile => `
+      <div class="palette-item terrain-item ${selectedTerrain === tile.id ? 'active' : ''}" data-terrain="${escapeHtml(tile.id)}" role="button" aria-label="${escapeHtml(tile.name)}" tabindex="0" title="${escapeHtml(tile.name)}">
+        ${allGroundTiles.length ? metatileThumb(tile) : `<div class="terrain-swatch ${escapeHtml(tile.id)}"></div>`}
+        <span>${escapeHtml(tile.name)}</span>${favoriteButton('terrain', tile.id)}
+      </div>`).join('');
+    const stampCards = groundStamps.map(stamp => `
+      <div class="palette-item ${placingAsset?.kind === 'groundStamp' && placingAsset.id === stamp.id ? 'active' : ''}" draggable="true" data-ground-stamp="${escapeHtml(stamp.id)}" role="button" aria-label="${escapeHtml(stamp.name)}" tabindex="0" title="${escapeHtml(stamp.name)}">
+        <div class="palette-thumb"><img src="${stamp.thumbnail}" alt="" /></div><span>${escapeHtml(stamp.name)}</span>${favoriteButton('groundStamp', stamp.id)}
+      </div>`).join('');
+    const groundCards = groundTiles.map(tile => `
+      <div class="palette-item terrain-item ${selectedTerrain === tile.id ? 'active' : ''}" data-terrain="${escapeHtml(tile.id)}" role="button" aria-label="${escapeHtml(tile.name)}" tabindex="0" title="${escapeHtml(tile.name)}">
+        ${metatileThumb(tile)}<span>${escapeHtml(tile.name)}</span>${favoriteButton('terrain', tile.id)}
+      </div>`).join('');
+    const structureCards = structureTiles.map(tile => `
+      <div class="palette-item metatile-item ${selectedMetatile === tile.id ? 'active' : ''}" draggable="true" data-metatile="${escapeHtml(tile.id)}" role="button" aria-label="${escapeHtml(tile.names?.[0] || tile.id)}" tabindex="0" title="${escapeHtml(tile.names?.[0] || tile.id)}">
+        ${metatileThumb(tile)}<span class="visually-hidden">${escapeHtml(tile.names?.[0] || tile.id)}</span>${favoriteButton('metatile', tile.id)}
+      </div>`).join('');
+
+    paletteContent.innerHTML = `
+      <div class="palette-section-title">Surfaces <span class="palette-count">${surfaces.length}</span></div>
+      ${surfaceCards ? `<div class="palette-grid ground-tile-grid">${surfaceCards}</div>` : emptyMarkup('No surfaces match this filter.')}
+      ${allGroundStamps.length ? `
+        <div class="palette-section-title structure-title">Ready-made paths and areas <span class="palette-count">${groundStamps.length}</span></div>
+        <label class="metatile-family"><span>Family</span><select id="groundStampFamily">${familyOptions(groundStampFamilies, selectedGroundStampFamily, allGroundStamps, 'family')}</select></label>
+        ${stampCards ? `<div class="palette-grid">${stampCards}</div>` : emptyMarkup('No path assemblies match this filter.')}` : ''}
+      ${allGroundTiles.length ? `
+        <details class="palette-disclosure" ${(paletteQuery || favoriteOnly) ? 'open' : ''}>
+          <summary>Individual transitions <span class="palette-count">${groundTiles.length}</span></summary>
+          <div class="palette-disclosure-body">
+            <label class="metatile-family"><span>Family</span><select id="groundFamily">${familyOptions(groundFamilies, selectedGroundFamily, allGroundTiles, 'family')}</select></label>
+            ${groundCards ? `<div class="palette-grid ground-tile-grid">${groundCards}</div>` : emptyMarkup('No individual tiles match this filter.')}
+          </div>
+        </details>` : ''}
+      ${allStructureTiles.length ? `
+        <details id="structureDisclosure" class="palette-disclosure" ${(showAdvancedStructure || paletteQuery) ? 'open' : ''}>
+          <summary>Advanced structure cells <span class="palette-count">${structureTiles.length}</span></summary>
+          <div class="palette-disclosure-body">
+            <div class="advanced-note">Use complete buildings and props from Stamps for normal map work. These cells are for repairing or authoring one exact structure tile.</div>
+            <label class="metatile-family"><span>Family</span><select id="metatileFamily">${familyOptions(structureFamilies, selectedMetatileFamily, allStructureTiles.map(tile => ({...tile, family: tile.families?.[0]})), 'family')}</select></label>
+            ${structureCards ? `<div class="palette-grid metatile-grid">${structureCards}</div>` : emptyMarkup('No structure cells match this filter.')}
+          </div>
+        </details>` : ''}`;
+
+    paletteContent.querySelector('#groundFamily')?.addEventListener('change', event => { selectedGroundFamily = event.currentTarget.value; buildPalette(); });
+    paletteContent.querySelector('#groundStampFamily')?.addEventListener('change', event => { selectedGroundStampFamily = event.currentTarget.value; buildPalette(); });
+    paletteContent.querySelector('#metatileFamily')?.addEventListener('change', event => { selectedMetatileFamily = event.currentTarget.value; selectedMetatile = null; buildPalette(); });
+    paletteContent.querySelector('#structureDisclosure')?.addEventListener('toggle', event => { showAdvancedStructure = event.currentTarget.open; });
+    paletteContent.querySelectorAll('[data-terrain]').forEach(item => {
+      const activate = () => {
+        selectedTerrain = item.dataset.terrain;
+        selectedMetatile = null;
+        placingAsset = null;
+        trackRecent('terrain', selectedTerrain);
+        setMode('terrain');
+        buildPalette();
+      };
+      item.addEventListener('click', activate);
+      item.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') activate(); });
+    });
+    paletteContent.querySelectorAll('[data-metatile]').forEach(item => {
+      const activate = () => {
+        selectedMetatile = item.dataset.metatile;
+        placingAsset = null;
+        trackRecent('metatile', selectedMetatile);
+        setMode('structure');
+        buildPalette();
+      };
+      item.addEventListener('click', activate);
+      item.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') activate(); });
+      item.addEventListener('dragstart', event => {
+        event.dataTransfer.effectAllowed = 'copy';
+        event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: 'metatile', id: item.dataset.metatile}));
+      });
+    });
+    paletteContent.querySelectorAll('[data-ground-stamp]').forEach(item => {
+      const activate = () => {
+        placingAsset = {kind: 'groundStamp', id: item.dataset.groundStamp};
+        selectedMetatile = null;
+        trackRecent('groundStamp', item.dataset.groundStamp);
+        setMode('select');
+        buildPalette();
+      };
+      item.addEventListener('click', activate);
+      item.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') activate(); });
+      item.addEventListener('dragstart', event => {
+        event.dataTransfer.effectAllowed = 'copy';
+        event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: 'groundStamp', id: item.dataset.groundStamp}));
+      });
+    });
+    bindFavoriteButtons();
+    updateBrushReadout();
+    return;
+  }
+
+  const map = activeMap();
+  const kind = paletteTab === 'objects' ? 'object' : 'actor';
+  const availableAssets = paletteTab === 'objects'
+    ? project.assets.objects.filter(asset => asset.mapType === map.type && (!asset.mapId || asset.mapId === map.id))
+    : project.assets.actors;
+  const objectFamilies = paletteTab === 'objects'
+    ? [...new Set(availableAssets.map(asset => asset.category).filter(Boolean))].sort()
+    : [];
+  if (paletteTab === 'objects' && !objectFamilies.includes(selectedObjectFamily)) selectedObjectFamily = objectFamilies.includes('trees') ? 'trees' : objectFamilies[0] || '';
+  const source = paletteQuery || favoriteOnly || paletteTab === 'actors'
+    ? availableAssets
+    : availableAssets.filter(asset => asset.category === selectedObjectFamily);
+  const assets = sortPaletteEntries(source.filter(asset => paletteMatches(asset, kind)), kind);
+  const objectFilter = paletteTab === 'objects'
+    ? `<label class="metatile-family"><span>Family</span><select id="objectFamily">${familyOptions(objectFamilies, selectedObjectFamily, availableAssets, 'category')}</select></label>`
+    : '';
+  const cards = assets.map(asset => {
+    const active = placingAsset?.id === asset.id ? 'active' : '';
+    const thumb = paletteTab === 'actors'
+      ? `<div class="palette-thumb"><span class="actor-thumb" style="width:32px;height:60px;background-image:url('${asset.path}');background-position:-32px 0;background-repeat:no-repeat"></span></div>`
+      : `<div class="palette-thumb"><img src="${asset.path}" alt="" /></div>`;
+    return `<div class="palette-item ${active}" draggable="true" data-asset="${escapeHtml(asset.id)}" data-asset-kind="${kind}" role="button" aria-label="${escapeHtml(asset.name)}" tabindex="0">${thumb}<span>${escapeHtml(asset.name)}</span>${favoriteButton(kind, asset.id)}</div>`;
+  }).join('');
+  paletteContent.innerHTML = `${objectFilter}<div class="palette-section-title">${paletteTab === 'objects' ? friendlyName(selectedObjectFamily) : 'Characters'} <span class="palette-count">${assets.length}</span></div>${cards ? `<div class="palette-grid">${cards}</div>` : emptyMarkup('No assets match this filter.')}`;
+  paletteContent.querySelector('#objectFamily')?.addEventListener('change', event => { selectedObjectFamily = event.currentTarget.value; buildPalette(); });
+  paletteContent.querySelectorAll('[data-asset]').forEach(item => {
+    const activate = () => {
+      placingAsset = {kind: item.dataset.assetKind, id: item.dataset.asset};
+      trackRecent(item.dataset.assetKind, item.dataset.asset);
+      setMode('select');
+      buildPalette();
+    };
+    item.addEventListener('click', activate);
+    item.addEventListener('keydown', event => { if (event.key === 'Enter' || event.key === ' ') activate(); });
+    item.addEventListener('dragstart', event => {
+      event.dataTransfer.effectAllowed = 'copy';
+      event.dataTransfer.setData('application/x-badger-asset', JSON.stringify({kind: item.dataset.assetKind, id: item.dataset.asset}));
+    });
+  });
+  bindFavoriteButtons();
+  updateBrushReadout();
 }
 
 function selectedEntry() {
@@ -586,6 +881,7 @@ function updateAll() {
   updateHistoryButtons();
   updateInspector();
   updateValidation();
+  updateBrushReadout();
   requestRender();
 }
 
@@ -600,6 +896,100 @@ function cellFromClient(clientX, clientY) {
 
 function setTerrain(cell, material) {
   activeMap().terrain[cell.y][cell.x] = material;
+}
+
+function fillTerrain(cell, material) {
+  const map = activeMap();
+  const target = map.terrain[cell.y][cell.x];
+  if (target === material) {
+    saveStatus.textContent = 'Fill skipped: the area already uses this tile';
+    return;
+  }
+  const pending = [cell];
+  const visited = new Set();
+  while (pending.length) {
+    const current = pending.pop();
+    const key = `${current.x},${current.y}`;
+    if (visited.has(key) || map.terrain[current.y]?.[current.x] !== target) continue;
+    visited.add(key);
+    map.terrain[current.y][current.x] = material;
+    for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
+      const x = current.x + dx;
+      const y = current.y + dy;
+      if (x >= 0 && y >= 0 && x < map.width && y < map.height) pending.push({x, y});
+    }
+  }
+  recordHistory(`${visited.size} ground cells filled`);
+}
+
+function pickAt(cell) {
+  const map = activeMap();
+  const hit = renderer.hitTest(renderState(), cell.x, cell.y);
+  if (hit?.kind === 'actor') {
+    const actor = map.actors.find(entry => entry.id === hit.id);
+    const asset = project.assets.actors.find(entry => entry.id === actor?.assetId);
+    if (asset) {
+      paletteTab = 'actors';
+      placingAsset = {kind: 'actor', id: asset.id};
+      trackRecent('actor', asset.id);
+      setMode('select');
+      buildPalette();
+      return;
+    }
+  }
+  if (hit?.kind === 'object') {
+    const object = map.objects.find(entry => entry.id === hit.id);
+    const localX = cell.x - object.x;
+    const localY = cell.y - object.y;
+    const tileId = object.metatiles?.[localY]?.[localX];
+    if (tileId) {
+      const tile = metatileById(tileId);
+      paletteTab = 'terrain';
+      selectedMetatile = tileId;
+      selectedMetatileFamily = tile?.families?.[0] || selectedMetatileFamily;
+      showAdvancedStructure = true;
+      trackRecent('metatile', tileId);
+      setMode('structure');
+      buildPalette();
+      return;
+    }
+    const asset = project.assets.objects.find(entry => entry.id === object?.assetId);
+    if (asset) {
+      paletteTab = 'objects';
+      selectedObjectFamily = asset.category || selectedObjectFamily;
+      placingAsset = {kind: 'object', id: asset.id};
+      trackRecent('object', asset.id);
+      setMode('select');
+      buildPalette();
+      return;
+    }
+  }
+  selectedTerrain = map.terrain[cell.y][cell.x];
+  const tile = (project.assets.groundTiles || []).find(entry => entry.id === selectedTerrain);
+  if (tile?.family) selectedGroundFamily = tile.family;
+  paletteTab = 'terrain';
+  trackRecent('terrain', selectedTerrain);
+  setMode('terrain');
+  buildPalette();
+}
+
+function eraseAt(cell) {
+  const map = activeMap();
+  const hit = renderer.hitTest(renderState(), cell.x, cell.y);
+  if (hit) {
+    const key = hit.kind === 'object' ? 'objects' : hit.kind === 'actor' ? 'actors' : 'events';
+    map[key] = map[key].filter(entry => entry.id !== hit.id);
+    if (selection?.id === hit.id) selection = null;
+    recordHistory(`${friendlyName(hit.kind)} erased`);
+    return;
+  }
+  const replacement = map.originalTerrain?.[cell.y]?.[cell.x] || (map.type === 'exterior' ? 'grass' : 'floor');
+  if (map.terrain[cell.y][cell.x] === replacement) {
+    saveStatus.textContent = 'Nothing to erase in this cell';
+    return;
+  }
+  map.terrain[cell.y][cell.x] = replacement;
+  recordHistory('Ground cell restored');
 }
 
 function metatileById(tileId) {
@@ -869,6 +1259,18 @@ canvas.addEventListener('pointerdown', event => {
   const cell = cellFromClient(event.clientX, event.clientY);
   if (!cell) return;
   canvas.focus();
+  if (mode === 'pick') {
+    pickAt(cell);
+    return;
+  }
+  if (mode === 'fill') {
+    fillTerrain(cell, selectedTerrain);
+    return;
+  }
+  if (mode === 'erase') {
+    eraseAt(cell);
+    return;
+  }
   if (placingAsset) {
     if (placingAsset.kind === 'groundStamp') applyGroundStamp(placingAsset.id, cell);
     else if (placingAsset.kind === 'object') addObject(placingAsset.id, cell);
@@ -1032,6 +1434,23 @@ document.querySelectorAll('[data-palette]').forEach(button => button.addEventLis
   placingAsset = null;
   buildPalette();
 }));
+paletteSearch.addEventListener('input', event => {
+  paletteQuery = event.currentTarget.value.trim().toLowerCase();
+  buildPalette();
+});
+favoriteFilter.addEventListener('click', () => {
+  favoriteOnly = !favoriteOnly;
+  favoriteFilter.classList.toggle('active', favoriteOnly);
+  favoriteFilter.setAttribute('aria-pressed', String(favoriteOnly));
+  favoriteFilter.innerHTML = favoriteOnly ? '&#9733;' : '&#9734;';
+  buildPalette();
+});
+document.querySelector('#paletteExpand').addEventListener('click', () => {
+  editorShell.classList.toggle('palette-wide');
+  requestRender();
+});
+document.querySelector('#inspectorToggle').addEventListener('click', () => inspectorPanel.classList.add('mobile-open'));
+document.querySelector('#inspectorClose').addEventListener('click', () => inspectorPanel.classList.remove('mobile-open'));
 document.querySelector('#undoButton').addEventListener('click', () => restoreHistory(historyIndex - 1));
 document.querySelector('#redoButton').addEventListener('click', () => restoreHistory(historyIndex + 1));
 document.querySelector('#gridButton').addEventListener('click', event => {
@@ -1129,7 +1548,7 @@ window.addEventListener('keydown', event => {
   if ((event.key === 'Delete' || event.key === 'Backspace') && document.activeElement === canvas) {
     event.preventDefault(); deleteSelection(); return;
   }
-  const toolKeys = {h: 'pan', v: 'select', t: 'terrain', s: 'structure', c: 'collision', d: 'door', e: 'event'};
+  const toolKeys = {h: 'pan', v: 'select', i: 'pick', t: 'terrain', f: 'fill', x: 'erase', s: 'structure', c: 'collision', d: 'door', e: 'event'};
   if (document.activeElement === canvas && toolKeys[event.key.toLowerCase()]) setMode(toolKeys[event.key.toLowerCase()]);
 });
 
@@ -1148,6 +1567,10 @@ window.__badgerMapEditorTest = {
     showCollision,
     cameraPreview,
     zoom,
+    selectedTerrain,
+    selectedMetatile,
+    paletteQuery,
+    favoriteOnly,
     validation: validateProject(project)
   })
 };

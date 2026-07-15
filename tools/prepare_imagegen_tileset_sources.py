@@ -23,23 +23,26 @@ MANIFEST_PATH = OUTPUT_DIR / "source_manifest.json"
 
 BOARDS = {
     "ground": {
-        "path": SOURCE_DIR / "season_one_ground_source_v1.png",
-        "columns": 3,
+        "path": SOURCE_DIR / "season_one_ground_source_v2.png",
+        "columns": 4,
         "rows": 3,
         "entries": [
-            ("grass", (16, 16), "fit", 14),
-            ("mowed_grass", (16, 16), "fit", 14),
-            ("dirt", (16, 16), "fit", 14),
+            ("grass", (16, 16), "fit", 16),
+            ("mowed_grass", (16, 16), "fit", 16),
+            ("dirt", (16, 16), "fit", 16),
             ("brick", (16, 16), "fit", 16),
-            ("stone", (16, 16), "fit", 14),
-            ("gravel", (16, 16), "fit", 14),
-            ("sand", (16, 16), "fit", 14),
+            ("stone", (16, 16), "fit", 16),
+            ("concrete", (16, 16), "fit", 16),
+            ("gravel", (16, 16), "fit", 16),
+            ("sand", (16, 16), "fit", 16),
             ("water", (16, 16), "fit", 16),
-            ("asphalt", (16, 16), "fit", 12),
+            ("asphalt", (16, 16), "fit", 16),
+            ("timber", (16, 16), "fit", 16),
+            ("meadow_grass", (16, 16), "fit", 16),
         ],
     },
     "vegetation": {
-        "path": SOURCE_DIR / "season_one_vegetation_source_v1.png",
+        "path": SOURCE_DIR / "season_one_vegetation_source_v2.png",
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -156,13 +159,23 @@ BOARDS = {
 }
 
 
-# Imagegen establishes the material idea, but a 16px gameplay tile cannot keep
-# painterly micro-variation. These material-specific targets preserve the source
-# role while enforcing the quiet-ground value structure used by the game.
+# Imagegen establishes the material texture and value grouping. The compiler
+# reduces every ground panel to a declared four-color material ramp so generated
+# noise cannot leak into the game, while preserving substantially more authored
+# information than the old one-field-plus-stipple treatment.
 GROUND_RAMPS = {
-    "grass": ((138, 201, 165, 255), (117, 190, 154, 255)),
-    "mowed_grass": ((145, 198, 143, 255), (124, 183, 127, 255)),
-    "brick": ((222, 211, 181, 255), (239, 231, 204, 255), (190, 178, 145, 255)),
+    "grass": ((77, 148, 74, 255), (96, 177, 82, 255), (128, 203, 103, 255), (163, 219, 126, 255)),
+    "mowed_grass": ((83, 151, 74, 255), (103, 176, 83, 255), (136, 198, 102, 255), (174, 216, 128, 255)),
+    "dirt": ((143, 107, 62, 255), (176, 138, 78, 255), (216, 184, 112, 255), (239, 216, 155, 255)),
+    "brick": ((142, 91, 78, 255), (181, 120, 99, 255), (216, 164, 132, 255), (238, 202, 169, 255)),
+    "stone": ((126, 125, 116, 255), (161, 159, 145, 255), (202, 198, 177, 255), (231, 225, 202, 255)),
+    "concrete": ((126, 130, 126, 255), (165, 166, 156, 255), (207, 205, 190, 255), (237, 232, 216, 255)),
+    "gravel": ((105, 105, 98, 255), (139, 136, 124, 255), (180, 174, 154, 255), (211, 204, 181, 255)),
+    "sand": ((151, 128, 70, 255), (188, 163, 92, 255), (222, 198, 127, 255), (243, 224, 164, 255)),
+    "water": ((37, 91, 133, 255), (48, 121, 161, 255), (73, 157, 187, 255), (116, 194, 207, 255)),
+    "asphalt": ((42, 47, 49, 255), (57, 63, 65, 255), (78, 86, 87, 255), (104, 112, 111, 255)),
+    "timber": ((67, 43, 31, 255), (105, 67, 43, 255), (151, 96, 59, 255), (194, 135, 82, 255)),
+    "meadow_grass": ((68, 137, 66, 255), (91, 169, 75, 255), (127, 201, 100, 255), (222, 221, 167, 255)),
 }
 
 
@@ -171,52 +184,34 @@ def _luma(pixel: tuple[int, int, int, int]) -> int:
     return red * 299 + green * 587 + blue * 114
 
 
-def quiet_stipple(source: Image.Image, base, accent, count: int = 10) -> Image.Image:
-    """Reduce a source texture to one field color and <=5% spaced detail."""
-    output = Image.new("RGBA", source.size, base)
-    source_pixels = source.convert("RGBA").load()
-    candidates = sorted(
-        (
-            (_luma(source_pixels[x, y]), y, x)
-            for y in range(1, source.height - 1)
-            for x in range(1, source.width - 1)
-        ),
-        key=lambda entry: (entry[0], entry[1], entry[2]),
-    )
-    selected: list[tuple[int, int]] = []
-    for _value, y, x in candidates:
-        if all(abs(x - other_x) + abs(y - other_y) >= 4 for other_x, other_y in selected):
-            selected.append((x, y))
-        if len(selected) == count:
-            break
-    draw = ImageDraw.Draw(output)
-    for x, y in selected:
-        draw.point((x, y), fill=accent)
-    return output
-
-
-def quiet_pavers(source: Image.Image, ramp) -> Image.Image:
-    """Convert the former cardinal brick field into low-contrast campus pavers."""
-    base, light, joint = ramp
-    output = Image.new("RGBA", source.size, base)
-    draw = ImageDraw.Draw(output)
-    # All four outer edges stay base-colored. That makes every rotated edge and
-    # corner metatile reciprocal while the internal joints retain the material.
-    draw.line((1, 7, source.width - 2, 7), fill=joint)
-    draw.line((1, 8, source.width - 2, 8), fill=light)
-    draw.line((7, 1, 7, 6), fill=joint)
-    draw.line((3, 9, 3, source.height - 2), fill=joint)
+def posterize_to_ramp(source: Image.Image, ramp) -> Image.Image:
+    """Map source luminance to a fixed material ramp without dither or AA."""
+    rgba = source.convert("RGBA")
+    pixels = list(rgba.getdata())
+    visible = [pixel for pixel in pixels if pixel[3]]
+    if not visible:
+        return rgba
+    low = min(_luma(pixel) for pixel in visible)
+    high = max(_luma(pixel) for pixel in visible)
+    ordered = sorted(ramp, key=_luma)
+    span = max(1, high - low)
+    output = Image.new("RGBA", rgba.size, (0, 0, 0, 0))
+    mapped = []
+    for pixel in pixels:
+        if not pixel[3]:
+            mapped.append((0, 0, 0, 0))
+            continue
+        ratio = (_luma(pixel) - low) / span
+        index = min(len(ordered) - 1, int(ratio * len(ordered)))
+        mapped.append(ordered[index])
+    output.putdata(mapped)
     return output
 
 
 def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image:
     """Apply the declared per-material value grammar after source extraction."""
-    if asset_id in {"grass", "mowed_grass"}:
-        base, accent = GROUND_RAMPS[asset_id]
-        return quiet_stipple(image, base, accent)
-    if asset_id == "brick":
-        return quiet_pavers(image, GROUND_RAMPS[asset_id])
-    return image
+    ramp = GROUND_RAMPS.get(asset_id)
+    return posterize_to_ramp(image, ramp) if ramp else image
 
 STANDALONE_ASSETS = {
     "landmarks": [
@@ -261,7 +256,13 @@ def is_key(pixel: tuple[int, int, int, int]) -> bool:
     return red >= 205 and blue >= 155 and green <= 105 and red - green >= 105 and blue - green >= 65
 
 
-def extract_panel(board: Image.Image, columns: int, rows: int, index: int) -> Image.Image:
+def extract_panel(
+    board: Image.Image,
+    columns: int,
+    rows: int,
+    index: int,
+    trim_noise: bool = False,
+) -> Image.Image:
     column = index % columns
     row = index // columns
     x1 = round(column * board.width / columns)
@@ -279,7 +280,38 @@ def extract_panel(board: Image.Image, columns: int, rows: int, index: int) -> Im
                 # Despill the narrow chroma halo while retaining legitimate
                 # cardinal reds and pink flowers.
                 pixels[x, y] = (red, min(green + 12, 255), max(0, blue - 34), alpha)
-    bbox = panel.getchannel("A").getbbox()
+    alpha = panel.getchannel("A")
+    alpha_pixels = alpha.load()
+    row_floor = max(2, round(panel.width * 0.01))
+    column_floor = max(2, round(panel.height * 0.01))
+    row_counts = {
+        y: sum(alpha_pixels[x, y] >= 96 for x in range(panel.width))
+        for y in range(panel.height)
+    }
+    column_counts = {
+        x: sum(alpha_pixels[x, y] >= 96 for y in range(panel.height))
+        for x in range(panel.width)
+    }
+
+    def dominant_span(counts: dict[int, int], floor: int) -> list[int]:
+        indices = [index for index, count in counts.items() if count >= floor]
+        if not indices:
+            return []
+        groups: list[list[int]] = [[indices[0]]]
+        for value in indices[1:]:
+            if value - groups[-1][-1] > 3:
+                groups.append([value])
+            else:
+                groups[-1].append(value)
+        return max(groups, key=lambda group: sum(counts[value] for value in group))
+
+    significant_rows = dominant_span(row_counts, row_floor)
+    significant_columns = dominant_span(column_counts, column_floor)
+    disciplined_bbox = (
+        min(significant_columns), min(significant_rows),
+        max(significant_columns) + 1, max(significant_rows) + 1,
+    ) if significant_rows and significant_columns else alpha.getbbox()
+    bbox = disciplined_bbox if trim_noise else alpha.getbbox()
     if not bbox:
         raise SystemExit(f"Imagegen panel {index} contains no non-key artwork")
     return panel.crop(bbox)
@@ -350,7 +382,13 @@ def build() -> dict:
             raise SystemExit(f"{category}: expected {expected} panel definitions")
         sources[category] = sha256(path)
         for index, (asset_id, size, mode, colors) in enumerate(spec["entries"]):
-            panel = extract_panel(board, spec["columns"], spec["rows"], index)
+            panel = extract_panel(
+                board,
+                spec["columns"],
+                spec["rows"],
+                index,
+                trim_noise=category in {"ground", "vegetation"},
+            )
             normalized = normalize(panel, size, mode, colors)
             if category == "ground":
                 normalized = discipline_ground_material(
@@ -392,7 +430,7 @@ def build() -> dict:
 
     manifest = {
         "schema": "badger-grapple-imagegen-tileset-sources/v1",
-        "version": 1,
+        "version": 2,
         "logicalCellSize": 16,
         "chromaKey": "#ff00ff",
         "sourceBoards": sources,

@@ -20,7 +20,10 @@
       <div class="tool-segments" id="toolSegments" aria-label="Editor tool">
         <button data-tool="pan" title="Drag to move around the map (H)">Pan</button>
         <button class="active" data-tool="select" title="Select and move objects">Select</button>
-        <button data-tool="terrain" title="Paint neighbor-aware ground metatiles">Ground</button>
+        <button data-tool="pick" title="Pick the tile or asset under the cursor (I)">Pick</button>
+        <button data-tool="terrain" title="Paint explicit ground metatiles">Ground</button>
+        <button data-tool="fill" title="Fill a connected ground area (F)">Fill</button>
+        <button data-tool="erase" title="Erase ground, objects, actors, or events (X)">Erase</button>
         <button data-tool="structure" title="Paint behavior-owned structure metatiles">Structure</button>
         <button data-tool="collision" title="Paint selected object collision">Collision</button>
         <button data-tool="door" title="Place selected object door">Door</button>
@@ -33,6 +36,7 @@
         <button id="gridButton" class="icon-button active" title="Toggle grid" aria-label="Toggle grid">#</button>
         <button id="collisionButton" class="icon-button" title="Toggle collision overlay" aria-label="Toggle collision overlay">C</button>
         <button id="cameraButton" class="icon-button" title="Toggle camera preview" aria-label="Toggle camera preview">&#9635;</button>
+        <button id="inspectorToggle" class="icon-button inspector-toggle" title="Open inspector" aria-label="Open inspector">I</button>
       </div>
       <div class="zoom-control" aria-label="Zoom">
         <button id="zoomOut" class="icon-button" title="Zoom out" aria-label="Zoom out">&#8722;</button>
@@ -52,11 +56,19 @@
       <aside class="palette-panel" aria-label="Asset palette">
         <div class="panel-heading">
           <strong>Palette</strong>
+          <button id="paletteExpand" class="icon-button palette-expand" title="Expand palette" aria-label="Expand palette">&#8646;</button>
           <div class="palette-tabs" role="tablist">
             <button class="active" data-palette="terrain" role="tab">Tiles</button>
             <button data-palette="objects" role="tab">Stamps</button>
             <button data-palette="actors" role="tab">Actors</button>
           </div>
+        </div>
+        <div class="palette-controls">
+          <label class="palette-search">
+            <span class="visually-hidden">Search palette</span>
+            <input id="paletteSearch" type="search" placeholder="Search tiles and stamps" autocomplete="off" />
+          </label>
+          <button id="favoriteFilter" class="icon-button" title="Show starred assets" aria-label="Show starred assets" aria-pressed="false">&#9734;</button>
         </div>
         <div id="paletteContent" class="palette-content"></div>
       </aside>
@@ -68,13 +80,17 @@
         <div class="workspace-readout">
           <span id="cellReadout">Cell --,--</span>
           <span id="modeReadout">Select</span>
+          <span id="brushReadout">No brush</span>
         </div>
       </section>
 
       <aside class="inspector-panel" id="inspectorPanel" aria-label="Inspector">
         <div class="panel-heading">
           <strong>Inspector</strong>
-          <button id="deleteButton" class="icon-button danger" title="Delete selection" aria-label="Delete selection">&#215;</button>
+          <div class="inspector-heading-actions">
+            <button id="inspectorClose" class="icon-button inspector-close" title="Close inspector" aria-label="Close inspector">&#215;</button>
+            <button id="deleteButton" class="icon-button danger" title="Delete selection" aria-label="Delete selection">&#128465;</button>
+          </div>
         </div>
         <div id="inspectorContent" class="inspector-content"></div>
         <section class="validation-panel">

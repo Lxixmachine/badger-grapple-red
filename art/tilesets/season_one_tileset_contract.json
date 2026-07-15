@@ -1,6 +1,6 @@
 {
   "schema": "badger-grapple-tileset-contract/v1",
-  "version": 3,
+  "version": 4,
   "cellSize": 32,
   "logicalCellSize": 16,
   "renderScale": 2,
@@ -38,8 +38,8 @@
   ],
   "groundFamilies": {
     "base_surfaces": {
-      "minimum": 12,
-      "required": ["grass", "grass_b", "mowed_grass", "dirt", "brick", "stone", "water", "asphalt", "sand", "gravel"]
+      "minimum": 14,
+      "required": ["grass", "grass_b", "mowed_grass", "meadow_grass", "dirt", "brick", "stone", "concrete", "water", "asphalt", "sand", "gravel", "timber"]
     },
     "natural_details": {
       "minimum": 12,
@@ -47,7 +47,7 @@
     },
     "narrow_paths": {
       "minimumPerMaterial": 16,
-      "materials": ["dirt", "brick", "stone"]
+      "materials": ["dirt", "brick", "stone", "concrete", "timber"]
     },
     "blob47_transitions": {
       "minimumPerFamily": 47,
@@ -57,6 +57,8 @@
         "surface_stone",
         "surface_sand",
         "surface_gravel",
+        "surface_concrete",
+        "surface_timber",
         "shore_water",
         "road_asphalt_grass",
         "road_asphalt_curb",
@@ -133,7 +135,7 @@
     }
   },
   "groundAssemblies": {
-    "minimum": 18,
+    "minimum": 26,
     "required": [
       "brick_walk_ns",
       "brick_walk_ew",
@@ -141,6 +143,10 @@
       "brick_walk_cross",
       "stone_walk_ns",
       "stone_walk_ew",
+      "concrete_walk_ns",
+      "concrete_walk_ew",
+      "timber_walk_ns",
+      "timber_walk_ew",
       "dirt_trail_ns",
       "dirt_trail_ew",
       "pond_small",

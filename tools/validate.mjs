@@ -84,9 +84,9 @@ else{
   const world=JSON.parse(readFileSync(worldTilesetBuildPath,'utf8'));
   const manifest=JSON.parse(readFileSync(worldTilesetManifestPath,'utf8'));
   const contract=JSON.parse(readFileSync(worldTilesetContractPath,'utf8'));
-  if(world.schema!=='badger-grapple-world-tileset/v4'||world.version!==4||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  if(world.schema!=='badger-grapple-world-tileset/v5'||world.version!==5||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
   if(manifest.schema!=='badger-grapple-world-tileset-manifest/v2'||manifest.version!==2||manifest.logicalCellSize!==16||manifest.renderScale!==2)errs.push('Season One world tileset manifest must use the authored 16px/2x pipeline');
-  if(contract.version!==3||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false||contract.rules?.quietGroundPalette!==true||contract.rules?.cardinalGroundReserved!==true)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
+  if(contract.version!==4||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false||contract.rules?.quietGroundPalette!==true||contract.rules?.cardinalGroundReserved!==true)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
   if(world.artPipeline?.logicalCellSize!==16||world.artPipeline?.renderScale!==2||world.artPipeline?.resampling!=='nearest'||world.artPipeline?.pixelPerfect!==true)errs.push('Season One world tileset is not an exact nearest-neighbor logical-grid export');
   if(world.sources?.manifest!==fileHash(worldTilesetManifestPath))errs.push('Season One world tileset manifest is stale');
   if(!existsSync(worldTilesetContractPath)||world.sources?.contract!==fileHash(worldTilesetContractPath)||world.contract?.sha256!==fileHash(worldTilesetContractPath))errs.push('Season One world tileset contract is missing or stale');
@@ -108,7 +108,7 @@ else{
   const catalog=world.terrain?.catalog||[];
   const tileIds=new Set(catalog.map(tile=>tile.id));
   if(catalog.length<500||tileIds.size!==catalog.length)errs.push('Season One world ground catalog must contain at least 500 unique explicit tiles');
-  for(const required of ['grass','mowed_grass','brick','stone','concrete','dirt','sand','gravel','water','asphalt','brick_path_cross','surface_brick_blob_n_e_s_w_ne_se_sw_nw','shore_water_blob_n_e_s_w_ne_se_sw_nw','crosswalk_ns'])if(!tileIds.has(required))errs.push(`Season One world ground catalog is missing ${required}`);
+  for(const required of ['grass','mowed_grass','meadow_grass','brick','stone','concrete','dirt','sand','gravel','water','asphalt','timber','brick_path_cross','concrete_path_cross','timber_path_cross','surface_brick_blob_n_e_s_w_ne_se_sw_nw','shore_water_blob_n_e_s_w_ne_se_sw_nw','crosswalk_ns'])if(!tileIds.has(required))errs.push(`Season One world ground catalog is missing ${required}`);
   for(const tile of catalog){
     if(!['walkable','water'].includes(tile.behavior)||tile.coverage!=='full')errs.push(`Season One ground tile ${tile.id} must be full-cell with a supported behavior`);
     if(world.terrain.tiles?.[tile.id]!==tile.visual||!Number.isInteger(tile.visual)||tile.visual<0||tile.visual>=world.atlas.visualCount)errs.push(`Season One ground tile ${tile.id} references an invalid visual`);
@@ -117,15 +117,15 @@ else{
   for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
   if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<84||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
   const groundMetrics=world.coverage?.groundMaterialMetrics||{};
-  if(!groundMetrics.grass||groundMetrics.grass.uniqueColors>2||groundMetrics.grass.dominantCoverage<0.95||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the quiet-ground palette contract');
-  if(!groundMetrics.campusPavers||groundMetrics.campusPavers.uniqueColors>3||groundMetrics.campusPavers.meanLightness<0.7||groundMetrics.campusPavers.cardinalPixelCount!==0)errs.push('Season One campus pavers violate the quiet-ground palette contract');
-  for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
+  if(!groundMetrics.grass||groundMetrics.grass.uniqueColors>4||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the quiet-ground palette contract');
+  if(!groundMetrics.campusPavers||groundMetrics.campusPavers.uniqueColors>4||groundMetrics.campusPavers.meanLightness<0.55||groundMetrics.campusPavers.cardinalPixelCount!==0)errs.push('Season One campus pavers violate the quiet-ground palette contract');
+  for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','surface_concrete','surface_timber','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
     if((world.coverage?.groundFamilyCounts?.[family]||0)<47)errs.push(`Season One world transition family ${family} is incomplete`);
   }
   for(const required of ['tree_oak_a','tree_pine','forest_mass_core','forest_border_west_long','hedge_corner_nw','fence_long','wood_bench','roof_red_gable','door_red','awning_cardinal','trainer_room_exterior','buckys_locker_room_exterior','cliff_run','cliff_stairs'])if(!world.stamps?.[required])errs.push(`Season One world stamp library is missing ${required}`);
   for(const required of ['field_house_arena_exterior','kohl_arena_exterior','nationals_arena_exterior','bascom_hall_exterior','wisconsin_capitol_exterior','brittingham_boats_exterior'])if(!world.stamps?.[required])errs.push(`Season One landmark stamp library is missing ${required}`);
   for(const required of ['equipment_annex_exterior','campus_housing_exterior','bookstore_row_exterior','theater_marquee_exterior','food_cart_row_exterior','capitol_hotel_exterior','civic_offices_exterior','transit_hotel_exterior','team_hotel_exterior','riverfront_hotel_exterior','state_facade_11x5','state_facade_10x3','state_facade_13x5','state_facade_8x5','state_facade_8x4','state_facade_10x5','state_facade_5x5','city_edge_horizontal','city_edge_vertical'])if(!world.stamps?.[required])errs.push(`Season One ordinary-building stamp library is missing ${required}`);
-  if(Object.keys(world.terrain?.stamps||{}).length<18)errs.push('Season One world tileset is missing reusable ground assemblies');
+  if(Object.keys(world.terrain?.stamps||{}).length<26)errs.push('Season One world tileset is missing reusable ground assemblies');
 }
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{

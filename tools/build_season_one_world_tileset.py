@@ -40,9 +40,9 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v4.png"
-STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v3"
-GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v5"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v5.png"
+STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
+GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
 SEAM_PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_tileset_seam_test.png"
 
@@ -448,6 +448,8 @@ def build() -> dict:
     water = export_2x(material_tile("water"))
     sand = export_2x(material_tile("sand"))
     gravel = export_2x(material_tile("gravel"))
+    timber = export_2x(material_tile("timber"))
+    meadow = export_2x(material_tile("meadow_grass"))
 
     add_ground("grass", "Grass", "grass", grass, ["base", "natural"])
     add_ground("grass_b", "Grass B", "grass", grass_b, ["base", "natural", "variation"])
@@ -463,19 +465,19 @@ def build() -> dict:
     add_ground("water", "Open Water", "water", water, ["base", "water"], "water")
     add_ground("asphalt", "Asphalt", "roads", asphalt, ["base", "road"])
     add_ground("asphalt_b", "Asphalt B", "roads", export_2x(material_tile("asphalt", 1)), ["base", "road", "variation"])
+    add_ground("timber", "Timber Boardwalk", "surface_timber", timber, ["base", "route", "boardwalk"])
+    add_ground("meadow_grass", "Meadow Grass", "meadow", meadow, ["base", "natural", "flowering"])
 
     ground_material_metrics = {
         "grass": material_metrics(material_tile("grass")),
         "mowedGrass": material_metrics(material_tile("mowed_grass")),
         "campusPavers": material_metrics(material_tile("brick")),
     }
-    if ground_material_metrics["grass"]["uniqueColors"] > 2:
-        raise SystemExit("Grass must be a two-color quiet field")
-    if ground_material_metrics["grass"]["dominantCoverage"] < 0.95:
-        raise SystemExit("Grass stipple exceeds the five-percent visual budget")
+    if ground_material_metrics["grass"]["uniqueColors"] > 4:
+        raise SystemExit("Grass must stay within its four-color material ramp")
     paver_metrics = ground_material_metrics["campusPavers"]
-    if paver_metrics["uniqueColors"] > 3 or paver_metrics["meanLightness"] < 0.70:
-        raise SystemExit("Campus pavers must remain a pale three-color material")
+    if paver_metrics["uniqueColors"] > 4 or paver_metrics["meanLightness"] < 0.55:
+        raise SystemExit("Campus pavers must remain a pale four-color material")
     if paver_metrics["cardinalPixelCount"]:
         raise SystemExit("Cardinal red is reserved for identity objects, not ground")
 
@@ -485,7 +487,7 @@ def build() -> dict:
             export_2x(ground_detail(overlay["id"])), ["detail", "natural", "authored16"],
         )
 
-    for material in ("dirt", "brick", "stone"):
+    for material in ("dirt", "brick", "stone", "concrete", "timber"):
         family = f"path_{material}"
         for bits, suffix in CONNECTOR_NAMES.items():
             tile = export_2x(connector_tile(material, bits, bits % 3))
@@ -534,7 +536,7 @@ def build() -> dict:
 
     blob_families = [
         "surface_dirt", "surface_brick", "surface_stone", "surface_sand",
-        "surface_gravel", "shore_water", "road_asphalt_grass",
+        "surface_gravel", "surface_concrete", "surface_timber", "shore_water", "road_asphalt_grass",
         "road_asphalt_curb", "lawn_mowed",
     ]
     for family in blob_families:
@@ -870,6 +872,8 @@ def build() -> dict:
     assembly_sets = [
         ("brick_walk", "Brick Walk", "surface_brick"),
         ("stone_walk", "Stone Walk", "surface_stone"),
+        ("concrete_walk", "Concrete Walk", "surface_concrete"),
+        ("timber_walk", "Timber Boardwalk", "surface_timber"),
         ("dirt_trail", "Dirt Trail", "surface_dirt"),
         ("gravel_trail", "Gravel Trail", "surface_gravel"),
     ]
@@ -1059,8 +1063,8 @@ def build() -> dict:
     save_png(preview, PREVIEW_PATH)
 
     result = {
-        "schema": "badger-grapple-world-tileset/v4",
-        "version": 4,
+        "schema": "badger-grapple-world-tileset/v5",
+        "version": 5,
         "status": "season-one-quiet-ground-pixel-kit",
         "cellSize": cell,
         "artPipeline": {

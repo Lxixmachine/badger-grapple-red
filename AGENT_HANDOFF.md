@@ -3017,3 +3017,24 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   ground-value retuning is the next visual package after Tony verifies v22.7.
 - Current authority is Season One layout revision 6, Camp metatile v9, and app
   v22.7. The old 24x20 Camp geometry is no longer present in region metadata.
+
+## Codex World Kit and Map Studio Workflow (v22.11)
+
+- The deterministic world compiler now consumes dedicated Imagegen v2 ground
+  and vegetation boards. World atlas v5 contains 695 ground tiles, 138 shared
+  stamps, 28 ready-made ground assemblies, and 2,314 exact-grid visuals.
+- The ground catalog now includes concrete, timber boardwalk, and meadow
+  materials; concrete and timber have complete Blob-47 transitions and narrow
+  path families. Every ground material is reduced to its declared four-color
+  ramp and exported through the exact 2x pixel contract.
+- Map Studio now prioritizes surfaces and ready-made assemblies, with searchable
+  tiles/stamps/actors, persistent favorites and recents, collapsible low-level
+  transitions, and an explicit advanced-structure warning.
+- Pick, contiguous Fill, and Erase operate on exact owned cells. Hover previews
+  show complete ground matrices and object footprints before placement. Mobile
+  now has a usable palette tray, inspector drawer, and non-clipping toolbar;
+  desktop file actions wrap at laptop widths instead of leaving the viewport.
+- `tests/map-editor.spec.js` has 16 passing interaction and geometry tests. Do
+  not regenerate world compositions until Tony's dirty State Street composition
+  draft is intentionally reconciled; the broad validator reports that draft as
+  stale, while balance, map lint, and the Vite production build pass.

@@ -145,11 +145,13 @@ def material_tile(name: str, phase: int = 0) -> Image.Image:
         "dirt": "dirt",
         "brick": "brick",
         "stone": "stone",
-        "concrete": "stone",
+        "concrete": "concrete",
         "sand": "sand",
         "gravel": "gravel",
         "water": "water",
         "asphalt": "asphalt",
+        "timber": "timber",
+        "meadow_grass": "meadow_grass",
     }.get(name)
     if source_name:
         source = source_asset("ground", source_name)
@@ -269,6 +271,8 @@ EDGE_STYLES = {
     "surface_stone": EdgeStyle("grass", "stone", (3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3), PALETTE["stone_light"], PALETTE["stone_dark"]),
     "surface_sand": EdgeStyle("grass", "sand", (4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 5, 4, 3, 3, 4), None, PALETTE["sand_dark"]),
     "surface_gravel": EdgeStyle("grass", "gravel", (3, 4, 3, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 3, 4, 3), None, PALETTE["gravel_dark"]),
+    "surface_concrete": EdgeStyle("grass", "concrete", (3,) * 16, PALETTE["stone_light"], PALETTE["curb_dark"]),
+    "surface_timber": EdgeStyle("grass", "timber", (3,) * 16, PALETTE["wood"], PALETTE["trunk_dark"]),
     "shore_water": EdgeStyle("grass", "water", (4, 4, 3, 3, 4, 5, 5, 4, 4, 5, 5, 4, 3, 3, 4, 4), PALETTE["sand"], PALETTE["water_dark"], PALETTE["foam"]),
     "road_asphalt_grass": EdgeStyle("grass", "asphalt", (4,) * 16, PALETTE["curb"], PALETTE["asphalt_dark"]),
     "road_asphalt_curb": EdgeStyle("concrete", "asphalt", (2,) * 16, PALETTE["curb"], PALETTE["curb_dark"]),
@@ -386,7 +390,13 @@ def validate_plaza_transition_seams() -> None:
 
 
 def connector_tile(material: str, bits: int, phase: int = 0) -> Image.Image:
-    family = {"dirt": "surface_dirt", "brick": "surface_brick", "stone": "surface_stone"}[material]
+    family = {
+        "dirt": "surface_dirt",
+        "brick": "surface_brick",
+        "stone": "surface_stone",
+        "concrete": "surface_concrete",
+        "timber": "surface_timber",
+    }[material]
     style = EDGE_STYLES[family]
     mask = Image.new("L", (16, 16), 0)
     draw = ImageDraw.Draw(mask)
