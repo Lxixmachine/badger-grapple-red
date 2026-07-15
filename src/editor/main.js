@@ -84,6 +84,8 @@ function loadDraft(seed) {
 
 function migrateDraft(saved, seed) {
   const migrated = cloneProject(saved);
+  const refreshPlannedAssets = migrated.layoutRevision !== seed.layoutRevision
+    || migrated.metatileVersion !== seed.metatileVersion;
   migrated.maps ||= {};
   for (const [mapId, seedMap] of Object.entries(seed.maps)) {
     const savedMap = migrated.maps?.[mapId];
@@ -106,7 +108,7 @@ function migrateDraft(saved, seed) {
     });
     const seedObjects = new Map((seedMap.objects || []).map(object => [object.id, object]));
     savedMap.objects = (savedMap.objects || []).map(object => {
-      if (object.sourceKind !== 'planned-metatile') return object;
+      if (object.sourceKind !== 'planned-metatile' || !refreshPlannedAssets) return object;
       const replacement = seedObjects.get(object.id);
       return replacement ? {...cloneProject(replacement), x: object.x, y: object.y, name: object.name} : object;
     });

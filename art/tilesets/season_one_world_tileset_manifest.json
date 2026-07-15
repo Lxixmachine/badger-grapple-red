@@ -69,6 +69,8 @@
     {"id": "campus_lamp", "name": "Campus Lamp", "family": "campus_props", "source": "vegetation", "crop": [64, 815, 137, 995], "width": 1, "height": 2, "fit": "contain", "collisionMask": [".", "#"]},
     {"id": "wood_bench", "name": "Wood Bench", "family": "campus_props", "source": "vegetation", "crop": [220, 857, 418, 982], "width": 3, "height": 2, "fit": "contain", "collisionMask": ["...", "###"]},
     {"id": "campus_sign", "name": "Campus Sign", "family": "campus_props", "source": "vegetation", "crop": [507, 826, 723, 992], "width": 3, "height": 2, "fit": "contain", "collisionMask": ["...", "#.#"]},
+    {"id": "team_building_sign", "name": "Team Building Sign", "family": "campus_props", "source": "vegetation", "crop": [507, 826, 723, 992], "width": 3, "height": 2, "fit": "contain", "collisionMask": ["...", "#.#"]},
+    {"id": "coach_office_sign", "name": "Coach Office Sign", "family": "campus_props", "source": "vegetation", "crop": [507, 826, 723, 992], "width": 3, "height": 2, "fit": "contain", "collisionMask": ["...", "#.#"]},
     {"id": "banner_pole", "name": "Cardinal Banner", "family": "campus_props", "source": "vegetation", "crop": [794, 804, 895, 995], "width": 1, "height": 2, "fit": "contain", "collisionMask": [".", "#"]},
     {"id": "trash_can", "name": "Trash Can", "family": "campus_props", "source": "vegetation", "crop": [981, 873, 1064, 985], "width": 1, "height": 1, "fit": "contain", "collisionMask": ["#"]},
     {"id": "bike_rack", "name": "Bike Rack", "family": "campus_props", "source": "vegetation", "crop": [1132, 882, 1321, 972], "width": 3, "height": 1, "fit": "contain", "collisionMask": ["###"]},

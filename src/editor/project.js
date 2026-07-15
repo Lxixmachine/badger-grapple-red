@@ -165,11 +165,24 @@ function terrainBlobId(material, materialGrid, x, y) {
     ['nw', -1, -1]
   ].filter(([, dx, dy]) => matches(dx, dy)).map(([name]) => name);
   const suffix = neighbors.length ? neighbors.join('_') : 'isolated';
-  const candidate = `surface_${material}_blob_${suffix}`;
+  const family = {
+    brick: 'surface_brick',
+    stone: 'surface_stone',
+    concrete: 'surface_concrete',
+    dirt: 'surface_dirt',
+    gravel: 'surface_gravel',
+    sand: 'surface_sand',
+    timber: 'surface_timber',
+    mowed_grass: 'lawn_mowed',
+    water: 'shore_water',
+    asphalt: 'road_asphalt_grass'
+  }[material] || `surface_${material}`;
+  const candidate = `${family}_blob_${suffix}`;
   return terrainTileIds.has(candidate) ? candidate : material;
 }
 
 function campGridTerrain(layout) {
+  if (layout.terrainOverride) return deepClone(layout.terrainOverride);
   const {width, height} = layout.size;
   const materials = Array.from({length: height}, () => Array(width).fill('grass'));
   const paint = (material, x, y, paintWidth, paintHeight) => {
@@ -187,7 +200,6 @@ function campGridTerrain(layout) {
   return materials.map((row, y) => row.map((material, x) => {
     if (material !== 'grass') return terrainBlobId(material, materials, x, y);
     const variation = (x * 17 + y * 29) % 31;
-    if (variation === 0) return 'grass_white_flowers';
     if (variation === 7) return 'grass_b';
     if (variation === 19) return 'grass_c';
     return 'grass';
@@ -203,7 +215,7 @@ function campGridObject(id, stampId, x, y, extra = {}) {
       ? `${production.map.id}:${stampId}`
       : `world:${stampId}`,
     sourceId: stampId,
-    sourceKind: 'metatile',
+    sourceKind: productionCampObjectIds.has(stampId) ? 'planned-metatile' : 'metatile',
     name: extra.name || stamp.name || id.replaceAll('_', ' '),
     x,
     y,
@@ -226,7 +238,7 @@ function createCampRandallGridMap() {
   const coachOffice = layout.buildings.find(owner => owner.id === 'coach_office');
   const memoryGardenWest = layout.blockers.find(owner => owner.id === 'memory_garden_west');
   const memoryGardenEast = layout.blockers.find(owner => owner.id === 'memory_garden_east');
-  const terrain = campGridTerrain(layout);
+  const terrain = deepClone(metatileBuild.map.terrain || campGridTerrain(layout));
   const objects = [
     campGridObject(stadium.id, 'camp_randall_stadium', stadium.x, stadium.y, {
       name: stadium.name,
@@ -240,56 +252,38 @@ function createCampRandallGridMap() {
     campGridObject(coachOffice.id, 'coach_office', coachOffice.x, coachOffice.y, {
       name: coachOffice.name,
       interior: coachOffice.interior
-    }),
-    campGridObject(memoryGardenWest.id, memoryGardenWest.id, memoryGardenWest.x, memoryGardenWest.y, {depthMode: 'row-sliced'}),
-    campGridObject(memoryGardenEast.id, memoryGardenEast.id, memoryGardenEast.x, memoryGardenEast.y, {depthMode: 'row-sliced'}),
-
-    campGridObject('forest_west_0', 'forest_edge_west', 0, 0),
-    campGridObject('forest_west_1', 'forest_edge_west_b', 0, 6),
-    campGridObject('forest_west_2', 'forest_edge_west', 0, 12),
-    campGridObject('forest_west_3', 'forest_edge_west_b', 0, 18),
-    campGridObject('forest_west_4', 'forest_edge_west', 0, 24),
-    campGridObject('forest_east_0', 'forest_edge_east', 46, 0),
-    campGridObject('forest_east_1', 'forest_edge_east_b', 46, 6),
-    campGridObject('forest_east_2', 'forest_edge_east', 46, 12),
-    campGridObject('forest_east_3', 'forest_edge_east_b', 46, 18),
-    campGridObject('forest_east_4', 'forest_edge_east', 46, 24),
-    campGridObject('forest_north_0', 'forest_edge_north', 2, 0),
-    campGridObject('forest_north_1', 'forest_edge_north', 9, 0),
-    campGridObject('forest_north_2', 'forest_edge_north', 31, 0),
-    campGridObject('forest_north_3', 'forest_edge_north', 38, 0),
-    campGridObject('forest_south_0', 'forest_edge_south', 2, 27),
-    campGridObject('forest_south_1', 'forest_edge_south', 9, 27),
-    campGridObject('forest_south_2', 'forest_edge_south', 16, 27),
-    campGridObject('forest_south_3', 'forest_edge_south', 25, 27),
-    campGridObject('forest_south_4', 'forest_edge_south', 32, 27),
-    campGridObject('forest_south_5', 'forest_edge_south', 39, 27),
-
-    campGridObject('grove_southwest', 'forest_grove_small', 2, 22),
-    campGridObject('grove_southeast', 'forest_grove_small', 41, 22),
-    campGridObject('oak_southwest', 'tree_oak_a', 11, 22),
-    campGridObject('oak_southeast', 'tree_oak_b', 35, 22),
-    campGridObject('pine_west', 'tree_pine', 3, 9),
-    campGridObject('pine_east', 'tree_pine_b', 43, 9),
-    campGridObject('banner_west', 'banner_pole', 19, 22),
-    campGridObject('banner_east', 'banner_pole', 28, 22),
-    campGridObject('lamp_west', 'campus_lamp', 21, 15),
-    campGridObject('lamp_east', 'campus_lamp', 26, 15),
-    campGridObject('stadium_threshold', 'stone_threshold', stadium.door.x, stadium.door.y, {depthMode: 'row-sliced'}),
-    campGridObject('team_threshold', 'stone_threshold', teamBuilding.door.x - 1, teamBuilding.door.y + 1, {depthMode: 'row-sliced'}),
-    campGridObject('office_threshold', 'stone_threshold', coachOffice.door.x - 1, coachOffice.door.y + 1, {depthMode: 'row-sliced'}),
-    campGridObject('quad_bench_west', 'wood_bench', 15, 22),
-    campGridObject('quad_bench_east', 'wood_bench', 30, 22),
-    campGridObject('flower_west', 'shrub_flowering', 18, 25),
-    campGridObject('flower_east', 'shrub_flowering_b', 29, 25)
+    })
   ];
 
-  const actorDefinitions = [
-    {id: 'assistant_coach', sheet: 'coach', x: 26, y: 20, facing: 'left', dialogue: 'Camp Randall is home. The Team Building is west across the quad.'},
-    {id: 'camp_quad_student', sheet: 'student', x: 14, y: 19, facing: 'right', dialogue: 'The stadium axis connects every place the team needs.', patrol: {axis: 'horizontal', radius: 1, interval: 1700}},
-    {id: 'team_bus_manager', sheet: 'manager', x: 20, y: 25, facing: 'down', dialogue: 'The team bus is ready for the airport.', condition: 'ready_for_airport'},
-    {id: 'homecoming_captain', sheet: 'captain', x: 24, y: 8, facing: 'down', dialogue: 'Captain: Take the championship through the stadium tunnel.', condition: 'homecoming'}
+  const defaultDecorations = [
+    {id: memoryGardenWest.id, stamp: memoryGardenWest.id, x: memoryGardenWest.x, y: memoryGardenWest.y, depthMode: 'row-sliced'},
+    {id: memoryGardenEast.id, stamp: memoryGardenEast.id, x: memoryGardenEast.x, y: memoryGardenEast.y, depthMode: 'row-sliced'},
+    ...(layout.decorations || [])
   ];
+  if (!metatileBuild.patchesAuthoritative) {
+    for (const decoration of defaultDecorations) {
+      objects.push(campGridObject(
+        decoration.id,
+        decoration.stamp,
+        decoration.x,
+        decoration.y,
+        {name: decoration.name, depthMode: decoration.depthMode}
+      ));
+    }
+  }
+  for (const patch of metatileBuild.patches || []) {
+    const instance = {
+      ...deepClone(patch),
+      assetId: null,
+      sourceId: patch.id,
+      sourceKind: 'metatile',
+      metatiles: deepClone(patch.cells)
+    };
+    delete instance.cells;
+    const index = objects.findIndex(object => object.id === patch.id);
+    if (index === -1) objects.push(instance);
+    else objects[index] = instance;
+  }
 
   return {
     id: 'camp_randall',
@@ -305,7 +299,7 @@ function createCampRandallGridMap() {
     originalTerrain: deepClone(terrain),
     terrain,
     objects,
-    actors: actorDefinitions.map(actor => makeActor(actor, 'camp_randall')),
+    actors: (layout.actors || []).map(actor => makeActor(actor, 'camp_randall')),
     events: deepClone(layout.events),
     waterRoutes: [],
     connections: deepClone(layout.connections),

@@ -1,7 +1,7 @@
 {
   "version": 2,
   "status": "quiet-ground-production-pilot",
-  "layoutRevision": 6,
+  "layoutRevision": 7,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "map": {
@@ -821,9 +821,9 @@
     }
   },
   "sources": {
-    "manifest": "cb67cc3c1df1d8add2652975d333a2821b221f51b17b0f5f5f3c8cdf93bff0f9",
-    "layout": "673a6388715bde28f7948f0fd08b5e3ba2998cef4e23b7bb5ace7c9cbc54eb84",
-    "worldTileset": "c875b4b3ca5743ad2b3f161a3718b9f1d5f05c19942838a6b3c75c0aef613f85",
+    "manifest": "c2e1df645117bb67248804b44392c356bf238a2e6bf8f696d6cc05f2a0bf7463",
+    "layout": "109bd925d9a0a50ff272f0e2112eb1feff036c0262d2d95e4b889e747a7d9e73",
+    "worldTileset": "ef6092ad78d3c67d55e4701f15ee48d7d9bca9d55627d3e55da2254da3b36313",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
@@ -859,8 +859,8 @@
     "camp-randall__memory_garden_east.png": "b5e9797dbd10f7893b4e475d477fa61cbd6cca5e22778b635bf4ff67b91edd4f",
     "camp-randall__memory_garden_west.png": "b5e9797dbd10f7893b4e475d477fa61cbd6cca5e22778b635bf4ff67b91edd4f",
     "camp-randall__team_building.png": "4732964a1601ac26fda4e9ec285e4d4f788d90f13d32e783eca8ccafa11761a2",
-    "camp_randall_base_v2.png": "31050b6a1e1ec8792a0b29da1ef29b5e14c4b95785f5b65e63eb088d734f5894",
-    "camp_randall_ground_v2.png": "5c64c59e2c688e80f054c4251cceca68553a4413e81a2f6f56eb905187a7009e",
+    "camp_randall_base_v2.png": "298a4b86099cfa7a6a1078e008984f691cc19ee344484dd9160a0986a8f6fd53",
+    "camp_randall_ground_v2.png": "7b19b018abb3071b9e1c4c14cf95296b432baefbd24bbb433d26d3a7d7e2a303",
     "coach-office__coach_desk.png": "b1b8defeb67c4cb051662ce50477d7b2e16379617032904d1aa2d4a5dfeb3e6a",
     "coach-office__depth_chart.png": "0b765670a0215cdee843785d6b008b2164ee0d0805e1bc14c0c045c601b10c73",
     "coach-office__office_exit_frame.png": "35f99d18bf469bd636ffff9b6a30848196c7945647b19500f8bc355f1a044e94",

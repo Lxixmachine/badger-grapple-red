@@ -160,22 +160,26 @@ BOARDS = {
 
 
 # Imagegen establishes the material texture and value grouping. The compiler
-# reduces every ground panel to a declared four-color material ramp so generated
+# reduces every ground panel to a declared material ramp so generated
 # noise cannot leak into the game, while preserving substantially more authored
 # information than the old one-field-plus-stipple treatment.
 GROUND_RAMPS = {
-    "grass": ((77, 148, 74, 255), (96, 177, 82, 255), (128, 203, 103, 255), (163, 219, 126, 255)),
-    "mowed_grass": ((83, 151, 74, 255), (103, 176, 83, 255), (136, 198, 102, 255), (174, 216, 128, 255)),
-    "dirt": ((143, 107, 62, 255), (176, 138, 78, 255), (216, 184, 112, 255), (239, 216, 155, 255)),
-    "brick": ((142, 91, 78, 255), (181, 120, 99, 255), (216, 164, 132, 255), (238, 202, 169, 255)),
-    "stone": ((126, 125, 116, 255), (161, 159, 145, 255), (202, 198, 177, 255), (231, 225, 202, 255)),
-    "concrete": ((126, 130, 126, 255), (165, 166, 156, 255), (207, 205, 190, 255), (237, 232, 216, 255)),
-    "gravel": ((105, 105, 98, 255), (139, 136, 124, 255), (180, 174, 154, 255), (211, 204, 181, 255)),
-    "sand": ((151, 128, 70, 255), (188, 163, 92, 255), (222, 198, 127, 255), (243, 224, 164, 255)),
-    "water": ((37, 91, 133, 255), (48, 121, 161, 255), (73, 157, 187, 255), (116, 194, 207, 255)),
-    "asphalt": ((42, 47, 49, 255), (57, 63, 65, 255), (78, 86, 87, 255), (104, 112, 111, 255)),
-    "timber": ((67, 43, 31, 255), (105, 67, 43, 255), (151, 96, 59, 255), (194, 135, 82, 255)),
-    "meadow_grass": ((68, 137, 66, 255), (91, 169, 75, 255), (127, 201, 100, 255), (222, 221, 167, 255)),
+    # Grass is intentionally the quietest material in the game. Its second
+    # color is selected sparsely below instead of globally posterized.
+    "grass": ((73, 145, 101, 255), (112, 185, 126, 255)),
+    "mowed_grass": ((78, 146, 94, 255), (109, 177, 112, 255), (143, 202, 136, 255)),
+    "dirt": ((139, 112, 68, 255), (187, 156, 98, 255), (226, 204, 150, 255)),
+    # Campus walks are warm limestone pavers. Cardinal belongs to identity
+    # objects, never to the ground field beneath them.
+    "brick": ((152, 136, 105, 255), (197, 178, 139, 255), (235, 220, 181, 255)),
+    "stone": ((126, 126, 118, 255), (174, 171, 155, 255), (222, 215, 192, 255)),
+    "concrete": ((126, 132, 128, 255), (174, 177, 168, 255), (224, 222, 207, 255)),
+    "gravel": ((102, 104, 100, 255), (145, 143, 132, 255), (194, 188, 169, 255)),
+    "sand": ((151, 128, 75, 255), (196, 169, 105, 255), (232, 211, 158, 255)),
+    "water": ((35, 87, 132, 255), (48, 121, 164, 255), (78, 158, 190, 255), (184, 213, 222, 255)),
+    "asphalt": ((42, 47, 49, 255), (64, 70, 71, 255), (94, 101, 100, 255)),
+    "timber": ((67, 43, 31, 255), (116, 74, 46, 255), (181, 124, 74, 255)),
+    "meadow_grass": ((66, 137, 91, 255), (105, 178, 115, 255), (144, 203, 137, 255), (231, 224, 174, 255)),
 }
 
 
@@ -208,9 +212,72 @@ def posterize_to_ramp(source: Image.Image, ramp) -> Image.Image:
     return output
 
 
+def quiet_grass(source: Image.Image, ramp) -> Image.Image:
+    """Preserve Imagegen's strongest blade placements at <=5% coverage."""
+    rgba = source.convert("RGBA")
+    base, accent = sorted(ramp, key=_luma, reverse=True)
+    output = Image.new("RGBA", rgba.size, base)
+    candidates = []
+    for y in range(1, rgba.height - 1):
+        for x in range(1, rgba.width - 1):
+            pixel = rgba.getpixel((x, y))
+            if pixel[3]:
+                candidates.append((_luma(pixel), y, x))
+    candidates.sort()
+    accent_limit = max(1, int(rgba.width * rgba.height * 0.05))
+    selected: list[tuple[int, int]] = []
+    for _luminance, y, x in candidates:
+        if any(abs(x - other_x) <= 1 and abs(y - other_y) <= 1 for other_x, other_y in selected):
+            continue
+        output.putpixel((x, y), accent)
+        selected.append((x, y))
+        if len(selected) >= accent_limit:
+            break
+    return output
+
+
+def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
+    """Keep Imagegen's material read while replacing micro-noise with placed seams."""
+    rgba = source.convert("RGBA")
+    dark, seam, base = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", rgba.size, base)
+    draw = ImageDraw.Draw(output)
+
+    if material == "brick":
+        course_height = 4
+        for y in range(0, rgba.height, course_height):
+            draw.line((0, y, rgba.width - 1, y), fill=seam)
+            offset = 0 if (y // course_height) % 2 == 0 else 4
+            for x in range(offset, rgba.width, 8):
+                draw.line((x, y + 1, x, min(rgba.height - 1, y + course_height - 1)), fill=seam)
+    else:
+        slab = 8 if material == "concrete" else 6
+        for y in range(0, rgba.height, slab):
+            draw.line((0, y, rgba.width - 1, y), fill=seam)
+        for x in range(0, rgba.width, slab):
+            draw.line((x, 0, x, rgba.height - 1), fill=seam)
+
+    # Preserve only a few of the generated panel's darkest authored marks as
+    # scuffs. Seams remain dominant and the texture cannot devolve into noise.
+    candidates = []
+    for y in range(1, rgba.height - 1):
+        for x in range(1, rgba.width - 1):
+            if output.getpixel((x, y)) == base:
+                candidates.append((_luma(rgba.getpixel((x, y))), y, x))
+    candidates.sort()
+    for _luminance, y, x in candidates[:max(1, rgba.width * rgba.height // 50)]:
+        output.putpixel((x, y), dark)
+    draw.rectangle((0, 0, rgba.width - 1, rgba.height - 1), outline=seam)
+    return output
+
+
 def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image:
     """Apply the declared per-material value grammar after source extraction."""
     ramp = GROUND_RAMPS.get(asset_id)
+    if asset_id == "grass" and ramp:
+        return quiet_grass(image, ramp)
+    if asset_id in {"brick", "concrete", "stone"} and ramp:
+        return disciplined_paver(image, ramp, asset_id)
     return posterize_to_ramp(image, ramp) if ramp else image
 
 STANDALONE_ASSETS = {

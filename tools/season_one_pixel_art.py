@@ -791,6 +791,30 @@ def authored_stamp(spec_id: str, width: int, height: int) -> Image.Image:
     if spec_id.startswith("awning_"):
         return _awning(width, height, spec_id.removeprefix("awning_"))
 
+    if spec_id in {"team_building_sign", "coach_office_sign"}:
+        image = source_asset("props", "campus_sign")
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((7, 4, 40, 15), fill=PALETTE["outline"])
+        draw.rectangle((8, 5, 39, 14), fill=PALETTE["red_deep"])
+        label = "TEAM" if spec_id == "team_building_sign" else "COACH"
+        glyphs = {
+            "T": ("111", "010", "010", "010", "010"),
+            "E": ("111", "100", "110", "100", "111"),
+            "A": ("010", "101", "111", "101", "101"),
+            "M": ("101", "111", "111", "101", "101"),
+            "C": ("111", "100", "100", "100", "111"),
+            "O": ("111", "101", "101", "101", "111"),
+            "H": ("101", "101", "111", "101", "101"),
+        }
+        text_width = len(label) * 4 - 1
+        start_x = (image.width - text_width) // 2
+        for index, letter in enumerate(label):
+            for y, row in enumerate(glyphs[letter]):
+                for x, marker in enumerate(row):
+                    if marker == "1":
+                        draw.point((start_x + index * 4 + x, 7 + y), fill=PALETTE["gold"])
+        return image
+
     direct_props = {
         "campus_lamp": "campus_lamp",
         "wood_bench": "wood_bench",

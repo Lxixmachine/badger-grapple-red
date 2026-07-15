@@ -1,5 +1,26 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.12 Grid Production)
+
+Camp Randall is now the production template for Season One rather than a
+hardcoded demo composition. `seasonOneLayouts.json` owns its path hierarchy,
+45 decorations, four actors, events, doors, and camera reviews; Map Studio and
+the live runtime consume the same 32px metatile cells. Applied Map Studio
+exports now preserve terrain, actors, moved/deleted metatile patches, doors,
+collision edits, and undo history without the version migrator restoring
+default inspector values.
+
+The ground-value pass makes grass a strict two-color quiet field and replaces
+cardinal brick with pale limestone courses. Concrete landings visibly bridge
+the main walk to all three doors, and the stadium threshold now sits below its
+warp instead of covering it. Imagegen campus boards are disciplined into crisp
+TEAM and COACH signs. Camp metatiles are v11; the product label is v22.12.
+
+Verified: 22 Map Studio/Camp tests, 13 Season One/production tests, and 7 world
+atlas tests pass. `npm run validate` reaches only the pre-existing dirty State
+Street composition hash mismatch; do not rebuild or discard Tony's separate
+State Street files while resolving that work.
+
 ## Latest Codex Turn (v22.10 Naming Layout)
 
 Tony's phone capture exposed two defects in the nickname confirmation screen:

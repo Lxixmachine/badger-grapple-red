@@ -45,8 +45,8 @@
       "path": "art/tilesets/imagegen_v3/ground/grass.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "8ed09d9925d98713b9b7d552fd6e46de02dd72cc3133d324f682834e1215122b",
+      "colors": 2,
+      "sha256": "91fa27987722e919de1c6d54946e31200c63c07acbe1e42b64e1d7d2ac8dbcbb",
       "sourcePanel": 0
     },
     "mowed_grass": {
@@ -54,8 +54,8 @@
       "path": "art/tilesets/imagegen_v3/ground/mowed_grass.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "66b33500ada59353917441a3af0235110b4477804727a8b2ca90c4dd35bfd92d",
+      "colors": 3,
+      "sha256": "9bc20acd9ab43d1e77bf491fae39e669355362db846c3315907d2f62ba29f71e",
       "sourcePanel": 1
     },
     "dirt": {
@@ -63,8 +63,8 @@
       "path": "art/tilesets/imagegen_v3/ground/dirt.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "e636b34a7ae1f79b1a440bf3ce4e225885156b5dbcb24bce16965a8a5d0cbad7",
+      "colors": 3,
+      "sha256": "fe38a075de3d89aec51696dafbc909a3b1e15c9c9c61d7fbd786c68c5e0a1494",
       "sourcePanel": 2
     },
     "brick": {
@@ -72,8 +72,8 @@
       "path": "art/tilesets/imagegen_v3/ground/brick.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "775721ec6fe32ce66609f2eadbdd050c0318884332fb42c0cbb7ad66c8721fc8",
+      "colors": 3,
+      "sha256": "882f85e96f3c2a3ae48807ada97d054c5d4b7276aba4fd7b4c99211f1bbd114e",
       "sourcePanel": 3
     },
     "stone": {
@@ -81,8 +81,8 @@
       "path": "art/tilesets/imagegen_v3/ground/stone.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "b06758571e8cd2f3c2c6514320101f5989073045743ec8528a5b7dbe32be56f7",
+      "colors": 3,
+      "sha256": "36c7cf88666f49e17f9182f497d5c1ef919f0953ba1e34ddbcd07a37aa3d0bd7",
       "sourcePanel": 4
     },
     "concrete": {
@@ -90,8 +90,8 @@
       "path": "art/tilesets/imagegen_v3/ground/concrete.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "0b6b22113fbd0c004c70dd73e916d48c4990d17771f79abf2ad9bac24645ae02",
+      "colors": 3,
+      "sha256": "8497c199202d56d697c72b7da17c36820de17f63d3484898303c1f85ff701d31",
       "sourcePanel": 5
     },
     "gravel": {
@@ -99,8 +99,8 @@
       "path": "art/tilesets/imagegen_v3/ground/gravel.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "6ae9c8be564d266e082714e3a64c3efb00f42f0d8296ae02260351950e086424",
+      "colors": 3,
+      "sha256": "63169d1e2104e99e80353d2f3146293a647e1d64ef55c6ec651138042aaffedc",
       "sourcePanel": 6
     },
     "sand": {
@@ -108,8 +108,8 @@
       "path": "art/tilesets/imagegen_v3/ground/sand.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "5c01fd80afe81c8b2568505799c5d467a36509c30394eed3f0d59f5762e6f114",
+      "colors": 3,
+      "sha256": "3f5e47a61337e1dd8200ae1c94b2303bde8099926f5fc90da79bf4937c7b222c",
       "sourcePanel": 7
     },
     "water": {
@@ -118,7 +118,7 @@
       "width": 16,
       "height": 16,
       "colors": 4,
-      "sha256": "4bbf1ceb8ed3beecf37d7692e42a5d1bfe8de0e91cd709a25b42ca641902c7ff",
+      "sha256": "443eec49c34688df3dfb2dcefecfb1192657f792f9127c14fbcb6ccb9ced242f",
       "sourcePanel": 8
     },
     "asphalt": {
@@ -126,8 +126,8 @@
       "path": "art/tilesets/imagegen_v3/ground/asphalt.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "034d21f63a89b922ca7823b292b9fbcdf0dc896fd256dd49e3341286f1b09be9",
+      "colors": 3,
+      "sha256": "dd6a70e7100743bc1c8d2f91007435ce0ca64f7190f63f4cb05d6add3624fdac",
       "sourcePanel": 9
     },
     "timber": {
@@ -135,8 +135,8 @@
       "path": "art/tilesets/imagegen_v3/ground/timber.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "ddccde5c23f532e5b17f7982dafa99ced31136a58318e3047c71b6ce00c111fe",
+      "colors": 3,
+      "sha256": "7f3b7fdce47b1a5a8d81bdffe405b7269accb8442e306673d3d4379eb9d20b92",
       "sourcePanel": 10
     },
     "meadow_grass": {
@@ -145,7 +145,7 @@
       "width": 16,
       "height": 16,
       "colors": 4,
-      "sha256": "02e131626fce57030c34021f2b39b25ec2f46913c06ec75c60f862d642766798",
+      "sha256": "93cbac195dfe5e141f5205f16dae22bd47672bbeda9587edd1b4c8a5a622dbdd",
       "sourcePanel": 11
     },
     "tree_oak_a": {

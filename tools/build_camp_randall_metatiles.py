@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v10.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v11.png"
 GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v4.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
@@ -143,7 +143,13 @@ def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
         "brick": "surface_brick",
         "stone": "surface_stone",
         "dirt": "surface_dirt",
+        "concrete": "surface_concrete",
+        "gravel": "surface_gravel",
+        "sand": "surface_sand",
+        "timber": "surface_timber",
+        "mowed_grass": "lawn_mowed",
         "water": "shore_water",
+        "asphalt": "road_asphalt_grass",
     }
     rows = [["grass" for _ in range(width)] for _ in range(height)]
     for y in range(height):
@@ -194,18 +200,33 @@ def validate_path_clearance(layout: dict, rows: list[list[str]]) -> None:
 
 def validate_ground_system(layout: dict, rows: list[list[str]]) -> dict:
     """Prove Camp Randall has one connected, edge-authored circulation grid."""
-    materials = {path["material"] for path in layout.get("paths", [])}
-    if len(materials) != 1:
-        raise SystemExit(
-            f"{layout['displayName']}: expected one primary path material, found {sorted(materials)}"
-        )
-    material = next(iter(materials))
-    cells = {
-        (x, y)
-        for path in layout.get("paths", [])
-        for y in range(path["y"], path["y"] + path["height"])
-        for x in range(path["x"], path["x"] + path["width"])
+    families = {
+        "brick": "surface_brick",
+        "stone": "surface_stone",
+        "concrete": "surface_concrete",
+        "dirt": "surface_dirt",
+        "gravel": "surface_gravel",
+        "sand": "surface_sand",
+        "timber": "surface_timber",
     }
+    if layout.get("terrainOverride") is not None:
+        materials_by_cell = {
+            (x, y): material
+            for y, row in enumerate(rows)
+            for x, tile_id in enumerate(row)
+            for material, family in families.items()
+            if tile_id == material or tile_id.startswith(f"{family}_blob_")
+        }
+        cells = set(materials_by_cell)
+        materials = set(materials_by_cell.values())
+    else:
+        materials = {path["material"] for path in layout.get("paths", [])}
+        cells = {
+            (x, y)
+            for path in layout.get("paths", [])
+            for y in range(path["y"], path["y"] + path["height"])
+            for x in range(path["x"], path["x"] + path["width"])
+        }
     if not cells:
         raise SystemExit(f"{layout['displayName']}: circulation network is empty")
 
@@ -245,25 +266,23 @@ def validate_ground_system(layout: dict, rows: list[list[str]]) -> dict:
         details = ", ".join(f"{name}={cell[0]},{cell[1]}" for name, cell in missing_anchors.items())
         raise SystemExit(f"{layout['displayName']}: circulation misses {details}")
 
-    family = {"brick": "surface_brick", "stone": "surface_stone", "dirt": "surface_dirt"}.get(material)
-    if not family:
-        raise SystemExit(f"{layout['displayName']}: unsupported primary path material {material}")
-    raw_cuts = {
-        (x, y): rows[y][x]
-        for x, y in cells
-        if not rows[y][x].startswith(f"{family}_blob_")
-    }
+    raw_cuts = {}
+    for x, y in cells:
+        tile_id = rows[y][x]
+        if not any(tile_id.startswith(f"{candidate}_blob_") for candidate in families.values()):
+            raw_cuts[(x, y)] = tile_id
     if raw_cuts:
         details = ", ".join(f"{x},{y}={tile}" for (x, y), tile in sorted(raw_cuts.items())[:8])
         raise SystemExit(f"{layout['displayName']}: path cells bypass edge grammar ({details})")
 
     return {
-        "primaryMaterial": material,
+        "primaryMaterial": layout.get("paths", [{}])[0].get("material"),
+        "materials": sorted(materials),
         "pathCellCount": len(cells),
         "connectedComponentCount": 1,
         "anchorCount": len(anchors),
         "anchors": {name: {"x": cell[0], "y": cell[1]} for name, cell in anchors.items()},
-        "transitionFamily": family,
+        "transitionFamilies": sorted({families[material] for material in materials}),
         "rawCutCount": 0,
     }
 
@@ -530,7 +549,7 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 10,
+        "version": 11,
         "status": "season-one-connected-ground-atlas",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
@@ -552,6 +571,7 @@ def build() -> dict:
         "palette": palette_ids,
         "stamps": stamps,
         "patches": patches,
+        "patchesAuthoritative": bool(overrides.get("patchesAuthoritative", False)),
         "plannedMaps": planned_maps,
         "map": {
             "id": production["map"]["id"],

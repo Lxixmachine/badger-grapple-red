@@ -473,11 +473,12 @@ def build() -> dict:
         "mowedGrass": material_metrics(material_tile("mowed_grass")),
         "campusPavers": material_metrics(material_tile("brick")),
     }
-    if ground_material_metrics["grass"]["uniqueColors"] > 4:
-        raise SystemExit("Grass must stay within its four-color material ramp")
+    grass_metrics = ground_material_metrics["grass"]
+    if grass_metrics["uniqueColors"] != 2 or grass_metrics["dominantCoverage"] < 0.94:
+        raise SystemExit("Grass must be a two-color field with no more than five percent accent coverage")
     paver_metrics = ground_material_metrics["campusPavers"]
-    if paver_metrics["uniqueColors"] > 4 or paver_metrics["meanLightness"] < 0.55:
-        raise SystemExit("Campus pavers must remain a pale four-color material")
+    if paver_metrics["uniqueColors"] > 3 or paver_metrics["meanLightness"] < 0.55:
+        raise SystemExit("Campus pavers must remain a pale three-color material")
     if paver_metrics["cardinalPixelCount"]:
         raise SystemExit("Cardinal red is reserved for identity objects, not ground")
 

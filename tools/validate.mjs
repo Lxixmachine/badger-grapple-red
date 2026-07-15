@@ -117,8 +117,8 @@ else{
   for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
   if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<84||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
   const groundMetrics=world.coverage?.groundMaterialMetrics||{};
-  if(!groundMetrics.grass||groundMetrics.grass.uniqueColors>4||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the quiet-ground palette contract');
-  if(!groundMetrics.campusPavers||groundMetrics.campusPavers.uniqueColors>4||groundMetrics.campusPavers.meanLightness<0.55||groundMetrics.campusPavers.cardinalPixelCount!==0)errs.push('Season One campus pavers violate the quiet-ground palette contract');
+  if(!groundMetrics.grass||groundMetrics.grass.uniqueColors!==2||groundMetrics.grass.dominantCoverage<0.94||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the two-color quiet-ground contract');
+  if(!groundMetrics.campusPavers||groundMetrics.campusPavers.uniqueColors>3||groundMetrics.campusPavers.meanLightness<0.55||groundMetrics.campusPavers.cardinalPixelCount!==0)errs.push('Season One campus pavers violate the pale three-color contract');
   for(const family of ['surface_dirt','surface_brick','surface_stone','surface_sand','surface_gravel','surface_concrete','surface_timber','shore_water','road_asphalt_grass','road_asphalt_curb','lawn_mowed']){
     if((world.coverage?.groundFamilyCounts?.[family]||0)<47)errs.push(`Season One world transition family ${family} is incomplete`);
   }
@@ -130,13 +130,13 @@ else{
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==10)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==11)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==metatileBuild.atlas.sha256)errs.push('Camp metatile atlas is missing or stale');
   if(metatileBuild.atlas.visualCount!==metatileBuild.atlas.entries?.length)errs.push('Camp metatile visual catalog is incomplete');
-  if(metatileBuild.groundSystem?.primaryMaterial!=='brick'||metatileBuild.groundSystem?.connectedComponentCount!==1||metatileBuild.groundSystem?.anchorCount!==5||metatileBuild.groundSystem?.rawCutCount!==0||metatileBuild.groundSystem?.transitionFamily!=='surface_brick')errs.push('Camp Randall ground system is not one connected, transition-safe authored grid');
+  if(metatileBuild.groundSystem?.primaryMaterial!=='brick'||metatileBuild.groundSystem?.connectedComponentCount!==1||metatileBuild.groundSystem?.anchorCount!==5||metatileBuild.groundSystem?.rawCutCount!==0||JSON.stringify(metatileBuild.groundSystem?.transitionFamilies)!==JSON.stringify(['surface_brick','surface_concrete']))errs.push('Camp Randall ground system is not one connected, transition-safe authored grid');
   if(!metatileBuild.visualHierarchyMetrics||metatileBuild.visualHierarchyMetrics.saturationDifference<=0||metatileBuild.visualHierarchyMetrics.ground?.meanSaturation>=metatileBuild.visualHierarchyMetrics.identityObjects?.meanSaturation)errs.push('Camp Randall ground is not visually quieter than its identity architecture');
   const terrainTiles=metatileBuild.terrain?.tiles||{};
   if(Object.keys(terrainTiles).length<500||metatileBuild.terrain?.catalog?.length!==Object.keys(terrainTiles).length)errs.push('Camp metatile ground catalog did not merge the Season One authoring kit');

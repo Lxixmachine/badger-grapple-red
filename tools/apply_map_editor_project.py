@@ -253,9 +253,9 @@ def actor_for_manifest(actor: dict) -> dict:
         "facing": actor.get("facing", "down"),
         "solid": actor.get("solid", True),
     }
-    for key in ("condition", "dialogue"):
+    for key in ("condition", "dialogue", "patrol"):
         if actor.get(key):
-            result[key] = actor[key]
+            result[key] = copy.deepcopy(actor[key])
     return result
 
 
@@ -296,11 +296,16 @@ def apply_exterior(project: dict, layouts: dict, manifest: dict, map_data: dict)
             new_specs.append(new_spec)
         layout[group] = preserved + rebuilt
     manifest["exterior"]["objects"] = new_specs
-    manifest["exterior"]["actors"] = [actor_for_manifest(actor) for actor in map_data.get("actors", [])]
+    authored_actors = [actor_for_manifest(actor) for actor in map_data.get("actors", [])]
+    manifest["exterior"]["actors"] = copy.deepcopy(authored_actors)
+    layout["actors"] = authored_actors
     layout["events"] = copy.deepcopy(map_data.get("events", []))
     layout["cameraReviews"] = copy.deepcopy(map_data.get("cameraReviews", []))
     layout["connections"] = copy.deepcopy(map_data.get("connections", []))
-    apply_terrain(layout, map_data)
+    if map_data.get("renderModel") == "metatile":
+        apply_metatile_terrain(layout, map_data)
+    else:
+        apply_terrain(layout, map_data)
 
 
 def apply_interior(project: dict, layouts: dict, manifest: dict, map_data: dict) -> None:
@@ -480,6 +485,7 @@ def metatile_overrides(project: dict) -> dict:
             objects[instance["id"]] = {"cells": instance["metatiles"]}
     return {
         "schema": "badger-grapple-metatile-overrides/v1",
+        "patchesAuthoritative": True,
         "terrain": map_data["terrain"],
         "objects": objects,
         "patches": patches,
