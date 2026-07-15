@@ -92,13 +92,18 @@ export class NamingScene extends Phaser.Scene{
   }
   panel(x,y,w,h){const g=this.add.graphics();g.fillStyle(0x000000,.3);g.fillRoundedRect(x+4,y+4,w,h,5);g.fillStyle(0xfff7df,1);g.fillRoundedRect(x,y,w,h,5);g.lineStyle(3,0x17151a,1);g.strokeRoundedRect(x,y,w,h,5);g.lineStyle(1,0xd6a336,1);g.strokeRoundedRect(x+5,y+5,w-10,h-10,3);return g;}
   drawConfirm(){
-    this.drawFrame();this.panel(38,55,404,235);
-    this.add.image(240,174,battleTextureFor(this.target.id)).setOrigin(.5,1).setDisplaySize(128,128);
+    this.drawFrame();this.panel(30,52,420,242);
     const subject=this.rename?wrestlerName(this.target):ROSTER[this.target.id].name;
     const question=this.rename?`Change ${subject}'s nickname?`:`Give a nickname to ${subject}?`;
-    this.add.text(240,72,question,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',align:'center',wordWrap:{width:354}}).setOrigin(.5,0);
-    this.add.text(240,109,`${personaFor(this.target.id).toUpperCase()} WRESTLER`,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(.5,0);
-    ['YES','NO'].forEach((label,index)=>{const x=160+index*160,selected=index===this.confirmSel;if(selected){const g=this.add.graphics();g.fillStyle(0x7b1d2a,.14);g.fillRoundedRect(x-56,239,112,34,4);g.lineStyle(2,0x7b1d2a,1);g.strokeRoundedRect(x-56,239,112,34,4);}this.add.text(x,246,`${selected?'\u25b6 ':''}${label}`,{fontFamily:FONT,fontSize:18,color:selected?'#7b1d2a':'#111',fontStyle:'bold'}).setOrigin(.5,0);});
+    this.add.text(240,67,question,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',align:'center',wordWrap:{width:380}}).setOrigin(.5,0);
+    this.add.image(240,198,battleTextureFor(this.target.id)).setOrigin(.5,1).setDisplaySize(100,100);
+    this.add.text(240,204,`${personaFor(this.target.id).toUpperCase()} WRESTLER`,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(.5,0);
+    this.add.line(0,0,52,230,428,230,0xc9bda4,.8).setOrigin(0);
+    ['YES','NO'].forEach((label,index)=>{
+      const x=160+index*160,selected=index===this.confirmSel,g=this.add.graphics();
+      if(selected){g.fillStyle(0x7b1d2a,.14);g.fillRoundedRect(x-62,239,124,39,4);g.lineStyle(2,0x7b1d2a,1);g.strokeRoundedRect(x-62,239,124,39,4);g.fillStyle(0x7b1d2a,1);g.fillTriangle(x-43,252,x-43,266,x-32,259);}
+      this.add.text(x+(selected?8:0),247,label,{fontFamily:FONT,fontSize:18,color:selected?'#7b1d2a':'#111',fontStyle:'bold'}).setOrigin(.5,0);
+    });
   }
   drawNaming(){
     this.drawFrame();this.panel(28,50,424,55);

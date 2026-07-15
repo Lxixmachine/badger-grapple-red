@@ -1,5 +1,18 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.10 Naming Layout)
+
+Tony's phone capture exposed two defects in the nickname confirmation screen:
+the battle portrait overlapped both the question and wrestler classification,
+and the Unicode selection marker rendered as an iOS play-button emoji. The
+screen now reserves separate vertical bands for the question, 100px portrait,
+classification, divider, and YES/NO choices. The selection cursor is a
+Phaser-drawn cardinal triangle and therefore cannot vary by platform font.
+
+The nickname UI test now measures the rendered Phaser bounds and fails if the
+question, portrait, classification, or choices overlap. Phone and full-frame
+browser review show the corrected composition with clean browser logs.
+
 ## Latest Codex Turn (v22.9 Named Roster)
 
 Wrestlers now support FireRed-length nicknames as persistent save data. The

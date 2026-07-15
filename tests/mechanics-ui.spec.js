@@ -97,6 +97,22 @@ test('Travel Lineup naming persists a nickname and battle HUD uses it',async({pa
   await press(page,'start');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene'))).toMatchObject({active:true,phase:'confirm',confirmSelected:0});
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys().at(-1))).toBe('NamingScene');
+  const promptLayout=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('NamingScene'),children=scene.children.list;
+    const bounds=entry=>{const box=entry.getBounds();return {top:box.top,bottom:box.bottom,left:box.left,right:box.right};};
+    const texts=children.filter(child=>child.type==='Text');
+    return {
+      question:bounds(texts.find(child=>child.text.includes('nickname?'))),
+      portrait:bounds(children.find(child=>child.type==='Image')),
+      persona:bounds(texts.find(child=>child.text.endsWith('WRESTLER'))),
+      optionTop:Math.min(...texts.filter(child=>['YES','NO'].includes(child.text)).map(child=>child.getBounds().top)),
+      options:texts.filter(child=>['YES','NO'].includes(child.text)).map(child=>child.text)
+    };
+  });
+  expect(promptLayout.question.bottom).toBeLessThanOrEqual(promptLayout.portrait.top);
+  expect(promptLayout.portrait.bottom).toBeLessThanOrEqual(promptLayout.persona.top);
+  expect(promptLayout.persona.bottom).toBeLessThanOrEqual(promptLayout.optionTop);
+  expect(promptLayout.options).toEqual(['YES','NO']);
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene').phase)).toBe('naming');
   await page.keyboard.type('ACE');
