@@ -51,9 +51,14 @@ else{
   const production=JSON.parse(readFileSync(productionBuildPath,'utf8'));
   const productionManifest=JSON.parse(readFileSync(productionManifestPath,'utf8'));
   const hashFile=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
-  if(production.version!==2||production.status!=='quiet-ground-production-pilot')errs.push('Camp production build version/status is unsupported');
+  if(production.version!==3||production.status!=='logical-grid-actor-production-pilot')errs.push('Camp production build version/status is unsupported');
   if(production.layoutRevision!==seasonLayouts.revision||production.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp production build diverges from the Season One layout contract');
   if(production.minimumBlockedCellCoverage!==productionManifest.minimumBlockedCellCoverage)errs.push('Camp production visual-coverage threshold diverges from its manifest');
+  const actorContract=production.actorPixelContract||{};
+  if(actorContract.logicalFrameWidth!==16||actorContract.logicalFrameHeight!==32||actorContract.bodyHeightMax!==24||actorContract.renderScale!==2||actorContract.maxOpaqueColors!==15||actorContract.binaryAlpha!==true||actorContract.sharedFootBaseline!==true)errs.push('Camp production actors must use the 16x32 logical-grid, exact-2x pixel contract');
+  const actorPreview=production.actorPixelPreview||{};
+  const actorPreviewPath=fileURLToPath(new URL(`../${actorPreview.path||''}`,import.meta.url));
+  if(!actorPreview.path||!existsSync(actorPreviewPath)||actorPreview.sha256!==hashFile(actorPreviewPath))errs.push('Camp production actor pixel preview is missing or stale');
   if(production.sources?.manifest!==hashFile(productionManifestPath))errs.push('Camp production manifest is stale; run npm run build:camp-production');
   if(production.sources?.layout!==hashFile(seasonLayoutsPath))errs.push('Camp production layout is stale; run npm run build:camp-production');
   for(const [sourceId,relative] of Object.entries(productionManifest.sourceAssets||{})){
@@ -71,6 +76,13 @@ else{
   for(const [actorId,sheet] of Object.entries(production.actorSheets||{})){
     const output=fileURLToPath(new URL(`../public/${sheet.path.replace(/^\.\//,'')}`,import.meta.url));
     if(sheet.frameWidth!==32||sheet.frameHeight!==64||!existsSync(output))errs.push(`Camp production actor ${actorId} is missing or not 32x64 framed`);
+    if(sheet.logicalFrameWidth!==16||sheet.logicalFrameHeight!==32||sheet.renderScale!==2)errs.push(`Camp production actor ${actorId} diverges from the logical-grid export contract`);
+    if(!Array.isArray(sheet.palette)||sheet.palette.length===0||sheet.palette.length>15)errs.push(`Camp production actor ${actorId} exceeds the shared GBA-style palette budget`);
+    const pixel=sheet.pixelMetrics||{};
+    if(pixel.opaqueColorCount>15||pixel.partialAlphaPixelCount!==0||pixel.exactRenderScaleBlockCoverage!==1||pixel.frameVisibleSizes?.length!==12)errs.push(`Camp production actor ${actorId} fails exact pixel-discipline metrics`);
+    for(const size of pixel.frameVisibleSizes||[]){
+      if(size.width<20||size.width>32||size.height<2||size.height>48||size.width%2||size.height%2)errs.push(`Camp production actor ${actorId} has an invalid logical-frame silhouette`);
+    }
   }
 }
 const campMetatileBuildPath=fileURLToPath(new URL('../src/data/campRandallMetatileBuild.json',import.meta.url));

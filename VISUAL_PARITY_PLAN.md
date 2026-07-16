@@ -61,6 +61,15 @@ and every review is a vibe check.
 > collision ownership, door alignment, route connectivity, flood-fill
 > reachability, save isolation, and phone controls. Tony's phone verdict
 > still closes WP-V1; after that, WP-V2 is the top visual package.
+>
+> v22.22 closes the remaining actor-side implementation gap. Production
+> character sheets now normalize Imagegen source art onto 16x32 logical
+> frames, reserve a 16x24 body envelope, share one foot baseline, use binary
+> alpha and at most 15 opaque colors, then export at exact nearest-neighbor
+> 2x. Runtime frame size remains 32x64 and runtime scale remains 1. The
+> compiler, generated manifest, validator, Map Studio, and phone comparison
+> all consume that same contract; stretched 24x36 source frames can no longer
+> silently re-enter the live world.
 
 The single largest visual jump available, and it costs zero new art.
 `VISUAL_SLICE_CONTRACT.md` is the authority; `?slice=1` and `?atlas=1`

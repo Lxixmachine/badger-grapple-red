@@ -96,7 +96,32 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 20});
+  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 13, metatileVersion: 20});
+  expect(state.project.actorPixelContract).toEqual({
+    logicalFrameWidth: 16,
+    logicalFrameHeight: 32,
+    bodyHeightMax: 24,
+    renderScale: 2,
+    maxOpaqueColors: 15,
+    binaryAlpha: true,
+    sharedFootBaseline: true
+  });
+  for (const actor of state.project.assets.actors) {
+    expect(actor).toMatchObject({
+      frameWidth: 32,
+      frameHeight: 64,
+      logicalFrameWidth: 16,
+      logicalFrameHeight: 32,
+      renderScale: 2,
+      pixelMetrics: {
+        partialAlphaPixelCount: 0,
+        exactRenderScaleBlockCoverage: 1
+      }
+    });
+    expect(actor.palette.length).toBeLessThanOrEqual(15);
+    expect(actor.pixelMetrics.opaqueColorCount).toBeLessThanOrEqual(15);
+    expect(actor.pixelMetrics.frameVisibleSizes).toHaveLength(12);
+  }
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'brick',
     connectedComponentCount: 1,

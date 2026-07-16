@@ -3303,3 +3303,31 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   composition checksum; do not regenerate, stage, or overwrite those six
   user-owned files. Tony's FireRed comparison verdict remains the visual close
   condition.
+
+## Codex Actor Pixel Contract (v22.22)
+
+- The live world no longer stretches 24x36 Imagegen frames directly into a
+  32x48 body. Every production actor is normalized to a 16x32 logical frame
+  with a maximum 16x24 visible body, bottom anchored to one shared foot
+  baseline, and exported at exact nearest-neighbor 2x into the existing 32x64
+  runtime frame. Runtime movement, collision ownership, and scale remain
+  unchanged.
+- All twelve production sheets use binary alpha and no more than 15 opaque
+  colors. The production compiler records frame silhouettes, palette counts,
+  partial-alpha counts, and exact 2x block coverage; it aborts on a missing
+  baseline or any pixel-contract violation.
+- `art/imagegen/validation/season_one_actor_pixel_preview.png` is the standing
+  four-direction contact sheet. Map Studio exposes the same actor contract and
+  metrics, while `npm run validate` verifies contract fields, preview hash,
+  output hashes, palette limits, silhouettes, and exact export coverage.
+- PNG writers now preserve an existing file when regenerated pixels are
+  identical. This prevents encoder-only byte churn across Python/Pillow
+  environments while still replacing files when artwork actually changes.
+- A direct 390x844 phone capture shows the player as a readable character
+  rather than the previous narrow red-and-black pillar. Tony's FireRed
+  comparison verdict remains the close condition; this release fixes actor
+  pixel integrity, not final character art quality.
+- Balance, map lint, production build, the focused 35-scenario visual/grid
+  suite, and the complete 118-scenario game suite pass. Broad validation stops
+  only on Tony's protected State Street composition checksum; those six files
+  remain unstaged and untouched by this release.

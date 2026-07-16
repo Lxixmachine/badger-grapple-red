@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: production-grid rollout through Capitol Square with explicit quiet-ground variation, maintained institutional lawn pads, and material-disciplined pixel art in v22.21.
+Status: production-grid rollout through Capitol Square with quiet-ground hierarchy, material-disciplined art, and one logical actor pixel contract in v22.22.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is
@@ -11,6 +11,9 @@ buildings, props, or character art are produced. The exact authority is
 - 480x320 native canvas with a 15x10-cell camera.
 - 32x32 gameplay cells.
 - 32x64 actors with one 32x32 foot/collision owner.
+- Actor art is authored as 16x32 logical frames, limited to 15 opaque colors,
+  uses binary alpha, and exports at exact nearest-neighbor 2x. Every direction
+  shares the same bottom foot baseline; runtime scale remains exactly 1.
 - Cardinal 165ms grid movement, turn-in-place, and held movement.
 - Every physical map edge uses a reciprocal two-cell threshold.
 - Every building, landmark, door, event, blocker, and camera window has exact

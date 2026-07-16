@@ -685,13 +685,20 @@ export function createSeedProject() {
     category: 'actors',
     path: sheet.path,
     frameWidth: sheet.frameWidth,
-    frameHeight: sheet.frameHeight
+    frameHeight: sheet.frameHeight,
+    logicalFrameWidth: sheet.logicalFrameWidth,
+    logicalFrameHeight: sheet.logicalFrameHeight,
+    renderScale: sheet.renderScale,
+    palette: deepClone(sheet.palette),
+    pixelMetrics: deepClone(sheet.pixelMetrics)
   }));
 
   return {
     schema: PROJECT_SCHEMA,
     revision: 1,
     productionVersion: production.version,
+    actorPixelContract: deepClone(production.actorPixelContract),
+    actorPixelPreview: deepClone(production.actorPixelPreview),
     layoutRevision: production.layoutRevision,
     metatileVersion: metatileBuild.version,
     groundSystem: deepClone(metatileBuild.groundSystem),

@@ -28,6 +28,11 @@ MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
 LAYOUTS = json.loads(LAYOUT_PATH.read_text(encoding="utf-8"))
 CELL = MANIFEST["cellSize"]
 MIN_COVERAGE = MANIFEST["minimumBlockedCellCoverage"]
+ACTOR_LOGICAL_WIDTH = 16
+ACTOR_LOGICAL_HEIGHT = 32
+ACTOR_BODY_HEIGHT = 24
+ACTOR_RENDER_SCALE = 2
+ACTOR_MAX_OPAQUE_COLORS = 15
 
 
 def sha256(path: Path) -> str:
@@ -40,6 +45,12 @@ def public_path(path: Path) -> str:
 
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        with Image.open(path) as existing:
+            current = existing.convert("RGBA")
+            candidate = image.convert("RGBA")
+            if current.size == candidate.size and current.tobytes() == candidate.tobytes():
+                return
     image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
@@ -454,6 +465,110 @@ def build_object_asset(scope: str, owner: dict, spec: dict) -> tuple[dict, Image
     }, image)
 
 
+def binary_alpha(image: Image.Image) -> Image.Image:
+    rgba = image.convert("RGBA")
+    alpha = rgba.getchannel("A").point(lambda value: 255 if value >= 128 else 0)
+    rgba.putalpha(alpha)
+    return rgba
+
+
+def logical_actor_frame(frame: Image.Image, row: int) -> Image.Image:
+    frame = binary_alpha(frame)
+    bbox = frame.getchannel("A").getbbox()
+    if not bbox:
+        raise SystemExit("Actor frame became empty during logical-grid normalization")
+    body = frame.crop(bbox)
+    body.thumbnail((ACTOR_LOGICAL_WIDTH, ACTOR_BODY_HEIGHT), Image.Resampling.NEAREST)
+    body = binary_alpha(body)
+    resized_bbox = body.getchannel("A").getbbox()
+    if not resized_bbox:
+        raise SystemExit("Actor frame became empty after logical-grid resize")
+    body = body.crop(resized_bbox)
+
+    minimum_width = 10 if row in (1, 2) else 12
+    if body.width < minimum_width:
+        body = body.resize((minimum_width, body.height), Image.Resampling.NEAREST)
+        body = binary_alpha(body)
+
+    logical = Image.new("RGBA", (ACTOR_LOGICAL_WIDTH, ACTOR_LOGICAL_HEIGHT), (0, 0, 0, 0))
+    logical.alpha_composite(body, ((ACTOR_LOGICAL_WIDTH - body.width) // 2, ACTOR_LOGICAL_HEIGHT - body.height))
+    return logical
+
+
+def discipline_actor_palette(sheet: Image.Image) -> tuple[Image.Image, list[tuple[int, int, int]]]:
+    rgba = binary_alpha(sheet)
+    opaque = [pixel[:3] for pixel in rgba.get_flattened_data() if pixel[3]]
+    if not opaque:
+        raise SystemExit("Actor sheet has no opaque pixels")
+
+    sample = Image.new("RGB", (len(opaque), 1))
+    sample.putdata(opaque)
+    quantized = sample.quantize(
+        colors=ACTOR_MAX_OPAQUE_COLORS,
+        method=Image.Quantize.MEDIANCUT,
+        dither=Image.Dither.NONE,
+    ).convert("RGB")
+    palette = list(dict.fromkeys(quantized.get_flattened_data()))
+    cache: dict[tuple[int, int, int], tuple[int, int, int]] = {}
+
+    def nearest(color: tuple[int, int, int]) -> tuple[int, int, int]:
+        if color not in cache:
+            cache[color] = min(
+                palette,
+                key=lambda candidate: sum((color[index] - candidate[index]) ** 2 for index in range(3)),
+            )
+        return cache[color]
+
+    output = Image.new("RGBA", rgba.size, (0, 0, 0, 0))
+    source_pixels = rgba.load()
+    output_pixels = output.load()
+    for y in range(rgba.height):
+        for x in range(rgba.width):
+            pixel = source_pixels[x, y]
+            if pixel[3]:
+                output_pixels[x, y] = (*nearest(pixel[:3]), 255)
+    return output, palette
+
+
+def actor_sheet_metrics(sheet: Image.Image) -> dict:
+    colors = {pixel[:3] for pixel in sheet.get_flattened_data() if pixel[3]}
+    partial_alpha = sum(1 for pixel in sheet.get_flattened_data() if pixel[3] not in (0, 255))
+    total_blocks = exact_blocks = 0
+    for y in range(0, sheet.height, ACTOR_RENDER_SCALE):
+        for x in range(0, sheet.width, ACTOR_RENDER_SCALE):
+            block = {
+                sheet.getpixel((x + dx, y + dy))
+                for dy in range(ACTOR_RENDER_SCALE)
+                for dx in range(ACTOR_RENDER_SCALE)
+            }
+            total_blocks += 1
+            if len(block) == 1:
+                exact_blocks += 1
+
+    frame_width = ACTOR_LOGICAL_WIDTH * ACTOR_RENDER_SCALE
+    frame_height = ACTOR_LOGICAL_HEIGHT * ACTOR_RENDER_SCALE
+    frame_sizes = []
+    for row in range(4):
+        for column in range(3):
+            alpha = sheet.getchannel("A").crop((
+                column * frame_width,
+                row * frame_height,
+                (column + 1) * frame_width,
+                (row + 1) * frame_height,
+            ))
+            bbox = alpha.getbbox()
+            if not bbox or bbox[3] != frame_height:
+                raise SystemExit(f"Actor frame {row},{column} lost its shared foot baseline")
+            frame_sizes.append({"width": bbox[2] - bbox[0], "height": bbox[3] - bbox[1]})
+
+    return {
+        "opaqueColorCount": len(colors),
+        "partialAlphaPixelCount": partial_alpha,
+        "exactRenderScaleBlockCoverage": round(exact_blocks / max(total_blocks, 1), 4),
+        "frameVisibleSizes": frame_sizes,
+    }
+
+
 def build_actor_sheet(actor_id: str) -> dict:
     source = SOURCES[actor_id]
     source_frame_width = source.width // 3
@@ -461,10 +576,11 @@ def build_actor_sheet(actor_id: str) -> dict:
     if source.size != (source_frame_width * 3, source_frame_height * 4):
         raise SystemExit(f"Actor sheet {actor_id} must be a 3x4 frame grid")
 
-    frame_width = CELL
-    frame_height = CELL * 2
-    sprite_height = round(CELL * 1.5)
-    sheet = Image.new("RGBA", (frame_width * 3, frame_height * 4), (0, 0, 0, 0))
+    logical_sheet = Image.new(
+        "RGBA",
+        (ACTOR_LOGICAL_WIDTH * 3, ACTOR_LOGICAL_HEIGHT * 4),
+        (0, 0, 0, 0),
+    )
     for row in range(4):
         for column in range(3):
             frame = source.crop((
@@ -473,8 +589,24 @@ def build_actor_sheet(actor_id: str) -> dict:
                 (column + 1) * source_frame_width,
                 (row + 1) * source_frame_height,
             ))
-            frame = frame.resize((frame_width, sprite_height), Image.Resampling.NEAREST)
-            sheet.alpha_composite(frame, (column * frame_width, row * frame_height + frame_height - sprite_height))
+            frame = logical_actor_frame(frame, row)
+            logical_sheet.alpha_composite(
+                frame,
+                (column * ACTOR_LOGICAL_WIDTH, row * ACTOR_LOGICAL_HEIGHT),
+            )
+
+    logical_sheet, palette = discipline_actor_palette(logical_sheet)
+    frame_width = ACTOR_LOGICAL_WIDTH * ACTOR_RENDER_SCALE
+    frame_height = ACTOR_LOGICAL_HEIGHT * ACTOR_RENDER_SCALE
+    sheet = logical_sheet.resize(
+        (logical_sheet.width * ACTOR_RENDER_SCALE, logical_sheet.height * ACTOR_RENDER_SCALE),
+        Image.Resampling.NEAREST,
+    )
+    metrics = actor_sheet_metrics(sheet)
+    if metrics["opaqueColorCount"] > ACTOR_MAX_OPAQUE_COLORS:
+        raise SystemExit(f"Actor sheet {actor_id} exceeds the shared GBA-style palette")
+    if metrics["partialAlphaPixelCount"] or metrics["exactRenderScaleBlockCoverage"] != 1:
+        raise SystemExit(f"Actor sheet {actor_id} violates binary-alpha exact-{ACTOR_RENDER_SCALE}x export")
 
     path = OUTPUT_DIR / f"actor_{actor_id}.png"
     save_png(sheet, path)
@@ -483,8 +615,44 @@ def build_actor_sheet(actor_id: str) -> dict:
         "path": public_path(path),
         "frameWidth": frame_width,
         "frameHeight": frame_height,
+        "logicalFrameWidth": ACTOR_LOGICAL_WIDTH,
+        "logicalFrameHeight": ACTOR_LOGICAL_HEIGHT,
+        "renderScale": ACTOR_RENDER_SCALE,
+        "palette": [list(color) for color in palette],
+        "pixelMetrics": metrics,
         "directions": {"down": 0, "left": 1, "right": 2, "up": 3},
     }
+
+
+def build_actor_preview(actor_sheets: dict[str, dict]) -> Path:
+    ids = list(actor_sheets)
+    columns = 3
+    cell_width = 144
+    cell_height = 84
+    rows = (len(ids) + columns - 1) // columns
+    preview = Image.new("RGBA", (columns * cell_width, rows * cell_height), (20, 24, 27, 255))
+    draw = ImageDraw.Draw(preview)
+    for index, actor_id in enumerate(ids):
+        column = index % columns
+        row = index // columns
+        x = column * cell_width
+        y = row * cell_height
+        draw.rectangle((x, y, x + cell_width - 1, y + cell_height - 1), outline=(74, 84, 86, 255))
+        draw.text((x + 5, y + 2), actor_id.upper(), fill=(235, 228, 205, 255))
+        entry = actor_sheets[actor_id]
+        path = ROOT / "public" / entry["path"].removeprefix("./")
+        sheet = Image.open(path).convert("RGBA")
+        for direction in range(4):
+            idle = sheet.crop((
+                entry["frameWidth"],
+                direction * entry["frameHeight"],
+                entry["frameWidth"] * 2,
+                (direction + 1) * entry["frameHeight"],
+            ))
+            preview.alpha_composite(idle, (x + 8 + direction * entry["frameWidth"], y + 18))
+    path = VALIDATION_DIR / "season_one_actor_pixel_preview.png"
+    save_png(preview, path)
+    return path
 
 
 def composite_preview(base: Image.Image, objects: list[tuple[dict, Image.Image]]) -> Image.Image:
@@ -536,9 +704,18 @@ def build() -> dict:
     save_png(exterior_preview, VALIDATION_DIR / "camp_randall_production_preview.png")
     save_png(ownership_overlay(exterior_preview, exterior_owners), VALIDATION_DIR / "camp_randall_production_ownership.png")
 
+    actor_sheets = {
+        actor_id: build_actor_sheet(actor_id)
+        for actor_id in (
+            "player", "captain", "coach", "rex", "trainer", "wrestler",
+            "manager", "scout", "student", "official", "athlete", "camper",
+        )
+    }
+    actor_preview_path = build_actor_preview(actor_sheets)
+
     runtime = {
-        "version": 2,
-        "status": "quiet-ground-production-pilot",
+        "version": 3,
+        "status": "logical-grid-actor-production-pilot",
         "layoutRevision": LAYOUTS["revision"],
         "cellSize": CELL,
         "minimumBlockedCellCoverage": MIN_COVERAGE,
@@ -550,13 +727,20 @@ def build() -> dict:
             "actors": MANIFEST["exterior"].get("actors", []),
         },
         "interiors": {},
-        "actorSheets": {
-            actor_id: build_actor_sheet(actor_id)
-            for actor_id in (
-                "player", "captain", "coach", "rex", "trainer", "wrestler",
-                "manager", "scout", "student", "official", "athlete", "camper",
-            )
+        "actorPixelContract": {
+            "logicalFrameWidth": ACTOR_LOGICAL_WIDTH,
+            "logicalFrameHeight": ACTOR_LOGICAL_HEIGHT,
+            "bodyHeightMax": ACTOR_BODY_HEIGHT,
+            "renderScale": ACTOR_RENDER_SCALE,
+            "maxOpaqueColors": ACTOR_MAX_OPAQUE_COLORS,
+            "binaryAlpha": True,
+            "sharedFootBaseline": True,
         },
+        "actorPixelPreview": {
+            "path": actor_preview_path.relative_to(ROOT).as_posix(),
+            "sha256": sha256(actor_preview_path),
+        },
+        "actorSheets": actor_sheets,
     }
 
     for interior_id, art_spec in MANIFEST["interiors"].items():

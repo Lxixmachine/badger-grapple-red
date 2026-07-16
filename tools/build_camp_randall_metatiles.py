@@ -53,6 +53,12 @@ def public_path(path: Path) -> str:
 
 def save_png(image: Image.Image, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.exists():
+        with Image.open(path) as existing:
+            current = existing.convert("RGBA")
+            candidate = image.convert("RGBA")
+            if current.size == candidate.size and current.tobytes() == candidate.tobytes():
+                return
     image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
