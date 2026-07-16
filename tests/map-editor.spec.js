@@ -96,7 +96,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 18});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 19});
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'brick',
     connectedComponentCount: 1,
@@ -126,6 +126,14 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   expect(state.project.visualHierarchyMetrics.saturationDifference).toBeGreaterThan(0);
   expect(state.project.visualHierarchyMetrics.ground.meanSaturation)
     .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanSaturation);
+  expect(state.project.pixelDiscipline).toMatchObject({
+    version: 4,
+    profileVersion: 1,
+    maxColorsPerMaterial: 4,
+    assetCount: 115,
+    outputPartialAlphaPixelCount: 0,
+    paletteViolationCount: 0
+  });
   expect(Object.keys(state.project.maps)).toEqual([
     'camp_randall', 'r1', 'field_house', 'lakeshore_path', 'picnic_point', 'state_street',
     'bascom_hill', 'capitol_square', 'monona_shore', 'kohl_center', 'airport', 'st_louis',
@@ -434,7 +442,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 18});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 19});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

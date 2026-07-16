@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v10.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v11.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
 GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
@@ -80,6 +80,66 @@ def sha256(path: Path) -> str:
 
 def public_path(path: Path) -> str:
     return "./" + path.relative_to(ROOT / "public").as_posix()
+
+
+def validate_material_discipline(prepared: dict) -> dict:
+    """Fail the build if prepared Imagegen art escapes its material ramps."""
+    if prepared.get("schema") != "badger-grapple-imagegen-tileset-sources/v2":
+        raise SystemExit("Prepared Imagegen source schema is unsupported")
+    if prepared.get("version") != 4:
+        raise SystemExit("Prepared Imagegen source version is unsupported")
+    contract = prepared.get("materialDiscipline", {})
+    max_colors = contract.get("maxColorsPerMaterial")
+    if contract.get("profileVersion") != 1 or max_colors != 4:
+        raise SystemExit("Prepared Imagegen material discipline contract is stale")
+    profile_path = ROOT / contract.get("profilePath", "")
+    if not profile_path.exists() or contract.get("profileSha256") != sha256(profile_path):
+        raise SystemExit("Prepared Imagegen material profile is missing or stale")
+
+    material_asset_counts: Counter[str] = Counter()
+    material_pixel_counts: Counter[str] = Counter()
+    outline_pixels = 0
+    input_partial_alpha = 0
+    assets = prepared.get("assets", {})
+    for asset_id, asset in assets.items():
+        metrics = asset.get("materialDiscipline", {})
+        materials = metrics.get("materials", [])
+        color_counts = metrics.get("materialColorCounts", {})
+        if not materials or not color_counts:
+            raise SystemExit(f"Prepared Imagegen asset {asset_id} has no material discipline")
+        if metrics.get("maxColorsPerMaterial", max_colors + 1) > max_colors:
+            raise SystemExit(f"Prepared Imagegen asset {asset_id} exceeds its material ramp")
+        if metrics.get("outputPartialAlphaPixelCount") != 0:
+            raise SystemExit(f"Prepared Imagegen asset {asset_id} contains partial alpha")
+        if metrics.get("paletteViolationCount") != 0:
+            raise SystemExit(f"Prepared Imagegen asset {asset_id} contains off-ramp colors")
+        for material, color_count in color_counts.items():
+            if material not in materials or color_count < 1 or color_count > max_colors:
+                raise SystemExit(f"Prepared Imagegen asset {asset_id} has invalid {material} ramp usage")
+            material_asset_counts[material] += 1
+        for material, pixel_count in metrics.get("pixelsByMaterial", {}).items():
+            material_pixel_counts[material] += pixel_count
+        outline_pixels += metrics.get("outlinePixelCount", 0)
+        input_partial_alpha += metrics.get("inputPartialAlphaPixelCount", 0)
+
+    if contract.get("disciplinedAssetCount") != len(assets):
+        raise SystemExit("Prepared Imagegen material discipline coverage is incomplete")
+    return {
+        "schema": prepared["schema"],
+        "version": prepared["version"],
+        "profilePath": contract["profilePath"],
+        "profileSha256": contract["profileSha256"],
+        "profileVersion": contract["profileVersion"],
+        "maxColorsPerMaterial": max_colors,
+        "assetCount": len(assets),
+        "materialCount": len(material_asset_counts),
+        "materialAssetCounts": dict(sorted(material_asset_counts.items())),
+        "materialPixelCounts": dict(sorted(material_pixel_counts.items())),
+        "outlinePixelCount": outline_pixels,
+        "inputPartialAlphaPixelCount": input_partial_alpha,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0,
+    }
 
 
 def material_metrics(image: Image.Image) -> dict:
@@ -374,6 +434,7 @@ def plaza_mask(name: str, cell: int) -> Image.Image:
 
 def build() -> dict:
     prepared_sources = prepare_imagegen_sources()
+    pixel_discipline = validate_material_discipline(prepared_sources)
     validate_plaza_transition_seams()
     manifest = load_json(MANIFEST_PATH)
     contract = load_json(CONTRACT_PATH)
@@ -1063,6 +1124,7 @@ def build() -> dict:
         "logicalCellSize": LOGICAL_CELL,
         "groundMaterialMetrics": ground_material_metrics,
         "groundValueContract": GROUND_VALUE_CONTRACT,
+        "pixelDiscipline": pixel_discipline,
         "contractSatisfied": True,
     }
 
@@ -1181,8 +1243,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-world-tileset/v5",
-        "version": 10,
-        "status": "season-one-high-key-ground-pixel-kit",
+        "version": 11,
+        "status": "season-one-material-disciplined-pixel-kit",
         "cellSize": cell,
         "artPipeline": {
             "logicalCellSize": LOGICAL_CELL,
@@ -1190,6 +1252,13 @@ def build() -> dict:
             "resampling": "nearest",
             "sourceMode": "authored-logical-pixel-tiles",
             "pixelPerfect": True,
+            "materialDiscipline": {
+                "profileVersion": pixel_discipline["profileVersion"],
+                "maxColorsPerMaterial": pixel_discipline["maxColorsPerMaterial"],
+                "assetCount": pixel_discipline["assetCount"],
+                "outputPartialAlphaPixelCount": 0,
+                "paletteViolationCount": 0,
+            },
         },
         "atlas": {
             "path": public_path(ATLAS_PATH), "columns": columns,
@@ -1221,6 +1290,7 @@ def build() -> dict:
             "pixelArtModule": sha256(ROOT / manifest["artModule"]),
             "preparedImagegenManifest": sha256(IMAGEGEN_SOURCE_MANIFEST_PATH),
             "preparedImagegenAssetCount": len(prepared_sources["assets"]),
+            "materialProfile": pixel_discipline["profileSha256"],
             "referenceBoards": {
                 key: sha256(ROOT / path) for key, path in manifest["referenceSources"].items()
             },

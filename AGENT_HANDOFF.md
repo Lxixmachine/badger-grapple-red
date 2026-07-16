@@ -3249,3 +3249,29 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   app v22.19. Broad validation still stops only on Tony's protected State
   Street composition checksum; do not regenerate, stage, or overwrite those
   six user-owned files.
+
+## Codex Per-Material Pixel Discipline (v22.20)
+
+- The Imagegen preparation pipeline now consumes
+  `art/tilesets/imagegen_material_profiles.json`. Each of the 115 prepared
+  assets declares its semantic materials and resolves every visible pixel to
+  that material's exact four-color ramp: one outline plus three cel shades.
+  Output alpha is binary; anti-aliased fringe colors and global-quantizer
+  micro-noise can no longer enter the runtime atlas.
+- `source_manifest.json` v4 records per-asset material usage, color counts,
+  pixel counts, outline recovery, alpha cleanup, and profile hashes. The world
+  compiler and validator reject stale profiles, incomplete coverage, partial
+  alpha, off-ramp colors, or more than four colors in any material zone.
+- Season One world tileset v11 and Camp metatile atlas v19 propagate this same
+  contract into runtime and Map Studio. Map Studio exposes the profile version,
+  115-asset coverage, zero partial-alpha output, and zero palette violations.
+- A repeated 116-file prepared-source rebuild was byte-for-byte deterministic.
+  Phone-framed runtime review and a temporary 15x10 FireRed A/B board confirm
+  crisper architecture, foliage, props, and landmarks without changing the
+  collision-owned composition. The board also identifies the next parity work:
+  retire the permanent overworld review HUD and add restrained lawn value
+  modulation without breaking the quiet-ground contract.
+- Balance, map lint, production build, targeted runtime/editor tests, and the
+  complete sequential suite pass; the final count is 117/117. Broad validation
+  still stops only on Tony's protected State Street composition checksum. Do
+  not regenerate, stage, or overwrite those six user-owned files.

@@ -1,15 +1,18 @@
 """Normalize Imagegen source boards into exact logical-grid pixel assets.
 
-Imagegen supplies the art quality and palette.  This script supplies the map
-discipline: deterministic panel extraction, chroma-key removal, palette
-reduction, logical sizing, binary alpha, and source hashes.  Runtime compilers
-consume only the normalized outputs under art/tilesets/imagegen_v3.
+Imagegen supplies the art quality and material placement.  This script supplies
+the map discipline: deterministic panel extraction, chroma-key removal,
+material-specific four-shade ramps, logical sizing, binary alpha, and source
+hashes. Runtime compilers consume only the normalized outputs under
+art/tilesets/imagegen_v3.
 """
 
 from __future__ import annotations
 
 import hashlib
 import json
+from collections import Counter, defaultdict
+from functools import lru_cache
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageOps
@@ -21,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "art" / "imagegen" / "tileset_v3"
 OUTPUT_DIR = ROOT / "art" / "tilesets" / "imagegen_v3"
 MANIFEST_PATH = OUTPUT_DIR / "source_manifest.json"
+MATERIAL_PROFILE_PATH = ROOT / "art" / "tilesets" / "imagegen_material_profiles.json"
 
 
 BOARDS = {
@@ -222,6 +226,164 @@ def _luma(pixel: tuple[int, int, int, int]) -> int:
     return red * 299 + green * 587 + blue * 114
 
 
+def load_material_profiles() -> dict:
+    profiles = json.loads(MATERIAL_PROFILE_PATH.read_text(encoding="utf-8"))
+    if profiles.get("schema") != "badger-grapple-imagegen-material-profiles/v1":
+        raise SystemExit("Imagegen material profile schema is unsupported")
+    if profiles.get("version") != 1 or profiles.get("maxColorsPerMaterial") != 4:
+        raise SystemExit("Imagegen material profile contract is stale")
+    for material, keys in profiles.get("ramps", {}).items():
+        if len(keys) != profiles["maxColorsPerMaterial"]:
+            raise SystemExit(f"Material {material} must declare exactly four colors")
+        missing = [key for key in keys if key not in PALETTE]
+        if missing:
+            raise SystemExit(f"Material {material} references missing palette keys: {missing}")
+    return profiles
+
+
+MATERIAL_PROFILES = load_material_profiles()
+
+
+def material_profile_for(asset_id: str, category: str) -> list[str]:
+    materials = MATERIAL_PROFILES.get("assetProfiles", {}).get(asset_id)
+    if materials is None:
+        materials = MATERIAL_PROFILES.get("categoryDefaults", {}).get(category)
+    if not materials:
+        raise SystemExit(f"Prepared Imagegen asset {asset_id} has no material profile")
+    missing = [material for material in materials if material not in MATERIAL_PROFILES["ramps"]]
+    if missing:
+        raise SystemExit(f"Prepared Imagegen asset {asset_id} references unknown materials: {missing}")
+    return list(materials)
+
+
+def _srgb_channel_to_linear(value: int) -> float:
+    channel = value / 255
+    return channel / 12.92 if channel <= 0.04045 else ((channel + 0.055) / 1.055) ** 2.4
+
+
+@lru_cache(maxsize=4096)
+def _oklab(red: int, green: int, blue: int) -> tuple[float, float, float]:
+    r = _srgb_channel_to_linear(red)
+    g = _srgb_channel_to_linear(green)
+    b = _srgb_channel_to_linear(blue)
+    light = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b
+    medium = 0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b
+    short = 0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b
+    light = light ** (1 / 3)
+    medium = medium ** (1 / 3)
+    short = short ** (1 / 3)
+    return (
+        0.2104542553 * light + 0.7936177850 * medium - 0.0040720468 * short,
+        1.9779984951 * light - 2.4285922050 * medium + 0.4505937099 * short,
+        0.0259040371 * light + 0.7827717662 * medium - 0.8086757660 * short,
+    )
+
+
+def _perceptual_distance(pixel: tuple[int, int, int, int], palette_key: str) -> float:
+    source = _oklab(pixel[0], pixel[1], pixel[2])
+    target_color = PALETTE[palette_key]
+    target = _oklab(target_color[0], target_color[1], target_color[2])
+    return (
+        (source[0] - target[0]) ** 2
+        + 1.5 * (source[1] - target[1]) ** 2
+        + 1.5 * (source[2] - target[2]) ** 2
+    )
+
+
+def discipline_material_zones(source: Image.Image, materials: list[str]) -> tuple[Image.Image, dict]:
+    """Snap each inferred material zone to its four-color authored ramp."""
+    rgba = source.convert("RGBA")
+    width, height = rgba.size
+    ramps = MATERIAL_PROFILES["ramps"]
+    labels: list[list[str | None]] = [[None for _x in range(width)] for _y in range(height)]
+    partial_alpha_pixels = 0
+
+    for y in range(height):
+        for x in range(width):
+            pixel = rgba.getpixel((x, y))
+            if pixel[3] < 96:
+                continue
+            if pixel[3] < 255:
+                partial_alpha_pixels += 1
+            labels[y][x] = min(
+                materials,
+                key=lambda material: min(
+                    _perceptual_distance(pixel, key)
+                    for key in ramps[material][1:]
+                ),
+            )
+
+    output = Image.new("RGBA", rgba.size, (0, 0, 0, 0))
+    colors_by_material: dict[str, set[tuple[int, int, int, int]]] = defaultdict(set)
+    pixels_by_material: Counter[str] = Counter()
+    outline_pixels = 0
+    alpha_threshold = MATERIAL_PROFILES["outlineAlphaThreshold"]
+    luma_threshold = MATERIAL_PROFILES["outlineLumaThreshold"] * 1000
+
+    for y in range(height):
+        for x in range(width):
+            material = labels[y][x]
+            if material is None:
+                continue
+            pixel = rgba.getpixel((x, y))
+            boundary = any(
+                neighbor_x < 0
+                or neighbor_x >= width
+                or neighbor_y < 0
+                or neighbor_y >= height
+                or labels[neighbor_y][neighbor_x] is None
+                for neighbor_x, neighbor_y in (
+                    (x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)
+                )
+            )
+            antialiased_edge = boundary and pixel[3] < alpha_threshold
+            dark_edge = boundary and _luma(pixel) < luma_threshold
+            if antialiased_edge or dark_edge:
+                neighboring_materials = [
+                    labels[neighbor_y][neighbor_x]
+                    for neighbor_y in range(max(0, y - 1), min(height, y + 2))
+                    for neighbor_x in range(max(0, x - 1), min(width, x + 2))
+                    if labels[neighbor_y][neighbor_x] is not None
+                ]
+                if neighboring_materials:
+                    material = Counter(neighboring_materials).most_common(1)[0][0]
+                palette_key = ramps[material][0]
+                outline_pixels += 1
+            else:
+                palette_key = min(
+                    ramps[material],
+                    key=lambda key: _perceptual_distance(pixel, key),
+                )
+            color = PALETTE[palette_key]
+            output.putpixel((x, y), color)
+            colors_by_material[material].add(color)
+            pixels_by_material[material] += 1
+
+    material_color_counts = {
+        material: len(colors_by_material[material])
+        for material in materials
+        if pixels_by_material[material]
+    }
+    max_colors = max(material_color_counts.values(), default=0)
+    if max_colors > MATERIAL_PROFILES["maxColorsPerMaterial"]:
+        raise SystemExit(f"Material compositor emitted {max_colors} colors in one zone")
+    metrics = {
+        "materials": materials,
+        "materialColorCounts": material_color_counts,
+        "maxColorsPerMaterial": max_colors,
+        "pixelsByMaterial": {
+            material: pixels_by_material[material]
+            for material in materials
+            if pixels_by_material[material]
+        },
+        "outlinePixelCount": outline_pixels,
+        "inputPartialAlphaPixelCount": partial_alpha_pixels,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0,
+    }
+    return output, metrics
+
+
 def posterize_to_ramp(source: Image.Image, ramp) -> Image.Image:
     """Map source luminance to a fixed material ramp without dither or AA."""
     rgba = source.convert("RGBA")
@@ -360,6 +522,26 @@ def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image
         return disciplined_paver(image, ramp, asset_id)
     return posterize_to_ramp(image, ramp) if ramp else image
 
+
+def ground_material_discipline_metrics(asset_id: str, image: Image.Image) -> dict:
+    colors = {
+        pixel
+        for pixel in image.convert("RGBA").get_flattened_data()
+        if pixel[3]
+    }
+    if len(colors) > MATERIAL_PROFILES["maxColorsPerMaterial"]:
+        raise SystemExit(f"Ground material {asset_id} exceeds the four-color zone contract")
+    return {
+        "materials": [asset_id],
+        "materialColorCounts": {asset_id: len(colors)},
+        "maxColorsPerMaterial": len(colors),
+        "pixelsByMaterial": {asset_id: image.width * image.height},
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0,
+    }
+
 STANDALONE_ASSETS = {
     "landmarks": [
         ("field_house_arena_exterior", SOURCE_DIR / "season_one_field_house_arena_source_v1.png", (192, 112), 36),
@@ -474,7 +656,7 @@ def quantize_rgba(image: Image.Image, colors: int) -> Image.Image:
     return reduced
 
 
-def normalize(panel: Image.Image, size: tuple[int, int], mode: str, colors: int) -> Image.Image:
+def normalize_geometry(panel: Image.Image, size: tuple[int, int], mode: str) -> Image.Image:
     if mode == "fit_dark_trim":
         visible = panel.convert("RGB").point(lambda value: 0 if value < 18 else 255).convert("L")
         bbox = visible.getbbox()
@@ -489,7 +671,11 @@ def normalize(panel: Image.Image, size: tuple[int, int], mode: str, colors: int)
         reduced.alpha_composite(fitted, ((size[0] - fitted.width) // 2, size[1] - fitted.height))
     else:
         raise ValueError(mode)
-    return quantize_rgba(reduced, colors)
+    return reduced.convert("RGBA")
+
+
+def normalize(panel: Image.Image, size: tuple[int, int], mode: str, colors: int) -> Image.Image:
+    return quantize_rgba(normalize_geometry(panel, size, mode), colors)
 
 
 def make_ground_seamless(image: Image.Image) -> Image.Image:
@@ -567,11 +753,18 @@ def build() -> dict:
                     index,
                     trim_noise=category in {"ground", "vegetation"},
                 )
-            normalized = normalize(panel, size, mode, colors)
             if category == "ground":
+                normalized = normalize(panel, size, mode, colors)
                 normalized = discipline_ground_material(
                     asset_id,
                     make_ground_seamless(normalized),
+                )
+                discipline = ground_material_discipline_metrics(asset_id, normalized)
+            else:
+                geometry = normalize_geometry(panel, size, mode)
+                normalized, discipline = discipline_material_zones(
+                    geometry,
+                    material_profile_for(asset_id, category),
                 )
             output_path = OUTPUT_DIR / category / f"{asset_id}.png"
             save_png(normalized, output_path)
@@ -583,6 +776,7 @@ def build() -> dict:
                 "colors": len(normalized.convert("RGB").getcolors(maxcolors=65536) or []),
                 "sha256": sha256(output_path),
                 "sourcePanel": index,
+                "materialDiscipline": discipline,
             }
 
     for category, entries in STANDALONE_ASSETS.items():
@@ -593,7 +787,11 @@ def build() -> dict:
             sources[source_key] = sha256(path)
             board = Image.open(path).convert("RGBA")
             panel = extract_panel(board, 1, 1, 0)
-            normalized = normalize(panel, size, options[0] if options else "contain", colors)
+            geometry = normalize_geometry(panel, size, options[0] if options else "contain")
+            normalized, discipline = discipline_material_zones(
+                geometry,
+                material_profile_for(asset_id, category),
+            )
             output_path = OUTPUT_DIR / category / f"{asset_id}.png"
             save_png(normalized, output_path)
             outputs[asset_id] = {
@@ -604,10 +802,15 @@ def build() -> dict:
                 "colors": len(normalized.convert("RGB").getcolors(maxcolors=65536) or []),
                 "sha256": sha256(output_path),
                 "sourceFile": path.name,
+                "materialDiscipline": discipline,
             }
 
     arena_path = OUTPUT_DIR / "landmarks" / "field_house_arena_exterior.png"
-    arch = field_house_entry_arch(Image.open(arena_path).convert("RGBA"))
+    arch_geometry = field_house_entry_arch(Image.open(arena_path).convert("RGBA"))
+    arch, discipline = discipline_material_zones(
+        arch_geometry,
+        material_profile_for("field_house_entry_arch", "landmarks"),
+    )
     arch_path = OUTPUT_DIR / "landmarks" / "field_house_entry_arch.png"
     save_png(arch, arch_path)
     sources["landmarks:field_house_entry_arch"] = f"derived:{sha256(arena_path)}"
@@ -620,13 +823,21 @@ def build() -> dict:
         "sha256": sha256(arch_path),
         "sourceFile": arena_path.name,
         "derivation": "grid-native gateway from approved Imagegen Field House source",
+        "materialDiscipline": discipline,
     }
 
     manifest = {
-        "schema": "badger-grapple-imagegen-tileset-sources/v1",
-        "version": 3,
+        "schema": "badger-grapple-imagegen-tileset-sources/v2",
+        "version": 4,
         "logicalCellSize": 16,
         "chromaKey": "#ff00ff",
+        "materialDiscipline": {
+            "profilePath": MATERIAL_PROFILE_PATH.relative_to(ROOT).as_posix(),
+            "profileSha256": sha256(MATERIAL_PROFILE_PATH),
+            "profileVersion": MATERIAL_PROFILES["version"],
+            "maxColorsPerMaterial": MATERIAL_PROFILES["maxColorsPerMaterial"],
+            "disciplinedAssetCount": len(outputs),
+        },
         "sourceBoards": sources,
         "assets": outputs,
     }

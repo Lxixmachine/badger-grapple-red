@@ -134,6 +134,15 @@ verdict "closer"; ground zones' mean saturation measurably below
 object zones'.
 
 ### WP-V3 — Per-material pixel-discipline pass (compositor; Claude owns)
+> **STATUS: SOURCE AND RUNTIME CONTRACT SHIPPED IN v22.20; TONY VISUAL VERDICT REMAINS.**
+> All 115 prepared Imagegen assets now resolve through asset-specific material
+> profiles. Every visible output pixel has binary alpha and belongs to a
+> declared four-shade material ramp (three cel shades plus one outline shade).
+> The prepared source manifest, Season One world atlas, Camp Randall atlas,
+> runtime, and Map Studio carry the same profile hash and fail validation on
+> partial alpha, an off-ramp color, stale profile data, or incomplete coverage.
+> A repeated 116-file source rebuild is byte-for-byte deterministic.
+
 Mechanical, scriptable, not artistry: for each manifest material zone,
 snap pixels to that material's declared 3-shade ramp (+1 outline
 shade) instead of quantizing the whole image globally; kill AA

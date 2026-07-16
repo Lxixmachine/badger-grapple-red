@@ -1,8 +1,15 @@
 {
-  "schema": "badger-grapple-imagegen-tileset-sources/v1",
-  "version": 3,
+  "schema": "badger-grapple-imagegen-tileset-sources/v2",
+  "version": 4,
   "logicalCellSize": 16,
   "chromaKey": "#ff00ff",
+  "materialDiscipline": {
+    "profilePath": "art/tilesets/imagegen_material_profiles.json",
+    "profileSha256": "4bf67a01e532a192bf436913a2acbd79eebae36331ba84aac9040ed981ab76a0",
+    "profileVersion": 1,
+    "maxColorsPerMaterial": 4,
+    "disciplinedAssetCount": 115
+  },
   "sourceBoards": {
     "ground": "9824dd2720145de8d6373d1ff441a5ee53b2ee04919cd6129cd6459baafe3621",
     "ground:dirt": "b11b7a9cdb276ac2dbe142eb7a221486cb0e29c2e78cc2216682d30dd93f03ab",
@@ -41,7 +48,7 @@
     "ordinary_buildings:state_facade_5x5": "5c3068215f0969e6bcea437c93fd5a52c36dcfac442eebbc68cac7007787b68a",
     "ordinary_buildings:city_edge_horizontal": "005322c068ee98c41938572d2636194b23e5219a8dc3f71ec8bedf7fe5643d44",
     "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279",
-    "landmarks:field_house_entry_arch": "derived:e64111b17809f7b3e19a2c90c91c7a17b1b1703c5250b2775820bec7fedba588"
+    "landmarks:field_house_entry_arch": "derived:63c27d93c62ef8efe9e366a9f5b1093e346160cd4f28583d7d9c40cdf72ba7bb"
   },
   "assets": {
     "grass": {
@@ -51,7 +58,23 @@
       "height": 16,
       "colors": 2,
       "sha256": "30da7cbe621d33649d40182827301bc11a25772a51cccbeff7ec097d9b0c4597",
-      "sourcePanel": 0
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "grass"
+        ],
+        "materialColorCounts": {
+          "grass": 2
+        },
+        "maxColorsPerMaterial": 2,
+        "pixelsByMaterial": {
+          "grass": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "mowed_grass": {
       "category": "ground",
@@ -60,7 +83,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "dd62c85b7e0e5a96c1c487b17ee8d44e1ebc6a6411d36c4d99e3beaa1d5a3040",
-      "sourcePanel": 1
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "mowed_grass"
+        ],
+        "materialColorCounts": {
+          "mowed_grass": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "mowed_grass": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "dirt": {
       "category": "ground",
@@ -69,7 +108,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "3809751cfdf4e4e801edd92b8c2c66086805018ba5ea0e40b843663ff675e1a4",
-      "sourcePanel": 2
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "dirt"
+        ],
+        "materialColorCounts": {
+          "dirt": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "dirt": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "brick": {
       "category": "ground",
@@ -78,7 +133,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "cf03a48828339b5a0e0cd718b8d92399e39ce95cf75247f239f590cdfa7c4469",
-      "sourcePanel": 3
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "brick"
+        ],
+        "materialColorCounts": {
+          "brick": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "brick": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "stone": {
       "category": "ground",
@@ -87,7 +158,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "dd3a6606ec23f4f89fcd4ef942aa01c8b830668de8a4532515e3127182a3b1a1",
-      "sourcePanel": 4
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "stone"
+        ],
+        "materialColorCounts": {
+          "stone": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "stone": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "concrete": {
       "category": "ground",
@@ -96,7 +183,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "36fc0f4bb04578242dbde625644dae12fee2aa1972162f327d7700b9920a7de1",
-      "sourcePanel": 5
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "concrete"
+        ],
+        "materialColorCounts": {
+          "concrete": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "concrete": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "gravel": {
       "category": "ground",
@@ -105,7 +208,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "9746329a06a6a2438dc94f3f14c6c68dd3c960004e333b42b5cfe9554f7df3b9",
-      "sourcePanel": 6
+      "sourcePanel": 6,
+      "materialDiscipline": {
+        "materials": [
+          "gravel"
+        ],
+        "materialColorCounts": {
+          "gravel": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "gravel": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "sand": {
       "category": "ground",
@@ -114,7 +233,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "d16c1bf9a13c532a46cdef56aef4e4447c02254cf86c8fa7010c66e4851d1e69",
-      "sourcePanel": 7
+      "sourcePanel": 7,
+      "materialDiscipline": {
+        "materials": [
+          "sand"
+        ],
+        "materialColorCounts": {
+          "sand": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "sand": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "water": {
       "category": "ground",
@@ -123,7 +258,23 @@
       "height": 16,
       "colors": 4,
       "sha256": "7afd9d62fa5e457e4c1cf8eacb5b48974244b3ca2bbc034ea2ad643e472a4776",
-      "sourcePanel": 8
+      "sourcePanel": 8,
+      "materialDiscipline": {
+        "materials": [
+          "water"
+        ],
+        "materialColorCounts": {
+          "water": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "water": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "asphalt": {
       "category": "ground",
@@ -132,7 +283,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "7b344bdda451a0a45624e64ea355ec2f707edb5d95bd089977aaf9dbbf2cdfe6",
-      "sourcePanel": 9
+      "sourcePanel": 9,
+      "materialDiscipline": {
+        "materials": [
+          "asphalt"
+        ],
+        "materialColorCounts": {
+          "asphalt": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "asphalt": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "timber": {
       "category": "ground",
@@ -141,7 +308,23 @@
       "height": 16,
       "colors": 3,
       "sha256": "bdef62aefd5a3f59a40f048b1e5157fdc2f37f1bc27e22f50107c06f126e572e",
-      "sourcePanel": 10
+      "sourcePanel": 10,
+      "materialDiscipline": {
+        "materials": [
+          "timber"
+        ],
+        "materialColorCounts": {
+          "timber": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "timber": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "meadow_grass": {
       "category": "ground",
@@ -150,935 +333,3689 @@
       "height": 16,
       "colors": 4,
       "sha256": "a3c0c2da3312feea098eac0c6be35abdb3f7d9c36d41acf9eeb7c1940c7bb88a",
-      "sourcePanel": 11
+      "sourcePanel": 11,
+      "materialDiscipline": {
+        "materials": [
+          "meadow_grass"
+        ],
+        "materialColorCounts": {
+          "meadow_grass": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "meadow_grass": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "tree_oak_a": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/tree_oak_a.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "f6ad47d322ee4317300cc53786dc03cac99988dab73fb2324b2fd599d42cbc84",
-      "sourcePanel": 0
+      "colors": 9,
+      "sha256": "788ebc69350e57324929025d3f8a7b4cce4ddd8df03beae9ee862ea5832a31dc",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 331,
+          "wood": 365
+        },
+        "outlinePixelCount": 108,
+        "inputPartialAlphaPixelCount": 94,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "tree_oak_autumn": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/tree_oak_autumn.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "c215f80844f314e308f6768fa8f7149d1ce03790a9e445e1dcdd3dde1fc0be3c",
-      "sourcePanel": 1
+      "colors": 9,
+      "sha256": "9cf67dd218d194367731b9ec5949f627a3b8d73ee0b54ff36aeb1760621a6ebe",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "gold",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 325,
+          "wood": 400
+        },
+        "outlinePixelCount": 112,
+        "inputPartialAlphaPixelCount": 141,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "tree_pine": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/tree_pine.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "a29a637f723f4dce5c79347e3db9699db63e54d4c9f2aad23c62ea25fc4934de",
-      "sourcePanel": 2
+      "colors": 7,
+      "sha256": "914775236778c0b24279fd3142f7c81e07d0a4234e382ec65567cdb289373026",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 314,
+          "wood": 546
+        },
+        "outlinePixelCount": 133,
+        "inputPartialAlphaPixelCount": 124,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "tree_ornamental": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/tree_ornamental.png",
       "width": 16,
       "height": 32,
-      "colors": 24,
-      "sha256": "3062d3e98236db304d5c9278c121d379013b7a88549ff8101645caf15b8aa264",
-      "sourcePanel": 3
+      "colors": 12,
+      "sha256": "a6d1b9313e109f8a8109506e9cdeb92f7ccbda65b2895a16d687b8831720e927",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "cardinal",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "cardinal": 3,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 93,
+          "cardinal": 8,
+          "wood": 190
+        },
+        "outlinePixelCount": 67,
+        "inputPartialAlphaPixelCount": 69,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "forest_top": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/forest_top.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "f5757d451fbe8de0305944fe4cfc0a50f2e8c0f61ac7c2d373ad150408eed199",
-      "sourcePanel": 4
+      "colors": 7,
+      "sha256": "e8eadf079ea97d8810eae2917f674362b173aa5adc3a528eb2c245b101ed093a",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 616,
+          "wood": 729
+        },
+        "outlinePixelCount": 134,
+        "inputPartialAlphaPixelCount": 60,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "forest_middle": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/forest_middle.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "5cf381b0b58c5e12f7830392129b5e4a0735e1d6f1d927853ef41de5376376e1",
-      "sourcePanel": 5
+      "colors": 7,
+      "sha256": "5f91bc3f59da36dba2f7c9d9e7e578b5e527977b9e69e115b101a8d5fee77149",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 839,
+          "wood": 681
+        },
+        "outlinePixelCount": 145,
+        "inputPartialAlphaPixelCount": 41,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "forest_bottom": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/forest_bottom.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "8db894feb81a3018d6a68b3c90d3f31a14c529a5430d6b8fdd9d866762617df0",
-      "sourcePanel": 6
+      "colors": 9,
+      "sha256": "62f7039099350d779b31eafa09051beb26e76430e00014214de2bbd196ff27aa",
+      "sourcePanel": 6,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 543,
+          "wood": 793
+        },
+        "outlinePixelCount": 141,
+        "inputPartialAlphaPixelCount": 53,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "forest_corner": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/forest_corner.png",
       "width": 32,
       "height": 48,
-      "colors": 24,
-      "sha256": "356a58254fd812d3d3bd8493311af7e8e85298e1d618e109f64baa8358741131",
-      "sourcePanel": 7
+      "colors": 7,
+      "sha256": "328d69a81c6e4322dcf920828a76fbd75091eb37597d56bcf3ba9cc504f18d38",
+      "sourcePanel": 7,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 390,
+          "wood": 414
+        },
+        "outlinePixelCount": 113,
+        "inputPartialAlphaPixelCount": 94,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "hedge_horizontal": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/hedge_horizontal.png",
       "width": 48,
       "height": 16,
-      "colors": 20,
-      "sha256": "bc59755ab5160ce133b93bebb9062591f8621f467a386fa78323f45431722f2e",
-      "sourcePanel": 8
+      "colors": 8,
+      "sha256": "dc12341369f126a88803c81253faa46f999d6291530bfeeba2417b07752b9341",
+      "sourcePanel": 8,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 307,
+          "wood": 340
+        },
+        "outlinePixelCount": 106,
+        "inputPartialAlphaPixelCount": 93,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "shrub_flowering": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/shrub_flowering.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "157aa019b70d42b2c25e1edda25e0af7e50c885038ac945a72a1f975838a0388",
-      "sourcePanel": 9
+      "colors": 8,
+      "sha256": "7cee2d24bf818416646731772a2d773b7481c29c6321fde475383cffe68aa16f",
+      "sourcePanel": 9,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "foliage": 3,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 70,
+          "cardinal": 90
+        },
+        "outlinePixelCount": 40,
+        "inputPartialAlphaPixelCount": 46,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "rock_cluster": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/rock_cluster.png",
       "width": 32,
       "height": 16,
-      "colors": 18,
-      "sha256": "f42e47834bf39e1236be7cc80a6360c9429db5b7364486304501ae8f5c50d79e",
-      "sourcePanel": 10
+      "colors": 8,
+      "sha256": "7280af75eaa8f1ffb45eaea362bba391101bdb387e8fa474d71c93eb09262409",
+      "sourcePanel": 10,
+      "materialDiscipline": {
+        "materials": [
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "stone": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "stone": 45,
+          "limestone": 192
+        },
+        "outlinePixelCount": 48,
+        "inputPartialAlphaPixelCount": 49,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "shore_reeds": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/shore_reeds.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "a23270a5fdc54c18e50758f936aad8f3f9438ae874f099eb84ddd73ad0355eb1",
-      "sourcePanel": 11
+      "colors": 6,
+      "sha256": "968ab4bfaa294ceb8fb84809d8f120a0208348aa699075bab08ea62a0b1bbefc",
+      "sourcePanel": 11,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood",
+          "water"
+        ],
+        "materialColorCounts": {
+          "foliage": 2,
+          "wood": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "foliage": 14,
+          "wood": 149
+        },
+        "outlinePixelCount": 49,
+        "inputPartialAlphaPixelCount": 79,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "roof_red_gable": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/roof_red_gable.png",
       "width": 48,
       "height": 32,
-      "colors": 24,
-      "sha256": "3ceed69d2025e7340b2d3f828d3c57fd649627365716bb2c94d08e0dcbe4b1a2",
-      "sourcePanel": 0
+      "colors": 9,
+      "sha256": "3fe6c54ef4756454c5f16f8a94e0989204cf8405f4cba7ffa968710afc1c3a60",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 851,
+          "limestone": 165
+        },
+        "outlinePixelCount": 119,
+        "inputPartialAlphaPixelCount": 58,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "roof_slate_gable": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/roof_slate_gable.png",
       "width": 48,
       "height": 32,
-      "colors": 24,
-      "sha256": "e391ba1e08ac025ef87c87b899ae618a2f2938ee598f719dfb1c91297052f95b",
-      "sourcePanel": 1
+      "colors": 9,
+      "sha256": "39e3ae3c103cd07d365f80e3e48bf7f176872d93b76bfe781a4235c646e9579e",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "slate": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 687,
+          "limestone": 297
+        },
+        "outlinePixelCount": 120,
+        "inputPartialAlphaPixelCount": 59,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "wall_limestone": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/wall_limestone.png",
       "width": 48,
       "height": 32,
-      "colors": 20,
-      "sha256": "ba322f4d9c2e5a81f3743f8bc2711b5fc1756b3f07d16d07a1ec638a220ca820",
-      "sourcePanel": 2
+      "colors": 5,
+      "sha256": "e5d63f88e026a040bf250a610497a6297d25d7f3726c7c0bb9276b5217645c9b",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 1527
+        },
+        "outlinePixelCount": 106,
+        "inputPartialAlphaPixelCount": 48,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "wall_brick": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/wall_brick.png",
       "width": 48,
       "height": 32,
-      "colors": 20,
-      "sha256": "8a10f524c87dc8ac302ad9b5129009134d6af353c5b7b36d218e215991922638",
-      "sourcePanel": 3
+      "colors": 7,
+      "sha256": "55595d79ac37ae86876d179bd886b2e5b3b3ac5760af622890256f5f98ea39c8",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "brick",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "brick": 4,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "brick": 1371,
+          "limestone": 165
+        },
+        "outlinePixelCount": 113,
+        "inputPartialAlphaPixelCount": 60,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "window_limestone": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/window_limestone.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "209850baa32a61e8e92cdda84e773abe6c32cc7349dc221af35031760ac272cb",
-      "sourcePanel": 4
+      "colors": 9,
+      "sha256": "edf6d5c65f0b7d1b6fc54deea24e39c14e3f1e26b480b8ae09c090e34d546111",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "glass",
+          "slate"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "glass": 2,
+          "slate": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 170,
+          "glass": 21,
+          "slate": 65
+        },
+        "outlinePixelCount": 37,
+        "inputPartialAlphaPixelCount": 25,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "door_wood": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/door_wood.png",
       "width": 16,
       "height": 32,
-      "colors": 20,
-      "sha256": "cdad30deb5966a1af1fb12153a9c43864fd859ffac080d0c32ae7921ad23739b",
-      "sourcePanel": 5
+      "colors": 11,
+      "sha256": "8ac71b843af8e63abd66bd38907e7713bc6330609aa46e8bcb535e37cbb17b26",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "wood",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "wood": 3,
+          "metal": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 85,
+          "wood": 145,
+          "metal": 74
+        },
+        "outlinePixelCount": 58,
+        "inputPartialAlphaPixelCount": 56,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "door_red": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/door_red.png",
       "width": 16,
       "height": 32,
-      "colors": 20,
-      "sha256": "ff0da2dbdafb45f5a4b36d4801b3b3ec572531fa7d125762cb1e5e19ab86c07b",
-      "sourcePanel": 6
+      "colors": 15,
+      "sha256": "6ac5c3a957b1f835468d07d1227f9483c24095f77056a43ab763ff0b5ff45de3",
+      "sourcePanel": 6,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "cardinal",
+          "glass",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "cardinal": 4,
+          "glass": 2,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 123,
+          "cardinal": 106,
+          "glass": 12,
+          "metal": 47
+        },
+        "outlinePixelCount": 57,
+        "inputPartialAlphaPixelCount": 56,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "storefront": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/storefront.png",
       "width": 32,
       "height": 32,
-      "colors": 23,
-      "sha256": "8d69ac0cfd1cab263ef0589506621d5a6b6ea2bd24026c12a503c68bc3a6b282",
-      "sourcePanel": 7
+      "colors": 12,
+      "sha256": "459191489067cccfa72aa3cd0dd7e95202a70f1e35b746d235765a31cf2c2647",
+      "sourcePanel": 7,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "glass",
+          "slate",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "limestone": 3,
+          "glass": 2,
+          "slate": 4,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 170,
+          "glass": 246,
+          "slate": 339,
+          "metal": 269
+        },
+        "outlinePixelCount": 75,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "awning_cardinal": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/awning_cardinal.png",
       "width": 48,
       "height": 32,
-      "colors": 18,
-      "sha256": "deea1a1894c95082ba29004eca2a14b4f9258f6db8375637c3ae4efdf79a3370",
-      "sourcePanel": 8
+      "colors": 8,
+      "sha256": "66441b5a4dc1a828247f3a46a51adb419116e7dc808f66401939c81be12ca771",
+      "sourcePanel": 8,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 450,
+          "limestone": 471
+        },
+        "outlinePixelCount": 115,
+        "inputPartialAlphaPixelCount": 37,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "awning_gold": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/awning_gold.png",
       "width": 48,
       "height": 32,
-      "colors": 18,
-      "sha256": "8914e4da86e1a265f1320c29958e5f82ef5af15838fa3d9e66929aa19e5b3f12",
-      "sourcePanel": 9
+      "colors": 9,
+      "sha256": "8c7d5599aa03d7a7b178b9c7bafa0ed22ac81224134e082d08cad85d66d7e697",
+      "sourcePanel": 9,
+      "materialDiscipline": {
+        "materials": [
+          "gold",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "gold": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "gold": 407,
+          "limestone": 507
+        },
+        "outlinePixelCount": 121,
+        "inputPartialAlphaPixelCount": 64,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "stadium_trim": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/stadium_trim.png",
       "width": 64,
       "height": 32,
-      "colors": 24,
-      "sha256": "fc547d57274fbc54b538d6343da700cf76c83fd42e52a6cfc945ca85bcad4fc6",
-      "sourcePanel": 10
+      "colors": 14,
+      "sha256": "4e238ba7d4a30b8b172c09a3db742c7a00b6cd59651c8f7f65f293135a90fff7",
+      "sourcePanel": 10,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 213,
+          "brick": 30,
+          "limestone": 708,
+          "slate": 204
+        },
+        "outlinePixelCount": 117,
+        "inputPartialAlphaPixelCount": 105,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "stone_stairs": {
       "category": "architecture",
       "path": "art/tilesets/imagegen_v3/architecture/stone_stairs.png",
       "width": 32,
       "height": 32,
-      "colors": 20,
-      "sha256": "6f9dda722260ed90e21336fb45ac1fc3a92d2905dba35f0d970e9a5a3cc57c18",
-      "sourcePanel": 11
+      "colors": 12,
+      "sha256": "7a402a74a2f9a43d64aa815479460ca98d02959c746f7b453a9517a4d60750c3",
+      "sourcePanel": 11,
+      "materialDiscipline": {
+        "materials": [
+          "stone",
+          "limestone",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "stone": 4,
+          "limestone": 4,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "stone": 216,
+          "limestone": 343,
+          "metal": 380
+        },
+        "outlinePixelCount": 111,
+        "inputPartialAlphaPixelCount": 67,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "trainer_room_exterior": {
       "category": "service_buildings",
       "path": "art/tilesets/imagegen_v3/service_buildings/trainer_room_exterior.png",
       "width": 80,
       "height": 64,
-      "colors": 32,
-      "sha256": "9ab50f8ad882adfa14330081c5db7868fc7d180889040bfa6031162ae8c1a285",
-      "sourcePanel": 0
+      "colors": 28,
+      "sha256": "ecf562dd60881ee75cda08d7615d3172de6ad833d88ce0408b555ba627f8b6ff",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1433,
+          "brick": 27,
+          "limestone": 995,
+          "slate": 239,
+          "glass": 55,
+          "wood": 459,
+          "metal": 427,
+          "gold": 640
+        },
+        "outlinePixelCount": 261,
+        "inputPartialAlphaPixelCount": 165,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "buckys_locker_room_exterior": {
       "category": "service_buildings",
       "path": "art/tilesets/imagegen_v3/service_buildings/buckys_locker_room_exterior.png",
       "width": 80,
       "height": 64,
-      "colors": 32,
-      "sha256": "f21541f6f1ab32c5c7c51dee8eaf86a00bdab028acb7cb0eefc53096e903d8bb",
-      "sourcePanel": 1
+      "colors": 25,
+      "sha256": "6c7772c6f794198700fa0d382fbad7299b3a72799582b50400df96493175b715",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 3,
+          "limestone": 4,
+          "slate": 3,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 854,
+          "brick": 69,
+          "limestone": 183,
+          "slate": 717,
+          "glass": 12,
+          "wood": 757,
+          "metal": 836,
+          "gold": 490
+        },
+        "outlinePixelCount": 244,
+        "inputPartialAlphaPixelCount": 202,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "campus_lamp": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/campus_lamp.png",
       "width": 16,
       "height": 32,
-      "colors": 20,
-      "sha256": "ee7d1f89a1ab9b4f3eadcdc9ea485e80b74259e5b4d251d08a2cb0f21ee3270c",
-      "sourcePanel": 0
+      "colors": 13,
+      "sha256": "ad990cee7e85253a15f0a89cdadd91e4c8d5d608fd144fad437abbc10a8e4d3b",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "limestone",
+          "glass",
+          "gold"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "limestone": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 169,
+          "limestone": 18,
+          "gold": 16
+        },
+        "outlinePixelCount": 70,
+        "inputPartialAlphaPixelCount": 59,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "wood_bench": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/wood_bench.png",
       "width": 48,
       "height": 32,
-      "colors": 20,
-      "sha256": "babeed6ddd1d200cf7997079e71a612829935fd84258c9fead6656ca208e0ca8",
-      "sourcePanel": 1
+      "colors": 12,
+      "sha256": "af9cf164d27ea44550e8bb86a497f6acce2fd3d64ab036a304f5e926581b89a1",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "metal": 4,
+          "cardinal": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 526,
+          "metal": 598,
+          "cardinal": 193
+        },
+        "outlinePixelCount": 196,
+        "inputPartialAlphaPixelCount": 219,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "campus_sign": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/campus_sign.png",
       "width": 48,
       "height": 32,
-      "colors": 20,
-      "sha256": "7e8d3381db7bb9515e53f265abab19286b847eaf3962ada78ee55a604661a7cb",
-      "sourcePanel": 2
+      "colors": 12,
+      "sha256": "19c90afb8e5f7d0bc755830e358eacc7ea0d3d0d09298f6bf7d7c8156332f561",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "limestone",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "wood": 3,
+          "limestone": 4,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 200,
+          "limestone": 451,
+          "metal": 354
+        },
+        "outlinePixelCount": 128,
+        "inputPartialAlphaPixelCount": 118,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "banner_pole": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/banner_pole.png",
       "width": 16,
       "height": 32,
-      "colors": 19,
-      "sha256": "605a5032cb4ddd1be0a629f461ffd946bb84045290c30940b64170f7483c595b",
-      "sourcePanel": 3
+      "colors": 13,
+      "sha256": "dbae85decc8467b7d3c8ac517769833d7a9e12ce272beb6d67532e94024eeb64",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "cardinal",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "cardinal": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 113,
+          "cardinal": 167,
+          "limestone": 18
+        },
+        "outlinePixelCount": 93,
+        "inputPartialAlphaPixelCount": 110,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "fence_long": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/fence_long.png",
       "width": 64,
       "height": 32,
-      "colors": 18,
-      "sha256": "bfb29106c0a9ccb94e4408b67bd55a4a0d6ee0bb7bf092c462942a16b17a0865",
-      "sourcePanel": 4
+      "colors": 8,
+      "sha256": "a26ac09f82571259c3d6f86af9bb5f5cc4bf7204c10e35b04c5d9971d0cdcbe2",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 1048,
+          "limestone": 39
+        },
+        "outlinePixelCount": 354,
+        "inputPartialAlphaPixelCount": 310,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "open_gate": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/open_gate.png",
       "width": 64,
       "height": 32,
-      "colors": 20,
-      "sha256": "1a9a2a36565e1dd68e0541acca3e91f4b1ecb1d5268344f76e10c3f736672ffe",
-      "sourcePanel": 5
+      "colors": 9,
+      "sha256": "9e836cbd5db9c45670e49ca2dcdcfb40f8fc7de3e57c1580eed31caf48285029",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 904,
+          "limestone": 191
+        },
+        "outlinePixelCount": 349,
+        "inputPartialAlphaPixelCount": 307,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bike_rack": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/bike_rack.png",
       "width": 48,
       "height": 16,
-      "colors": 18,
-      "sha256": "46571f7a29cfade5ee7c382bed986ee6921aca15904fde767ef0c44fe240114a",
-      "sourcePanel": 6
+      "colors": 5,
+      "sha256": "6034eacaa832b55f16c417b7352f7c60cf8d7f96dd02bd0e76a17939f9af93a9",
+      "sourcePanel": 6,
+      "materialDiscipline": {
+        "materials": [
+          "metal"
+        ],
+        "materialColorCounts": {
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 291
+        },
+        "outlinePixelCount": 165,
+        "inputPartialAlphaPixelCount": 138,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "trash_can": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/trash_can.png",
       "width": 16,
       "height": 16,
-      "colors": 18,
-      "sha256": "ecb14d2429dee4d76e10a3bbd7fdc50495585067fab9f78a7bd74157cfdf2a63",
-      "sourcePanel": 7
+      "colors": 4,
+      "sha256": "04a4ac26d3a551c3236ab9254f74444a19a738b7de5b5785bfe482496531b7aa",
+      "sourcePanel": 7,
+      "materialDiscipline": {
+        "materials": [
+          "metal"
+        ],
+        "materialColorCounts": {
+          "metal": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "metal": 160
+        },
+        "outlinePixelCount": 44,
+        "inputPartialAlphaPixelCount": 38,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "flowers_white": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/flowers_white.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "10236b504fc715e06f8283bd673e2a60a3a95a944cc276d0ae28c72e0aec887e",
-      "sourcePanel": 8
+      "colors": 7,
+      "sha256": "25d614e4b7425046998b3df113bf8a87e34f2cae79d112cc2b174187eac9fc60",
+      "sourcePanel": 8,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "cream"
+        ],
+        "materialColorCounts": {
+          "foliage": 3,
+          "cream": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "foliage": 91,
+          "cream": 42
+        },
+        "outlinePixelCount": 37,
+        "inputPartialAlphaPixelCount": 38,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "flowers_cardinal": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/flowers_cardinal.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "86d37ae93501c2cf3ebed712b0431e7c3d91d8e8259b1b429b8ad392d5a6b4f6",
-      "sourcePanel": 9
+      "colors": 9,
+      "sha256": "723d0e0c897cab8a1395c93cd0b0d299f581180e70f25c5ff2205fe608334184",
+      "sourcePanel": 9,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 26,
+          "cardinal": 115
+        },
+        "outlinePixelCount": 39,
+        "inputPartialAlphaPixelCount": 37,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bollard": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/bollard.png",
       "width": 16,
       "height": 32,
-      "colors": 18,
-      "sha256": "286d7050a5f535901f3d7e51684a0e2d5010dcd030250653787d49f7fcba5cfd",
-      "sourcePanel": 10
+      "colors": 8,
+      "sha256": "4d134e73afe24fdd5598957a50c7e4c357ea1dd25580b00176ae1f8ddbcb25a8",
+      "sourcePanel": 10,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 173,
+          "stone": 76
+        },
+        "outlinePixelCount": 50,
+        "inputPartialAlphaPixelCount": 49,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "hanging_sign": {
       "category": "props",
       "path": "art/tilesets/imagegen_v3/props/hanging_sign.png",
       "width": 32,
       "height": 32,
-      "colors": 20,
-      "sha256": "a1f386870a1293f53d88f19b73265f7604bb3f61363964f8550b95f62cc81449",
-      "sourcePanel": 11
+      "colors": 15,
+      "sha256": "47f401b863e20928265566475004a46d54a998c1e3a2a572af6113a95b94d93a",
+      "sourcePanel": 11,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "limestone",
+          "foliage",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "limestone": 3,
+          "foliage": 3,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 177,
+          "limestone": 135,
+          "foliage": 14,
+          "metal": 335
+        },
+        "outlinePixelCount": 171,
+        "inputPartialAlphaPixelCount": 148,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "outdoor_wrestling_mat": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/outdoor_wrestling_mat.png",
       "width": 64,
       "height": 48,
-      "colors": 28,
-      "sha256": "3f0bc6c6b28d304fc77eda4fce407dec41315271af66150febcf03d515002d3e",
-      "sourcePanel": 0
+      "colors": 12,
+      "sha256": "f5e1da363fda8e7f2ae715473ef1a0f9f330f6978f6008bb69d195492df543b0",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "cream",
+          "gold",
+          "slate"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "cream": 1,
+          "gold": 3,
+          "slate": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 2068,
+          "cream": 13,
+          "gold": 197,
+          "slate": 397
+        },
+        "outlinePixelCount": 201,
+        "inputPartialAlphaPixelCount": 40,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "campfire_ring": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/campfire_ring.png",
       "width": 48,
       "height": 48,
-      "colors": 28,
-      "sha256": "40c62320658abacdaf1e3ae4e94d5ab9ee5e654775b3002b489f8ec420f52615",
-      "sourcePanel": 1
+      "colors": 8,
+      "sha256": "f1afdb14898843b3026cc2db9377f82dc4da574c659d619fd45bd3a72d29c8b6",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "stone",
+          "wood",
+          "fire"
+        ],
+        "materialColorCounts": {
+          "stone": 3,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "stone": 230,
+          "wood": 866
+        },
+        "outlinePixelCount": 120,
+        "inputPartialAlphaPixelCount": 99,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "kayak_rack": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/kayak_rack.png",
       "width": 48,
       "height": 32,
-      "colors": 28,
-      "sha256": "160899079dc4b83f1db6ed8301420f7993340455ff99596f67f61de661cd60cb",
-      "sourcePanel": 2
+      "colors": 15,
+      "sha256": "aad2969f0d238ac81d78e30e532e52d3004e428ddd7b7c19eff2980f66e43de1",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "gold",
+          "wood",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "gold": 2,
+          "wood": 4,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 332,
+          "gold": 121,
+          "wood": 269,
+          "metal": 299
+        },
+        "outlinePixelCount": 220,
+        "inputPartialAlphaPixelCount": 162,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "timber_dock": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/timber_dock.png",
       "width": 64,
       "height": 32,
-      "colors": 26,
-      "sha256": "7aa0135da75a9e9f1785682b3c6a4efd1b8607d738c1256d161eca08006d37c5",
-      "sourcePanel": 3
+      "colors": 7,
+      "sha256": "aaee69366e3b51f093fd7747383c04548f75694c0b269aaa41e1138460f5fdd5",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "water",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "wood": 3,
+          "stone": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "wood": 1226,
+          "stone": 59
+        },
+        "outlinePixelCount": 148,
+        "inputPartialAlphaPixelCount": 54,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "recovery_counter": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/recovery_counter.png",
       "width": 64,
       "height": 32,
-      "colors": 28,
-      "sha256": "1d1ee04bb9915637a72146c487e2e47fe00f2203d6eb78bcc7aa5cbe5137baad",
-      "sourcePanel": 4
+      "colors": 14,
+      "sha256": "3fd78fe8d8bd33b25809d2d9eeb574b56cefb06f5cb8929eed440c8b7717afbf",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "cardinal",
+          "glass",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "limestone": 3,
+          "cardinal": 4,
+          "glass": 2,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 221,
+          "cardinal": 662,
+          "glass": 3,
+          "metal": 709
+        },
+        "outlinePixelCount": 157,
+        "inputPartialAlphaPixelCount": 35,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "medical_cabinet": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/medical_cabinet.png",
       "width": 32,
       "height": 32,
-      "colors": 26,
-      "sha256": "ad8d862067f4acd49c3d5ff1afe783c6bc0b2de46b4efe4cc64d219fdcd7cbc6",
-      "sourcePanel": 5
+      "colors": 8,
+      "sha256": "c5ad867f450d64fea60f72908373ef9acd539dbaf18a11fa9bad0a136751b0ac",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "metal",
+          "glass"
+        ],
+        "materialColorCounts": {
+          "limestone": 3,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 92,
+          "metal": 395
+        },
+        "outlinePixelCount": 105,
+        "inputPartialAlphaPixelCount": 81,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "gear_shop_counter": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/gear_shop_counter.png",
       "width": 64,
       "height": 32,
-      "colors": 28,
-      "sha256": "4cf4cb4faf238fd518709a8621c5be9d7217fa3f29e03cd5fcb67e02d455d8ca",
-      "sourcePanel": 6
+      "colors": 14,
+      "sha256": "32ed153b8dc0ab40edde7abc7d064f42f506358b1b7bb6c40e717ccb11be0460",
+      "sourcePanel": 6,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "cardinal",
+          "gold",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "cardinal": 3,
+          "gold": 3,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 480,
+          "cardinal": 214,
+          "gold": 127,
+          "metal": 709
+        },
+        "outlinePixelCount": 135,
+        "inputPartialAlphaPixelCount": 75,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "singlet_shelf": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/singlet_shelf.png",
       "width": 48,
       "height": 32,
-      "colors": 28,
-      "sha256": "9e0a507a72bb4eded75c4715a3ae28703b86fe84f013df682291b99df9c4ae5c",
-      "sourcePanel": 7
+      "colors": 15,
+      "sha256": "f2d5a07495082d6ea5ff81a3ca9cf915e344bec321fc3dc269b282ce373c3d17",
+      "sourcePanel": 7,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "cardinal",
+          "gold",
+          "cream"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "cardinal": 4,
+          "gold": 2,
+          "cream": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 730,
+          "cardinal": 225,
+          "gold": 34,
+          "cream": 214
+        },
+        "outlinePixelCount": 150,
+        "inputPartialAlphaPixelCount": 109,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "airport_gate_desk": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/airport_gate_desk.png",
       "width": 64,
       "height": 32,
-      "colors": 26,
-      "sha256": "6df88adfec3f2743797c709f70ba18ccc9126d15afd976ec8626d35f40098b3b",
-      "sourcePanel": 8
+      "colors": 11,
+      "sha256": "b380463f955fe57e79b7a8b1c287e4d0cbb878ea5981ef933095b56b74f117a8",
+      "sourcePanel": 8,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "glass",
+          "cardinal",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "glass": 1,
+          "cardinal": 3,
+          "limestone": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 855,
+          "glass": 2,
+          "cardinal": 441,
+          "limestone": 74
+        },
+        "outlinePixelCount": 145,
+        "inputPartialAlphaPixelCount": 56,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "airport_departure_seats": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/airport_departure_seats.png",
       "width": 64,
       "height": 32,
-      "colors": 24,
-      "sha256": "ed35b791e3f77a083a6eb899ceb6a3b23797a9de7b1a0f8c88589757955d315d",
-      "sourcePanel": 9
+      "colors": 10,
+      "sha256": "ca7d4dd9dd75df8999834c77332c65bafe6d69438cee09f7212deac08034c73f",
+      "sourcePanel": 9,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "slate",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "slate": 4,
+          "cardinal": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 1127,
+          "slate": 468,
+          "cardinal": 243
+        },
+        "outlinePixelCount": 181,
+        "inputPartialAlphaPixelCount": 128,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "championship_trophy_case": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/championship_trophy_case.png",
       "width": 64,
       "height": 32,
-      "colors": 28,
-      "sha256": "e7fee482957165eb4ffbe89e0ab87e93b483516504ecf59c1b82f3bf94c171e1",
-      "sourcePanel": 10
+      "colors": 15,
+      "sha256": "c7d6028bf3449ecd3fde179765935adeba732c6b2ecc271a140fda1c682cf497",
+      "sourcePanel": 10,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "glass",
+          "gold",
+          "metal",
+          "cream"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "glass": 1,
+          "gold": 3,
+          "metal": 4,
+          "cream": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 845,
+          "glass": 2,
+          "gold": 57,
+          "metal": 525,
+          "cream": 18
+        },
+        "outlinePixelCount": 148,
+        "inputPartialAlphaPixelCount": 39,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "tournament_bracket_board": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/tournament_bracket_board.png",
       "width": 48,
       "height": 32,
-      "colors": 24,
-      "sha256": "462f8fd98072b4533f3a98cf143d8464f907460b35f51054b2cca3804ec93f06",
-      "sourcePanel": 11
+      "colors": 17,
+      "sha256": "43500f8fef61f8a9f797c3912340d52d9cfd20149939bfa8e752fabca1e5c16b",
+      "sourcePanel": 11,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "cream",
+          "cardinal",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "cream": 4,
+          "cardinal": 4,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 55,
+          "cream": 885,
+          "cardinal": 41,
+          "metal": 513
+        },
+        "outlinePixelCount": 152,
+        "inputPartialAlphaPixelCount": 123,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "field_house_competition_mat": {
       "category": "arena_mats",
       "path": "art/tilesets/imagegen_v3/arena_mats/field_house_competition_mat.png",
       "width": 144,
       "height": 112,
-      "colors": 32,
-      "sha256": "e91b962da12a21b275a7304559dbf05fac5b2d807d2382b83bc6fa8177b419bf",
-      "sourcePanel": 0
+      "colors": 10,
+      "sha256": "f5ed5b79ce0d7856415675db30aa788c5575a627a1a3c8c7f04442e4bb91d4ae",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "gold",
+          "slate",
+          "cream",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "gold": 3,
+          "cream": 1,
+          "metal": 1
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 9648,
+          "gold": 3353,
+          "cream": 16,
+          "metal": 87
+        },
+        "outlinePixelCount": 454,
+        "inputPartialAlphaPixelCount": 144,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "capitol_exhibition_mat": {
       "category": "arena_mats",
       "path": "art/tilesets/imagegen_v3/arena_mats/capitol_exhibition_mat.png",
       "width": 144,
       "height": 112,
-      "colors": 32,
-      "sha256": "557982a48b94d2e892e3b1793be7a83bc8ce82b411d083ca40cbb7ff39bea2c9",
-      "sourcePanel": 1
+      "colors": 18,
+      "sha256": "ecf6018030a25e261ec3d94c7afd0301f6c4be3a846292e7bfe1d31de9147c7b",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "gold",
+          "slate",
+          "cream",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "gold": 4,
+          "slate": 2,
+          "cream": 3,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 6726,
+          "gold": 1605,
+          "slate": 15,
+          "cream": 805,
+          "metal": 3953
+        },
+        "outlinePixelCount": 388,
+        "inputPartialAlphaPixelCount": 125,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "kohl_conference_mat": {
       "category": "arena_mats",
       "path": "art/tilesets/imagegen_v3/arena_mats/kohl_conference_mat.png",
       "width": 144,
       "height": 112,
-      "colors": 32,
-      "sha256": "82e3bdaed9ff05b128e018ebf043692bec0998ad618817960cd26f9bcece796f",
-      "sourcePanel": 2
+      "colors": 16,
+      "sha256": "a4e59e1a5139a1796d1442fa58ebba5f33b71522249469b6f90f817e01f6cd3b",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "gold",
+          "slate",
+          "cream",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "gold": 4,
+          "slate": 3,
+          "cream": 1,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 6535,
+          "gold": 1059,
+          "slate": 236,
+          "cream": 68,
+          "metal": 5094
+        },
+        "outlinePixelCount": 452,
+        "inputPartialAlphaPixelCount": 104,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "nationals_championship_mat": {
       "category": "arena_mats",
       "path": "art/tilesets/imagegen_v3/arena_mats/nationals_championship_mat.png",
       "width": 144,
       "height": 112,
-      "colors": 32,
-      "sha256": "d075a7248c58e9c0bb6d2c07624fd884cf6afaeccad11918d79b8a5c5759cc44",
-      "sourcePanel": 3
+      "colors": 16,
+      "sha256": "505c51f231b9518491328422ef7e62bd6bc3d02838985366113716d2a37ae61e",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "gold",
+          "slate",
+          "cream",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "gold": 3,
+          "slate": 3,
+          "cream": 2,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 2024,
+          "gold": 1343,
+          "slate": 482,
+          "cream": 252,
+          "metal": 8891
+        },
+        "outlinePixelCount": 452,
+        "inputPartialAlphaPixelCount": 3,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "dirt_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/dirt_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "8c0a78cb714cf29cce7ee21cec57a42534e509aa319417c9b9f001b97664d30c",
-      "sourcePanel": 0
+      "colors": 3,
+      "sha256": "236dfc22573661b5e586ff516b4e8b40e9132f74612937884d7d404df682b73d",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "dirt"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "dirt": 2
+        },
+        "maxColorsPerMaterial": 2,
+        "pixelsByMaterial": {
+          "grass": 83,
+          "dirt": 173
+        },
+        "outlinePixelCount": 46,
+        "inputPartialAlphaPixelCount": 16,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "dirt_corner": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/dirt_corner.png",
       "width": 16,
       "height": 16,
-      "colors": 19,
-      "sha256": "f01a34f285ae1d6a0a4d8e167fd3f7d632d7e94486bc5d76ece627371235ec6b",
-      "sourcePanel": 1
+      "colors": 3,
+      "sha256": "f0325a5ca52487877ce062d702331c697be94827ec93f50de7e278da75f7b07e",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "dirt"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "dirt": 2
+        },
+        "maxColorsPerMaterial": 2,
+        "pixelsByMaterial": {
+          "grass": 89,
+          "dirt": 167
+        },
+        "outlinePixelCount": 48,
+        "inputPartialAlphaPixelCount": 16,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "brick_limestone_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/brick_limestone_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 18,
-      "sha256": "9d5f0d84212c586b97915c9710faab0630d0afa66073647cea3df572dddf6cb2",
-      "sourcePanel": 2
+      "colors": 7,
+      "sha256": "60b8e9f366c0643e04a85ed1e6a16e8b823408a75d6972dbcbe98591e1317a1b",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "brick",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "brick": 3,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "grass": 8,
+          "brick": 128,
+          "limestone": 120
+        },
+        "outlinePixelCount": 60,
+        "inputPartialAlphaPixelCount": 42,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "stone_grass_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/stone_grass_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "dd6dab6ffda3153f38ea5762d87a61fd14bd1e4160eb833fa4323cbeb0f7c404",
-      "sourcePanel": 3
+      "colors": 6,
+      "sha256": "d518986affb1c4fe8692b811c47cd57dabcbcca694d0522462fc0aa0e8970403",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "grass": 2,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 58,
+          "stone": 198
+        },
+        "outlinePixelCount": 42,
+        "inputPartialAlphaPixelCount": 16,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "shoreline_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/shoreline_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 21,
-      "sha256": "84dde94c009904502ca03df1eb44a41a934919007c317f53aadfd3c57c6b8430",
-      "sourcePanel": 4
+      "colors": 6,
+      "sha256": "3f2af9b97ac9bd5eeaa883aee00316e9ba6e823c25c5c730f1ba3527066957a0",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "sand",
+          "water"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "sand": 2,
+          "water": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "grass": 80,
+          "sand": 43,
+          "water": 133
+        },
+        "outlinePixelCount": 53,
+        "inputPartialAlphaPixelCount": 15,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "shoreline_corner": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/shoreline_corner.png",
       "width": 16,
       "height": 16,
-      "colors": 21,
-      "sha256": "cd331aa8d8451e00e0c976e3833698b1f08ca864331e98dc3a44882ffcdfdfea",
-      "sourcePanel": 5
+      "colors": 8,
+      "sha256": "75b384e369760cac4526aa48ec20bd49a647874e964cffd6705be9aba9da6ad3",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "sand",
+          "water"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "sand": 3,
+          "water": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 116,
+          "sand": 54,
+          "water": 86
+        },
+        "outlinePixelCount": 57,
+        "inputPartialAlphaPixelCount": 15,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "asphalt_curb_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/asphalt_curb_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 20,
-      "sha256": "9f3a6668047b66d0c44d3e95a89fbd2ae54f0586b1103a5929fa2cfa1cb565e7",
-      "sourcePanel": 6
+      "colors": 9,
+      "sha256": "72f3e321f285d06f51b1552047f691dc4503cae150aaab61f6ce6b3840ab8a48",
+      "sourcePanel": 6,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "asphalt",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "grass": 3,
+          "asphalt": 4,
+          "limestone": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 26,
+          "asphalt": 143,
+          "limestone": 87
+        },
+        "outlinePixelCount": 56,
+        "inputPartialAlphaPixelCount": 16,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "mowed_grass_edge": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/mowed_grass_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 18,
-      "sha256": "a9bd0d8adf576d2e822df2cee81fcd053e5fed68e546af1726ada2124812655b",
-      "sourcePanel": 7
+      "colors": 3,
+      "sha256": "bb0994cea4401ae6842894a30684673ed5f3e4540e29c31e9079a806a36cd460",
+      "sourcePanel": 7,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "foliage": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "foliage": 256
+        },
+        "outlinePixelCount": 60,
+        "inputPartialAlphaPixelCount": 16,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "cliff_face": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/cliff_face.png",
       "width": 48,
       "height": 32,
-      "colors": 23,
-      "sha256": "437cc09c5a6fcf1082c93d8aa5862d1789c618c253017adb52566b009cde1f75",
-      "sourcePanel": 8
+      "colors": 10,
+      "sha256": "877549b6db810bc2ed8196d8376726f740e6892f24976d715a00cab684678c86",
+      "sourcePanel": 8,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "grass": 3,
+          "stone": 4,
+          "limestone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 175,
+          "stone": 400,
+          "limestone": 961
+        },
+        "outlinePixelCount": 145,
+        "inputPartialAlphaPixelCount": 26,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "cliff_corner": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/cliff_corner.png",
       "width": 32,
       "height": 32,
-      "colors": 24,
-      "sha256": "545ce4351dd17cf10770a17ba126fb76b967e56daca36aeb43f4b8751195722c",
-      "sourcePanel": 9
+      "colors": 7,
+      "sha256": "9ea50de0f1dc8072bdb8a2cbad24d951b6a390626531e6c66f24b4f079d82dfc",
+      "sourcePanel": 9,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "grass": 2,
+          "stone": 3,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "grass": 176,
+          "stone": 124,
+          "limestone": 724
+        },
+        "outlinePixelCount": 119,
+        "inputPartialAlphaPixelCount": 7,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "cliff_stairs": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/cliff_stairs.png",
       "width": 32,
       "height": 32,
-      "colors": 24,
-      "sha256": "9c7c025043316f6de97db7e8c069aa8b40a089e3cc0a745c94bfa4ab0938a48e",
-      "sourcePanel": 10
+      "colors": 8,
+      "sha256": "dca175b45e0b94d8e582d2f5fc6205995a2e9cb7caa44de85764ee9a2b1cb023",
+      "sourcePanel": 10,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "grass": 2,
+          "stone": 4,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 148,
+          "stone": 237,
+          "limestone": 639
+        },
+        "outlinePixelCount": 110,
+        "inputPartialAlphaPixelCount": 12,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "retaining_wall": {
       "category": "transitions",
       "path": "art/tilesets/imagegen_v3/transitions/retaining_wall.png",
       "width": 48,
       "height": 16,
-      "colors": 22,
-      "sha256": "7eba04537b3ff01d5d7009e341c882e96c2f71b7407f0e7f3c9c0ae3ecd01373",
-      "sourcePanel": 11
+      "colors": 8,
+      "sha256": "2a44228027ba54c26e7787700da290f6d42f7bbc435925e0eca1ff030d8eaf14",
+      "sourcePanel": 11,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "grass": 2,
+          "stone": 4,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 24,
+          "stone": 342,
+          "limestone": 402
+        },
+        "outlinePixelCount": 87,
+        "inputPartialAlphaPixelCount": 17,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "lakeshore_pier": {
       "category": "route_landmarks",
       "path": "art/tilesets/imagegen_v3/route_landmarks/lakeshore_pier.png",
       "width": 48,
       "height": 64,
-      "colors": 36,
-      "sha256": "6fa6d9c2703ec067a928e0b651e1dbb324a301937bcfb28d3e7be82985fa212d",
-      "sourcePanel": 0
+      "colors": 11,
+      "sha256": "8cf2f8e8c06a10df7261eb9f3cf384e3478836a9f7afbebfcbed6f57e5e09138",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "stone": 4,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 819,
+          "stone": 378,
+          "limestone": 1203
+        },
+        "outlinePixelCount": 194,
+        "inputPartialAlphaPixelCount": 101,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "terrace_chair_trio": {
       "category": "route_landmarks",
       "path": "art/tilesets/imagegen_v3/route_landmarks/terrace_chair_trio.png",
       "width": 64,
       "height": 32,
-      "colors": 32,
-      "sha256": "5008cfaa8650ed792cadc79087a0435086e28534e84f7199b62dfbe77a6fc875",
-      "sourcePanel": 1
+      "colors": 19,
+      "sha256": "53c3b8640f936ceb4f2d06ab42fecc25059018f0e2b19b4065aba7dba92d6650",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "gold",
+          "glass",
+          "slate",
+          "metal"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "gold": 4,
+          "glass": 3,
+          "slate": 4,
+          "metal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 298,
+          "gold": 205,
+          "glass": 82,
+          "slate": 261,
+          "metal": 223
+        },
+        "outlinePixelCount": 221,
+        "inputPartialAlphaPixelCount": 198,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "lakeshore_boathouse": {
       "category": "route_landmarks",
       "path": "art/tilesets/imagegen_v3/route_landmarks/lakeshore_boathouse.png",
       "width": 80,
       "height": 80,
-      "colors": 40,
-      "sha256": "789ced926eeb882761b1f0acf695dd5c3ddde8ca8477000b5ad79613a576a544",
-      "sourcePanel": 2
+      "colors": 24,
+      "sha256": "d4a1d34574171d2fc01299d0ba9b5434187d71075d7a08c3e893aa5cd39bc611",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "slate",
+          "limestone",
+          "wood",
+          "foliage",
+          "glass"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "slate": 4,
+          "limestone": 4,
+          "wood": 4,
+          "foliage": 4,
+          "glass": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 760,
+          "slate": 2693,
+          "limestone": 736,
+          "wood": 821,
+          "foliage": 483,
+          "glass": 216
+        },
+        "outlinePixelCount": 286,
+        "inputPartialAlphaPixelCount": 145,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "picnic_fire_circle": {
       "category": "route_landmarks",
       "path": "art/tilesets/imagegen_v3/route_landmarks/picnic_fire_circle.png",
       "width": 64,
       "height": 64,
-      "colors": 36,
-      "sha256": "fc8e77d36360ac52dba49765702558b1d10292a63b3dd17fbbd601aaaa0163dc",
-      "sourcePanel": 3
+      "colors": 14,
+      "sha256": "9331bffb8108cffdd1daf1df3e96d97dcc5de8376b3c79f9699a37554b85ead1",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "stone",
+          "fire",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "wood": 4,
+          "stone": 3,
+          "fire": 4,
+          "foliage": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "wood": 2071,
+          "stone": 334,
+          "fire": 45,
+          "foliage": 6
+        },
+        "outlinePixelCount": 462,
+        "inputPartialAlphaPixelCount": 370,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "trail_sign": {
       "category": "route_landmarks",
       "path": "art/tilesets/imagegen_v3/route_landmarks/trail_sign.png",
       "width": 16,
       "height": 32,
-      "colors": 26,
-      "sha256": "82d7575aefb9b52e3036c33edaf29f4cf63e8370766f7c95178e2ae4e3123bac",
-      "sourcePanel": 4
+      "colors": 6,
+      "sha256": "03ab1c98b353b169f8cbc8809b2802ad286ffb9034cb01c4f04c2f5dc93854c4",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "wood",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "wood": 3,
+          "limestone": 2
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "wood": 40,
+          "limestone": 8
+        },
+        "outlinePixelCount": 31,
+        "inputPartialAlphaPixelCount": 36,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "shoreline_cluster": {
       "category": "route_landmarks",
       "path": "art/tilesets/imagegen_v3/route_landmarks/shoreline_cluster.png",
       "width": 64,
       "height": 32,
-      "colors": 32,
-      "sha256": "e7520d03d00b9233e0cb7825a8789323f3b191f85698988887b3fff53fb0a3ed",
-      "sourcePanel": 5
+      "colors": 18,
+      "sha256": "a2c89c9c7261f1fe573ab8380b2fa6f0192dc3d179a024a724b41636de14c7b6",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "stone",
+          "dirt",
+          "water",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "stone": 4,
+          "dirt": 3,
+          "water": 3,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 91,
+          "stone": 215,
+          "dirt": 102,
+          "water": 228,
+          "wood": 363
+        },
+        "outlinePixelCount": 161,
+        "inputPartialAlphaPixelCount": 151,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bascom_lincoln_statue": {
       "category": "bascom_landmarks",
       "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_lincoln_statue.png",
       "width": 32,
       "height": 48,
-      "colors": 32,
-      "sha256": "b3af3bf01f731b93adaa2ab0f4c3a48d4800119e2fe1ca4228ff6a588f75aaf2",
-      "sourcePanel": 0
+      "colors": 10,
+      "sha256": "68b0f364c8c48b525a4745e95a949f4539fd0d6f843aca7e7e74b16a66583a55",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "stone",
+          "limestone"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "stone": 3,
+          "limestone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 369,
+          "stone": 121,
+          "limestone": 62
+        },
+        "outlinePixelCount": 72,
+        "inputPartialAlphaPixelCount": 68,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bascom_memorial_balustrade": {
       "category": "bascom_landmarks",
       "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_memorial_balustrade.png",
       "width": 64,
       "height": 32,
-      "colors": 32,
-      "sha256": "a4063277155df8e5bac226cb39e2c11c31b73d291dfa4547912c02c6be4ea4da",
-      "sourcePanel": 1
+      "colors": 8,
+      "sha256": "4520e95631f0ea06b8de289cb82e617be56a51e46c5f362600d40fb684cf51e9",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 808,
+          "stone": 761
+        },
+        "outlinePixelCount": 126,
+        "inputPartialAlphaPixelCount": 110,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bascom_stair_landing": {
       "category": "bascom_landmarks",
       "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_stair_landing.png",
       "width": 64,
       "height": 32,
-      "colors": 32,
-      "sha256": "224e333785e296a89c418e7c1875658fa1ee68335c4de808855198a1c7bdf01a",
-      "sourcePanel": 2
+      "colors": 8,
+      "sha256": "e156c3cbecf7494382122ec0dc5179dc29432f9414cbbe9efd7789a20ff92cd0",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 396,
+          "stone": 340
+        },
+        "outlinePixelCount": 128,
+        "inputPartialAlphaPixelCount": 93,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bascom_history_marker": {
       "category": "bascom_landmarks",
       "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_history_marker.png",
       "width": 32,
       "height": 32,
-      "colors": 28,
-      "sha256": "f4e594a2127ca873e0d641bf000f75fdaf08fc6f273cc479f2a20f57dbd41541",
-      "sourcePanel": 3
+      "colors": 11,
+      "sha256": "c955767d69782cf6ad92abb0a5d9c5e6b9239b67b637da737e64be2e9a3c4804",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "metal",
+          "limestone",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "metal": 4,
+          "limestone": 4,
+          "cardinal": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "metal": 251,
+          "limestone": 348,
+          "cardinal": 105
+        },
+        "outlinePixelCount": 68,
+        "inputPartialAlphaPixelCount": 28,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "field_house_arena_exterior": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/field_house_arena_exterior.png",
       "width": 192,
       "height": 112,
-      "colors": 36,
-      "sha256": "e64111b17809f7b3e19a2c90c91c7a17b1b1703c5250b2775820bec7fedba588",
-      "sourceFile": "season_one_field_house_arena_source_v1.png"
+      "colors": 29,
+      "sha256": "63c27d93c62ef8efe9e366a9f5b1093e346160cd4f28583d7d9c40cdf72ba7bb",
+      "sourceFile": "season_one_field_house_arena_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 6734,
+          "brick": 330,
+          "limestone": 3477,
+          "slate": 512,
+          "glass": 2,
+          "wood": 2560,
+          "metal": 1556,
+          "gold": 2593,
+          "stone": 1201
+        },
+        "outlinePixelCount": 558,
+        "inputPartialAlphaPixelCount": 428,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "kohl_arena_exterior": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/kohl_arena_exterior.png",
       "width": 192,
       "height": 112,
-      "colors": 36,
-      "sha256": "e003b531aa28c266d45687b170f84ecf48b9e53011d7b86f6f73ad0c09f5eefc",
-      "sourceFile": "season_one_kohl_arena_source_v1.png"
+      "colors": 26,
+      "sha256": "154bac25caae6e2fc7925836ed27b5726fb4f78726d8f79afd943752450779d1",
+      "sourceFile": "season_one_kohl_arena_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "wood": 4,
+          "metal": 4,
+          "gold": 3,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1562,
+          "brick": 160,
+          "limestone": 2093,
+          "slate": 1148,
+          "wood": 1372,
+          "metal": 5086,
+          "gold": 744,
+          "stone": 994
+        },
+        "outlinePixelCount": 482,
+        "inputPartialAlphaPixelCount": 231,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "nationals_arena_exterior": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/nationals_arena_exterior.png",
       "width": 224,
       "height": 128,
-      "colors": 40,
-      "sha256": "7ccb51bce9924631ab760b24043b7dbd0ffba00fe9b3c1f7606dd0732fe1e570",
-      "sourceFile": "season_one_nationals_arena_source_v1.png"
+      "colors": 30,
+      "sha256": "2cda7c88ace9b52993072bbd48187d62a8623e32a56af68a1c7a4a1c683ccc0f",
+      "sourceFile": "season_one_nationals_arena_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1948,
+          "brick": 43,
+          "limestone": 2787,
+          "slate": 3831,
+          "glass": 126,
+          "wood": 2404,
+          "metal": 3491,
+          "gold": 1520,
+          "stone": 908
+        },
+        "outlinePixelCount": 578,
+        "inputPartialAlphaPixelCount": 304,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bascom_hall_exterior": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/bascom_hall_exterior.png",
       "width": 160,
       "height": 80,
-      "colors": 32,
-      "sha256": "e84e817965b0f07ef5d79fd062c12ed72355c5210022c7ab344afd28949793f5",
-      "sourceFile": "season_one_bascom_hall_source_v1.png"
+      "colors": 30,
+      "sha256": "3a2566d95b14672e18e47ac7efb97aaa70993f87b53f6c04827aae90ff0ac966",
+      "sourceFile": "season_one_bascom_hall_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 2433,
+          "brick": 18,
+          "limestone": 2719,
+          "slate": 931,
+          "glass": 83,
+          "wood": 1468,
+          "metal": 1171,
+          "gold": 1736,
+          "stone": 968
+        },
+        "outlinePixelCount": 439,
+        "inputPartialAlphaPixelCount": 118,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "wisconsin_capitol_exterior": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/wisconsin_capitol_exterior.png",
       "width": 192,
       "height": 128,
-      "colors": 40,
-      "sha256": "975653f0791f6a614dae0f71dfc5ee4cf4d951d5b6a88b5e0f6b1ea9a4940f55",
-      "sourceFile": "season_one_wisconsin_capitol_source_v1.png"
+      "colors": 28,
+      "sha256": "b232364c9ffcc7df95e2b0391d083f670842f13c4c842e3e29c700340eda5a0c",
+      "sourceFile": "season_one_wisconsin_capitol_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 266,
+          "brick": 43,
+          "limestone": 3141,
+          "slate": 1104,
+          "glass": 1,
+          "wood": 1604,
+          "metal": 3534,
+          "gold": 1433,
+          "stone": 2286
+        },
+        "outlinePixelCount": 571,
+        "inputPartialAlphaPixelCount": 328,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "brittingham_boats_exterior": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/brittingham_boats_exterior.png",
       "width": 96,
       "height": 80,
-      "colors": 32,
-      "sha256": "835d7f596763f5be67bb671426f786ae16ceb330eca26d774936162213123312",
-      "sourceFile": "season_one_brittingham_boats_source_v1.png"
+      "colors": 27,
+      "sha256": "f0d81b4e61af422f0fe99c30a0ec6edf8b0e13f4594075ba75d5c42d607bb044",
+      "sourceFile": "season_one_brittingham_boats_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 3,
+          "limestone": 4,
+          "slate": 3,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 3,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1601,
+          "brick": 309,
+          "limestone": 354,
+          "slate": 649,
+          "glass": 14,
+          "wood": 1410,
+          "metal": 1787,
+          "gold": 329,
+          "stone": 196
+        },
+        "outlinePixelCount": 321,
+        "inputPartialAlphaPixelCount": 196,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "gateway_arch_landmark": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/gateway_arch_landmark.png",
       "width": 160,
       "height": 128,
-      "colors": 36,
-      "sha256": "032c776f4c38d30c5e8db669949565043280df2bdbe572dfb7fea3e983ee0003",
-      "sourceFile": "season_one_gateway_arch_source_v1.png"
+      "colors": 30,
+      "sha256": "a715005a4b4413a9ca3b65603c88101dccf446bcdee107fddaf04d37605ca9e4",
+      "sourceFile": "season_one_gateway_arch_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 189,
+          "brick": 30,
+          "limestone": 1320,
+          "slate": 2287,
+          "glass": 694,
+          "wood": 428,
+          "metal": 2322,
+          "gold": 743,
+          "stone": 417
+        },
+        "outlinePixelCount": 619,
+        "inputPartialAlphaPixelCount": 430,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "equipment_annex_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/equipment_annex_exterior.png",
       "width": 112,
       "height": 80,
-      "colors": 36,
-      "sha256": "1d4931ef8e85f18e64f43d4eb560ed6100541b6db2dae68bab091c1e7d704329",
-      "sourceFile": "equipment_annex_source_v1.png"
+      "colors": 22,
+      "sha256": "cd3e3bd10cc1bbf6a4d9c8d7b013aa42ec93c72f1b488e99a048dc7d694e8351",
+      "sourceFile": "equipment_annex_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 1
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 972,
+          "brick": 1,
+          "limestone": 854,
+          "slate": 3335,
+          "glass": 5,
+          "wood": 601,
+          "metal": 895,
+          "gold": 125
+        },
+        "outlinePixelCount": 341,
+        "inputPartialAlphaPixelCount": 149,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "campus_housing_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/campus_housing_exterior.png",
       "width": 128,
       "height": 64,
-      "colors": 36,
-      "sha256": "aaf6cd0e17092622afa5cca20fc73ca5d55cafcd1dbfd1d16b02cdbf94d3eb35",
-      "sourceFile": "campus_housing_source_v1.png"
+      "colors": 26,
+      "sha256": "d32bc421faf83f8461d7fcdc3c0db67d54586c175e82d2d035807fd2288953b0",
+      "sourceFile": "campus_housing_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 3,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 3019,
+          "brick": 123,
+          "limestone": 2005,
+          "slate": 487,
+          "glass": 37,
+          "wood": 811,
+          "metal": 715,
+          "gold": 568
+        },
+        "outlinePixelCount": 359,
+        "inputPartialAlphaPixelCount": 232,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "bookstore_row_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/bookstore_row_exterior.png",
       "width": 144,
       "height": 64,
-      "colors": 40,
-      "sha256": "c9cbd6fe3d620468160c79739dbeddc8e9a2594d75e732d4059617edd3960186",
-      "sourceFile": "bookstore_row_source_v1.png"
+      "colors": 29,
+      "sha256": "6222893721abd7112b30d524c19cbd973ec4a181f2efa341008e37aa59bc4be0",
+      "sourceFile": "bookstore_row_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "foliage": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1058,
+          "brick": 237,
+          "limestone": 1221,
+          "slate": 629,
+          "glass": 4,
+          "wood": 1109,
+          "metal": 1248,
+          "gold": 829,
+          "foliage": 43
+        },
+        "outlinePixelCount": 330,
+        "inputPartialAlphaPixelCount": 296,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "theater_marquee_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/theater_marquee_exterior.png",
       "width": 128,
       "height": 64,
-      "colors": 40,
-      "sha256": "39c15084045d27aa1b3a786d2c3408cf77f0f210226bf5959fca1367429bb04c",
-      "sourceFile": "theater_marquee_source_v1.png"
+      "colors": 23,
+      "sha256": "f0f1b7e431216ac35efdb63231a4439f3695330710561c5d5e0b321fdc8d583f",
+      "sourceFile": "theater_marquee_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "wood": 4,
+          "metal": 4,
+          "gold": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1696,
+          "brick": 92,
+          "limestone": 1638,
+          "slate": 226,
+          "wood": 872,
+          "metal": 1102,
+          "gold": 611
+        },
+        "outlinePixelCount": 279,
+        "inputPartialAlphaPixelCount": 262,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "food_cart_row_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/food_cart_row_exterior.png",
       "width": 144,
       "height": 64,
-      "colors": 40,
-      "sha256": "db5ba753f58d720614ee0ac91191d3802dfd8fa50b23978144c994c78c84af12",
-      "sourceFile": "food_cart_row_source_v1.png"
+      "colors": 27,
+      "sha256": "0e84e3de1bd50667c06eefd12a8c118cf3bff583ca8c75ab120cf89d0ed80e3e",
+      "sourceFile": "food_cart_row_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "foliage": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 721,
+          "brick": 94,
+          "limestone": 960,
+          "slate": 351,
+          "wood": 942,
+          "metal": 1037,
+          "gold": 896,
+          "foliage": 15
+        },
+        "outlinePixelCount": 187,
+        "inputPartialAlphaPixelCount": 176,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "capitol_hotel_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/capitol_hotel_exterior.png",
       "width": 80,
       "height": 64,
-      "colors": 36,
-      "sha256": "4fe14c9e1e95ddfabc5745f5237a1c972e93728b41a69db1fd24b6a566ae1051",
-      "sourceFile": "capitol_hotel_source_v1.png"
+      "colors": 27,
+      "sha256": "db45c433aab7c23a66122bc80c1d9fd624dde6512b8136a187cdc8b416d46698",
+      "sourceFile": "capitol_hotel_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 3,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "foliage": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 233,
+          "brick": 28,
+          "limestone": 1252,
+          "slate": 543,
+          "glass": 62,
+          "wood": 410,
+          "metal": 987,
+          "gold": 474,
+          "foliage": 43
+        },
+        "outlinePixelCount": 177,
+        "inputPartialAlphaPixelCount": 139,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "civic_offices_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/civic_offices_exterior.png",
       "width": 80,
       "height": 112,
-      "colors": 40,
-      "sha256": "596a0107cc33899c3b5599f1524e27ffcec90ee724ed84382df92936c9b3845d",
-      "sourceFile": "civic_offices_source_v1.png"
+      "colors": 26,
+      "sha256": "9c76bbbad2b224e58646b7328be5b947a89c67ff17e95fa6e2c813b37a4aed14",
+      "sourceFile": "civic_offices_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 3,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 173,
+          "brick": 139,
+          "limestone": 2079,
+          "slate": 569,
+          "glass": 303,
+          "wood": 634,
+          "metal": 767,
+          "gold": 640
+        },
+        "outlinePixelCount": 284,
+        "inputPartialAlphaPixelCount": 267,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "transit_hotel_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/transit_hotel_exterior.png",
       "width": 144,
       "height": 48,
-      "colors": 36,
-      "sha256": "7c1e5ec78082f033f2f0e4106a2d65e027abf87e97c6dafebe8c8448146c603e",
-      "sourceFile": "transit_hotel_source_v1.png"
+      "colors": 24,
+      "sha256": "e961f2300819e620262b4968567b24e63e44c3a9d9fee862d90b5762ee604d0a",
+      "sourceFile": "transit_hotel_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 168,
+          "brick": 3,
+          "limestone": 1349,
+          "slate": 1434,
+          "glass": 184,
+          "wood": 212,
+          "metal": 666,
+          "gold": 233
+        },
+        "outlinePixelCount": 315,
+        "inputPartialAlphaPixelCount": 158,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "team_hotel_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/team_hotel_exterior.png",
       "width": 128,
       "height": 96,
-      "colors": 40,
-      "sha256": "e1c292cf63478270a2065e96c7b43e9d03291af414829030740f9834e579282e",
-      "sourceFile": "team_hotel_source_v1.png"
+      "colors": 28,
+      "sha256": "280093aaa051ad1856a2e02a895ea821afd400fb99a119e7e32742efa75699b4",
+      "sourceFile": "team_hotel_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "foliage": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1893,
+          "brick": 145,
+          "limestone": 1802,
+          "slate": 1805,
+          "glass": 87,
+          "wood": 1425,
+          "metal": 1588,
+          "gold": 724,
+          "foliage": 23
+        },
+        "outlinePixelCount": 336,
+        "inputPartialAlphaPixelCount": 286,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "riverfront_hotel_exterior": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/riverfront_hotel_exterior.png",
       "width": 112,
       "height": 64,
-      "colors": 40,
-      "sha256": "5f5566f6ff4293dc50a2cab7c4b33eba7698e54867bdac7f554742a02279a8f1",
-      "sourceFile": "riverfront_hotel_source_v1.png"
+      "colors": 28,
+      "sha256": "16778fb83cd23a37d65bff7a7aacb31c4027e12abc8379ee0e7f31f61c4a82aa",
+      "sourceFile": "riverfront_hotel_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 3,
+          "foliage": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 723,
+          "brick": 427,
+          "limestone": 967,
+          "slate": 968,
+          "glass": 19,
+          "wood": 838,
+          "metal": 1129,
+          "gold": 395,
+          "foliage": 5
+        },
+        "outlinePixelCount": 222,
+        "inputPartialAlphaPixelCount": 193,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_11x5": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_11x5.png",
       "width": 176,
       "height": 80,
-      "colors": 40,
-      "sha256": "c372e2ad9d730f3c60a4386295bf1bc8e6067716fd08a6b580b17d209efd8ae0",
-      "sourceFile": "state_facade_11x5_source_v1.png"
+      "colors": 27,
+      "sha256": "9857fc52d57d02a0290d85a3cbff2ae950579f7f5be6b8fffeb2a21e42c8df26",
+      "sourceFile": "state_facade_11x5_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 3,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1650,
+          "brick": 425,
+          "limestone": 2731,
+          "slate": 1294,
+          "glass": 238,
+          "wood": 1408,
+          "metal": 1929,
+          "gold": 1215
+        },
+        "outlinePixelCount": 417,
+        "inputPartialAlphaPixelCount": 338,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_10x3": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_10x3.png",
       "width": 160,
       "height": 48,
-      "colors": 40,
-      "sha256": "c897ab4d29a978d3895e9099d0edd4e8d8511de790032a042820b817c45b476e",
-      "sourceFile": "state_facade_10x3_source_v1.png"
+      "colors": 26,
+      "sha256": "6fc747bb7215ab7252db8c556979431470406693f0181d97ccfeb654c882c34d",
+      "sourceFile": "state_facade_10x3_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 3,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1569,
+          "brick": 65,
+          "limestone": 1405,
+          "slate": 1014,
+          "glass": 222,
+          "wood": 664,
+          "metal": 1154,
+          "gold": 482
+        },
+        "outlinePixelCount": 321,
+        "inputPartialAlphaPixelCount": 151,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_13x5": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_13x5.png",
       "width": 208,
       "height": 80,
-      "colors": 40,
-      "sha256": "f9a533d59f5b4bb66a308e5d9f3072272e307d900932540c2271be3630398dce",
-      "sourceFile": "state_facade_13x5_source_v1.png"
+      "colors": 27,
+      "sha256": "cc6d6075d9fd42ba66138c9669d8801f13c3c17fc53377a8ece01bde8e9e4f1f",
+      "sourceFile": "state_facade_13x5_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1990,
+          "brick": 269,
+          "limestone": 3344,
+          "slate": 1314,
+          "glass": 265,
+          "wood": 1656,
+          "metal": 2165,
+          "gold": 1529
+        },
+        "outlinePixelCount": 480,
+        "inputPartialAlphaPixelCount": 440,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_8x5": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_8x5.png",
       "width": 128,
       "height": 80,
-      "colors": 40,
-      "sha256": "1056cc9cea7191c4f49908183d5b668391ce5ce4bd2f2adbb21854c5099e9868",
-      "sourceFile": "state_facade_8x5_source_v1.png"
+      "colors": 28,
+      "sha256": "a178d565ee66e67980d78765929a6eda6769304cfd018358e95fa355f2c82ab4",
+      "sourceFile": "state_facade_8x5_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1198,
+          "brick": 125,
+          "limestone": 2259,
+          "slate": 1651,
+          "glass": 227,
+          "wood": 965,
+          "metal": 1888,
+          "gold": 668
+        },
+        "outlinePixelCount": 317,
+        "inputPartialAlphaPixelCount": 282,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_8x4": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_8x4.png",
       "width": 128,
       "height": 64,
-      "colors": 40,
-      "sha256": "0c9d2a8461993233981a80b94bad2049d7a6b0b1910d99ef786b5a73a57a1714",
-      "sourceFile": "state_facade_8x4_source_v1.png"
+      "colors": 28,
+      "sha256": "528b2650b4fc71287ad85cd2b3387af2cf1e3f651f3e4024dfec21d7b5d3c2cb",
+      "sourceFile": "state_facade_8x4_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 3,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 740,
+          "brick": 254,
+          "limestone": 2441,
+          "slate": 539,
+          "glass": 319,
+          "wood": 1137,
+          "metal": 1211,
+          "gold": 864
+        },
+        "outlinePixelCount": 232,
+        "inputPartialAlphaPixelCount": 159,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_10x5": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_10x5.png",
       "width": 160,
       "height": 80,
-      "colors": 40,
-      "sha256": "36c5ee73e020db02676bcefacebcad9483abe27498c555f8e68ac744853f66e2",
-      "sourceFile": "state_facade_10x5_source_v1.png"
+      "colors": 30,
+      "sha256": "5916c5e65e4c7afa7f2e360ce33981c8b63d4bcfa641cead068c3caede9c949a",
+      "sourceFile": "state_facade_10x5_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "foliage": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 1461,
+          "brick": 156,
+          "limestone": 2541,
+          "slate": 1053,
+          "glass": 400,
+          "wood": 1236,
+          "metal": 1732,
+          "gold": 873,
+          "foliage": 56
+        },
+        "outlinePixelCount": 435,
+        "inputPartialAlphaPixelCount": 278,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "state_facade_5x5": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_5x5.png",
       "width": 80,
       "height": 80,
-      "colors": 36,
-      "sha256": "0b5ba1b4124a3772945127d5a2a71dcf4b666df1ff4ec04d9ebb887cdb6ff9dc",
-      "sourceFile": "state_facade_5x5_source_v1.png"
+      "colors": 28,
+      "sha256": "15902939a102a2afebcc8ba770471b88b8cfa23bc80e3ee385a4fda761367647",
+      "sourceFile": "state_facade_5x5_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 3,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 768,
+          "brick": 23,
+          "limestone": 968,
+          "slate": 619,
+          "glass": 149,
+          "wood": 404,
+          "metal": 623,
+          "gold": 288
+        },
+        "outlinePixelCount": 250,
+        "inputPartialAlphaPixelCount": 234,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "city_edge_horizontal": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/city_edge_horizontal.png",
       "width": 128,
       "height": 32,
-      "colors": 36,
-      "sha256": "9d3f32f7f63127dda59ddddfcbcd73e2a7a21e8dd1bd42c61f7ae9fa719c202d",
-      "sourceFile": "city_edge_horizontal_source_v1.png"
+      "colors": 26,
+      "sha256": "b2563d36e3fc938881f955c55473cae8fba462cdee0630c06b9d7b18ee9ad420",
+      "sourceFile": "city_edge_horizontal_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 2,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 959,
+          "brick": 20,
+          "limestone": 502,
+          "slate": 1084,
+          "glass": 9,
+          "wood": 103,
+          "metal": 1096,
+          "gold": 323
+        },
+        "outlinePixelCount": 225,
+        "inputPartialAlphaPixelCount": 54,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "city_edge_vertical": {
       "category": "ordinary_buildings",
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/city_edge_vertical.png",
       "width": 32,
       "height": 128,
-      "colors": 36,
-      "sha256": "7fe23c9011e03a3b8475814acd1a38f9265760c370ed05b7407e2d244c42870d",
-      "sourceFile": "city_edge_vertical_source_v1.png"
+      "colors": 24,
+      "sha256": "ca1c63393944733533470632a60743bb5265241a12cddbdae54be6e18cb4b2f3",
+      "sourceFile": "city_edge_vertical_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "slate": 4,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 773,
+          "brick": 55,
+          "limestone": 606,
+          "slate": 1150,
+          "glass": 23,
+          "wood": 122,
+          "metal": 1028,
+          "gold": 339
+        },
+        "outlinePixelCount": 163,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     },
     "field_house_entry_arch": {
       "category": "landmarks",
       "path": "art/tilesets/imagegen_v3/landmarks/field_house_entry_arch.png",
       "width": 112,
       "height": 64,
-      "colors": 36,
-      "sha256": "a1906dc66e556a99f6d1ef9b06800e43e4f9fbb9d000a9b1f178fb358e77b0b9",
+      "colors": 27,
+      "sha256": "a457c91ecd90d63a9f07f4f35f5080cea979d0efe018c6f9deafed30fe9fa482",
       "sourceFile": "field_house_arena_exterior.png",
-      "derivation": "grid-native gateway from approved Imagegen Field House source"
+      "derivation": "grid-native gateway from approved Imagegen Field House source",
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "glass",
+          "wood",
+          "metal",
+          "gold",
+          "foliage",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 3,
+          "slate": 3,
+          "glass": 1,
+          "wood": 4,
+          "metal": 4,
+          "gold": 4,
+          "stone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 2377,
+          "brick": 118,
+          "limestone": 618,
+          "slate": 116,
+          "glass": 1,
+          "wood": 393,
+          "metal": 378,
+          "gold": 384,
+          "stone": 176
+        },
+        "outlinePixelCount": 323,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
     }
   }
 }
