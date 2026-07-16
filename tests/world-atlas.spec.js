@@ -52,6 +52,7 @@ async function walk(page, direction, steps) {
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
+  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.21-ground-hierarchy');
   await expect(page.locator('canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
@@ -67,7 +68,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
     tilePos: {x: 23, y: 29},
     atlas: {
       mode: 'map', mapId: 'camp_randall', mapWidth: 48, mapHeight: 31,
-      metatileVersion: 19, metatilePlacementCount: 50
+      metatileVersion: 20, metatilePlacementCount: 50
     }
   });
   expect((await state(page)).atlas.metatileRenderCount).toBeGreaterThan(200);
@@ -84,8 +85,17 @@ test('Camp Randall runtime collision comes from the rendered metatiles', async (
   await openAtlas(page, '&play=1&area=camp_randall&x=9&y=25&facing=right');
   await expect.poll(async () => (await state(page)).passable.right).toBe(false);
   const camp = await state(page);
-  expect(camp.atlas).toMatchObject({metatileVersion: 19, metatilePlacementCount: 50});
+  expect(camp.atlas).toMatchObject({metatileVersion: 20, metatilePlacementCount: 50});
   expect(camp.atlas.metatileRenderCount).toBeGreaterThan(200);
+  expect(issues).toEqual([]);
+});
+
+test('playtest framing is clean by default and diagnostics remain opt-in', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openAtlas(page, '&play=1&area=camp_randall');
+  await expect.poll(async () => (await state(page)).atlas.diagnosticHud).toBe(false);
+  await openAtlas(page, '&play=1&hud=1&area=camp_randall');
+  await expect.poll(async () => (await state(page)).atlas.diagnosticHud).toBe(true);
   expect(issues).toEqual([]);
 });
 

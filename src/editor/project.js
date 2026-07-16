@@ -695,6 +695,7 @@ export function createSeedProject() {
     layoutRevision: production.layoutRevision,
     metatileVersion: metatileBuild.version,
     groundSystem: deepClone(metatileBuild.groundSystem),
+    groundHierarchy: deepClone(metatileBuild.groundHierarchy),
     groundMaterialMetrics: deepClone(metatileBuild.groundMaterialMetrics),
     groundValueContract: deepClone(metatileBuild.groundValueContract),
     pixelDiscipline: deepClone(metatileBuild.pixelDiscipline),

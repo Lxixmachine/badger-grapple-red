@@ -3275,3 +3275,31 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   complete sequential suite pass; the final count is 117/117. Broad validation
   still stops only on Tony's protected State Street composition checksum. Do
   not regenerate, stage, or overwrite those six user-owned files.
+
+## Codex Quiet Ground Hierarchy (v22.21)
+
+- Clean World Atlas playtests no longer carry permanent top and bottom
+  diagnostic bars. `?atlas=1&play=1` presents only the world; `hud=1` remains
+  available for explicit collision and coordinate review.
+- Grass B and C are now authored two-color variants with progressively sparser
+  accent pixels. The map compiler places them as stable low-frequency clusters
+  and enforces 4-16% variant coverage on every exterior with meaningful grass.
+  Runtime and Map Studio receive the exact same tile IDs; there is no hidden
+  neighbor mutation or renderer substitution.
+- Camp Randall and every institutional exterior receive explicit maintained-
+  lawn pads before connected paths are resolved. The quieter, slightly darker
+  lawn grounds buildings while pale public grass and limestone circulation
+  remain visually dominant. All pads, clipped corners, transitions, doors, and
+  collision ownership stay on the 32px grid.
+- The maintained-lawn Imagegen source was mechanically disciplined into a calm
+  three-color material with no diagonal hatching, cardinal pixels, partial
+  alpha, or more than three colors. Repeating the 115-source preparation,
+  world-atlas build, and Camp-atlas build reproduced all key hashes exactly.
+- Current authority is layout revision 13, Season One world tileset v12, Camp
+  metatile atlas v20, and app v22.21. Phone review confirmed a native 480x320
+  canvas, one final CSS fit, clean framing, and zero runtime warnings. The
+  focused release suite passes 40/40 and the complete sequential suite passes
+  118/118. Broad validation still stops only on Tony's protected State Street
+  composition checksum; do not regenerate, stage, or overwrite those six
+  user-owned files. Tony's FireRed comparison verdict remains the visual close
+  condition.

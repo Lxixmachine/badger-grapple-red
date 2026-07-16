@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v19.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v20.png"
 GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v4.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
@@ -99,7 +99,49 @@ def behavior_at(owner: dict, rows: list[str], x: int, y: int) -> str:
     return "solid" if rows[y][x] == "#" else "walkable"
 
 
-def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
+def stable_map_seed(map_id: str) -> int:
+    return sum((index + 1) * ord(character) for index, character in enumerate(map_id))
+
+
+def grass_variant(map_id: str, x: int, y: int) -> str:
+    """Return an explicit sparse lawn tile id for one authored map cell."""
+    block_x, local_x = divmod(x, 5)
+    block_y, local_y = divmod(y, 5)
+    seed = stable_map_seed(map_id) + block_x * 37 + block_y * 61
+    anchor_x = 1 + seed % 3
+    anchor_y = 1 + (seed // 3) % 3
+    if (local_x, local_y) in {(anchor_x, anchor_y), (anchor_x + 1, anchor_y)}:
+        return "grass_b"
+    if (local_x, local_y) == (anchor_x, anchor_y + 1):
+        return "grass_c"
+    return "grass"
+
+
+def paint_maintained_lawn(raw: list[list[str]], layout: dict) -> None:
+    """Ground institutional buildings with one soft, grid-authored lawn pad."""
+    height = len(raw)
+    width = len(raw[0]) if raw else 0
+    owners = list(layout.get("buildings", []))
+    if layout.get("kind") in {"home_town", "town"}:
+        owners.extend(
+            owner for owner in layout.get("landmarks", [])
+            if not owner.get("walkable") and owner.get("kind") not in {"water", "deep_water"}
+        )
+    for owner in owners:
+        left = max(0, owner["x"] - 1)
+        right = min(width - 1, owner["x"] + owner["width"])
+        top = max(0, owner["y"] - 1)
+        bottom = min(height - 1, owner["y"] + owner["height"])
+        clipped_corners = {(left, top), (right, top), (left, bottom), (right, bottom)}
+        for y in range(top, bottom + 1):
+            for x in range(left, right + 1):
+                if (x, y) in clipped_corners:
+                    continue
+                if raw[y][x] == "grass":
+                    raw[y][x] = "mowed_grass"
+
+
+def terrain_rows(layout: dict, world: dict, map_id: str) -> list[list[str]]:
     width, height = layout["size"]["width"], layout["size"]["height"]
     override = layout.get("terrainOverride")
     if override is not None:
@@ -128,6 +170,7 @@ def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
                 if 0 <= x < width and 0 <= y < height:
                     raw[y][x] = material
 
+    paint_maintained_lawn(raw, layout)
     for path in layout.get("paths", []):
         paint_rect(path, material_aliases.get(path["material"], path["material"]))
     for body in layout.get("waterBodies", []):
@@ -160,7 +203,7 @@ def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
             material = raw[y][x]
             family = family_by_material.get(material)
             if not family:
-                rows[y][x] = material
+                rows[y][x] = grass_variant(map_id, x, y) if material == "grass" else material
                 continue
             signature = 0
             cardinal_neighbors = {"n": (x, y - 1), "e": (x + 1, y), "s": (x, y + 1), "w": (x - 1, y)}
@@ -175,8 +218,36 @@ def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
             tile_id = f"{family}_blob_{blob_signature_name(signature)}"
             if tile_id not in world["terrain"]["tiles"]:
                 raise SystemExit(f"{layout['displayName']}: terrain resolver produced unavailable tile {tile_id}")
-            rows[y][x] = tile_id
+            fully_surrounded = signature == sum(CARDINAL_BITS.values()) + sum(DIAGONAL_BITS.values())
+            if material == "mowed_grass" and fully_surrounded and grass_variant(map_id, x, y) == "grass_c":
+                rows[y][x] = "mowed_grass_b"
+            else:
+                rows[y][x] = tile_id
     return rows
+
+
+def quiet_lawn_tile(tile_id: str) -> bool:
+    return tile_id in {"grass", "grass_b", "grass_c", "mowed_grass", "mowed_grass_b"} \
+        or tile_id.startswith("lawn_mowed_blob_")
+
+
+def ground_hierarchy_metrics(rows: list[list[str]]) -> dict:
+    counts: dict[str, int] = {}
+    for row in rows:
+        for tile_id in row:
+            counts[tile_id] = counts.get(tile_id, 0) + 1
+    grass_total = sum(counts.get(tile_id, 0) for tile_id in ("grass", "grass_b", "grass_c"))
+    variant_count = counts.get("grass_b", 0) + counts.get("grass_c", 0)
+    maintained_count = sum(
+        count for tile_id, count in counts.items()
+        if tile_id in {"mowed_grass", "mowed_grass_b"} or tile_id.startswith("lawn_mowed_blob_")
+    )
+    return {
+        "grassCellCount": grass_total,
+        "grassVariantCellCount": variant_count,
+        "grassVariantCoverage": round(variant_count / max(grass_total, 1), 4),
+        "maintainedLawnCellCount": maintained_count,
+    }
 
 
 def ground_tile(material: str) -> Image.Image:
@@ -192,7 +263,7 @@ def validate_path_clearance(layout: dict, rows: list[list[str]]) -> None:
         covered = []
         for y in range(owner["y"], owner["y"] + owner["height"]):
             for x in range(owner["x"], owner["x"] + owner["width"]):
-                if rows[y][x] != "grass":
+                if not quiet_lawn_tile(rows[y][x]):
                     covered.append(f"{x},{y}")
         if covered:
             raise SystemExit(
@@ -305,7 +376,7 @@ def build() -> dict:
         raise SystemExit("Camp metatiles cannot compile from a stale production package")
 
     ground_path = GROUND_PATH
-    terrain = terrain_rows(layout, world)
+    terrain = terrain_rows(layout, world, production["map"]["id"])
 
     visuals: list[Image.Image] = []
     visual_lookup: dict[bytes, int] = {}
@@ -542,16 +613,28 @@ def build() -> dict:
             "id": map_id,
             "width": planned_layout["size"]["width"],
             "height": planned_layout["size"]["height"],
-            "terrain": terrain_rows(planned_layout, world),
+            "terrain": terrain_rows(planned_layout, world, map_id),
         }
         for map_id, planned_layout in layouts["maps"].items()
     }
     planned_maps[production["map"]["id"]]["terrain"] = terrain
+    map_ground_hierarchy = {
+        map_id: ground_hierarchy_metrics(package["terrain"])
+        for map_id, package in planned_maps.items()
+    }
+    for map_id, metrics in map_ground_hierarchy.items():
+        planned_layout = layouts["maps"][map_id]
+        if metrics["grassCellCount"] >= 25 and not 0.04 <= metrics["grassVariantCoverage"] <= 0.16:
+            raise SystemExit(f"{map_id}: grass variants must occupy 4-16% of explicit grass cells")
+        needs_maintained_lawn = bool(planned_layout.get("buildings")) \
+            and planned_layout.get("ground") not in {"water", "terminal"}
+        if needs_maintained_lawn and not metrics["maintainedLawnCellCount"]:
+            raise SystemExit(f"{map_id}: institutional buildings require an explicit maintained-lawn pad")
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 19,
-        "status": "season-one-material-disciplined-atlas",
+        "version": 20,
+        "status": "season-one-ground-hierarchy-atlas",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
         "atlas": {
@@ -582,6 +665,14 @@ def build() -> dict:
             "terrain": terrain,
         },
         "groundSystem": ground_system,
+        "groundHierarchy": {
+            "contract": {
+                "grassVariantCoverageMin": 0.04,
+                "grassVariantCoverageMax": 0.16,
+                "maintainedLawnPads": "required-for-institutional-buildings",
+            },
+            "maps": map_ground_hierarchy,
+        },
         "groundMaterialMetrics": world["coverage"]["groundMaterialMetrics"],
         "groundValueContract": world["coverage"]["groundValueContract"],
         "pixelDiscipline": world["coverage"]["pixelDiscipline"],

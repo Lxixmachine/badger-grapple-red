@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: production-grid rollout through Capitol Square with shared high-key ground hierarchy and material-disciplined pixel art in v22.20.
+Status: production-grid rollout through Capitol Square with explicit quiet-ground variation, maintained institutional lawn pads, and material-disciplined pixel art in v22.21.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is
@@ -15,6 +15,9 @@ buildings, props, or character art are produced. The exact authority is
 - Every physical map edge uses a reciprocal two-cell threshold.
 - Every building, landmark, door, event, blocker, and camera window has exact
   integer-cell ownership.
+- Ground variation is authored as explicit tile IDs. Quiet grass clusters and
+  maintained-lawn pads are part of the map grid consumed unchanged by Map
+  Studio, collision, and runtime rendering.
 - A connected town reserves at least eight cells before a major arena
   footprint so its first camera establishes place before the venue reveal.
 

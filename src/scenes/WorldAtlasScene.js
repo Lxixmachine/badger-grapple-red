@@ -195,6 +195,7 @@ export class WorldAtlasScene extends Phaser.Scene {
 
     const params = new URLSearchParams(window.location.search);
     this.playtestMode = params.has('play');
+    this.diagnosticHud = !this.playtestMode || params.has('hud');
     const requested = ORDER.includes(params.get('area')) ? params.get('area') : ORDER[0];
     const requestedInterior = layouts.interiors[params.get('interior')] ? params.get('interior') : null;
     this.selectedIndex = ORDER.indexOf(requested);
@@ -702,6 +703,7 @@ export class WorldAtlasScene extends Phaser.Scene {
   }
 
   drawMapHud() {
+    if (!this.diagnosticHud) return;
     const graphics = this.track(this.add.graphics().setScrollFactor(0).setDepth(2000));
     fill(graphics, COLORS.ink, 0, 0, WIDTH, 28, 0.95);
     fill(graphics, COLORS.red, 0, 0, 7, 28);

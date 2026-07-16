@@ -84,7 +84,7 @@ Acceptance:
 
 ### WP-V2 — Make the ground a SYSTEM: connected paths + edge tiles + values
 
-> **STATUS: SOURCE-LEVEL RETUNE COMPLETE IN v22.19; TONY VISUAL VERDICT REMAINS.**
+> **STATUS: SOURCE/RUNTIME GROUND SYSTEM SHIPPED THROUGH v22.21; TONY VISUAL VERDICT REMAINS.**
 > Camp Randall now has one 108-cell primary path network joining all
 > three door approaches and both south-route cells. Every occupied
 > path cell resolves through the 47-signature `surface_brick` edge
@@ -101,6 +101,15 @@ Acceptance:
 > underneath. These contracts are enforced by `npm run validate`, and SELECT exposes the
 > same grid/collision ownership used by the runtime. Tony's phone eye
 > still closes the package through the WP-V4 comparison ritual.
+>
+> v22.21 adds the missing low-frequency hierarchy without weakening that
+> contract. Grass B and C are explicit two-color tiles with progressively
+> sparser accent pixels, and the map compiler places them in restrained,
+> deterministic clusters. Institutional buildings receive explicit maintained-
+> lawn pads before path transitions are resolved. Map Studio and runtime consume
+> those exact tile IDs; there is no hidden renderer substitution. Clean atlas
+> playtests now omit the diagnostic HUD by default, with `hud=1` retaining it for
+> collision review. Tony's comparison verdict still closes visual parity.
 
 > **REVISED after inspecting v22.4 on screen (D1 confirmed fixed
 > there).** With crisp pixels, the loudest remaining non-FireRed

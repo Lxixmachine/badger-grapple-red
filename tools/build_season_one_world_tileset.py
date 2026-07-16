@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v11.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v12.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
 GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
@@ -164,6 +164,32 @@ def material_metrics(image: Image.Image) -> dict:
         "meanLightness": round(lightness_sum / total, 4),
         "cardinalPixelCount": cardinal_pixels,
     }
+
+
+def sparse_ground_variant(image: Image.Image, keep_ratio: float) -> Image.Image:
+    """Keep a placed subset of a two-color ground tile's accent pixels.
+
+    FireRed-scale lawns read as a dominant field with rare texture clusters,
+    not as the same stipple repeated in every cell. Variants retain the exact
+    two-color ramp while changing only accent coverage; the map compiler then
+    places these explicit tile ids in deterministic clusters.
+    """
+    rgba = image.convert("RGBA")
+    counts = Counter(rgba.get_flattened_data())
+    base = max(counts, key=counts.get)
+    accents = [
+        (x, y, rgba.getpixel((x, y)))
+        for y in range(rgba.height)
+        for x in range(rgba.width)
+        if rgba.getpixel((x, y)) != base
+    ]
+    target = max(1, round(len(accents) * keep_ratio))
+    # A coordinate hash avoids top-left bias while remaining byte-stable.
+    chosen = sorted(accents, key=lambda entry: ((entry[0] * 17 + entry[1] * 29) % 47, entry[1], entry[0]))[:target]
+    output = Image.new("RGBA", rgba.size, base)
+    for x, y, color in chosen:
+        output.putpixel((x, y), color)
+    return output
 
 
 def save_png(image: Image.Image, path: Path) -> None:
@@ -519,9 +545,12 @@ def build() -> dict:
     # The runtime cell is 32px, but all source pixels below are deliberately
     # authored at 16px and enlarged by exactly 2x.  Do not reintroduce crop
     # fitting, antialiasing, or generic 32px morphology here.
-    grass = export_2x(material_tile("grass"))
-    grass_b = export_2x(material_tile("grass", 1))
-    grass_c = export_2x(material_tile("grass", 2))
+    grass_logical = material_tile("grass")
+    grass_b_logical = sparse_ground_variant(material_tile("grass", 1), 0.5)
+    grass_c_logical = sparse_ground_variant(material_tile("grass", 2), 0.25)
+    grass = export_2x(grass_logical)
+    grass_b = export_2x(grass_b_logical)
+    grass_c = export_2x(grass_c_logical)
     mowed = export_2x(material_tile("mowed_grass"))
     mowed_b = export_2x(material_tile("mowed_grass", 1))
     brick = export_2x(material_tile("brick"))
@@ -553,7 +582,9 @@ def build() -> dict:
     add_ground("meadow_grass", "Meadow Grass", "meadow", meadow, ["base", "natural", "flowering"])
 
     ground_material_metrics = {
-        "grass": material_metrics(material_tile("grass")),
+        "grass": material_metrics(grass_logical),
+        "grassB": material_metrics(grass_b_logical),
+        "grassC": material_metrics(grass_c_logical),
         "mowedGrass": material_metrics(material_tile("mowed_grass")),
         "campusPavers": material_metrics(material_tile("brick")),
     }
@@ -568,6 +599,16 @@ def build() -> dict:
         or grass_metrics["cardinalPixelCount"]
     ):
         raise SystemExit("Grass violates the measured high-key two-color ground contract")
+    for variant_name in ("grassB", "grassC"):
+        variant_metrics = ground_material_metrics[variant_name]
+        if (
+            variant_metrics["uniqueColors"] != 2
+            or variant_metrics["dominantCoverage"] <= grass_metrics["dominantCoverage"]
+            or variant_metrics["meanLightness"] < grass_metrics["meanLightness"]
+            or variant_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["grass"]["meanSaturationMax"]
+            or variant_metrics["cardinalPixelCount"]
+        ):
+            raise SystemExit(f"{variant_name} violates the restrained two-color lawn-variation contract")
     mowed_metrics = ground_material_metrics["mowedGrass"]
     if (
         mowed_metrics["uniqueColors"] > GROUND_VALUE_CONTRACT["mowedGrass"]["uniqueColorsMax"]
@@ -1243,8 +1284,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-world-tileset/v5",
-        "version": 11,
-        "status": "season-one-material-disciplined-pixel-kit",
+        "version": 12,
+        "status": "season-one-quiet-ground-variation-kit",
         "cellSize": cell,
         "artPipeline": {
             "logicalCellSize": LOGICAL_CELL,

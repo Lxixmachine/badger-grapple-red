@@ -84,7 +84,7 @@ else{
   const world=JSON.parse(readFileSync(worldTilesetBuildPath,'utf8'));
   const manifest=JSON.parse(readFileSync(worldTilesetManifestPath,'utf8'));
   const contract=JSON.parse(readFileSync(worldTilesetContractPath,'utf8'));
-  if(world.schema!=='badger-grapple-world-tileset/v5'||world.version!==11||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  if(world.schema!=='badger-grapple-world-tileset/v5'||world.version!==12||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
   if(manifest.schema!=='badger-grapple-world-tileset-manifest/v2'||manifest.version!==2||manifest.logicalCellSize!==16||manifest.renderScale!==2)errs.push('Season One world tileset manifest must use the authored 16px/2x pipeline');
   if(contract.version!==5||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false||contract.rules?.quietGroundPalette!==true||contract.rules?.cardinalGroundReserved!==true)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
   if(world.artPipeline?.logicalCellSize!==16||world.artPipeline?.renderScale!==2||world.artPipeline?.resampling!=='nearest'||world.artPipeline?.pixelPerfect!==true)errs.push('Season One world tileset is not an exact nearest-neighbor logical-grid export');
@@ -127,6 +127,8 @@ else{
   const groundMetrics=world.coverage?.groundMaterialMetrics||{};
   const groundValueContract=world.coverage?.groundValueContract||{};
   if(!groundMetrics.grass||groundMetrics.grass.uniqueColors!==2||groundMetrics.grass.dominantCoverage<0.94||groundMetrics.grass.meanLightness<0.62||groundMetrics.grass.meanLightness>0.70||groundMetrics.grass.meanSaturation>0.42||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the high-key two-color quiet-ground contract');
+  if(!groundMetrics.grassB||groundMetrics.grassB.uniqueColors!==2||groundMetrics.grassB.dominantCoverage<=groundMetrics.grass.dominantCoverage||groundMetrics.grassB.meanLightness<groundMetrics.grass.meanLightness||groundMetrics.grassB.cardinalPixelCount!==0)errs.push('Season One sparse grass B violates the explicit quiet-ground variant contract');
+  if(!groundMetrics.grassC||groundMetrics.grassC.uniqueColors!==2||groundMetrics.grassC.dominantCoverage<=groundMetrics.grassB?.dominantCoverage||groundMetrics.grassC.meanLightness<groundMetrics.grassB?.meanLightness||groundMetrics.grassC.cardinalPixelCount!==0)errs.push('Season One sparse grass C violates the explicit quiet-ground variant contract');
   if(!groundMetrics.mowedGrass||groundMetrics.mowedGrass.uniqueColors>3||groundMetrics.mowedGrass.meanLightness<0.60||groundMetrics.mowedGrass.meanSaturation>0.42||groundMetrics.mowedGrass.cardinalPixelCount!==0)errs.push('Season One maintained lawn violates the quiet-ground contract');
   if(!groundMetrics.campusPavers||groundMetrics.campusPavers.uniqueColors>3||groundMetrics.campusPavers.meanLightness<0.78||groundMetrics.campusPavers.meanSaturation>0.40||groundMetrics.campusPavers.cardinalPixelCount!==0)errs.push('Season One campus pavers violate the pale neutral-limestone contract');
   if(groundValueContract.grass?.meanLightnessMin!==0.62||groundValueContract.mowedGrass?.meanLightnessMin!==0.60||groundValueContract.campusPavers?.meanSaturationMax!==0.40)errs.push('Season One ground value thresholds are missing or stale');
@@ -141,7 +143,7 @@ else{
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==19)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==20)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
@@ -167,6 +169,10 @@ else{
   for(const [id,stamp] of Object.entries(metatileBuild.stamps||{}))validateStamp(`Camp stamp ${id}`,stamp);
   for(const patch of metatileBuild.patches||[])validateStamp(`Camp patch ${patch.id}`,patch);
   const plannedMapIds=Object.keys(seasonLayouts.maps||{});
+  const hierarchy=metatileBuild.groundHierarchy||{};
+  const hierarchyContract=hierarchy.contract||{};
+  if(hierarchyContract.grassVariantCoverageMin!==0.04||hierarchyContract.grassVariantCoverageMax!==0.16||hierarchyContract.maintainedLawnPads!=='required-for-institutional-buildings')errs.push('Season One ground hierarchy contract is missing or stale');
+  const institutionalMaps=new Set(['camp_randall','field_house','state_street','bascom_hill','capitol_square','kohl_center','st_louis']);
   if(JSON.stringify(Object.keys(metatileBuild.plannedMaps||{}))!==JSON.stringify(plannedMapIds))errs.push('Map Studio must compile every Season One exterior in layout order');
   for(const mapId of plannedMapIds){
     const layout=seasonLayouts.maps[mapId];
@@ -176,6 +182,12 @@ else{
       continue;
     }
     for(const row of planned.terrain)for(const tileId of row)if(!Object.hasOwn(terrainTiles,tileId))errs.push(`Map Studio exterior ${mapId} references unknown ground tile ${tileId}`);
+    const metrics=hierarchy.maps?.[mapId];
+    if(!metrics)errs.push(`Map Studio exterior ${mapId} is missing ground hierarchy metrics`);
+    else{
+      if(metrics.grassCellCount>=25&&(metrics.grassVariantCoverage<hierarchyContract.grassVariantCoverageMin||metrics.grassVariantCoverage>hierarchyContract.grassVariantCoverageMax))errs.push(`Map Studio exterior ${mapId} grass variation is outside the quiet-ground contract`);
+      if(institutionalMaps.has(mapId)&&metrics.maintainedLawnCellCount<1)errs.push(`Map Studio exterior ${mapId} is missing its maintained institutional lawn pad`);
+    }
   }
 }
 const seasonNodes=seasonRegion.nodes||{};

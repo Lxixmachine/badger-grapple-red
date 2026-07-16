@@ -432,6 +432,25 @@ def quiet_grass(source: Image.Image, ramp) -> Image.Image:
     return output
 
 
+def quiet_mowed_grass(source: Image.Image, ramp) -> Image.Image:
+    """Convert generated lawn stripes into a calm maintained-grass field."""
+    dark, base, light = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", source.size, base)
+    # Sparse paired marks suggest clipped blades without forming rows, bands,
+    # or visible cell frames when the tile repeats across a building pad.
+    marks = (
+        (2, 4, dark), (3, 3, light),
+        (9, 2, dark),
+        (13, 7, dark), (12, 6, light),
+        (5, 12, dark),
+        (11, 14, dark), (10, 13, light),
+    )
+    for x, y, color in marks:
+        if x < output.width and y < output.height:
+            output.putpixel((x, y), color)
+    return output
+
+
 def quiet_dirt(source: Image.Image, ramp) -> Image.Image:
     """Keep Imagegen's strongest local marks without retaining its gradient."""
     rgba = source.convert("RGBA")
@@ -516,6 +535,8 @@ def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image
     ramp = GROUND_RAMPS.get(asset_id)
     if asset_id == "grass" and ramp:
         return quiet_grass(image, ramp)
+    if asset_id == "mowed_grass" and ramp:
+        return quiet_mowed_grass(image, ramp)
     if asset_id == "dirt" and ramp:
         return quiet_dirt(image, ramp)
     if asset_id in {"brick", "concrete", "stone"} and ramp:

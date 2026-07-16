@@ -130,6 +130,7 @@ export function installTestHooks(game, routeVirtualButton) {
         mapId: scene.currentMapId ?? null,
         interiorId: scene.currentInteriorId ?? null,
         overlayMode: scene.overlayMode,
+        diagnosticHud: scene.diagnosticHud ?? null,
         mapWidth: scene.mapWidth ?? null,
         mapHeight: scene.mapHeight ?? null,
         returnDepth: scene.returnStack?.length ?? 0,

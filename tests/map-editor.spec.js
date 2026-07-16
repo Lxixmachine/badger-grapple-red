@@ -96,7 +96,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 19});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 20});
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'brick',
     connectedComponentCount: 1,
@@ -110,6 +110,12 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   });
   expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeGreaterThanOrEqual(0.62);
   expect(state.project.groundMaterialMetrics.grass.meanSaturation).toBeLessThanOrEqual(0.42);
+  expect(state.project.groundMaterialMetrics.grassB).toMatchObject({uniqueColors: 2, cardinalPixelCount: 0});
+  expect(state.project.groundMaterialMetrics.grassC).toMatchObject({uniqueColors: 2, cardinalPixelCount: 0});
+  expect(state.project.groundMaterialMetrics.grassB.dominantCoverage)
+    .toBeGreaterThan(state.project.groundMaterialMetrics.grass.dominantCoverage);
+  expect(state.project.groundMaterialMetrics.grassC.dominantCoverage)
+    .toBeGreaterThan(state.project.groundMaterialMetrics.grassB.dominantCoverage);
   expect(state.project.groundMaterialMetrics.mowedGrass.meanLightness).toBeGreaterThanOrEqual(0.60);
   expect(state.project.groundMaterialMetrics.mowedGrass.meanSaturation).toBeLessThanOrEqual(0.42);
   expect(state.project.groundMaterialMetrics.campusPavers).toMatchObject({
@@ -123,6 +129,19 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     mowedGrass: {meanLightnessMin: 0.60, meanSaturationMax: 0.42},
     campusPavers: {meanLightnessMin: 0.78, meanSaturationMax: 0.40}
   });
+  expect(state.project.groundHierarchy.contract).toEqual({
+    grassVariantCoverageMin: 0.04,
+    grassVariantCoverageMax: 0.16,
+    maintainedLawnPads: 'required-for-institutional-buildings'
+  });
+  for (const metrics of Object.values(state.project.groundHierarchy.maps)) {
+    if (metrics.grassCellCount < 25) continue;
+    expect(metrics.grassVariantCoverage).toBeGreaterThanOrEqual(0.04);
+    expect(metrics.grassVariantCoverage).toBeLessThanOrEqual(0.16);
+  }
+  for (const mapId of ['camp_randall', 'field_house', 'state_street', 'bascom_hill', 'capitol_square', 'kohl_center', 'st_louis']) {
+    expect(state.project.groundHierarchy.maps[mapId].maintainedLawnCellCount).toBeGreaterThan(0);
+  }
   expect(state.project.visualHierarchyMetrics.saturationDifference).toBeGreaterThan(0);
   expect(state.project.visualHierarchyMetrics.ground.meanSaturation)
     .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanSaturation);
@@ -160,8 +179,8 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   expect(camp.terrain[18][8]).toMatch(/^surface_concrete_blob_/);
   expect(camp.terrain[18][11]).toMatch(/^surface_brick_blob_/);
   expect(camp.terrain[7][23]).toMatch(/^surface_concrete_blob_/);
-  expect(camp.terrain[17][7]).toBe('grass');
-  expect(camp.terrain[17][8]).toBe('grass');
+  expect(camp.terrain[17][7]).toMatch(/^lawn_mowed_blob_/);
+  expect(camp.terrain[17][8]).toMatch(/^lawn_mowed_blob_/);
   await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '1536');
   await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '992');
   expect(issues).toEqual([]);
@@ -442,7 +461,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 19});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 20});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
