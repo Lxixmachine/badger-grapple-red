@@ -14,6 +14,7 @@
     "arena_mats": "8bd9b3ec79c47f6d39bfa01e451ada4915345629bf93201e780430506733da8b",
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
     "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
+    "bascom_landmarks": "cc8bc27bba589daca622593304c1ab749a59108314e1ea56d458611ead57f725",
     "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
     "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
     "landmarks:nationals_arena_exterior": "ca455a729265756657ba63fcdd81983032c4af4718c328f438947a963d28ab08",
@@ -76,7 +77,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "882f85e96f3c2a3ae48807ada97d054c5d4b7276aba4fd7b4c99211f1bbd114e",
+      "sha256": "bb7b54ca47b950f480231e6793134630d08fa38e72a351132822eb41a298fb09",
       "sourcePanel": 3
     },
     "stone": {
@@ -85,7 +86,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "36c7cf88666f49e17f9182f497d5c1ef919f0953ba1e34ddbcd07a37aa3d0bd7",
+      "sha256": "38709afe09502242320aa24cc2ff2882540d89ba993c3711c74df9c6ae6a9499",
       "sourcePanel": 4
     },
     "concrete": {
@@ -94,7 +95,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "8497c199202d56d697c72b7da17c36820de17f63d3484898303c1f85ff701d31",
+      "sha256": "bee2d0816d66fc455db51483a9bb610dffd3fdceb31d154e3edd1e6c69b916f3",
       "sourcePanel": 5
     },
     "gravel": {
@@ -798,6 +799,42 @@
       "colors": 32,
       "sha256": "e7520d03d00b9233e0cb7825a8789323f3b191f85698988887b3fff53fb0a3ed",
       "sourcePanel": 5
+    },
+    "bascom_lincoln_statue": {
+      "category": "bascom_landmarks",
+      "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_lincoln_statue.png",
+      "width": 32,
+      "height": 48,
+      "colors": 32,
+      "sha256": "b3af3bf01f731b93adaa2ab0f4c3a48d4800119e2fe1ca4228ff6a588f75aaf2",
+      "sourcePanel": 0
+    },
+    "bascom_memorial_balustrade": {
+      "category": "bascom_landmarks",
+      "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_memorial_balustrade.png",
+      "width": 64,
+      "height": 32,
+      "colors": 32,
+      "sha256": "a4063277155df8e5bac226cb39e2c11c31b73d291dfa4547912c02c6be4ea4da",
+      "sourcePanel": 1
+    },
+    "bascom_stair_landing": {
+      "category": "bascom_landmarks",
+      "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_stair_landing.png",
+      "width": 64,
+      "height": 32,
+      "colors": 32,
+      "sha256": "224e333785e296a89c418e7c1875658fa1ee68335c4de808855198a1c7bdf01a",
+      "sourcePanel": 2
+    },
+    "bascom_history_marker": {
+      "category": "bascom_landmarks",
+      "path": "art/tilesets/imagegen_v3/bascom_landmarks/bascom_history_marker.png",
+      "width": 32,
+      "height": 32,
+      "colors": 28,
+      "sha256": "f4e594a2127ca873e0d641bf000f75fdaf08fc6f273cc479f2a20f57dbd41541",
+      "sourcePanel": 3
     },
     "field_house_arena_exterior": {
       "category": "landmarks",

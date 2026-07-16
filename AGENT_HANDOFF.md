@@ -3158,3 +3158,25 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   not regenerate world compositions until Tony's dirty State Street composition
   draft is intentionally reconciled; the broad validator reports that draft as
   stale, while balance, map lint, and the Vite production build pass.
+
+## Codex Bascom Crown Production Grid (v22.16)
+
+- Bascom Hill is no longer a stretched-cliff blockout. Its 18x18 layout is one
+  exact behavior grid with a south arrival, four-cell limestone stair, split
+  Lincoln terrace, upper forecourt, and centered Bascom Hall warp.
+- A new ChatGPT Imagegen board supplies the Lincoln monument, memorial terrace,
+  stair, and history marker. The source is normalized into four exact logical
+  stamps; no generated board enters runtime directly. The statue's 2x3 art
+  blocks only its 2x1 pedestal, preserving honest walk-behind occlusion.
+- The shared stone, brick, and concrete source grammar no longer outlines each
+  32px map cell. Staggered internal joints keep the paving readable without
+  exposing the gameplay grid.
+- Bascom actors, story events, camera reviews, and terrain now live in
+  `seasonOneLayouts.json`; the obsolete hidden Map Polish duplicate was removed.
+  Focused tests prove exact stamp sizes, zero solid-cell overlap, actor-inclusive
+  traversal, Hall access, event approaches, and the reciprocal State Street
+  threshold.
+- Current authority is layout revision 11, tileset contract v5, 115 prepared
+  Imagegen assets, world tileset v8, Camp/Season metatile atlas v15, and app
+  v22.16. The next non-conflicting exterior is Capitol Square; State Street has
+  an active user composition draft and must not be overwritten or staged.

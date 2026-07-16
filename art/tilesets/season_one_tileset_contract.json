@@ -1,6 +1,6 @@
 {
   "schema": "badger-grapple-tileset-contract/v1",
-  "version": 4,
+  "version": 5,
   "cellSize": 32,
   "logicalCellSize": 16,
   "renderScale": 2,
@@ -13,7 +13,7 @@
     "visibleCollisionCoverage": 0.55,
     "doorFootprint": [1, 1],
     "imagegenSourceRequired": true,
-    "minimumPreparedImagegenAssets": 84,
+    "minimumPreparedImagegenAssets": 115,
     "exactNearestNeighborScale": true,
     "materialSpecificTransitions": true,
     "quietGroundPalette": true,
@@ -108,6 +108,10 @@
     "town_landmarks": {
       "minimum": 6,
       "required": ["field_house_arena_exterior", "kohl_arena_exterior", "nationals_arena_exterior", "bascom_hall_exterior", "wisconsin_capitol_exterior", "brittingham_boats_exterior"]
+    },
+    "bascom_landmarks": {
+      "minimum": 4,
+      "required": ["bascom_lincoln_statue", "bascom_memorial_balustrade", "bascom_stair_landing", "bascom_history_marker"]
     },
     "ordinary_buildings": {
       "minimum": 19,

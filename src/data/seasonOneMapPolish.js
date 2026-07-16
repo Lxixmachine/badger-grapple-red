@@ -84,24 +84,6 @@ export const SEASON_ONE_MAP_POLISH = {
       actor('state_official', 'official', 40, 9, 'left', 'Capitol Square begins beyond this block.')
     ]
   },
-  bascom_hill: {
-    objects: [
-      stamp('bascom_oak_w', 'tree_oak_a', 3, 11, 2, 3),
-      stamp('bascom_oak_e', 'tree_oak_b', 13, 11, 2, 3),
-      stamp('bascom_pine_w', 'tree_pine', 5, 14, 2, 3),
-      stamp('bascom_pine_e', 'tree_pine_b', 11, 14, 2, 3),
-      stamp('bascom_bench_w', 'wood_bench', 4, 7, 3, 2),
-      stamp('bascom_bench_e', 'wood_bench', 11, 7, 3, 2),
-      stamp('bascom_lamp_w', 'campus_lamp', 6, 10, 1, 2),
-      stamp('bascom_lamp_e', 'campus_lamp', 11, 10, 1, 2),
-      stamp('bascom_plaque', 'blank_plaque', 8, 8, 2, 2)
-    ],
-    actors: [
-      actor('professor_actor', 'coach', 8, 6, 'down', 'The Professor: Good wrestlers solve the position before they attack.'),
-      actor('bascom_student', 'student', 9, 10, 'down', 'The statue remembers every climb.'),
-      actor('bascom_scout', 'scout', 4, 10, 'right', 'This hill is optional. The lesson is not.')
-    ]
-  },
   capitol_square: {
     objects: [
       stamp('capitol_oak_sw', 'tree_oak_a', 4, 17, 2, 3),

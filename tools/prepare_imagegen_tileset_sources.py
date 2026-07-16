@@ -169,6 +169,17 @@ BOARDS = {
             ("shoreline_cluster", (64, 32), "contain", 32),
         ],
     },
+    "bascom_landmarks": {
+        "path": SOURCE_DIR / "season_one_bascom_landmarks_source_v1.png",
+        "columns": 2,
+        "rows": 2,
+        "entries": [
+            ("bascom_lincoln_statue", (32, 48), "contain", 32),
+            ("bascom_memorial_balustrade", (64, 32), "contain", 32),
+            ("bascom_stair_landing", (64, 32), "contain", 32),
+            ("bascom_history_marker", (32, 32), "contain", 28),
+        ],
+    },
 }
 
 
@@ -301,17 +312,27 @@ def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
 
     if material == "brick":
         course_height = 4
-        for y in range(0, rgba.height, course_height):
-            draw.line((0, y, rgba.width - 1, y), fill=seam)
-            offset = 0 if (y // course_height) % 2 == 0 else 4
+        for y in range(course_height - 1, rgba.height - 1, course_height):
+            draw.line((1, y, rgba.width - 2, y), fill=seam)
+            course = y // course_height
+            offset = 4 if course % 2 == 0 else 8
             for x in range(offset, rgba.width, 8):
-                draw.line((x, y + 1, x, min(rgba.height - 1, y + course_height - 1)), fill=seam)
+                draw.line((x, y + 1, x, min(rgba.height - 2, y + course_height)), fill=seam)
+    elif material == "stone":
+        # Staggered flagstones cross the source-cell boundary without drawing
+        # a frame around it. Repeated 32px map cells therefore read as one
+        # paved field instead of a visible gameplay grid.
+        for y in (5, 11):
+            draw.line((1, y, rgba.width - 2, y), fill=seam)
+        for x in (6,):
+            draw.line((x, 1, x, 4), fill=seam)
+        for x in (3, 11):
+            draw.line((x, 6, x, 10), fill=seam)
+        for x in (8,):
+            draw.line((x, 12, x, rgba.height - 2), fill=seam)
     else:
-        slab = 8 if material == "concrete" else 6
-        for y in range(0, rgba.height, slab):
-            draw.line((0, y, rgba.width - 1, y), fill=seam)
-        for x in range(0, rgba.width, slab):
-            draw.line((x, 0, x, rgba.height - 1), fill=seam)
+        draw.line((1, 7, rgba.width - 2, 7), fill=seam)
+        draw.line((7, 1, 7, rgba.height - 2), fill=seam)
 
     # Preserve only a few of the generated panel's darkest authored marks as
     # scuffs. Seams remain dominant and the texture cannot devolve into noise.
@@ -323,7 +344,6 @@ def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
     candidates.sort()
     for _luminance, y, x in candidates[:max(1, rgba.width * rgba.height // 50)]:
         output.putpixel((x, y), dark)
-    draw.rectangle((0, 0, rgba.width - 1, rgba.height - 1), outline=seam)
     return output
 
 

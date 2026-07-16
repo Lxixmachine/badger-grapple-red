@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: FireRed-informed town-composition revision 2 in v21.65.
+Status: production-grid rollout through Bascom Hill in v22.16.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is
@@ -25,20 +25,20 @@ are explicit story-transition planes.
 
 | Order | Area | Role | Origin | Size | Camera reviews |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Camp Randall | Home town | 3,0 | 24x20 | 4 |
+| 1 | Camp Randall | Home town | -9,-11 | 48x31 | 4 |
 | 2 | R1 - First Walk | Route | 6,20 | 18x24 | 3 |
 | 3 | Field House Town | Town 1 | -6,44 | 40x28 | 7 |
 | 4 | Lakeshore Path | Branch route | -62,54 | 56x14 | 6 |
 | 5 | Picnic Point | Badge venue | -110,52 | 48x18 | 5 |
 | 6 | State Street | R2 | 34,50 | 44x18 | 5 |
-| 7 | Bascom Hill | Optional venue | 48,32 | 18x18 | 3 |
+| 7 | Bascom Hill | Optional venue | 48,32 | 18x18 | 4 |
 | 8 | Capitol Square | Town 2 | 78,44 | 40x28 | 7 |
 | 9 | Monona Shore | R3 | 90,72 | 18x24 | 3 |
 | 10 | Kohl Center District | Town 3 | 78,96 | 40x28 | 8 |
 | 11 | Airport | Story transition | separate | 15x10 | 1 |
 | 12 | St. Louis Nationals | Town 4 | separate | 42x30 | 7 |
 
-The atlas contains 54 exact camera-review windows. Developed towns after Camp
+The atlas contains 55 exact camera-review windows. Developed towns after Camp
 Randall contain the same 5x4 Trainer's Room and Bucky's Locker Room exterior
 footprints, centered door grammar, and canonical interiors. Their local
 placement changes; their recognition language does not.
@@ -82,9 +82,16 @@ Review the package in this order:
 
 ## Approval State
 
-All twelve exteriors and twelve interiors are blockouts. None is approved for
-final art yet. Kohl Center's non-arena town X-factor remains an explicit Tony
+Camp Randall, R1, Field House Town, Lakeshore Path, Picnic Point, and Bascom
+Hill now use the production metatile behavior grid. State Street, Capitol
+Square, Monona Shore, Kohl Center, Airport, and St. Louis remain layout
+blockouts. Kohl Center's non-arena town X-factor remains an explicit Tony
 decision. No artist or agent should infer a landmark merely to fill that space.
+
+Bascom Hill is the first optional venue rebuilt as a three-camera vertical
+climb: south arrival, Lincoln terrace, and Bascom Hall crown. Its generated
+landmarks are normalized to exact stamps; monument collision belongs only to
+the pedestal cells, and the two bypasses remain traversable with actors active.
 
 After an area is approved, its art package is built from shared terrain and
 service kits plus grid-native bespoke structures. Lower pixels, upper

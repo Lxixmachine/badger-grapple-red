@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v7.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v8.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
 GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
@@ -760,6 +760,34 @@ def build() -> dict:
             minimum_coverage=0.08,
         )
 
+    bascom_landmark_specs = [
+        (
+            "bascom_lincoln_statue", "Lincoln Monument", 2, 3,
+            ["..", "..", "##"], "bascom_monument",
+        ),
+        (
+            "bascom_memorial_balustrade", "Bascom Memorial Terrace", 4, 2,
+            ["....", "####"], "terrace_seating",
+        ),
+        (
+            "bascom_stair_landing", "Bascom Limestone Stair", 4, 2,
+            ["....", "...."], "elevation_access",
+        ),
+        (
+            "bascom_history_marker", "Bascom History Marker", 2, 2,
+            ["..", "##"], "campus_history",
+        ),
+    ]
+    for stamp_id, name, width, height, mask, semantic in bascom_landmark_specs:
+        image = export_2x(source_asset("bascom_landmarks", stamp_id))
+        register_stamp(
+            stamp_id, name, "bascom_landmarks",
+            image, width, height, mask,
+            tags=["bascom_landmark", "imagegen_direct", "authored16", "grid_native"],
+            semantic_behavior=semantic,
+            minimum_coverage=0.08,
+        )
+
     arena_mat_specs = [
         ("field_house_competition_mat", "Field House Competition Mat"),
         ("capitol_exhibition_mat", "Capitol Exhibition Mat"),
@@ -1110,8 +1138,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-world-tileset/v5",
-        "version": 7,
-        "status": "season-one-route-landmark-pixel-kit",
+        "version": 8,
+        "status": "season-one-bascom-landmark-pixel-kit",
         "cellSize": cell,
         "artPipeline": {
             "logicalCellSize": LOGICAL_CELL,

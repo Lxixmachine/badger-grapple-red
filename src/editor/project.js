@@ -351,6 +351,9 @@ function sourceStampId(owner, group, layout) {
     kohl_arena: 'kohl_arena_exterior',
     nationals_arena: 'nationals_arena_exterior',
     bascom_hall: 'bascom_hall_exterior',
+    abe_statue: 'bascom_lincoln_statue',
+    memorial_terrace: 'bascom_memorial_balustrade',
+    history_marker: 'bascom_history_marker',
     wisconsin_capitol: 'wisconsin_capitol_exterior',
     brittingham_boats: 'brittingham_boats_exterior',
     gateway_arch: 'gateway_arch_landmark'

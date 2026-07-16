@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "status": "production-pilot",
   "layoutId": "camp_randall",
-  "layoutRevision": 10,
+  "layoutRevision": 11,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "law": "Every solid gameplay cell must visibly read as occupied. Collision comes from seasonOneLayouts.json; this manifest only assigns original art to those owners. Roof and trim pixels may decorate an owner but may not silently expand collision.",
