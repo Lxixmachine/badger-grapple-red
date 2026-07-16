@@ -60,29 +60,6 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
     ]
   },
-  capitol_square: {
-    objects: [
-      stamp('capitol_oak_sw', 'tree_oak_a', 4, 17, 2, 3),
-      stamp('capitol_oak_se', 'tree_oak_b', 34, 12, 2, 3),
-      stamp('capitol_tree_w', 'tree_ornamental', 7, 10, 1, 2),
-      stamp('capitol_tree_e', 'tree_ornamental', 32, 12, 1, 2),
-      stamp('capitol_lamp_nw', 'campus_lamp', 10, 3, 1, 2),
-      stamp('capitol_lamp_ne', 'campus_lamp', 29, 3, 1, 2),
-      stamp('capitol_lamp_sw', 'campus_lamp', 10, 17, 1, 2),
-      stamp('capitol_lamp_se', 'campus_lamp', 29, 17, 1, 2),
-      stamp('capitol_bench_w', 'wood_bench', 4, 19, 3, 2),
-      stamp('capitol_bench_e', 'wood_bench', 33, 15, 3, 2),
-      stamp('capitol_banner_w', 'banner_pole', 17, 14, 1, 2),
-      stamp('capitol_banner_e', 'banner_pole', 23, 14, 1, 2),
-      stamp('capitol_directory', 'campus_sign', 25, 21, 3, 2)
-    ],
-    actors: [
-      actor('capitol_booster', 'manager', 9, 15, 'right', 'I can get you onto Monona. Earn the voucher first.'),
-      actor('capitol_trainer', 'trainer', 5, 7, 'down', "The Trainer's Room is northwest of the square."),
-      actor('capitol_shopkeeper', 'student', 31, 20, 'right', "Bucky's Locker Room is southeast."),
-      actor('capitol_citizen', 'student', 13, 18, 'up', 'The square is a loop. Every landmark returns you to the axis.', {patrol: {axis: 'horizontal', radius: 1, interval: 1700}})
-    ]
-  },
   monona_shore: {
     objects: [
       stamp('monona_rack', 'kayak_rack', 11, 5, 3, 2),

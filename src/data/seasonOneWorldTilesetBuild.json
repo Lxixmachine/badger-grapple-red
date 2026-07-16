@@ -1,7 +1,7 @@
 {
   "schema": "badger-grapple-world-tileset/v5",
-  "version": 8,
-  "status": "season-one-bascom-landmark-pixel-kit",
+  "version": 9,
+  "status": "season-one-capitol-civic-ring-pixel-kit",
   "cellSize": 32,
   "artPipeline": {
     "logicalCellSize": 16,
@@ -11,7 +11,7 @@
     "pixelPerfect": true
   },
   "atlas": {
-    "path": "./assets/metatiles/season_one_world_tileset_v8.png",
+    "path": "./assets/metatiles/season_one_world_tileset_v9.png",
     "columns": 16,
     "visualCount": 2428,
     "sha256": "21b6cdd07f414fde2be8f7c7276a34fc450176596d8585999ba50f92b4e1232a",

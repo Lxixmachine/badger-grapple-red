@@ -36,7 +36,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 12, metatileVersion: 16});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 17});
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'brick',
     connectedComponentCount: 1,
@@ -156,8 +156,6 @@ test('every planned location is grid-native, editable, and linked to its playtes
     'state_street:south_storefront_east': 'state_facade_5x5',
     'capitol_square:capitol_hotel': 'capitol_hotel_exterior',
     'capitol_square:civic_offices': 'civic_offices_exterior',
-    'capitol_square:north_city_edge': 'city_edge_horizontal',
-    'capitol_square:east_city_edge': 'city_edge_vertical',
     'kohl_center:transit_hotel': 'transit_hotel_exterior',
     'st_louis:team_hotel': 'team_hotel_exterior',
     'st_louis:riverfront_hotel': 'riverfront_hotel_exterior'
@@ -366,7 +364,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 12, metatileVersion: 16});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 17});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

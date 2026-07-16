@@ -18,7 +18,7 @@ async function openDemo(page, query = '') {
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('#game canvas')).toBeVisible();
   await expect(page).toHaveTitle('Badger Grapple Red - Camp Randall Demo');
-  await expect(page.locator('#note')).toHaveText('v22.17 State Street Promenade');
+  await expect(page.locator('#note')).toHaveText('v22.18 Capitol Civic Ring');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || []))
     .toContain('OverworldScene');
   await expect.poll(async () => (await state(page))?.area).toBe('camp_randall');

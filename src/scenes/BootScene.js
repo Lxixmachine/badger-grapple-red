@@ -1,4 +1,4 @@
-import {chooseStarter,defaultState,loadState,saveState} from '../systems/save.js';
+import {chooseStarter,defaultState,loadState,resetState,saveState} from '../systems/save.js';
 import {setVirtualHandler} from '../systems/ui.js';
 import {LAYERED_UPPER_TEXTURES} from '../data/layeredMaps.js';
 import {NPC_LOOKS} from '../data/npcLooks.js';
@@ -37,6 +37,9 @@ export class BootScene extends Phaser.Scene{
     this.anims.create({key:'npc-idle-up',frames:[{key:'npc',frame:10}],frameRate:1,repeat:0});
     setVirtualHandler(this);
     const params=new URLSearchParams(window.location.search);
+    // Test resets must happen before any scene reads or writes the save. Clearing
+    // storage after Phaser starts leaves the active scene and persistence split.
+    if(params.has('test')&&params.has('reset'))resetState();
     const campDemoMode=window.BADGER_ENTRY_MODE==='camp-randall'||params.get('demo')==='camp-randall';
     if(campDemoMode){
       const state=loadState();
@@ -103,6 +106,7 @@ export class BootScene extends Phaser.Scene{
       const area=allowed.includes(params.get('area'))?params.get('area'):'camp_randall';
       state.area=area;
       state.pos=params.has('x')&&params.has('y')?{x:Number(params.get('x')),y:Number(params.get('y'))}:null;
+      if(['up','down','left','right'].includes(params.get('facing')))state.facing=params.get('facing');
       state.message='';
       saveState(state);
       this.scene.start('OverworldScene');

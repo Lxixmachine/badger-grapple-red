@@ -3205,3 +3205,26 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   material. Do not regenerate, overwrite, stage, or revert them until Tony
   explicitly reconciles that draft. The broad validator reports only the known
   world-composition checksum mismatch caused by those unstaged edits.
+
+## Codex Capitol Civic Ring Production Grid (v22.18)
+
+- Capitol Square is now a canonical 40x28 metatile-behavior map with a quiet
+  State Street arrival buffer, a complete civic circulation ring, a centered
+  Capitol-to-Monona axis, exact service aprons, and a visibly open south gate.
+  Trainer's Room, Bucky's Locker Room, the hotel, Civic Offices, and the
+  Wisconsin Capitol each use one exact door cell and honest solid ownership.
+- All exterior objects, actors, events, camera reviews, and reciprocal State
+  Street/Monona thresholds are authored in `seasonOneLayouts.json`; the old
+  duplicate Capitol polish layer and redundant exterior story actors are gone.
+- The Capitol story now follows one ordered chain: the interior booster grants
+  the Kayak Voucher, the Senator grants the Capitol Badge, and the exterior
+  Capitol staff member then grants the Bus Pass. Automated play physically
+  verifies both route seams and the gated Monona exit.
+- Boot-time test reset now occurs before any scene reads or writes save data,
+  and requested test facing is preserved. This removes a real intermittent
+  state race rather than masking it in individual tests.
+- The complete sequential release suite passes 116/116 tests. Current authority
+  is layout revision 13, world tileset v9, Camp/Season metatile atlas v17, and
+  app v22.18. The known local broad-validator failure is still limited to the
+  protected State Street composition draft; do not touch those six user-owned
+  files while continuing production work.

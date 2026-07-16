@@ -59,8 +59,7 @@ const ACTOR_STORY_KEYS = {
   deion_actor: 'state_street:deion_throw',
   state_thrower: 'state_street:throw_trainer_two',
   professor_actor: 'bascom_hill:professor_wall',
-  capitol_booster: 'capitol_square:booster_speech',
-  senator_actor: 'capitol_square:senator_badge',
+  capitol_staff: 'capitol_square:bus_pass',
   boat_attendant: 'monona_shore:voucher_redeem',
   monona_wrestler: 'monona_shore:water_trainer',
   conference_official: 'kohl_center:conference_checkin',
@@ -96,7 +95,6 @@ const BATTLES = {
   'state_street:throw_trainer_two': {team: [['whizzkid', 13], ['lockthrow', 13]], trainerName: 'State Street Thrower', battleType: 'trainer', defeatKey: 'state_thrower', reward: {grit: 8, rep: 7}},
   'bascom_hill:professor_wall': {team: [['whizzkid', 15], ['professor', 16]], trainerName: 'The Professor', battleType: 'trainer', defeatKey: 'bascom_professor', reward: {grit: 14, rep: 12}},
   'capitol_interior:senator': {team: [['lockthrow', 15], ['senator', 16]], trainerName: 'The Senator', battleType: 'gym', defeatKey: 'capitol_senator', badge: 'Capitol Badge', requiresKeyItem: 'kayakVoucher', requirementMessage: 'Hear the Capitol booster before challenging the Senator.', reward: {grit: 16, rep: 14}},
-  'capitol_square:senator_badge': {team: [['lockthrow', 15], ['senator', 16]], trainerName: 'The Senator', battleType: 'gym', defeatKey: 'capitol_senator', badge: 'Capitol Badge', requiresKeyItem: 'kayakVoucher', requirementMessage: 'The Senator is waiting inside the Capitol.', reward: {grit: 16, rep: 14}},
   'monona_shore:water_trainer': {team: [['riverroller', 17], ['lakechain', 17]], trainerName: 'Shoreline Wrestler', battleType: 'trainer', defeatKey: 'monona_trainer', reward: {grit: 10, rep: 8}},
   'kohl_bracket_floor:round_one': {team: [['tilttech', 18], ['pacecommand', 18]], trainerName: 'Conference Quarterfinalist', battleType: 'tournament', defeatKey: 'kohl_round_one', requiresBadges: ['Field House Badge', 'Picnic Point Badge', 'Capitol Badge'], requirementMessage: 'Bring the Field House, Picnic Point, and Capitol credentials to the bracket.', reward: {grit: 12, rep: 10}},
   'kohl_bracket_floor:round_two': {team: [['chainmaster', 19], ['drillveteran', 19]], trainerName: 'Conference Semifinalist', battleType: 'tournament', defeatKey: 'kohl_round_two', requiresDefeat: 'kohl_round_one', requirementMessage: 'Win the conference quarterfinal first.', reward: {grit: 13, rep: 11}},
@@ -769,14 +767,20 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       case 'lakeshore_path:first_recruit_zone':
       case 'lakeshore_path:blue_chip_cove':
         return this.startScout();
-      case 'capitol_square:booster_speech':
       case 'capitol_interior:booster':
-        if (!this.state.keyItems.kayakVoucher) {
-          grantKeyItem(this.state, 'kayakVoucher');
-          this.setObjective('Challenge The Senator inside the Capitol.');
-          this.persistState();
+        if (this.state.keyItems.kayakVoucher) {
+          return this.showMessage('Booster: The Kayak Voucher is yours. The Senator is waiting on the exhibition mat.');
         }
-        return this.showMessage('Booster: This Kayak Voucher opens Brittingham and the Monona crossing.');
+        return this.showMessage('Booster: You want to know why Capitol wrestling matters?', () => {
+          this.showMessage('Booster: I have watched Badgers win from the old Field House to the biggest stages in the country.', () => {
+            this.showMessage('Booster: Talent gets applause. Position, preparation, and loyalty build a program.', () => {
+              grantKeyItem(this.state, 'kayakVoucher');
+              this.setObjective('Challenge The Senator inside the Capitol.');
+              this.persistState();
+              this.showMessage('You received the Kayak Voucher! It opens Brittingham Boats and the Monona crossing.');
+            });
+          });
+        });
       case 'capitol_square:bus_pass':
         if (!this.hasBadge('Capitol Badge')) return this.showMessage("The Senator's staff issues the Bus Pass after the Capitol Badge.");
         if (!this.state.keyItems.busPass) {
@@ -949,7 +953,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     const destinations = [
       {id: 'campRandall', name: 'Camp Randall', area: 'camp_randall', pos: {x: 23, y: 25}},
       {id: 'fieldHouse', name: 'Field House', area: 'field_house', pos: {x: 20, y: 8}},
-      {id: 'capitolSquare', name: 'Capitol Square', area: 'capitol_square', pos: {x: 9, y: 14}},
+      {id: 'capitolSquare', name: 'Capitol Square', area: 'capitol_square', pos: {x: 8, y: 14}},
       {id: 'kohlCenter', name: 'Kohl Center', area: 'kohl_center', pos: {x: 20, y: 18}}
     ];
     const visited = this.state.visitedMaps || {};
