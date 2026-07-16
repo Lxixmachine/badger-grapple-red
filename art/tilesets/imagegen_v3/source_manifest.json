@@ -1,10 +1,11 @@
 {
   "schema": "badger-grapple-imagegen-tileset-sources/v1",
-  "version": 2,
+  "version": 3,
   "logicalCellSize": 16,
   "chromaKey": "#ff00ff",
   "sourceBoards": {
     "ground": "9824dd2720145de8d6373d1ff441a5ee53b2ee04919cd6129cd6459baafe3621",
+    "ground:dirt": "b11b7a9cdb276ac2dbe142eb7a221486cb0e29c2e78cc2216682d30dd93f03ab",
     "vegetation": "97530fd56608cec72de3458a4188af36e04ced09ea263685af1d8050b092aaee",
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
     "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
@@ -64,7 +65,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "fe38a075de3d89aec51696dafbc909a3b1e15c9c9c61d7fbd786c68c5e0a1494",
+      "sha256": "6135cf8de0919cfee19781bfe4c7f83bf262474922183b15bd701c450b78f846",
       "sourcePanel": 2
     },
     "brick": {

@@ -3,7 +3,7 @@
   "status": "design-authority",
   "source": "GAME_VISION.md + SEASON_ONE_SYNOPSIS.md + docs/VISUAL_SLICE_CONTRACT.md + docs/SEASON_ONE_LAYOUT_ATLAS.md + docs/FIRERED_TOWN_COMPOSITION_AUDIT.md",
   "layoutSource": "src/data/seasonOneLayouts.json",
-  "layoutRevision": 7,
+  "layoutRevision": 8,
   "productionPilot": "camp_randall",
   "tileSize": 32,
   "camera": {

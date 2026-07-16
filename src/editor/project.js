@@ -450,6 +450,20 @@ function plannedExterior(mapId, layout, objectAssets) {
       objects.push(built.object);
     }
   }
+  for (const decoration of layout.decorations || []) {
+    const sourceStamp = metatileBuild.stamps[decoration.stamp];
+    if (!sourceStamp) throw new Error(`${mapId}.${decoration.id}: missing layout stamp ${decoration.stamp}`);
+    const owner = {
+      ...decoration,
+      kind: decoration.kind || 'decoration',
+      editorStampId: decoration.stamp,
+      width: decoration.width || sourceStamp.width,
+      height: decoration.height || sourceStamp.height
+    };
+    const built = plannedObject(mapId, owner, 'decorations', layout);
+    objectAssets.push(built.asset);
+    objects.push(built.object);
+  }
   const polish = mapPolish(mapId);
   for (const owner of polish.objects || []) {
     const built = plannedObject(mapId, owner, 'decorations', layout);
@@ -478,7 +492,8 @@ function plannedExterior(mapId, layout, objectAssets) {
     connections: deepClone(layout.connections || []),
     cameraReviews: deepClone(layout.cameraReviews || []),
     start: deepClone(layout.start || null),
-    exit: null
+    exit: null,
+    gridAuthority: layout.gridAuthority || 'metatile-behavior-v1'
   };
 }
 

@@ -159,6 +159,14 @@ BOARDS = {
 }
 
 
+# Route dirt is a dedicated Imagegen source instead of the dense ground-board
+# panel. The compiler still owns logical sizing, palette, edge safety, and
+# repetition discipline; Imagegen owns the sparse mark placement.
+GROUND_SOURCE_OVERRIDES = {
+    "dirt": SOURCE_DIR / "season_one_route_dirt_source_v1.png",
+}
+
+
 # Imagegen establishes the material texture and value grouping. The compiler
 # reduces every ground panel to a declared material ramp so generated
 # noise cannot leak into the game, while preserving substantially more authored
@@ -168,7 +176,7 @@ GROUND_RAMPS = {
     # color is selected sparsely below instead of globally posterized.
     "grass": ((73, 145, 101, 255), (112, 185, 126, 255)),
     "mowed_grass": ((78, 146, 94, 255), (109, 177, 112, 255), (143, 202, 136, 255)),
-    "dirt": ((139, 112, 68, 255), (187, 156, 98, 255), (226, 204, 150, 255)),
+    "dirt": ((198, 170, 108, 255), (225, 204, 151, 255), (241, 224, 181, 255)),
     # Campus walks are warm limestone pavers. Cardinal belongs to identity
     # objects, never to the ground field beneath them.
     "brick": ((152, 136, 105, 255), (197, 178, 139, 255), (235, 220, 181, 255)),
@@ -236,6 +244,41 @@ def quiet_grass(source: Image.Image, ramp) -> Image.Image:
     return output
 
 
+def quiet_dirt(source: Image.Image, ramp) -> Image.Image:
+    """Keep Imagegen's strongest local marks without retaining its gradient."""
+    rgba = source.convert("RGBA")
+    dark, base, light = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", rgba.size, base)
+    candidates: list[tuple[int, int, int]] = []
+    for y in range(1, rgba.height - 1):
+        for x in range(1, rgba.width - 1):
+            center = _luma(rgba.getpixel((x, y)))
+            neighbors = [
+                _luma(rgba.getpixel((nx, ny)))
+                for ny in range(y - 1, y + 2)
+                for nx in range(x - 1, x + 2)
+                if nx != x or ny != y
+            ]
+            candidates.append((center - sum(neighbors) // len(neighbors), y, x))
+
+    selected: list[tuple[int, int]] = []
+
+    def place(ordered: list[tuple[int, int, int]], color, count: int) -> None:
+        placed = 0
+        for contrast, y, x in ordered:
+            if contrast == 0 or any(abs(x - px) <= 1 and abs(y - py) <= 1 for px, py in selected):
+                continue
+            output.putpixel((x, y), color)
+            selected.append((x, y))
+            placed += 1
+            if placed >= count:
+                break
+
+    place(sorted((entry for entry in candidates if entry[0] < 0), key=lambda entry: entry[0]), dark, 4)
+    place(sorted((entry for entry in candidates if entry[0] > 0), key=lambda entry: entry[0], reverse=True), light, 4)
+    return output
+
+
 def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
     """Keep Imagegen's material read while replacing micro-noise with placed seams."""
     rgba = source.convert("RGBA")
@@ -276,6 +319,8 @@ def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image
     ramp = GROUND_RAMPS.get(asset_id)
     if asset_id == "grass" and ramp:
         return quiet_grass(image, ramp)
+    if asset_id == "dirt" and ramp:
+        return quiet_dirt(image, ramp)
     if asset_id in {"brick", "concrete", "stone"} and ramp:
         return disciplined_paver(image, ramp, asset_id)
     return posterize_to_ramp(image, ramp) if ramp else image
@@ -449,13 +494,20 @@ def build() -> dict:
             raise SystemExit(f"{category}: expected {expected} panel definitions")
         sources[category] = sha256(path)
         for index, (asset_id, size, mode, colors) in enumerate(spec["entries"]):
-            panel = extract_panel(
-                board,
-                spec["columns"],
-                spec["rows"],
-                index,
-                trim_noise=category in {"ground", "vegetation"},
-            )
+            override_path = GROUND_SOURCE_OVERRIDES.get(asset_id) if category == "ground" else None
+            if override_path:
+                if not override_path.exists():
+                    raise SystemExit(f"Missing Imagegen ground source override: {override_path}")
+                sources[f"{category}:{asset_id}"] = sha256(override_path)
+                panel = extract_panel(Image.open(override_path).convert("RGBA"), 1, 1, 0)
+            else:
+                panel = extract_panel(
+                    board,
+                    spec["columns"],
+                    spec["rows"],
+                    index,
+                    trim_noise=category in {"ground", "vegetation"},
+                )
             normalized = normalize(panel, size, mode, colors)
             if category == "ground":
                 normalized = discipline_ground_material(
@@ -497,7 +549,7 @@ def build() -> dict:
 
     manifest = {
         "schema": "badger-grapple-imagegen-tileset-sources/v1",
-        "version": 2,
+        "version": 3,
         "logicalCellSize": 16,
         "chromaKey": "#ff00ff",
         "sourceBoards": sources,

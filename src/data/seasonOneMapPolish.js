@@ -60,32 +60,6 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
     ]
   },
-  r1: {
-    objects: [
-      stamp('r1_forest_w_0', 'forest_edge_west', 0, 0, 2, 6),
-      stamp('r1_forest_w_1', 'forest_edge_west_b', 0, 6, 2, 6),
-      stamp('r1_forest_w_2', 'forest_edge_west', 0, 12, 2, 6),
-      stamp('r1_forest_w_3', 'forest_edge_west_b', 0, 18, 2, 6),
-      stamp('r1_forest_e_0', 'forest_edge_east', 16, 0, 2, 6),
-      stamp('r1_forest_e_1', 'forest_edge_east_b', 16, 6, 2, 6),
-      stamp('r1_forest_e_2', 'forest_edge_east', 16, 12, 2, 6),
-      stamp('r1_forest_e_3', 'forest_edge_east_b', 16, 18, 2, 6),
-      stamp('r1_grove_nw', 'forest_grove_small', 2, 0, 5, 4),
-      stamp('r1_grove_ne', 'forest_grove_small', 11, 0, 5, 4),
-      stamp('r1_grove_mid_e', 'forest_grove_small', 11, 8, 5, 4),
-      stamp('r1_grove_south_w', 'forest_grove_small', 1, 15, 5, 4),
-      stamp('r1_training_mat', 'outdoor_wrestling_mat', 9, 14, 4, 3),
-      stamp('r1_rest_bench', 'wood_bench', 5, 20, 3, 2),
-      stamp('r1_rock_cluster', 'rock_cluster', 12, 21, 2, 1),
-      stamp('r1_route_sign', 'campus_sign', 10, 11, 3, 2)
-    ],
-    actors: [
-      actor('rex_route_one', 'rex', 6, 6, 'right', 'Rex: One more wrestle-off. No excuses.'),
-      actor('recruiting_guide', 'scout', 6, 9, 'down', 'A singlet turns a prospect into a recruit.'),
-      actor('route_wrestler_one', 'wrestler', 10, 15, 'left', 'Every route teaches a different position.'),
-      actor('route_wrestler_two', 'athlete', 12, 18, 'up', 'The Field House is just ahead.')
-    ]
-  },
   field_house: {
     objects: [
       stamp('field_lamp_west', 'campus_lamp', 8, 7, 1, 2),

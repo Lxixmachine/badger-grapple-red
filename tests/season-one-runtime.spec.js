@@ -193,6 +193,44 @@ test('first assigned Field House arrival reveals the venue before returning cont
   expect((await sceneState(page)).inputLocked).toBe(false);
 });
 
+test('Camp Randall, R1, and Field House share exact two-cell transition lanes', async ({page}) => {
+  await bootMap(page, 'camp_randall', {x: 23, y: 30});
+  await page.evaluate(() => {
+    const scene = window.badgerGame.scene.getScene('OverworldScene');
+    scene.state.flags.openingRecoveryDone = true;
+    scene.state.flags.assignment = true;
+  });
+
+  await press(page, 'down');
+  await expect.poll(async () => (await sceneState(page))?.facing).toBe('down');
+  await press(page, 'down');
+  await expect.poll(async () => (await sceneState(page))?.area).toBe('r1');
+  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 8, y: 0});
+  await expect.poll(async () => (await sceneState(page))?.inputLocked).toBe(false);
+
+  await press(page, 'up');
+  await expect.poll(async () => (await sceneState(page))?.facing).toBe('up');
+  await press(page, 'up');
+  await expect.poll(async () => (await sceneState(page))?.area).toBe('camp_randall');
+  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 23, y: 30});
+
+  await bootMap(page, 'r1', {x: 8, y: 23});
+  if ((await sceneState(page)).facing !== 'down') {
+    await press(page, 'down');
+    await expect.poll(async () => (await sceneState(page))?.facing).toBe('down');
+  }
+  await press(page, 'down');
+  await expect.poll(async () => (await sceneState(page))?.area).toBe('field_house');
+  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 20, y: 0});
+  await expect.poll(async () => (await sceneState(page))?.inputLocked).toBe(false);
+
+  await press(page, 'up');
+  await expect.poll(async () => (await sceneState(page))?.facing).toBe('up');
+  await press(page, 'up');
+  await expect.poll(async () => (await sceneState(page))?.area).toBe('r1');
+  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 8, y: 23});
+});
+
 test('exterior venue doors enter and return through their exact grid cell', async ({page}) => {
   await bootMap(page, 'field_house', {x: 20, y: 17});
   await press(page, 'a');

@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.13 Route One Production)
+
+Route One is now the first production route built from the same grid-owned
+contract as Camp Randall. `seasonOneLayouts.json` owns its variable-width dirt
+trail, arrival meadow, Rex lesson pocket, gauntlet curve, open-mat finish,
+38 grid-aligned decorations, four story actors, and exact two-cell reciprocal
+transitions to Camp Randall and Field House. The former giant forest-border
+stamps are gone; 29 individual tree cells create readable clusters and every
+solid visual cell owns the corresponding behavior cell.
+
+The route ground is derived from a new Imagegen source but mechanically reduced
+to a quiet three-color pixel ramp before atlas construction. This keeps the path
+pale and subordinate to actors, trees, and the wrestling mat instead of reading
+as noisy gravel. Camp metatiles are v12, Season One layouts are revision 8, and
+the product label is v22.13.
+
+Phone-sized browser QA covered Camp Randall -> Route One -> Field House and the
+reciprocal return lanes. The dedicated Route One suite verifies layout ownership,
+behavior completeness, route-width variation, actor approachability, and start
+to exit reachability with actors treated as blockers. Build, map lint, balance,
+and the full Chromium suite pass. `npm run validate` still stops only on Tony's
+pre-existing dirty State Street composition hash mismatch; do not rebuild,
+stage, or revert those separate files.
+
+Next production slice: rebuild Field House town around its story purpose and
+arrival buffer, then obtain Tony's phone verdict on Route One's composition.
+
 ## Latest Codex Turn (v22.12 Grid Production)
 
 Camp Randall is now the production template for Season One rather than a

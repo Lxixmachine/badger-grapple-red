@@ -14,7 +14,7 @@
     "path": "./assets/metatiles/season_one_world_tileset_v5.png",
     "columns": 16,
     "visualCount": 2316,
-    "sha256": "b6d9984e3af2c7a1b2bbb3ab667db1e649e22b3f060892a851d862002642822c",
+    "sha256": "acdfea59f8cd50722ef76e6eeda4608803faab0f327c4f32a007b45954aa2e0c",
     "entries": [
       {
         "index": 0,
@@ -111891,13 +111891,13 @@
   },
   "validation": {
     "seamTest": "art/imagegen/validation/season_one_tileset_seam_test.png",
-    "seamTestSha256": "771821869238cca346f50148efb07321946a402d54044f1216bd3aff322f190d"
+    "seamTestSha256": "333898b6e3d9f22855a66a2e94abc1b1ffa937833fe37f2cbed2dadda15e8e82"
   },
   "sources": {
     "manifest": "ce655b86985fef2efea0c2fcbc03820a4fef3c265f6a14400280a6696d5954f1",
     "contract": "216804194083cd7f3fc6c222af88d02b59ae1753755e11949d50998773112537",
     "pixelArtModule": "a8c33b6ea6ecaaab2615cd226e1ef28b4cc43304b887680202806e8dcbd9b4aa",
-    "preparedImagegenManifest": "ca9cbb5403c43e1fd2064873163b9c75e95ffa5b2521f4a4167baf6575b6fe2e",
+    "preparedImagegenManifest": "c36f4618b51b84dfa50725176e95c7db95520b3457b5a07f591a23966bafc5d7",
     "preparedImagegenAssetCount": 104,
     "referenceBoards": {
       "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
