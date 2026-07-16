@@ -1,5 +1,43 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.15 Lakeshore Journey)
+
+Lakeshore Path and Picnic Point are now a continuous production route rather
+than short placeholder screens. Lakeshore is 56x14 and Picnic Point is 48x18;
+their world origins create exact reciprocal two-cell seams from Field House to
+Lakeshore and from Lakeshore to Picnic Point. Both maps use the shared 32px
+metatile behavior grid, with actor-inclusive flood-fill coverage proving that
+the full route, story events, and both exits remain reachable.
+
+The route received a dedicated original Imagegen landmark board and six
+grid-native stamps: the Lakeshore boathouse, walkable Mendota pier, Terrace
+chairs, Picnic Point fire circle, trail sign, and shoreline cluster. Their
+collision masks follow the visible footprint instead of rectangular image
+bounds. Lake Mendota is authored as real water terrain, the pier repaints
+walkable timber over it, and staggered individual trees form route edges and
+pinches without straight decorative walls. The Funk Doctor arena, recruiting
+mats, marina, fire-circle destination, NPCs, messages, and camera reviews all
+live in `seasonOneLayouts.json`; duplicate legacy map-polish actors were
+removed.
+
+Season One world tiles are v7, Camp metatiles are v14, layouts/region are
+revision 10, and the product label is v22.15. The metatile atlas now uses the
+cache-safe `camp_randall_metatiles_v14.png` filename so deployed phones cannot
+reuse the previous route art. Map Studio exposes the same route stamps and
+their exact source footprints as the live runtime.
+
+`tests/lakeshore-picnic-production.spec.js` asserts long-form scale, exact
+seams, zero solid-object overlap, full traversal with actors as blockers, and
+live transitions on both route boundaries. The full Chromium suite passes
+103/103; build, balance, and map lint pass, and the final cache-safe atlas smoke
+passes 6/6. `npm run validate` stops only on Tony's pre-existing dirty State
+Street composition hash mismatch. Do not rebuild, stage, or revert those
+separate State Street files.
+
+Next production slice: obtain Tony's live phone verdict on Lakeshore/Picnic,
+then apply this same grid-owned landmark and traversal standard to State Street
+once its separate composition draft is ready.
+
 ## Latest Codex Turn (v22.14 Field House Production)
 
 Field House is now a production-authored 40x28 town on the same 32px

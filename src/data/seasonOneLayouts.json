@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 9,
+  "revision": 10,
   "status": "season-one-production-grid",
   "contract": {
     "cellSize": 32,
@@ -33,7 +33,7 @@
       "airport",
       "st_louis"
     ],
-    "madisonBounds": {"x": -60, "y": -11, "width": 178, "height": 135},
+    "madisonBounds": {"x": -110, "y": -11, "width": 228, "height": 135},
     "transitions": [
       {"from": "kohl_center", "to": "camp_randall", "kind": "bus", "gate": "all_flight_credentials"},
       {"from": "camp_randall", "to": "airport", "kind": "cutscene", "gate": "all_flight_credentials"},
@@ -370,75 +370,202 @@
       "displayName": "Lakeshore Path",
       "kind": "route",
       "plane": "madison",
-      "origin": {"x": -36, "y": 54},
-      "size": {"width": 30, "height": 14},
-      "start": {"x": 28, "y": 7, "facing": "left"},
+      "origin": {"x": -62, "y": 54},
+      "size": {"width": 56, "height": 14},
+      "start": {"x": 55, "y": 7, "facing": "left"},
       "ground": "shore",
       "walkableMode": "paths",
+      "gridAuthority": "metatile-behavior-v1",
       "paths": [
-        {"id": "shoreline_trail", "x": 0, "y": 6, "width": 30, "height": 2, "material": "dirt"},
-        {"id": "upper_scout_loop", "x": 9, "y": 3, "width": 9, "height": 5, "material": "dirt"},
-        {"id": "lower_scout_loop", "x": 19, "y": 7, "width": 7, "height": 4, "material": "dirt"}
+        {"id": "west_gate", "x": 0, "y": 7, "width": 7, "height": 2, "material": "dirt"},
+        {"id": "west_curve", "x": 5, "y": 6, "width": 8, "height": 4, "material": "dirt"},
+        {"id": "blue_chip_bulb", "x": 10, "y": 5, "width": 10, "height": 5, "material": "dirt"},
+        {"id": "middle_narrows", "x": 18, "y": 6, "width": 8, "height": 3, "material": "dirt"},
+        {"id": "boathouse_apron", "x": 21, "y": 4, "width": 8, "height": 4, "material": "dirt"},
+        {"id": "marina_apron", "x": 27, "y": 4, "width": 9, "height": 4, "material": "dirt"},
+        {"id": "marina_spur", "x": 30, "y": 2, "width": 2, "height": 5, "material": "stone"},
+        {"id": "pier_deck", "x": 29, "y": 0, "width": 3, "height": 4, "material": "timber", "overWater": true},
+        {"id": "pier_landing", "x": 29, "y": 3, "width": 3, "height": 2, "material": "stone", "overWater": true},
+        {"id": "marina_return", "x": 34, "y": 6, "width": 8, "height": 3, "material": "dirt"},
+        {"id": "first_crossing", "x": 39, "y": 5, "width": 8, "height": 4, "material": "dirt"},
+        {"id": "arrival_bulb", "x": 45, "y": 5, "width": 8, "height": 5, "material": "dirt"},
+        {"id": "east_gate", "x": 51, "y": 7, "width": 5, "height": 2, "material": "dirt"}
       ],
       "clearings": [
-        {"id": "lake_overlook", "x": 9, "y": 2, "width": 9, "height": 5},
-        {"id": "recruiting_cove", "x": 18, "y": 7, "width": 8, "height": 4}
+        {"id": "picnic_approach", "x": 0, "y": 5, "width": 12, "height": 6},
+        {"id": "blue_chip_cove", "x": 10, "y": 4, "width": 11, "height": 7},
+        {"id": "mendota_marina", "x": 20, "y": 3, "width": 17, "height": 7},
+        {"id": "first_recruit_meadow", "x": 38, "y": 3, "width": 10, "height": 7},
+        {"id": "field_house_approach", "x": 45, "y": 4, "width": 11, "height": 7}
       ],
-      "blockers": [
-        {"id": "mendota_water", "kind": "water", "x": 0, "y": 11, "width": 30, "height": 3}
+      "waterBodies": [
+        {"id": "lake_mendota", "x": 0, "y": 0, "width": 56, "height": 4}
       ],
+      "blockers": [],
       "buildings": [],
       "landmarks": [
-        {"id": "mendota_overlook", "name": "Mendota Overlook", "kind": "route_landmark", "x": 12, "y": 2, "width": 3, "height": 2, "walkable": true}
+        {"id": "lakeshore_boathouse", "name": "Locked Lakeshore Boathouse", "kind": "route_landmark", "x": 21, "y": 0, "width": 5, "height": 5, "editorStampId": "lakeshore_boathouse", "collisionMask": ["#####", "#####", "#####", "#####", "#####"]},
+        {"id": "mendota_pier", "name": "Lake Mendota Pier", "kind": "route_landmark", "x": 29, "y": 0, "width": 3, "height": 4, "editorStampId": "lakeshore_pier", "collisionMask": ["...", "...", "...", "..."]},
+        {"id": "terrace_chairs", "name": "Terrace Chairs", "kind": "route_landmark", "x": 33, "y": 3, "width": 4, "height": 2, "editorStampId": "terrace_chair_trio", "collisionMask": ["####", "####"]}
+      ],
+      "decorations": [
+        {"id": "lake_mat_first", "name": "First Recruiting Mat", "stamp": "outdoor_wrestling_mat", "x": 41, "y": 4},
+        {"id": "lake_mat_blue_chip", "name": "Blue Chip Cove Mat", "stamp": "outdoor_wrestling_mat", "x": 12, "y": 5},
+        {"id": "lake_trail_sign_east", "stamp": "trail_sign", "x": 53, "y": 4},
+        {"id": "lake_kayak_rack", "stamp": "kayak_rack", "x": 26, "y": 2},
+        {"id": "lake_overlook_bench", "stamp": "wood_bench", "x": 15, "y": 3},
+        {"id": "lake_shore_cluster_west", "stamp": "shoreline_cluster", "x": 2, "y": 1},
+        {"id": "lake_shore_cluster_east", "stamp": "shoreline_cluster", "x": 47, "y": 1},
+        {"id": "lake_pine_north_00", "stamp": "tree_pine", "x": 6, "y": 2},
+        {"id": "lake_oak_north_01", "stamp": "tree_oak_a", "x": 9, "y": 2},
+        {"id": "lake_pine_north_02", "stamp": "tree_pine_b", "x": 18, "y": 2},
+        {"id": "lake_oak_north_03", "stamp": "tree_oak_c", "x": 38, "y": 2},
+        {"id": "lake_pine_north_04", "stamp": "tree_pine", "x": 48, "y": 2},
+        {"id": "lake_tree_south_00", "stamp": "tree_oak_a", "x": 0, "y": 10},
+        {"id": "lake_tree_south_01", "stamp": "tree_pine", "x": 2, "y": 11},
+        {"id": "lake_tree_south_02", "stamp": "tree_oak_b", "x": 5, "y": 9},
+        {"id": "lake_tree_south_03", "stamp": "tree_pine_b", "x": 8, "y": 11},
+        {"id": "lake_tree_south_04", "stamp": "tree_oak_c", "x": 11, "y": 10},
+        {"id": "lake_tree_south_05", "stamp": "tree_pine", "x": 15, "y": 11},
+        {"id": "lake_tree_south_06", "stamp": "tree_oak_a", "x": 18, "y": 9},
+        {"id": "lake_tree_south_07", "stamp": "tree_pine_b", "x": 21, "y": 11},
+        {"id": "lake_tree_south_08", "stamp": "tree_oak_b", "x": 24, "y": 10},
+        {"id": "lake_tree_south_09", "stamp": "tree_pine", "x": 27, "y": 11},
+        {"id": "lake_tree_south_10", "stamp": "tree_oak_c", "x": 30, "y": 9},
+        {"id": "lake_tree_south_11", "stamp": "tree_pine_b", "x": 33, "y": 11},
+        {"id": "lake_tree_south_12", "stamp": "tree_oak_a", "x": 36, "y": 10},
+        {"id": "lake_tree_south_13", "stamp": "tree_pine", "x": 39, "y": 11},
+        {"id": "lake_tree_south_14", "stamp": "tree_oak_b", "x": 42, "y": 9},
+        {"id": "lake_tree_south_15", "stamp": "tree_pine_b", "x": 45, "y": 11},
+        {"id": "lake_tree_south_16", "stamp": "tree_oak_c", "x": 48, "y": 10},
+        {"id": "lake_tree_south_17", "stamp": "tree_pine", "x": 51, "y": 11},
+        {"id": "lake_tree_south_18", "stamp": "tree_oak_a", "x": 54, "y": 9},
+        {"id": "lake_rocks_middle", "stamp": "rock_cluster", "x": 37, "y": 9},
+        {"id": "lake_flowers_west", "stamp": "shrub_flowering", "x": 8, "y": 5},
+        {"id": "lake_flowers_east", "stamp": "shrub_flowering_b", "x": 50, "y": 5}
+      ],
+      "actors": [
+        {"id": "lakeshore_scout", "sheet": "scout", "x": 44, "y": 8, "facing": "up", "dialogue": "Open mats are where overlooked wrestlers get noticed."},
+        {"id": "blue_chip_scout", "sheet": "athlete", "x": 17, "y": 9, "facing": "left", "dialogue": "Some recruits only appear off the main trail."},
+        {"id": "lakeshore_runner", "sheet": "student", "x": 49, "y": 8, "facing": "left", "dialogue": "Picnic Point is west along the shore.", "patrol": {"axis": "horizontal", "radius": 2, "interval": 1250}}
       ],
       "connections": [
         {"to": "picnic_point", "edge": "west", "start": 7, "span": 2, "toEdge": "east", "toStart": 9},
         {"to": "field_house", "edge": "east", "start": 7, "span": 2, "toEdge": "west", "toStart": 17}
       ],
       "events": [
-        {"id": "first_recruit_zone", "label": "Recruiting mats", "x": 13, "y": 5, "beat": 12},
-        {"id": "blue_chip_cove", "label": "Rare scout cove", "x": 22, "y": 9, "beat": 27}
+        {"id": "first_recruit_zone", "label": "First recruiting mat", "x": 43, "y": 6, "beat": 12},
+        {"id": "blue_chip_cove", "label": "Rare scout cove", "x": 14, "y": 8, "beat": 27},
+        {"id": "locked_boathouse", "label": "Locked boathouse", "x": 23, "y": 5, "kind": "message", "text": "The Lakeshore Boathouse is locked for the season. A faded team schedule hangs inside.", "once": true},
+        {"id": "mendota_pier_view", "label": "Mendota pier", "x": 30, "y": 1, "kind": "message", "text": "Lake Mendota stretches past the end of the pier. The next test waits west.", "once": true},
+        {"id": "terrace_chairs_view", "label": "Terrace chairs", "x": 34, "y": 5, "kind": "message", "text": "Three bright chairs face the lake: cardinal, gold, and blue.", "once": true}
       ],
       "cameraReviews": [
         {"id": "picnic_gate", "label": "Picnic approach", "x": 0, "y": 2, "width": 15, "height": 10},
-        {"id": "overlook", "label": "Lake overlook", "x": 7, "y": 2, "width": 15, "height": 10},
-        {"id": "field_gate", "label": "Field House return", "x": 15, "y": 2, "width": 15, "height": 10}
+        {"id": "blue_chip_cove", "label": "Blue Chip Cove", "x": 8, "y": 2, "width": 15, "height": 10},
+        {"id": "boathouse", "label": "Locked boathouse", "x": 18, "y": 0, "width": 15, "height": 10},
+        {"id": "marina", "label": "Mendota marina", "x": 26, "y": 0, "width": 15, "height": 10},
+        {"id": "first_recruit", "label": "First recruiting mat", "x": 37, "y": 2, "width": 15, "height": 10},
+        {"id": "field_gate", "label": "Field House return", "x": 41, "y": 2, "width": 15, "height": 10}
       ]
     },
     "picnic_point": {
       "displayName": "Picnic Point",
       "kind": "badge_venue",
       "plane": "madison",
-      "origin": {"x": -60, "y": 52},
-      "size": {"width": 24, "height": 18},
-      "start": {"x": 22, "y": 9, "facing": "left"},
+      "origin": {"x": -110, "y": 52},
+      "size": {"width": 48, "height": 18},
+      "start": {"x": 47, "y": 9, "facing": "left"},
       "ground": "shore",
-      "walkableMode": "open",
+      "walkableMode": "paths",
+      "gridAuthority": "metatile-behavior-v1",
       "paths": [
-        {"id": "point_trail", "x": 10, "y": 8, "width": 14, "height": 2, "material": "dirt"},
-        {"id": "mat_approach", "x": 10, "y": 5, "width": 2, "height": 5, "material": "dirt"}
+        {"id": "east_gate", "x": 42, "y": 9, "width": 6, "height": 2, "material": "dirt"},
+        {"id": "arrival_meadow", "x": 37, "y": 7, "width": 7, "height": 6, "material": "dirt"},
+        {"id": "east_curve", "x": 31, "y": 8, "width": 8, "height": 3, "material": "dirt"},
+        {"id": "first_mat_apron", "x": 31, "y": 5, "width": 6, "height": 5, "material": "dirt"},
+        {"id": "first_pine_pinch", "x": 25, "y": 7, "width": 8, "height": 3, "material": "dirt"},
+        {"id": "middle_bulb", "x": 19, "y": 6, "width": 8, "height": 5, "material": "dirt"},
+        {"id": "second_pine_pinch", "x": 14, "y": 8, "width": 7, "height": 3, "material": "dirt"},
+        {"id": "funk_mat_apron", "x": 10, "y": 6, "width": 7, "height": 5, "material": "dirt"},
+        {"id": "south_tip_bend", "x": 7, "y": 9, "width": 6, "height": 4, "material": "dirt"},
+        {"id": "fire_circle_clearing", "x": 4, "y": 5, "width": 8, "height": 8, "material": "dirt"}
       ],
-      "blockers": [
-        {"id": "north_water", "kind": "water", "x": 0, "y": 0, "width": 24, "height": 2},
-        {"id": "south_water", "kind": "water", "x": 0, "y": 15, "width": 24, "height": 3},
-        {"id": "west_tree_point", "kind": "forest", "x": 0, "y": 2, "width": 3, "height": 13}
+      "clearings": [
+        {"id": "east_arrival", "x": 37, "y": 6, "width": 11, "height": 8},
+        {"id": "first_mat_clearing", "x": 30, "y": 4, "width": 8, "height": 8},
+        {"id": "middle_training_clearing", "x": 18, "y": 5, "width": 10, "height": 7},
+        {"id": "funk_doctor_clearing", "x": 9, "y": 5, "width": 9, "height": 8},
+        {"id": "western_fire_circle", "x": 4, "y": 4, "width": 9, "height": 10}
       ],
+      "waterBodies": [
+        {"id": "mendota_north", "x": 0, "y": 0, "width": 48, "height": 3},
+        {"id": "mendota_south", "x": 0, "y": 15, "width": 48, "height": 3},
+        {"id": "mendota_point", "x": 0, "y": 0, "width": 4, "height": 18}
+      ],
+      "blockers": [],
       "buildings": [],
       "landmarks": [
-        {"id": "funk_mat", "name": "Funk Doctor's Mat", "kind": "arena", "x": 5, "y": 4, "width": 4, "height": 3},
-        {"id": "fire_circle", "name": "Fire Circle", "kind": "route_landmark", "x": 15, "y": 4, "width": 3, "height": 3}
+        {"id": "funk_mat", "name": "Funk Doctor's Mat", "kind": "arena", "x": 11, "y": 6, "width": 4, "height": 3, "editorStampId": "outdoor_wrestling_mat", "collisionMask": ["....", "....", "...."]},
+        {"id": "fire_circle", "name": "Picnic Point Fire Circle", "kind": "route_landmark", "x": 5, "y": 5, "width": 4, "height": 4, "editorStampId": "picnic_fire_circle", "collisionMask": [".###", "####", "####", ".###"]}
+      ],
+      "decorations": [
+        {"id": "picnic_mat_first", "name": "First Point Mat", "stamp": "outdoor_wrestling_mat", "x": 32, "y": 5},
+        {"id": "picnic_trail_sign", "stamp": "trail_sign", "x": 44, "y": 6},
+        {"id": "picnic_tip_shore", "stamp": "shoreline_cluster", "x": 0, "y": 10},
+        {"id": "picnic_north_shore", "stamp": "shoreline_cluster", "x": 17, "y": 1},
+        {"id": "picnic_south_shore", "stamp": "shoreline_cluster", "x": 38, "y": 14},
+        {"id": "picnic_bench", "stamp": "wood_bench", "x": 14, "y": 11},
+        {"id": "picnic_tree_north_00", "stamp": "tree_pine", "x": 4, "y": 2},
+        {"id": "picnic_tree_north_01", "stamp": "tree_oak_a", "x": 7, "y": 2},
+        {"id": "picnic_tree_north_02", "stamp": "tree_pine_b", "x": 9, "y": 2},
+        {"id": "picnic_tree_north_03", "stamp": "tree_oak_c", "x": 15, "y": 3},
+        {"id": "picnic_tree_north_04", "stamp": "tree_pine", "x": 21, "y": 2},
+        {"id": "picnic_tree_north_05", "stamp": "tree_oak_b", "x": 24, "y": 3},
+        {"id": "picnic_tree_north_06", "stamp": "tree_pine_b", "x": 28, "y": 2},
+        {"id": "picnic_tree_north_07", "stamp": "tree_oak_a", "x": 37, "y": 3},
+        {"id": "picnic_tree_north_08", "stamp": "tree_pine", "x": 40, "y": 2},
+        {"id": "picnic_tree_north_09", "stamp": "tree_oak_c", "x": 44, "y": 3},
+        {"id": "picnic_tree_south_00", "stamp": "tree_oak_b", "x": 4, "y": 12},
+        {"id": "picnic_tree_south_01", "stamp": "tree_pine_b", "x": 8, "y": 13},
+        {"id": "picnic_tree_south_02", "stamp": "tree_oak_a", "x": 12, "y": 12},
+        {"id": "picnic_tree_south_03", "stamp": "tree_pine", "x": 20, "y": 13},
+        {"id": "picnic_tree_south_04", "stamp": "tree_oak_c", "x": 23, "y": 12},
+        {"id": "picnic_tree_south_05", "stamp": "tree_pine_b", "x": 27, "y": 13},
+        {"id": "picnic_tree_south_06", "stamp": "tree_oak_b", "x": 31, "y": 12},
+        {"id": "picnic_tree_south_07", "stamp": "tree_pine", "x": 34, "y": 13},
+        {"id": "picnic_tree_south_08", "stamp": "tree_oak_a", "x": 42, "y": 12},
+        {"id": "picnic_tree_south_09", "stamp": "tree_pine_b", "x": 46, "y": 13},
+        {"id": "picnic_pinch_north_a", "stamp": "tree_pine", "x": 18, "y": 3},
+        {"id": "picnic_pinch_south_a", "stamp": "tree_oak_a", "x": 17, "y": 10},
+        {"id": "picnic_pinch_north_b", "stamp": "tree_oak_b", "x": 27, "y": 4},
+        {"id": "picnic_pinch_south_b", "stamp": "tree_pine_b", "x": 26, "y": 10},
+        {"id": "picnic_pinch_north_c", "stamp": "tree_pine", "x": 37, "y": 4},
+        {"id": "picnic_pinch_south_c", "stamp": "tree_oak_c", "x": 38, "y": 10},
+        {"id": "picnic_rocks_first", "stamp": "rock_cluster", "x": 30, "y": 11},
+        {"id": "picnic_rocks_tip", "stamp": "rock_cluster", "x": 12, "y": 4},
+        {"id": "picnic_flowers_east", "stamp": "shrub_flowering", "x": 41, "y": 7},
+        {"id": "picnic_flowers_tip", "stamp": "shrub_flowering_b", "x": 10, "y": 12}
+      ],
+      "actors": [
+        {"id": "funk_doctor_actor", "sheet": "wrestler", "x": 10, "y": 8, "facing": "left", "dialogue": "The Funk Doctor: Balance disappears when rhythm changes."},
+        {"id": "picnic_camper", "sheet": "camper", "x": 24, "y": 9, "facing": "left", "dialogue": "The fire circle marks the point. The trail back is east.", "patrol": {"axis": "horizontal", "radius": 1, "interval": 1750}},
+        {"id": "picnic_scout", "sheet": "scout", "x": 37, "y": 9, "facing": "left", "dialogue": "Win here and the Picnic Point credential is yours."}
       ],
       "connections": [
         {"to": "lakeshore_path", "edge": "east", "start": 9, "span": 2, "toEdge": "west", "toStart": 7}
       ],
       "events": [
-        {"id": "funk_doctor", "label": "The Funk Doctor", "x": 7, "y": 7, "beat": 27},
-        {"id": "picnic_badge", "label": "Picnic Point Badge", "x": 8, "y": 7, "beat": 27}
+        {"id": "funk_doctor", "label": "The Funk Doctor", "x": 10, "y": 8, "beat": 27},
+        {"id": "picnic_badge", "label": "Picnic Point Badge", "x": 10, "y": 9, "beat": 27},
+        {"id": "fire_circle_history", "label": "Fire circle", "x": 9, "y": 7, "kind": "message", "text": "Generations of wrestlers have met at the end of the point. The stones still hold their marks.", "once": true}
       ],
       "cameraReviews": [
-        {"id": "badge_clearing", "label": "Badge clearing", "x": 2, "y": 2, "width": 15, "height": 10},
-        {"id": "fire_circle", "label": "Point identity", "x": 9, "y": 3, "width": 15, "height": 10},
-        {"id": "shore_exit", "label": "Lakeshore return", "x": 9, "y": 8, "width": 15, "height": 10}
+        {"id": "fire_circle", "label": "Point identity", "x": 0, "y": 3, "width": 15, "height": 10},
+        {"id": "badge_clearing", "label": "Funk Doctor clearing", "x": 7, "y": 3, "width": 15, "height": 10},
+        {"id": "middle_pinch", "label": "Middle pine pinch", "x": 17, "y": 3, "width": 15, "height": 10},
+        {"id": "first_mat", "label": "First Point mat", "x": 27, "y": 3, "width": 15, "height": 10},
+        {"id": "shore_exit", "label": "Lakeshore return", "x": 33, "y": 4, "width": 15, "height": 10}
       ]
     },
     "state_street": {

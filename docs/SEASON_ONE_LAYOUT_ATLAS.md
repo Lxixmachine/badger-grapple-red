@@ -28,8 +28,8 @@ are explicit story-transition planes.
 | 1 | Camp Randall | Home town | 3,0 | 24x20 | 4 |
 | 2 | R1 - First Walk | Route | 6,20 | 18x24 | 3 |
 | 3 | Field House Town | Town 1 | -6,44 | 40x28 | 7 |
-| 4 | Lakeshore Path | Branch route | -36,54 | 30x14 | 3 |
-| 5 | Picnic Point | Badge venue | -60,52 | 24x18 | 3 |
+| 4 | Lakeshore Path | Branch route | -62,54 | 56x14 | 6 |
+| 5 | Picnic Point | Badge venue | -110,52 | 48x18 | 5 |
 | 6 | State Street | R2 | 34,50 | 44x18 | 5 |
 | 7 | Bascom Hill | Optional venue | 48,32 | 18x18 | 3 |
 | 8 | Capitol Square | Town 2 | 78,44 | 40x28 | 7 |

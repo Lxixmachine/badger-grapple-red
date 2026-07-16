@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v6.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v7.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
 GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
@@ -724,6 +724,42 @@ def build() -> dict:
             minimum_coverage=0.08,
         )
 
+    route_landmark_specs = [
+        (
+            "lakeshore_pier", "Lake Mendota Pier", 3, 4,
+            ["...", "...", "...", "..."], "walkable_pier",
+        ),
+        (
+            "terrace_chair_trio", "Terrace Chair Trio", 4, 2,
+            ["####", "####"], "lakeside_seating",
+        ),
+        (
+            "lakeshore_boathouse", "Lakeshore Boathouse", 5, 5,
+            ["#####", "#####", "#####", "#####", "#####"], "locked_boathouse",
+        ),
+        (
+            "picnic_fire_circle", "Picnic Point Fire Circle", 4, 4,
+            [".###", "####", "####", ".###"], "badge_fire_circle",
+        ),
+        (
+            "trail_sign", "Lakeshore Trail Sign", 1, 2,
+            [".", "#"], "route_sign",
+        ),
+        (
+            "shoreline_cluster", "Mendota Shoreline Cluster", 4, 2,
+            ["####", "####"], "shoreline_detail",
+        ),
+    ]
+    for stamp_id, name, width, height, mask, semantic in route_landmark_specs:
+        image = export_2x(source_asset("route_landmarks", stamp_id))
+        register_stamp(
+            stamp_id, name, "route_landmarks",
+            image, width, height, mask,
+            tags=["route_landmark", "imagegen_direct", "authored16", "grid_native"],
+            semantic_behavior=semantic,
+            minimum_coverage=0.08,
+        )
+
     arena_mat_specs = [
         ("field_house_competition_mat", "Field House Competition Mat"),
         ("capitol_exhibition_mat", "Capitol Exhibition Mat"),
@@ -1074,8 +1110,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-world-tileset/v5",
-        "version": 6,
-        "status": "season-one-quiet-ground-pixel-kit",
+        "version": 7,
+        "status": "season-one-route-landmark-pixel-kit",
         "cellSize": cell,
         "artPipeline": {
             "logicalCellSize": LOGICAL_CELL,

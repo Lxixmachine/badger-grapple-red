@@ -13,6 +13,7 @@
     "story_props": "510bba6cc671b6a6c72683e0ea9419ad143432a766d89f1b60aadf65de573134",
     "arena_mats": "8bd9b3ec79c47f6d39bfa01e451ada4915345629bf93201e780430506733da8b",
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
+    "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
     "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
     "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
     "landmarks:nationals_arena_exterior": "ca455a729265756657ba63fcdd81983032c4af4718c328f438947a963d28ab08",
@@ -743,6 +744,60 @@
       "colors": 22,
       "sha256": "7eba04537b3ff01d5d7009e341c882e96c2f71b7407f0e7f3c9c0ae3ecd01373",
       "sourcePanel": 11
+    },
+    "lakeshore_pier": {
+      "category": "route_landmarks",
+      "path": "art/tilesets/imagegen_v3/route_landmarks/lakeshore_pier.png",
+      "width": 48,
+      "height": 64,
+      "colors": 36,
+      "sha256": "6fa6d9c2703ec067a928e0b651e1dbb324a301937bcfb28d3e7be82985fa212d",
+      "sourcePanel": 0
+    },
+    "terrace_chair_trio": {
+      "category": "route_landmarks",
+      "path": "art/tilesets/imagegen_v3/route_landmarks/terrace_chair_trio.png",
+      "width": 64,
+      "height": 32,
+      "colors": 32,
+      "sha256": "5008cfaa8650ed792cadc79087a0435086e28534e84f7199b62dfbe77a6fc875",
+      "sourcePanel": 1
+    },
+    "lakeshore_boathouse": {
+      "category": "route_landmarks",
+      "path": "art/tilesets/imagegen_v3/route_landmarks/lakeshore_boathouse.png",
+      "width": 80,
+      "height": 80,
+      "colors": 40,
+      "sha256": "789ced926eeb882761b1f0acf695dd5c3ddde8ca8477000b5ad79613a576a544",
+      "sourcePanel": 2
+    },
+    "picnic_fire_circle": {
+      "category": "route_landmarks",
+      "path": "art/tilesets/imagegen_v3/route_landmarks/picnic_fire_circle.png",
+      "width": 64,
+      "height": 64,
+      "colors": 36,
+      "sha256": "fc8e77d36360ac52dba49765702558b1d10292a63b3dd17fbbd601aaaa0163dc",
+      "sourcePanel": 3
+    },
+    "trail_sign": {
+      "category": "route_landmarks",
+      "path": "art/tilesets/imagegen_v3/route_landmarks/trail_sign.png",
+      "width": 16,
+      "height": 32,
+      "colors": 26,
+      "sha256": "82d7575aefb9b52e3036c33edaf29f4cf63e8370766f7c95178e2ae4e3123bac",
+      "sourcePanel": 4
+    },
+    "shoreline_cluster": {
+      "category": "route_landmarks",
+      "path": "art/tilesets/imagegen_v3/route_landmarks/shoreline_cluster.png",
+      "width": 64,
+      "height": 32,
+      "colors": 32,
+      "sha256": "e7520d03d00b9233e0cb7825a8789323f3b191f85698988887b3fff53fb0a3ed",
+      "sourcePanel": 5
     },
     "field_house_arena_exterior": {
       "category": "landmarks",

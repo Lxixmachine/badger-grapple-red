@@ -56,7 +56,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 9, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 10, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
@@ -67,7 +67,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
     tilePos: {x: 23, y: 29},
     atlas: {
       mode: 'map', mapId: 'camp_randall', mapWidth: 48, mapHeight: 31,
-      metatileVersion: 13, metatilePlacementCount: 50
+      metatileVersion: 14, metatilePlacementCount: 50
     }
   });
   expect((await state(page)).atlas.metatileRenderCount).toBeGreaterThan(200);
@@ -84,7 +84,7 @@ test('Camp Randall runtime collision comes from the rendered metatiles', async (
   await openAtlas(page, '&play=1&area=camp_randall&x=9&y=25&facing=right');
   await expect.poll(async () => (await state(page)).passable.right).toBe(false);
   const camp = await state(page);
-  expect(camp.atlas).toMatchObject({metatileVersion: 13, metatilePlacementCount: 50});
+  expect(camp.atlas).toMatchObject({metatileVersion: 14, metatilePlacementCount: 50});
   expect(camp.atlas.metatileRenderCount).toBeGreaterThan(200);
   expect(issues).toEqual([]);
 });
@@ -154,8 +154,8 @@ test('every planned exterior and interior boots through its direct review route'
     camp_randall: [48, 31],
     r1: [18, 24],
     field_house: [40, 28],
-    lakeshore_path: [30, 14],
-    picnic_point: [24, 18],
+    lakeshore_path: [56, 14],
+    picnic_point: [48, 18],
     state_street: [44, 18],
     bascom_hill: [18, 18],
     capitol_square: [40, 28],

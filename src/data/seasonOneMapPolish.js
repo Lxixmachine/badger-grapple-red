@@ -60,41 +60,6 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
     ]
   },
-  lakeshore_path: {
-    objects: [
-      stamp('lake_grove_nw', 'forest_grove_small', 0, 0, 5, 4),
-      stamp('lake_grove_ne', 'forest_grove_small', 25, 0, 5, 4),
-      stamp('lake_oak_w', 'tree_oak_a', 5, 2, 2, 3),
-      stamp('lake_pine_e', 'tree_pine_b', 26, 7, 2, 3),
-      stamp('lake_training_mat', 'outdoor_wrestling_mat', 11, 3, 4, 3),
-      stamp('lake_overlook_bench', 'wood_bench', 15, 3, 3, 2),
-      stamp('lake_kayak_rack', 'kayak_rack', 21, 8, 3, 2),
-      stamp('lake_sign_w', 'campus_sign', 2, 5, 3, 2),
-      stamp('lake_rocks', 'rock_cluster', 18, 10, 2, 1),
-      stamp('lake_shrub', 'shrub_flowering', 24, 5, 1, 1)
-    ],
-    actors: [
-      actor('lakeshore_scout', 'scout', 13, 5, 'down', 'Open mats are where overlooked wrestlers get noticed.'),
-      actor('blue_chip_scout', 'athlete', 19, 9, 'right', 'Some recruits only appear off the main trail.'),
-      actor('lakeshore_runner', 'student', 8, 7, 'right', 'Picnic Point is west along the shore.', {patrol: {axis: 'horizontal', radius: 2, interval: 1250}})
-    ]
-  },
-  picnic_point: {
-    objects: [
-      stamp('picnic_grove_north', 'forest_grove_small', 10, 2, 5, 4),
-      stamp('picnic_grove_south', 'forest_grove_small', 3, 10, 5, 4),
-      stamp('picnic_pine_nw', 'tree_pine', 3, 2, 2, 3),
-      stamp('picnic_oak_e', 'tree_oak_c', 20, 3, 2, 3),
-      stamp('picnic_bench', 'wood_bench', 12, 11, 3, 2),
-      stamp('picnic_sign', 'campus_sign', 19, 10, 3, 2),
-      stamp('picnic_rocks', 'rock_cluster', 16, 12, 2, 1)
-    ],
-    actors: [
-      actor('funk_doctor_actor', 'wrestler', 7, 7, 'down', 'The Funk Doctor: Balance disappears when rhythm changes.'),
-      actor('picnic_camper', 'camper', 15, 8, 'left', 'The fire circle marks the point. The trail back is east.', {patrol: {axis: 'horizontal', radius: 1, interval: 1750}}),
-      actor('picnic_scout', 'scout', 11, 9, 'up', 'Win here and the Picnic Point credential is yours.')
-    ]
-  },
   state_street: {
     objects: [
       stamp('state_mat_west', 'outdoor_wrestling_mat', 8, 7, 4, 3),

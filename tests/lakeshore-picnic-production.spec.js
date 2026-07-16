@@ -1,0 +1,165 @@
+import {expect, test} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+
+const layouts = JSON.parse(readFileSync(new URL('../src/data/seasonOneLayouts.json', import.meta.url), 'utf8'));
+const worldTileset = JSON.parse(readFileSync(new URL('../src/data/seasonOneWorldTilesetBuild.json', import.meta.url), 'utf8'));
+
+async function openStudio(page) {
+  await page.goto('/map-editor.html');
+  await expect(page.locator('#mapCanvas')).toBeVisible();
+  await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
+  return page.evaluate(() => window.__badgerMapEditorTest.project());
+}
+
+function key(x, y) {
+  return `${x},${y}`;
+}
+
+function reachableCells(project, map, blockActors = true) {
+  const ground = new Map(project.assets.groundTiles.map(tile => [tile.id, tile.behavior]));
+  const actorCells = new Set(blockActors ? map.actors.map(actor => key(actor.x, actor.y)) : []);
+  const solidCells = new Set();
+  for (const object of map.objects) {
+    for (let y = 0; y < object.height; y += 1) {
+      for (let x = 0; x < object.width; x += 1) {
+        if (object.collisionMask?.[y]?.[x] === '#') solidCells.add(key(object.x + x, object.y + y));
+      }
+    }
+  }
+  const passable = (x, y) => x >= 0 && y >= 0 && x < map.width && y < map.height
+    && !['solid', 'water'].includes(ground.get(map.terrain[y][x]))
+    && !solidCells.has(key(x, y))
+    && !actorCells.has(key(x, y));
+  const seen = new Set();
+  const queue = [];
+  if (passable(map.start.x, map.start.y)) {
+    seen.add(key(map.start.x, map.start.y));
+    queue.push([map.start.x, map.start.y]);
+  }
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+      const nextX = x + dx;
+      const nextY = y + dy;
+      const cell = key(nextX, nextY);
+      if (seen.has(cell) || !passable(nextX, nextY)) continue;
+      seen.add(cell);
+      queue.push([nextX, nextY]);
+    }
+  }
+  return seen;
+}
+
+function solidOwnership(map) {
+  const owners = new Map();
+  const overlaps = [];
+  for (const object of map.objects) {
+    expect(object.x, `${map.id}.${object.id} x`).toBeGreaterThanOrEqual(0);
+    expect(object.y, `${map.id}.${object.id} y`).toBeGreaterThanOrEqual(0);
+    expect(object.x + object.width, `${map.id}.${object.id} width`).toBeLessThanOrEqual(map.width);
+    expect(object.y + object.height, `${map.id}.${object.id} height`).toBeLessThanOrEqual(map.height);
+    for (let y = 0; y < object.height; y += 1) {
+      for (let x = 0; x < object.width; x += 1) {
+        if (object.collisionMask?.[y]?.[x] !== '#') continue;
+        const cell = key(object.x + x, object.y + y);
+        if (owners.has(cell)) overlaps.push(`${cell}: ${owners.get(cell)} / ${object.id}`);
+        else owners.set(cell, object.id);
+      }
+    }
+  }
+  return overlaps;
+}
+
+test('Lakeshore and Picnic use the long-form FireRed route scale and exact world seams', async ({page}) => {
+  const project = await openStudio(page);
+  const lakeLayout = layouts.maps.lakeshore_path;
+  const picnicLayout = layouts.maps.picnic_point;
+  const fieldLayout = layouts.maps.field_house;
+  const lake = project.maps.lakeshore_path;
+  const picnic = project.maps.picnic_point;
+
+  expect(lake).toMatchObject({width: 56, height: 14, gridAuthority: 'metatile-behavior-v1'});
+  expect(picnic).toMatchObject({width: 48, height: 18, gridAuthority: 'metatile-behavior-v1'});
+  expect(lakeLayout.origin.x + lakeLayout.size.width).toBe(fieldLayout.origin.x);
+  expect(picnicLayout.origin.x + picnicLayout.size.width).toBe(lakeLayout.origin.x);
+  expect(lakeLayout.origin.y + lakeLayout.connections[0].start)
+    .toBe(picnicLayout.origin.y + picnicLayout.connections[0].start);
+  expect(lakeLayout.origin.y + lakeLayout.connections[1].start)
+    .toBe(fieldLayout.origin.y + lakeLayout.connections[1].toStart);
+
+  expect(lake.terrain[0][0]).toMatch(/^shore_water_blob_/);
+  expect(lake.terrain[0][29]).toMatch(/^surface_timber_blob_/);
+  expect(lake.terrain[1][30]).toMatch(/^surface_timber_blob_/);
+  expect(lake.terrain[13][30]).not.toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[0][47]).toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[17][47]).toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[9][0]).toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[9][47]).toMatch(/^surface_dirt_blob_/);
+
+  expect(lake.objects.find(object => object.id === 'mendota_pier')).toMatchObject({
+    sourceId: 'lakeshore_pier', width: 3, height: 4,
+    collisionMask: ['...', '...', '...', '...']
+  });
+  expect(lake.objects.find(object => object.id === 'lakeshore_boathouse')).toMatchObject({
+    sourceId: 'lakeshore_boathouse', width: 5, height: 5
+  });
+  expect(picnic.objects.find(object => object.id === 'fire_circle')).toMatchObject({
+    sourceId: 'picnic_fire_circle', width: 4, height: 4,
+    collisionMask: ['.###', '####', '####', '.###']
+  });
+  expect(worldTileset.stamps.trail_sign).toMatchObject({width: 1, height: 2, collisionMask: ['.', '#']});
+  expect(worldTileset.stamps.lakeshore_pier.coverageAudit).toEqual({});
+  expect(Object.keys(worldTileset.stamps.lakeshore_boathouse.coverageAudit)).toHaveLength(25);
+  expect(solidOwnership(lake)).toEqual([]);
+  expect(solidOwnership(picnic)).toEqual([]);
+});
+
+test('the complete route remains traversable with actors and exact object collision enabled', async ({page}) => {
+  const project = await openStudio(page);
+  for (const mapId of ['lakeshore_path', 'picnic_point']) {
+    const map = project.maps[mapId];
+    const reachable = reachableCells(project, map, true);
+    expect(reachable.size, `${mapId} reachable cells`).toBeGreaterThan(mapId === 'lakeshore_path' ? 180 : 150);
+    for (const connection of map.connections) {
+      const cells = [0, 1].map(offset => connection.edge === 'west'
+        ? key(0, connection.start + offset)
+        : key(map.width - 1, connection.start + offset));
+      expect(cells.some(cell => reachable.has(cell)), `${mapId} -> ${connection.to}`).toBe(true);
+    }
+    for (const event of map.events) {
+      const adjacent = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1]]
+        .some(([dx, dy]) => reachable.has(key(event.x + dx, event.y + dy)));
+      expect(adjacent, `${mapId}.${event.id} approach`).toBe(true);
+    }
+    const withoutActors = reachableCells(project, map, false);
+    for (const actor of map.actors) {
+      expect(withoutActors.has(key(actor.x, actor.y)), `${mapId}.${actor.id} owns open ground`).toBe(true);
+      const approachable = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+        .some(([dx, dy]) => reachable.has(key(actor.x + dx, actor.y + dy)));
+      expect(approachable, `${mapId}.${actor.id} can be approached`).toBe(true);
+    }
+  }
+});
+
+test('runtime crosses both Lakeshore seams on their visible two-cell lanes', async ({page}) => {
+  const boot = async (area, x, y) => {
+    await page.goto(`/?test=1&scene=overworld&reset=1&area=${area}&x=${x}&y=${y}`);
+    await expect.poll(() => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene')?.area)).toBe(area);
+  };
+  const press = keyName => page.evaluate(value => window.__badgerTest.press(value), keyName);
+  const state = () => page.evaluate(() => window.__badgerTest.sceneState('OverworldScene'));
+
+  await boot('lakeshore_path', 0, 7);
+  await press('left');
+  await expect.poll(async () => (await state()).facing).toBe('left');
+  await press('left');
+  await expect.poll(async () => (await state()).area).toBe('picnic_point');
+  await expect.poll(async () => (await state()).tilePos).toEqual({x: 47, y: 9});
+
+  await boot('lakeshore_path', 55, 7);
+  await press('right');
+  await expect.poll(async () => (await state()).facing).toBe('right');
+  await press('right');
+  await expect.poll(async () => (await state()).area).toBe('field_house');
+  await expect.poll(async () => (await state()).tilePos).toEqual({x: 0, y: 17});
+});

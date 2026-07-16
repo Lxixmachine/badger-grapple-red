@@ -156,6 +156,19 @@ BOARDS = {
             ("retaining_wall", (48, 16), "fit", 22),
         ],
     },
+    "route_landmarks": {
+        "path": SOURCE_DIR / "season_one_lakeshore_landmarks_source_v1.png",
+        "columns": 3,
+        "rows": 2,
+        "entries": [
+            ("lakeshore_pier", (48, 64), "contain", 36),
+            ("terrace_chair_trio", (64, 32), "contain", 32),
+            ("lakeshore_boathouse", (80, 80), "contain", 40),
+            ("picnic_fire_circle", (64, 64), "contain", 36),
+            ("trail_sign", (16, 32), "contain", 28),
+            ("shoreline_cluster", (64, 32), "contain", 32),
+        ],
+    },
 }
 
 

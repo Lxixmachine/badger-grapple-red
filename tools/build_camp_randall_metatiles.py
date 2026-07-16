@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v13.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v14.png"
 GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v4.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
@@ -135,6 +135,9 @@ def terrain_rows(layout: dict, world: dict) -> list[list[str]]:
     for blocker in layout.get("blockers", []):
         if blocker.get("kind") in {"water", "deep_water"}:
             paint_rect(blocker, "water")
+    for path in layout.get("paths", []):
+        if path.get("overWater"):
+            paint_rect(path, material_aliases.get(path["material"], path["material"]))
     for landmark in layout.get("landmarks", []):
         if landmark.get("walkable"):
             paint_rect(landmark, "brick" if landmark.get("kind") == "arena" else "stone")
@@ -549,8 +552,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 13,
-        "status": "season-one-connected-ground-atlas",
+        "version": 14,
+        "status": "season-one-lakeshore-picnic-production-atlas",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
         "atlas": {

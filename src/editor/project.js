@@ -326,7 +326,7 @@ const DEDICATED_FIXTURE_STAMPS = {
   rotunda: 'capitol_exhibition_mat',
   conference_mat: 'kohl_conference_mat',
   nationals_mat: 'nationals_championship_mat',
-  fire_circle: 'campfire_ring',
+  fire_circle: 'picnic_fire_circle',
   west_seating: 'airport_departure_seats',
   east_seating: 'airport_departure_seats',
   departure_gate: 'airport_gate_desk',
@@ -437,7 +437,11 @@ function plannedObject(mapId, owner, group, layout, mapType = 'exterior') {
   };
   return {
     asset: makeObjectAsset(mapId, entry, effectiveOwner, mapType, stamp),
-    object: {...makeObjectInstance(mapId, entry, effectiveOwner, stamp), sourceKind: 'planned-metatile'}
+    object: {
+      ...makeObjectInstance(mapId, entry, effectiveOwner, stamp),
+      sourceId: sourceStamp.id,
+      sourceKind: 'planned-metatile'
+    }
   };
 }
 
