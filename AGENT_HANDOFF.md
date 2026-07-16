@@ -3331,3 +3331,31 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   suite, and the complete 118-scenario game suite pass. Broad validation stops
   only on Tony's protected State Street composition checksum; those six files
   remain unstaged and untouched by this release.
+
+## Codex Character Art Pass (v22.23)
+
+- ChatGPT built-in image generation produced new contract-targeted source
+  sheets for Player, Coach, Rex, Athletic Trainer, and Captain. Chroma sources,
+  alpha-cleaned masters, and the exact prompt record are retained under
+  `art/imagegen/`; the existing source slicer now names those v2 masters.
+- Each identity was simplified for the actual 16x32 logical frame rather than
+  the retired 24x36 presentation: connected pixel clusters, dark warm outlines,
+  at most three shades per material, stronger direction silhouettes, and one
+  common foot baseline. The production compiler still owns binary alpha,
+  15-color palette discipline, exact 2x export, and unchanged collision.
+- `art/imagegen/validation/season_one_actor_pixel_preview.png` was rebuilt and
+  visually checked alongside 390x844 phone captures in Camp Randall, the Team
+  Locker Room, R1, and Field House. Player, Coach, Rex, Trainer, and Captain are
+  recognizable and distinct at product scale.
+- World Atlas previously rendered a procedural red-column placeholder even
+  while its state changed direction. It now loads the production player sheet,
+  maps down/left/right/up to frames 1/4/7/10, and alternates authored step
+  frames while moving. A regression test locks those four direction rows.
+- Tony's FireRed comparison verdict remains the visual close condition. This
+  batch establishes the reproducible character-art method; Wrestler, Manager,
+  Scout, Student, Official, Athlete, and Camper remain v1 sources for the next
+  cast batch.
+- Balance, map lint, production build, the isolated Map Studio retry, and the
+  complete sequential release suite pass; final suite count is 119/119. Broad
+  validation reaches only Tony's protected State Street composition checksum,
+  which remains deliberately unrebuilt and unstaged.

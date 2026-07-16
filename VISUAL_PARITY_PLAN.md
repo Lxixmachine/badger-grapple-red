@@ -70,6 +70,14 @@ and every review is a vibe check.
 > compiler, generated manifest, validator, Map Studio, and phone comparison
 > all consume that same contract; stretched 24x36 source frames can no longer
 > silently re-enter the live world.
+>
+> v22.23 applies the first art batch authored specifically for that final
+> contract. Player, Coach, Rex, Athletic Trainer, and Captain now use retained
+> ChatGPT Imagegen chroma sources with simplified connected clusters, deliberate
+> three-tone material ramps, stronger silhouettes, and explicit direction
+> sheets. The World Atlas no longer substitutes its procedural placeholder:
+> atlas review and the story runtime consume the same production player sheet,
+> including four correct idle rows and alternating walk phases.
 
 The single largest visual jump available, and it costs zero new art.
 `VISUAL_SLICE_CONTRACT.md` is the authority; `?slice=1` and `?atlas=1`

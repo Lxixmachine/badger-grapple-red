@@ -1,6 +1,7 @@
 import layouts from '../data/seasonOneLayouts.json';
 import region from '../data/seasonOneRegion.json';
 import campMetatiles from '../data/campRandallMetatileBuild.json';
+import campProduction from '../data/campRandallProductionBuild.json';
 import {SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
 import {FONT,setVirtualHandler} from '../systems/ui.js';
 
@@ -10,6 +11,7 @@ const WIDTH = layouts.contract.canvasWidth;
 const HEIGHT = layouts.contract.canvasHeight;
 const ORDER = layouts.region.reviewOrder;
 const CAMP_GRID_MAP = SEASON_ONE_PROJECT.maps.camp_randall;
+const PLAYER_SHEET = campProduction.actorSheets.player;
 const CAMP_ATLAS_LAYOUT = {
   ...layouts.maps.camp_randall,
   size: {width: CAMP_GRID_MAP.width, height: CAMP_GRID_MAP.height},
@@ -68,6 +70,10 @@ const DIRS = {
   left: {dx: -1, dy: 0},
   right: {dx: 1, dy: 0}
 };
+
+const playerFrame = (direction, phase = 1) => (
+  (PLAYER_SHEET.directions[direction] ?? PLAYER_SHEET.directions.down) * 3 + phase
+);
 
 const SHORT_NAMES = {
   camp_randall: 'CAMP',
@@ -172,6 +178,10 @@ export class WorldAtlasScene extends Phaser.Scene {
       frameWidth: campMetatiles.cellSize,
       frameHeight: campMetatiles.cellSize
     });
+    this.load.spritesheet('atlas-player', PLAYER_SHEET.path, {
+      frameWidth: PLAYER_SHEET.frameWidth,
+      frameHeight: PLAYER_SHEET.frameHeight
+    });
   }
 
   create() {
@@ -186,10 +196,10 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.messageOpen = false;
     this.heldDirection = null;
     this.pendingDirection = null;
+    this.walkPhase = 0;
     this.returnStack = [];
     this.cameras.main.setRoundPixels(true);
     this.cameras.main.setBackgroundColor('#17161a');
-    this.createPlayerTextures();
     this.bindKeyboard();
     setVirtualHandler(this);
 
@@ -234,38 +244,6 @@ export class WorldAtlasScene extends Phaser.Scene {
       callback: () => {
         if (this.heldDirection) this.handleDirection(this.heldDirection);
       }
-    });
-  }
-
-  createPlayerTextures() {
-    ['down', 'up', 'right'].forEach(direction => {
-      if (this.textures.exists(`atlas-player-${direction}`)) return;
-      const graphics = this.make.graphics({x: 0, y: 0, add: false});
-      const rect = (x, y, width, height, color) => fill(graphics, color, x, y, width, height);
-      if (direction === 'down') {
-        rect(8, 4, 16, 18, 0x34231f);
-        rect(10, 10, 12, 14, 0xc98b64);
-        rect(8, 5, 16, 7, 0x34231f);
-        rect(11, 17, 2, 2, COLORS.ink);
-        rect(19, 17, 2, 2, COLORS.ink);
-      } else if (direction === 'up') {
-        rect(8, 4, 16, 20, 0x34231f);
-      } else {
-        rect(9, 4, 15, 19, 0x34231f);
-        rect(13, 10, 13, 14, 0xc98b64);
-        rect(22, 16, 2, 2, COLORS.ink);
-      }
-      rect(8, 25, 16, 24, COLORS.red);
-      rect(11, 28, 10, 18, 0x721827);
-      rect(14, 27, 4, 20, COLORS.paper);
-      rect(3, 29, 6, 21, 0xc98b64);
-      rect(23, 29, 6, 21, 0xc98b64);
-      rect(9, 48, 7, 12, 0x721827);
-      rect(17, 48, 7, 12, 0x721827);
-      rect(7, 58, 10, 6, COLORS.ink);
-      rect(16, 58, 10, 6, COLORS.ink);
-      graphics.generateTexture(`atlas-player-${direction}`, 32, 64);
-      graphics.destroy();
     });
   }
 
@@ -685,7 +663,7 @@ export class WorldAtlasScene extends Phaser.Scene {
     this.facing = DIRS[spawn.facing] ? spawn.facing : 'down';
     const position = this.worldPosition(spawn.x, spawn.y);
     this.shadow = this.track(this.add.ellipse(position.x, position.y - 3, 25, 8, 0x101614, 0.42).setDepth(position.y - 1));
-    this.player = this.track(this.add.sprite(position.x, position.y, 'atlas-player-down').setOrigin(0.5, 1).setDepth(position.y));
+    this.player = this.track(this.add.sprite(position.x, position.y, 'atlas-player', playerFrame(this.facing)).setOrigin(0.5, 1).setDepth(position.y));
     this.setFacing(this.facing);
   }
 
@@ -783,9 +761,8 @@ export class WorldAtlasScene extends Phaser.Scene {
   setFacing(direction) {
     this.facing = direction;
     if (!this.player) return;
-    const textureDirection = direction === 'left' ? 'right' : direction;
-    this.player.setTexture(`atlas-player-${textureDirection}`);
-    this.player.setFlipX(direction === 'left');
+    this.player.setFrame(playerFrame(direction));
+    this.player.setFlipX(false);
   }
 
   tryStep(direction) {
@@ -800,6 +777,8 @@ export class WorldAtlasScene extends Phaser.Scene {
     }
     this.moving = true;
     this.pendingDirection = null;
+    this.player.setFrame(playerFrame(direction, this.walkPhase ? 2 : 0));
+    this.walkPhase = this.walkPhase ? 0 : 1;
     const position = this.worldPosition(target.x, target.y);
     this.tweens.add({
       targets: this.player,

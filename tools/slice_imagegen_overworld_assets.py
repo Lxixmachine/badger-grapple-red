@@ -7,12 +7,12 @@ ART = ROOT / "art" / "imagegen"
 OUT = ROOT / "public" / "assets" / "sprites"
 
 SHEETS = {
-    "player_walk.png": ART / "overworld_player_sheet_2026-07-09.png",
+    "player_walk.png": ART / "overworld_player_v2_2026-07-16_alpha.png",
     "npc_walk.png": ART / "overworld_coach_sheet_2026-07-09.png",
-    "npc_coach_walk.png": ART / "overworld_head_coach_v1_2026-07-13_alpha.png",
-    "npc_trainer_walk.png": ART / "overworld_trainer_v1_2026-07-13_alpha.png",
-    "npc_rex_walk.png": ART / "overworld_rex_v1_2026-07-13_alpha.png",
-    "npc_captain_walk.png": ART / "overworld_captain_v1_2026-07-13_alpha.png",
+    "npc_coach_walk.png": ART / "overworld_head_coach_v2_2026-07-16_alpha.png",
+    "npc_trainer_walk.png": ART / "overworld_trainer_v2_2026-07-16_alpha.png",
+    "npc_rex_walk.png": ART / "overworld_rex_v2_2026-07-16_alpha.png",
+    "npc_captain_walk.png": ART / "overworld_captain_v2_2026-07-16_alpha.png",
     "npc_wrestler_walk.png": ART / "overworld_wrestler_v1_2026-07-13_alpha.png",
     "npc_manager_walk.png": ART / "overworld_manager_v1_2026-07-13_alpha.png",
     "npc_scout_walk.png": ART / "overworld_scout_v1_2026-07-13_alpha.png",

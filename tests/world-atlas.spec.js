@@ -52,7 +52,7 @@ async function walk(page, direction, steps) {
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
-  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.22-actor-pixel-contract');
+  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.23-character-art-pass');
   await expect(page.locator('canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
@@ -96,6 +96,18 @@ test('playtest framing is clean by default and diagnostics remain opt-in', async
   await expect.poll(async () => (await state(page)).atlas.diagnosticHud).toBe(false);
   await openAtlas(page, '&play=1&hud=1&area=camp_randall');
   await expect.poll(async () => (await state(page)).atlas.diagnosticHud).toBe(true);
+  expect(issues).toEqual([]);
+});
+
+test('atlas playtest uses the production actor sheet in all four directions', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openAtlas(page, '&play=1&area=camp_randall&x=24&y=20&facing=down');
+  await expect.poll(async () => (await state(page)).playerFrame).toBe(1);
+  for (const [direction, idleFrame] of [['left', 4], ['right', 7], ['up', 10], ['down', 1]]) {
+    await press(page, direction);
+    await expect.poll(async () => (await state(page)).facing).toBe(direction);
+    await expect.poll(async () => (await state(page)).playerFrame).toBe(idleFrame);
+  }
   expect(issues).toEqual([]);
 });
 
