@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: production-grid rollout through Bascom Hill in v22.16.
+Status: production-grid rollout through State Street in v22.17.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is
@@ -82,16 +82,24 @@ Review the package in this order:
 
 ## Approval State
 
-Camp Randall, R1, Field House Town, Lakeshore Path, Picnic Point, and Bascom
-Hill now use the production metatile behavior grid. State Street, Capitol
-Square, Monona Shore, Kohl Center, Airport, and St. Louis remain layout
-blockouts. Kohl Center's non-arena town X-factor remains an explicit Tony
-decision. No artist or agent should infer a landmark merely to fill that space.
+Camp Randall, R1, Field House Town, Lakeshore Path, Picnic Point, Bascom Hill,
+and State Street now use the production metatile behavior grid. Capitol Square,
+Monona Shore, Kohl Center, Airport, and St. Louis remain layout blockouts. Kohl
+Center's non-arena town X-factor remains an explicit Tony decision. No artist
+or agent should infer a landmark merely to fill that space.
 
 Bascom Hill is the first optional venue rebuilt as a three-camera vertical
 climb: south arrival, Lincoln terrace, and Bascom Hall crown. Its generated
 landmarks are normalized to exact stamps; monument collision belongs only to
 the pedestal cells, and the two bypasses remain traversable with actors active.
+
+State Street is a 44x18 production route built around one three-cell pedestrian
+promenade, a north Library Mall branch, and an east Capitol forecourt. Eight
+Imagegen-derived storefront stamps own exact non-overlapping footprints. Two
+practice mats, four actors, five camera reviews, and the west, north, and east
+thresholds share the same collision grid used by Map Studio and the live game.
+Closed façades are not interactive; only exact doors, actors, authored events,
+and route signs advertise an A-button action.
 
 After an area is approved, its art package is built from shared terrain and
 service kits plus grid-native bespoke structures. Lower pixels, upper

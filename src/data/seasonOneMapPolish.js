@@ -60,30 +60,6 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
     ]
   },
-  state_street: {
-    objects: [
-      stamp('state_mat_west', 'outdoor_wrestling_mat', 8, 7, 4, 3),
-      stamp('state_mat_east', 'outdoor_wrestling_mat', 27, 7, 4, 3),
-      stamp('state_lamp_0', 'campus_lamp', 4, 5, 1, 2),
-      stamp('state_lamp_1', 'campus_lamp', 18, 5, 1, 2),
-      stamp('state_lamp_2', 'campus_lamp', 32, 5, 1, 2),
-      stamp('state_lamp_3', 'campus_lamp', 41, 5, 1, 2),
-      stamp('state_bench_w', 'wood_bench', 14, 11, 3, 2),
-      stamp('state_bench_e', 'wood_bench', 35, 11, 3, 2),
-      stamp('state_bike_rack', 'bike_rack', 20, 12, 3, 1),
-      stamp('state_planter_0', 'flower_planter', 6, 11, 2, 1),
-      stamp('state_planter_1', 'flower_planter', 23, 5, 2, 1),
-      stamp('state_planter_2', 'flower_planter', 39, 11, 2, 1),
-      stamp('state_bollard_0', 'bollard', 12, 6, 1, 2),
-      stamp('state_bollard_1', 'bollard', 34, 6, 1, 2)
-    ],
-    actors: [
-      actor('deion_actor', 'wrestler', 9, 9, 'right', 'Deion: Throws start with footwork, not force.'),
-      actor('state_thrower', 'athlete', 28, 9, 'left', 'Own the center before you reach for the body lock.'),
-      actor('state_vendor', 'student', 24, 11, 'up', 'The Capitol is east. Bascom Hill branches north.', {patrol: {axis: 'horizontal', radius: 2, interval: 1650}}),
-      actor('state_official', 'official', 40, 9, 'left', 'Capitol Square begins beyond this block.')
-    ]
-  },
   capitol_square: {
     objects: [
       stamp('capitol_oak_sw', 'tree_oak_a', 4, 17, 2, 3),

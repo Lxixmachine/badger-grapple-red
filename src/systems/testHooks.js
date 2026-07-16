@@ -61,6 +61,9 @@ export function installTestHooks(game, routeVirtualButton) {
       tileRuntimeVersion: scene.bg?.getData?.('campTileRuntime') ?? null,
       messageOpen: scene.messageOpen ?? null,
       message: scene.message ?? null,
+      interactionPrompt: scene.promptForTarget && scene.tilePos && scene.facing
+        ? scene.promptForTarget()
+        : null,
       trainerName: scene.trainerName ?? null,
       battleType: scene.type ?? null,
       battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,

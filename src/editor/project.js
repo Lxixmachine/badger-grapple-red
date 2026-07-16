@@ -89,7 +89,9 @@ function makeObjectInstance(mapId, entry, owner, stamp = null) {
     door: doorFor(owner),
     metatiles: stamp ? deepClone(stamp.cells) : null,
     gate: owner?.gate || null,
-    interior: owner?.interior || owner?.to || null
+    interior: owner?.interior || owner?.to || null,
+    kind: owner?.kind || null,
+    inspectable: owner?.inspectable === true || owner?.kind === 'route_landmark'
   };
 }
 

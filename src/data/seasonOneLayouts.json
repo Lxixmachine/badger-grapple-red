@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 11,
+  "revision": 12,
   "status": "season-one-production-grid",
   "contract": {
     "cellSize": 32,
@@ -577,38 +577,60 @@
       "start": {"x": 1, "y": 8, "facing": "right"},
       "ground": "urban",
       "walkableMode": "paths",
+      "gridAuthority": "metatile-behavior-v1",
       "paths": [
-        {"id": "main_promenade", "x": 0, "y": 7, "width": 44, "height": 4, "material": "pedestrian_brick"},
-        {"id": "north_sidewalk", "x": 0, "y": 5, "width": 44, "height": 2, "material": "stone"},
+        {"id": "main_promenade", "x": 0, "y": 8, "width": 44, "height": 3, "material": "pedestrian_brick"},
+        {"id": "north_sidewalk", "x": 0, "y": 7, "width": 44, "height": 1, "material": "stone"},
         {"id": "south_sidewalk", "x": 0, "y": 11, "width": 44, "height": 2, "material": "stone"},
-        {"id": "bascom_branch", "x": 21, "y": 0, "width": 2, "height": 8, "material": "stone"},
-        {"id": "library_plaza", "x": 12, "y": 4, "width": 9, "height": 10, "material": "stone"},
-        {"id": "capitol_forecourt", "x": 35, "y": 5, "width": 9, "height": 8, "material": "stone"}
+        {"id": "bascom_branch", "x": 22, "y": 0, "width": 2, "height": 9, "material": "stone"},
+        {"id": "library_mall", "x": 19, "y": 5, "width": 5, "height": 8, "material": "stone"},
+        {"id": "capitol_forecourt", "x": 34, "y": 7, "width": 10, "height": 6, "material": "stone"}
       ],
       "clearings": [
-        {"id": "throw_plaza", "x": 8, "y": 6, "width": 6, "height": 7},
-        {"id": "library_mall", "x": 14, "y": 3, "width": 7, "height": 12},
-        {"id": "capitol_reveal", "x": 36, "y": 5, "width": 8, "height": 8}
+        {"id": "west_throw_plaza", "x": 7, "y": 7, "width": 7, "height": 6},
+        {"id": "library_mall", "x": 19, "y": 5, "width": 5, "height": 8},
+        {"id": "east_throw_plaza", "x": 26, "y": 7, "width": 6, "height": 6},
+        {"id": "capitol_reveal", "x": 34, "y": 7, "width": 10, "height": 6}
       ],
-      "blockers": [
-        {"id": "north_storefront_west", "kind": "storefront", "x": 0, "y": 0, "width": 11, "height": 5},
-        {"id": "north_storefront_mid", "kind": "storefront", "x": 11, "y": 0, "width": 10, "height": 3},
-        {"id": "north_storefront_east", "kind": "storefront", "x": 23, "y": 0, "width": 13, "height": 5},
-        {"id": "north_terminal_block", "kind": "storefront", "x": 36, "y": 0, "width": 8, "height": 5},
-        {"id": "south_storefront_west", "kind": "storefront", "x": 0, "y": 13, "width": 8, "height": 5},
-        {"id": "south_storefront_mid_left", "kind": "storefront", "x": 14, "y": 14, "width": 8, "height": 4},
-        {"id": "south_storefront_mid_right", "kind": "storefront", "x": 25, "y": 13, "width": 10, "height": 5},
-        {"id": "south_storefront_east", "kind": "storefront", "x": 39, "y": 13, "width": 5, "height": 5}
-      ],
+      "blockers": [],
       "buildings": [
-        {"id": "bookstore_row", "name": "Bookstore Row", "kind": "closed_building", "x": 1, "y": 1, "width": 9, "height": 4},
-        {"id": "theater_marquee", "name": "State Street Theater", "kind": "closed_building", "x": 25, "y": 1, "width": 8, "height": 4},
-        {"id": "food_cart_row", "name": "Food Cart Row", "kind": "closed_building", "x": 25, "y": 14, "width": 9, "height": 4}
+        {"id": "bookstore_row", "name": "Bookstore Row", "kind": "closed_building", "x": 0, "y": 4, "width": 9, "height": 4},
+        {"id": "north_storefront_mid", "name": "State Street Shops", "kind": "closed_building", "x": 9, "y": 5, "width": 10, "height": 3},
+        {"id": "theater_marquee", "name": "State Street Theater", "kind": "closed_building", "x": 24, "y": 4, "width": 8, "height": 4},
+        {"id": "north_storefront_terminal", "name": "Capitol View Shops", "kind": "closed_building", "x": 34, "y": 3, "width": 10, "height": 5, "editorStampId": "state_facade_10x5"},
+        {"id": "south_storefront_west", "name": "Library Mall Offices", "kind": "closed_building", "x": 0, "y": 13, "width": 8, "height": 5},
+        {"id": "south_storefront_mid_left", "name": "University Book Annex", "kind": "closed_building", "x": 14, "y": 14, "width": 8, "height": 4},
+        {"id": "food_cart_row", "name": "Food Cart Row", "kind": "closed_building", "x": 25, "y": 14, "width": 9, "height": 4},
+        {"id": "south_storefront_east", "name": "Capitol Newsstand", "kind": "closed_building", "x": 39, "y": 13, "width": 5, "height": 5}
       ],
       "landmarks": [
-        {"id": "state_street_gate", "name": "State Street Gate", "kind": "route_landmark", "x": 1, "y": 6, "width": 3, "height": 2, "walkable": true},
-        {"id": "library_mall_marker", "name": "Library Mall", "kind": "route_landmark", "x": 15, "y": 4, "width": 5, "height": 3, "walkable": true},
-        {"id": "capitol_view", "name": "Capitol Vista", "kind": "vista", "x": 39, "y": 6, "width": 4, "height": 2, "walkable": true}
+        {"id": "state_street_gate", "name": "State Street", "kind": "route_landmark", "x": 1, "y": 11, "width": 2, "height": 2, "editorStampId": "hanging_sign"},
+        {"id": "library_mall_marker", "name": "Library Mall - Bascom Hill", "kind": "route_landmark", "x": 19, "y": 5, "width": 3, "height": 2, "editorStampId": "campus_sign"},
+        {"id": "capitol_view", "name": "Capitol Square East", "kind": "route_landmark", "x": 41, "y": 11, "width": 2, "height": 2, "editorStampId": "hanging_sign"}
+      ],
+      "decorations": [
+        {"id": "state_mat_west", "stamp": "outdoor_wrestling_mat", "x": 8, "y": 8},
+        {"id": "state_mat_east", "stamp": "outdoor_wrestling_mat", "x": 27, "y": 8},
+        {"id": "state_lamp_west", "stamp": "campus_lamp", "x": 5, "y": 7},
+        {"id": "state_lamp_library_w", "stamp": "campus_lamp", "x": 16, "y": 7},
+        {"id": "state_lamp_theater", "stamp": "campus_lamp", "x": 32, "y": 7},
+        {"id": "state_lamp_capitol", "stamp": "campus_lamp", "x": 37, "y": 7},
+        {"id": "state_bench_library", "stamp": "wood_bench", "x": 14, "y": 11},
+        {"id": "state_bench_capitol", "stamp": "wood_bench", "x": 35, "y": 11},
+        {"id": "state_bike_rack", "stamp": "bike_rack", "x": 20, "y": 12},
+        {"id": "state_planter_west", "stamp": "flower_planter", "x": 6, "y": 11},
+        {"id": "state_planter_theater", "stamp": "flower_planter", "x": 24, "y": 8},
+        {"id": "state_planter_capitol", "stamp": "flower_planter", "x": 39, "y": 11},
+        {"id": "state_planter_alley", "stamp": "flower_planter", "x": 32, "y": 7},
+        {"id": "state_bollard_west", "stamp": "bollard", "x": 12, "y": 7},
+        {"id": "state_bollard_east", "stamp": "bollard", "x": 34, "y": 7},
+        {"id": "state_library_tree", "stamp": "tree_ornamental", "x": 20, "y": 3}
+      ],
+      "actors": [
+        {"id": "deion_actor", "sheet": "wrestler", "x": 10, "y": 10, "facing": "right", "dialogue": "Deion: Throws start with footwork, not force."},
+        {"id": "state_thrower", "sheet": "athlete", "x": 29, "y": 10, "facing": "left", "dialogue": "Own the center before you reach for the body lock."},
+        {"id": "state_vendor", "sheet": "student", "x": 24, "y": 11, "facing": "up", "dialogue": "The Capitol is east. Bascom Hill branches north."},
+        {"id": "state_official", "sheet": "official", "x": 39, "y": 9, "facing": "left", "dialogue": "Capitol Square begins beyond this block."}
       ],
       "connections": [
         {"to": "field_house", "edge": "west", "start": 8, "span": 2, "toEdge": "east", "toStart": 14},
@@ -616,14 +638,15 @@
         {"to": "capitol_square", "edge": "east", "start": 8, "span": 2, "toEdge": "west", "toStart": 14}
       ],
       "events": [
-        {"id": "deion_throw", "label": "Deion", "x": 9, "y": 9, "beat": 16},
-        {"id": "throw_trainer_two", "label": "Throw trainer", "x": 28, "y": 9, "beat": 16},
-        {"id": "capitol_reveal", "label": "Capitol reveal", "x": 40, "y": 9, "beat": 17}
+        {"id": "state_welcome", "label": "State Street", "x": 3, "y": 8, "kind": "message", "text": "STATE STREET - The pedestrian mall runs east to Capitol Square.", "once": true},
+        {"id": "library_direction", "label": "Library Mall", "x": 22, "y": 8, "kind": "message", "text": "LIBRARY MALL - Bascom Hill climbs north. Capitol Square is east.", "once": true},
+        {"id": "theater_notice", "label": "State Street Theater", "x": 26, "y": 8, "kind": "message", "text": "STATE STREET THEATER - Closed for the conference wrestling showcase.", "once": true},
+        {"id": "capitol_reveal", "label": "The Capitol dome rises beyond the next block.", "x": 38, "y": 8, "beat": 17, "once": true}
       ],
       "cameraReviews": [
         {"id": "field_entry", "label": "Field House departure", "x": 0, "y": 4, "width": 15, "height": 10},
-        {"id": "bookstore_plaza", "label": "Bookstore and throw plaza", "x": 8, "y": 2, "width": 15, "height": 10},
-        {"id": "bascom_junction", "label": "Bascom branch", "x": 15, "y": 0, "width": 15, "height": 10},
+        {"id": "deion_block", "label": "Bookstore and Deion mat", "x": 5, "y": 3, "width": 15, "height": 10},
+        {"id": "bascom_junction", "label": "Library Mall and Bascom branch", "x": 14, "y": 0, "width": 15, "height": 10},
         {"id": "theater_block", "label": "Theater block", "x": 22, "y": 3, "width": 15, "height": 10},
         {"id": "capitol_reveal", "label": "Capitol reveal", "x": 29, "y": 4, "width": 15, "height": 10}
       ]

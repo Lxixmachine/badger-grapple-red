@@ -36,7 +36,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 11, metatileVersion: 15});
+  expect(state.project).toMatchObject({layoutRevision: 12, metatileVersion: 16});
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'brick',
     connectedComponentCount: 1,
@@ -149,12 +149,10 @@ test('every planned location is grid-native, editable, and linked to its playtes
     'state_street:bookstore_row': 'bookstore_row_exterior',
     'state_street:theater_marquee': 'theater_marquee_exterior',
     'state_street:food_cart_row': 'food_cart_row_exterior',
-    'state_street:north_storefront_west': 'state_facade_11x5',
     'state_street:north_storefront_mid': 'state_facade_10x3',
-    'state_street:north_storefront_east': 'state_facade_13x5',
-    'state_street:north_terminal_block': 'state_facade_8x5',
+    'state_street:north_storefront_terminal': 'state_facade_10x5',
+    'state_street:south_storefront_west': 'state_facade_8x5',
     'state_street:south_storefront_mid_left': 'state_facade_8x4',
-    'state_street:south_storefront_mid_right': 'state_facade_10x5',
     'state_street:south_storefront_east': 'state_facade_5x5',
     'capitol_square:capitol_hotel': 'capitol_hotel_exterior',
     'capitol_square:civic_offices': 'civic_offices_exterior',
@@ -368,7 +366,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 11, metatileVersion: 15});
+  expect(state.project).toMatchObject({layoutRevision: 12, metatileVersion: 16});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

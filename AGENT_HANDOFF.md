@@ -3180,3 +3180,28 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   Imagegen assets, world tileset v8, Camp/Season metatile atlas v15, and app
   v22.16. The next non-conflicting exterior is Capitol Square; State Street has
   an active user composition draft and must not be overwritten or staged.
+
+## Codex State Street Promenade Production Grid (v22.17)
+
+- State Street is now a canonical 44x18 metatile-behavior route shared by the
+  game, World Atlas, and Map Studio. Its three-cell promenade connects the
+  Field House west threshold, two-cell Library Mall/Bascom branch, and Capitol
+  Square east threshold without hidden blockers or overlapping solid owners.
+- Eight existing Imagegen-derived storefront families are exact, independently
+  owned stamps. Practice mats, lamps, benches, planters, a bike rack, signs,
+  four actors, four events, and five 15x10 review windows are authored directly
+  in `seasonOneLayouts.json`; the obsolete State Street Map Polish duplicate is
+  removed.
+- Deion and the second thrower launch their authored battles from approachable
+  grid cells. Actor-inclusive flood fill reaches all three reciprocal seams.
+  Runtime tests physically cross each threshold and verify its destination.
+- Solid walls no longer masquerade as interactions or alternate entrances.
+  Only an exact warp cell can enter a building; actors, events, and explicitly
+  inspectable route signs are the only other interaction targets.
+- Current authority is layout revision 12, world tileset v8, Camp/Season
+  metatile atlas v16, and app v22.17. Capitol Square is the next production
+  exterior.
+- Tony's six State Street composition draft files remain user-owned reference
+  material. Do not regenerate, overwrite, stage, or revert them until Tony
+  explicitly reconciles that draft. The broad validator reports only the known
+  world-composition checksum mismatch caused by those unstaged edits.

@@ -672,7 +672,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     const hereEvent = mapEventAt(this.map, this.tilePos.x, this.tilePos.y);
     if (hereEvent) return {type: 'event', event: hereEvent};
     const objectEntry = objectsAt(this.map, front.x, front.y).at(-1);
-    if (objectEntry && (objectEntry.object.interior || objectEntry.cell.solid)) {
+    if (objectEntry?.object.inspectable === true) {
       return {type: 'object', object: objectEntry.object};
     }
     return null;
@@ -692,7 +692,6 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       return this.showMessage(target.actor.data.dialogue || 'Keep working.');
     }
     if (target.type === 'event') return this.handleStoryKey(`${this.currentMapId}:${target.event.id}`, target.event);
-    if (target.object.interior) return this.enterDoor({object: target.object, to: target.object.interior});
     this.showMessage(target.object.name || 'A familiar campus landmark.');
   }
 
@@ -1032,7 +1031,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       if (key === 'buckys_locker_room:shop') return 'A SHOP';
       return 'A CHECK';
     }
-    return target.object.interior ? 'A ENTER' : 'A CHECK';
+    return 'A READ';
   }
 
   drawHud() {

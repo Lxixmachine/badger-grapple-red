@@ -1,7 +1,7 @@
 {
   "version": 2,
   "status": "quiet-ground-production-pilot",
-  "layoutRevision": 11,
+  "layoutRevision": 12,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "map": {
@@ -821,8 +821,8 @@
     }
   },
   "sources": {
-    "manifest": "16c39be00c35938eea4a562b327c0f87a85e2900c0f5e436c3a5683cccc8f56f",
-    "layout": "da340165d72c4e30cc7cfe289dd683aa04f8ea25c23b3217b2c714a085cefce3",
+    "manifest": "77c3aaafc85a9a89d4ff1ecef9eb1fa0e6c21be76eb1fd628c9db0a9baee6ba6",
+    "layout": "bde88bac36545558cb9a5550f4358971050c28cdf6ff532c637d02080b3c7cb0",
     "worldTileset": "fa97850371b47e41b1d50222a0ced6fa78d66d1e39ea98acb99664887a4e526e",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
