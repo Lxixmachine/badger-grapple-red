@@ -28,7 +28,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.13-route-one-production');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.14-field-house-production');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',

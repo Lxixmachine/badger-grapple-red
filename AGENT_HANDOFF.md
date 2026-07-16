@@ -1,5 +1,39 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.14 Field House Production)
+
+Field House is now a production-authored 40x28 town on the same 32px
+metatile/behavior contract as Camp Randall and Route One. The authority lives in
+`src/data/seasonOneLayouts.json` revision 9. The previous white cross and giant
+forest blockers are gone; the map now has a north arrival sequence, a delayed
+arena reveal, distinct trainer/equipment/service walks, paired arena bypasses,
+an arena forecourt, honest west/east exits, and more than 50 grid-owned trees,
+lamps, banners, benches, gardens, signs, and shrubs. All four Field House actors
+were migrated out of `seasonOneMapPolish.js` and into the layout authority.
+
+The arrival arch is a new 7x4 grid-native stamp,
+`field_house_entry_arch`, composited from the approved Imagegen Field House
+source by `tools/prepare_imagegen_tileset_sources.py`. Its explicit collision
+mask leaves a real three-cell walk-under opening instead of treating the
+building silhouette as a rectangular blocker. The Season One world atlas is
+v6 and Camp metatiles are v13; both the runtime and Map Studio consume the same
+stamp and behavior ownership. Validator contracts were advanced to these
+versions, and `src/data/seasonOneRegion.json` now points to layout revision 9.
+
+`tests/field-house-production.spec.js` flood-fills the production map and proves
+the north arrival reaches all three service doors and both exits, even with
+actors included as blockers. A 390x844 touch run visited every cell from
+`(20,1)` through `(20,9)` in order on the native 480x320 canvas with no boot or
+runtime errors. The full Chromium suite passes: 100/100. `npm run validate`
+reaches only Tony's pre-existing dirty State Street composition hash mismatch;
+do not rebuild, stage, or revert those separate State Street files.
+
+Next production slice: rebuild the Lakeshore Path/Picnic Point sequence (or the
+next story-authoritative branch Tony selects) with this same authored-grid,
+actor-inclusive flood-fill, phone traversal, and fixed-reference visual review
+ritual. Field House still needs Tony's live phone verdict; metrics do not close
+visual parity.
+
 ## Latest Codex Turn (v22.13 Route One Production)
 
 Route One is now the first production route built from the same grid-owned

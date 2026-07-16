@@ -12,7 +12,7 @@ import hashlib
 import json
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageOps
+from PIL import Image, ImageChops, ImageDraw, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -481,6 +481,30 @@ def save_png(image: Image.Image, path: Path) -> None:
     image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
+def field_house_entry_arch(arena: Image.Image) -> Image.Image:
+    """Build a grid-native gateway from the approved Imagegen Field House art."""
+    if arena.size != (192, 112):
+        raise SystemExit(f"Field House arena source is {arena.size}, expected 192x112")
+    arch = Image.new("RGBA", (112, 64), (0, 0, 0, 0))
+    left_support = arena.crop((16, 48, 48, 112))
+    right_support = arena.crop((144, 48, 176, 112))
+    top_beam = arena.crop((40, 24, 152, 48))
+    arch.alpha_composite(left_support, (0, 0))
+    arch.alpha_composite(right_support, (80, 0))
+    arch.alpha_composite(top_beam, (0, 0))
+
+    # The route owns the middle three cells. Carve a generous opening while
+    # retaining the generated limestone and cardinal material language.
+    alpha = arch.getchannel("A")
+    opening = Image.new("L", arch.size, 255)
+    draw = ImageDraw.Draw(opening)
+    draw.ellipse((31, 10, 80, 57), fill=0)
+    draw.rectangle((31, 32, 80, 63), fill=0)
+    alpha = ImageChops.multiply(alpha, opening)
+    arch.putalpha(alpha.point(lambda value: 255 if value >= 96 else 0))
+    return quantize_rgba(arch, 36)
+
+
 def build() -> dict:
     outputs: dict[str, dict] = {}
     sources: dict[str, str] = {}
@@ -546,6 +570,22 @@ def build() -> dict:
                 "sha256": sha256(output_path),
                 "sourceFile": path.name,
             }
+
+    arena_path = OUTPUT_DIR / "landmarks" / "field_house_arena_exterior.png"
+    arch = field_house_entry_arch(Image.open(arena_path).convert("RGBA"))
+    arch_path = OUTPUT_DIR / "landmarks" / "field_house_entry_arch.png"
+    save_png(arch, arch_path)
+    sources["landmarks:field_house_entry_arch"] = f"derived:{sha256(arena_path)}"
+    outputs["field_house_entry_arch"] = {
+        "category": "landmarks",
+        "path": arch_path.relative_to(ROOT).as_posix(),
+        "width": arch.width,
+        "height": arch.height,
+        "colors": len(arch.convert("RGB").getcolors(maxcolors=65536) or []),
+        "sha256": sha256(arch_path),
+        "sourceFile": arena_path.name,
+        "derivation": "grid-native gateway from approved Imagegen Field House source",
+    }
 
     manifest = {
         "schema": "badger-grapple-imagegen-tileset-sources/v1",

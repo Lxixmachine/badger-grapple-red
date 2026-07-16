@@ -38,7 +38,8 @@
     "ordinary_buildings:state_facade_10x5": "673fc4cf6b5a63e91980785865cd4d32ef9573250d5b23c575febfbde6232d92",
     "ordinary_buildings:state_facade_5x5": "5c3068215f0969e6bcea437c93fd5a52c36dcfac442eebbc68cac7007787b68a",
     "ordinary_buildings:city_edge_horizontal": "005322c068ee98c41938572d2636194b23e5219a8dc3f71ec8bedf7fe5643d44",
-    "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279"
+    "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279",
+    "landmarks:field_house_entry_arch": "derived:e64111b17809f7b3e19a2c90c91c7a17b1b1703c5250b2775820bec7fedba588"
   },
   "assets": {
     "grass": {
@@ -976,6 +977,16 @@
       "colors": 36,
       "sha256": "7fe23c9011e03a3b8475814acd1a38f9265760c370ed05b7407e2d244c42870d",
       "sourceFile": "city_edge_vertical_source_v1.png"
+    },
+    "field_house_entry_arch": {
+      "category": "landmarks",
+      "path": "art/tilesets/imagegen_v3/landmarks/field_house_entry_arch.png",
+      "width": 112,
+      "height": 64,
+      "colors": 36,
+      "sha256": "a1906dc66e556a99f6d1ef9b06800e43e4f9fbb9d000a9b1f178fb358e77b0b9",
+      "sourceFile": "field_house_arena_exterior.png",
+      "derivation": "grid-native gateway from approved Imagegen Field House source"
     }
   }
 }

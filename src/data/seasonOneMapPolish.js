@@ -60,28 +60,6 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
     ]
   },
-  field_house: {
-    objects: [
-      stamp('field_lamp_west', 'campus_lamp', 8, 7, 1, 2),
-      stamp('field_lamp_east', 'campus_lamp', 30, 13, 1, 2),
-      stamp('field_banner_west', 'banner_pole', 11, 16, 1, 2),
-      stamp('field_banner_east', 'banner_pole', 28, 16, 1, 2),
-      stamp('field_forecourt_bench_w', 'wood_bench', 14, 18, 3, 2),
-      stamp('field_forecourt_bench_e', 'wood_bench', 23, 18, 3, 2),
-      stamp('field_tree_west', 'tree_oak_b', 2, 10, 2, 3),
-      stamp('field_tree_east', 'tree_oak_c', 34, 4, 2, 3),
-      stamp('field_bike_rack', 'bike_rack', 27, 22, 3, 1),
-      stamp('field_directory', 'campus_sign', 18, 24, 3, 2),
-      stamp('field_flowers_w', 'shrub_flowering', 17, 19, 1, 1),
-      stamp('field_flowers_e', 'shrub_flowering_b', 22, 19, 1, 1)
-    ],
-    actors: [
-      actor('equipment_manager', 'manager', 11, 18, 'right', 'The shipment is inside. Coach wants your roster ready.'),
-      actor('field_house_regular', 'wrestler', 6, 13, 'down', 'The Field House rewards wrestlers who pressure first.'),
-      actor('field_house_student', 'student', 35, 16, 'left', "Bucky's Locker Room has the gear counter.", {patrol: {axis: 'vertical', radius: 1, interval: 1550}}),
-      actor('field_house_trainer', 'trainer', 4, 8, 'down', "The Trainer's Room restores Condition and Stamina.")
-    ]
-  },
   lakeshore_path: {
     objects: [
       stamp('lake_grove_nw', 'forest_grove_small', 0, 0, 5, 4),

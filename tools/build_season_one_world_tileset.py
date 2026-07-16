@@ -40,7 +40,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v5.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v6.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
 GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
@@ -787,6 +787,15 @@ def build() -> dict:
     landmark_building("wisconsin_capitol_exterior", "Wisconsin State Capitol", 12, 8, 6)
     landmark_building("brittingham_boats_exterior", "Brittingham Boats", 6, 5, 2)
 
+    field_house_arch = export_2x(source_asset("landmarks", "field_house_entry_arch"))
+    register_stamp(
+        "field_house_entry_arch", "Field House Entry Arch", "town_landmarks",
+        field_house_arch, 7, 4, ["##...##"] * 4,
+        tags=["landmark", "field_house", "walk_under", "imagegen_derived", "authored16"],
+        semantic_behavior="walk_under_landmark",
+        minimum_coverage=contract["rules"]["visibleCollisionCoverage"],
+    )
+
     gateway_arch = export_2x(source_asset("landmarks", "gateway_arch_landmark"))
     gateway_mask = collision_mask_from_alpha(
         gateway_arch, 10, 8, None, contract["rules"]["visibleCollisionCoverage"],
@@ -1065,7 +1074,7 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-world-tileset/v5",
-        "version": 5,
+        "version": 6,
         "status": "season-one-quiet-ground-pixel-kit",
         "cellSize": cell,
         "artPipeline": {

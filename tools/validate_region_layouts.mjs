@@ -138,8 +138,8 @@ export function validateSeasonOneLayouts(region, layouts) {
   const requiredIds = Object.keys(region.nodes || {});
 
   if (layouts.schemaVersion !== 1 || !Number.isInteger(layouts.revision) || layouts.revision < 1
-    || layouts.status !== 'pre-art-blockout') {
-    errors.push('Season One layouts must use schemaVersion 1, a positive revision, and pre-art-blockout status');
+    || !['pre-art-blockout', 'season-one-production-grid'].includes(layouts.status)) {
+    errors.push('Season One layouts must use schemaVersion 1, a positive revision, and an approved production status');
   }
   if (contract.cellSize !== region.tileSize
     || contract.canvasWidth !== region.camera?.canvasWidth

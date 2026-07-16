@@ -347,6 +347,7 @@ function sourceStampId(owner, group, layout) {
   if (DEDICATED_FIXTURE_STAMPS[id]) return DEDICATED_FIXTURE_STAMPS[id];
   const dedicatedLandmarks = {
     field_house_arena: 'field_house_arena_exterior',
+    field_house_arch: 'field_house_entry_arch',
     kohl_arena: 'kohl_arena_exterior',
     nationals_arena: 'nationals_arena_exterior',
     bascom_hall: 'bascom_hall_exterior',

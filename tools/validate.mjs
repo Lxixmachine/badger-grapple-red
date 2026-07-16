@@ -84,7 +84,7 @@ else{
   const world=JSON.parse(readFileSync(worldTilesetBuildPath,'utf8'));
   const manifest=JSON.parse(readFileSync(worldTilesetManifestPath,'utf8'));
   const contract=JSON.parse(readFileSync(worldTilesetContractPath,'utf8'));
-  if(world.schema!=='badger-grapple-world-tileset/v5'||world.version!==5||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
+  if(world.schema!=='badger-grapple-world-tileset/v5'||world.version!==6||world.cellSize!==32)errs.push('Season One world tileset schema/version/cell size is unsupported');
   if(manifest.schema!=='badger-grapple-world-tileset-manifest/v2'||manifest.version!==2||manifest.logicalCellSize!==16||manifest.renderScale!==2)errs.push('Season One world tileset manifest must use the authored 16px/2x pipeline');
   if(contract.version!==4||contract.logicalCellSize!==16||contract.renderScale!==2||contract.rules?.imagegenSourceRequired!==true||contract.rules?.sceneCropStretching!==false||contract.rules?.quietGroundPalette!==true||contract.rules?.cardinalGroundReserved!==true)errs.push('Season One tileset contract does not enforce the Imagegen logical-grid pipeline');
   if(world.artPipeline?.logicalCellSize!==16||world.artPipeline?.renderScale!==2||world.artPipeline?.resampling!=='nearest'||world.artPipeline?.pixelPerfect!==true)errs.push('Season One world tileset is not an exact nearest-neighbor logical-grid export');
@@ -130,7 +130,7 @@ else{
 if(!existsSync(campMetatileBuildPath))errs.push('Camp metatile build is missing; run npm run build:camp-metatiles');
 else{
   const metatileBuild=JSON.parse(readFileSync(campMetatileBuildPath,'utf8'));
-  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==12)errs.push('Camp metatile build schema/version is unsupported');
+  if(metatileBuild.schema!=='badger-grapple-metatiles/v2'||metatileBuild.version!==13)errs.push('Camp metatile build schema/version is unsupported');
   if(metatileBuild.layoutRevision!==seasonLayouts.revision||metatileBuild.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp metatile build diverges from the Season One layout contract');
   if(metatileBuild.sources?.layout!==fileHash(seasonLayoutsPath)||metatileBuild.sources?.production!==fileHash(productionBuildPath)||metatileBuild.sources?.overrides!==fileHash(campMetatileOverridesPath)||metatileBuild.sources?.worldTileset!==fileHash(worldTilesetBuildPath))errs.push('Camp metatile build is stale; run npm run build:camp-metatiles');
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));

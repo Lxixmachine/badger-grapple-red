@@ -1,6 +1,6 @@
 {
   "schema": "badger-grapple-world-tileset/v5",
-  "version": 5,
+  "version": 6,
   "status": "season-one-quiet-ground-pixel-kit",
   "cellSize": 32,
   "artPipeline": {
@@ -11,10 +11,10 @@
     "pixelPerfect": true
   },
   "atlas": {
-    "path": "./assets/metatiles/season_one_world_tileset_v5.png",
+    "path": "./assets/metatiles/season_one_world_tileset_v6.png",
     "columns": 16,
-    "visualCount": 2316,
-    "sha256": "acdfea59f8cd50722ef76e6eeda4608803faab0f327c4f32a007b45954aa2e0c",
+    "visualCount": 2333,
+    "sha256": "d4d7748184b4b273cef85aee563adff7c4333b9d713b90fd2507b122c3cbe7d9",
     "entries": [
       {
         "index": 0,
@@ -6987,6 +6987,13 @@
           "Wisconsin State Capitol 10,4",
           "Wisconsin State Capitol 11,4",
           "Wisconsin State Capitol 12,4",
+          "Field House Entry Arch 4,2",
+          "Field House Entry Arch 3,3",
+          "Field House Entry Arch 4,3",
+          "Field House Entry Arch 5,3",
+          "Field House Entry Arch 3,4",
+          "Field House Entry Arch 4,4",
+          "Field House Entry Arch 5,4",
           "Gateway Arch Championship Landmark 1,1",
           "Gateway Arch Championship Landmark 2,1",
           "Gateway Arch Championship Landmark 9,1",
@@ -20060,7 +20067,8 @@
           "town_landmarks"
         ],
         "names": [
-          "Wisconsin Field House 2,6"
+          "Wisconsin Field House 2,6",
+          "Field House Entry Arch 1,3"
         ]
       },
       {
@@ -20150,7 +20158,8 @@
           "town_landmarks"
         ],
         "names": [
-          "Wisconsin Field House 11,6"
+          "Wisconsin Field House 11,6",
+          "Field House Entry Arch 7,3"
         ]
       },
       {
@@ -20180,7 +20189,8 @@
           "town_landmarks"
         ],
         "names": [
-          "Wisconsin Field House 2,7"
+          "Wisconsin Field House 2,7",
+          "Field House Entry Arch 1,4"
         ]
       },
       {
@@ -20270,7 +20280,8 @@
           "town_landmarks"
         ],
         "names": [
-          "Wisconsin Field House 11,7"
+          "Wisconsin Field House 11,7",
+          "Field House Entry Arch 7,4"
         ]
       },
       {
@@ -23070,7 +23081,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,1"
+          "Field House Entry Arch 1,1"
         ]
       },
       {
@@ -23080,7 +23091,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,1"
+          "Field House Entry Arch 2,1"
         ]
       },
       {
@@ -23090,7 +23101,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 5,1"
+          "Field House Entry Arch 3,1"
         ]
       },
       {
@@ -23100,7 +23111,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 6,1"
+          "Field House Entry Arch 4,1"
         ]
       },
       {
@@ -23110,7 +23121,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,1"
+          "Field House Entry Arch 5,1"
         ]
       },
       {
@@ -23120,7 +23131,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,1"
+          "Field House Entry Arch 6,1"
         ]
       },
       {
@@ -23130,7 +23141,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,2"
+          "Field House Entry Arch 7,1"
         ]
       },
       {
@@ -23140,7 +23151,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,2"
+          "Field House Entry Arch 1,2"
         ]
       },
       {
@@ -23150,7 +23161,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 5,2"
+          "Field House Entry Arch 2,2"
         ]
       },
       {
@@ -23160,7 +23171,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 6,2"
+          "Field House Entry Arch 3,2"
         ]
       },
       {
@@ -23170,7 +23181,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,2"
+          "Field House Entry Arch 5,2"
         ]
       },
       {
@@ -23180,7 +23191,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,2"
+          "Field House Entry Arch 6,2"
         ]
       },
       {
@@ -23190,7 +23201,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 2,3"
+          "Field House Entry Arch 7,2"
         ]
       },
       {
@@ -23200,7 +23211,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,3"
+          "Field House Entry Arch 2,3"
         ]
       },
       {
@@ -23210,7 +23221,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,3"
+          "Field House Entry Arch 6,3"
         ]
       },
       {
@@ -23220,7 +23231,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,3"
+          "Field House Entry Arch 2,4"
         ]
       },
       {
@@ -23230,7 +23241,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,3"
+          "Field House Entry Arch 6,4"
         ]
       },
       {
@@ -23240,7 +23251,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 9,3"
+          "Gateway Arch Championship Landmark 3,1"
         ]
       },
       {
@@ -23250,7 +23261,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 2,4"
+          "Gateway Arch Championship Landmark 4,1"
         ]
       },
       {
@@ -23260,7 +23271,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,4"
+          "Gateway Arch Championship Landmark 5,1"
         ]
       },
       {
@@ -23270,7 +23281,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,4"
+          "Gateway Arch Championship Landmark 6,1"
         ]
       },
       {
@@ -23280,7 +23291,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,4"
+          "Gateway Arch Championship Landmark 7,1"
         ]
       },
       {
@@ -23290,7 +23301,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,4"
+          "Gateway Arch Championship Landmark 8,1"
         ]
       },
       {
@@ -23300,7 +23311,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 9,4"
+          "Gateway Arch Championship Landmark 3,2"
         ]
       },
       {
@@ -23310,7 +23321,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 2,5"
+          "Gateway Arch Championship Landmark 4,2"
         ]
       },
       {
@@ -23320,7 +23331,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,5"
+          "Gateway Arch Championship Landmark 5,2"
         ]
       },
       {
@@ -23330,7 +23341,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,5"
+          "Gateway Arch Championship Landmark 6,2"
         ]
       },
       {
@@ -23340,7 +23351,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,5"
+          "Gateway Arch Championship Landmark 7,2"
         ]
       },
       {
@@ -23350,7 +23361,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 9,5"
+          "Gateway Arch Championship Landmark 8,2"
         ]
       },
       {
@@ -23360,7 +23371,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 1,6"
+          "Gateway Arch Championship Landmark 2,3"
         ]
       },
       {
@@ -23370,7 +23381,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 2,6"
+          "Gateway Arch Championship Landmark 3,3"
         ]
       },
       {
@@ -23380,7 +23391,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,6"
+          "Gateway Arch Championship Landmark 4,3"
         ]
       },
       {
@@ -23390,7 +23401,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,6"
+          "Gateway Arch Championship Landmark 7,3"
         ]
       },
       {
@@ -23400,7 +23411,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,6"
+          "Gateway Arch Championship Landmark 8,3"
         ]
       },
       {
@@ -23410,7 +23421,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,6"
+          "Gateway Arch Championship Landmark 9,3"
         ]
       },
       {
@@ -23420,7 +23431,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 9,6"
+          "Gateway Arch Championship Landmark 2,4"
         ]
       },
       {
@@ -23430,7 +23441,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 10,6"
+          "Gateway Arch Championship Landmark 3,4"
         ]
       },
       {
@@ -23440,7 +23451,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 1,7"
+          "Gateway Arch Championship Landmark 4,4"
         ]
       },
       {
@@ -23450,7 +23461,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 2,7"
+          "Gateway Arch Championship Landmark 7,4"
         ]
       },
       {
@@ -23460,7 +23471,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,7"
+          "Gateway Arch Championship Landmark 8,4"
         ]
       },
       {
@@ -23470,7 +23481,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,7"
+          "Gateway Arch Championship Landmark 9,4"
         ]
       },
       {
@@ -23480,7 +23491,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,7"
+          "Gateway Arch Championship Landmark 2,5"
         ]
       },
       {
@@ -23490,7 +23501,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,7"
+          "Gateway Arch Championship Landmark 3,5"
         ]
       },
       {
@@ -23500,7 +23511,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 9,7"
+          "Gateway Arch Championship Landmark 7,5"
         ]
       },
       {
@@ -23510,7 +23521,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 10,7"
+          "Gateway Arch Championship Landmark 8,5"
         ]
       },
       {
@@ -23520,7 +23531,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 1,8"
+          "Gateway Arch Championship Landmark 9,5"
         ]
       },
       {
@@ -23530,7 +23541,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 2,8"
+          "Gateway Arch Championship Landmark 1,6"
         ]
       },
       {
@@ -23540,7 +23551,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 3,8"
+          "Gateway Arch Championship Landmark 2,6"
         ]
       },
       {
@@ -23550,7 +23561,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 4,8"
+          "Gateway Arch Championship Landmark 3,6"
         ]
       },
       {
@@ -23560,7 +23571,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 7,8"
+          "Gateway Arch Championship Landmark 4,6"
         ]
       },
       {
@@ -23570,7 +23581,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 8,8"
+          "Gateway Arch Championship Landmark 7,6"
         ]
       },
       {
@@ -23580,7 +23591,7 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 9,8"
+          "Gateway Arch Championship Landmark 8,6"
         ]
       },
       {
@@ -23590,11 +23601,181 @@
           "town_landmarks"
         ],
         "names": [
-          "Gateway Arch Championship Landmark 10,8"
+          "Gateway Arch Championship Landmark 9,6"
         ]
       },
       {
         "index": 2295,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 10,6"
+        ]
+      },
+      {
+        "index": 2296,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 1,7"
+        ]
+      },
+      {
+        "index": 2297,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 2,7"
+        ]
+      },
+      {
+        "index": 2298,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 3,7"
+        ]
+      },
+      {
+        "index": 2299,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 4,7"
+        ]
+      },
+      {
+        "index": 2300,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 7,7"
+        ]
+      },
+      {
+        "index": 2301,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 8,7"
+        ]
+      },
+      {
+        "index": 2302,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 9,7"
+        ]
+      },
+      {
+        "index": 2303,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 10,7"
+        ]
+      },
+      {
+        "index": 2304,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 1,8"
+        ]
+      },
+      {
+        "index": 2305,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 2,8"
+        ]
+      },
+      {
+        "index": 2306,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 3,8"
+        ]
+      },
+      {
+        "index": 2307,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 4,8"
+        ]
+      },
+      {
+        "index": 2308,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 7,8"
+        ]
+      },
+      {
+        "index": 2309,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 8,8"
+        ]
+      },
+      {
+        "index": 2310,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 9,8"
+        ]
+      },
+      {
+        "index": 2311,
+        "kind": "structure",
+        "families": [
+          "town_landmarks"
+        ],
+        "names": [
+          "Gateway Arch Championship Landmark 10,8"
+        ]
+      },
+      {
+        "index": 2312,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23605,7 +23786,7 @@
         ]
       },
       {
-        "index": 2296,
+        "index": 2313,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23617,7 +23798,7 @@
         ]
       },
       {
-        "index": 2297,
+        "index": 2314,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23628,7 +23809,7 @@
         ]
       },
       {
-        "index": 2298,
+        "index": 2315,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23639,7 +23820,7 @@
         ]
       },
       {
-        "index": 2299,
+        "index": 2316,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23651,7 +23832,7 @@
         ]
       },
       {
-        "index": 2300,
+        "index": 2317,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23662,7 +23843,7 @@
         ]
       },
       {
-        "index": 2301,
+        "index": 2318,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23673,7 +23854,7 @@
         ]
       },
       {
-        "index": 2302,
+        "index": 2319,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23684,7 +23865,7 @@
         ]
       },
       {
-        "index": 2303,
+        "index": 2320,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23695,7 +23876,7 @@
         ]
       },
       {
-        "index": 2304,
+        "index": 2321,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23706,7 +23887,7 @@
         ]
       },
       {
-        "index": 2305,
+        "index": 2322,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23717,7 +23898,7 @@
         ]
       },
       {
-        "index": 2306,
+        "index": 2323,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23728,7 +23909,7 @@
         ]
       },
       {
-        "index": 2307,
+        "index": 2324,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23739,7 +23920,7 @@
         ]
       },
       {
-        "index": 2308,
+        "index": 2325,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23750,7 +23931,7 @@
         ]
       },
       {
-        "index": 2309,
+        "index": 2326,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23760,7 +23941,7 @@
         ]
       },
       {
-        "index": 2310,
+        "index": 2327,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23770,7 +23951,7 @@
         ]
       },
       {
-        "index": 2311,
+        "index": 2328,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23780,7 +23961,7 @@
         ]
       },
       {
-        "index": 2312,
+        "index": 2329,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23790,7 +23971,7 @@
         ]
       },
       {
-        "index": 2313,
+        "index": 2330,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23800,7 +23981,7 @@
         ]
       },
       {
-        "index": 2314,
+        "index": 2331,
         "kind": "structure",
         "families": [
           "elevation"
@@ -23811,7 +23992,7 @@
         ]
       },
       {
-        "index": 2315,
+        "index": 2332,
         "kind": "structure",
         "families": [
           "elevation"
@@ -36122,6 +36303,13 @@
         "Wisconsin State Capitol 10,4",
         "Wisconsin State Capitol 11,4",
         "Wisconsin State Capitol 12,4",
+        "Field House Entry Arch 4,2",
+        "Field House Entry Arch 3,3",
+        "Field House Entry Arch 4,3",
+        "Field House Entry Arch 5,3",
+        "Field House Entry Arch 3,4",
+        "Field House Entry Arch 4,4",
+        "Field House Entry Arch 5,4",
         "Gateway Arch Championship Landmark 1,1",
         "Gateway Arch Championship Landmark 2,1",
         "Gateway Arch Championship Landmark 9,1",
@@ -36341,6 +36529,13 @@
         "Wisconsin State Capitol 10,4",
         "Wisconsin State Capitol 11,4",
         "Wisconsin State Capitol 12,4",
+        "Field House Entry Arch 4,2",
+        "Field House Entry Arch 3,3",
+        "Field House Entry Arch 4,3",
+        "Field House Entry Arch 5,3",
+        "Field House Entry Arch 3,4",
+        "Field House Entry Arch 4,4",
+        "Field House Entry Arch 5,4",
         "Gateway Arch Championship Landmark 1,1",
         "Gateway Arch Championship Landmark 2,1",
         "Gateway Arch Championship Landmark 9,1",
@@ -36560,6 +36755,13 @@
         "Wisconsin State Capitol 10,4",
         "Wisconsin State Capitol 11,4",
         "Wisconsin State Capitol 12,4",
+        "Field House Entry Arch 4,2",
+        "Field House Entry Arch 3,3",
+        "Field House Entry Arch 4,3",
+        "Field House Entry Arch 5,3",
+        "Field House Entry Arch 3,4",
+        "Field House Entry Arch 4,4",
+        "Field House Entry Arch 5,4",
         "Gateway Arch Championship Landmark 1,1",
         "Gateway Arch Championship Landmark 2,1",
         "Gateway Arch Championship Landmark 9,1",
@@ -87095,7 +87297,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 2,6"
+        "Wisconsin Field House 2,6",
+        "Field House Entry Arch 1,3"
       ]
     },
     "mt_6248cd7fe3a3": {
@@ -87108,7 +87311,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 2,6"
+        "Wisconsin Field House 2,6",
+        "Field House Entry Arch 1,3"
       ]
     },
     "mt_e1d4660e1d32": {
@@ -87121,7 +87325,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 2,6"
+        "Wisconsin Field House 2,6",
+        "Field House Entry Arch 1,3"
       ]
     },
     "mt_c1872208555f": {
@@ -87446,7 +87651,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 11,6"
+        "Wisconsin Field House 11,6",
+        "Field House Entry Arch 7,3"
       ]
     },
     "mt_1e38959d1d24": {
@@ -87459,7 +87665,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 11,6"
+        "Wisconsin Field House 11,6",
+        "Field House Entry Arch 7,3"
       ]
     },
     "mt_4ae413408aa7": {
@@ -87472,7 +87679,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 11,6"
+        "Wisconsin Field House 11,6",
+        "Field House Entry Arch 7,3"
       ]
     },
     "mt_cc506d8552ad": {
@@ -87563,7 +87771,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 2,7"
+        "Wisconsin Field House 2,7",
+        "Field House Entry Arch 1,4"
       ]
     },
     "mt_c3f3e64a64cf": {
@@ -87576,7 +87785,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 2,7"
+        "Wisconsin Field House 2,7",
+        "Field House Entry Arch 1,4"
       ]
     },
     "mt_ab949108fdf8": {
@@ -87589,7 +87799,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 2,7"
+        "Wisconsin Field House 2,7",
+        "Field House Entry Arch 1,4"
       ]
     },
     "mt_9692ed9f8a9e": {
@@ -87914,7 +88125,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 11,7"
+        "Wisconsin Field House 11,7",
+        "Field House Entry Arch 7,4"
       ]
     },
     "mt_37323fe0e6b1": {
@@ -87927,7 +88139,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 11,7"
+        "Wisconsin Field House 11,7",
+        "Field House Entry Arch 7,4"
       ]
     },
     "mt_594b15a6796c": {
@@ -87940,7 +88153,8 @@
         "town_landmarks"
       ],
       "names": [
-        "Wisconsin Field House 11,7"
+        "Wisconsin Field House 11,7",
+        "Field House Entry Arch 7,4"
       ]
     },
     "mt_4d7cdf359921": {
@@ -98824,9 +99038,672 @@
         "Brittingham Boats 6,5"
       ]
     },
+    "mt_be009b99a899": {
+      "id": "mt_be009b99a899",
+      "visual": 2242,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 1,1"
+      ]
+    },
+    "mt_d02d4f24d8bc": {
+      "id": "mt_d02d4f24d8bc",
+      "visual": 2242,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 1,1"
+      ]
+    },
+    "mt_008da9bb526c": {
+      "id": "mt_008da9bb526c",
+      "visual": 2242,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 1,1"
+      ]
+    },
+    "mt_746e8d591e9f": {
+      "id": "mt_746e8d591e9f",
+      "visual": 2243,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,1"
+      ]
+    },
+    "mt_19aa7f32f97f": {
+      "id": "mt_19aa7f32f97f",
+      "visual": 2243,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,1"
+      ]
+    },
+    "mt_ae72cab6eca8": {
+      "id": "mt_ae72cab6eca8",
+      "visual": 2243,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,1"
+      ]
+    },
+    "mt_a777997ed6f9": {
+      "id": "mt_a777997ed6f9",
+      "visual": 2244,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 3,1"
+      ]
+    },
+    "mt_7e4d13ba288a": {
+      "id": "mt_7e4d13ba288a",
+      "visual": 2244,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 3,1"
+      ]
+    },
+    "mt_9d1677f2e160": {
+      "id": "mt_9d1677f2e160",
+      "visual": 2244,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 3,1"
+      ]
+    },
+    "mt_816c3b8d055a": {
+      "id": "mt_816c3b8d055a",
+      "visual": 2245,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 4,1"
+      ]
+    },
+    "mt_79dcf7a1469f": {
+      "id": "mt_79dcf7a1469f",
+      "visual": 2245,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 4,1"
+      ]
+    },
+    "mt_00d96f2bb13d": {
+      "id": "mt_00d96f2bb13d",
+      "visual": 2245,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 4,1"
+      ]
+    },
+    "mt_b78ae9dc8378": {
+      "id": "mt_b78ae9dc8378",
+      "visual": 2246,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 5,1"
+      ]
+    },
+    "mt_d5f45ae18cb6": {
+      "id": "mt_d5f45ae18cb6",
+      "visual": 2246,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 5,1"
+      ]
+    },
+    "mt_e4e67c388920": {
+      "id": "mt_e4e67c388920",
+      "visual": 2246,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 5,1"
+      ]
+    },
+    "mt_6852e6797ee5": {
+      "id": "mt_6852e6797ee5",
+      "visual": 2247,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,1"
+      ]
+    },
+    "mt_8cda3f815482": {
+      "id": "mt_8cda3f815482",
+      "visual": 2247,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,1"
+      ]
+    },
+    "mt_b6e20446083a": {
+      "id": "mt_b6e20446083a",
+      "visual": 2247,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,1"
+      ]
+    },
+    "mt_a660b97a59e9": {
+      "id": "mt_a660b97a59e9",
+      "visual": 2248,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 7,1"
+      ]
+    },
+    "mt_1cf0725170f0": {
+      "id": "mt_1cf0725170f0",
+      "visual": 2248,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 7,1"
+      ]
+    },
+    "mt_ec550d454cdb": {
+      "id": "mt_ec550d454cdb",
+      "visual": 2248,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 7,1"
+      ]
+    },
+    "mt_40de999e8e16": {
+      "id": "mt_40de999e8e16",
+      "visual": 2249,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 1,2"
+      ]
+    },
+    "mt_9d654e58752f": {
+      "id": "mt_9d654e58752f",
+      "visual": 2249,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 1,2"
+      ]
+    },
+    "mt_bfb762ce2204": {
+      "id": "mt_bfb762ce2204",
+      "visual": 2249,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 1,2"
+      ]
+    },
+    "mt_822b03475208": {
+      "id": "mt_822b03475208",
+      "visual": 2250,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,2"
+      ]
+    },
+    "mt_d40cf61c3aee": {
+      "id": "mt_d40cf61c3aee",
+      "visual": 2250,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,2"
+      ]
+    },
+    "mt_d4560a71f79e": {
+      "id": "mt_d4560a71f79e",
+      "visual": 2250,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,2"
+      ]
+    },
+    "mt_68dde221373b": {
+      "id": "mt_68dde221373b",
+      "visual": 2251,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 3,2"
+      ]
+    },
+    "mt_3d32f86e7520": {
+      "id": "mt_3d32f86e7520",
+      "visual": 2251,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 3,2"
+      ]
+    },
+    "mt_089c7b111380": {
+      "id": "mt_089c7b111380",
+      "visual": 2251,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 3,2"
+      ]
+    },
+    "mt_e915f5f21a0f": {
+      "id": "mt_e915f5f21a0f",
+      "visual": 2252,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 5,2"
+      ]
+    },
+    "mt_dbe4f1042e7e": {
+      "id": "mt_dbe4f1042e7e",
+      "visual": 2252,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 5,2"
+      ]
+    },
+    "mt_de3f423f2db3": {
+      "id": "mt_de3f423f2db3",
+      "visual": 2252,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 5,2"
+      ]
+    },
+    "mt_eea4e498b525": {
+      "id": "mt_eea4e498b525",
+      "visual": 2253,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,2"
+      ]
+    },
+    "mt_8e9eb7971f53": {
+      "id": "mt_8e9eb7971f53",
+      "visual": 2253,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,2"
+      ]
+    },
+    "mt_d1d9e5d77db3": {
+      "id": "mt_d1d9e5d77db3",
+      "visual": 2253,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,2"
+      ]
+    },
+    "mt_11418e547e52": {
+      "id": "mt_11418e547e52",
+      "visual": 2254,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 7,2"
+      ]
+    },
+    "mt_10601ff08c79": {
+      "id": "mt_10601ff08c79",
+      "visual": 2254,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 7,2"
+      ]
+    },
+    "mt_b40372296fa2": {
+      "id": "mt_b40372296fa2",
+      "visual": 2254,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 7,2"
+      ]
+    },
+    "mt_617b9fbf8dd0": {
+      "id": "mt_617b9fbf8dd0",
+      "visual": 2255,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,3"
+      ]
+    },
+    "mt_8acabc100721": {
+      "id": "mt_8acabc100721",
+      "visual": 2255,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,3"
+      ]
+    },
+    "mt_db81118787c5": {
+      "id": "mt_db81118787c5",
+      "visual": 2255,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,3"
+      ]
+    },
+    "mt_ce77d3a2133b": {
+      "id": "mt_ce77d3a2133b",
+      "visual": 2256,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,3"
+      ]
+    },
+    "mt_3d21220b837d": {
+      "id": "mt_3d21220b837d",
+      "visual": 2256,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,3"
+      ]
+    },
+    "mt_154194a4b9db": {
+      "id": "mt_154194a4b9db",
+      "visual": 2256,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,3"
+      ]
+    },
+    "mt_f07f999ff325": {
+      "id": "mt_f07f999ff325",
+      "visual": 2257,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,4"
+      ]
+    },
+    "mt_fef86e0b95d1": {
+      "id": "mt_fef86e0b95d1",
+      "visual": 2257,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,4"
+      ]
+    },
+    "mt_5b879c25d6c1": {
+      "id": "mt_5b879c25d6c1",
+      "visual": 2257,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 2,4"
+      ]
+    },
+    "mt_a39dcd2d60d9": {
+      "id": "mt_a39dcd2d60d9",
+      "visual": 2258,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,4"
+      ]
+    },
+    "mt_9bfe92427a39": {
+      "id": "mt_9bfe92427a39",
+      "visual": 2258,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,4"
+      ]
+    },
+    "mt_6cc58e76c5a6": {
+      "id": "mt_6cc58e76c5a6",
+      "visual": 2258,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "town_landmarks"
+      ],
+      "names": [
+        "Field House Entry Arch 6,4"
+      ]
+    },
     "mt_e308444a2305": {
       "id": "mt_e308444a2305",
-      "visual": 2242,
+      "visual": 2259,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -98839,7 +99716,7 @@
     },
     "mt_6d5ac136ef85": {
       "id": "mt_6d5ac136ef85",
-      "visual": 2242,
+      "visual": 2259,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -98852,7 +99729,7 @@
     },
     "mt_0ad4b5613296": {
       "id": "mt_0ad4b5613296",
-      "visual": 2242,
+      "visual": 2259,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -98865,7 +99742,7 @@
     },
     "mt_47352d6fe318": {
       "id": "mt_47352d6fe318",
-      "visual": 2243,
+      "visual": 2260,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -98878,7 +99755,7 @@
     },
     "mt_1c769963787b": {
       "id": "mt_1c769963787b",
-      "visual": 2243,
+      "visual": 2260,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -98891,7 +99768,7 @@
     },
     "mt_7fc48425ce3d": {
       "id": "mt_7fc48425ce3d",
-      "visual": 2243,
+      "visual": 2260,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -98904,7 +99781,7 @@
     },
     "mt_56516513d5fb": {
       "id": "mt_56516513d5fb",
-      "visual": 2244,
+      "visual": 2261,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -98917,7 +99794,7 @@
     },
     "mt_c06369abb207": {
       "id": "mt_c06369abb207",
-      "visual": 2244,
+      "visual": 2261,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -98930,7 +99807,7 @@
     },
     "mt_54bfa780938c": {
       "id": "mt_54bfa780938c",
-      "visual": 2244,
+      "visual": 2261,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -98943,7 +99820,7 @@
     },
     "mt_17fb17caa600": {
       "id": "mt_17fb17caa600",
-      "visual": 2245,
+      "visual": 2262,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -98956,7 +99833,7 @@
     },
     "mt_5eabe857fa1a": {
       "id": "mt_5eabe857fa1a",
-      "visual": 2245,
+      "visual": 2262,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -98969,7 +99846,7 @@
     },
     "mt_300a656e3df0": {
       "id": "mt_300a656e3df0",
-      "visual": 2245,
+      "visual": 2262,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -98982,7 +99859,7 @@
     },
     "mt_b7b9038676a0": {
       "id": "mt_b7b9038676a0",
-      "visual": 2246,
+      "visual": 2263,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -98995,7 +99872,7 @@
     },
     "mt_a405cf0c787b": {
       "id": "mt_a405cf0c787b",
-      "visual": 2246,
+      "visual": 2263,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99008,7 +99885,7 @@
     },
     "mt_c783233cd539": {
       "id": "mt_c783233cd539",
-      "visual": 2246,
+      "visual": 2263,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99021,7 +99898,7 @@
     },
     "mt_7c1528614c6b": {
       "id": "mt_7c1528614c6b",
-      "visual": 2247,
+      "visual": 2264,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99034,7 +99911,7 @@
     },
     "mt_bcbde86723a6": {
       "id": "mt_bcbde86723a6",
-      "visual": 2247,
+      "visual": 2264,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99047,7 +99924,7 @@
     },
     "mt_78b73f909973": {
       "id": "mt_78b73f909973",
-      "visual": 2247,
+      "visual": 2264,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99060,7 +99937,7 @@
     },
     "mt_8f59ea04d71b": {
       "id": "mt_8f59ea04d71b",
-      "visual": 2248,
+      "visual": 2265,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99073,7 +99950,7 @@
     },
     "mt_1a46336d65a4": {
       "id": "mt_1a46336d65a4",
-      "visual": 2248,
+      "visual": 2265,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99086,7 +99963,7 @@
     },
     "mt_7cd368508a81": {
       "id": "mt_7cd368508a81",
-      "visual": 2248,
+      "visual": 2265,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99099,7 +99976,7 @@
     },
     "mt_8e8807007bd3": {
       "id": "mt_8e8807007bd3",
-      "visual": 2249,
+      "visual": 2266,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99112,7 +99989,7 @@
     },
     "mt_78a1982fef7d": {
       "id": "mt_78a1982fef7d",
-      "visual": 2249,
+      "visual": 2266,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99125,7 +100002,7 @@
     },
     "mt_828d301cba90": {
       "id": "mt_828d301cba90",
-      "visual": 2249,
+      "visual": 2266,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99138,7 +100015,7 @@
     },
     "mt_c15d9060c05f": {
       "id": "mt_c15d9060c05f",
-      "visual": 2250,
+      "visual": 2267,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99151,7 +100028,7 @@
     },
     "mt_bce0227299d3": {
       "id": "mt_bce0227299d3",
-      "visual": 2250,
+      "visual": 2267,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99164,7 +100041,7 @@
     },
     "mt_2c39294aec70": {
       "id": "mt_2c39294aec70",
-      "visual": 2250,
+      "visual": 2267,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99177,7 +100054,7 @@
     },
     "mt_f94befa8b842": {
       "id": "mt_f94befa8b842",
-      "visual": 2251,
+      "visual": 2268,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99190,7 +100067,7 @@
     },
     "mt_83c606333763": {
       "id": "mt_83c606333763",
-      "visual": 2251,
+      "visual": 2268,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99203,7 +100080,7 @@
     },
     "mt_99eb434d0ca3": {
       "id": "mt_99eb434d0ca3",
-      "visual": 2251,
+      "visual": 2268,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99216,7 +100093,7 @@
     },
     "mt_d888371228c6": {
       "id": "mt_d888371228c6",
-      "visual": 2252,
+      "visual": 2269,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99229,7 +100106,7 @@
     },
     "mt_4950b1c4e327": {
       "id": "mt_4950b1c4e327",
-      "visual": 2252,
+      "visual": 2269,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99242,7 +100119,7 @@
     },
     "mt_1f3c72267d9c": {
       "id": "mt_1f3c72267d9c",
-      "visual": 2252,
+      "visual": 2269,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99255,7 +100132,7 @@
     },
     "mt_0943b638b6a0": {
       "id": "mt_0943b638b6a0",
-      "visual": 2253,
+      "visual": 2270,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99268,7 +100145,7 @@
     },
     "mt_74b9c0134350": {
       "id": "mt_74b9c0134350",
-      "visual": 2253,
+      "visual": 2270,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99281,7 +100158,7 @@
     },
     "mt_bd63d3623b0b": {
       "id": "mt_bd63d3623b0b",
-      "visual": 2253,
+      "visual": 2270,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99294,7 +100171,7 @@
     },
     "mt_d0ea8ac36518": {
       "id": "mt_d0ea8ac36518",
-      "visual": 2254,
+      "visual": 2271,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99307,7 +100184,7 @@
     },
     "mt_fb7270b56f5e": {
       "id": "mt_fb7270b56f5e",
-      "visual": 2254,
+      "visual": 2271,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99320,7 +100197,7 @@
     },
     "mt_8b40e1fc3646": {
       "id": "mt_8b40e1fc3646",
-      "visual": 2254,
+      "visual": 2271,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99333,7 +100210,7 @@
     },
     "mt_15d714669643": {
       "id": "mt_15d714669643",
-      "visual": 2255,
+      "visual": 2272,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99346,7 +100223,7 @@
     },
     "mt_a00ad1db6df6": {
       "id": "mt_a00ad1db6df6",
-      "visual": 2255,
+      "visual": 2272,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99359,7 +100236,7 @@
     },
     "mt_e0115b69a81d": {
       "id": "mt_e0115b69a81d",
-      "visual": 2255,
+      "visual": 2272,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99372,7 +100249,7 @@
     },
     "mt_c2faf61f886d": {
       "id": "mt_c2faf61f886d",
-      "visual": 2256,
+      "visual": 2273,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99385,7 +100262,7 @@
     },
     "mt_13eda3c32eb3": {
       "id": "mt_13eda3c32eb3",
-      "visual": 2256,
+      "visual": 2273,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99398,7 +100275,7 @@
     },
     "mt_9e49d52bdb5d": {
       "id": "mt_9e49d52bdb5d",
-      "visual": 2256,
+      "visual": 2273,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99411,7 +100288,7 @@
     },
     "mt_d985b3b6aeab": {
       "id": "mt_d985b3b6aeab",
-      "visual": 2257,
+      "visual": 2274,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99424,7 +100301,7 @@
     },
     "mt_5d964dfb45fa": {
       "id": "mt_5d964dfb45fa",
-      "visual": 2257,
+      "visual": 2274,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99437,7 +100314,7 @@
     },
     "mt_393429237bd6": {
       "id": "mt_393429237bd6",
-      "visual": 2257,
+      "visual": 2274,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99450,7 +100327,7 @@
     },
     "mt_0714ee6bba6d": {
       "id": "mt_0714ee6bba6d",
-      "visual": 2258,
+      "visual": 2275,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99463,7 +100340,7 @@
     },
     "mt_6a24b7753539": {
       "id": "mt_6a24b7753539",
-      "visual": 2258,
+      "visual": 2275,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99476,7 +100353,7 @@
     },
     "mt_9311db9f1c62": {
       "id": "mt_9311db9f1c62",
-      "visual": 2258,
+      "visual": 2275,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99489,7 +100366,7 @@
     },
     "mt_57be60b45e12": {
       "id": "mt_57be60b45e12",
-      "visual": 2259,
+      "visual": 2276,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99502,7 +100379,7 @@
     },
     "mt_a2f1e0fef713": {
       "id": "mt_a2f1e0fef713",
-      "visual": 2259,
+      "visual": 2276,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99515,7 +100392,7 @@
     },
     "mt_1b5351cf8dbd": {
       "id": "mt_1b5351cf8dbd",
-      "visual": 2259,
+      "visual": 2276,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99528,7 +100405,7 @@
     },
     "mt_4f130435af38": {
       "id": "mt_4f130435af38",
-      "visual": 2260,
+      "visual": 2277,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99541,7 +100418,7 @@
     },
     "mt_f9d2ca712539": {
       "id": "mt_f9d2ca712539",
-      "visual": 2260,
+      "visual": 2277,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99554,7 +100431,7 @@
     },
     "mt_bcbf479d76ac": {
       "id": "mt_bcbf479d76ac",
-      "visual": 2260,
+      "visual": 2277,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99567,7 +100444,7 @@
     },
     "mt_07fc13e031c7": {
       "id": "mt_07fc13e031c7",
-      "visual": 2261,
+      "visual": 2278,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99580,7 +100457,7 @@
     },
     "mt_8db3e9acd573": {
       "id": "mt_8db3e9acd573",
-      "visual": 2261,
+      "visual": 2278,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99593,7 +100470,7 @@
     },
     "mt_a84b76b43140": {
       "id": "mt_a84b76b43140",
-      "visual": 2261,
+      "visual": 2278,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99606,7 +100483,7 @@
     },
     "mt_aef51ff5d0b7": {
       "id": "mt_aef51ff5d0b7",
-      "visual": 2262,
+      "visual": 2279,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99619,7 +100496,7 @@
     },
     "mt_aa5a4ea306c1": {
       "id": "mt_aa5a4ea306c1",
-      "visual": 2262,
+      "visual": 2279,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99632,7 +100509,7 @@
     },
     "mt_1081e3d5405a": {
       "id": "mt_1081e3d5405a",
-      "visual": 2262,
+      "visual": 2279,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99645,7 +100522,7 @@
     },
     "mt_3d1a01e0d37c": {
       "id": "mt_3d1a01e0d37c",
-      "visual": 2263,
+      "visual": 2280,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99658,7 +100535,7 @@
     },
     "mt_a25f1965e8c4": {
       "id": "mt_a25f1965e8c4",
-      "visual": 2263,
+      "visual": 2280,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99671,7 +100548,7 @@
     },
     "mt_052944aa28bd": {
       "id": "mt_052944aa28bd",
-      "visual": 2263,
+      "visual": 2280,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99684,7 +100561,7 @@
     },
     "mt_e2e6c6719266": {
       "id": "mt_e2e6c6719266",
-      "visual": 2264,
+      "visual": 2281,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99697,7 +100574,7 @@
     },
     "mt_297fc4b0e015": {
       "id": "mt_297fc4b0e015",
-      "visual": 2264,
+      "visual": 2281,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99710,7 +100587,7 @@
     },
     "mt_2e5642800a6d": {
       "id": "mt_2e5642800a6d",
-      "visual": 2264,
+      "visual": 2281,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99723,7 +100600,7 @@
     },
     "mt_6c3cff6d97d4": {
       "id": "mt_6c3cff6d97d4",
-      "visual": 2265,
+      "visual": 2282,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99736,7 +100613,7 @@
     },
     "mt_0889487dd5c2": {
       "id": "mt_0889487dd5c2",
-      "visual": 2265,
+      "visual": 2282,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99749,7 +100626,7 @@
     },
     "mt_4dcb2ff36cec": {
       "id": "mt_4dcb2ff36cec",
-      "visual": 2265,
+      "visual": 2282,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99762,7 +100639,7 @@
     },
     "mt_16fda940a0f0": {
       "id": "mt_16fda940a0f0",
-      "visual": 2266,
+      "visual": 2283,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99775,7 +100652,7 @@
     },
     "mt_7d39396c67e1": {
       "id": "mt_7d39396c67e1",
-      "visual": 2266,
+      "visual": 2283,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99788,7 +100665,7 @@
     },
     "mt_6ea6efff3785": {
       "id": "mt_6ea6efff3785",
-      "visual": 2266,
+      "visual": 2283,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99801,7 +100678,7 @@
     },
     "mt_b445ba7996b2": {
       "id": "mt_b445ba7996b2",
-      "visual": 2267,
+      "visual": 2284,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99814,7 +100691,7 @@
     },
     "mt_a3227a3d159a": {
       "id": "mt_a3227a3d159a",
-      "visual": 2267,
+      "visual": 2284,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99827,7 +100704,7 @@
     },
     "mt_96316e1851c7": {
       "id": "mt_96316e1851c7",
-      "visual": 2267,
+      "visual": 2284,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99840,7 +100717,7 @@
     },
     "mt_5a3ee73bc1bf": {
       "id": "mt_5a3ee73bc1bf",
-      "visual": 2268,
+      "visual": 2285,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99853,7 +100730,7 @@
     },
     "mt_800b3102c3db": {
       "id": "mt_800b3102c3db",
-      "visual": 2268,
+      "visual": 2285,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99866,7 +100743,7 @@
     },
     "mt_a4efea116ad4": {
       "id": "mt_a4efea116ad4",
-      "visual": 2268,
+      "visual": 2285,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99879,7 +100756,7 @@
     },
     "mt_be314c063716": {
       "id": "mt_be314c063716",
-      "visual": 2269,
+      "visual": 2286,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99892,7 +100769,7 @@
     },
     "mt_ebdee90243ed": {
       "id": "mt_ebdee90243ed",
-      "visual": 2269,
+      "visual": 2286,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99905,7 +100782,7 @@
     },
     "mt_b257f2cafc07": {
       "id": "mt_b257f2cafc07",
-      "visual": 2269,
+      "visual": 2286,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99918,7 +100795,7 @@
     },
     "mt_bc71f04ba5f9": {
       "id": "mt_bc71f04ba5f9",
-      "visual": 2270,
+      "visual": 2287,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99931,7 +100808,7 @@
     },
     "mt_98ed607fcd8e": {
       "id": "mt_98ed607fcd8e",
-      "visual": 2270,
+      "visual": 2287,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99944,7 +100821,7 @@
     },
     "mt_1fd8ef4e8b5c": {
       "id": "mt_1fd8ef4e8b5c",
-      "visual": 2270,
+      "visual": 2287,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99957,7 +100834,7 @@
     },
     "mt_ac542788699a": {
       "id": "mt_ac542788699a",
-      "visual": 2271,
+      "visual": 2288,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -99970,7 +100847,7 @@
     },
     "mt_cca2c3c833b0": {
       "id": "mt_cca2c3c833b0",
-      "visual": 2271,
+      "visual": 2288,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -99983,7 +100860,7 @@
     },
     "mt_8b6c7413f953": {
       "id": "mt_8b6c7413f953",
-      "visual": 2271,
+      "visual": 2288,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -99996,7 +100873,7 @@
     },
     "mt_68f474116fe3": {
       "id": "mt_68f474116fe3",
-      "visual": 2272,
+      "visual": 2289,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100009,7 +100886,7 @@
     },
     "mt_e445a8e0734d": {
       "id": "mt_e445a8e0734d",
-      "visual": 2272,
+      "visual": 2289,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100022,7 +100899,7 @@
     },
     "mt_4b37ebe7181b": {
       "id": "mt_4b37ebe7181b",
-      "visual": 2272,
+      "visual": 2289,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100035,7 +100912,7 @@
     },
     "mt_99d30766d7b2": {
       "id": "mt_99d30766d7b2",
-      "visual": 2273,
+      "visual": 2290,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100048,7 +100925,7 @@
     },
     "mt_3d0a5aabff5c": {
       "id": "mt_3d0a5aabff5c",
-      "visual": 2273,
+      "visual": 2290,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100061,7 +100938,7 @@
     },
     "mt_5cb65615da2a": {
       "id": "mt_5cb65615da2a",
-      "visual": 2273,
+      "visual": 2290,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100074,7 +100951,7 @@
     },
     "mt_a2550075ad57": {
       "id": "mt_a2550075ad57",
-      "visual": 2274,
+      "visual": 2291,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100087,7 +100964,7 @@
     },
     "mt_0e51bb450d40": {
       "id": "mt_0e51bb450d40",
-      "visual": 2274,
+      "visual": 2291,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100100,7 +100977,7 @@
     },
     "mt_c052a1136c84": {
       "id": "mt_c052a1136c84",
-      "visual": 2274,
+      "visual": 2291,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100113,7 +100990,7 @@
     },
     "mt_36db05aa93c9": {
       "id": "mt_36db05aa93c9",
-      "visual": 2275,
+      "visual": 2292,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100126,7 +101003,7 @@
     },
     "mt_e15d6e1a26ac": {
       "id": "mt_e15d6e1a26ac",
-      "visual": 2275,
+      "visual": 2292,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100139,7 +101016,7 @@
     },
     "mt_a553e07bd2ef": {
       "id": "mt_a553e07bd2ef",
-      "visual": 2275,
+      "visual": 2292,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100152,7 +101029,7 @@
     },
     "mt_6d4ff5da5526": {
       "id": "mt_6d4ff5da5526",
-      "visual": 2276,
+      "visual": 2293,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100165,7 +101042,7 @@
     },
     "mt_f8a0f87aefeb": {
       "id": "mt_f8a0f87aefeb",
-      "visual": 2276,
+      "visual": 2293,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100178,7 +101055,7 @@
     },
     "mt_127f77203b04": {
       "id": "mt_127f77203b04",
-      "visual": 2276,
+      "visual": 2293,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100191,7 +101068,7 @@
     },
     "mt_327d1c292f30": {
       "id": "mt_327d1c292f30",
-      "visual": 2277,
+      "visual": 2294,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100204,7 +101081,7 @@
     },
     "mt_47f6302f69af": {
       "id": "mt_47f6302f69af",
-      "visual": 2277,
+      "visual": 2294,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100217,7 +101094,7 @@
     },
     "mt_00e22693397b": {
       "id": "mt_00e22693397b",
-      "visual": 2277,
+      "visual": 2294,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100230,7 +101107,7 @@
     },
     "mt_c423d4c860a8": {
       "id": "mt_c423d4c860a8",
-      "visual": 2278,
+      "visual": 2295,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100243,7 +101120,7 @@
     },
     "mt_e45f2ecdde8b": {
       "id": "mt_e45f2ecdde8b",
-      "visual": 2278,
+      "visual": 2295,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100256,7 +101133,7 @@
     },
     "mt_232162c38662": {
       "id": "mt_232162c38662",
-      "visual": 2278,
+      "visual": 2295,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100269,7 +101146,7 @@
     },
     "mt_62c626eb84d8": {
       "id": "mt_62c626eb84d8",
-      "visual": 2279,
+      "visual": 2296,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100282,7 +101159,7 @@
     },
     "mt_8a6567d9c8f2": {
       "id": "mt_8a6567d9c8f2",
-      "visual": 2279,
+      "visual": 2296,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100295,7 +101172,7 @@
     },
     "mt_b625c93d17cf": {
       "id": "mt_b625c93d17cf",
-      "visual": 2279,
+      "visual": 2296,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100308,7 +101185,7 @@
     },
     "mt_116d0b383b99": {
       "id": "mt_116d0b383b99",
-      "visual": 2280,
+      "visual": 2297,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100321,7 +101198,7 @@
     },
     "mt_8ba0c879d333": {
       "id": "mt_8ba0c879d333",
-      "visual": 2280,
+      "visual": 2297,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100334,7 +101211,7 @@
     },
     "mt_034baec7a2fa": {
       "id": "mt_034baec7a2fa",
-      "visual": 2280,
+      "visual": 2297,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100347,7 +101224,7 @@
     },
     "mt_34c4932d8251": {
       "id": "mt_34c4932d8251",
-      "visual": 2281,
+      "visual": 2298,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100360,7 +101237,7 @@
     },
     "mt_7e9597f1eb9c": {
       "id": "mt_7e9597f1eb9c",
-      "visual": 2281,
+      "visual": 2298,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100373,7 +101250,7 @@
     },
     "mt_df4763ea57fe": {
       "id": "mt_df4763ea57fe",
-      "visual": 2281,
+      "visual": 2298,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100386,7 +101263,7 @@
     },
     "mt_a20d3b26cc9c": {
       "id": "mt_a20d3b26cc9c",
-      "visual": 2282,
+      "visual": 2299,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100399,7 +101276,7 @@
     },
     "mt_44088e836992": {
       "id": "mt_44088e836992",
-      "visual": 2282,
+      "visual": 2299,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100412,7 +101289,7 @@
     },
     "mt_14ef47614209": {
       "id": "mt_14ef47614209",
-      "visual": 2282,
+      "visual": 2299,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100425,7 +101302,7 @@
     },
     "mt_7ad781604565": {
       "id": "mt_7ad781604565",
-      "visual": 2283,
+      "visual": 2300,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100438,7 +101315,7 @@
     },
     "mt_1ec6c61f1e52": {
       "id": "mt_1ec6c61f1e52",
-      "visual": 2283,
+      "visual": 2300,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100451,7 +101328,7 @@
     },
     "mt_8f9955cba5f6": {
       "id": "mt_8f9955cba5f6",
-      "visual": 2283,
+      "visual": 2300,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100464,7 +101341,7 @@
     },
     "mt_bbe0e2ef8e1b": {
       "id": "mt_bbe0e2ef8e1b",
-      "visual": 2284,
+      "visual": 2301,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100477,7 +101354,7 @@
     },
     "mt_a2c47c1025d6": {
       "id": "mt_a2c47c1025d6",
-      "visual": 2284,
+      "visual": 2301,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100490,7 +101367,7 @@
     },
     "mt_0207f7b6832c": {
       "id": "mt_0207f7b6832c",
-      "visual": 2284,
+      "visual": 2301,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100503,7 +101380,7 @@
     },
     "mt_0dae938c818a": {
       "id": "mt_0dae938c818a",
-      "visual": 2285,
+      "visual": 2302,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100516,7 +101393,7 @@
     },
     "mt_8ea9e547dba5": {
       "id": "mt_8ea9e547dba5",
-      "visual": 2285,
+      "visual": 2302,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100529,7 +101406,7 @@
     },
     "mt_4cb1d2b0065a": {
       "id": "mt_4cb1d2b0065a",
-      "visual": 2285,
+      "visual": 2302,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100542,7 +101419,7 @@
     },
     "mt_51d9778b3ba8": {
       "id": "mt_51d9778b3ba8",
-      "visual": 2286,
+      "visual": 2303,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100555,7 +101432,7 @@
     },
     "mt_9ab2d22712dc": {
       "id": "mt_9ab2d22712dc",
-      "visual": 2286,
+      "visual": 2303,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100568,7 +101445,7 @@
     },
     "mt_cd4550d6aba8": {
       "id": "mt_cd4550d6aba8",
-      "visual": 2286,
+      "visual": 2303,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100581,7 +101458,7 @@
     },
     "mt_825069130f97": {
       "id": "mt_825069130f97",
-      "visual": 2287,
+      "visual": 2304,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100594,7 +101471,7 @@
     },
     "mt_44674b93ad38": {
       "id": "mt_44674b93ad38",
-      "visual": 2287,
+      "visual": 2304,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100607,7 +101484,7 @@
     },
     "mt_3ffefba4af06": {
       "id": "mt_3ffefba4af06",
-      "visual": 2287,
+      "visual": 2304,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100620,7 +101497,7 @@
     },
     "mt_a6f5504ee53e": {
       "id": "mt_a6f5504ee53e",
-      "visual": 2288,
+      "visual": 2305,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100633,7 +101510,7 @@
     },
     "mt_883d467d726a": {
       "id": "mt_883d467d726a",
-      "visual": 2288,
+      "visual": 2305,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100646,7 +101523,7 @@
     },
     "mt_878f05e39bfe": {
       "id": "mt_878f05e39bfe",
-      "visual": 2288,
+      "visual": 2305,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100659,7 +101536,7 @@
     },
     "mt_3421523940de": {
       "id": "mt_3421523940de",
-      "visual": 2289,
+      "visual": 2306,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100672,7 +101549,7 @@
     },
     "mt_fa34759e8e8d": {
       "id": "mt_fa34759e8e8d",
-      "visual": 2289,
+      "visual": 2306,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100685,7 +101562,7 @@
     },
     "mt_60f45324d3b1": {
       "id": "mt_60f45324d3b1",
-      "visual": 2289,
+      "visual": 2306,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100698,7 +101575,7 @@
     },
     "mt_adfa93672e21": {
       "id": "mt_adfa93672e21",
-      "visual": 2290,
+      "visual": 2307,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100711,7 +101588,7 @@
     },
     "mt_fdc208b9a4b8": {
       "id": "mt_fdc208b9a4b8",
-      "visual": 2290,
+      "visual": 2307,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100724,7 +101601,7 @@
     },
     "mt_973b3f34333d": {
       "id": "mt_973b3f34333d",
-      "visual": 2290,
+      "visual": 2307,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100737,7 +101614,7 @@
     },
     "mt_38dadcd7971c": {
       "id": "mt_38dadcd7971c",
-      "visual": 2291,
+      "visual": 2308,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100750,7 +101627,7 @@
     },
     "mt_aa79724dea56": {
       "id": "mt_aa79724dea56",
-      "visual": 2291,
+      "visual": 2308,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100763,7 +101640,7 @@
     },
     "mt_6814fccc2397": {
       "id": "mt_6814fccc2397",
-      "visual": 2291,
+      "visual": 2308,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100776,7 +101653,7 @@
     },
     "mt_69e7ac035b2a": {
       "id": "mt_69e7ac035b2a",
-      "visual": 2292,
+      "visual": 2309,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100789,7 +101666,7 @@
     },
     "mt_299424c1c626": {
       "id": "mt_299424c1c626",
-      "visual": 2292,
+      "visual": 2309,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100802,7 +101679,7 @@
     },
     "mt_e9b4aa0e8715": {
       "id": "mt_e9b4aa0e8715",
-      "visual": 2292,
+      "visual": 2309,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100815,7 +101692,7 @@
     },
     "mt_c9a619c40e70": {
       "id": "mt_c9a619c40e70",
-      "visual": 2293,
+      "visual": 2310,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100828,7 +101705,7 @@
     },
     "mt_5c12d149cb2c": {
       "id": "mt_5c12d149cb2c",
-      "visual": 2293,
+      "visual": 2310,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100841,7 +101718,7 @@
     },
     "mt_09caa9a8e956": {
       "id": "mt_09caa9a8e956",
-      "visual": 2293,
+      "visual": 2310,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100854,7 +101731,7 @@
     },
     "mt_fdccc7b5710a": {
       "id": "mt_fdccc7b5710a",
-      "visual": 2294,
+      "visual": 2311,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100867,7 +101744,7 @@
     },
     "mt_2185aab93b71": {
       "id": "mt_2185aab93b71",
-      "visual": 2294,
+      "visual": 2311,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100880,7 +101757,7 @@
     },
     "mt_5dc2ee4644c3": {
       "id": "mt_5dc2ee4644c3",
-      "visual": 2294,
+      "visual": 2311,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100893,7 +101770,7 @@
     },
     "mt_363796381ee9": {
       "id": "mt_363796381ee9",
-      "visual": 2295,
+      "visual": 2312,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100907,7 +101784,7 @@
     },
     "mt_0778214a615c": {
       "id": "mt_0778214a615c",
-      "visual": 2295,
+      "visual": 2312,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100921,7 +101798,7 @@
     },
     "mt_1578a62da194": {
       "id": "mt_1578a62da194",
-      "visual": 2295,
+      "visual": 2312,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100935,7 +101812,7 @@
     },
     "mt_70fb1cdb7837": {
       "id": "mt_70fb1cdb7837",
-      "visual": 2296,
+      "visual": 2313,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100950,7 +101827,7 @@
     },
     "mt_7ed5f4b16653": {
       "id": "mt_7ed5f4b16653",
-      "visual": 2296,
+      "visual": 2313,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -100965,7 +101842,7 @@
     },
     "mt_106bb630813e": {
       "id": "mt_106bb630813e",
-      "visual": 2296,
+      "visual": 2313,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -100980,7 +101857,7 @@
     },
     "mt_4b0f1d1d948d": {
       "id": "mt_4b0f1d1d948d",
-      "visual": 2297,
+      "visual": 2314,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -100994,7 +101871,7 @@
     },
     "mt_0dce6e94482e": {
       "id": "mt_0dce6e94482e",
-      "visual": 2297,
+      "visual": 2314,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101008,7 +101885,7 @@
     },
     "mt_6411b23d8ac1": {
       "id": "mt_6411b23d8ac1",
-      "visual": 2297,
+      "visual": 2314,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101022,7 +101899,7 @@
     },
     "mt_eee427605d73": {
       "id": "mt_eee427605d73",
-      "visual": 2298,
+      "visual": 2315,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101036,7 +101913,7 @@
     },
     "mt_bfe7e7d30027": {
       "id": "mt_bfe7e7d30027",
-      "visual": 2298,
+      "visual": 2315,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101050,7 +101927,7 @@
     },
     "mt_c71b296d467c": {
       "id": "mt_c71b296d467c",
-      "visual": 2298,
+      "visual": 2315,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101064,7 +101941,7 @@
     },
     "mt_9270f2998d46": {
       "id": "mt_9270f2998d46",
-      "visual": 2299,
+      "visual": 2316,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101079,7 +101956,7 @@
     },
     "mt_72d14ddd1618": {
       "id": "mt_72d14ddd1618",
-      "visual": 2299,
+      "visual": 2316,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101094,7 +101971,7 @@
     },
     "mt_e6c4fc48621a": {
       "id": "mt_e6c4fc48621a",
-      "visual": 2299,
+      "visual": 2316,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101109,7 +101986,7 @@
     },
     "mt_03bbf9655e30": {
       "id": "mt_03bbf9655e30",
-      "visual": 2300,
+      "visual": 2317,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101123,7 +102000,7 @@
     },
     "mt_88120d623279": {
       "id": "mt_88120d623279",
-      "visual": 2300,
+      "visual": 2317,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101137,7 +102014,7 @@
     },
     "mt_5cf7e42b0f21": {
       "id": "mt_5cf7e42b0f21",
-      "visual": 2300,
+      "visual": 2317,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101151,7 +102028,7 @@
     },
     "mt_2f864a246d00": {
       "id": "mt_2f864a246d00",
-      "visual": 2301,
+      "visual": 2318,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101165,7 +102042,7 @@
     },
     "mt_f7c721313d3b": {
       "id": "mt_f7c721313d3b",
-      "visual": 2301,
+      "visual": 2318,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101179,7 +102056,7 @@
     },
     "mt_4988fe6bbd14": {
       "id": "mt_4988fe6bbd14",
-      "visual": 2301,
+      "visual": 2318,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101193,7 +102070,7 @@
     },
     "mt_7e5e0889c082": {
       "id": "mt_7e5e0889c082",
-      "visual": 2302,
+      "visual": 2319,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101207,7 +102084,7 @@
     },
     "mt_c46ee987139c": {
       "id": "mt_c46ee987139c",
-      "visual": 2302,
+      "visual": 2319,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101221,7 +102098,7 @@
     },
     "mt_0036deddd275": {
       "id": "mt_0036deddd275",
-      "visual": 2302,
+      "visual": 2319,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101235,7 +102112,7 @@
     },
     "mt_e4f392da1598": {
       "id": "mt_e4f392da1598",
-      "visual": 2303,
+      "visual": 2320,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101249,7 +102126,7 @@
     },
     "mt_8e6081f7a94e": {
       "id": "mt_8e6081f7a94e",
-      "visual": 2303,
+      "visual": 2320,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101263,7 +102140,7 @@
     },
     "mt_e46c9e5fd0e9": {
       "id": "mt_e46c9e5fd0e9",
-      "visual": 2303,
+      "visual": 2320,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101277,7 +102154,7 @@
     },
     "mt_f4b6d8516e20": {
       "id": "mt_f4b6d8516e20",
-      "visual": 2304,
+      "visual": 2321,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101291,7 +102168,7 @@
     },
     "mt_033b90266a44": {
       "id": "mt_033b90266a44",
-      "visual": 2304,
+      "visual": 2321,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101305,7 +102182,7 @@
     },
     "mt_bafcab88af02": {
       "id": "mt_bafcab88af02",
-      "visual": 2304,
+      "visual": 2321,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101319,7 +102196,7 @@
     },
     "mt_4e1f728c6ddf": {
       "id": "mt_4e1f728c6ddf",
-      "visual": 2305,
+      "visual": 2322,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101333,7 +102210,7 @@
     },
     "mt_a8e7a1398bc5": {
       "id": "mt_a8e7a1398bc5",
-      "visual": 2305,
+      "visual": 2322,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101347,7 +102224,7 @@
     },
     "mt_4d4ad43506ac": {
       "id": "mt_4d4ad43506ac",
-      "visual": 2305,
+      "visual": 2322,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101361,7 +102238,7 @@
     },
     "mt_61fad17f2de5": {
       "id": "mt_61fad17f2de5",
-      "visual": 2306,
+      "visual": 2323,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101375,7 +102252,7 @@
     },
     "mt_fa0ba8ff45bb": {
       "id": "mt_fa0ba8ff45bb",
-      "visual": 2306,
+      "visual": 2323,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101389,7 +102266,7 @@
     },
     "mt_65897f5db497": {
       "id": "mt_65897f5db497",
-      "visual": 2306,
+      "visual": 2323,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101403,7 +102280,7 @@
     },
     "mt_bb29c72a0089": {
       "id": "mt_bb29c72a0089",
-      "visual": 2307,
+      "visual": 2324,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101417,7 +102294,7 @@
     },
     "mt_4a6f320793cc": {
       "id": "mt_4a6f320793cc",
-      "visual": 2307,
+      "visual": 2324,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101431,7 +102308,7 @@
     },
     "mt_5057f909b218": {
       "id": "mt_5057f909b218",
-      "visual": 2307,
+      "visual": 2324,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101445,7 +102322,7 @@
     },
     "mt_c5dc6f85f299": {
       "id": "mt_c5dc6f85f299",
-      "visual": 2308,
+      "visual": 2325,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101459,7 +102336,7 @@
     },
     "mt_746e4451e1f0": {
       "id": "mt_746e4451e1f0",
-      "visual": 2308,
+      "visual": 2325,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101473,7 +102350,7 @@
     },
     "mt_5024a5b20b9f": {
       "id": "mt_5024a5b20b9f",
-      "visual": 2308,
+      "visual": 2325,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101487,7 +102364,7 @@
     },
     "mt_17db4d3e5704": {
       "id": "mt_17db4d3e5704",
-      "visual": 2309,
+      "visual": 2326,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101500,7 +102377,7 @@
     },
     "mt_503b9cf1a4cb": {
       "id": "mt_503b9cf1a4cb",
-      "visual": 2309,
+      "visual": 2326,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101513,7 +102390,7 @@
     },
     "mt_98bc7308cb06": {
       "id": "mt_98bc7308cb06",
-      "visual": 2309,
+      "visual": 2326,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101526,7 +102403,7 @@
     },
     "mt_6259a94be6b3": {
       "id": "mt_6259a94be6b3",
-      "visual": 2310,
+      "visual": 2327,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101539,7 +102416,7 @@
     },
     "mt_b807b0f4d91a": {
       "id": "mt_b807b0f4d91a",
-      "visual": 2310,
+      "visual": 2327,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101552,7 +102429,7 @@
     },
     "mt_cdfd2e77216c": {
       "id": "mt_cdfd2e77216c",
-      "visual": 2310,
+      "visual": 2327,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101565,7 +102442,7 @@
     },
     "mt_70602eaa8021": {
       "id": "mt_70602eaa8021",
-      "visual": 2311,
+      "visual": 2328,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101578,7 +102455,7 @@
     },
     "mt_ce8af557133b": {
       "id": "mt_ce8af557133b",
-      "visual": 2311,
+      "visual": 2328,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101591,7 +102468,7 @@
     },
     "mt_1177dfcbce74": {
       "id": "mt_1177dfcbce74",
-      "visual": 2311,
+      "visual": 2328,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101604,7 +102481,7 @@
     },
     "mt_3c20eb879246": {
       "id": "mt_3c20eb879246",
-      "visual": 2312,
+      "visual": 2329,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101617,7 +102494,7 @@
     },
     "mt_49cdba783c59": {
       "id": "mt_49cdba783c59",
-      "visual": 2312,
+      "visual": 2329,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101630,7 +102507,7 @@
     },
     "mt_0988cbb47f9e": {
       "id": "mt_0988cbb47f9e",
-      "visual": 2312,
+      "visual": 2329,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101643,7 +102520,7 @@
     },
     "mt_08c8bd643798": {
       "id": "mt_08c8bd643798",
-      "visual": 2313,
+      "visual": 2330,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101656,7 +102533,7 @@
     },
     "mt_1c5726cff2fe": {
       "id": "mt_1c5726cff2fe",
-      "visual": 2313,
+      "visual": 2330,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101669,7 +102546,7 @@
     },
     "mt_cb4ca7dd0ddd": {
       "id": "mt_cb4ca7dd0ddd",
-      "visual": 2313,
+      "visual": 2330,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101682,7 +102559,7 @@
     },
     "mt_1b693c2b3b36": {
       "id": "mt_1b693c2b3b36",
-      "visual": 2314,
+      "visual": 2331,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101696,7 +102573,7 @@
     },
     "mt_f7e2856e06e5": {
       "id": "mt_f7e2856e06e5",
-      "visual": 2314,
+      "visual": 2331,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101710,7 +102587,7 @@
     },
     "mt_122aac8fc201": {
       "id": "mt_122aac8fc201",
-      "visual": 2314,
+      "visual": 2331,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -101724,7 +102601,7 @@
     },
     "mt_00af0a7fa827": {
       "id": "mt_00af0a7fa827",
-      "visual": 2315,
+      "visual": 2332,
       "behavior": "solid",
       "layer": "structure",
       "layerType": "normal",
@@ -101737,7 +102614,7 @@
     },
     "mt_ca8c8a4a396c": {
       "id": "mt_ca8c8a4a396c",
-      "visual": 2315,
+      "visual": 2332,
       "behavior": "walkable",
       "layer": "structure",
       "layerType": "covered",
@@ -101750,7 +102627,7 @@
     },
     "mt_5833e361ab4b": {
       "id": "mt_5833e361ab4b",
-      "visual": 2315,
+      "visual": 2332,
       "behavior": "warp",
       "layer": "structure",
       "layerType": "normal",
@@ -103334,6 +104211,23 @@
     "mt_0dffac955b7d",
     "mt_3fe05b7a02de",
     "mt_024436a9584a",
+    "mt_be009b99a899",
+    "mt_746e8d591e9f",
+    "mt_a777997ed6f9",
+    "mt_816c3b8d055a",
+    "mt_b78ae9dc8378",
+    "mt_6852e6797ee5",
+    "mt_a660b97a59e9",
+    "mt_40de999e8e16",
+    "mt_822b03475208",
+    "mt_68dde221373b",
+    "mt_e915f5f21a0f",
+    "mt_eea4e498b525",
+    "mt_11418e547e52",
+    "mt_617b9fbf8dd0",
+    "mt_ce77d3a2133b",
+    "mt_f07f999ff325",
+    "mt_a39dcd2d60d9",
     "mt_e308444a2305",
     "mt_47352d6fe318",
     "mt_56516513d5fb",
@@ -111331,6 +112225,88 @@
         "authored16"
       ]
     },
+    "field_house_entry_arch": {
+      "id": "field_house_entry_arch",
+      "name": "Field House Entry Arch",
+      "category": "town_landmarks",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_field_house_entry_arch.png",
+      "width": 7,
+      "height": 4,
+      "cells": [
+        [
+          "mt_be009b99a899",
+          "mt_746e8d591e9f",
+          "mt_a777997ed6f9",
+          "mt_816c3b8d055a",
+          "mt_b78ae9dc8378",
+          "mt_6852e6797ee5",
+          "mt_a660b97a59e9"
+        ],
+        [
+          "mt_40de999e8e16",
+          "mt_822b03475208",
+          "mt_68dde221373b",
+          "mt_94feb0e20e61",
+          "mt_e915f5f21a0f",
+          "mt_eea4e498b525",
+          "mt_11418e547e52"
+        ],
+        [
+          "mt_ddf0c054c3bc",
+          "mt_617b9fbf8dd0",
+          "mt_94feb0e20e61",
+          "mt_94feb0e20e61",
+          "mt_94feb0e20e61",
+          "mt_ce77d3a2133b",
+          "mt_350549cebe9a"
+        ],
+        [
+          "mt_1fb2c51d5446",
+          "mt_f07f999ff325",
+          "mt_94feb0e20e61",
+          "mt_94feb0e20e61",
+          "mt_94feb0e20e61",
+          "mt_a39dcd2d60d9",
+          "mt_0f3d34bc4d12"
+        ]
+      ],
+      "collisionMask": [
+        "##...##",
+        "##...##",
+        "##...##",
+        "##...##"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "walk_under_landmark",
+      "coverageAudit": {
+        "0,0": 1.0,
+        "1,0": 1.0,
+        "5,0": 1.0,
+        "6,0": 1.0,
+        "0,1": 1.0,
+        "1,1": 0.9883,
+        "5,1": 0.9883,
+        "6,1": 1.0,
+        "0,2": 1.0,
+        "1,2": 0.9375,
+        "5,2": 0.9375,
+        "6,2": 1.0,
+        "0,3": 0.8242,
+        "1,3": 0.8008,
+        "5,3": 0.7969,
+        "6,3": 0.8242
+      },
+      "tags": [
+        "town_landmarks",
+        "season_one_world_kit",
+        "landmark",
+        "field_house",
+        "walk_under",
+        "imagegen_derived",
+        "authored16"
+      ]
+    },
     "gateway_arch_landmark": {
       "id": "gateway_arch_landmark",
       "name": "Gateway Arch Championship Landmark",
@@ -111829,7 +112805,7 @@
       "road_asphalt_grass": 47,
       "road_asphalt_curb": 47
     },
-    "structureStampCount": 140,
+    "structureStampCount": 141,
     "structureFamilyCounts": {
       "trees": 6,
       "forest_masses": 14,
@@ -111851,13 +112827,13 @@
       "story_props": 12,
       "arena_mats": 4,
       "ordinary_buildings": 19,
-      "town_landmarks": 7,
+      "town_landmarks": 8,
       "elevation": 8
     },
     "groundAssemblyCount": 28,
     "blobSignatureCount": 47,
-    "preparedImagegenAssetCount": 104,
-    "exactNearestNeighborVisualCount": 2316,
+    "preparedImagegenAssetCount": 105,
+    "exactNearestNeighborVisualCount": 2333,
     "logicalCellSize": 16,
     "groundMaterialMetrics": {
       "grass": {
@@ -111897,8 +112873,8 @@
     "manifest": "ce655b86985fef2efea0c2fcbc03820a4fef3c265f6a14400280a6696d5954f1",
     "contract": "216804194083cd7f3fc6c222af88d02b59ae1753755e11949d50998773112537",
     "pixelArtModule": "a8c33b6ea6ecaaab2615cd226e1ef28b4cc43304b887680202806e8dcbd9b4aa",
-    "preparedImagegenManifest": "c36f4618b51b84dfa50725176e95c7db95520b3457b5a07f591a23966bafc5d7",
-    "preparedImagegenAssetCount": 104,
+    "preparedImagegenManifest": "737c50701b6054dda2420936675c4d35d546eaf3eecece379b0d5f7a065f1bd0",
+    "preparedImagegenAssetCount": 105,
     "referenceBoards": {
       "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
       "vegetation": "94453f4bef0f9849be3395e49db53ffe9c0f89f431d3aa87a6ff147ed8e72b20",

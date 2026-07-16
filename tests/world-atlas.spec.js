@@ -56,7 +56,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 8, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 9, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
@@ -67,7 +67,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
     tilePos: {x: 23, y: 29},
     atlas: {
       mode: 'map', mapId: 'camp_randall', mapWidth: 48, mapHeight: 31,
-      metatileVersion: 12, metatilePlacementCount: 50
+      metatileVersion: 13, metatilePlacementCount: 50
     }
   });
   expect((await state(page)).atlas.metatileRenderCount).toBeGreaterThan(200);
@@ -84,7 +84,7 @@ test('Camp Randall runtime collision comes from the rendered metatiles', async (
   await openAtlas(page, '&play=1&area=camp_randall&x=9&y=25&facing=right');
   await expect.poll(async () => (await state(page)).passable.right).toBe(false);
   const camp = await state(page);
-  expect(camp.atlas).toMatchObject({metatileVersion: 12, metatilePlacementCount: 50});
+  expect(camp.atlas).toMatchObject({metatileVersion: 13, metatilePlacementCount: 50});
   expect(camp.atlas.metatileRenderCount).toBeGreaterThan(200);
   expect(issues).toEqual([]);
 });
@@ -117,16 +117,19 @@ test('major arena approaches route around the facade to south-facing doors', asy
   test.setTimeout(90000);
   const issues = runtimeIssues(page);
   const approaches = [
-    ['field_house', 'field_house_floor'],
-    ['kohl_center', 'kohl_bracket_floor']
+    {
+      area: 'field_house', interior: 'field_house_floor',
+      route: [['down', 3], ['left', 7], ['down', 8], ['right', 7]]
+    },
+    {
+      area: 'kohl_center', interior: 'kohl_bracket_floor',
+      route: [['left', 7], ['down', 11], ['right', 7]]
+    }
   ];
 
-  for (const [area, interior] of approaches) {
+  for (const {area, interior, route} of approaches) {
     await openAtlas(page, `&play=1&area=${area}&x=20&y=6&facing=left`);
-    await walk(page, 'left', 7);
-    await walk(page, 'down', 11);
-    await walk(page, 'right', 7);
-    await walk(page, 'up', 0);
+    for (const [direction, steps] of route) await walk(page, direction, steps);
     for (let attempt = 0; attempt < 3 && (await state(page)).atlas.interiorId !== interior; attempt += 1) {
       await press(page, 'up');
       await page.waitForTimeout(200);
