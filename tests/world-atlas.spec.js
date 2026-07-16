@@ -56,7 +56,7 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 11, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 12, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
