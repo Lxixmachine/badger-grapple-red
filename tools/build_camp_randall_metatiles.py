@@ -29,7 +29,7 @@ ROOT = Path(__file__).resolve().parents[1]
 LAYOUT_PATH = ROOT / "src" / "data" / "seasonOneLayouts.json"
 PRODUCTION_PATH = ROOT / "src" / "data" / "campRandallProductionBuild.json"
 BUILD_PATH = ROOT / "src" / "data" / "campRandallMetatileBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v17.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_metatiles_v18.png"
 GROUND_PATH = ROOT / "public" / "assets" / "metatiles" / "camp_randall_ground_v4.png"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "camp_randall_metatile_preview.png"
 OVERRIDES_PATH = ROOT / "art" / "metatiles" / "camp_randall_metatile_overrides.json"
@@ -504,11 +504,9 @@ def build() -> dict:
         atlas.alpha_composite(image, ((index % ATLAS_COLUMNS) * CELL, (index // ATLAS_COLUMNS) * CELL))
     save_png(atlas, ATLAS_PATH)
 
-    preview = Image.open(ground_path).convert("RGBA")
+    preview = Image.new("RGBA", (layout["size"]["width"] * CELL, layout["size"]["height"] * CELL), (0, 0, 0, 0))
     for y, row in enumerate(terrain):
         for x, material in enumerate(row):
-            if material == "grass":
-                continue
             index = terrain_tiles[material]
             preview.alpha_composite(visuals[index], (x * CELL, y * CELL))
     ground_hierarchy = saturation_metric([preview])
@@ -552,8 +550,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-metatiles/v2",
-        "version": 17,
-        "status": "season-one-capitol-civic-ring-atlas",
+        "version": 18,
+        "status": "season-one-high-key-ground-atlas",
         "layoutRevision": layouts["revision"],
         "cellSize": CELL,
         "atlas": {
@@ -585,6 +583,7 @@ def build() -> dict:
         },
         "groundSystem": ground_system,
         "groundMaterialMetrics": world["coverage"]["groundMaterialMetrics"],
+        "groundValueContract": world["coverage"]["groundValueContract"],
         "visualHierarchyMetrics": {
             "ground": ground_hierarchy,
             "identityObjects": identity_hierarchy,

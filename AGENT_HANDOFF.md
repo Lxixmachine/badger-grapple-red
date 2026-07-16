@@ -3228,3 +3228,24 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   app v22.18. The known local broad-validator failure is still limited to the
   protected State Street composition draft; do not touch those six user-owned
   files while continuing production work.
+
+## Codex High-Key Ground Hierarchy (v22.19)
+
+- Ground generation now has one palette authority. The Imagegen source
+  normalizer consumes `season_one_pixel_art.py` instead of maintaining a
+  second private ramp, preventing Map Studio and runtime colors from drifting.
+- Grass is a pale two-color mint field, mowed grass is a restrained three-color
+  variant, and campus paving is warm neutral limestone. Numeric lightness,
+  saturation, cardinal-reservation, and color-count limits are enforced by the
+  world compiler, generated manifests, Map Studio tests, and validation gate.
+- Map Studio no longer substitutes its obsolete baked grass background on
+  metatile maps. Every ground cell now draws from the same atlas cell as the
+  live game; an exact RGBA regression test proves editor/runtime parity.
+- The Camp preview is rebuilt from runtime terrain cells instead of a stale
+  flat background. Phone review and a fixed 15x10 FireRed comparison board show
+  quiet ground supporting louder red identity objects without exposed seams.
+- The complete sequential release suite passes 117/117 tests. Current authority
+  is layout revision 13, world tileset v10, Camp/Season metatile atlas v18, and
+  app v22.19. Broad validation still stops only on Tony's protected State
+  Street composition checksum; do not regenerate, stage, or overwrite those
+  six user-owned files.

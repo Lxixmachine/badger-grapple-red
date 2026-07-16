@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: production-grid rollout through Capitol Square in v22.18.
+Status: production-grid rollout through Capitol Square with shared high-key ground hierarchy in v22.19.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is

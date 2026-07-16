@@ -50,7 +50,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "91fa27987722e919de1c6d54946e31200c63c07acbe1e42b64e1d7d2ac8dbcbb",
+      "sha256": "30da7cbe621d33649d40182827301bc11a25772a51cccbeff7ec097d9b0c4597",
       "sourcePanel": 0
     },
     "mowed_grass": {
@@ -59,7 +59,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "9bc20acd9ab43d1e77bf491fae39e669355362db846c3315907d2f62ba29f71e",
+      "sha256": "dd62c85b7e0e5a96c1c487b17ee8d44e1ebc6a6411d36c4d99e3beaa1d5a3040",
       "sourcePanel": 1
     },
     "dirt": {
@@ -68,7 +68,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "6135cf8de0919cfee19781bfe4c7f83bf262474922183b15bd701c450b78f846",
+      "sha256": "3809751cfdf4e4e801edd92b8c2c66086805018ba5ea0e40b843663ff675e1a4",
       "sourcePanel": 2
     },
     "brick": {
@@ -77,7 +77,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "bb7b54ca47b950f480231e6793134630d08fa38e72a351132822eb41a298fb09",
+      "sha256": "cf03a48828339b5a0e0cd718b8d92399e39ce95cf75247f239f590cdfa7c4469",
       "sourcePanel": 3
     },
     "stone": {
@@ -86,7 +86,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "38709afe09502242320aa24cc2ff2882540d89ba993c3711c74df9c6ae6a9499",
+      "sha256": "dd3a6606ec23f4f89fcd4ef942aa01c8b830668de8a4532515e3127182a3b1a1",
       "sourcePanel": 4
     },
     "concrete": {
@@ -95,7 +95,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "bee2d0816d66fc455db51483a9bb610dffd3fdceb31d154e3edd1e6c69b916f3",
+      "sha256": "36fc0f4bb04578242dbde625644dae12fee2aa1972162f327d7700b9920a7de1",
       "sourcePanel": 5
     },
     "gravel": {
@@ -104,7 +104,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "63169d1e2104e99e80353d2f3146293a647e1d64ef55c6ec651138042aaffedc",
+      "sha256": "9746329a06a6a2438dc94f3f14c6c68dd3c960004e333b42b5cfe9554f7df3b9",
       "sourcePanel": 6
     },
     "sand": {
@@ -113,7 +113,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "3f5e47a61337e1dd8200ae1c94b2303bde8099926f5fc90da79bf4937c7b222c",
+      "sha256": "d16c1bf9a13c532a46cdef56aef4e4447c02254cf86c8fa7010c66e4851d1e69",
       "sourcePanel": 7
     },
     "water": {
@@ -122,7 +122,7 @@
       "width": 16,
       "height": 16,
       "colors": 4,
-      "sha256": "443eec49c34688df3dfb2dcefecfb1192657f792f9127c14fbcb6ccb9ced242f",
+      "sha256": "7afd9d62fa5e457e4c1cf8eacb5b48974244b3ca2bbc034ea2ad643e472a4776",
       "sourcePanel": 8
     },
     "asphalt": {
@@ -131,7 +131,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "dd6a70e7100743bc1c8d2f91007435ce0ca64f7190f63f4cb05d6add3624fdac",
+      "sha256": "7b344bdda451a0a45624e64ea355ec2f707edb5d95bd089977aaf9dbbf2cdfe6",
       "sourcePanel": 9
     },
     "timber": {
@@ -140,7 +140,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "7f3b7fdce47b1a5a8d81bdffe405b7269accb8442e306673d3d4379eb9d20b92",
+      "sha256": "bdef62aefd5a3f59a40f048b1e5157fdc2f37f1bc27e22f50107c06f126e572e",
       "sourcePanel": 10
     },
     "meadow_grass": {
@@ -149,7 +149,7 @@
       "width": 16,
       "height": 16,
       "colors": 4,
-      "sha256": "93cbac195dfe5e141f5205f16dae22bd47672bbeda9587edd1b4c8a5a622dbdd",
+      "sha256": "a3c0c2da3312feea098eac0c6be35abdb3f7d9c36d41acf9eeb7c1940c7bb88a",
       "sourcePanel": 11
     },
     "tree_oak_a": {

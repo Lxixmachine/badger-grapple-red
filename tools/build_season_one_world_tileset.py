@@ -40,11 +40,34 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
 CONTRACT_PATH = ROOT / "art" / "tilesets" / "season_one_tileset_contract.json"
 BUILD_PATH = ROOT / "src" / "data" / "seasonOneWorldTilesetBuild.json"
-ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v9.png"
+ATLAS_PATH = ROOT / "public" / "assets" / "metatiles" / "season_one_world_tileset_v10.png"
 STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "stamps" / "v4"
 GROUND_STAMP_DIR = ROOT / "public" / "assets" / "metatiles" / "ground-stamps" / "v6"
 PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_world_tileset_preview.png"
 SEAM_PREVIEW_PATH = ROOT / "art" / "imagegen" / "validation" / "season_one_tileset_seam_test.png"
+
+GROUND_VALUE_CONTRACT = {
+    "grass": {
+        "uniqueColors": 2,
+        "dominantCoverageMin": 0.94,
+        "meanLightnessMin": 0.62,
+        "meanLightnessMax": 0.70,
+        "meanSaturationMax": 0.42,
+        "cardinalPixelCountMax": 0,
+    },
+    "mowedGrass": {
+        "uniqueColorsMax": 3,
+        "meanLightnessMin": 0.60,
+        "meanSaturationMax": 0.42,
+        "cardinalPixelCountMax": 0,
+    },
+    "campusPavers": {
+        "uniqueColorsMax": 3,
+        "meanLightnessMin": 0.78,
+        "meanSaturationMax": 0.40,
+        "cardinalPixelCountMax": 0,
+    },
+}
 
 
 def load_json(path: Path) -> dict:
@@ -474,13 +497,32 @@ def build() -> dict:
         "campusPavers": material_metrics(material_tile("brick")),
     }
     grass_metrics = ground_material_metrics["grass"]
-    if grass_metrics["uniqueColors"] != 2 or grass_metrics["dominantCoverage"] < 0.94:
-        raise SystemExit("Grass must be a two-color field with no more than five percent accent coverage")
+    if (
+        grass_metrics["uniqueColors"] != GROUND_VALUE_CONTRACT["grass"]["uniqueColors"]
+        or grass_metrics["dominantCoverage"] < GROUND_VALUE_CONTRACT["grass"]["dominantCoverageMin"]
+        or not GROUND_VALUE_CONTRACT["grass"]["meanLightnessMin"]
+        <= grass_metrics["meanLightness"]
+        <= GROUND_VALUE_CONTRACT["grass"]["meanLightnessMax"]
+        or grass_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["grass"]["meanSaturationMax"]
+        or grass_metrics["cardinalPixelCount"]
+    ):
+        raise SystemExit("Grass violates the measured high-key two-color ground contract")
+    mowed_metrics = ground_material_metrics["mowedGrass"]
+    if (
+        mowed_metrics["uniqueColors"] > GROUND_VALUE_CONTRACT["mowedGrass"]["uniqueColorsMax"]
+        or mowed_metrics["meanLightness"] < GROUND_VALUE_CONTRACT["mowedGrass"]["meanLightnessMin"]
+        or mowed_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["mowedGrass"]["meanSaturationMax"]
+        or mowed_metrics["cardinalPixelCount"]
+    ):
+        raise SystemExit("Mowed grass violates the quiet maintained-lawn contract")
     paver_metrics = ground_material_metrics["campusPavers"]
-    if paver_metrics["uniqueColors"] > 3 or paver_metrics["meanLightness"] < 0.55:
-        raise SystemExit("Campus pavers must remain a pale three-color material")
-    if paver_metrics["cardinalPixelCount"]:
-        raise SystemExit("Cardinal red is reserved for identity objects, not ground")
+    if (
+        paver_metrics["uniqueColors"] > GROUND_VALUE_CONTRACT["campusPavers"]["uniqueColorsMax"]
+        or paver_metrics["meanLightness"] < GROUND_VALUE_CONTRACT["campusPavers"]["meanLightnessMin"]
+        or paver_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["campusPavers"]["meanSaturationMax"]
+        or paver_metrics["cardinalPixelCount"]
+    ):
+        raise SystemExit("Campus pavers violate the pale neutral-limestone contract")
 
     for overlay in manifest["groundOverlays"]:
         add_ground(
@@ -1020,6 +1062,7 @@ def build() -> dict:
         "exactNearestNeighborVisualCount": len(visuals),
         "logicalCellSize": LOGICAL_CELL,
         "groundMaterialMetrics": ground_material_metrics,
+        "groundValueContract": GROUND_VALUE_CONTRACT,
         "contractSatisfied": True,
     }
 
@@ -1138,8 +1181,8 @@ def build() -> dict:
 
     result = {
         "schema": "badger-grapple-world-tileset/v5",
-        "version": 9,
-        "status": "season-one-capitol-civic-ring-pixel-kit",
+        "version": 10,
+        "status": "season-one-high-key-ground-pixel-kit",
         "cellSize": cell,
         "artPipeline": {
             "logicalCellSize": LOGICAL_CELL,

@@ -155,7 +155,7 @@ export class MapRenderer {
 
   drawTerrainMetatile(map, atlas, x, y) {
     const material = map.terrain[y][x];
-    if ((material === 'grass' && map.background?.path) || !atlas?.complete || !atlas.naturalWidth) return;
+    if (!atlas?.complete || !atlas.naturalWidth) return;
     const visual = map.terrainTiles?.[material];
     if (!Number.isInteger(visual)) return;
     this.drawAtlasVisual(atlas, map.metatileAtlas.columns, map.cellSize, visual, x * map.cellSize, y * map.cellSize);

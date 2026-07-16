@@ -14,6 +14,8 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageOps
 
+from season_one_pixel_art import PALETTE
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "art" / "imagegen" / "tileset_v3"
@@ -198,20 +200,20 @@ GROUND_SOURCE_OVERRIDES = {
 GROUND_RAMPS = {
     # Grass is intentionally the quietest material in the game. Its second
     # color is selected sparsely below instead of globally posterized.
-    "grass": ((73, 145, 101, 255), (112, 185, 126, 255)),
-    "mowed_grass": ((78, 146, 94, 255), (109, 177, 112, 255), (143, 202, 136, 255)),
-    "dirt": ((198, 170, 108, 255), (225, 204, 151, 255), (241, 224, 181, 255)),
+    "grass": (PALETTE["grass_dark"], PALETTE["grass"]),
+    "mowed_grass": (PALETTE["grass_dark"], PALETTE["mowed"], PALETTE["mowed_light"]),
+    "dirt": (PALETTE["dirt_dark"], PALETTE["dirt"], PALETTE["dirt_light"]),
     # Campus walks are warm limestone pavers. Cardinal belongs to identity
     # objects, never to the ground field beneath them.
-    "brick": ((152, 136, 105, 255), (197, 178, 139, 255), (235, 220, 181, 255)),
-    "stone": ((126, 126, 118, 255), (174, 171, 155, 255), (222, 215, 192, 255)),
-    "concrete": ((126, 132, 128, 255), (174, 177, 168, 255), (224, 222, 207, 255)),
-    "gravel": ((102, 104, 100, 255), (145, 143, 132, 255), (194, 188, 169, 255)),
-    "sand": ((151, 128, 75, 255), (196, 169, 105, 255), (232, 211, 158, 255)),
-    "water": ((35, 87, 132, 255), (48, 121, 164, 255), (78, 158, 190, 255), (184, 213, 222, 255)),
-    "asphalt": ((42, 47, 49, 255), (64, 70, 71, 255), (94, 101, 100, 255)),
-    "timber": ((67, 43, 31, 255), (116, 74, 46, 255), (181, 124, 74, 255)),
-    "meadow_grass": ((66, 137, 91, 255), (105, 178, 115, 255), (144, 203, 137, 255), (231, 224, 174, 255)),
+    "brick": (PALETTE["paver_dark"], PALETTE["paver"], PALETTE["paver_light"]),
+    "stone": (PALETTE["stone_dark"], PALETTE["stone"], PALETTE["stone_light"]),
+    "concrete": (PALETTE["curb_dark"], PALETTE["concrete"], PALETTE["paver_light"]),
+    "gravel": (PALETTE["gravel_dark"], PALETTE["gravel"], PALETTE["gravel_light"]),
+    "sand": (PALETTE["sand_dark"], PALETTE["sand"], PALETTE["sand_light"]),
+    "water": (PALETTE["water_dark"], PALETTE["water"], PALETTE["water_light"], PALETTE["foam"]),
+    "asphalt": (PALETTE["asphalt_dark"], PALETTE["asphalt"], PALETTE["asphalt_light"]),
+    "timber": (PALETTE["trunk_dark"], PALETTE["trunk"], PALETTE["wood_light"]),
+    "meadow_grass": (PALETTE["grass_shadow"], PALETTE["grass_dark"], PALETTE["grass"], PALETTE["cream"]),
 }
 
 
@@ -223,7 +225,7 @@ def _luma(pixel: tuple[int, int, int, int]) -> int:
 def posterize_to_ramp(source: Image.Image, ramp) -> Image.Image:
     """Map source luminance to a fixed material ramp without dither or AA."""
     rgba = source.convert("RGBA")
-    pixels = list(rgba.getdata())
+    pixels = list(rgba.get_flattened_data())
     visible = [pixel for pixel in pixels if pixel[3]]
     if not visible:
         return rgba

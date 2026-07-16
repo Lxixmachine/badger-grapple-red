@@ -31,12 +31,72 @@ async function clickCell(page, x, y) {
   await canvas.click({position: {x: x * 32 + 16, y: y * 32 + 16}});
 }
 
+async function grassRenderMatchesRuntimeAtlas(page) {
+  return page.evaluate(async () => {
+    const project = window.__badgerMapEditorTest.project();
+    const map = project.maps.camp_randall;
+    const occupied = new Set();
+    for (const object of map.objects || []) {
+      for (let y = object.y; y < object.y + object.height; y += 1) {
+        for (let x = object.x; x < object.x + object.width; x += 1) occupied.add(`${x},${y}`);
+      }
+    }
+    const pointEntries = [
+      ...(map.actors || []),
+      ...(map.events || []),
+      ...(map.doors || [])
+    ];
+    for (const entry of pointEntries) occupied.add(`${entry.x},${entry.y}`);
+    let target = null;
+    for (let y = 1; y < map.height - 1 && !target; y += 1) {
+      for (let x = 1; x < map.width - 1; x += 1) {
+        if (map.terrain[y][x] === 'grass' && !occupied.has(`${x},${y}`)) {
+          target = {x, y};
+          break;
+        }
+      }
+    }
+    if (!target) return {matches: false, reason: 'no uncovered grass cell'};
+
+    const atlas = new Image();
+    atlas.src = new URL(map.metatileAtlas.path, window.location.href).href;
+    await atlas.decode();
+    const visual = map.terrainTiles.grass;
+    const cell = map.cellSize;
+    const source = document.createElement('canvas');
+    source.width = cell;
+    source.height = cell;
+    const sourceContext = source.getContext('2d');
+    sourceContext.imageSmoothingEnabled = false;
+    sourceContext.drawImage(
+      atlas,
+      (visual % map.metatileAtlas.columns) * cell,
+      Math.floor(visual / map.metatileAtlas.columns) * cell,
+      cell,
+      cell,
+      0,
+      0,
+      cell,
+      cell
+    );
+    const expected = Array.from(sourceContext.getImageData(cell / 2, cell / 2, 1, 1).data);
+    const canvas = document.querySelector('#mapCanvas');
+    const actual = Array.from(canvas.getContext('2d').getImageData(
+      target.x * cell + cell / 2,
+      target.y * cell + cell / 2,
+      1,
+      1
+    ).data);
+    return {matches: JSON.stringify(actual) === JSON.stringify(expected), target, actual, expected};
+  });
+}
+
 test('map studio boots with the complete Season One atlas', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 17});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 18});
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'brick',
     connectedComponentCount: 1,
@@ -48,11 +108,21 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     uniqueColors: 2,
     cardinalPixelCount: 0
   });
+  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeGreaterThanOrEqual(0.62);
+  expect(state.project.groundMaterialMetrics.grass.meanSaturation).toBeLessThanOrEqual(0.42);
+  expect(state.project.groundMaterialMetrics.mowedGrass.meanLightness).toBeGreaterThanOrEqual(0.60);
+  expect(state.project.groundMaterialMetrics.mowedGrass.meanSaturation).toBeLessThanOrEqual(0.42);
   expect(state.project.groundMaterialMetrics.campusPavers).toMatchObject({
     uniqueColors: 3,
     cardinalPixelCount: 0
   });
-  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThan(0.55);
+  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThanOrEqual(0.78);
+  expect(state.project.groundMaterialMetrics.campusPavers.meanSaturation).toBeLessThanOrEqual(0.40);
+  expect(state.project.groundValueContract).toMatchObject({
+    grass: {meanLightnessMin: 0.62, meanSaturationMax: 0.42},
+    mowedGrass: {meanLightnessMin: 0.60, meanSaturationMax: 0.42},
+    campusPavers: {meanLightnessMin: 0.78, meanSaturationMax: 0.40}
+  });
   expect(state.project.visualHierarchyMetrics.saturationDifference).toBeGreaterThan(0);
   expect(state.project.visualHierarchyMetrics.ground.meanSaturation)
     .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanSaturation);
@@ -364,7 +434,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 17});
+  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 18});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
@@ -490,6 +560,11 @@ test('mobile layout keeps the canvas and touch palette usable', async ({page}) =
   await page.getByRole('button', {name: 'Close inspector'}).click();
   await expect(page.locator('.inspector-panel')).toBeHidden();
   expect(issues).toEqual([]);
+});
+
+test('map studio renders grass from the same atlas as the live game', async ({page}) => {
+  await openEditor(page);
+  await expect.poll(() => grassRenderMatchesRuntimeAtlas(page)).toMatchObject({matches: true});
 });
 
 test('palette search, favorites, and curated disclosures reduce catalog hunting', async ({page}) => {

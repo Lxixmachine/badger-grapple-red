@@ -14,6 +14,11 @@ never copy the tiles: our subjects are UW-Madison and wrestling.
 - **Grass ground = TWO colors**: one flat base + one stipple dot shade
   at ~3-5% coverage in a loose diagonal rhythm. That's the whole quiet-
   ground trick. (Measured: base mint + dot one step darker.)
+- The production calibration window keeps grass mean lightness at
+  **0.62-0.70**, grass saturation at **<=0.42**, and maintained lawn
+  lightness at **>=0.60**. Campus limestone stays at **>=0.78** mean
+  lightness and **<=0.40** saturation. These are value relationships,
+  not copied reference colors; the Badger master palette remains original.
 - **Every material is a 3-shade cel ramp** (highlight / mid / shadow),
   flat fills, zero gradients, zero noise. Example measured roof ramp:
   #ee9473 / #de6a62 / #ac2029. Interior wood: #b8a858 / #a09858 /

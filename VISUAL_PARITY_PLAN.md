@@ -84,7 +84,7 @@ Acceptance:
 
 ### WP-V2 — Make the ground a SYSTEM: connected paths + edge tiles + values
 
-> **STATUS: CODE COMPLETE IN v22.8; TONY VISUAL VERDICT REMAINS.**
+> **STATUS: SOURCE-LEVEL RETUNE COMPLETE IN v22.19; TONY VISUAL VERDICT REMAINS.**
 > Camp Randall now has one 108-cell primary path network joining all
 > three door approaches and both south-route cells. Every occupied
 > path cell resolves through the 47-signature `surface_brick` edge
@@ -92,7 +92,13 @@ Acceptance:
 > anchors, and raw cuts. Grass is a two-color, 3.9% stipple material;
 > warm campus pavers use three colors with zero cardinal pixels.
 > Locker-room and office floors use quieter fixed-ramp patterns. These
-> contracts are enforced by `npm run validate`, and SELECT exposes the
+> v22.19 removes the second private ground palette that had silently
+> darkened those authored Imagegen materials after intake. The prepared
+> sources, transition edges, runtime atlas, World Atlas, and Map Studio now
+> share one master palette: grass measures 0.659 lightness, maintained lawn
+> 0.650, and limestone 0.312 saturation. Map Studio also draws every ground
+> cell from the runtime atlas instead of leaking its obsolete baked grass
+> underneath. These contracts are enforced by `npm run validate`, and SELECT exposes the
 > same grid/collision ownership used by the runtime. Tony's phone eye
 > still closes the package through the WP-V4 comparison ritual.
 

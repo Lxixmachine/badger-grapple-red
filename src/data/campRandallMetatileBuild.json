@@ -1,14 +1,14 @@
 {
   "schema": "badger-grapple-metatiles/v2",
-  "version": 17,
-  "status": "season-one-capitol-civic-ring-atlas",
+  "version": 18,
+  "status": "season-one-high-key-ground-atlas",
   "layoutRevision": 13,
   "cellSize": 32,
   "atlas": {
-    "path": "./assets/metatiles/camp_randall_metatiles_v17.png",
+    "path": "./assets/metatiles/camp_randall_metatiles_v18.png",
     "columns": 16,
     "visualCount": 2589,
-    "sha256": "3f0b70804a4f53a31a8cc15bd1be2bce46cf12c59adfe961de3fae139c0b58f6",
+    "sha256": "bc78229216d6d6e6e138700fc44eb49bca60241c8f723166e053f326762c4ab0",
     "entries": [
       {
         "index": 0,
@@ -125813,41 +125813,63 @@
     "grass": {
       "uniqueColors": 2,
       "dominantCoverage": 0.9531,
-      "meanSaturation": 0.3421,
-      "meanLightness": 0.5751,
+      "meanSaturation": 0.3673,
+      "meanLightness": 0.6594,
       "cardinalPixelCount": 0
     },
     "mowedGrass": {
       "uniqueColors": 3,
       "dominantCoverage": 0.4297,
-      "meanSaturation": 0.3302,
-      "meanLightness": 0.5424,
+      "meanSaturation": 0.3475,
+      "meanLightness": 0.65,
       "cardinalPixelCount": 0
     },
     "campusPavers": {
       "uniqueColors": 3,
       "dominantCoverage": 0.7578,
-      "meanSaturation": 0.5132,
-      "meanLightness": 0.7747,
+      "meanSaturation": 0.3121,
+      "meanLightness": 0.8479,
       "cardinalPixelCount": 0
+    }
+  },
+  "groundValueContract": {
+    "grass": {
+      "uniqueColors": 2,
+      "dominantCoverageMin": 0.94,
+      "meanLightnessMin": 0.62,
+      "meanLightnessMax": 0.7,
+      "meanSaturationMax": 0.42,
+      "cardinalPixelCountMax": 0
+    },
+    "mowedGrass": {
+      "uniqueColorsMax": 3,
+      "meanLightnessMin": 0.6,
+      "meanSaturationMax": 0.42,
+      "cardinalPixelCountMax": 0
+    },
+    "campusPavers": {
+      "uniqueColorsMax": 3,
+      "meanLightnessMin": 0.78,
+      "meanSaturationMax": 0.4,
+      "cardinalPixelCountMax": 0
     }
   },
   "visualHierarchyMetrics": {
     "ground": {
-      "meanSaturation": 0.3459,
+      "meanSaturation": 0.3622,
       "opaquePixelCount": 1523712
     },
     "identityObjects": {
       "meanSaturation": 0.4555,
       "opaquePixelCount": 142848
     },
-    "saturationDifference": 0.1096
+    "saturationDifference": 0.0933
   },
   "sources": {
     "layout": "52ead5b22773b2d276c1ead119e0697363883f05697ef40f7fe0ac68c3b09eaa",
     "production": "188394e79d32e7ae8e1676a4a326da9b543a1ed325d76fa619d59b34b2a46680",
     "overrides": "866eea668a472d64e6d18b1b2f9c85ae9710832e694e5587d30abd9f5196e3bd",
-    "worldTileset": "a9c8fd27c11a1fe49f7d31a2c966f1c954cd5e71a93da2b835c5979fb41dd0dd",
-    "worldAtlas": "21b6cdd07f414fde2be8f7c7276a34fc450176596d8585999ba50f92b4e1232a"
+    "worldTileset": "5761d354deddb1fd37f4db918f934dadaf4af7d68f0b4ab54ea5699498b0641b",
+    "worldAtlas": "c5647fa2fe5b1e1b14bfe6c516abfca5e13c496af5988c9535742117b78701b8"
   }
 }

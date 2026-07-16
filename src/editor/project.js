@@ -696,6 +696,7 @@ export function createSeedProject() {
     metatileVersion: metatileBuild.version,
     groundSystem: deepClone(metatileBuild.groundSystem),
     groundMaterialMetrics: deepClone(metatileBuild.groundMaterialMetrics),
+    groundValueContract: deepClone(metatileBuild.groundValueContract),
     visualHierarchyMetrics: deepClone(metatileBuild.visualHierarchyMetrics),
     createdFrom: 'season-one-map-studio-atlas',
     activeMapId: production.map.id,

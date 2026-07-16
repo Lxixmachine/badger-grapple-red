@@ -1,7 +1,7 @@
 {
   "schema": "badger-grapple-world-tileset/v5",
-  "version": 9,
-  "status": "season-one-capitol-civic-ring-pixel-kit",
+  "version": 10,
+  "status": "season-one-high-key-ground-pixel-kit",
   "cellSize": 32,
   "artPipeline": {
     "logicalCellSize": 16,
@@ -11,10 +11,10 @@
     "pixelPerfect": true
   },
   "atlas": {
-    "path": "./assets/metatiles/season_one_world_tileset_v9.png",
+    "path": "./assets/metatiles/season_one_world_tileset_v10.png",
     "columns": 16,
     "visualCount": 2428,
-    "sha256": "21b6cdd07f414fde2be8f7c7276a34fc450176596d8585999ba50f92b4e1232a",
+    "sha256": "c5647fa2fe5b1e1b14bfe6c516abfca5e13c496af5988c9535742117b78701b8",
     "entries": [
       {
         "index": 0,
@@ -118100,23 +118100,45 @@
       "grass": {
         "uniqueColors": 2,
         "dominantCoverage": 0.9531,
-        "meanSaturation": 0.3421,
-        "meanLightness": 0.5751,
+        "meanSaturation": 0.3673,
+        "meanLightness": 0.6594,
         "cardinalPixelCount": 0
       },
       "mowedGrass": {
         "uniqueColors": 3,
         "dominantCoverage": 0.4297,
-        "meanSaturation": 0.3302,
-        "meanLightness": 0.5424,
+        "meanSaturation": 0.3475,
+        "meanLightness": 0.65,
         "cardinalPixelCount": 0
       },
       "campusPavers": {
         "uniqueColors": 3,
         "dominantCoverage": 0.7578,
-        "meanSaturation": 0.5132,
-        "meanLightness": 0.7747,
+        "meanSaturation": 0.3121,
+        "meanLightness": 0.8479,
         "cardinalPixelCount": 0
+      }
+    },
+    "groundValueContract": {
+      "grass": {
+        "uniqueColors": 2,
+        "dominantCoverageMin": 0.94,
+        "meanLightnessMin": 0.62,
+        "meanLightnessMax": 0.7,
+        "meanSaturationMax": 0.42,
+        "cardinalPixelCountMax": 0
+      },
+      "mowedGrass": {
+        "uniqueColorsMax": 3,
+        "meanLightnessMin": 0.6,
+        "meanSaturationMax": 0.42,
+        "cardinalPixelCountMax": 0
+      },
+      "campusPavers": {
+        "uniqueColorsMax": 3,
+        "meanLightnessMin": 0.78,
+        "meanSaturationMax": 0.4,
+        "cardinalPixelCountMax": 0
       }
     },
     "contractSatisfied": true
@@ -118128,13 +118150,13 @@
   },
   "validation": {
     "seamTest": "art/imagegen/validation/season_one_tileset_seam_test.png",
-    "seamTestSha256": "bacccc75d1e716c6be254f5b0604a51ad1b55c23dbcc0209ad9b59da23ec63a1"
+    "seamTestSha256": "0bbd0c4bf7bc513c1c66e81c7e1f550b5accaf8a173501e49a106ca31f6c47d4"
   },
   "sources": {
     "manifest": "ce655b86985fef2efea0c2fcbc03820a4fef3c265f6a14400280a6696d5954f1",
     "contract": "0fd851fd2e8e939e9ff445cd15b8cf6d5e97ca5c8e24bcd59110162288c8e0af",
-    "pixelArtModule": "a8c33b6ea6ecaaab2615cd226e1ef28b4cc43304b887680202806e8dcbd9b4aa",
-    "preparedImagegenManifest": "aac8467b05a3e29d49b8ffe3aa99667edfda09a62cac062417e00c2bdbc85fc8",
+    "pixelArtModule": "97d54a131ce17d6f1ff2dae0306c687ca95f5bd5cea489acfaf45fdf50787890",
+    "preparedImagegenManifest": "f441b1e89b3272591304aa43d86772353a2ffdb5804ecc3b5fec5152b89eb102",
     "preparedImagegenAssetCount": 115,
     "referenceBoards": {
       "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
