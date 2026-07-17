@@ -116,22 +116,31 @@ test('Lakeshore and Picnic use the long-form FireRed route scale and exact world
   expect(solidOwnership(picnic)).toEqual([]);
 });
 
-test('route scenery uses stepped shorelines, clustered trees, and compact grass encounters', async ({page}) => {
+test('route scenery uses stepped shorelines, continuous forest masses, and compact grass encounters', async ({page}) => {
   const project = await openStudio(page);
   const lakeLayout = layouts.maps.lakeshore_path;
   const picnicLayout = layouts.maps.picnic_point;
   const lake = project.maps.lakeshore_path;
   const picnic = project.maps.picnic_point;
 
-  const lakeTrees = lakeLayout.decorations.filter(entry => entry.id.startsWith('lake_tree_south_'));
-  expect(lakeTrees).toHaveLength(24);
-  expect(lakeTrees.every(entry => entry.stamp.startsWith('tree_'))).toBe(true);
-  expect(lakeLayout.decorations.some(entry => entry.stamp === 'forest_edge_south')).toBe(false);
+  const lakeForest = lakeLayout.decorations.filter(entry => entry.id.startsWith('lake_forest_south_'));
+  expect(lakeForest).toHaveLength(8);
+  expect(lakeForest.map(entry => entry.x)).toEqual([0, 7, 14, 21, 28, 35, 42, 49]);
+  expect(lakeForest.every(entry => /^forest_edge_north(_b)?$/.test(entry.stamp))).toBe(true);
+  expect(lakeLayout.decorations.some(entry => entry.id.startsWith('lake_tree_south_'))).toBe(false);
 
-  const picnicTrees = picnicLayout.decorations.filter(entry => entry.id.startsWith('picnic_tree_'));
-  expect(picnicTrees).toHaveLength(25);
-  expect(picnicTrees.every(entry => entry.stamp.startsWith('tree_'))).toBe(true);
-  expect(picnicLayout.decorations.some(entry => entry.stamp === 'forest_grove_small')).toBe(false);
+  const picnicForest = picnicLayout.decorations.filter(entry => entry.id.startsWith('picnic_forest_'));
+  expect(picnicForest).toHaveLength(7);
+  expect(picnicForest.every(entry => entry.stamp.startsWith('forest_edge_'))).toBe(true);
+  expect(picnicLayout.decorations.some(entry => entry.id.startsWith('picnic_tree_'))).toBe(false);
+  expect(worldTileset.stamps.forest_edge_north).toMatchObject({width: 7, height: 3});
+  expect(worldTileset.stamps.forest_edge_north_b).toMatchObject({width: 7, height: 3});
+  expect(worldTileset.stamps.forest_edge_south).toMatchObject({width: 7, height: 4});
+  expect(worldTileset.stamps.forest_edge_south_b).toMatchObject({width: 7, height: 4});
+  expect(worldTileset.stamps.forest_edge_north.cells)
+    .not.toEqual(worldTileset.stamps.forest_edge_north_b.cells);
+  expect(worldTileset.stamps.forest_edge_south.cells)
+    .not.toEqual(worldTileset.stamps.forest_edge_south_b.cells);
   expect(picnicLayout.waterBodies).toHaveLength(7);
   expect(picnic.terrain[4][10]).toMatch(/^shore_water_blob_/);
   expect(picnic.terrain[13][24]).toMatch(/^shore_water_blob_/);
@@ -153,6 +162,7 @@ test('shared route art keeps the phone-scale footprint and logical-pixel contrac
   const grassSource = imagegenSources.assets.tall_grass_cluster;
   const matSource = imagegenSources.assets.outdoor_wrestling_mat;
   const matStamp = worldTileset.stamps.outdoor_wrestling_mat;
+  const forestSource = imagegenSources.assets.forest_core;
 
   expect(grassSource).toMatchObject({
     width: 16,
@@ -178,6 +188,16 @@ test('shared route art keeps the phone-scale footprint and logical-pixel contrac
     height: 2,
     collisionMask: ['...', '...'],
     semanticBehavior: 'practice_mat'
+  });
+  expect(forestSource).toMatchObject({
+    category: 'forest_masses',
+    width: 96,
+    height: 128
+  });
+  expect(forestSource.materialDiscipline).toMatchObject({
+    materials: ['foliage', 'wood'],
+    maxColorsPerMaterial: 4,
+    outputPartialAlphaPixelCount: 0
   });
 
   for (const mapId of ['lakeshore_path', 'picnic_point']) {

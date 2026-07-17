@@ -577,72 +577,72 @@ def _pine(width: int, height: int, variant: int = 0) -> Image.Image:
 
 
 def _forest(width: int, height: int, kind: str) -> Image.Image:
-    image = canvas(width, height)
-    w, h = image.size
-
-    top = source_asset("vegetation", "forest_top")
-    middle = source_asset("vegetation", "forest_middle")
-    bottom = source_asset("vegetation", "forest_bottom")
-    corner = source_asset("vegetation", "forest_corner")
-
-    def repeat_horizontal(segment: Image.Image, y: int) -> None:
-        for x in range(0, w, segment.width):
-            remaining = min(segment.width, w - x)
-            image.alpha_composite(segment.crop((0, 0, remaining, min(segment.height, h - y))), (x, y))
-
-    if "edge_west" in kind or "border_west" in kind or "edge_east" in kind or "border_east" in kind:
-        segments = max(1, h // top.height)
-        for index in range(segments):
-            segment = top if index == 0 else bottom if index == segments - 1 else middle
-            image.alpha_composite(segment, (0, index * top.height))
-        if "east" in kind:
+    w, h = width * LOGICAL_CELL, height * LOGICAL_CELL
+    exact_sources = {
+        "forest_mass_core": "forest_core",
+        "forest_edge_north": "forest_edge_north_a",
+        "forest_edge_north_b": "forest_edge_north_b",
+        "forest_edge_south": "forest_edge_south_a",
+        "forest_edge_south_b": "forest_edge_south_b",
+        "forest_edge_west": "forest_edge_west_a",
+        "forest_edge_west_b": "forest_edge_west_b",
+        "forest_edge_east": "forest_edge_east_a",
+        "forest_edge_east_b": "forest_edge_east_b",
+        "forest_corner_inner_nw": "forest_corner_inner_nw",
+        "forest_corner_inner_ne": "forest_corner_inner_nw",
+        "forest_corner_outer_sw": "forest_corner_outer_sw",
+        "forest_corner_outer_se": "forest_corner_outer_sw",
+        "forest_grove_small": "forest_grove_small",
+    }
+    source_id = exact_sources.get(kind)
+    if source_id:
+        image = source_asset("forest_masses", source_id)
+        if kind.endswith("_ne") or kind.endswith("_se"):
             image = ImageOps.mirror(image)
-        return image
-    if "edge_north" in kind:
-        repeat_horizontal(top, 0)
-        return image
-    if "edge_south" in kind:
-        repeat_horizontal(middle, 0)
-        repeat_horizontal(bottom, max(0, h - bottom.height))
-        return image
-    if "corner_inner" in kind:
-        for y in range(0, h, middle.height):
-            repeat_horizontal(middle, y)
-        clear = Image.new("L", (w, h), 255)
-        clear_draw = ImageDraw.Draw(clear)
-        if kind.endswith("nw"):
-            clear_draw.rectangle((0, 0, w // 2 - 1, h // 2 - 1), fill=0)
-        else:
-            clear_draw.rectangle((w // 2, 0, w - 1, h // 2 - 1), fill=0)
-        image.putalpha(ImageChops.multiply(image.getchannel("A"), clear))
-        return image
-    if "corner_outer" in kind:
-        for y in range(0, h, middle.height):
-            repeat_horizontal(middle, y)
-        for y in range(0, h, corner.height):
-            for x in range(0, w, corner.width):
-                image.alpha_composite(corner, (x, y))
-        shape = Image.new("L", (w, h), 0)
-        shape_draw = ImageDraw.Draw(shape)
-        if kind.endswith("sw"):
-            shape_draw.rectangle((0, 0, w // 2, h - 1), fill=255)
-            shape_draw.rectangle((0, h // 3, w - 1, h - 1), fill=255)
-        else:
-            shape_draw.rectangle((w // 2, 0, w - 1, h - 1), fill=255)
-            shape_draw.rectangle((0, h // 3, w - 1, h - 1), fill=255)
-        image.putalpha(ImageChops.multiply(image.getchannel("A"), shape))
+        # Corner notches are gameplay ownership, not soft image boundaries.
+        # Clip generated leaf spill to the same whole-cell geometry declared by
+        # the collision masks so a visibly empty cell is always walkable and a
+        # visibly forested cell is always solid.
+        if kind == "forest_corner_inner_nw":
+            alpha = image.getchannel("A")
+            ImageDraw.Draw(alpha).rectangle((0, 0, LOGICAL_CELL * 2 - 1, LOGICAL_CELL * 2 - 1), fill=0)
+            image.putalpha(alpha)
+        elif kind == "forest_corner_inner_ne":
+            alpha = image.getchannel("A")
+            ImageDraw.Draw(alpha).rectangle((w - LOGICAL_CELL * 2, 0, w - 1, LOGICAL_CELL * 2 - 1), fill=0)
+            image.putalpha(alpha)
+        elif kind == "forest_corner_outer_sw":
+            alpha = image.getchannel("A")
+            ImageDraw.Draw(alpha).rectangle((LOGICAL_CELL * 2, 0, w - 1, LOGICAL_CELL * 3 - 1), fill=0)
+            image.putalpha(alpha)
+        elif kind == "forest_corner_outer_se":
+            alpha = image.getchannel("A")
+            ImageDraw.Draw(alpha).rectangle((0, 0, w - LOGICAL_CELL * 2 - 1, LOGICAL_CELL * 3 - 1), fill=0)
+            image.putalpha(alpha)
+        elif kind == "forest_grove_small":
+            alpha = image.getchannel("A")
+            alpha_draw = ImageDraw.Draw(alpha)
+            alpha_draw.rectangle((0, 0, LOGICAL_CELL - 1, LOGICAL_CELL - 1), fill=0)
+            alpha_draw.rectangle((w - LOGICAL_CELL, 0, w - 1, LOGICAL_CELL - 1), fill=0)
+            image.putalpha(alpha)
+        if image.size != (w, h):
+            raise ValueError(f"{kind}: forest source is {image.size}, expected {(w, h)}")
         return image
 
-    # Forest cores and groves are composed from authored cap/middle/base
-    # modules.  Their 2x3-cell rhythm is intentionally staggered so a map does
-    # not reveal one-cell wallpaper repetition.
-    segment_height = top.height
-    rows = max(1, (h + segment_height - 1) // segment_height)
-    for row in range(rows):
-        segment = top if row == 0 else bottom if row == rows - 1 else middle
-        y = min(row * segment_height, max(0, h - segment_height))
-        repeat_horizontal(segment if row % 2 == 0 else ImageOps.mirror(segment), y)
-    return image
+    if kind in {"forest_border_west_long", "forest_border_east_long"}:
+        side = "east" if "east" in kind else "west"
+        variants = [
+            source_asset("forest_masses", f"forest_edge_{side}_a"),
+            source_asset("forest_masses", f"forest_edge_{side}_b"),
+        ]
+        image = canvas(width, height)
+        for index, y in enumerate(range(0, h, variants[0].height)):
+            segment = variants[index % len(variants)]
+            remaining = min(segment.height, h - y)
+            image.alpha_composite(segment.crop((0, 0, segment.width, remaining)), (0, y))
+        return image
+
+    raise ValueError(f"No exact forest source for {kind}")
 
 def _hedge(width: int, height: int, kind: str) -> Image.Image:
     source = source_asset("vegetation", "hedge_horizontal")
@@ -750,9 +750,12 @@ def _awning(width: int, height: int, color: str) -> Image.Image:
 
 def authored_stamp(spec_id: str, width: int, height: int) -> Image.Image:
     """Build a logical-resolution stamp for every shared world-kit ID."""
-    if spec_id.startswith("tree_oak"):
-        oak = source_asset("vegetation", "tree_oak_a")
-        return ImageOps.mirror(oak) if spec_id == "tree_oak_b" else oak
+    if spec_id == "tree_oak_a":
+        return source_asset("vegetation", "tree_oak_a")
+    if spec_id == "tree_oak_b":
+        return source_asset("vegetation", "tree_oak_autumn")
+    if spec_id == "tree_oak_c":
+        return ImageOps.mirror(source_asset("vegetation", "tree_oak_a"))
     if spec_id.startswith("tree_pine"):
         pine = source_asset("vegetation", "tree_pine")
         return ImageOps.mirror(pine) if spec_id.endswith("_b") else pine

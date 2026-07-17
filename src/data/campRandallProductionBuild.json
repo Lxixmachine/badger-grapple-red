@@ -2455,8 +2455,8 @@
   },
   "sources": {
     "manifest": "25c5545973dc5b7f366e8032c9a43a4d89f38a2f9359c788e8006a166d87fbd4",
-    "layout": "95055d2cac3a334fc1e55fa60fb6cd30f208ba01d91d54b13bee56cb003e7115",
-    "worldTileset": "f80ddd9776582547b6cbefcd592be345f0a6c8e8956e967dfa217a3ad0abaa02",
+    "layout": "1046f528d1975617f9b183b5c3ed33cae68123e92cd8171c3fdff7c771f0cab3",
+    "worldTileset": "7e3cac1a6b9844be3f1b128aed1433e1913ed4483cbcccc2a1f94b4a9b4d431b",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",

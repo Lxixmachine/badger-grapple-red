@@ -3406,3 +3406,29 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   `npm run validate` still stops only on Tony's protected State Street world-
   composition checksum. Do not run `npm run build:world-compositions`, stage,
   regenerate, or revert those separate user-owned files.
+
+## Codex Canopy Grammar Pass (v22.31)
+
+- ChatGPT built-in image generation produced a dedicated 4x3 forest assembly
+  board rather than another sheet of isolated trees. The active v2 source has
+  brighter medium-green foliage, restrained recess colors, binary alpha, and
+  twelve exact modules: north/south A/B edges, west/east A/B edges, core,
+  grove, and inner/outer corners.
+- The source compiler owns forest join sealing and validates every declared
+  joining edge after per-material discipline. Forest materials use at most
+  four foliage/wood colors, while corners and groves are clipped to honest
+  whole-cell collision masks. The compositor maps exact prepared modules and
+  no longer derives every forest from one repeated 2x3 strip.
+- Lakeshore Path's 24-tree picket row is now eight alternating 7x3 canopy
+  assemblies. Picnic Point's 25 isolated trees are now seven connected forest
+  compositions arranged around the authored route. Both routes remain fully
+  traversable with actors present and cross their exact reciprocal seams.
+- The standing visual review ritual now has native 480x320 capture tooling,
+  a same-scale two-up board builder, and documented fixed-reference rules.
+  F-010 is implemented but remains awaiting Tony's A/B verdict; metrics cannot
+  close visual parity.
+- The production build, battle-art validation, balance simulation, map lint,
+  targeted environment checks, and complete sequential suite pass; final
+  suite count is 122/122. Broad validation stops only on Tony's protected
+  State Street composition checksum. Those six files remain deliberately
+  unstaged and must not be regenerated, reverted, or included in this release.

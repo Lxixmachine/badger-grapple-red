@@ -24,6 +24,7 @@
     "fire": ["red_deep", "red", "brick_light", "gold"]
   },
   "categoryDefaults": {
+    "forest_masses": ["foliage", "wood"],
     "ordinary_buildings": ["cardinal", "brick", "limestone", "slate", "glass", "wood", "metal", "gold", "foliage"],
     "landmarks": ["cardinal", "brick", "limestone", "slate", "glass", "wood", "metal", "gold", "foliage", "stone"],
     "service_buildings": ["cardinal", "brick", "limestone", "slate", "glass", "wood", "metal", "gold", "foliage"],
@@ -31,7 +32,7 @@
   },
   "assetProfiles": {
     "tree_oak_a": ["foliage", "wood"],
-    "tree_oak_autumn": ["foliage", "gold", "wood"],
+    "tree_oak_autumn": ["foliage", "wood"],
     "tree_pine": ["foliage", "wood"],
     "tree_ornamental": ["foliage", "cardinal", "wood"],
     "tall_grass_cluster": ["foliage"],

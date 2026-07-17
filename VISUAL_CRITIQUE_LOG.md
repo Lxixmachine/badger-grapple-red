@@ -67,12 +67,15 @@ tracker for looks.
 - **F-008 [TEX-002] street brick mall — OPEN.**
   Brick repeats at an obvious 2-tile rhythm. Owner: Codex (seamless
   brick with 3-4 variants).
-- **F-010 [OBJ-007] every tree border (routes, campus, Celadon-test) — OPEN.**
+- **F-010 [OBJ-007] every tree border (routes, campus, Celadon-test) — IMPLEMENTED, AWAITING TONY REVIEW.**
   Tony's call, confirmed in the reference sheets: FireRed tree walls are
   composed from an interlock kit (canopy-over-canopy pieces, fill tiles,
   drawn clumps); ours are ONE 2x2 tree stamped in staggered rows — the
-  picket-line look. Owner: Codex (forest kit per spec law 6b) + Claude
-  (compositor border pass rewritten to compose from the kit).
+  picket-line look. v22.31 replaces route tree rows with twelve exact
+  grid-native Imagegen forest assemblies, A/B edge variants, honest whole-cell
+  masks, sealed repeat joins, and per-material four-color discipline. Lakeshore
+  and Picnic now use connected canopy compositions; actor-aware reachability
+  and both seams pass. Tony's fixed A/B verdict remains the close condition.
 - **F-011 [TG-013/edge continuity] route water seams — OPEN.**
   Found by the world stitch: Picnic Point's north shore sits one row
   higher than Lakeshore's (water rows 0-2 vs 1-4), so Mendota steps at

@@ -48,7 +48,7 @@ BOARDS = {
         ],
     },
     "vegetation": {
-        "path": SOURCE_DIR / "season_one_vegetation_source_v2.png",
+        "path": SOURCE_DIR / "season_one_vegetation_source_v3.png",
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -64,6 +64,25 @@ BOARDS = {
             ("shrub_flowering", (16, 16), "contain", 20),
             ("rock_cluster", (32, 16), "contain", 18),
             ("shore_reeds", (16, 16), "contain", 20),
+        ],
+    },
+    "forest_masses": {
+        "path": SOURCE_DIR / "season_one_forest_masses_source_v2.png",
+        "columns": 4,
+        "rows": 3,
+        "entries": [
+            ("forest_edge_north_a", (112, 48), "fit", 24),
+            ("forest_edge_north_b", (112, 48), "fit", 24),
+            ("forest_edge_south_a", (112, 64), "fit", 24),
+            ("forest_edge_south_b", (112, 64), "fit", 24),
+            ("forest_edge_west_a", (32, 96), "fit", 24),
+            ("forest_edge_west_b", (32, 96), "fit", 24),
+            ("forest_edge_east_a", (32, 96), "fit", 24),
+            ("forest_edge_east_b", (32, 96), "fit", 24),
+            ("forest_core", (96, 128), "fit", 24),
+            ("forest_grove_small", (80, 64), "fit", 24),
+            ("forest_corner_inner_nw", (80, 80), "fit", 24),
+            ("forest_corner_outer_sw", (96, 80), "fit", 24),
         ],
     },
     "architecture": {
@@ -795,6 +814,70 @@ def normalize(panel: Image.Image, size: tuple[int, int], mode: str, colors: int)
     return quantize_rgba(normalize_geometry(panel, size, mode), colors)
 
 
+def seal_forest_join_edges(image: Image.Image, asset_id: str) -> Image.Image:
+    """Close small Imagegen gutters only on declared forest joining edges.
+
+    Source panels preserve irregular outer silhouettes, but a few transparent
+    pixels at a repeat edge become conspicuous grass slits in a long forest
+    wall. Mirror the nearest authored pixels across edge runs of at most half a
+    logical cell. Standalone groves and corner notches remain untouched.
+    """
+    output = image.copy().convert("RGBA")
+    pixels = output.load()
+    def nearest(values: list[int], target: int) -> int:
+        return min(values, key=lambda value: abs(value - target))
+
+    def seal_horizontal() -> None:
+        for y in range(output.height):
+            visible = [x for x in range(output.width) if pixels[x, y][3] >= 96]
+            if not visible:
+                continue
+            left, right = visible[0], visible[-1]
+            for x in range(left):
+                source_x = nearest(visible, left + (left - x))
+                pixels[x, y] = pixels[source_x, y]
+            for x in range(right + 1, output.width):
+                source_x = nearest(visible, right - (x - right))
+                pixels[x, y] = pixels[source_x, y]
+
+    def seal_vertical() -> None:
+        for x in range(output.width):
+            visible = [y for y in range(output.height) if pixels[x, y][3] >= 96]
+            if not visible:
+                continue
+            top, bottom = visible[0], visible[-1]
+            for y in range(top):
+                source_y = nearest(visible, top + (top - y))
+                pixels[x, y] = pixels[x, source_y]
+            for y in range(bottom + 1, output.height):
+                source_y = nearest(visible, bottom - (y - bottom))
+                pixels[x, y] = pixels[x, source_y]
+
+    if asset_id.startswith(("forest_edge_north", "forest_edge_south")) or asset_id == "forest_core":
+        seal_horizontal()
+    if asset_id.startswith(("forest_edge_west", "forest_edge_east")) or asset_id == "forest_core":
+        seal_vertical()
+    return output
+
+
+def validate_forest_join_edges(image: Image.Image, asset_id: str) -> None:
+    alpha = image.getchannel("A")
+    horizontal = asset_id.startswith(("forest_edge_north", "forest_edge_south")) or asset_id == "forest_core"
+    vertical = asset_id.startswith(("forest_edge_west", "forest_edge_east")) or asset_id == "forest_core"
+    if horizontal:
+        for y in range(image.height):
+            if not any(alpha.getpixel((x, y)) >= 250 for x in range(image.width)):
+                continue
+            if any(alpha.getpixel((x, y)) < 250 for x in (0, image.width - 1)):
+                raise SystemExit(f"{asset_id}: horizontal forest join edge contains a transparent seam")
+    if vertical:
+        for x in range(image.width):
+            if not any(alpha.getpixel((x, y)) >= 250 for y in range(image.height)):
+                continue
+            if any(alpha.getpixel((x, y)) < 250 for y in (0, image.height - 1)):
+                raise SystemExit(f"{asset_id}: vertical forest join edge contains a transparent seam")
+
+
 def make_ground_seamless(image: Image.Image) -> Image.Image:
     """Unify opposite logical edges without adding a visible frame."""
     output = image.copy().convert("RGBA")
@@ -861,7 +944,7 @@ def build() -> dict:
                 spec["columns"],
                 spec["rows"],
                 index,
-                trim_noise=category in {"ground", "vegetation"},
+                trim_noise=category in {"ground", "vegetation", "forest_masses"},
             )
             if category == "ground":
                 normalized = normalize(panel, size, mode, colors)
@@ -872,10 +955,14 @@ def build() -> dict:
                 discipline = ground_material_discipline_metrics(asset_id, normalized)
             else:
                 geometry = normalize_geometry(panel, size, mode)
+                if category == "forest_masses":
+                    geometry = seal_forest_join_edges(geometry, asset_id)
                 normalized, discipline = discipline_material_zones(
                     geometry,
                     material_profile_for(asset_id, category),
                 )
+                if category == "forest_masses":
+                    validate_forest_join_edges(normalized, asset_id)
             output_path = OUTPUT_DIR / category / f"{asset_id}.png"
             save_png(normalized, output_path)
             outputs[asset_id] = {
