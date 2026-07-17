@@ -14,7 +14,62 @@ const captures = [
   {
     id: 'natural-route',
     url: '/?test=1&scene=overworld&reset=1&area=lakeshore_path&x=31&y=8&facing=right',
-    scene: 'OverworldScene'
+    scene: 'OverworldScene',
+    area: 'lakeshore_path'
+  },
+  {
+    id: 'field-house-arrival',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=20&y=1&facing=down',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'field-house-trainer-quarter',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=8&y=8&facing=left',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'field-house-forecourt',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=20&y=18&facing=up',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'field-house-buckys-quarter',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=32&y=24&facing=up',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'bascom-entry',
+    url: '/?test=1&scene=overworld&reset=1&area=bascom_hill&x=8&y=16&facing=up',
+    scene: 'OverworldScene',
+    area: 'bascom_hill'
+  },
+  {
+    id: 'bascom-lower-stair',
+    url: '/?test=1&scene=overworld&reset=1&area=bascom_hill&x=8&y=14&facing=up',
+    scene: 'OverworldScene',
+    area: 'bascom_hill'
+  },
+  {
+    id: 'bascom-lincoln-terrace',
+    url: '/?test=1&scene=overworld&reset=1&area=bascom_hill&x=8&y=11&facing=up',
+    scene: 'OverworldScene',
+    area: 'bascom_hill'
+  },
+  {
+    id: 'bascom-upper-stair',
+    url: '/?test=1&scene=overworld&reset=1&area=bascom_hill&x=4&y=8&facing=up',
+    scene: 'OverworldScene',
+    area: 'bascom_hill'
+  },
+  {
+    id: 'bascom-hall-crown',
+    url: '/?test=1&scene=overworld&reset=1&area=bascom_hill&x=8&y=5&facing=up',
+    scene: 'OverworldScene',
+    area: 'bascom_hill'
   },
   {
     id: 'team-interior',
@@ -45,17 +100,17 @@ async function waitForScene(page, capture) {
     {timeout: 20_000}
   );
   await page.waitForFunction(
-    ({scene, id}) => {
+    ({scene, id, capture}) => {
       const state = window.__badgerTest?.sceneState?.(scene);
       if (!state?.active) return false;
       if (id === 'town-exterior') return state.area === 'camp_randall' && state.inputLocked === false;
-      if (id === 'natural-route') return state.area === 'lakeshore_path' && state.inputLocked === false;
+      if (capture.area) return state.area === capture.area && state.inputLocked === false;
       if (id === 'team-interior') return state.area === 'team_locker_room' && state.inputLocked === false;
       if (id === 'service-interior') return state.area === 'trainer_room' && state.inputLocked === false;
       if (id === 'service-shop') return state.area === 'buckys_locker_room' && state.inputLocked === false;
       return state.mode === 'command' && state.inputLocked === false;
     },
-    {scene: capture.scene, id: capture.id},
+    {scene: capture.scene, id: capture.id, capture: {area: capture.area}},
     {timeout: 20_000}
   );
 }

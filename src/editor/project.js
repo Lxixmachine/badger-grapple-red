@@ -133,6 +133,7 @@ const STAMP_COMPOSITION_POLICY = Object.freeze({
   gear_shop_counter: 'repeat-x',
   hedge_vertical: 'repeat-y',
   medical_cabinet: 'repeat-x',
+  bascom_terrace_wall: 'repeat-x',
   retaining_wall_brick: 'repeat-x',
   retaining_wall_stone: 'repeat-x',
   recovery_counter: 'repeat-x',

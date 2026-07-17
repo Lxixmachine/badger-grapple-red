@@ -1033,6 +1033,34 @@ def build() -> dict:
             minimum_coverage=0.08,
         )
 
+    bascom_elevation_specs = [
+        (
+            "bascom_terrace_wall", "Bascom Terrace Wall", 4, 2,
+            ["####", "####"], "ledge",
+        ),
+        (
+            "bascom_wall_end_left", "Bascom Terrace Left End", 2, 2,
+            [".#", ".#"], "ledge_end",
+        ),
+        (
+            "bascom_stair_ascent", "Bascom Limestone Ascent", 4, 3,
+            ["....", "....", "...."], "elevation_access",
+        ),
+        (
+            "bascom_wall_end_right", "Bascom Terrace Right End", 2, 2,
+            ["#.", "#."], "ledge_end",
+        ),
+    ]
+    for stamp_id, name, width, height, mask, semantic in bascom_elevation_specs:
+        image = export_2x(source_asset("bascom_elevation", stamp_id))
+        register_stamp(
+            stamp_id, name, "elevation",
+            image, width, height, mask,
+            tags=["bascom", "elevation", "imagegen_direct", "authored16", "grid_native"],
+            semantic_behavior=semantic,
+            minimum_coverage=0.08,
+        )
+
     arena_mat_specs = [
         ("field_house_competition_mat", "Field House Competition Mat"),
         ("capitol_exhibition_mat", "Capitol Exhibition Mat"),

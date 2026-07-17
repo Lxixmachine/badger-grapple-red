@@ -91,7 +91,16 @@
     },
     "elevation": {
       "minimum": 8,
-      "required": ["cliff_run", "cliff_corner_left", "cliff_corner_right", "cliff_stairs"]
+      "required": [
+        "cliff_run",
+        "cliff_corner_left",
+        "cliff_corner_right",
+        "cliff_stairs",
+        "bascom_terrace_wall",
+        "bascom_wall_end_left",
+        "bascom_stair_ascent",
+        "bascom_wall_end_right"
+      ]
     },
     "boundaries_and_props": {
       "minimum": 24,

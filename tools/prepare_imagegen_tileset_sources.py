@@ -215,6 +215,17 @@ BOARDS = {
             ("bascom_history_marker", (32, 32), "contain", 28),
         ],
     },
+    "bascom_elevation": {
+        "path": SOURCE_DIR / "season_one_bascom_elevation_source_v1.png",
+        "columns": 2,
+        "rows": 2,
+        "entries": [
+            ("bascom_terrace_wall", (64, 32), "fit", 24),
+            ("bascom_wall_end_left", (32, 32), "contain", 24),
+            ("bascom_stair_ascent", (64, 48), "contain", 24),
+            ("bascom_wall_end_right", (32, 32), "contain", 24),
+        ],
+    },
 }
 
 

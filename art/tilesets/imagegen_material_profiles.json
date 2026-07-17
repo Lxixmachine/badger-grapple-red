@@ -83,6 +83,10 @@
     "bascom_memorial_balustrade": ["limestone", "stone"],
     "bascom_stair_landing": ["limestone", "stone"],
     "bascom_history_marker": ["metal", "limestone", "cardinal"],
+    "bascom_terrace_wall": ["grass", "limestone", "stone"],
+    "bascom_wall_end_left": ["grass", "limestone", "stone"],
+    "bascom_stair_ascent": ["limestone", "stone"],
+    "bascom_wall_end_right": ["grass", "limestone", "stone"],
 
     "outdoor_wrestling_mat": ["cardinal", "cream", "slate"],
     "campfire_ring": ["stone", "wood", "fire"],

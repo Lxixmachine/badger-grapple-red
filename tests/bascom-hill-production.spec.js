@@ -78,20 +78,33 @@ test('Bascom Hill uses exact grid-native landmarks without stretched shortcuts',
     {to: 'state_street', edge: 'south', start: 8, span: 2, toEdge: 'north', toStart: 22}
   ]);
   expect(layout.cameraReviews).toHaveLength(4);
-  expect(layout.blockers.every(blocker => blocker.editorStampId === 'retaining_wall_stone')).toBe(true);
+  expect(layout.blockers).toHaveLength(5);
+  expect(layout.blockers.every(blocker => blocker.editorStampId === 'bascom_terrace_wall')).toBe(true);
   expect(map.objects.some(object => object.sourceId === 'cliff_run')).toBe(false);
 
   const hall = map.objects.find(object => object.id === 'bascom_hall');
   const statue = map.objects.find(object => object.id === 'abe_statue');
-  const stairs = map.objects.find(object => object.id === 'bascom_stair');
+  const lowerStairs = map.objects.find(object => object.id === 'bascom_lower_stair');
+  const upperStairs = map.objects.filter(object => object.sourceId === 'bascom_stair_ascent');
   expect(hall).toMatchObject({sourceId: 'bascom_hall_exterior', x: 4, y: 0, width: 10, height: 5});
   expect(statue).toMatchObject({
-    sourceId: 'bascom_lincoln_statue', x: 8, y: 8, width: 2, height: 3,
+    sourceId: 'bascom_lincoln_statue', x: 8, y: 9, width: 2, height: 3,
     collisionMask: ['..', '..', '##']
   });
-  expect(stairs).toMatchObject({
-    sourceId: 'bascom_stair_landing', x: 7, y: 12, width: 4, height: 2,
-    collisionMask: ['....', '....']
+  expect(lowerStairs).toMatchObject({
+    sourceId: 'bascom_stair_ascent', x: 7, y: 12, width: 4, height: 3,
+    collisionMask: ['....', '....', '....']
+  });
+  expect(upperStairs.map(({x, y}) => ({x, y}))).toEqual([
+    {x: 7, y: 12},
+    {x: 3, y: 6},
+    {x: 11, y: 6}
+  ]);
+  expect(worldTileset.stamps.bascom_terrace_wall).toMatchObject({
+    width: 4, height: 2, collisionMask: ['####', '####']
+  });
+  expect(worldTileset.stamps.bascom_stair_ascent).toMatchObject({
+    width: 4, height: 3, collisionMask: ['....', '....', '....']
   });
   expect(worldTileset.stamps.bascom_memorial_balustrade.collisionMask).toEqual(['....', '####']);
   expect(worldTileset.stamps.bascom_history_marker.collisionMask).toEqual(['..', '##']);
@@ -99,8 +112,15 @@ test('Bascom Hill uses exact grid-native landmarks without stretched shortcuts',
   for (const object of map.objects) {
     const source = worldTileset.stamps[object.sourceId];
     if (!source) continue;
-    expect(object.width, `${object.id} width`).toBe(source.width);
-    expect(object.height, `${object.id} height`).toBe(source.height);
+    if (object.sourceId === 'bascom_terrace_wall') {
+      expect(object.compositionPolicy, `${object.id} composition`)
+        .toBe(object.width === source.width ? 'exact' : 'repeat-x');
+      expect(object.sourceFootprint, `${object.id} source footprint`).toEqual({width: 4, height: 2});
+      expect(object.height, `${object.id} height`).toBe(source.height);
+    } else {
+      expect(object.width, `${object.id} width`).toBe(source.width);
+      expect(object.height, `${object.id} height`).toBe(source.height);
+    }
     expect(object.metatiles, `${object.id} metatiles`).toHaveLength(object.height);
   }
   expect(solidOwnership(map)).toEqual([]);
@@ -113,7 +133,7 @@ test('the hill remains traversable with actors, monument collision, and the Hall
   const withoutActors = reachableCells(project, map, false);
 
   expect(reachable.size).toBeGreaterThan(160);
-  for (const target of [key(8, 17), key(9, 17), key(8, 4), key(8, 11), key(14, 13)]) {
+  for (const target of [key(8, 17), key(9, 17), key(8, 4), key(8, 12), key(14, 12)]) {
     expect(reachable.has(target), `${target} is unreachable`).toBe(true);
   }
   for (const actor of map.actors) {

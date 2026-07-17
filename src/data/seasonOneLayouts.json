@@ -578,34 +578,37 @@
       "walkableMode": "paths",
       "gridAuthority": "metatile-behavior-v1",
       "paths": [
-        {"id": "south_axis", "x": 8, "y": 14, "width": 2, "height": 4, "material": "stone"},
-        {"id": "lower_stair_apron", "x": 7, "y": 12, "width": 4, "height": 2, "material": "stone"},
-        {"id": "statue_terrace", "x": 5, "y": 10, "width": 8, "height": 3, "material": "stone"},
-        {"id": "west_statue_climb", "x": 5, "y": 7, "width": 3, "height": 4, "material": "stone"},
-        {"id": "east_statue_climb", "x": 10, "y": 7, "width": 3, "height": 4, "material": "stone"},
-        {"id": "hall_forecourt", "x": 4, "y": 5, "width": 10, "height": 3, "material": "stone"}
+        {"id": "south_axis", "x": 8, "y": 15, "width": 2, "height": 3, "material": "stone"},
+        {"id": "lower_stair_approach", "x": 7, "y": 12, "width": 4, "height": 4, "material": "stone"},
+        {"id": "lincoln_terrace", "x": 3, "y": 9, "width": 12, "height": 4, "material": "stone"},
+        {"id": "west_upper_ascent", "x": 3, "y": 5, "width": 4, "height": 5, "material": "stone"},
+        {"id": "east_upper_ascent", "x": 11, "y": 5, "width": 4, "height": 5, "material": "stone"},
+        {"id": "hall_forecourt", "x": 4, "y": 5, "width": 10, "height": 2, "material": "stone"}
       ],
       "clearings": [
-        {"id": "lower_lawn", "x": 3, "y": 13, "width": 12, "height": 5},
-        {"id": "lincoln_terrace", "x": 4, "y": 8, "width": 10, "height": 5},
-        {"id": "hall_crown", "x": 3, "y": 4, "width": 12, "height": 5}
+        {"id": "lower_lawn", "x": 0, "y": 15, "width": 18, "height": 3},
+        {"id": "lincoln_lawn", "x": 0, "y": 9, "width": 18, "height": 4},
+        {"id": "hall_crown", "x": 0, "y": 5, "width": 18, "height": 2}
       ],
       "blockers": [
-        {"id": "west_upper_retaining", "kind": "cliff", "x": 0, "y": 7, "width": 4, "height": 1, "editorStampId": "retaining_wall_stone", "collisionMask": ["####"]},
-        {"id": "east_upper_retaining", "kind": "cliff", "x": 14, "y": 7, "width": 4, "height": 1, "editorStampId": "retaining_wall_stone", "collisionMask": ["####"]},
-        {"id": "west_terrace_retaining", "kind": "cliff", "x": 1, "y": 9, "width": 4, "height": 1, "editorStampId": "retaining_wall_stone", "collisionMask": ["####"]},
-        {"id": "east_terrace_retaining", "kind": "cliff", "x": 13, "y": 9, "width": 4, "height": 1, "editorStampId": "retaining_wall_stone", "collisionMask": ["####"]}
+        {"id": "west_upper_terrace", "kind": "cliff", "x": 0, "y": 7, "width": 3, "height": 2, "editorStampId": "bascom_terrace_wall", "collisionMask": ["###", "###"]},
+        {"id": "center_upper_terrace", "kind": "cliff", "x": 7, "y": 7, "width": 4, "height": 2, "editorStampId": "bascom_terrace_wall", "collisionMask": ["####", "####"]},
+        {"id": "east_upper_terrace", "kind": "cliff", "x": 15, "y": 7, "width": 3, "height": 2, "editorStampId": "bascom_terrace_wall", "collisionMask": ["###", "###"]},
+        {"id": "west_lower_terrace", "kind": "cliff", "x": 0, "y": 13, "width": 7, "height": 2, "editorStampId": "bascom_terrace_wall", "collisionMask": ["#######", "#######"]},
+        {"id": "east_lower_terrace", "kind": "cliff", "x": 11, "y": 13, "width": 7, "height": 2, "editorStampId": "bascom_terrace_wall", "collisionMask": ["#######", "#######"]}
       ],
       "buildings": [
         {"id": "bascom_hall", "name": "Bascom Hall", "kind": "story", "x": 4, "y": 0, "width": 10, "height": 5, "door": {"x": 8, "y": 4}, "interior": "bascom_classroom"}
       ],
       "landmarks": [
-        {"id": "abe_statue", "name": "Lincoln Monument", "kind": "x_factor", "x": 8, "y": 8, "width": 2, "height": 3, "editorStampId": "bascom_lincoln_statue", "collisionMask": ["..", "..", "##"]},
-        {"id": "memorial_terrace", "name": "Bascom Memorial Terrace", "kind": "route_landmark", "x": 1, "y": 11, "width": 4, "height": 2, "editorStampId": "bascom_memorial_balustrade", "collisionMask": ["....", "####"]},
-        {"id": "history_marker", "name": "Bascom History Marker", "kind": "route_landmark", "x": 14, "y": 11, "width": 2, "height": 2, "editorStampId": "bascom_history_marker", "collisionMask": ["..", "##"]}
+        {"id": "abe_statue", "name": "Lincoln Monument", "kind": "x_factor", "x": 8, "y": 9, "width": 2, "height": 3, "editorStampId": "bascom_lincoln_statue", "collisionMask": ["..", "..", "##"]},
+        {"id": "memorial_terrace", "name": "Bascom Memorial Terrace", "kind": "route_landmark", "x": 1, "y": 10, "width": 4, "height": 2, "editorStampId": "bascom_memorial_balustrade", "collisionMask": ["....", "####"]},
+        {"id": "history_marker", "name": "Bascom History Marker", "kind": "route_landmark", "x": 15, "y": 10, "width": 2, "height": 2, "editorStampId": "bascom_history_marker", "collisionMask": ["..", "##"]}
       ],
       "decorations": [
-        {"id": "bascom_stair", "stamp": "bascom_stair_landing", "x": 7, "y": 12},
+        {"id": "bascom_lower_stair", "stamp": "bascom_stair_ascent", "x": 7, "y": 12},
+        {"id": "bascom_upper_stair_w", "stamp": "bascom_stair_ascent", "x": 3, "y": 6},
+        {"id": "bascom_upper_stair_e", "stamp": "bascom_stair_ascent", "x": 11, "y": 6},
         {"id": "bascom_tree_nw_0", "stamp": "tree_pine", "x": 0, "y": 0},
         {"id": "bascom_tree_nw_1", "stamp": "tree_oak_a", "x": 2, "y": 1},
         {"id": "bascom_tree_ne_0", "stamp": "tree_oak_b", "x": 14, "y": 1},
@@ -614,31 +617,27 @@
         {"id": "bascom_tree_w_1", "stamp": "tree_pine", "x": 2, "y": 4},
         {"id": "bascom_tree_e_0", "stamp": "tree_pine_b", "x": 14, "y": 4},
         {"id": "bascom_tree_e_1", "stamp": "tree_oak_b", "x": 16, "y": 3},
-        {"id": "bascom_tree_w_2", "stamp": "tree_oak_a", "x": 0, "y": 8},
-        {"id": "bascom_tree_e_2", "stamp": "tree_oak_b", "x": 16, "y": 8},
-        {"id": "bascom_tree_sw_0", "stamp": "tree_pine", "x": 0, "y": 13},
-        {"id": "bascom_tree_sw_1", "stamp": "tree_oak_c", "x": 2, "y": 15},
-        {"id": "bascom_tree_sw_2", "stamp": "tree_oak_a", "x": 4, "y": 14},
-        {"id": "bascom_tree_se_0", "stamp": "tree_oak_b", "x": 12, "y": 14},
-        {"id": "bascom_tree_se_1", "stamp": "tree_oak_c", "x": 14, "y": 15},
-        {"id": "bascom_tree_se_2", "stamp": "tree_pine_b", "x": 16, "y": 13},
-        {"id": "bascom_lamp_w", "stamp": "campus_lamp", "x": 5, "y": 11},
-        {"id": "bascom_lamp_e", "stamp": "campus_lamp", "x": 12, "y": 11},
-        {"id": "bascom_flowers_w", "stamp": "shrub_flowering", "x": 3, "y": 5},
-        {"id": "bascom_flowers_e", "stamp": "shrub_flowering_b", "x": 14, "y": 5}
+        {"id": "bascom_tree_sw_0", "stamp": "tree_pine", "x": 0, "y": 15},
+        {"id": "bascom_tree_sw_1", "stamp": "tree_oak_c", "x": 3, "y": 15},
+        {"id": "bascom_tree_se_0", "stamp": "tree_oak_b", "x": 13, "y": 15},
+        {"id": "bascom_tree_se_1", "stamp": "tree_pine_b", "x": 16, "y": 15},
+        {"id": "bascom_lamp_w", "stamp": "campus_lamp", "x": 5, "y": 10},
+        {"id": "bascom_lamp_e", "stamp": "campus_lamp", "x": 12, "y": 10},
+        {"id": "bascom_flowers_w", "stamp": "shrub_flowering", "x": 1, "y": 6},
+        {"id": "bascom_flowers_e", "stamp": "shrub_flowering_b", "x": 16, "y": 6}
       ],
       "actors": [
-        {"id": "professor_actor", "sheet": "coach", "x": 11, "y": 6, "facing": "left", "dialogue": "The Professor: Good wrestlers solve the position before they attack."},
-        {"id": "bascom_student", "sheet": "student", "x": 6, "y": 9, "facing": "down", "dialogue": "The statue remembers every climb."},
-        {"id": "bascom_scout", "sheet": "scout", "x": 12, "y": 13, "facing": "left", "dialogue": "This hill is optional. The lesson is not."}
+        {"id": "professor_actor", "sheet": "coach", "x": 12, "y": 5, "facing": "left", "dialogue": "The Professor: Good wrestlers solve the position before they attack."},
+        {"id": "bascom_student", "sheet": "student", "x": 6, "y": 10, "facing": "down", "dialogue": "The statue remembers every climb."},
+        {"id": "bascom_scout", "sheet": "scout", "x": 12, "y": 12, "facing": "left", "dialogue": "This hill is optional. The lesson is not."}
       ],
       "connections": [
         {"to": "state_street", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 22}
       ],
       "events": [
-        {"id": "professor_wall", "label": "The Professor", "x": 11, "y": 6, "beat": 16},
-        {"id": "abe_lore", "label": "Lincoln Monument", "x": 8, "y": 11, "beat": 16, "kind": "message", "text": "A campus monument to persistence: climb with purpose, then finish what you started."},
-        {"id": "bascom_history", "label": "Bascom history", "x": 14, "y": 13, "kind": "message", "text": "BASCOM HILL - The climb is part of the lesson."}
+        {"id": "professor_wall", "label": "The Professor", "x": 12, "y": 5, "beat": 16},
+        {"id": "abe_lore", "label": "Lincoln Monument", "x": 8, "y": 12, "beat": 16, "kind": "message", "text": "A campus monument to persistence: climb with purpose, then finish what you started."},
+        {"id": "bascom_history", "label": "Bascom history", "x": 14, "y": 12, "kind": "message", "text": "BASCOM HILL - The climb is part of the lesson."}
       ],
       "cameraReviews": [
         {"id": "state_departure", "label": "Hill entrance", "x": 1, "y": 8, "width": 15, "height": 10},

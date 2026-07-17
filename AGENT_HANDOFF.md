@@ -3488,3 +3488,26 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   protected State Street composition checksum. Do not run
   `npm run build:world-compositions` or stage, regenerate, revert, or overwrite
   those separate user-owned files.
+
+## Codex Bascom Elevation Pass (v22.37)
+
+- The first location-by-location parity audit added permanent native review
+  captures for Field House and Bascom Hill. It identified Field House as
+  under-composed and Bascom's former one-row wall strips and shallow stair as
+  a semantic failure: they read as furniture on a flat lawn, not elevation.
+- ChatGPT built-in image generation produced an original Bascom elevation
+  source board. The deterministic source compositor exports a reusable
+  four-cell terrace wall, left/right ends, and a four-cell-by-three-cell stair
+  with exact 32px ownership, binary alpha, and declared material ramps.
+- Bascom Hill now has a lower continuous terrace wall with one central climb,
+  plus an upper wall with paired climbs around the Lincoln monument. Wall
+  cells are solid, every visible stair cell is walkable, and both routes reach
+  Bascom Hall with actors enabled. The stair and wall are reusable Map Studio
+  assets, not a flattened scene image.
+- Native 480x320 captures cover the arrival, lower stair, Lincoln terrace,
+  upper stair, and Hall crown. They verify that stair treads remain readable
+  and the player stays correctly layered on every tier.
+- World validation, battle-art validation, balance, map lint, production
+  build, and the complete sequential browser suite pass; final suite count is
+  122/122. Rebuilding 576 generated asset/catalog files preserves every SHA-256
+  hash. Field House remains the next exterior composition target.

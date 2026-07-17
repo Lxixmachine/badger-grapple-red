@@ -5,10 +5,10 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "e6acfe9c8012d27f7236eebf5d2ae25cf8cfbadbe38dbf3ab2a42501f98560aa",
+    "profileSha256": "cdec04504bc38eda04e00608c741117aa87c4d1f447e064eb4deee60eca50db9",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
-    "disciplinedAssetCount": 143
+    "disciplinedAssetCount": 147
   },
   "sourceBoards": {
     "ground": "0200894b42bc8b723dda8089f25807cae3b6da43d434a3382fb620c3f52bc256",
@@ -22,6 +22,7 @@
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
     "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
     "bascom_landmarks": "cc8bc27bba589daca622593304c1ab749a59108314e1ea56d458611ead57f725",
+    "bascom_elevation": "d93135690c29df88da17a7e197e405812982cd7ba53976baabba24f42f214ea0",
     "service_clinic": "352a7c07348e9ee46cf14ab6fde89451a03543ccab5792a8d0ec7495a364bbd0",
     "service_shop": "61c4cd2d24559b8e6828f40d51a7af43e6125c15dc7f0b79c20500ca7d4a2fc2",
     "service_floors": "87031385172dfc77c7ccb13c9c82c33f443de82a862de9fa18b235620f4125f3",
@@ -69,6 +70,7 @@
     "transitions": "art/imagegen/tileset_v3/season_one_transitions_source_v1.png",
     "route_landmarks": "art/imagegen/tileset_v3/season_one_lakeshore_landmarks_source_v1.png",
     "bascom_landmarks": "art/imagegen/tileset_v3/season_one_bascom_landmarks_source_v1.png",
+    "bascom_elevation": "art/imagegen/tileset_v3/season_one_bascom_elevation_source_v1.png",
     "service_clinic": "art/imagegen/tileset_v3/season_one_trainer_room_service_kit_source_v1.png",
     "service_shop": "art/imagegen/tileset_v3/season_one_buckys_service_kit_source_v1.png",
     "service_floors": "art/imagegen/tileset_v3/season_one_service_floors_source_v1.png",
@@ -3097,6 +3099,125 @@
         },
         "outlinePixelCount": 68,
         "inputPartialAlphaPixelCount": 28,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "bascom_terrace_wall": {
+      "category": "bascom_elevation",
+      "path": "art/tilesets/imagegen_v3/bascom_elevation/bascom_terrace_wall.png",
+      "width": 64,
+      "height": 32,
+      "colors": 8,
+      "sha256": "8998201d2bb53e63284dda781dce6f6170c77f3562b3a73b7fd099542a716579",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "stone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 1368,
+          "stone": 664
+        },
+        "outlinePixelCount": 110,
+        "inputPartialAlphaPixelCount": 8,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "bascom_wall_end_left": {
+      "category": "bascom_elevation",
+      "path": "art/tilesets/imagegen_v3/bascom_elevation/bascom_wall_end_left.png",
+      "width": 32,
+      "height": 32,
+      "colors": 8,
+      "sha256": "cdbd9d7c2e83099b249b54c29daa94f94f882d74556485bb735e7ea2aa0708b8",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "limestone": 3,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 31,
+          "limestone": 271,
+          "stone": 109
+        },
+        "outlinePixelCount": 90,
+        "inputPartialAlphaPixelCount": 73,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "bascom_stair_ascent": {
+      "category": "bascom_elevation",
+      "path": "art/tilesets/imagegen_v3/bascom_elevation/bascom_stair_ascent.png",
+      "width": 64,
+      "height": 48,
+      "colors": 8,
+      "sha256": "6fa3831168ae9b29dcd495d0da39dc983d57204361d87fa640c84fc7eaadca3f",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "stone": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 1543,
+          "stone": 1223
+        },
+        "outlinePixelCount": 177,
+        "inputPartialAlphaPixelCount": 72,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "bascom_wall_end_right": {
+      "category": "bascom_elevation",
+      "path": "art/tilesets/imagegen_v3/bascom_elevation/bascom_wall_end_right.png",
+      "width": 32,
+      "height": 32,
+      "colors": 8,
+      "sha256": "c470cebe663fb1008991708d192524bbd38a19b8474b97ea892417f262f101ed",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "grass",
+          "limestone",
+          "stone"
+        ],
+        "materialColorCounts": {
+          "grass": 1,
+          "limestone": 3,
+          "stone": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "grass": 45,
+          "limestone": 259,
+          "stone": 110
+        },
+        "outlinePixelCount": 85,
+        "inputPartialAlphaPixelCount": 68,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
