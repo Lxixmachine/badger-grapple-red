@@ -3380,3 +3380,29 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   production build, and complete sequential 119-scenario game suite pass.
   Broad validation reaches only Tony's protected State Street composition
   checksum; those six files remain deliberately unbuilt and unstaged.
+
+## Codex Ground Language Pass (v22.30)
+
+- ChatGPT built-in image generation produced the twelve-material Season One
+  source board at `art/imagegen/tileset_v3/season_one_ground_source_v3.png`;
+  its exact prompt is retained beside it. The source compiler now uses that
+  board directly for grass, maintained lawn, dirt, limestone paving,
+  flagstone, concrete, gravel, sand, water, asphalt, timber, and meadow.
+- Ground compilation is material-specific rather than a global quantization:
+  grass owns exactly four connected three-pixel blade motifs, loose surfaces
+  use sparse pebble clusters, timber uses broad seamless planks, and pavers use
+  low-contrast courses that do not trace the 16px source-cell boundary.
+- The palette now enforces FireRed's quiet-ground/loud-object hierarchy. Grass
+  is high-key mint, campus circulation is pale neutral limestone, and cardinal
+  remains reserved for identity architecture, banners, mats, and badges.
+  Dirt, gravel, sand, stone, concrete, and maintained-lawn transitions no
+  longer carry unnecessary dark rings.
+- Runtime and Map Studio share the rebuilt Season One atlas v12 and Camp
+  metatile atlas v20. Validators lock grass to two colors, 12 accent pixels,
+  four connected motifs, 0 partial alpha, the high-key value range, and the
+  existing exact grid/collision ownership contract.
+- Balance, map lint, battle-asset validation, production build, and the full
+  sequential Playwright suite pass; final suite count is 122/122. Broad
+  `npm run validate` still stops only on Tony's protected State Street world-
+  composition checksum. Do not run `npm run build:world-compositions`, stage,
+  regenerate, or revert those separate user-owned files.

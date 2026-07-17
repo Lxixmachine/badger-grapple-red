@@ -290,17 +290,17 @@ class EdgeStyle:
 
 
 EDGE_STYLES = {
-    "surface_dirt": EdgeStyle("grass", "dirt", (4, 4, 3, 3, 4, 5, 4, 3, 3, 4, 5, 4, 3, 3, 4, 4), None, PALETTE["dirt_dark"]),
-    "surface_brick": EdgeStyle("grass", "brick", (3,) * 16, PALETTE["curb"], PALETTE["paver_dark"]),
-    "surface_stone": EdgeStyle("grass", "stone", (3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3), PALETTE["stone_light"], PALETTE["stone_dark"]),
-    "surface_sand": EdgeStyle("grass", "sand", (4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 5, 4, 3, 3, 4), None, PALETTE["sand_dark"]),
-    "surface_gravel": EdgeStyle("grass", "gravel", (3, 4, 3, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 3, 4, 3), None, PALETTE["gravel_dark"]),
-    "surface_concrete": EdgeStyle("grass", "concrete", (3,) * 16, PALETTE["stone_light"], PALETTE["curb_dark"]),
+    "surface_dirt": EdgeStyle("grass", "dirt", (4, 4, 3, 3, 4, 5, 4, 3, 3, 4, 5, 4, 3, 3, 4, 4), None, None),
+    "surface_brick": EdgeStyle("grass", "brick", (3,) * 16, None, PALETTE["paver"]),
+    "surface_stone": EdgeStyle("grass", "stone", (3, 3, 3, 4, 4, 3, 3, 3, 3, 3, 3, 4, 4, 3, 3, 3), None, PALETTE["stone"]),
+    "surface_sand": EdgeStyle("grass", "sand", (4, 3, 3, 4, 5, 5, 4, 3, 3, 4, 5, 5, 4, 3, 3, 4), None, None),
+    "surface_gravel": EdgeStyle("grass", "gravel", (3, 4, 3, 3, 4, 4, 3, 4, 4, 3, 4, 4, 3, 3, 4, 3), None, None),
+    "surface_concrete": EdgeStyle("grass", "concrete", (3,) * 16, PALETTE["paver"], None),
     "surface_timber": EdgeStyle("grass", "timber", (3,) * 16, PALETTE["wood"], PALETTE["trunk_dark"]),
     "shore_water": EdgeStyle("grass", "water", (4, 4, 3, 3, 4, 5, 5, 4, 4, 5, 5, 4, 3, 3, 4, 4), PALETTE["sand"], PALETTE["water_dark"], PALETTE["foam"]),
     "road_asphalt_grass": EdgeStyle("grass", "asphalt", (4,) * 16, PALETTE["curb"], PALETTE["asphalt_dark"]),
     "road_asphalt_curb": EdgeStyle("concrete", "asphalt", (2,) * 16, PALETTE["curb"], PALETTE["curb_dark"]),
-    "lawn_mowed": EdgeStyle("grass", "mowed_grass", (2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2), None, PALETTE["grass_dark"]),
+    "lawn_mowed": EdgeStyle("grass", "mowed_grass", (2, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 3, 2, 2, 2), None, None),
 }
 
 

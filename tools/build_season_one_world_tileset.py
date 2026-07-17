@@ -50,14 +50,14 @@ GROUND_VALUE_CONTRACT = {
     "grass": {
         "uniqueColors": 2,
         "dominantCoverageMin": 0.94,
-        "meanLightnessMin": 0.62,
-        "meanLightnessMax": 0.70,
+        "meanLightnessMin": 0.76,
+        "meanLightnessMax": 0.80,
         "meanSaturationMax": 0.42,
         "cardinalPixelCountMax": 0,
     },
     "mowedGrass": {
         "uniqueColorsMax": 3,
-        "meanLightnessMin": 0.60,
+        "meanLightnessMin": 0.68,
         "meanSaturationMax": 0.42,
         "cardinalPixelCountMax": 0,
     },
@@ -143,7 +143,8 @@ def validate_material_discipline(prepared: dict) -> dict:
 
 
 def material_metrics(image: Image.Image) -> dict:
-    pixels = list(image.convert("RGB").get_flattened_data())
+    rgb_image = image.convert("RGB")
+    pixels = list(rgb_image.get_flattened_data())
     counts = Counter(pixels)
     total = len(pixels)
     saturation_sum = 0.0
@@ -157,12 +158,32 @@ def material_metrics(image: Image.Image) -> dict:
         if saturation >= 0.35 and (degrees <= 15 or degrees >= 345):
             cardinal_pixels += count
     dominant = max(counts.values())
+    dominant_color = counts.most_common(1)[0][0]
+    accent_pixels = {
+        (x, y)
+        for y in range(image.height)
+        for x in range(image.width)
+        if rgb_image.getpixel((x, y)) != dominant_color
+    }
+    remaining = set(accent_pixels)
+    accent_components = 0
+    while remaining:
+        accent_components += 1
+        stack = [remaining.pop()]
+        while stack:
+            x, y = stack.pop()
+            for neighbor in ((x - 1, y), (x + 1, y), (x, y - 1), (x, y + 1)):
+                if neighbor in remaining:
+                    remaining.remove(neighbor)
+                    stack.append(neighbor)
     return {
         "uniqueColors": len(counts),
         "dominantCoverage": round(dominant / total, 4),
         "meanSaturation": round(saturation_sum / total, 4),
         "meanLightness": round(lightness_sum / total, 4),
         "cardinalPixelCount": cardinal_pixels,
+        "accentPixelCount": len(accent_pixels),
+        "accentComponentCount": accent_components,
     }
 
 
@@ -596,6 +617,8 @@ def build() -> dict:
     if (
         grass_metrics["uniqueColors"] != GROUND_VALUE_CONTRACT["grass"]["uniqueColors"]
         or grass_metrics["dominantCoverage"] < GROUND_VALUE_CONTRACT["grass"]["dominantCoverageMin"]
+        or grass_metrics["accentPixelCount"] != 12
+        or grass_metrics["accentComponentCount"] != 4
         or not GROUND_VALUE_CONTRACT["grass"]["meanLightnessMin"]
         <= grass_metrics["meanLightness"]
         <= GROUND_VALUE_CONTRACT["grass"]["meanLightnessMax"]

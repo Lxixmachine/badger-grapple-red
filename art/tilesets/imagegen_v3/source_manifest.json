@@ -11,8 +11,7 @@
     "disciplinedAssetCount": 116
   },
   "sourceBoards": {
-    "ground": "9824dd2720145de8d6373d1ff441a5ee53b2ee04919cd6129cd6459baafe3621",
-    "ground:dirt": "b11b7a9cdb276ac2dbe142eb7a221486cb0e29c2e78cc2216682d30dd93f03ab",
+    "ground": "b73a16ebf62cb8fc8c7374864c2879b25ad032bf1552450395dddb7464bb3124",
     "vegetation": "97530fd56608cec72de3458a4188af36e04ced09ea263685af1d8050b092aaee",
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
     "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
@@ -59,7 +58,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "30da7cbe621d33649d40182827301bc11a25772a51cccbeff7ec097d9b0c4597",
+      "sha256": "039d8ccc21abc7077141987ca99e84120b4252a5eb073a29e84712ac5ab6a149",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
@@ -84,7 +83,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "73d919e416abb7224da0c39c4ed11151994100830c56078baca812aaec21d8df",
+      "sha256": "b1efa64b92bebb0e2a8fa691a7bbb1b3e81d03e1b27e6e26578e3c0726ea283d",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -109,7 +108,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "3809751cfdf4e4e801edd92b8c2c66086805018ba5ea0e40b843663ff675e1a4",
+      "sha256": "7dd84e9996ab38a56d72a38c4379adf20962983c378aa3887b6ec0816d0b0568",
       "sourcePanel": 2,
       "materialDiscipline": {
         "materials": [
@@ -133,17 +132,17 @@
       "path": "art/tilesets/imagegen_v3/ground/brick.png",
       "width": 16,
       "height": 16,
-      "colors": 3,
-      "sha256": "cf03a48828339b5a0e0cd718b8d92399e39ce95cf75247f239f590cdfa7c4469",
+      "colors": 2,
+      "sha256": "2491b47e0aa878adb3130b9339739f1836c65a8d1a3a00a60ad0c7d1d4e723f3",
       "sourcePanel": 3,
       "materialDiscipline": {
         "materials": [
           "brick"
         ],
         "materialColorCounts": {
-          "brick": 3
+          "brick": 2
         },
-        "maxColorsPerMaterial": 3,
+        "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
           "brick": 256
         },
@@ -158,17 +157,17 @@
       "path": "art/tilesets/imagegen_v3/ground/stone.png",
       "width": 16,
       "height": 16,
-      "colors": 3,
-      "sha256": "dd3a6606ec23f4f89fcd4ef942aa01c8b830668de8a4532515e3127182a3b1a1",
+      "colors": 2,
+      "sha256": "56579a42baa26c333dcf2e78dfe2f45befa3bedc4e1bc1828972ffaa1ad31bc9",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
           "stone"
         ],
         "materialColorCounts": {
-          "stone": 3
+          "stone": 2
         },
-        "maxColorsPerMaterial": 3,
+        "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
           "stone": 256
         },
@@ -183,17 +182,17 @@
       "path": "art/tilesets/imagegen_v3/ground/concrete.png",
       "width": 16,
       "height": 16,
-      "colors": 3,
-      "sha256": "36fc0f4bb04578242dbde625644dae12fee2aa1972162f327d7700b9920a7de1",
+      "colors": 2,
+      "sha256": "618746d8943a4402815dddd995694a7ee0a063fc8f44fb2fbd89b02e4c6b34da",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
           "concrete"
         ],
         "materialColorCounts": {
-          "concrete": 3
+          "concrete": 2
         },
-        "maxColorsPerMaterial": 3,
+        "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
           "concrete": 256
         },
@@ -209,7 +208,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "9746329a06a6a2438dc94f3f14c6c68dd3c960004e333b42b5cfe9554f7df3b9",
+      "sha256": "b06be98fb62e42ae0fa6e80fbc1962ad9528f9d8e8e14c0dc6d29b2ecb3782db",
       "sourcePanel": 6,
       "materialDiscipline": {
         "materials": [
@@ -234,7 +233,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "d16c1bf9a13c532a46cdef56aef4e4447c02254cf86c8fa7010c66e4851d1e69",
+      "sha256": "97547456b93a8d45e8b4f2d3136703a0116ea36ad37a5753d88ff3b7b8b9f310",
       "sourcePanel": 7,
       "materialDiscipline": {
         "materials": [
@@ -259,7 +258,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "156ee44eeffc6ad9f2984c05e3ee2e21be2f88111e433ccff89190db4ce9b002",
+      "sha256": "6867928994bee823d2197ca62dc18559dfcc59dc99748fabd3fe2d14878ff781",
       "sourcePanel": 8,
       "materialDiscipline": {
         "materials": [
@@ -284,7 +283,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "7b344bdda451a0a45624e64ea355ec2f707edb5d95bd089977aaf9dbbf2cdfe6",
+      "sha256": "e0d0321f4256e6b66ad913eee0342af08f2e8a681db721a2ee5e6944540fad0d",
       "sourcePanel": 9,
       "materialDiscipline": {
         "materials": [
@@ -309,7 +308,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "bdef62aefd5a3f59a40f048b1e5157fdc2f37f1bc27e22f50107c06f126e572e",
+      "sha256": "c208dcd5996382c7e40cc953e464cc2a86dd26dc7e5d2b503ad6d05ae5601622",
       "sourcePanel": 10,
       "materialDiscipline": {
         "materials": [
@@ -333,17 +332,17 @@
       "path": "art/tilesets/imagegen_v3/ground/meadow_grass.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "a3c0c2da3312feea098eac0c6be35abdb3f7d9c36d41acf9eeb7c1940c7bb88a",
+      "colors": 2,
+      "sha256": "a789661733cbca460b35188e99157cddf97614cb8d462d2a00b1f865c9e0e892",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
           "meadow_grass"
         ],
         "materialColorCounts": {
-          "meadow_grass": 4
+          "meadow_grass": 2
         },
-        "maxColorsPerMaterial": 4,
+        "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
           "meadow_grass": 256
         },

@@ -1,6 +1,6 @@
 {
   "name": "badger-grapple-red",
-  "version": "22.29.0",
+  "version": "22.30.0",
   "private": true,
   "type": "module",
   "description": "Source-first Phaser wrestling RPG built toward FireRed-style production quality",

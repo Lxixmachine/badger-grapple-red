@@ -29,7 +29,7 @@ MATERIAL_PROFILE_PATH = ROOT / "art" / "tilesets" / "imagegen_material_profiles.
 
 BOARDS = {
     "ground": {
-        "path": SOURCE_DIR / "season_one_ground_source_v2.png",
+        "path": SOURCE_DIR / "season_one_ground_source_v3.png",
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -189,14 +189,6 @@ BOARDS = {
 }
 
 
-# Route dirt is a dedicated Imagegen source instead of the dense ground-board
-# panel. The compiler still owns logical sizing, palette, edge safety, and
-# repetition discipline; Imagegen owns the sparse mark placement.
-GROUND_SOURCE_OVERRIDES = {
-    "dirt": SOURCE_DIR / "season_one_route_dirt_source_v1.png",
-}
-
-
 # Imagegen establishes the material texture and value grouping. The compiler
 # reduces every ground panel to a declared material ramp so generated
 # noise cannot leak into the game, while preserving substantially more authored
@@ -204,8 +196,8 @@ GROUND_SOURCE_OVERRIDES = {
 GROUND_RAMPS = {
     # Grass is intentionally the quietest material in the game. Its second
     # color is selected sparsely below instead of globally posterized.
-    "grass": (PALETTE["grass_dark"], PALETTE["grass"]),
-    "mowed_grass": (PALETTE["grass_dark"], PALETTE["mowed"], PALETTE["mowed_light"]),
+    "grass": (PALETTE["grass"], PALETTE["grass_light"]),
+    "mowed_grass": (PALETTE["grass_dark"], PALETTE["mowed_light"], PALETTE["grass_light"]),
     "dirt": (PALETTE["dirt_dark"], PALETTE["dirt"], PALETTE["dirt_light"]),
     # Campus walks are warm limestone pavers. Cardinal belongs to identity
     # objects, never to the ground field beneath them.
@@ -217,7 +209,7 @@ GROUND_RAMPS = {
     "water": (PALETTE["water_dark"], PALETTE["water"], PALETTE["water_light"], PALETTE["foam"]),
     "asphalt": (PALETTE["asphalt_dark"], PALETTE["asphalt"], PALETTE["asphalt_light"]),
     "timber": (PALETTE["trunk_dark"], PALETTE["trunk"], PALETTE["wood_light"]),
-    "meadow_grass": (PALETTE["grass_shadow"], PALETTE["grass_dark"], PALETTE["grass"], PALETTE["cream"]),
+    "meadow_grass": (PALETTE["grass_dark"], PALETTE["grass"], PALETTE["grass_light"], PALETTE["cream"]),
 }
 
 
@@ -408,27 +400,71 @@ def posterize_to_ramp(source: Image.Image, ramp) -> Image.Image:
     return output
 
 
-def quiet_grass(source: Image.Image, ramp) -> Image.Image:
-    """Preserve Imagegen's strongest blade placements at <=5% coverage."""
+def local_contrast_anchors(
+    source: Image.Image,
+    count: int,
+    minimum_distance: int,
+    mode: str = "dark",
+    margin: int = 2,
+) -> list[tuple[int, int]]:
+    """Select authored motif centers without inheriting gradients or noise."""
     rgba = source.convert("RGBA")
-    base, accent = sorted(ramp, key=_luma, reverse=True)
-    output = Image.new("RGBA", rgba.size, base)
-    candidates = []
-    for y in range(1, rgba.height - 1):
-        for x in range(1, rgba.width - 1):
-            pixel = rgba.getpixel((x, y))
-            if pixel[3]:
-                candidates.append((_luma(pixel), y, x))
-    candidates.sort()
-    accent_limit = max(1, int(rgba.width * rgba.height * 0.05))
+    candidates: list[tuple[int, int, int]] = []
+    for y in range(margin, rgba.height - margin):
+        for x in range(margin, rgba.width - margin):
+            center = _luma(rgba.getpixel((x, y)))
+            neighbors = [
+                _luma(rgba.getpixel((neighbor_x, neighbor_y)))
+                for neighbor_y in range(max(0, y - 1), min(rgba.height, y + 2))
+                for neighbor_x in range(max(0, x - 1), min(rgba.width, x + 2))
+                if neighbor_x != x or neighbor_y != y
+            ]
+            contrast = center - sum(neighbors) // len(neighbors)
+            if mode == "light":
+                score = -contrast
+            elif mode == "absolute":
+                score = -abs(contrast)
+            else:
+                score = contrast
+            candidates.append((score, y, x))
+
     selected: list[tuple[int, int]] = []
-    for _luminance, y, x in candidates:
-        if any(abs(x - other_x) <= 1 and abs(y - other_y) <= 1 for other_x, other_y in selected):
+    for _score, y, x in sorted(candidates):
+        if any(
+            abs(x - selected_x) + abs(y - selected_y) < minimum_distance
+            for selected_x, selected_y in selected
+        ):
             continue
-        output.putpixel((x, y), accent)
         selected.append((x, y))
-        if len(selected) >= accent_limit:
+        if len(selected) == count:
             break
+    return selected
+
+
+def paint_motif(
+    output: Image.Image,
+    anchor: tuple[int, int],
+    pixels: tuple[tuple[int, int, tuple[int, int, int, int]], ...],
+) -> None:
+    anchor_x, anchor_y = anchor
+    for offset_x, offset_y, color in pixels:
+        x = anchor_x + offset_x
+        y = anchor_y + offset_y
+        if 0 <= x < output.width and 0 <= y < output.height:
+            output.putpixel((x, y), color)
+
+
+def quiet_grass(source: Image.Image, ramp) -> Image.Image:
+    """Reduce the source to four connected blade clusters at <=5% coverage."""
+    base, accent = sorted(ramp, key=_luma, reverse=True)
+    output = Image.new("RGBA", source.size, base)
+    for index, anchor in enumerate(local_contrast_anchors(source, 4, 5, "dark")):
+        wing = -1 if index % 2 == 0 else 1
+        paint_motif(output, anchor, (
+            (0, 0, accent),
+            (0, -1, accent),
+            (wing, -1, accent),
+        ))
     return output
 
 
@@ -436,53 +472,75 @@ def quiet_mowed_grass(source: Image.Image, ramp) -> Image.Image:
     """Convert generated lawn stripes into a calm maintained-grass field."""
     dark, base, light = sorted(ramp, key=_luma)
     output = Image.new("RGBA", source.size, base)
-    # Sparse paired marks suggest clipped blades without forming rows, bands,
-    # or visible cell frames when the tile repeats across a building pad.
-    marks = (
-        (2, 4, dark), (3, 3, light),
-        (9, 2, dark),
-        (13, 7, dark), (12, 6, light),
-        (5, 12, dark),
-        (11, 14, dark), (10, 13, light),
-    )
-    for x, y, color in marks:
-        if x < output.width and y < output.height:
-            output.putpixel((x, y), color)
+    for index, anchor in enumerate(local_contrast_anchors(source, 3, 5, "dark")):
+        wing = -1 if index % 2 == 0 else 1
+        paint_motif(output, anchor, (
+            (0, 0, dark),
+            (0, -1, dark),
+            (wing, -1, light),
+        ))
     return output
 
 
 def quiet_dirt(source: Image.Image, ramp) -> Image.Image:
-    """Keep Imagegen's strongest local marks without retaining its gradient."""
-    rgba = source.convert("RGBA")
+    """Preserve sparse authored pebble clusters without retaining gradients."""
     dark, base, light = sorted(ramp, key=_luma)
-    output = Image.new("RGBA", rgba.size, base)
-    candidates: list[tuple[int, int, int]] = []
-    for y in range(1, rgba.height - 1):
-        for x in range(1, rgba.width - 1):
-            center = _luma(rgba.getpixel((x, y)))
-            neighbors = [
-                _luma(rgba.getpixel((nx, ny)))
-                for ny in range(y - 1, y + 2)
-                for nx in range(x - 1, x + 2)
-                if nx != x or ny != y
-            ]
-            candidates.append((center - sum(neighbors) // len(neighbors), y, x))
+    output = Image.new("RGBA", source.size, base)
+    for index, anchor in enumerate(local_contrast_anchors(source, 4, 5, "absolute")):
+        side = -1 if index % 2 == 0 else 1
+        paint_motif(output, anchor, (
+            (0, 0, dark),
+            (side, 0, dark),
+            (0, -1, light),
+        ))
+    return output
 
-    selected: list[tuple[int, int]] = []
 
-    def place(ordered: list[tuple[int, int, int]], color, count: int) -> None:
-        placed = 0
-        for contrast, y, x in ordered:
-            if contrast == 0 or any(abs(x - px) <= 1 and abs(y - py) <= 1 for px, py in selected):
-                continue
-            output.putpixel((x, y), color)
-            selected.append((x, y))
-            placed += 1
-            if placed >= count:
-                break
+def quiet_granular(source: Image.Image, ramp, material: str) -> Image.Image:
+    """Give loose surfaces distinct pebble densities instead of global static."""
+    dark, base, light = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", source.size, base)
+    counts = {"sand": 4, "gravel": 6, "asphalt": 4}
+    for index, anchor in enumerate(
+        local_contrast_anchors(source, counts[material], 4, "absolute")
+    ):
+        side = -1 if index % 2 == 0 else 1
+        paint_motif(output, anchor, (
+            (0, 0, dark),
+            (side, 0, light),
+        ))
+    return output
 
-    place(sorted((entry for entry in candidates if entry[0] < 0), key=lambda entry: entry[0]), dark, 4)
-    place(sorted((entry for entry in candidates if entry[0] > 0), key=lambda entry: entry[0], reverse=True), light, 4)
+
+def quiet_timber(source: Image.Image, ramp) -> Image.Image:
+    """Build broad seamless planks with sparse generated grain marks."""
+    dark, seam, base = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", source.size, base)
+    draw = ImageDraw.Draw(output)
+    for y in (3, 11):
+        draw.line((0, y, output.width - 1, y), fill=seam)
+    draw.line((8, 0, 8, 2), fill=seam)
+    draw.line((4, 4, 4, 10), fill=seam)
+    draw.line((8, 12, 8, 15), fill=seam)
+    for index, (x, y) in enumerate(local_contrast_anchors(source, 3, 5, "dark")):
+        length = 2 if index == 0 else 1
+        draw.line((x, y, min(output.width - 1, x + length), y), fill=dark)
+    return output
+
+
+def quiet_meadow(source: Image.Image, ramp) -> Image.Image:
+    """Keep meadow ground calm; flowers remain separate authored details."""
+    ordered = sorted(ramp, key=_luma)
+    accent = ordered[1]
+    base = ordered[-2]
+    output = Image.new("RGBA", source.size, base)
+    for index, anchor in enumerate(local_contrast_anchors(source, 3, 5, "dark")):
+        wing = -1 if index % 2 == 0 else 1
+        paint_motif(output, anchor, (
+            (0, 0, accent),
+            (0, -1, accent),
+            (wing, -1, accent),
+        ))
     return output
 
 
@@ -518,46 +576,33 @@ def quiet_water(source: Image.Image, ramp) -> Image.Image:
 
 
 def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
-    """Keep Imagegen's material read while replacing micro-noise with placed seams."""
-    rgba = source.convert("RGBA")
-    dark, seam, base = sorted(ramp, key=_luma)
-    output = Image.new("RGBA", rgba.size, base)
+    """Translate authored slabs into broad, low-contrast, grid-safe courses."""
+    _dark, seam, base = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", source.size, base)
     draw = ImageDraw.Draw(output)
 
     if material == "brick":
-        course_height = 4
-        for y in range(course_height - 1, rgba.height - 1, course_height):
-            draw.line((1, y, rgba.width - 2, y), fill=seam)
-            course = y // course_height
-            offset = 4 if course % 2 == 0 else 8
-            for x in range(offset, rgba.width, 8):
-                draw.line((x, y + 1, x, min(rgba.height - 2, y + course_height)), fill=seam)
+        # Two broad limestone courses span each logical cell. The course joints
+        # cross the cell while the staggered vertical joints stay internal.
+        for y in (5, 13):
+            draw.line((0, y, output.width - 1, y), fill=seam)
+        draw.line((10, 0, 10, 4), fill=seam)
+        draw.line((3, 6, 3, 12), fill=seam)
+        draw.line((10, 14, 10, 15), fill=seam)
     elif material == "stone":
-        # Staggered flagstones cross the source-cell boundary without drawing
-        # a frame around it. Repeated 32px map cells therefore read as one
-        # paved field instead of a visible gameplay grid.
         for y in (5, 11):
-            draw.line((1, y, rgba.width - 2, y), fill=seam)
-        for x in (6,):
-            draw.line((x, 1, x, 4), fill=seam)
-        for x in (3, 11):
-            draw.line((x, 6, x, 10), fill=seam)
-        for x in (8,):
-            draw.line((x, 12, x, rgba.height - 2), fill=seam)
+            draw.line((0, y, output.width - 1, y), fill=seam)
+        draw.line((8, 0, 8, 4), fill=seam)
+        draw.line((3, 6, 3, 10), fill=seam)
+        draw.line((11, 6, 11, 10), fill=seam)
+        draw.line((8, 12, 8, output.height - 1), fill=seam)
     else:
-        draw.line((1, 7, rgba.width - 2, 7), fill=seam)
-        draw.line((7, 1, 7, rgba.height - 2), fill=seam)
-
-    # Preserve only a few of the generated panel's darkest authored marks as
-    # scuffs. Seams remain dominant and the texture cannot devolve into noise.
-    candidates = []
-    for y in range(1, rgba.height - 1):
-        for x in range(1, rgba.width - 1):
-            if output.getpixel((x, y)) == base:
-                candidates.append((_luma(rgba.getpixel((x, y))), y, x))
-    candidates.sort()
-    for _luminance, y, x in candidates[:max(1, rgba.width * rgba.height // 50)]:
-        output.putpixel((x, y), dark)
+        # Concrete is intentionally almost flat. Short joints imply large
+        # slabs without tracing the 16px gameplay cell.
+        draw.line((1, 7, 6, 7), fill=seam)
+        draw.line((9, 7, 14, 7), fill=seam)
+        draw.line((7, 1, 7, 4), fill=seam)
+        draw.line((7, 10, 7, 14), fill=seam)
     return output
 
 
@@ -572,6 +617,12 @@ def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image
         return quiet_dirt(image, ramp)
     if asset_id == "water" and ramp:
         return quiet_water(image, ramp)
+    if asset_id in {"sand", "gravel", "asphalt"} and ramp:
+        return quiet_granular(image, ramp, asset_id)
+    if asset_id == "timber" and ramp:
+        return quiet_timber(image, ramp)
+    if asset_id == "meadow_grass" and ramp:
+        return quiet_meadow(image, ramp)
     if asset_id in {"brick", "concrete", "stone"} and ramp:
         return disciplined_paver(image, ramp, asset_id)
     return posterize_to_ramp(image, ramp) if ramp else image
@@ -805,20 +856,13 @@ def build() -> dict:
             raise SystemExit(f"{category}: expected {expected} panel definitions")
         sources[category] = sha256(path)
         for index, (asset_id, size, mode, colors) in enumerate(spec["entries"]):
-            override_path = GROUND_SOURCE_OVERRIDES.get(asset_id) if category == "ground" else None
-            if override_path:
-                if not override_path.exists():
-                    raise SystemExit(f"Missing Imagegen ground source override: {override_path}")
-                sources[f"{category}:{asset_id}"] = sha256(override_path)
-                panel = extract_panel(Image.open(override_path).convert("RGBA"), 1, 1, 0)
-            else:
-                panel = extract_panel(
-                    board,
-                    spec["columns"],
-                    spec["rows"],
-                    index,
-                    trim_noise=category in {"ground", "vegetation"},
-                )
+            panel = extract_panel(
+                board,
+                spec["columns"],
+                spec["rows"],
+                index,
+                trim_noise=category in {"ground", "vegetation"},
+            )
             if category == "ground":
                 normalized = normalize(panel, size, mode, colors)
                 normalized = discipline_ground_material(

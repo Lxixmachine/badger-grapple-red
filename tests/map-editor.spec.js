@@ -131,9 +131,12 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   });
   expect(state.project.groundMaterialMetrics.grass).toMatchObject({
     uniqueColors: 2,
-    cardinalPixelCount: 0
+    cardinalPixelCount: 0,
+    accentPixelCount: 12,
+    accentComponentCount: 4
   });
-  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeGreaterThanOrEqual(0.62);
+  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeGreaterThanOrEqual(0.76);
+  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeLessThanOrEqual(0.80);
   expect(state.project.groundMaterialMetrics.grass.meanSaturation).toBeLessThanOrEqual(0.42);
   expect(state.project.groundMaterialMetrics.grassB).toMatchObject({uniqueColors: 2, cardinalPixelCount: 0});
   expect(state.project.groundMaterialMetrics.grassC).toMatchObject({uniqueColors: 2, cardinalPixelCount: 0});
@@ -141,17 +144,17 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     .toBeGreaterThan(state.project.groundMaterialMetrics.grass.dominantCoverage);
   expect(state.project.groundMaterialMetrics.grassC.dominantCoverage)
     .toBeGreaterThan(state.project.groundMaterialMetrics.grassB.dominantCoverage);
-  expect(state.project.groundMaterialMetrics.mowedGrass.meanLightness).toBeGreaterThanOrEqual(0.60);
+  expect(state.project.groundMaterialMetrics.mowedGrass.meanLightness).toBeGreaterThanOrEqual(0.68);
   expect(state.project.groundMaterialMetrics.mowedGrass.meanSaturation).toBeLessThanOrEqual(0.42);
   expect(state.project.groundMaterialMetrics.campusPavers).toMatchObject({
-    uniqueColors: 3,
+    uniqueColors: 2,
     cardinalPixelCount: 0
   });
   expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThanOrEqual(0.78);
   expect(state.project.groundMaterialMetrics.campusPavers.meanSaturation).toBeLessThanOrEqual(0.40);
   expect(state.project.groundValueContract).toMatchObject({
-    grass: {meanLightnessMin: 0.62, meanSaturationMax: 0.42},
-    mowedGrass: {meanLightnessMin: 0.60, meanSaturationMax: 0.42},
+    grass: {meanLightnessMin: 0.76, meanSaturationMax: 0.42},
+    mowedGrass: {meanLightnessMin: 0.68, meanSaturationMax: 0.42},
     campusPavers: {meanLightnessMin: 0.78, meanSaturationMax: 0.40}
   });
   expect(state.project.groundHierarchy.contract).toEqual({
