@@ -5,13 +5,13 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "37a373a5e470103db8cd7d743c20295873bb288c6481448de56effbd7e268232",
+    "profileSha256": "e6acfe9c8012d27f7236eebf5d2ae25cf8cfbadbe38dbf3ab2a42501f98560aa",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
     "disciplinedAssetCount": 143
   },
   "sourceBoards": {
-    "ground": "b73a16ebf62cb8fc8c7374864c2879b25ad032bf1552450395dddb7464bb3124",
+    "ground": "0200894b42bc8b723dda8089f25807cae3b6da43d434a3382fb620c3f52bc256",
     "vegetation": "084b33eef647f09fc0e38ab8a39e3ea777c57d0ef1994711be3b2cdd61accf9a",
     "forest_masses": "801d530c927a8dbab0d7e15cbb9f2da9df2f127ca61ceda28053540e9b1616e2",
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
@@ -58,7 +58,7 @@
     "landmarks:field_house_entry_arch": "derived:63c27d93c62ef8efe9e366a9f5b1093e346160cd4f28583d7d9c40cdf72ba7bb"
   },
   "sourceBoardPaths": {
-    "ground": "art/imagegen/tileset_v3/season_one_ground_source_v3.png",
+    "ground": "art/imagegen/tileset_v3/season_one_ground_source_v4.png",
     "vegetation": "art/imagegen/tileset_v3/season_one_vegetation_source_v3.png",
     "forest_masses": "art/imagegen/tileset_v3/season_one_forest_masses_source_v6.png",
     "architecture": "art/imagegen/tileset_v3/season_one_architecture_source_v1.png",
@@ -111,7 +111,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "8a420132124b750c6d88f403fa9e7977b3f04933fec39a6ad0cbe855067c331f",
+      "sha256": "41eeb5120bdc4adf765fab143184de49fc7041ac3c85e6bd264f874bbcfd06e3",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
@@ -136,7 +136,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "3935e08b3025c9797d0f0093ff69cdc71f88bf2c71b1d4dcd18f47fa2e993a7e",
+      "sha256": "72195149f5d0139e4f2041c83588c41c6dbe846595c7ae12b8045227ee13fd8b",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -161,7 +161,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "7dd84e9996ab38a56d72a38c4379adf20962983c378aa3887b6ec0816d0b0568",
+      "sha256": "118f8f01aecfafe2d23b02346b6c90d6ec41550544b9c08d818d6a383cff712e",
       "sourcePanel": 2,
       "materialDiscipline": {
         "materials": [
@@ -186,7 +186,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "2491b47e0aa878adb3130b9339739f1836c65a8d1a3a00a60ad0c7d1d4e723f3",
+      "sha256": "ed2874a945205e81e8893a7d8aaa060e49ad5ffd59905d9eabea77766dab1b78",
       "sourcePanel": 3,
       "materialDiscipline": {
         "materials": [
@@ -211,7 +211,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "56579a42baa26c333dcf2e78dfe2f45befa3bedc4e1bc1828972ffaa1ad31bc9",
+      "sha256": "888834a371605619c639c3adfd3270cdeee3279bcc6d305dad3c031bd37a9d78",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
@@ -236,7 +236,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "618746d8943a4402815dddd995694a7ee0a063fc8f44fb2fbd89b02e4c6b34da",
+      "sha256": "94e173e7742632531382fe13e555aa11084d1955b8672f62cbf87ec0171ab7de",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
@@ -261,7 +261,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "b06be98fb62e42ae0fa6e80fbc1962ad9528f9d8e8e14c0dc6d29b2ecb3782db",
+      "sha256": "d89acb5e09d31e56f05567193495ba762dfca966372d5f9465eb1ad45ebfea1d",
       "sourcePanel": 6,
       "materialDiscipline": {
         "materials": [
@@ -286,7 +286,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "97547456b93a8d45e8b4f2d3136703a0116ea36ad37a5753d88ff3b7b8b9f310",
+      "sha256": "cf8d821f0f204234d3ba42f24f47d85c5a87a8b7eabd53573d4d23b7c1b494a5",
       "sourcePanel": 7,
       "materialDiscipline": {
         "materials": [
@@ -311,7 +311,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "6867928994bee823d2197ca62dc18559dfcc59dc99748fabd3fe2d14878ff781",
+      "sha256": "6a5a7bda04bb227d7ed34ef6212de1601dc004b9e51dac382d21bb04d6862251",
       "sourcePanel": 8,
       "materialDiscipline": {
         "materials": [
@@ -336,7 +336,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "e0d0321f4256e6b66ad913eee0342af08f2e8a681db721a2ee5e6944540fad0d",
+      "sha256": "845cdb464b67568379ca63c223fcbae00f1d768610c2e62829bdf427bc7290cf",
       "sourcePanel": 9,
       "materialDiscipline": {
         "materials": [
@@ -361,7 +361,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "c208dcd5996382c7e40cc953e464cc2a86dd26dc7e5d2b503ad6d05ae5601622",
+      "sha256": "de14b4b19ce1755630120073c406d58db585bca8c97f54eaaa5d8e103ac2b1e5",
       "sourcePanel": 10,
       "materialDiscipline": {
         "materials": [
@@ -386,7 +386,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "77689827154926fce4c0155e7c64fb2fbe7357492701093a8704b5d18d6b3ee2",
+      "sha256": "be41f773ae4a52e43f5bb5782e86ad05d5386f556d87c658f072467309a96bc2",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
@@ -2425,20 +2425,22 @@
       "path": "art/tilesets/imagegen_v3/transitions/dirt_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 2,
-      "sha256": "fa43ff1b58ac7a33ab371bdf057f7ade72eac9ed2c11b92c1ea553a9bfb7aff7",
+      "colors": 3,
+      "sha256": "1514851fa8a2d0a4cdaa45a95848e9c2248a95cf230be297cfb9d4b0d34863c3",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
           "grass",
-          "dirt"
+          "ground_dirt"
         ],
         "materialColorCounts": {
-          "dirt": 2
+          "grass": 1,
+          "ground_dirt": 2
         },
         "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
-          "dirt": 256
+          "grass": 109,
+          "ground_dirt": 147
         },
         "outlinePixelCount": 46,
         "inputPartialAlphaPixelCount": 16,
@@ -2451,20 +2453,22 @@
       "path": "art/tilesets/imagegen_v3/transitions/dirt_corner.png",
       "width": 16,
       "height": 16,
-      "colors": 2,
-      "sha256": "f2034f2c1d479bdf18cdf88ca8efbf2f3e0dca77197b10a0cf806618b2553e54",
+      "colors": 3,
+      "sha256": "0603c920ebe2446ec385bff3ab1e41a077b78610921d84d53cc383fb7a1f566d",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
           "grass",
-          "dirt"
+          "ground_dirt"
         ],
         "materialColorCounts": {
-          "dirt": 2
+          "grass": 1,
+          "ground_dirt": 2
         },
         "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
-          "dirt": 256
+          "grass": 115,
+          "ground_dirt": 141
         },
         "outlinePixelCount": 48,
         "inputPartialAlphaPixelCount": 16,
@@ -2477,8 +2481,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/brick_limestone_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 7,
-      "sha256": "e36a15784818c74a60dc14630d895d1b37613fc824c56e3e46650956641059ec",
+      "colors": 6,
+      "sha256": "d9e7d724f6d32f8c7fb22db127ce3131af6ba961af26702847cb0893c11ad75c",
       "sourcePanel": 2,
       "materialDiscipline": {
         "materials": [
@@ -2487,15 +2491,13 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 1,
           "brick": 3,
           "limestone": 3
         },
         "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "grass": 4,
           "brick": 128,
-          "limestone": 124
+          "limestone": 128
         },
         "outlinePixelCount": 60,
         "inputPartialAlphaPixelCount": 42,
@@ -2508,8 +2510,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/stone_grass_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 5,
-      "sha256": "5b4b0f3715869ae3ce61543b47101184621d50d2158bc49a09827ef4a768bf78",
+      "colors": 6,
+      "sha256": "6feafa5dd8af9b78344a6f35fd91e25f3eabc24de7447f83cd3fa06a869eb933",
       "sourcePanel": 3,
       "materialDiscipline": {
         "materials": [
@@ -2517,13 +2519,13 @@
           "stone"
         ],
         "materialColorCounts": {
-          "grass": 1,
+          "grass": 2,
           "stone": 4
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 13,
-          "stone": 243
+          "grass": 4,
+          "stone": 252
         },
         "outlinePixelCount": 42,
         "inputPartialAlphaPixelCount": 16,
@@ -2536,8 +2538,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/shoreline_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 5,
-      "sha256": "7010589d0d526855a7428f566adcd8753175a25b3b2f8fa92c3db4994282c477",
+      "colors": 6,
+      "sha256": "eb991150f551347ad5fad59f92fe779a3b32f4326f5ed60321f575564585e69e",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
@@ -2548,13 +2550,13 @@
         "materialColorCounts": {
           "grass": 1,
           "sand": 2,
-          "water": 2
+          "water": 3
         },
-        "maxColorsPerMaterial": 2,
+        "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "grass": 7,
-          "sand": 121,
-          "water": 128
+          "grass": 80,
+          "sand": 43,
+          "water": 133
         },
         "outlinePixelCount": 53,
         "inputPartialAlphaPixelCount": 15,
@@ -2567,8 +2569,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/shoreline_corner.png",
       "width": 16,
       "height": 16,
-      "colors": 7,
-      "sha256": "e6faee1f70ecc0cc9a45663caff9b5c7a733616f1f4d861b7569542e5e1a68d7",
+      "colors": 8,
+      "sha256": "c8839c36ce7fe67a6697e842f31040b49f437a7553d234e923f4bc138f4007c4",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
@@ -2579,13 +2581,13 @@
         "materialColorCounts": {
           "grass": 1,
           "sand": 3,
-          "water": 3
+          "water": 4
         },
-        "maxColorsPerMaterial": 3,
+        "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 4,
-          "sand": 168,
-          "water": 84
+          "grass": 110,
+          "sand": 60,
+          "water": 86
         },
         "outlinePixelCount": 57,
         "inputPartialAlphaPixelCount": 15,
@@ -2598,8 +2600,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/asphalt_curb_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 7,
-      "sha256": "cc33f7c4875cd656fdb37ca77ba910c2bf717d118cd63d3819d1763f662e11fe",
+      "colors": 8,
+      "sha256": "cddffe4ec6c4e36f876a16e665ebb123590d59feae6ca6f77b954667ea8dd7a0",
       "sourcePanel": 6,
       "materialDiscipline": {
         "materials": [
@@ -2608,15 +2610,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 1,
+          "grass": 2,
           "asphalt": 4,
           "limestone": 2
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 16,
+          "grass": 17,
           "asphalt": 143,
-          "limestone": 97
+          "limestone": 96
         },
         "outlinePixelCount": 56,
         "inputPartialAlphaPixelCount": 16,
@@ -2655,8 +2657,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/cliff_face.png",
       "width": 48,
       "height": 32,
-      "colors": 9,
-      "sha256": "38c6551c9d94213e6b3c1dd4c9826229c82e611afec8ac24fe9c3f79630eab8b",
+      "colors": 10,
+      "sha256": "870314dffbf302fbec195cfa0d53e3703d668e2975d600dfdf984b0185e0c612",
       "sourcePanel": 8,
       "materialDiscipline": {
         "materials": [
@@ -2665,15 +2667,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 2,
+          "grass": 3,
           "stone": 4,
           "limestone": 4
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 55,
-          "stone": 415,
-          "limestone": 1066
+          "grass": 103,
+          "stone": 401,
+          "limestone": 1032
         },
         "outlinePixelCount": 145,
         "inputPartialAlphaPixelCount": 26,
@@ -2686,8 +2688,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/cliff_corner.png",
       "width": 32,
       "height": 32,
-      "colors": 6,
-      "sha256": "6afe4a0d21d3bf5650881876f6ee9d06fa2ed50a123502dfdd4d096d2e9ed08d",
+      "colors": 7,
+      "sha256": "5191557dd8720eb09ad4eab7e41467dd303ab03c613261f481a1cc307bf5e6b6",
       "sourcePanel": 9,
       "materialDiscipline": {
         "materials": [
@@ -2696,15 +2698,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 1,
+          "grass": 2,
           "stone": 3,
           "limestone": 3
         },
         "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "grass": 10,
-          "stone": 142,
-          "limestone": 872
+          "grass": 66,
+          "stone": 124,
+          "limestone": 834
         },
         "outlinePixelCount": 119,
         "inputPartialAlphaPixelCount": 7,
@@ -2717,8 +2719,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/cliff_stairs.png",
       "width": 32,
       "height": 32,
-      "colors": 7,
-      "sha256": "a66fe890729045d2e4161c49f949a9afd80fd592bc121b1c61f15d81630bbef5",
+      "colors": 8,
+      "sha256": "acd685ffc21721f9c6211ddf0f1da33dec853d03c5cba86b3df2abd3b8900278",
       "sourcePanel": 10,
       "materialDiscipline": {
         "materials": [
@@ -2727,15 +2729,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 1,
+          "grass": 2,
           "stone": 4,
           "limestone": 3
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 8,
-          "stone": 254,
-          "limestone": 762
+          "grass": 55,
+          "stone": 237,
+          "limestone": 732
         },
         "outlinePixelCount": 110,
         "inputPartialAlphaPixelCount": 12,
@@ -2749,7 +2751,7 @@
       "width": 48,
       "height": 16,
       "colors": 8,
-      "sha256": "2c86286b48a903aee3b356edff3e236209ad0c6a40fba8f5ba025d0c11bc702e",
+      "sha256": "fd41571e16187d635aa967461e19f3b4311b57ac57b48a4c037010a0f00fae9c",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
@@ -2764,9 +2766,9 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 6,
-          "stone": 342,
-          "limestone": 420
+          "grass": 11,
+          "stone": 341,
+          "limestone": 416
         },
         "outlinePixelCount": 87,
         "inputPartialAlphaPixelCount": 17,
@@ -3573,7 +3575,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "8b9189e36aa47ce8ff1b4bee86f0e9d3f29e21cf30ec0007d805d6b6eef394b3",
+      "sha256": "3b911b285c0b3a361f7274a89761fc52b9d4548665538cdc4ea0d0c580d9e23c",
       "sourceRegion": [
         104,
         105,
@@ -3604,7 +3606,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "31e9d6ac9bac37d237d10e53fd7967f424d168f757f7441b20cd1e069f6ca743",
+      "sha256": "08b67917ec4c1f39c21b004e617cb6b3c75595be40d73ad94a139816a5ac7331",
       "sourceRegion": [
         990,
         106,

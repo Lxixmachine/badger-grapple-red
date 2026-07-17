@@ -135,27 +135,36 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     accentPixelCount: 12,
     accentComponentCount: 4
   });
-  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeGreaterThanOrEqual(0.76);
-  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeLessThanOrEqual(0.80);
-  expect(state.project.groundMaterialMetrics.grass.meanSaturation).toBeLessThanOrEqual(0.42);
+  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeGreaterThanOrEqual(0.78);
+  expect(state.project.groundMaterialMetrics.grass.meanLightness).toBeLessThanOrEqual(0.82);
+  expect(state.project.groundMaterialMetrics.grass.meanSaturation).toBeGreaterThanOrEqual(0.44);
+  expect(state.project.groundMaterialMetrics.grass.meanSaturation).toBeLessThanOrEqual(0.49);
   expect(state.project.groundMaterialMetrics.grassB).toMatchObject({uniqueColors: 2, cardinalPixelCount: 0});
   expect(state.project.groundMaterialMetrics.grassC).toMatchObject({uniqueColors: 2, cardinalPixelCount: 0});
   expect(state.project.groundMaterialMetrics.grassB.dominantCoverage)
     .toBeGreaterThan(state.project.groundMaterialMetrics.grass.dominantCoverage);
   expect(state.project.groundMaterialMetrics.grassC.dominantCoverage)
     .toBeGreaterThan(state.project.groundMaterialMetrics.grassB.dominantCoverage);
-  expect(state.project.groundMaterialMetrics.mowedGrass.meanLightness).toBeGreaterThanOrEqual(0.68);
-  expect(state.project.groundMaterialMetrics.mowedGrass.meanSaturation).toBeLessThanOrEqual(0.42);
+  expect(state.project.groundMaterialMetrics.mowedGrass.meanLightness).toBeGreaterThanOrEqual(0.74);
+  expect(state.project.groundMaterialMetrics.mowedGrass.meanSaturation).toBeLessThanOrEqual(0.43);
   expect(state.project.groundMaterialMetrics.campusPavers).toMatchObject({
     uniqueColors: 2,
     cardinalPixelCount: 0
   });
-  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThanOrEqual(0.78);
+  expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThanOrEqual(0.86);
   expect(state.project.groundMaterialMetrics.campusPavers.meanSaturation).toBeLessThanOrEqual(0.40);
+  expect(state.project.groundMaterialMetrics.primaryStonePath).toMatchObject({
+    uniqueColors: 2,
+    cardinalPixelCount: 0
+  });
+  expect(state.project.groundMaterialMetrics.primaryStonePath.meanLightness).toBeGreaterThanOrEqual(0.88);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.meanSaturation).toBeLessThanOrEqual(0.16);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.accentPixelCount).toBeLessThanOrEqual(40);
   expect(state.project.groundValueContract).toMatchObject({
-    grass: {meanLightnessMin: 0.76, meanSaturationMax: 0.42},
-    mowedGrass: {meanLightnessMin: 0.68, meanSaturationMax: 0.42},
-    campusPavers: {meanLightnessMin: 0.78, meanSaturationMax: 0.40}
+    grass: {meanLightnessMin: 0.78, meanSaturationMin: 0.44, meanSaturationMax: 0.49},
+    mowedGrass: {meanLightnessMin: 0.74, meanSaturationMax: 0.43},
+    campusPavers: {meanLightnessMin: 0.86, meanSaturationMax: 0.40},
+    primaryStonePath: {meanLightnessMin: 0.88, meanSaturationMax: 0.16}
   });
   expect(state.project.groundHierarchy.contract).toEqual({
     grassVariantCoverageMin: 0.04,
@@ -170,9 +179,11 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   for (const mapId of ['camp_randall', 'field_house', 'state_street', 'bascom_hill', 'capitol_square', 'kohl_center', 'st_louis']) {
     expect(state.project.groundHierarchy.maps[mapId].maintainedLawnCellCount).toBeGreaterThan(0);
   }
-  expect(state.project.visualHierarchyMetrics.saturationDifference).toBeGreaterThan(0);
-  expect(state.project.visualHierarchyMetrics.ground.meanSaturation)
-    .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanSaturation);
+  expect(state.project.visualHierarchyMetrics.contrastDifference).toBeGreaterThan(0.04);
+  expect(state.project.visualHierarchyMetrics.ground.meanNeighborContrast)
+    .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.meanNeighborContrast);
+  expect(state.project.visualHierarchyMetrics.ground.highContrastEdgeDensity)
+    .toBeLessThan(state.project.visualHierarchyMetrics.identityObjects.highContrastEdgeDensity);
   expect(state.project.pixelDiscipline).toMatchObject({
     version: 4,
     profileVersion: 1,

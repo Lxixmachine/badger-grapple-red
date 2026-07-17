@@ -39,7 +39,7 @@ def world_reference_source(source_id: str) -> Path:
 
 BOARDS = {
     "ground": {
-        "path": SOURCE_DIR / "season_one_ground_source_v3.png",
+        "path": world_reference_source("ground"),
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -263,12 +263,12 @@ GROUND_RAMPS = {
     # color is selected sparsely below instead of globally posterized.
     "grass": (PALETTE["grass"], PALETTE["grass_light"]),
     "mowed_grass": (PALETTE["grass_dark"], PALETTE["mowed_light"], PALETTE["grass_light"]),
-    "dirt": (PALETTE["dirt_dark"], PALETTE["dirt"], PALETTE["dirt_light"]),
+    "dirt": (PALETTE["path_dirt_dark"], PALETTE["path_dirt"], PALETTE["path_dirt_light"]),
     # Campus walks are warm limestone pavers. Cardinal belongs to identity
     # objects, never to the ground field beneath them.
     "brick": (PALETTE["paver_dark"], PALETTE["paver"], PALETTE["paver_light"]),
-    "stone": (PALETTE["stone_dark"], PALETTE["stone"], PALETTE["stone_light"]),
-    "concrete": (PALETTE["curb_dark"], PALETTE["concrete"], PALETTE["paver_light"]),
+    "stone": (PALETTE["path_stone_dark"], PALETTE["path_stone"], PALETTE["path_stone_light"]),
+    "concrete": (PALETTE["concrete_dark"], PALETTE["concrete"], PALETTE["concrete_light"]),
     "gravel": (PALETTE["gravel_dark"], PALETTE["gravel"], PALETTE["gravel_light"]),
     "sand": (PALETTE["sand_dark"], PALETTE["sand"], PALETTE["sand_light"]),
     "water": (PALETTE["water_dark"], PALETTE["water"], PALETTE["water_light"], PALETTE["foam"]),
@@ -643,33 +643,52 @@ def quiet_water(source: Image.Image, ramp) -> Image.Image:
 
 
 def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
-    """Translate authored slabs into broad, low-contrast, grid-safe courses."""
+    """Translate authored slabs into broad, low-contrast, grid-safe joints."""
     _dark, seam, base = sorted(ramp, key=_luma)
     output = Image.new("RGBA", source.size, base)
     draw = ImageDraw.Draw(output)
 
     if material == "brick":
-        # Two broad limestone courses span each logical cell. The course joints
-        # cross the cell while the staggered vertical joints stay internal.
-        for y in (5, 13):
-            draw.line((0, y, output.width - 1, y), fill=seam)
-        draw.line((10, 0, 10, 4), fill=seam)
-        draw.line((3, 6, 3, 12), fill=seam)
-        draw.line((10, 14, 10, 15), fill=seam)
+        # One broad course and two staggered joints imply large campus slabs.
+        # No line sits on a cell boundary, so the authoring grid disappears.
+        draw.line((0, 7, output.width - 1, 7), fill=seam)
+        draw.line((10, 1, 10, 6), fill=seam)
+        draw.line((4, 8, 4, 14), fill=seam)
     elif material == "stone":
-        for y in (5, 11):
-            draw.line((0, y, output.width - 1, y), fill=seam)
-        draw.line((8, 0, 8, 4), fill=seam)
-        draw.line((3, 6, 3, 10), fill=seam)
-        draw.line((11, 6, 11, 10), fill=seam)
-        draw.line((8, 12, 8, output.height - 1), fill=seam)
+        # Broken flagstone joints read as one continuous surface rather than
+        # sixteen-pixel paving squares. Phase transforms vary this silhouette.
+        draw.line((0, 6, 5, 6), fill=seam)
+        draw.line((9, 6, output.width - 1, 6), fill=seam)
+        draw.line((4, 12, 11, 12), fill=seam)
+        draw.line((6, 1, 6, 5), fill=seam)
+        draw.line((9, 7, 9, 11), fill=seam)
+        draw.line((3, 13, 3, 14), fill=seam)
     else:
-        # Concrete is intentionally almost flat. Short joints imply large
-        # slabs without tracing the 16px gameplay cell.
-        draw.line((1, 7, 6, 7), fill=seam)
-        draw.line((9, 7, 14, 7), fill=seam)
-        draw.line((7, 1, 7, 4), fill=seam)
-        draw.line((7, 10, 7, 14), fill=seam)
+        # Concrete is almost flat. Two short marks suggest aggregate without
+        # outlining slabs or tracing the gameplay cell.
+        draw.line((3, 5, 5, 5), fill=seam)
+        draw.line((11, 12, 13, 12), fill=seam)
+    return output
+
+
+def disciplined_service_floor(source: Image.Image, ramp, material: str) -> Image.Image:
+    """Keep service interiors readable with broad, low-frequency floor tiles."""
+    dark, mid, light = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", source.size, light)
+    draw = ImageDraw.Draw(output)
+    if material == "clinic_floor":
+        # A sparse cream checker gives the recovery room a sanitary cadence.
+        draw.rectangle((0, 0, 7, 7), fill=mid)
+        draw.rectangle((8, 8, 15, 15), fill=mid)
+        draw.point((12, 3), fill=dark)
+        draw.point((3, 12), fill=dark)
+    else:
+        # The shop keeps a cool blue checker, but removes the old 4px lattice
+        # that competed with actors, counters, and merchandise.
+        draw.rectangle((0, 0, 7, 7), fill=mid)
+        draw.rectangle((8, 8, 15, 15), fill=mid)
+        draw.line((7, 0, 7, 15), fill=dark)
+        draw.line((0, 7, 15, 7), fill=dark)
     return output
 
 
@@ -692,6 +711,8 @@ def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image
         return quiet_meadow(image, ramp)
     if asset_id in {"brick", "concrete", "stone"} and ramp:
         return disciplined_paver(image, ramp, asset_id)
+    if asset_id in {"clinic_floor", "shop_floor"} and ramp:
+        return disciplined_service_floor(image, ramp, asset_id)
     return posterize_to_ramp(image, ramp) if ramp else image
 
 

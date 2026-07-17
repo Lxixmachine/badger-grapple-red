@@ -181,7 +181,9 @@ def make_exterior_ground(layout: dict) -> Image.Image:
 def quiet_interior_floor(size: tuple[int, int], material: str) -> Image.Image:
     logical_size = (size[0] // 2, size[1] // 2)
     if material == "wood":
-        base, accent = (194, 174, 132, 255), (163, 144, 107, 255)
+        # Interior boards use value, not dark grout, to describe their cadence.
+        # Fixtures and actors should carry more local contrast than the floor.
+        base, accent = (207, 190, 152, 255), (190, 173, 139, 255)
         logical = Image.new("RGBA", logical_size, base)
         draw = ImageDraw.Draw(logical)
         for row, y in enumerate(range(7, logical_size[1], 8)):

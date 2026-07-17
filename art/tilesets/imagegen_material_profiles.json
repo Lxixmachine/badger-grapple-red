@@ -18,6 +18,7 @@
     "water": ["water_dark", "water", "water_light", "foam"],
     "grass": ["grass_shadow", "grass_dark", "grass", "grass_light"],
     "dirt": ["trunk_dark", "dirt_dark", "dirt", "dirt_light"],
+    "ground_dirt": ["trunk_dark", "path_dirt_dark", "path_dirt", "path_dirt_light"],
     "sand": ["dirt_dark", "sand_dark", "sand", "sand_light"],
     "asphalt": ["black", "asphalt_dark", "asphalt", "asphalt_light"],
     "cream": ["outline_soft", "limestone_dark", "cream", "white"],
@@ -110,8 +111,8 @@
     "buckys_singlet_display": ["slate", "limestone", "gold", "cardinal"],
     "buckys_supply_display": ["slate", "limestone", "gold", "cardinal"],
 
-    "dirt_edge": ["grass", "dirt"],
-    "dirt_corner": ["grass", "dirt"],
+    "dirt_edge": ["grass", "ground_dirt"],
+    "dirt_corner": ["grass", "ground_dirt"],
     "brick_limestone_edge": ["grass", "brick", "limestone"],
     "stone_grass_edge": ["grass", "stone"],
     "shoreline_edge": ["grass", "sand", "water"],

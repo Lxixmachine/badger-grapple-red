@@ -51,21 +51,29 @@ GROUND_VALUE_CONTRACT = {
     "grass": {
         "uniqueColors": 2,
         "dominantCoverageMin": 0.94,
-        "meanLightnessMin": 0.76,
-        "meanLightnessMax": 0.80,
-        "meanSaturationMax": 0.42,
+        "meanLightnessMin": 0.78,
+        "meanLightnessMax": 0.82,
+        "meanSaturationMin": 0.44,
+        "meanSaturationMax": 0.49,
         "cardinalPixelCountMax": 0,
     },
     "mowedGrass": {
         "uniqueColorsMax": 3,
-        "meanLightnessMin": 0.68,
-        "meanSaturationMax": 0.42,
+        "meanLightnessMin": 0.74,
+        "meanSaturationMax": 0.43,
         "cardinalPixelCountMax": 0,
     },
     "campusPavers": {
         "uniqueColorsMax": 3,
-        "meanLightnessMin": 0.78,
+        "meanLightnessMin": 0.86,
         "meanSaturationMax": 0.40,
+        "cardinalPixelCountMax": 0,
+    },
+    "primaryStonePath": {
+        "uniqueColorsMax": 2,
+        "meanLightnessMin": 0.88,
+        "meanSaturationMax": 0.16,
+        "accentPixelCountMax": 40,
         "cardinalPixelCountMax": 0,
     },
 }
@@ -613,6 +621,7 @@ def build() -> dict:
         "grassC": material_metrics(grass_c_logical),
         "mowedGrass": material_metrics(material_tile("mowed_grass")),
         "campusPavers": material_metrics(material_tile("brick")),
+        "primaryStonePath": material_metrics(material_tile("stone")),
     }
     grass_metrics = ground_material_metrics["grass"]
     if (
@@ -623,6 +632,7 @@ def build() -> dict:
         or not GROUND_VALUE_CONTRACT["grass"]["meanLightnessMin"]
         <= grass_metrics["meanLightness"]
         <= GROUND_VALUE_CONTRACT["grass"]["meanLightnessMax"]
+        or grass_metrics["meanSaturation"] < GROUND_VALUE_CONTRACT["grass"]["meanSaturationMin"]
         or grass_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["grass"]["meanSaturationMax"]
         or grass_metrics["cardinalPixelCount"]
     ):
@@ -653,6 +663,15 @@ def build() -> dict:
         or paver_metrics["cardinalPixelCount"]
     ):
         raise SystemExit("Campus pavers violate the pale neutral-limestone contract")
+    stone_path_metrics = ground_material_metrics["primaryStonePath"]
+    if (
+        stone_path_metrics["uniqueColors"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["uniqueColorsMax"]
+        or stone_path_metrics["meanLightness"] < GROUND_VALUE_CONTRACT["primaryStonePath"]["meanLightnessMin"]
+        or stone_path_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["meanSaturationMax"]
+        or stone_path_metrics["accentPixelCount"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["accentPixelCountMax"]
+        or stone_path_metrics["cardinalPixelCount"]
+    ):
+        raise SystemExit("Primary stone path violates the cool high-key circulation contract")
 
     for overlay in manifest["groundOverlays"]:
         add_ground(

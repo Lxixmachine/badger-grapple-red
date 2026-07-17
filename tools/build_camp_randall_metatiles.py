@@ -78,6 +78,52 @@ def saturation_metric(images: list[Image.Image]) -> dict:
     }
 
 
+def spatial_contrast_metric(images: list[Image.Image]) -> dict:
+    """Measure visual loudness as adjacent-pixel contrast, not colorfulness.
+
+    Classic GBA grass can be strongly chromatic while remaining quiet because
+    it is a broad flat field. Saturation alone misclassifies that relationship.
+    """
+    contrast = 0.0
+    pair_count = 0
+    high_contrast_pairs = 0
+
+    def luma(pixel: tuple[int, int, int, int]) -> float:
+        red, green, blue, _alpha = pixel
+        return (red * 0.299 + green * 0.587 + blue * 0.114) / 255
+
+    for image in images:
+        rgba = image.convert("RGBA")
+        for y in range(rgba.height):
+            for x in range(rgba.width):
+                pixel = rgba.getpixel((x, y))
+                if pixel[3] < 128:
+                    continue
+                for neighbor_x, neighbor_y in ((x + 1, y), (x, y + 1)):
+                    if neighbor_x >= rgba.width or neighbor_y >= rgba.height:
+                        continue
+                    neighbor = rgba.getpixel((neighbor_x, neighbor_y))
+                    if neighbor[3] < 128:
+                        continue
+                    delta = abs(luma(pixel) - luma(neighbor))
+                    contrast += delta
+                    pair_count += 1
+                    if delta >= 0.08:
+                        high_contrast_pairs += 1
+    return {
+        "meanNeighborContrast": round(contrast / max(pair_count, 1), 4),
+        "highContrastEdgeDensity": round(high_contrast_pairs / max(pair_count, 1), 4),
+        "neighborPairCount": pair_count,
+    }
+
+
+def visual_hierarchy_metric(images: list[Image.Image]) -> dict:
+    return {
+        **saturation_metric(images),
+        **spatial_contrast_metric(images),
+    }
+
+
 def owner_by_id(layout: dict, entry: dict) -> dict:
     group = entry["ownerGroup"]
     return next(owner for owner in layout.get(group, []) if owner["id"] == entry["id"])
@@ -589,15 +635,15 @@ def build() -> dict:
         for x, material in enumerate(row):
             index = terrain_tiles[material]
             preview.alpha_composite(visuals[index], (x * CELL, y * CELL))
-    ground_hierarchy = saturation_metric([preview])
+    ground_hierarchy = visual_hierarchy_metric([preview])
     identity_images = [
         Image.open(ROOT / "public" / entry["path"].removeprefix("./")).convert("RGBA")
         for entry in production["map"]["objects"]
         if entry["id"] in IDENTITY_OBJECT_IDS
     ]
-    identity_hierarchy = saturation_metric(identity_images)
-    if identity_hierarchy["meanSaturation"] <= ground_hierarchy["meanSaturation"]:
-        raise SystemExit("Camp Randall ground spends more saturation than its identity architecture")
+    identity_hierarchy = visual_hierarchy_metric(identity_images)
+    if identity_hierarchy["meanNeighborContrast"] <= ground_hierarchy["meanNeighborContrast"]:
+        raise SystemExit("Camp Randall ground has more local contrast than its identity architecture")
     for object_entry in sorted(production["map"]["objects"], key=lambda entry: entry["depth"]):
         stamp = stamps[object_entry["id"]]
         for y, row in enumerate(stamp["cells"]):
@@ -690,6 +736,9 @@ def build() -> dict:
             "identityObjects": identity_hierarchy,
             "saturationDifference": round(
                 identity_hierarchy["meanSaturation"] - ground_hierarchy["meanSaturation"], 4
+            ),
+            "contrastDifference": round(
+                identity_hierarchy["meanNeighborContrast"] - ground_hierarchy["meanNeighborContrast"], 4
             ),
         },
         "sources": {

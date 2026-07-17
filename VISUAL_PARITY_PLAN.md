@@ -134,6 +134,15 @@ Acceptance:
 > those exact tile IDs; there is no hidden renderer substitution. Clean atlas
 > playtests now omit the diagnostic HUD by default, with `hud=1` retaining it for
 > collision review. Tony's comparison verdict still closes visual parity.
+>
+> v22.36 corrects the palette assignment against fixed FireRed town and service-
+> interior references. The authoritative ground source is now a retained
+> Imagegen board, compiled into high-key mint lawns, pale warm campus pavers,
+> cool low-noise stone circulation, and quieter service floors. Ground dirt has
+> its own palette role, so changing a path can no longer repaint gold trim on
+> buildings or props. Validation now measures spatial neighbor contrast instead
+> of assuming quiet ground must have low saturation: FireRed grass is chromatic
+> but flat, while identity architecture carries the high-contrast edges.
 
 > **REVISED after inspecting v22.4 on screen (D1 confirmed fixed
 > there).** With crisp pixels, the loudest remaining non-FireRed
@@ -163,7 +172,7 @@ Acceptance:
 
 Acceptance: A/B board (WP-V4 format) vs the FireRed reference at
 identical framing; zero raw material cuts on any shipped screen; Tony
-verdict "closer"; ground zones' mean saturation measurably below
+verdict "closer"; ground zones' local edge contrast measurably below
 object zones'.
 
 ### WP-V3 — Per-material pixel-discipline pass (compositor; Claude owns)
