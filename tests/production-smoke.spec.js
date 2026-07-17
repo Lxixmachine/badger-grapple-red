@@ -28,7 +28,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.23-character-art-pass');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.24-complete-overworld-cast');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',
@@ -36,6 +36,14 @@ test('production build boots the Season One atlas and generated character art', 
     'season-actor:coach',
     'season-actor:trainer',
     'season-actor:rex',
+    'season-actor:captain',
+    'season-actor:wrestler',
+    'season-actor:manager',
+    'season-actor:scout',
+    'season-actor:student',
+    'season-actor:official',
+    'season-actor:athlete',
+    'season-actor:camper',
     'title_hero',
     'logo',
     'coach_intro',
@@ -56,6 +64,10 @@ test('production build boots the Season One atlas and generated character art', 
   expect(atlas.width).toBe(512);
   expect(atlas.height).toBeGreaterThan(4_000);
   expect(atlas.height % 32).toBe(0);
+  for (const actor of textures.filter(texture => texture.key.startsWith('season-actor:'))) {
+    expect(actor.width, `${actor.key} full 3-column sheet width`).toBe(96);
+    expect(actor.height, `${actor.key} full 4-row sheet height`).toBe(256);
+  }
   await expect(page.locator('#game canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('#game canvas')).toHaveAttribute('height', '320');
   expect(issues).toEqual([]);

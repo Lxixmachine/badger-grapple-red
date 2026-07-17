@@ -3352,10 +3352,31 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   maps down/left/right/up to frames 1/4/7/10, and alternates authored step
   frames while moving. A regression test locks those four direction rows.
 - Tony's FireRed comparison verdict remains the visual close condition. This
-  batch establishes the reproducible character-art method; Wrestler, Manager,
-  Scout, Student, Official, Athlete, and Camper remain v1 sources for the next
-  cast batch.
+  batch established the reproducible character-art method; v22.24 applies it
+  to Wrestler, Manager, Scout, Student, Official, Athlete, and Camper.
 - Balance, map lint, production build, the isolated Map Studio retry, and the
   complete sequential release suite pass; final suite count is 119/119. Broad
   validation reaches only Tony's protected State Street composition checksum,
   which remains deliberately unrebuilt and unstaged.
+
+## Codex Complete Overworld Cast (v22.24)
+
+- ChatGPT built-in image generation rebuilt Wrestler, Manager, Scout, Student,
+  Official, Athlete, and Camper specifically for the approved 16x32 logical
+  frame. Versioned chroma sources, alpha-cleaned masters, and the shared prompt
+  record are retained under `art/imagegen/`.
+- Every Season One overworld identity now uses the same source-to-runtime
+  process: strict down/left/right/up rows, left/idle/right columns, shared foot
+  baseline, connected pixel clusters, binary alpha, at most 15 opaque colors,
+  exact nearest-neighbor 2x export, and runtime scale 1.
+- The rebuilt contact sheet and 390x844 phone captures verify the remaining
+  cast in Field House, Trainer's Room, Monona Shore, Camp Randall, and Picnic
+  Point. The pass intentionally leaves map art unchanged; the captures make
+  the next environment targets visible without weakening the actor contract.
+- Production smoke now requires all twelve actor textures to be complete
+  96x256 sheets. A partial, stretched, missing, or procedural fallback can no
+  longer ship unnoticed.
+- The focused 36-scenario world and editor gate, balance simulation, map lint,
+  production build, and complete sequential 119-scenario game suite pass.
+  Broad validation reaches only Tony's protected State Street composition
+  checksum; those six files remain deliberately unbuilt and unstaged.

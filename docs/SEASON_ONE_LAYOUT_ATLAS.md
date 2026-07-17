@@ -1,6 +1,6 @@
 # Season One Layout Atlas
 
-Status: production-grid rollout through Capitol Square with quiet-ground hierarchy, material-disciplined art, one logical actor pixel contract, and the first source-faithful character batch in v22.23.
+Status: production-grid rollout through Capitol Square with quiet-ground hierarchy, material-disciplined art, one logical actor pixel contract, and the complete source-faithful overworld cast in v22.24.
 
 This atlas fixes the complete Season One world structure before final terrain,
 buildings, props, or character art are produced. The exact authority is

@@ -78,6 +78,13 @@ and every review is a vibe check.
 > sheets. The World Atlas no longer substitutes its procedural placeholder:
 > atlas review and the story runtime consume the same production player sheet,
 > including four correct idle rows and alternating walk phases.
+>
+> v22.24 completes that migration for Wrestler, Manager, Scout, Student,
+> Official, Athlete, and Camper. All twelve world identities now begin as
+> contract-targeted ChatGPT Imagegen sheets, compile through one 16x32 logical
+> frame and 15-color limit, and render as complete 96x256 directional sheets.
+> Phone captures cover the remaining cast in their real maps, while production
+> smoke tests reject any missing, partial, or incorrectly sized actor sheet.
 
 The single largest visual jump available, and it costs zero new art.
 `VISUAL_SLICE_CONTRACT.md` is the authority; `?slice=1` and `?atlas=1`
