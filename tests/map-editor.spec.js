@@ -96,7 +96,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 14, metatileVersion: 20});
+  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 15, metatileVersion: 20});
   expect(state.project.actorPixelContract).toEqual({
     logicalFrameWidth: 16,
     logicalFrameHeight: 32,
@@ -486,7 +486,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 14, metatileVersion: 20});
+  expect(state.project).toMatchObject({layoutRevision: 15, metatileVersion: 20});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');

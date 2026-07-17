@@ -1,5 +1,6 @@
 import {expect, test} from '@playwright/test';
 import {readFileSync} from 'node:fs';
+import {SEASON_ONE_MAP_POLISH} from '../src/data/seasonOneMapPolish.js';
 
 const layouts = JSON.parse(readFileSync(new URL('../src/data/seasonOneLayouts.json', import.meta.url), 'utf8'));
 const worldTileset = JSON.parse(readFileSync(new URL('../src/data/seasonOneWorldTilesetBuild.json', import.meta.url), 'utf8'));
@@ -112,6 +113,35 @@ test('Lakeshore and Picnic use the long-form FireRed route scale and exact world
   expect(Object.keys(worldTileset.stamps.lakeshore_boathouse.coverageAudit)).toHaveLength(25);
   expect(solidOwnership(lake)).toEqual([]);
   expect(solidOwnership(picnic)).toEqual([]);
+});
+
+test('route scenery uses stepped shorelines, clustered trees, and compact grass encounters', async ({page}) => {
+  const project = await openStudio(page);
+  const lakeLayout = layouts.maps.lakeshore_path;
+  const picnicLayout = layouts.maps.picnic_point;
+  const lake = project.maps.lakeshore_path;
+  const picnic = project.maps.picnic_point;
+
+  const lakeTrees = lakeLayout.decorations.filter(entry => entry.id.startsWith('lake_tree_south_'));
+  expect(lakeTrees).toHaveLength(24);
+  expect(lakeTrees.every(entry => entry.stamp.startsWith('tree_'))).toBe(true);
+  expect(lakeLayout.decorations.some(entry => entry.stamp === 'forest_edge_south')).toBe(false);
+
+  const picnicTrees = picnicLayout.decorations.filter(entry => entry.id.startsWith('picnic_tree_'));
+  expect(picnicTrees).toHaveLength(25);
+  expect(picnicTrees.every(entry => entry.stamp.startsWith('tree_'))).toBe(true);
+  expect(picnicLayout.decorations.some(entry => entry.stamp === 'forest_grove_small')).toBe(false);
+  expect(picnicLayout.waterBodies).toHaveLength(7);
+  expect(picnic.terrain[4][10]).toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[13][24]).toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[14][40]).toMatch(/^shore_water_blob_/);
+  expect(picnic.terrain[9][24]).toMatch(/^surface_dirt_blob_/);
+
+  for (const mapId of ['lakeshore_path', 'picnic_point']) {
+    const grass = SEASON_ONE_MAP_POLISH[mapId].terrain.filter(entry => entry.tile === 'tall_grass');
+    expect(grass.length, `${mapId} grass encounters`).toBeGreaterThanOrEqual(4);
+    expect(grass.every(entry => entry.width <= 3 && entry.height <= 2), `${mapId} compact grass`).toBe(true);
+  }
 });
 
 test('the complete route remains traversable with actors and exact object collision enabled', async ({page}) => {

@@ -74,6 +74,28 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'r1_flowers_gold', tile: 'grass_gold_flowers', x: 15, y: 12, width: 1, height: 1}
     ]
   },
+  lakeshore_path: {
+    terrain: [
+      {id: 'lake_grass_west_north', tile: 'tall_grass', x: 5, y: 5, width: 3, height: 2},
+      {id: 'lake_grass_west_south', tile: 'tall_grass', x: 6, y: 7, width: 2, height: 2},
+      {id: 'lake_grass_middle_north', tile: 'tall_grass', x: 18, y: 6, width: 3, height: 2},
+      {id: 'lake_grass_middle_south', tile: 'tall_grass', x: 19, y: 8, width: 2, height: 2},
+      {id: 'lake_grass_first_north', tile: 'tall_grass', x: 37, y: 6, width: 2, height: 2},
+      {id: 'lake_grass_first_south', tile: 'tall_grass', x: 36, y: 8, width: 3, height: 2},
+      {id: 'lake_flowers_white', tile: 'grass_white_flowers', x: 7, y: 5, width: 1, height: 1},
+      {id: 'lake_flowers_cardinal', tile: 'grass_red_flowers', x: 46, y: 5, width: 1, height: 1}
+    ]
+  },
+  picnic_point: {
+    terrain: [
+      {id: 'picnic_grass_arrival', tile: 'tall_grass', x: 39, y: 8, width: 3, height: 2},
+      {id: 'picnic_grass_arrival_tail', tile: 'tall_grass', x: 40, y: 10, width: 2, height: 1},
+      {id: 'picnic_grass_first', tile: 'tall_grass', x: 28, y: 8, width: 3, height: 2},
+      {id: 'picnic_grass_middle', tile: 'tall_grass', x: 18, y: 8, width: 3, height: 2},
+      {id: 'picnic_flowers_white', tile: 'grass_white_flowers', x: 36, y: 6, width: 1, height: 1},
+      {id: 'picnic_flowers_cardinal', tile: 'grass_red_flowers', x: 8, y: 10, width: 1, height: 1}
+    ]
+  },
   monona_shore: {
     objects: [
       stamp('monona_rack', 'kayak_rack', 11, 5, 3, 2),
