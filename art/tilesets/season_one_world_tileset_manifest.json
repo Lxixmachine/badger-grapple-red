@@ -10,7 +10,7 @@
   "referenceSources": {
     "ground": "art/imagegen/tileset_v3/season_one_ground_source_v1.png",
     "vegetation": "art/imagegen/tileset_v3/season_one_vegetation_source_v3.png",
-    "forestMasses": "art/imagegen/tileset_v3/season_one_forest_masses_source_v2.png",
+    "forestMasses": "art/imagegen/tileset_v3/season_one_forest_masses_source_v6.png",
     "architecture": "art/imagegen/tileset_v3/season_one_architecture_source_v1.png",
     "props": "art/imagegen/tileset_v3/season_one_props_source_v1.png",
     "transitions": "art/imagegen/tileset_v3/season_one_transitions_source_v1.png"

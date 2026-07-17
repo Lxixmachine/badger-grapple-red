@@ -117,6 +117,12 @@ else{
     const discipline=prepared.materialDiscipline||{};
     const profilePath=fileURLToPath(new URL(`../${discipline.profilePath||''}`,import.meta.url));
     if(prepared.schema!=='badger-grapple-imagegen-tileset-sources/v2'||prepared.version!==4||Object.keys(prepared.assets||{}).length<115||world.sources?.preparedImagegenAssetCount!==Object.keys(prepared.assets||{}).length)errs.push('Prepared Imagegen source coverage is incomplete');
+    const sharedBoardIds={vegetation:'vegetation',forestMasses:'forest_masses',architecture:'architecture',props:'props',transitions:'transitions'};
+    for(const [referenceId,preparedId] of Object.entries(sharedBoardIds)){
+      const relative=manifest.referenceSources?.[referenceId];
+      const source=relative?fileURLToPath(new URL(`../${relative}`,import.meta.url)):null;
+      if(!source||prepared.sourceBoardPaths?.[preparedId]!==relative||prepared.sourceBoards?.[preparedId]!==fileHash(source))errs.push(`Prepared Imagegen board ${preparedId} diverges from the world tileset manifest`);
+    }
     if(discipline.profileVersion!==1||discipline.maxColorsPerMaterial!==4||discipline.disciplinedAssetCount!==Object.keys(prepared.assets||{}).length||!existsSync(profilePath)||discipline.profileSha256!==fileHash(profilePath)||world.sources?.materialProfile!==discipline.profileSha256)errs.push('Prepared Imagegen material profile is missing or stale');
     for(const asset of Object.values(prepared.assets||{})){
       const source=fileURLToPath(new URL(`../${asset.path}`,import.meta.url));

@@ -13,7 +13,7 @@
   "sourceBoards": {
     "ground": "b73a16ebf62cb8fc8c7374864c2879b25ad032bf1552450395dddb7464bb3124",
     "vegetation": "084b33eef647f09fc0e38ab8a39e3ea777c57d0ef1994711be3b2cdd61accf9a",
-    "forest_masses": "13e351e6bbf78473bf6dd7bd3499c9dd09d0862882a43703541a51cee77b3510",
+    "forest_masses": "801d530c927a8dbab0d7e15cbb9f2da9df2f127ca61ceda28053540e9b1616e2",
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
     "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
     "props": "be9a7a8cbb13c2ce3aec6faad80ef04b2dc2d60816065229b2bb677b16af6f0e",
@@ -56,6 +56,53 @@
     "ordinary_buildings:city_edge_horizontal": "005322c068ee98c41938572d2636194b23e5219a8dc3f71ec8bedf7fe5643d44",
     "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279",
     "landmarks:field_house_entry_arch": "derived:63c27d93c62ef8efe9e366a9f5b1093e346160cd4f28583d7d9c40cdf72ba7bb"
+  },
+  "sourceBoardPaths": {
+    "ground": "art/imagegen/tileset_v3/season_one_ground_source_v3.png",
+    "vegetation": "art/imagegen/tileset_v3/season_one_vegetation_source_v3.png",
+    "forest_masses": "art/imagegen/tileset_v3/season_one_forest_masses_source_v6.png",
+    "architecture": "art/imagegen/tileset_v3/season_one_architecture_source_v1.png",
+    "service_buildings": "art/imagegen/tileset_v3/season_one_service_buildings_source_v2.png",
+    "props": "art/imagegen/tileset_v3/season_one_props_source_v1.png",
+    "story_props": "art/imagegen/tileset_v3/season_one_story_props_source_v1.png",
+    "arena_mats": "art/imagegen/tileset_v3/season_one_arena_mats_source_v1.png",
+    "transitions": "art/imagegen/tileset_v3/season_one_transitions_source_v1.png",
+    "route_landmarks": "art/imagegen/tileset_v3/season_one_lakeshore_landmarks_source_v1.png",
+    "bascom_landmarks": "art/imagegen/tileset_v3/season_one_bascom_landmarks_source_v1.png",
+    "service_clinic": "art/imagegen/tileset_v3/season_one_trainer_room_service_kit_source_v1.png",
+    "service_shop": "art/imagegen/tileset_v3/season_one_buckys_service_kit_source_v1.png",
+    "service_floors": "art/imagegen/tileset_v3/season_one_service_floors_source_v1.png",
+    "vegetation:tall_grass_cluster": "art/imagegen/tileset_v3/season_one_tall_grass_source_v2.png",
+    "service_clinic:trainer_recovery_counter": "art/imagegen/tileset_v3/season_one_trainer_recovery_counter_source_v2.png",
+    "service_clinic:trainer_floor_inlay": "art/imagegen/tileset_v3/season_one_trainer_floor_inlay_source_v1.png",
+    "story_props:outdoor_wrestling_mat": "art/imagegen/tileset_v3/season_one_outdoor_wrestling_mat_source_v4.png",
+    "landmarks:field_house_arena_exterior": "art/imagegen/tileset_v3/season_one_field_house_arena_source_v1.png",
+    "landmarks:kohl_arena_exterior": "art/imagegen/tileset_v3/season_one_kohl_arena_source_v1.png",
+    "landmarks:nationals_arena_exterior": "art/imagegen/tileset_v3/season_one_nationals_arena_source_v1.png",
+    "landmarks:bascom_hall_exterior": "art/imagegen/tileset_v3/season_one_bascom_hall_source_v1.png",
+    "landmarks:wisconsin_capitol_exterior": "art/imagegen/tileset_v3/season_one_wisconsin_capitol_source_v1.png",
+    "landmarks:brittingham_boats_exterior": "art/imagegen/tileset_v3/season_one_brittingham_boats_source_v1.png",
+    "landmarks:gateway_arch_landmark": "art/imagegen/tileset_v3/season_one_gateway_arch_source_v1.png",
+    "ordinary_buildings:equipment_annex_exterior": "art/imagegen/tileset_v3/ordinary_buildings/equipment_annex_source_v1.png",
+    "ordinary_buildings:campus_housing_exterior": "art/imagegen/tileset_v3/ordinary_buildings/campus_housing_source_v1.png",
+    "ordinary_buildings:bookstore_row_exterior": "art/imagegen/tileset_v3/ordinary_buildings/bookstore_row_source_v1.png",
+    "ordinary_buildings:theater_marquee_exterior": "art/imagegen/tileset_v3/ordinary_buildings/theater_marquee_source_v1.png",
+    "ordinary_buildings:food_cart_row_exterior": "art/imagegen/tileset_v3/ordinary_buildings/food_cart_row_source_v1.png",
+    "ordinary_buildings:capitol_hotel_exterior": "art/imagegen/tileset_v3/ordinary_buildings/capitol_hotel_source_v1.png",
+    "ordinary_buildings:civic_offices_exterior": "art/imagegen/tileset_v3/ordinary_buildings/civic_offices_source_v1.png",
+    "ordinary_buildings:transit_hotel_exterior": "art/imagegen/tileset_v3/ordinary_buildings/transit_hotel_source_v1.png",
+    "ordinary_buildings:team_hotel_exterior": "art/imagegen/tileset_v3/ordinary_buildings/team_hotel_source_v1.png",
+    "ordinary_buildings:riverfront_hotel_exterior": "art/imagegen/tileset_v3/ordinary_buildings/riverfront_hotel_source_v1.png",
+    "ordinary_buildings:state_facade_11x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_11x5_source_v1.png",
+    "ordinary_buildings:state_facade_10x3": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_10x3_source_v1.png",
+    "ordinary_buildings:state_facade_13x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_13x5_source_v1.png",
+    "ordinary_buildings:state_facade_8x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_8x5_source_v1.png",
+    "ordinary_buildings:state_facade_8x4": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_8x4_source_v1.png",
+    "ordinary_buildings:state_facade_10x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_10x5_source_v1.png",
+    "ordinary_buildings:state_facade_5x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_5x5_source_v1.png",
+    "ordinary_buildings:city_edge_horizontal": "art/imagegen/tileset_v3/ordinary_buildings/city_edge_horizontal_source_v1.png",
+    "ordinary_buildings:city_edge_vertical": "art/imagegen/tileset_v3/ordinary_buildings/city_edge_vertical_source_v1.png",
+    "landmarks:field_house_entry_arch": "art/tilesets/imagegen_v3/landmarks/field_house_arena_exterior.png"
   },
   "assets": {
     "grass": {
@@ -704,7 +751,7 @@
       "width": 112,
       "height": 48,
       "colors": 8,
-      "sha256": "aea4d17687572c072818333aceec41aa2678d30b36a0c85f47d1a06a40146798",
+      "sha256": "6db0c6221d913152a866faf77ef1db698cefb2ab5f6faf49722ea402f9400aaa",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
@@ -717,11 +764,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 4971,
-          "wood": 257
+          "foliage": 5023,
+          "wood": 189
         },
-        "outlinePixelCount": 240,
-        "inputPartialAlphaPixelCount": 109,
+        "outlinePixelCount": 247,
+        "inputPartialAlphaPixelCount": 44,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -731,8 +778,8 @@
       "path": "art/tilesets/imagegen_v3/forest_masses/forest_edge_north_b.png",
       "width": 112,
       "height": 48,
-      "colors": 9,
-      "sha256": "42ee530031449cd09f7bec222e79c22335719369bf719d9f5f546d0d22d44f4a",
+      "colors": 8,
+      "sha256": "ad95ba5fc2b17775a6177befc6498a203a33f88baa7b122d276b97c28e6fb95a",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -741,15 +788,15 @@
         ],
         "materialColorCounts": {
           "foliage": 4,
-          "wood": 4
+          "wood": 3
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 5007,
-          "wood": 231
+          "foliage": 4958,
+          "wood": 240
         },
-        "outlinePixelCount": 249,
-        "inputPartialAlphaPixelCount": 92,
+        "outlinePixelCount": 239,
+        "inputPartialAlphaPixelCount": 36,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -760,7 +807,7 @@
       "width": 112,
       "height": 64,
       "colors": 9,
-      "sha256": "704c5bd3bf2043822b85395a05311ed6a9a9670bd95bf882fa4f6cdf225c4fee",
+      "sha256": "a0587d2db9816608439d1b5b0d2a38faf9c5bb440b0ef120befe813ec101ad94",
       "sourcePanel": 2,
       "materialDiscipline": {
         "materials": [
@@ -773,11 +820,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 5738,
-          "wood": 1421
+          "foliage": 5339,
+          "wood": 1371
         },
-        "outlinePixelCount": 258,
-        "inputPartialAlphaPixelCount": 138,
+        "outlinePixelCount": 301,
+        "inputPartialAlphaPixelCount": 108,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -788,7 +835,7 @@
       "width": 112,
       "height": 64,
       "colors": 9,
-      "sha256": "db85632cc97ac8b8a7fd2525a090bf5356b08e257d933bff56bda2c914a1deb3",
+      "sha256": "45e25b3e439288f45717f415afe326e4b5da9b7a3a1ef8f364715345cc892e41",
       "sourcePanel": 3,
       "materialDiscipline": {
         "materials": [
@@ -801,11 +848,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 5661,
-          "wood": 1502
+          "foliage": 5317,
+          "wood": 1387
         },
-        "outlinePixelCount": 261,
-        "inputPartialAlphaPixelCount": 124,
+        "outlinePixelCount": 303,
+        "inputPartialAlphaPixelCount": 102,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -815,8 +862,8 @@
       "path": "art/tilesets/imagegen_v3/forest_masses/forest_edge_west_a.png",
       "width": 32,
       "height": 96,
-      "colors": 8,
-      "sha256": "aef0c45a1034c3db7b142ecb4e9efb248fc7b00553eb1ff2dfeaf2b68adb8474",
+      "colors": 7,
+      "sha256": "c079b214fa5ddfbfce1828ba0ef679f8ebc2771de4d08babaf5f63e7c7d59ef6",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
@@ -825,15 +872,15 @@
         ],
         "materialColorCounts": {
           "foliage": 4,
-          "wood": 3
+          "wood": 2
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 2922,
-          "wood": 139
+          "foliage": 2987,
+          "wood": 60
         },
-        "outlinePixelCount": 166,
-        "inputPartialAlphaPixelCount": 57,
+        "outlinePixelCount": 159,
+        "inputPartialAlphaPixelCount": 24,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -843,8 +890,8 @@
       "path": "art/tilesets/imagegen_v3/forest_masses/forest_edge_west_b.png",
       "width": 32,
       "height": 96,
-      "colors": 8,
-      "sha256": "a7f15a2b1386dfbb4c64b37b98664fb48699538b129616d4a637b43187d0afca",
+      "colors": 7,
+      "sha256": "c935586029eb3ec35eba27f81a4d797a790c5075ef99fc657bfbe5c5923c1116",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
@@ -853,15 +900,15 @@
         ],
         "materialColorCounts": {
           "foliage": 4,
-          "wood": 3
+          "wood": 2
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 2741,
-          "wood": 196
+          "foliage": 2992,
+          "wood": 64
         },
-        "outlinePixelCount": 211,
-        "inputPartialAlphaPixelCount": 74,
+        "outlinePixelCount": 138,
+        "inputPartialAlphaPixelCount": 21,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -871,8 +918,8 @@
       "path": "art/tilesets/imagegen_v3/forest_masses/forest_edge_east_a.png",
       "width": 32,
       "height": 96,
-      "colors": 8,
-      "sha256": "e7ce7fb836ccacb7f1516d959335140ed4eee973ffa10402917ae0de0259eb5d",
+      "colors": 7,
+      "sha256": "c2718a5fa655aceaf45302216c115fe9be842f38f21f6895c29ae687b8c9092f",
       "sourcePanel": 6,
       "materialDiscipline": {
         "materials": [
@@ -881,15 +928,15 @@
         ],
         "materialColorCounts": {
           "foliage": 4,
-          "wood": 3
+          "wood": 2
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 2710,
-          "wood": 219
+          "foliage": 2999,
+          "wood": 62
         },
-        "outlinePixelCount": 256,
-        "inputPartialAlphaPixelCount": 89,
+        "outlinePixelCount": 146,
+        "inputPartialAlphaPixelCount": 20,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -900,7 +947,7 @@
       "width": 32,
       "height": 96,
       "colors": 8,
-      "sha256": "5459f8fac64759b0f2131250cbdff41225601c3c1535c115531b52844eca7830",
+      "sha256": "a97c95da6ce8e9cf39a86e3ff7800ddf4c51210fc87023e951ae36fe5c709cea",
       "sourcePanel": 7,
       "materialDiscipline": {
         "materials": [
@@ -913,11 +960,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 2785,
-          "wood": 204
+          "foliage": 2962,
+          "wood": 63
         },
-        "outlinePixelCount": 225,
-        "inputPartialAlphaPixelCount": 81,
+        "outlinePixelCount": 153,
+        "inputPartialAlphaPixelCount": 34,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -928,7 +975,7 @@
       "width": 96,
       "height": 128,
       "colors": 8,
-      "sha256": "b36f98368310d6fe7fb36e62f27d27342be9d18f0a6f236e286d727ab5f35a14",
+      "sha256": "51caf9c67d5d4da570444010e8f5091ccfee7426442bbae234d5badd0e965f5d",
       "sourcePanel": 8,
       "materialDiscipline": {
         "materials": [
@@ -941,11 +988,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 11602,
-          "wood": 630
+          "foliage": 11877,
+          "wood": 407
         },
-        "outlinePixelCount": 346,
-        "inputPartialAlphaPixelCount": 182,
+        "outlinePixelCount": 230,
+        "inputPartialAlphaPixelCount": 9,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -956,7 +1003,7 @@
       "width": 80,
       "height": 64,
       "colors": 8,
-      "sha256": "9af10e0d54b1fecf6703fe5008141d753795fc1381e2e455da92c89fd4eabcc3",
+      "sha256": "38ac92bf36fd6a693368c20a47a7fc03f2bfdaaba0c11777ae0cd72fcc9ff752",
       "sourcePanel": 9,
       "materialDiscipline": {
         "materials": [
@@ -969,11 +1016,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 3481,
-          "wood": 209
+          "foliage": 3999,
+          "wood": 175
         },
-        "outlinePixelCount": 234,
-        "inputPartialAlphaPixelCount": 150,
+        "outlinePixelCount": 205,
+        "inputPartialAlphaPixelCount": 91,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -983,8 +1030,8 @@
       "path": "art/tilesets/imagegen_v3/forest_masses/forest_corner_inner_nw.png",
       "width": 80,
       "height": 80,
-      "colors": 7,
-      "sha256": "01ee47f154ad7b15d789d7f7be57ac6c4b24b7ee5d6f1a378081a3735ffb9505",
+      "colors": 8,
+      "sha256": "52a148ea105d85477d75dae2b50ed7b81c4bb41658a9a3f7c4e6eac26f90c40e",
       "sourcePanel": 10,
       "materialDiscipline": {
         "materials": [
@@ -993,15 +1040,15 @@
         ],
         "materialColorCounts": {
           "foliage": 4,
-          "wood": 2
+          "wood": 3
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 5298,
-          "wood": 232
+          "foliage": 5847,
+          "wood": 230
         },
-        "outlinePixelCount": 305,
-        "inputPartialAlphaPixelCount": 153,
+        "outlinePixelCount": 238,
+        "inputPartialAlphaPixelCount": 84,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -1012,7 +1059,7 @@
       "width": 96,
       "height": 80,
       "colors": 7,
-      "sha256": "9e106ec1b0e619da057fb56236795cfe7179376f44a4837c93b80ac213cba742",
+      "sha256": "e4ff22aa1a066e1af0d3b5eb0bdc9043bf4c0ee60526f46c898d13e91ed8d42e",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
@@ -1025,11 +1072,11 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 3520,
-          "wood": 276
+          "foliage": 3317,
+          "wood": 235
         },
-        "outlinePixelCount": 290,
-        "inputPartialAlphaPixelCount": 140,
+        "outlinePixelCount": 281,
+        "inputPartialAlphaPixelCount": 130,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }

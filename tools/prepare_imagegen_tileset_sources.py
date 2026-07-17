@@ -25,6 +25,16 @@ SOURCE_DIR = ROOT / "art" / "imagegen" / "tileset_v3"
 OUTPUT_DIR = ROOT / "art" / "tilesets" / "imagegen_v3"
 MANIFEST_PATH = OUTPUT_DIR / "source_manifest.json"
 MATERIAL_PROFILE_PATH = ROOT / "art" / "tilesets" / "imagegen_material_profiles.json"
+WORLD_TILESET_MANIFEST_PATH = ROOT / "art" / "tilesets" / "season_one_world_tileset_manifest.json"
+
+
+def world_reference_source(source_id: str) -> Path:
+    """Resolve shared source boards from the Map Studio tileset manifest."""
+    manifest = json.loads(WORLD_TILESET_MANIFEST_PATH.read_text(encoding="utf-8"))
+    relative = manifest.get("referenceSources", {}).get(source_id)
+    if not relative:
+        raise SystemExit(f"World tileset manifest is missing reference source: {source_id}")
+    return ROOT / relative
 
 
 BOARDS = {
@@ -48,7 +58,7 @@ BOARDS = {
         ],
     },
     "vegetation": {
-        "path": SOURCE_DIR / "season_one_vegetation_source_v3.png",
+        "path": world_reference_source("vegetation"),
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -67,7 +77,7 @@ BOARDS = {
         ],
     },
     "forest_masses": {
-        "path": SOURCE_DIR / "season_one_forest_masses_source_v2.png",
+        "path": world_reference_source("forestMasses"),
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -86,7 +96,7 @@ BOARDS = {
         ],
     },
     "architecture": {
-        "path": SOURCE_DIR / "season_one_architecture_source_v1.png",
+        "path": world_reference_source("architecture"),
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -114,7 +124,7 @@ BOARDS = {
         ],
     },
     "props": {
-        "path": SOURCE_DIR / "season_one_props_source_v1.png",
+        "path": world_reference_source("props"),
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -163,7 +173,7 @@ BOARDS = {
         ],
     },
     "transitions": {
-        "path": SOURCE_DIR / "season_one_transitions_source_v1.png",
+        "path": world_reference_source("transitions"),
         "columns": 4,
         "rows": 3,
         "entries": [
@@ -868,6 +878,15 @@ def normalize(panel: Image.Image, size: tuple[int, int], mode: str, colors: int)
     return quantize_rgba(normalize_geometry(panel, size, mode), colors)
 
 
+def trim_forest_repeat_outline(panel: Image.Image, asset_id: str) -> Image.Image:
+    """Cut repeatable forest modules through foliage, not their outer contour."""
+    horizontal = asset_id.startswith(("forest_edge_north", "forest_edge_south")) or asset_id == "forest_core"
+    vertical = asset_id.startswith(("forest_edge_west", "forest_edge_east")) or asset_id == "forest_core"
+    x_trim = max(1, round(panel.width * 0.08)) if horizontal else 0
+    y_trim = max(1, round(panel.height * 0.08)) if vertical else 0
+    return panel.crop((x_trim, y_trim, panel.width - x_trim, panel.height - y_trim))
+
+
 def seal_forest_join_edges(image: Image.Image, asset_id: str) -> Image.Image:
     """Close small Imagegen gutters only on declared forest joining edges.
 
@@ -983,6 +1002,7 @@ def field_house_entry_arch(arena: Image.Image) -> Image.Image:
 def build() -> dict:
     outputs: dict[str, dict] = {}
     sources: dict[str, str] = {}
+    source_paths: dict[str, str] = {}
     for category, spec in BOARDS.items():
         path: Path = spec["path"]
         if not path.exists():
@@ -992,6 +1012,7 @@ def build() -> dict:
         if len(spec["entries"]) != expected:
             raise SystemExit(f"{category}: expected {expected} panel definitions")
         sources[category] = sha256(path)
+        source_paths[category] = path.relative_to(ROOT).as_posix()
         for index, (asset_id, size, mode, colors) in enumerate(spec["entries"]):
             panel = extract_panel(
                 board,
@@ -1008,6 +1029,8 @@ def build() -> dict:
                 )
                 discipline = ground_material_discipline_metrics(asset_id, normalized)
             else:
+                if category == "forest_masses":
+                    panel = trim_forest_repeat_outline(panel, asset_id)
                 geometry = normalize_geometry(panel, size, mode)
                 if category == "forest_masses":
                     geometry = seal_forest_join_edges(geometry, asset_id)
@@ -1036,6 +1059,7 @@ def build() -> dict:
             raise SystemExit(f"Missing Imagegen source board: {path}")
         board = Image.open(path).convert("RGBA")
         sources[category] = sha256(path)
+        source_paths[category] = path.relative_to(ROOT).as_posix()
         for index, (asset_id, size, mode, colors, region) in enumerate(spec["entries"]):
             left, top, right, bottom = region
             if left < 0 or top < 0 or right > board.width or bottom > board.height:
@@ -1073,6 +1097,7 @@ def build() -> dict:
                 raise SystemExit(f"Missing Imagegen standalone source: {path}")
             source_key = f"{category}:{asset_id}"
             sources[source_key] = sha256(path)
+            source_paths[source_key] = path.relative_to(ROOT).as_posix()
             board = Image.open(path).convert("RGBA")
             panel = extract_panel(board, 1, 1, 0)
             geometry = normalize_geometry(panel, size, options[0] if options else "contain")
@@ -1102,6 +1127,7 @@ def build() -> dict:
     arch_path = OUTPUT_DIR / "landmarks" / "field_house_entry_arch.png"
     save_png(arch, arch_path)
     sources["landmarks:field_house_entry_arch"] = f"derived:{sha256(arena_path)}"
+    source_paths["landmarks:field_house_entry_arch"] = arena_path.relative_to(ROOT).as_posix()
     outputs["field_house_entry_arch"] = {
         "category": "landmarks",
         "path": arch_path.relative_to(ROOT).as_posix(),
@@ -1127,6 +1153,7 @@ def build() -> dict:
             "disciplinedAssetCount": len(outputs),
         },
         "sourceBoards": sources,
+        "sourceBoardPaths": source_paths,
         "assets": outputs,
     }
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
