@@ -23,6 +23,7 @@ from build_season_one_world_tileset import (
     DIAGONAL_REQUIREMENTS,
     blob_signature_name,
 )
+from hash_utils import sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -44,7 +45,7 @@ def load_json(path: Path) -> dict:
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_file(path)
 
 
 def public_path(path: Path) -> str:

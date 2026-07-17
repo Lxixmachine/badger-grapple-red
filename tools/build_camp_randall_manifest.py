@@ -13,6 +13,8 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+from hash_utils import sha256_file
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ART = ROOT / "art" / "imagegen"
@@ -131,10 +133,7 @@ def prepare_full_room(path: Path, size: tuple[int, int]) -> Image.Image:
 
 
 def source_hash(path: Path) -> str:
-    if path.suffix.lower() == ".json":
-        canonical = path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
-        return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_file(path)
 
 
 def tile_sample(terrain: Image.Image, key: str) -> Image.Image:

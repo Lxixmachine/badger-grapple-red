@@ -288,8 +288,6 @@ function createCampRandallGridMap() {
   const stadium = layout.landmarks.find(owner => owner.id === 'camp_randall_stadium');
   const teamBuilding = layout.buildings.find(owner => owner.id === 'team_building');
   const coachOffice = layout.buildings.find(owner => owner.id === 'coach_office');
-  const memoryGardenWest = layout.blockers.find(owner => owner.id === 'memory_garden_west');
-  const memoryGardenEast = layout.blockers.find(owner => owner.id === 'memory_garden_east');
   const terrain = deepClone(metatileBuild.map.terrain || campGridTerrain(layout));
   const objects = [
     campGridObject(stadium.id, 'camp_randall_stadium', stadium.x, stadium.y, {
@@ -307,11 +305,15 @@ function createCampRandallGridMap() {
     })
   ];
 
-  const defaultDecorations = [
-    {id: memoryGardenWest.id, stamp: memoryGardenWest.id, x: memoryGardenWest.x, y: memoryGardenWest.y, depthMode: 'row-sliced'},
-    {id: memoryGardenEast.id, stamp: memoryGardenEast.id, x: memoryGardenEast.x, y: memoryGardenEast.y, depthMode: 'row-sliced'},
-    ...(layout.decorations || [])
-  ];
+  for (const blocker of layout.blockers || []) {
+    if (!productionCampObjectIds.has(blocker.id) || !metatileBuild.stamps[blocker.id]) continue;
+    objects.push(campGridObject(blocker.id, blocker.id, blocker.x, blocker.y, {
+      name: blocker.name,
+      depthMode: 'row-sliced'
+    }));
+  }
+
+  const defaultDecorations = [...(layout.decorations || [])];
   if (!metatileBuild.patchesAuthoritative) {
     for (const decoration of defaultDecorations) {
       objects.push(campGridObject(

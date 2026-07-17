@@ -9,7 +9,6 @@ art/tilesets/imagegen_v3.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from collections import Counter, defaultdict
 from functools import lru_cache
@@ -17,6 +16,7 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageOps
 
+from hash_utils import sha256_file
 from season_one_pixel_art import PALETTE
 
 
@@ -767,7 +767,7 @@ STANDALONE_ASSETS = {
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_file(path)
 
 
 def is_key(pixel: tuple[int, int, int, int]) -> bool:

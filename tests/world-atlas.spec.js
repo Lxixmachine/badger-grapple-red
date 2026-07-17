@@ -52,12 +52,12 @@ async function walk(page, direction, steps) {
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
-  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.32-service-grammar');
+  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.33-compact-camp');
   await expect(page.locator('canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 15, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 16, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
@@ -65,10 +65,10 @@ test('world atlas boots at the approved scale and opens the selected map', async
   await press(page, 'left');
   await press(page, 'a');
   await expect.poll(() => state(page)).toMatchObject({
-    tilePos: {x: 23, y: 29},
+    tilePos: {x: 11, y: 18},
     atlas: {
-      mode: 'map', mapId: 'camp_randall', mapWidth: 48, mapHeight: 31,
-      metatileVersion: 20, metatilePlacementCount: 50
+      mode: 'map', mapId: 'camp_randall', mapWidth: 24, mapHeight: 20,
+      metatileVersion: 20, metatilePlacementCount: 25
     }
   });
   expect((await state(page)).atlas.metatileRenderCount).toBeGreaterThan(200);
@@ -79,13 +79,13 @@ test('world atlas boots at the approved scale and opens the selected map', async
 
 test('Camp Randall runtime collision comes from the rendered metatiles', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=23&y=29&facing=left');
+  await openAtlas(page, '&play=1&area=camp_randall&x=11&y=19&facing=left');
   await expect.poll(async () => (await state(page)).passable.left).toBe(false);
   await expect.poll(async () => (await state(page)).passable.right).toBe(true);
-  await openAtlas(page, '&play=1&area=camp_randall&x=9&y=25&facing=right');
+  await openAtlas(page, '&play=1&area=camp_randall&x=12&y=19&facing=right');
   await expect.poll(async () => (await state(page)).passable.right).toBe(false);
   const camp = await state(page);
-  expect(camp.atlas).toMatchObject({metatileVersion: 20, metatilePlacementCount: 50});
+  expect(camp.atlas).toMatchObject({metatileVersion: 20, metatilePlacementCount: 25});
   expect(camp.atlas.metatileRenderCount).toBeGreaterThan(200);
   expect(issues).toEqual([]);
 });
@@ -101,7 +101,7 @@ test('playtest framing is clean by default and diagnostics remain opt-in', async
 
 test('atlas playtest uses the production actor sheet in all four directions', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=24&y=20&facing=down');
+  await openAtlas(page, '&play=1&area=camp_randall&x=11&y=12&facing=down');
   await expect.poll(async () => (await state(page)).playerFrame).toBe(1);
   for (const [direction, idleFrame] of [['left', 4], ['right', 7], ['up', 10], ['down', 1]]) {
     await press(page, direction);
@@ -113,7 +113,7 @@ test('atlas playtest uses the production actor sheet in all four directions', as
 
 test('physical atlas edges transition through reciprocal two-cell thresholds', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=23&y=29&facing=down');
+  await openAtlas(page, '&play=1&area=camp_randall&x=11&y=18&facing=down');
   await press(page, 'down');
   await expect.poll(async () => (await state(page)).atlas.mapId).toBe('r1');
   await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 8, y: 0});
@@ -122,7 +122,7 @@ test('physical atlas edges transition through reciprocal two-cell thresholds', a
 
 test('blockout doors enter planned interiors and return to their exact exterior', async ({page}) => {
   const issues = runtimeIssues(page);
-  await openAtlas(page, '&play=1&area=camp_randall&x=8&y=18&facing=up');
+  await openAtlas(page, '&play=1&area=camp_randall&x=5&y=11&facing=up');
   await press(page, 'up');
   await expect.poll(async () => (await state(page)).atlas.interiorId).toBe('team_locker_room');
   await expect.poll(async () => (await state(page)).atlas.returnDepth).toBe(1);
@@ -131,7 +131,7 @@ test('blockout doors enter planned interiors and return to their exact exterior'
   await press(page, 'down');
   await press(page, 'down');
   await expect.poll(async () => (await state(page)).atlas.mapId).toBe('camp_randall');
-  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 8, y: 18});
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 5, y: 11});
   expect(issues).toEqual([]);
 });
 
@@ -173,7 +173,7 @@ test('interiors can be opened directly for layout review', async ({page}) => {
 test('every planned exterior and interior boots through its direct review route', async ({page}) => {
   const issues = runtimeIssues(page);
   const exteriors = {
-    camp_randall: [48, 31],
+    camp_randall: [24, 20],
     r1: [18, 24],
     field_house: [40, 28],
     lakeshore_path: [56, 14],

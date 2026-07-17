@@ -2,13 +2,14 @@
   "schemaVersion": 1,
   "status": "production-pilot",
   "layoutId": "camp_randall",
-  "layoutRevision": 15,
+  "layoutRevision": 16,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "law": "Every solid gameplay cell must visibly read as occupied. Collision comes from seasonOneLayouts.json; this manifest only assigns original art to those owners. Roof and trim pixels may decorate an owner but may not silently expand collision.",
   "sourceAssets": {
     "terrain": "art/imagegen/camp_randall_terrain_kit_v2_alpha_2026-07-11.png",
     "exterior": "art/imagegen/camp_randall_exterior_objects_v1_alpha_2026-07-11.png",
+    "stadium_compact": "art/imagegen/camp_randall_stadium_compact_v1_alpha_2026-07-17.png",
     "locker": "art/imagegen/camp_randall_fieldhouse_objects_v1_alpha_2026-07-11.png",
     "office": "art/imagegen/camp_randall_office_objects_v1_alpha_2026-07-11.png",
     "player": "public/assets/sprites/player_walk.png",
@@ -55,14 +56,14 @@
   "exterior": {
     "baseStyle": "campus_lawn",
     "objects": [
-      {"ownerGroup": "blockers", "ownerId": "memory_garden_west", "art": "memory_garden", "source": "exterior"},
-      {"ownerGroup": "blockers", "ownerId": "memory_garden_east", "art": "memory_garden", "source": "exterior"},
+      {"ownerGroup": "blockers", "ownerId": "memory_garden", "art": "memory_garden", "source": "exterior"},
+      {"ownerGroup": "blockers", "ownerId": "practice_pond", "art": "pond_grid_native"},
       {"ownerGroup": "buildings", "ownerId": "team_building", "art": "team_building", "source": "exterior"},
       {"ownerGroup": "buildings", "ownerId": "coach_office", "art": "coach_office", "source": "exterior"},
-      {"ownerGroup": "landmarks", "ownerId": "camp_randall_stadium", "art": "stadium_grid_native"}
+      {"ownerGroup": "landmarks", "ownerId": "camp_randall_stadium", "art": "stadium_compact_grid_native"}
     ],
     "actors": [
-      {"id": "assistant_coach", "sheet": "coach", "x": 26, "y": 20, "facing": "left", "solid": true, "dialogue": "Camp Randall is home. The Team Building is west across the quad."}
+      {"id": "assistant_coach", "sheet": "coach", "x": 14, "y": 12, "facing": "left", "solid": true, "dialogue": "Camp Randall is home. The Team Building is west across the walk."}
     ]
   },
   "interiors": {

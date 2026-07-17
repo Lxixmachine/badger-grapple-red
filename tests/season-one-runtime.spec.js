@@ -252,7 +252,7 @@ test('first assigned Field House arrival reveals the venue before returning cont
 });
 
 test('Camp Randall, R1, and Field House share exact two-cell transition lanes', async ({page}) => {
-  await bootMap(page, 'camp_randall', {x: 23, y: 30});
+  await bootMap(page, 'camp_randall', {x: 11, y: 19});
   await page.evaluate(() => {
     const scene = window.badgerGame.scene.getScene('OverworldScene');
     scene.state.flags.openingRecoveryDone = true;
@@ -270,7 +270,7 @@ test('Camp Randall, R1, and Field House share exact two-cell transition lanes', 
   await expect.poll(async () => (await sceneState(page))?.facing).toBe('up');
   await press(page, 'up');
   await expect.poll(async () => (await sceneState(page))?.area).toBe('camp_randall');
-  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 23, y: 30});
+  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 11, y: 19});
 
   await bootMap(page, 'r1', {x: 8, y: 23});
   if ((await sceneState(page)).facing !== 'down') {

@@ -18,7 +18,7 @@ async function openDemo(page, query = '') {
   await expect(page.locator('#bootError')).toBeHidden();
   await expect(page.locator('#game canvas')).toBeVisible();
   await expect(page).toHaveTitle('Badger Grapple Red - Camp Randall Demo');
-  await expect(page.locator('#note')).toHaveText('v22.32 Service Grammar');
+  await expect(page.locator('#note')).toHaveText('v22.33 Compact Camp');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest?.activeSceneKeys?.() || []))
     .toContain('OverworldScene');
   await expect.poll(async () => (await state(page))?.area).toBe('camp_randall');
@@ -41,14 +41,14 @@ test('dedicated demo is the product grid runtime, not a parallel flat-image scen
   expect(await state(page)).toMatchObject({
     active: true,
     area: 'camp_randall',
-    tilePos: {x: 23, y: 29},
+    tilePos: {x: 11, y: 18},
     facing: 'up',
     playerScale: 1,
     grid: {
       version: 'metatile-behavior-v1',
       cellSize: 32,
-      mapWidth: 48,
-      mapHeight: 31,
+      mapWidth: 24,
+      mapHeight: 20,
       renderModel: 'metatile',
       authority: 'metatile-behavior-v1',
       debugVisible: true
@@ -83,7 +83,7 @@ test('rendered metatile behavior, masks, doors, and every required anchor agree'
       }
     }
 
-    const start = {x: 23, y: 29};
+    const start = {x: 11, y: 18};
     const queue = [start];
     const visited = new Set();
     while (queue.length) {
@@ -107,8 +107,8 @@ test('rendered metatile behavior, masks, doors, and every required anchor agree'
     });
     const anchors = [
       ...doors,
-      {id: 'south_exit_west', x: 23, y: 30},
-      {id: 'south_exit_east', x: 24, y: 30},
+      {id: 'south_exit_west', x: 11, y: 19},
+      {id: 'south_exit_east', x: 12, y: 19},
       ...map.events.map(event => ({id: event.id, x: event.x, y: event.y}))
     ].map(anchor => ({...anchor, reachable: visited.has(`${anchor.x},${anchor.y}`)}));
 
@@ -119,31 +119,31 @@ test('rendered metatile behavior, masks, doors, and every required anchor agree'
   expect(audit.doors).toHaveLength(3);
   audit.doors.forEach(door => expect(door).toMatchObject({behavior: 'warp', solid: false, reachable: true}));
   expect(audit.anchors.filter(anchor => !anchor.reachable)).toEqual([]);
-  expect(audit.reachableCells).toBeGreaterThan(700);
+  expect(audit.reachableCells).toBeGreaterThan(140);
 });
 
 test('movement obeys the visible south grid and cannot enter its forest wall', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
-  await openDemo(page, '&x=23&y=29&facing=left');
-  expect((await state(page)).passable).toMatchObject({left: false, right: true, down: true});
+  await openDemo(page, '&x=11&y=19&facing=left');
+  expect((await state(page)).passable).toMatchObject({left: false, right: true, down: false});
 
   await press(page, 'left');
   await page.waitForTimeout(320);
-  expect((await state(page)).tilePos).toEqual({x: 23, y: 29});
+  expect((await state(page)).tilePos).toEqual({x: 11, y: 19});
 
   await press(page, 'right');
   await press(page, 'right');
-  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 24, y: 29});
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 12, y: 19});
   await expect.poll(async () => (await state(page)).playerAnimationPlaying).toBe(false);
   expect(runtimeIssues).toEqual([]);
 });
 
 test('the Team Building door is on its rendered cell and enters the shared interior', async ({page}) => {
   const runtimeIssues = collectRuntimeIssues(page);
-  await openDemo(page, '&x=8&y=19&facing=up');
+  await openDemo(page, '&x=5&y=12&facing=up');
 
   await press(page, 'up');
-  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 8, y: 18});
+  await expect.poll(async () => (await state(page)).tilePos).toEqual({x: 5, y: 11});
   await expect.poll(async () => (await state(page)).playerAnimationPlaying).toBe(false);
   await press(page, 'up');
   await expect.poll(async () => (await state(page)).area).toBe('team_locker_room');

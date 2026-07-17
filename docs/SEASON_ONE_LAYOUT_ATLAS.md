@@ -31,7 +31,7 @@ are explicit story-transition planes.
 
 | Order | Area | Role | Origin | Size | Camera reviews |
 | --- | --- | --- | --- | --- | --- |
-| 1 | Camp Randall | Home town | -9,-11 | 48x31 | 4 |
+| 1 | Camp Randall | Home town | 3,0 | 24x20 | 4 |
 | 2 | R1 - First Walk | Route | 6,20 | 18x24 | 3 |
 | 3 | Field House Town | Town 1 | -6,44 | 40x28 | 7 |
 | 4 | Lakeshore Path | Branch route | -62,54 | 56x14 | 6 |

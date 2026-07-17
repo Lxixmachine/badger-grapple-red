@@ -24,12 +24,12 @@ _SOURCE_CACHE: dict[tuple[str, str], Image.Image] = {}
 PALETTE = {
     "outline": (43, 50, 42, 255),
     "outline_soft": (64, 70, 55, 255),
-    "grass": (138, 201, 165, 255),
-    "grass_light": (177, 223, 195, 255),
-    "grass_dark": (101, 180, 140, 255),
-    "grass_shadow": (63, 132, 106, 255),
-    "mowed": (126, 190, 145, 255),
-    "mowed_light": (154, 209, 166, 255),
+    "grass": (154, 198, 160, 255),
+    "grass_light": (190, 220, 194, 255),
+    "grass_dark": (146, 190, 153, 255),
+    "grass_shadow": (92, 145, 111, 255),
+    "mowed": (164, 203, 169, 255),
+    "mowed_light": (184, 216, 190, 255),
     "dirt": (213, 187, 127, 255),
     "dirt_light": (235, 211, 155, 255),
     "dirt_dark": (169, 133, 84, 255),
@@ -96,6 +96,19 @@ PALETTE = {
 }
 
 
+QUIET_GROUND_RAMPS = {
+    ("ground", "grass"): {
+        (177, 223, 195, 255): PALETTE["grass_light"],
+        (138, 201, 165, 255): PALETTE["grass"],
+    },
+    ("ground", "mowed_grass"): {
+        (154, 209, 166, 255): PALETTE["mowed_light"],
+        (101, 180, 140, 255): PALETTE["grass_dark"],
+        (177, 223, 195, 255): PALETTE["grass_light"],
+    },
+}
+
+
 def canvas(width_cells: int = 1, height_cells: int = 1, fill=(0, 0, 0, 0)) -> Image.Image:
     return Image.new("RGBA", (width_cells * LOGICAL_CELL, height_cells * LOGICAL_CELL), fill)
 
@@ -109,6 +122,12 @@ def source_asset(category: str, asset_id: str) -> Image.Image:
     if not path.exists():
         raise FileNotFoundError(f"Prepared Imagegen tileset source is missing: {path}")
     image = Image.open(path).convert("RGBA")
+    ramp = QUIET_GROUND_RAMPS.get(key)
+    if ramp:
+        pixels = image.load()
+        for y in range(image.height):
+            for x in range(image.width):
+                pixels[x, y] = ramp.get(pixels[x, y], pixels[x, y])
     _SOURCE_CACHE[key] = image
     return image.copy()
 

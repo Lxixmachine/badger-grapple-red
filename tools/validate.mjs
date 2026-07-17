@@ -3,6 +3,7 @@ import {MOVES} from '../src/data/moves.js';
 import {AREAS,TRAINERS,TOURNAMENT,WORLD_META,TILE,areaDimensions,isBlocked,worldPlane,WILD_SLOTS,WILD_SLOT_CHANCES} from '../src/data/maps.js';
 import {existsSync,readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
+import {extname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {LAYERED_MAPS,LAYERED_MAP_VERSION} from '../src/data/layeredMaps.js';
 import {CAMP_TILE_RUNTIME_VERSION,campTilemap,campRuntimeStats,campRuntimeTile} from '../src/data/campRandallTilemaps.js';
@@ -10,7 +11,14 @@ import {validateSeasonOneLayouts} from './validate_region_layouts.mjs';
 import {NPC_LOOKS} from '../src/data/npcLooks.js';
 
 let errs=[];
-const fileHash=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
+const TEXT_HASH_EXTENSIONS=new Set(['.css','.csv','.html','.js','.json','.md','.mjs','.py','.tsv','.txt','.yaml','.yml']);
+const fileHash=path=>{
+  const bytes=readFileSync(path);
+  const payload=TEXT_HASH_EXTENSIONS.has(extname(path).toLowerCase())
+    ? Buffer.from(bytes.toString('utf8').replace(/\r\n?/g,'\n'),'utf8')
+    : bytes;
+  return createHash('sha256').update(payload).digest('hex');
+};
 const inBounds=(area,x,y)=>{const {width,height}=areaDimensions(area);return Number.isInteger(x)&&Number.isInteger(y)&&x>=0&&x<width&&y>=0&&y<height;};
 
 for(const look of NPC_LOOKS){
@@ -50,7 +58,7 @@ if(!existsSync(productionBuildPath))errs.push('Camp production build is missing;
 else{
   const production=JSON.parse(readFileSync(productionBuildPath,'utf8'));
   const productionManifest=JSON.parse(readFileSync(productionManifestPath,'utf8'));
-  const hashFile=path=>createHash('sha256').update(readFileSync(path)).digest('hex');
+  const hashFile=fileHash;
   if(production.version!==3||production.status!=='logical-grid-actor-production-pilot')errs.push('Camp production build version/status is unsupported');
   if(production.layoutRevision!==seasonLayouts.revision||production.cellSize!==seasonLayouts.contract.cellSize)errs.push('Camp production build diverges from the Season One layout contract');
   if(production.minimumBlockedCellCoverage!==productionManifest.minimumBlockedCellCoverage)errs.push('Camp production visual-coverage threshold diverges from its manifest');
@@ -161,7 +169,7 @@ else{
   const atlasPath=fileURLToPath(new URL(`../public/${metatileBuild.atlas.path.replace(/^\.\//,'')}`,import.meta.url));
   if(!existsSync(atlasPath)||fileHash(atlasPath)!==metatileBuild.atlas.sha256)errs.push('Camp metatile atlas is missing or stale');
   if(metatileBuild.atlas.visualCount!==metatileBuild.atlas.entries?.length)errs.push('Camp metatile visual catalog is incomplete');
-  if(metatileBuild.groundSystem?.primaryMaterial!=='brick'||metatileBuild.groundSystem?.connectedComponentCount!==1||metatileBuild.groundSystem?.anchorCount!==5||metatileBuild.groundSystem?.rawCutCount!==0||JSON.stringify(metatileBuild.groundSystem?.transitionFamilies)!==JSON.stringify(['surface_brick','surface_concrete']))errs.push('Camp Randall ground system is not one connected, transition-safe authored grid');
+  if(metatileBuild.groundSystem?.primaryMaterial!=='stone'||metatileBuild.groundSystem?.connectedComponentCount!==1||metatileBuild.groundSystem?.anchorCount!==5||metatileBuild.groundSystem?.rawCutCount!==0||JSON.stringify(metatileBuild.groundSystem?.transitionFamilies)!==JSON.stringify(['surface_dirt','surface_stone']))errs.push('Camp Randall ground system is not one connected, transition-safe authored grid');
   if(!metatileBuild.visualHierarchyMetrics||metatileBuild.visualHierarchyMetrics.saturationDifference<=0||metatileBuild.visualHierarchyMetrics.ground?.meanSaturation>=metatileBuild.visualHierarchyMetrics.identityObjects?.meanSaturation)errs.push('Camp Randall ground is not visually quieter than its identity architecture');
   if(metatileBuild.pixelDiscipline?.version!==4||metatileBuild.pixelDiscipline?.profileVersion!==1||metatileBuild.pixelDiscipline?.assetCount<115||metatileBuild.pixelDiscipline?.maxColorsPerMaterial!==4||metatileBuild.pixelDiscipline?.outputPartialAlphaPixelCount!==0||metatileBuild.pixelDiscipline?.paletteViolationCount!==0)errs.push('Camp Randall did not inherit the Season One material pixel discipline');
   const terrainTiles=metatileBuild.terrain?.tiles||{};
@@ -254,7 +262,7 @@ if(CAMP_TILE_RUNTIME_VERSION!==1)errs.push(`Camp Randall tile runtime version ${
 const campAtlas=fileURLToPath(new URL('../public/assets/tiles/camp_randall_runtime_tiles.png',import.meta.url));
 if(!existsSync(campAtlas))errs.push('Camp Randall runtime atlas is missing');
 else{
-  const atlasHash=createHash('sha256').update(readFileSync(campAtlas)).digest('hex');
+  const atlasHash=fileHash(campAtlas);
   if(atlasHash!==campRuntimeStats().atlasSha256)errs.push('Camp Randall runtime atlas is stale; run npm run build:camp-tiles');
 }
 for(const [aid,map] of Object.entries(LAYERED_MAPS)){
@@ -433,16 +441,14 @@ else{
   if(build.version!==1||build.tileSize!==TILE)errs.push('Camp Randall manifest build version/tile size is unsupported');
   for(const [path,expected] of Object.entries(build.inputSha256||{})){
     const source=fileURLToPath(new URL(`../${path}`,import.meta.url));
-    const bytes=readFileSync(source);
-    const canonical=path.endsWith('.json')?bytes.toString('utf8').replace(/\r\n/g,'\n').replace(/\r/g,'\n'):bytes;
-    const actual=createHash('sha256').update(canonical).digest('hex');
+    const actual=fileHash(source);
     if(actual!==expected)errs.push(`Camp Randall manifest input ${path} is stale; run npm run build:camp-manifest`);
   }
   for(const [path,expected] of Object.entries(build.outputSha256||{})){
     const output=fileURLToPath(new URL(`../${path}`,import.meta.url));
     if(!existsSync(output))errs.push(`Camp Randall generated output ${path} is missing; run npm run build:camp-manifest`);
     else{
-      const actual=createHash('sha256').update(readFileSync(output)).digest('hex');
+      const actual=fileHash(output);
       if(actual!==expected)errs.push(`Camp Randall generated output ${path} is stale; run npm run build:camp-manifest`);
     }
   }
@@ -492,16 +498,14 @@ else{
     const source=fileURLToPath(new URL(`../${path}`,import.meta.url));
     if(!existsSync(source))errs.push(`World composition input ${path} is missing`);
     else{
-      const bytes=readFileSync(source);
-      const canonical=path.endsWith('.json')?bytes.toString('utf8').replace(/\r\n/g,'\n').replace(/\r/g,'\n'):bytes;
-      const actual=createHash('sha256').update(canonical).digest('hex');
+      const actual=fileHash(source);
       if(actual!==expected)errs.push(`World composition input ${path} is stale; run npm run build:world-compositions`);
     }
   }
   for(const [path,expected] of Object.entries(build.outputSha256||{})){
     const output=fileURLToPath(new URL(`../${path}`,import.meta.url));
     if(!existsSync(output))errs.push(`World composition output ${path} is missing; run npm run build:world-compositions`);
-    else if(createHash('sha256').update(readFileSync(output)).digest('hex')!==expected)errs.push(`World composition output ${path} is stale; run npm run build:world-compositions`);
+    else if(fileHash(output)!==expected)errs.push(`World composition output ${path} is stale; run npm run build:world-compositions`);
   }
 }
 for(const [aid,spec] of Object.entries(worldManifest.areas)){

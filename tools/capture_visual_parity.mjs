@@ -8,7 +8,7 @@ const outputDir = path.resolve(process.argv[3] || 'test-results/visual-parity/cu
 const captures = [
   {
     id: 'town-exterior',
-    url: '/?test=1&scene=overworld&reset=1&area=camp_randall&x=8&y=20&facing=up',
+    url: '/?test=1&scene=overworld&reset=1&area=camp_randall&x=11&y=17&facing=up',
     scene: 'OverworldScene'
   },
   {
@@ -84,7 +84,11 @@ async function captureCanvas(page, capture) {
     throw new Error(`Expected native 480x320 canvas, received ${nativeSize.width}x${nativeSize.height}`);
   }
   const output = path.join(outputDir, `${capture.id}.png`);
-  await canvas.screenshot({path: output, animations: 'disabled'});
+  // Locator screenshots can read Phaser's WebGL framebuffer mid-present and
+  // produce false black regions. Capture the browser-composited canvas box.
+  const clip = await canvas.boundingBox();
+  if (!clip) throw new Error(`Could not resolve canvas bounds for ${capture.id}`);
+  await page.screenshot({path: output, clip, animations: 'disabled'});
   return output;
 }
 

@@ -35,41 +35,12 @@ const tallGrass = (id, x, y, width, height, extra = {}) => ({
 // live game use the same pixels, collision mask, and row-sliced occlusion.
 export const SEASON_ONE_MAP_POLISH = {
   camp_randall: {
-    // Density pass per design_bible Vol V/X: frame the stadium approach with
-    // trees, anchor each camera window with a point of interest, and keep the
-    // spawn row (y12, x5..x10) and every path/door/connection cell clear.
-    objects: [
-      stamp('camp_pine_nw', 'tree_pine', 2, 0, 2, 3),
-      stamp('camp_oak_nw', 'tree_oak_a', 2, 3, 2, 3),
-      stamp('camp_oak_ne', 'tree_oak_b', 19, 0, 2, 3),
-      stamp('camp_pine_ne', 'tree_pine_b', 20, 3, 2, 3),
-      stamp('camp_shrub_ne', 'shrub_round', 21, 0, 1, 1),
-      stamp('camp_lamp_gate', 'campus_lamp', 20, 6, 1, 2),
-      stamp('camp_ornamental_quad', 'tree_ornamental', 13, 7, 1, 2),
-      stamp('camp_office_sign', 'campus_sign', 17, 7, 3, 2),
-      stamp('camp_flowers_quad_w', 'shrub_flowering', 14, 8, 1, 1),
-      stamp('camp_flowers_quad_e', 'shrub_flowering_b', 21, 7, 1, 1),
-      stamp('camp_oak_mid', 'tree_oak_c', 9, 8, 2, 3),
-      stamp('camp_ornamental_office', 'tree_ornamental', 21, 9, 1, 2),
-      stamp('camp_stadium_sign', 'campus_sign', 2, 11, 3, 2),
-      stamp('camp_flowers_sign', 'shrub_round', 3, 13, 1, 1),
-      stamp('camp_flowers_walk', 'shrub_flowering', 7, 13, 1, 1),
-      stamp('camp_flowers_walk_b', 'shrub_flowering', 9, 13, 1, 1),
-      stamp('camp_pond_bench', 'wood_bench', 13, 14, 3, 2),
-      stamp('camp_pond_rocks', 'rock_cluster', 20, 15, 2, 1),
-      stamp('camp_pond_flowers', 'shrub_flowering', 13, 16, 1, 1),
-      stamp('camp_pond_flowers_b', 'shrub_flowering_b', 15, 17, 1, 1)
-    ],
-    actors: [
-      actor('team_bus_manager', 'manager', 11, 18, 'down', 'The team bus is ready for the airport.', {condition: 'ready_for_airport'}),
-      actor('homecoming_captain', 'captain', 12, 7, 'down', 'Captain: Take the championship through the stadium tunnel.', {condition: 'homecoming'}),
-      actor('camp_quad_student', 'student', 13, 12, 'down', 'Game day feels different when the wrestling team is winning.', {patrol: {axis: 'horizontal', radius: 1, interval: 1700}})
-    ],
-    events: [
-      {id: 'camp_stadium_sign_read', label: 'Stadium sign', x: 3, y: 13, kind: 'message', text: 'CAMP RANDALL STADIUM - Home of the Badgers. Team building around the corner.', once: true},
-      {id: 'camp_garden_plaque', label: 'Garden plaque', x: 9, y: 14, kind: 'message', text: 'Memory Garden: a plaque for every Badger who left it all on the mat.', once: true},
-      {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
-    ]
+    // Camp Randall's production package owns its complete exterior grammar.
+    // Keeping this layer empty prevents a second, stale decoration/collision
+    // source from drifting away from the authoritative 24x20 layout.
+    objects: [],
+    actors: [],
+    events: []
   },
   r1: {
     objects: [

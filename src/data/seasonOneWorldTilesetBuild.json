@@ -21,7 +21,7 @@
     "path": "./assets/metatiles/season_one_world_tileset_v12.png",
     "columns": 16,
     "visualCount": 2759,
-    "sha256": "5f8582c18e0f3bcdfa7c067001c5cddbf61ffc68eb6f07eb8f4976ba8b464581",
+    "sha256": "3c0ecb235be2692d1c9cef787749802e6859ef216510664a04890f7ebf83e481",
     "entries": [
       {
         "index": 0,
@@ -59577,8 +59577,8 @@
         "Stone Ledge 1,1"
       ]
     },
-    "mt_1430ba51949e": {
-      "id": "mt_1430ba51949e",
+    "mt_a73874c60c8e": {
+      "id": "mt_a73874c60c8e",
       "visual": 1139,
       "behavior": "solid",
       "layer": "structure",
@@ -59594,8 +59594,8 @@
         "Stone Ledge 3,1"
       ]
     },
-    "mt_a7d87ac72a32": {
-      "id": "mt_a7d87ac72a32",
+    "mt_1c4a9401edab": {
+      "id": "mt_1c4a9401edab",
       "visual": 1139,
       "behavior": "walkable",
       "layer": "structure",
@@ -59611,8 +59611,8 @@
         "Stone Ledge 3,1"
       ]
     },
-    "mt_8ed57d6d37b1": {
-      "id": "mt_8ed57d6d37b1",
+    "mt_8a77729706a9": {
+      "id": "mt_8a77729706a9",
       "visual": 1139,
       "behavior": "warp",
       "layer": "structure",
@@ -59628,8 +59628,8 @@
         "Stone Ledge 3,1"
       ]
     },
-    "mt_6b0e0c95fd7b": {
-      "id": "mt_6b0e0c95fd7b",
+    "mt_c871dad9325d": {
+      "id": "mt_c871dad9325d",
       "visual": 1140,
       "behavior": "solid",
       "layer": "structure",
@@ -59643,8 +59643,8 @@
         "Stone Ledge 4,1"
       ]
     },
-    "mt_8b53966398ac": {
-      "id": "mt_8b53966398ac",
+    "mt_df08c657f39f": {
+      "id": "mt_df08c657f39f",
       "visual": 1140,
       "behavior": "walkable",
       "layer": "structure",
@@ -59658,8 +59658,8 @@
         "Stone Ledge 4,1"
       ]
     },
-    "mt_f8cbea755f93": {
-      "id": "mt_f8cbea755f93",
+    "mt_f05b9a94c151": {
+      "id": "mt_f05b9a94c151",
       "visual": 1140,
       "behavior": "warp",
       "layer": "structure",
@@ -59712,8 +59712,8 @@
         "Brick Retaining Wall 1,1"
       ]
     },
-    "mt_cae19d9fda54": {
-      "id": "mt_cae19d9fda54",
+    "mt_a96214ce6112": {
+      "id": "mt_a96214ce6112",
       "visual": 1142,
       "behavior": "solid",
       "layer": "structure",
@@ -59725,8 +59725,8 @@
         "Brick Retaining Wall 2,1"
       ]
     },
-    "mt_6836a635c261": {
-      "id": "mt_6836a635c261",
+    "mt_3de2b7bf2d19": {
+      "id": "mt_3de2b7bf2d19",
       "visual": 1142,
       "behavior": "walkable",
       "layer": "structure",
@@ -59738,8 +59738,8 @@
         "Brick Retaining Wall 2,1"
       ]
     },
-    "mt_721cd0bdf06f": {
-      "id": "mt_721cd0bdf06f",
+    "mt_826cd9fed6ef": {
+      "id": "mt_826cd9fed6ef",
       "visual": 1142,
       "behavior": "warp",
       "layer": "structure",
@@ -59751,8 +59751,8 @@
         "Brick Retaining Wall 2,1"
       ]
     },
-    "mt_26aa16e9251a": {
-      "id": "mt_26aa16e9251a",
+    "mt_6d954f0b29d3": {
+      "id": "mt_6d954f0b29d3",
       "visual": 1143,
       "behavior": "solid",
       "layer": "structure",
@@ -59764,8 +59764,8 @@
         "Brick Retaining Wall 3,1"
       ]
     },
-    "mt_0ccf3fa783d5": {
-      "id": "mt_0ccf3fa783d5",
+    "mt_02ec5c6c5033": {
+      "id": "mt_02ec5c6c5033",
       "visual": 1143,
       "behavior": "walkable",
       "layer": "structure",
@@ -59777,8 +59777,8 @@
         "Brick Retaining Wall 3,1"
       ]
     },
-    "mt_1fc84f676870": {
-      "id": "mt_1fc84f676870",
+    "mt_2b6a397aba3c": {
+      "id": "mt_2b6a397aba3c",
       "visual": 1143,
       "behavior": "warp",
       "layer": "structure",
@@ -117543,8 +117543,8 @@
         "Gateway Arch Championship Landmark 10,8"
       ]
     },
-    "mt_8396e461a2c5": {
-      "id": "mt_8396e461a2c5",
+    "mt_31d202f11c00": {
+      "id": "mt_31d202f11c00",
       "visual": 2623,
       "behavior": "solid",
       "layer": "structure",
@@ -117557,8 +117557,8 @@
         "Cliff Corner Right 1,1"
       ]
     },
-    "mt_73c4d5e6c5c7": {
-      "id": "mt_73c4d5e6c5c7",
+    "mt_409d2b6af57f": {
+      "id": "mt_409d2b6af57f",
       "visual": 2623,
       "behavior": "walkable",
       "layer": "structure",
@@ -117571,8 +117571,8 @@
         "Cliff Corner Right 1,1"
       ]
     },
-    "mt_77d841a19845": {
-      "id": "mt_77d841a19845",
+    "mt_e5e9e250a997": {
+      "id": "mt_e5e9e250a997",
       "visual": 2623,
       "behavior": "warp",
       "layer": "structure",
@@ -117585,8 +117585,8 @@
         "Cliff Corner Right 1,1"
       ]
     },
-    "mt_4f07319609f8": {
-      "id": "mt_4f07319609f8",
+    "mt_e1cc5aed9c5f": {
+      "id": "mt_e1cc5aed9c5f",
       "visual": 2624,
       "behavior": "solid",
       "layer": "structure",
@@ -117600,8 +117600,8 @@
         "Cliff Run 4,1"
       ]
     },
-    "mt_9bd90f43e151": {
-      "id": "mt_9bd90f43e151",
+    "mt_dfb03bd50dd4": {
+      "id": "mt_dfb03bd50dd4",
       "visual": 2624,
       "behavior": "walkable",
       "layer": "structure",
@@ -117615,8 +117615,8 @@
         "Cliff Run 4,1"
       ]
     },
-    "mt_3ae992f3df89": {
-      "id": "mt_3ae992f3df89",
+    "mt_fba147d80f05": {
+      "id": "mt_fba147d80f05",
       "visual": 2624,
       "behavior": "warp",
       "layer": "structure",
@@ -117630,8 +117630,8 @@
         "Cliff Run 4,1"
       ]
     },
-    "mt_1894270dad8d": {
-      "id": "mt_1894270dad8d",
+    "mt_428d6e5551e2": {
+      "id": "mt_428d6e5551e2",
       "visual": 2625,
       "behavior": "solid",
       "layer": "structure",
@@ -117644,8 +117644,8 @@
         "Cliff Corner Left 3,1"
       ]
     },
-    "mt_fdddb9e213c5": {
-      "id": "mt_fdddb9e213c5",
+    "mt_76c360ab062f": {
+      "id": "mt_76c360ab062f",
       "visual": 2625,
       "behavior": "walkable",
       "layer": "structure",
@@ -117658,8 +117658,8 @@
         "Cliff Corner Left 3,1"
       ]
     },
-    "mt_466e648cd2da": {
-      "id": "mt_466e648cd2da",
+    "mt_b4556f68bfa2": {
+      "id": "mt_b4556f68bfa2",
       "visual": 2625,
       "behavior": "warp",
       "layer": "structure",
@@ -117672,8 +117672,8 @@
         "Cliff Corner Left 3,1"
       ]
     },
-    "mt_c6056841a0a4": {
-      "id": "mt_c6056841a0a4",
+    "mt_a3c6dc2996e6": {
+      "id": "mt_a3c6dc2996e6",
       "visual": 2626,
       "behavior": "solid",
       "layer": "structure",
@@ -117686,8 +117686,8 @@
         "Cliff Corner Right 1,2"
       ]
     },
-    "mt_4ee6b10d872a": {
-      "id": "mt_4ee6b10d872a",
+    "mt_51a50b1d6554": {
+      "id": "mt_51a50b1d6554",
       "visual": 2626,
       "behavior": "walkable",
       "layer": "structure",
@@ -117700,8 +117700,8 @@
         "Cliff Corner Right 1,2"
       ]
     },
-    "mt_93cd3fc720ea": {
-      "id": "mt_93cd3fc720ea",
+    "mt_09c4eaa45f66": {
+      "id": "mt_09c4eaa45f66",
       "visual": 2626,
       "behavior": "warp",
       "layer": "structure",
@@ -117714,8 +117714,8 @@
         "Cliff Corner Right 1,2"
       ]
     },
-    "mt_c0c2a36cc93e": {
-      "id": "mt_c0c2a36cc93e",
+    "mt_e978eec3cd6d": {
+      "id": "mt_e978eec3cd6d",
       "visual": 2627,
       "behavior": "solid",
       "layer": "structure",
@@ -117729,8 +117729,8 @@
         "Cliff Run 4,2"
       ]
     },
-    "mt_ce2b7ef5de66": {
-      "id": "mt_ce2b7ef5de66",
+    "mt_877355afd5fe": {
+      "id": "mt_877355afd5fe",
       "visual": 2627,
       "behavior": "walkable",
       "layer": "structure",
@@ -117744,8 +117744,8 @@
         "Cliff Run 4,2"
       ]
     },
-    "mt_3f34bb129dcb": {
-      "id": "mt_3f34bb129dcb",
+    "mt_170c1573926b": {
+      "id": "mt_170c1573926b",
       "visual": 2627,
       "behavior": "warp",
       "layer": "structure",
@@ -117759,8 +117759,8 @@
         "Cliff Run 4,2"
       ]
     },
-    "mt_d06f6d2769d1": {
-      "id": "mt_d06f6d2769d1",
+    "mt_d43b050447ed": {
+      "id": "mt_d43b050447ed",
       "visual": 2628,
       "behavior": "solid",
       "layer": "structure",
@@ -117773,8 +117773,8 @@
         "Cliff Corner Left 3,2"
       ]
     },
-    "mt_a5ada3a605ed": {
-      "id": "mt_a5ada3a605ed",
+    "mt_4af0fbd5ef32": {
+      "id": "mt_4af0fbd5ef32",
       "visual": 2628,
       "behavior": "walkable",
       "layer": "structure",
@@ -117787,8 +117787,8 @@
         "Cliff Corner Left 3,2"
       ]
     },
-    "mt_eb8c6357dcb2": {
-      "id": "mt_eb8c6357dcb2",
+    "mt_dbdb1f98a951": {
+      "id": "mt_dbdb1f98a951",
       "visual": 2628,
       "behavior": "warp",
       "layer": "structure",
@@ -117801,8 +117801,8 @@
         "Cliff Corner Left 3,2"
       ]
     },
-    "mt_1d88e376529d": {
-      "id": "mt_1d88e376529d",
+    "mt_be21dad422fc": {
+      "id": "mt_be21dad422fc",
       "visual": 2629,
       "behavior": "solid",
       "layer": "structure",
@@ -117815,8 +117815,8 @@
         "Cliff End Left 1,1"
       ]
     },
-    "mt_fa747baa8785": {
-      "id": "mt_fa747baa8785",
+    "mt_17cfaee70a62": {
+      "id": "mt_17cfaee70a62",
       "visual": 2629,
       "behavior": "walkable",
       "layer": "structure",
@@ -117829,8 +117829,8 @@
         "Cliff End Left 1,1"
       ]
     },
-    "mt_390d770b30d8": {
-      "id": "mt_390d770b30d8",
+    "mt_72c0ce7344c9": {
+      "id": "mt_72c0ce7344c9",
       "visual": 2629,
       "behavior": "warp",
       "layer": "structure",
@@ -117843,8 +117843,8 @@
         "Cliff End Left 1,1"
       ]
     },
-    "mt_b0a2f930bb1a": {
-      "id": "mt_b0a2f930bb1a",
+    "mt_164de75a3c50": {
+      "id": "mt_164de75a3c50",
       "visual": 2630,
       "behavior": "solid",
       "layer": "structure",
@@ -117857,8 +117857,8 @@
         "Cliff End Left 2,1"
       ]
     },
-    "mt_3efa4f8dad3b": {
-      "id": "mt_3efa4f8dad3b",
+    "mt_68ec2f1b95f5": {
+      "id": "mt_68ec2f1b95f5",
       "visual": 2630,
       "behavior": "walkable",
       "layer": "structure",
@@ -117871,8 +117871,8 @@
         "Cliff End Left 2,1"
       ]
     },
-    "mt_4cd6fccb97b1": {
-      "id": "mt_4cd6fccb97b1",
+    "mt_ce442cf21168": {
+      "id": "mt_ce442cf21168",
       "visual": 2630,
       "behavior": "warp",
       "layer": "structure",
@@ -117885,8 +117885,8 @@
         "Cliff End Left 2,1"
       ]
     },
-    "mt_ec118b177c01": {
-      "id": "mt_ec118b177c01",
+    "mt_4095f8fb6a86": {
+      "id": "mt_4095f8fb6a86",
       "visual": 2631,
       "behavior": "solid",
       "layer": "structure",
@@ -117899,8 +117899,8 @@
         "Cliff End Left 1,2"
       ]
     },
-    "mt_e03f7b07e3f9": {
-      "id": "mt_e03f7b07e3f9",
+    "mt_f12d9326b460": {
+      "id": "mt_f12d9326b460",
       "visual": 2631,
       "behavior": "walkable",
       "layer": "structure",
@@ -117913,8 +117913,8 @@
         "Cliff End Left 1,2"
       ]
     },
-    "mt_ed8d219d496d": {
-      "id": "mt_ed8d219d496d",
+    "mt_252d5c072811": {
+      "id": "mt_252d5c072811",
       "visual": 2631,
       "behavior": "warp",
       "layer": "structure",
@@ -117927,8 +117927,8 @@
         "Cliff End Left 1,2"
       ]
     },
-    "mt_c3d6d5da435e": {
-      "id": "mt_c3d6d5da435e",
+    "mt_2bc9f2a6d25c": {
+      "id": "mt_2bc9f2a6d25c",
       "visual": 2632,
       "behavior": "solid",
       "layer": "structure",
@@ -117941,8 +117941,8 @@
         "Cliff End Left 2,2"
       ]
     },
-    "mt_93652e37700d": {
-      "id": "mt_93652e37700d",
+    "mt_c1f404d95180": {
+      "id": "mt_c1f404d95180",
       "visual": 2632,
       "behavior": "walkable",
       "layer": "structure",
@@ -117955,8 +117955,8 @@
         "Cliff End Left 2,2"
       ]
     },
-    "mt_dbabd033d347": {
-      "id": "mt_dbabd033d347",
+    "mt_e6b4eba28130": {
+      "id": "mt_e6b4eba28130",
       "visual": 2632,
       "behavior": "warp",
       "layer": "structure",
@@ -117969,8 +117969,8 @@
         "Cliff End Left 2,2"
       ]
     },
-    "mt_5bac3a40f577": {
-      "id": "mt_5bac3a40f577",
+    "mt_91200ed89add": {
+      "id": "mt_91200ed89add",
       "visual": 2633,
       "behavior": "solid",
       "layer": "structure",
@@ -117983,8 +117983,8 @@
         "Cliff End Right 1,1"
       ]
     },
-    "mt_126e14d4857d": {
-      "id": "mt_126e14d4857d",
+    "mt_2219d6f37883": {
+      "id": "mt_2219d6f37883",
       "visual": 2633,
       "behavior": "walkable",
       "layer": "structure",
@@ -117997,8 +117997,8 @@
         "Cliff End Right 1,1"
       ]
     },
-    "mt_c02a7d51e0a8": {
-      "id": "mt_c02a7d51e0a8",
+    "mt_2938d2b761a9": {
+      "id": "mt_2938d2b761a9",
       "visual": 2633,
       "behavior": "warp",
       "layer": "structure",
@@ -118011,8 +118011,8 @@
         "Cliff End Right 1,1"
       ]
     },
-    "mt_499cdf19b1b2": {
-      "id": "mt_499cdf19b1b2",
+    "mt_e26087fea956": {
+      "id": "mt_e26087fea956",
       "visual": 2634,
       "behavior": "solid",
       "layer": "structure",
@@ -118025,8 +118025,8 @@
         "Cliff End Right 2,1"
       ]
     },
-    "mt_f834c3465dfb": {
-      "id": "mt_f834c3465dfb",
+    "mt_405485ed9938": {
+      "id": "mt_405485ed9938",
       "visual": 2634,
       "behavior": "walkable",
       "layer": "structure",
@@ -118039,8 +118039,8 @@
         "Cliff End Right 2,1"
       ]
     },
-    "mt_d5918e0e16d8": {
-      "id": "mt_d5918e0e16d8",
+    "mt_ac5e18e4bbbd": {
+      "id": "mt_ac5e18e4bbbd",
       "visual": 2634,
       "behavior": "warp",
       "layer": "structure",
@@ -118053,8 +118053,8 @@
         "Cliff End Right 2,1"
       ]
     },
-    "mt_1fc771025ec2": {
-      "id": "mt_1fc771025ec2",
+    "mt_fa15163912c8": {
+      "id": "mt_fa15163912c8",
       "visual": 2635,
       "behavior": "solid",
       "layer": "structure",
@@ -118067,8 +118067,8 @@
         "Cliff End Right 1,2"
       ]
     },
-    "mt_5301ea604c22": {
-      "id": "mt_5301ea604c22",
+    "mt_c73a4e69c8c9": {
+      "id": "mt_c73a4e69c8c9",
       "visual": 2635,
       "behavior": "walkable",
       "layer": "structure",
@@ -118081,8 +118081,8 @@
         "Cliff End Right 1,2"
       ]
     },
-    "mt_0845aa0012a8": {
-      "id": "mt_0845aa0012a8",
+    "mt_9088ac7813a8": {
+      "id": "mt_9088ac7813a8",
       "visual": 2635,
       "behavior": "warp",
       "layer": "structure",
@@ -118095,8 +118095,8 @@
         "Cliff End Right 1,2"
       ]
     },
-    "mt_3ceca33b51c1": {
-      "id": "mt_3ceca33b51c1",
+    "mt_026f9f3c1a19": {
+      "id": "mt_026f9f3c1a19",
       "visual": 2636,
       "behavior": "solid",
       "layer": "structure",
@@ -118109,8 +118109,8 @@
         "Cliff End Right 2,2"
       ]
     },
-    "mt_927a9f909765": {
-      "id": "mt_927a9f909765",
+    "mt_d7f15a13b5b1": {
+      "id": "mt_d7f15a13b5b1",
       "visual": 2636,
       "behavior": "walkable",
       "layer": "structure",
@@ -118123,8 +118123,8 @@
         "Cliff End Right 2,2"
       ]
     },
-    "mt_785c07dd3689": {
-      "id": "mt_785c07dd3689",
+    "mt_61ba8961fbda": {
+      "id": "mt_61ba8961fbda",
       "visual": 2636,
       "behavior": "warp",
       "layer": "structure",
@@ -118137,8 +118137,8 @@
         "Cliff End Right 2,2"
       ]
     },
-    "mt_14739c8e9eda": {
-      "id": "mt_14739c8e9eda",
+    "mt_6f47faf5e4fd": {
+      "id": "mt_6f47faf5e4fd",
       "visual": 2637,
       "behavior": "walkable",
       "layer": "structure",
@@ -118150,8 +118150,8 @@
         "Cliff Stairs 1,1"
       ]
     },
-    "mt_85a619e00c79": {
-      "id": "mt_85a619e00c79",
+    "mt_1941de6e2939": {
+      "id": "mt_1941de6e2939",
       "visual": 2637,
       "behavior": "solid",
       "layer": "structure",
@@ -118163,8 +118163,8 @@
         "Cliff Stairs 1,1"
       ]
     },
-    "mt_f1fd6d50c91a": {
-      "id": "mt_f1fd6d50c91a",
+    "mt_3d66e17f4a6a": {
+      "id": "mt_3d66e17f4a6a",
       "visual": 2637,
       "behavior": "warp",
       "layer": "structure",
@@ -118176,8 +118176,8 @@
         "Cliff Stairs 1,1"
       ]
     },
-    "mt_b686a4f293cd": {
-      "id": "mt_b686a4f293cd",
+    "mt_1b7da9e904e2": {
+      "id": "mt_1b7da9e904e2",
       "visual": 2638,
       "behavior": "walkable",
       "layer": "structure",
@@ -118189,8 +118189,8 @@
         "Cliff Stairs 2,1"
       ]
     },
-    "mt_39d372aa820d": {
-      "id": "mt_39d372aa820d",
+    "mt_d9b09d6a86eb": {
+      "id": "mt_d9b09d6a86eb",
       "visual": 2638,
       "behavior": "solid",
       "layer": "structure",
@@ -118202,8 +118202,8 @@
         "Cliff Stairs 2,1"
       ]
     },
-    "mt_dbc3f83e6018": {
-      "id": "mt_dbc3f83e6018",
+    "mt_4d1196a5a0ad": {
+      "id": "mt_4d1196a5a0ad",
       "visual": 2638,
       "behavior": "warp",
       "layer": "structure",
@@ -118215,8 +118215,8 @@
         "Cliff Stairs 2,1"
       ]
     },
-    "mt_d212deaf4dce": {
-      "id": "mt_d212deaf4dce",
+    "mt_c0361a4b66c7": {
+      "id": "mt_c0361a4b66c7",
       "visual": 2639,
       "behavior": "walkable",
       "layer": "structure",
@@ -118228,8 +118228,8 @@
         "Cliff Stairs 1,2"
       ]
     },
-    "mt_394c6fa27380": {
-      "id": "mt_394c6fa27380",
+    "mt_8a17663e656a": {
+      "id": "mt_8a17663e656a",
       "visual": 2639,
       "behavior": "solid",
       "layer": "structure",
@@ -118241,8 +118241,8 @@
         "Cliff Stairs 1,2"
       ]
     },
-    "mt_5836137fb894": {
-      "id": "mt_5836137fb894",
+    "mt_7fd5b801982c": {
+      "id": "mt_7fd5b801982c",
       "visual": 2639,
       "behavior": "warp",
       "layer": "structure",
@@ -118254,8 +118254,8 @@
         "Cliff Stairs 1,2"
       ]
     },
-    "mt_1755e771ba14": {
-      "id": "mt_1755e771ba14",
+    "mt_bea21abee1ae": {
+      "id": "mt_bea21abee1ae",
       "visual": 2640,
       "behavior": "walkable",
       "layer": "structure",
@@ -118267,8 +118267,8 @@
         "Cliff Stairs 2,2"
       ]
     },
-    "mt_a9cea34f8d35": {
-      "id": "mt_a9cea34f8d35",
+    "mt_765d4e0eef30": {
+      "id": "mt_765d4e0eef30",
       "visual": 2640,
       "behavior": "solid",
       "layer": "structure",
@@ -118280,8 +118280,8 @@
         "Cliff Stairs 2,2"
       ]
     },
-    "mt_deecc8045e2f": {
-      "id": "mt_deecc8045e2f",
+    "mt_5693270e57af": {
+      "id": "mt_5693270e57af",
       "visual": 2640,
       "behavior": "warp",
       "layer": "structure",
@@ -118293,8 +118293,8 @@
         "Cliff Stairs 2,2"
       ]
     },
-    "mt_3635e478e268": {
-      "id": "mt_3635e478e268",
+    "mt_cf9a42f0686a": {
+      "id": "mt_cf9a42f0686a",
       "visual": 2641,
       "behavior": "solid",
       "layer": "structure",
@@ -118306,8 +118306,8 @@
         "Retaining Wall Corner 1,1"
       ]
     },
-    "mt_c91fe2a36722": {
-      "id": "mt_c91fe2a36722",
+    "mt_ec2f5d4c059b": {
+      "id": "mt_ec2f5d4c059b",
       "visual": 2641,
       "behavior": "walkable",
       "layer": "structure",
@@ -118319,8 +118319,8 @@
         "Retaining Wall Corner 1,1"
       ]
     },
-    "mt_95d3a7b98bda": {
-      "id": "mt_95d3a7b98bda",
+    "mt_ac02e75d5da2": {
+      "id": "mt_ac02e75d5da2",
       "visual": 2641,
       "behavior": "warp",
       "layer": "structure",
@@ -118332,8 +118332,8 @@
         "Retaining Wall Corner 1,1"
       ]
     },
-    "mt_9a23d605374e": {
-      "id": "mt_9a23d605374e",
+    "mt_54be61106409": {
+      "id": "mt_54be61106409",
       "visual": 2642,
       "behavior": "solid",
       "layer": "structure",
@@ -118346,8 +118346,8 @@
         "Retaining Wall Corner 3,1"
       ]
     },
-    "mt_80cf70b1b155": {
-      "id": "mt_80cf70b1b155",
+    "mt_7a02f7cd0af5": {
+      "id": "mt_7a02f7cd0af5",
       "visual": 2642,
       "behavior": "walkable",
       "layer": "structure",
@@ -118360,8 +118360,8 @@
         "Retaining Wall Corner 3,1"
       ]
     },
-    "mt_3c45dada736b": {
-      "id": "mt_3c45dada736b",
+    "mt_9e9fe2c89c2f": {
+      "id": "mt_9e9fe2c89c2f",
       "visual": 2642,
       "behavior": "warp",
       "layer": "structure",
@@ -123364,11 +123364,11 @@
     "mt_ffd7e7e3cb63",
     "mt_8dca8b6ecf4a",
     "mt_bc47d1bfc873",
-    "mt_1430ba51949e",
-    "mt_6b0e0c95fd7b",
+    "mt_a73874c60c8e",
+    "mt_c871dad9325d",
     "mt_12b54990a5a5",
-    "mt_cae19d9fda54",
-    "mt_26aa16e9251a",
+    "mt_a96214ce6112",
+    "mt_6d954f0b29d3",
     "mt_47a349489ebf",
     "mt_e4800a1dd102",
     "mt_88bb2e96713f",
@@ -124852,26 +124852,26 @@
     "mt_a4b9e26d318c",
     "mt_9c37089e0234",
     "mt_703cb427e9ea",
-    "mt_8396e461a2c5",
-    "mt_4f07319609f8",
-    "mt_1894270dad8d",
-    "mt_c6056841a0a4",
-    "mt_c0c2a36cc93e",
-    "mt_d06f6d2769d1",
-    "mt_1d88e376529d",
-    "mt_b0a2f930bb1a",
-    "mt_ec118b177c01",
-    "mt_c3d6d5da435e",
-    "mt_5bac3a40f577",
-    "mt_499cdf19b1b2",
-    "mt_1fc771025ec2",
-    "mt_3ceca33b51c1",
-    "mt_14739c8e9eda",
-    "mt_b686a4f293cd",
-    "mt_d212deaf4dce",
-    "mt_1755e771ba14",
-    "mt_3635e478e268",
-    "mt_9a23d605374e",
+    "mt_31d202f11c00",
+    "mt_e1cc5aed9c5f",
+    "mt_428d6e5551e2",
+    "mt_a3c6dc2996e6",
+    "mt_e978eec3cd6d",
+    "mt_d43b050447ed",
+    "mt_be21dad422fc",
+    "mt_164de75a3c50",
+    "mt_4095f8fb6a86",
+    "mt_2bc9f2a6d25c",
+    "mt_91200ed89add",
+    "mt_e26087fea956",
+    "mt_fa15163912c8",
+    "mt_026f9f3c1a19",
+    "mt_6f47faf5e4fd",
+    "mt_1b7da9e904e2",
+    "mt_c0361a4b66c7",
+    "mt_bea21abee1ae",
+    "mt_cf9a42f0686a",
+    "mt_54be61106409",
     "mt_2636f30ee109",
     "mt_8297ea16e34e",
     "mt_694fd8affc0d",
@@ -128590,9 +128590,9 @@
       "cells": [
         [
           "mt_bc47d1bfc873",
-          "mt_1430ba51949e",
-          "mt_1430ba51949e",
-          "mt_6b0e0c95fd7b"
+          "mt_a73874c60c8e",
+          "mt_a73874c60c8e",
+          "mt_c871dad9325d"
         ]
       ],
       "collisionMask": [
@@ -128624,8 +128624,8 @@
       "cells": [
         [
           "mt_12b54990a5a5",
-          "mt_cae19d9fda54",
-          "mt_26aa16e9251a"
+          "mt_a96214ce6112",
+          "mt_6d954f0b29d3"
         ]
       ],
       "collisionMask": [
@@ -133794,18 +133794,18 @@
       "height": 2,
       "cells": [
         [
-          "mt_8396e461a2c5",
-          "mt_4f07319609f8",
-          "mt_4f07319609f8",
-          "mt_4f07319609f8",
-          "mt_1894270dad8d"
+          "mt_31d202f11c00",
+          "mt_e1cc5aed9c5f",
+          "mt_e1cc5aed9c5f",
+          "mt_e1cc5aed9c5f",
+          "mt_428d6e5551e2"
         ],
         [
-          "mt_c6056841a0a4",
-          "mt_c0c2a36cc93e",
-          "mt_c0c2a36cc93e",
-          "mt_c0c2a36cc93e",
-          "mt_d06f6d2769d1"
+          "mt_a3c6dc2996e6",
+          "mt_e978eec3cd6d",
+          "mt_e978eec3cd6d",
+          "mt_e978eec3cd6d",
+          "mt_d43b050447ed"
         ]
       ],
       "collisionMask": [
@@ -133844,14 +133844,14 @@
       "height": 2,
       "cells": [
         [
-          "mt_1d88e376529d",
-          "mt_b0a2f930bb1a",
-          "mt_1894270dad8d"
+          "mt_be21dad422fc",
+          "mt_164de75a3c50",
+          "mt_428d6e5551e2"
         ],
         [
-          "mt_ec118b177c01",
-          "mt_c3d6d5da435e",
-          "mt_d06f6d2769d1"
+          "mt_4095f8fb6a86",
+          "mt_2bc9f2a6d25c",
+          "mt_d43b050447ed"
         ]
       ],
       "collisionMask": [
@@ -133886,14 +133886,14 @@
       "height": 2,
       "cells": [
         [
-          "mt_8396e461a2c5",
-          "mt_5bac3a40f577",
-          "mt_499cdf19b1b2"
+          "mt_31d202f11c00",
+          "mt_91200ed89add",
+          "mt_e26087fea956"
         ],
         [
-          "mt_c6056841a0a4",
-          "mt_1fc771025ec2",
-          "mt_3ceca33b51c1"
+          "mt_a3c6dc2996e6",
+          "mt_fa15163912c8",
+          "mt_026f9f3c1a19"
         ]
       ],
       "collisionMask": [
@@ -133928,12 +133928,12 @@
       "height": 2,
       "cells": [
         [
-          "mt_1d88e376529d",
-          "mt_b0a2f930bb1a"
+          "mt_be21dad422fc",
+          "mt_164de75a3c50"
         ],
         [
-          "mt_ec118b177c01",
-          "mt_c3d6d5da435e"
+          "mt_4095f8fb6a86",
+          "mt_2bc9f2a6d25c"
         ]
       ],
       "collisionMask": [
@@ -133966,12 +133966,12 @@
       "height": 2,
       "cells": [
         [
-          "mt_5bac3a40f577",
-          "mt_499cdf19b1b2"
+          "mt_91200ed89add",
+          "mt_e26087fea956"
         ],
         [
-          "mt_1fc771025ec2",
-          "mt_3ceca33b51c1"
+          "mt_fa15163912c8",
+          "mt_026f9f3c1a19"
         ]
       ],
       "collisionMask": [
@@ -134004,12 +134004,12 @@
       "height": 2,
       "cells": [
         [
-          "mt_14739c8e9eda",
-          "mt_b686a4f293cd"
+          "mt_6f47faf5e4fd",
+          "mt_1b7da9e904e2"
         ],
         [
-          "mt_d212deaf4dce",
-          "mt_1755e771ba14"
+          "mt_c0361a4b66c7",
+          "mt_bea21abee1ae"
         ]
       ],
       "collisionMask": [
@@ -134038,9 +134038,9 @@
       "cells": [
         [
           "mt_bc47d1bfc873",
-          "mt_1430ba51949e",
-          "mt_1430ba51949e",
-          "mt_6b0e0c95fd7b"
+          "mt_a73874c60c8e",
+          "mt_a73874c60c8e",
+          "mt_c871dad9325d"
         ]
       ],
       "collisionMask": [
@@ -134071,9 +134071,9 @@
       "height": 1,
       "cells": [
         [
-          "mt_3635e478e268",
-          "mt_9a23d605374e",
-          "mt_9a23d605374e",
+          "mt_cf9a42f0686a",
+          "mt_54be61106409",
+          "mt_54be61106409",
           "mt_2636f30ee109"
         ]
       ],
@@ -134783,8 +134783,8 @@
       "grass": {
         "uniqueColors": 2,
         "dominantCoverage": 0.9531,
-        "meanSaturation": 0.4158,
-        "meanLightness": 0.7787,
+        "meanSaturation": 0.299,
+        "meanLightness": 0.7986,
         "cardinalPixelCount": 0,
         "accentPixelCount": 12,
         "accentComponentCount": 4
@@ -134792,8 +134792,8 @@
       "grassB": {
         "uniqueColors": 2,
         "dominantCoverage": 0.9766,
-        "meanSaturation": 0.417,
-        "meanLightness": 0.7815,
+        "meanSaturation": 0.2995,
+        "meanLightness": 0.8013,
         "cardinalPixelCount": 0,
         "accentPixelCount": 6,
         "accentComponentCount": 3
@@ -134801,8 +134801,8 @@
       "grassC": {
         "uniqueColors": 2,
         "dominantCoverage": 0.9883,
-        "meanSaturation": 0.4176,
-        "meanLightness": 0.7829,
+        "meanSaturation": 0.2997,
+        "meanLightness": 0.8026,
         "cardinalPixelCount": 0,
         "accentPixelCount": 3,
         "accentComponentCount": 3
@@ -134810,8 +134810,8 @@
       "mowedGrass": {
         "uniqueColors": 3,
         "dominantCoverage": 0.9648,
-        "meanSaturation": 0.374,
-        "meanLightness": 0.7088,
+        "meanSaturation": 0.2901,
+        "meanLightness": 0.7816,
         "cardinalPixelCount": 0,
         "accentPixelCount": 9,
         "accentComponentCount": 3
@@ -134869,7 +134869,7 @@
         "foliage": 37,
         "glass": 39,
         "gold": 46,
-        "grass": 12,
+        "grass": 10,
         "gravel": 1,
         "limestone": 76,
         "meadow_grass": 1,
@@ -134890,23 +134890,23 @@
         "clinic_floor": 256,
         "concrete": 256,
         "cream": 3040,
-        "dirt": 698,
+        "dirt": 870,
         "fire": 45,
         "foliage": 62342,
         "glass": 5474,
         "gold": 31863,
-        "grass": 1239,
+        "grass": 379,
         "gravel": 256,
-        "limestone": 67482,
+        "limestone": 67890,
         "meadow_grass": 256,
         "metal": 77714,
         "mowed_grass": 256,
-        "sand": 353,
+        "sand": 545,
         "shop_floor": 256,
         "slate": 43951,
-        "stone": 11487,
+        "stone": 11582,
         "timber": 256,
-        "water": 691,
+        "water": 684,
         "wood": 48429
       },
       "outlinePixelCount": 25242,
@@ -134923,13 +134923,13 @@
   },
   "validation": {
     "seamTest": "art/imagegen/validation/season_one_tileset_seam_test.png",
-    "seamTestSha256": "0093b44c15e4653824411d63fd9a00e677786f8fc845ed9f7900ceb06075119d"
+    "seamTestSha256": "3bee7d9be8d719d6faef9295c4352c7c7c134a553afb458f74e1ec944d3be2cd"
   },
   "sources": {
     "manifest": "7eef371b5e0cedf1bfbfa8a6c828820bafa67f387f214145ceb19350aa9b542d",
     "contract": "77ea43d1604d9cea3ca4cdf4fdea5e5528e8ec6275f4e32c08184de8f6f82ffb",
-    "pixelArtModule": "05180cbf0fb16c07bf9df9157ce7604705dd78b949decd2a5ea292a5bd1fceaa",
-    "preparedImagegenManifest": "47d93b399c8c3c4eb5a441bd674979f445d842d998815643ee3b837ec57d0964",
+    "pixelArtModule": "8e999d60760648357cb08b203b73671731b573cd75237ea02689f18ceeabb54d",
+    "preparedImagegenManifest": "bfd754d8e03e3694a1146aca35f2d99066e9c45f2ccb3eb0cf8591b4fbd61179",
     "preparedImagegenAssetCount": 143,
     "materialProfile": "37a373a5e470103db8cd7d743c20295873bb288c6481448de56effbd7e268232",
     "referenceBoards": {

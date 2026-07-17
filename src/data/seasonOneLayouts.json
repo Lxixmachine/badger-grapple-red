@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 15,
+  "revision": 16,
   "status": "season-one-production-grid",
   "contract": {
     "cellSize": 32,
@@ -33,7 +33,7 @@
       "airport",
       "st_louis"
     ],
-    "madisonBounds": {"x": -110, "y": -11, "width": 228, "height": 135},
+    "madisonBounds": {"x": -110, "y": 0, "width": 228, "height": 124},
     "transitions": [
       {"from": "kohl_center", "to": "camp_randall", "kind": "bus", "gate": "all_flight_credentials"},
       {"from": "camp_randall", "to": "airport", "kind": "cutscene", "gate": "all_flight_credentials"},
@@ -46,103 +46,79 @@
       "displayName": "Camp Randall",
       "kind": "home_town",
       "plane": "madison",
-      "origin": {"x": -9, "y": -11},
-      "size": {"width": 48, "height": 31},
-      "start": {"x": 23, "y": 29, "facing": "up"},
+      "origin": {"x": 3, "y": 0},
+      "size": {"width": 24, "height": 20},
+      "start": {"x": 11, "y": 18, "facing": "up"},
       "ground": "lawn",
       "walkableMode": "open",
       "gridAuthority": "metatile-behavior-v1",
       "paths": [
-        {"id": "stadium_axis", "x": 23, "y": 7, "width": 2, "height": 24, "material": "brick"},
-        {"id": "quad_crossing", "x": 8, "y": 18, "width": 32, "height": 2, "material": "brick"},
-        {"id": "stadium_forecourt", "x": 20, "y": 7, "width": 8, "height": 3, "material": "concrete"},
-        {"id": "team_building_landing", "x": 7, "y": 18, "width": 4, "height": 2, "material": "concrete"},
-        {"id": "coach_office_landing", "x": 37, "y": 18, "width": 4, "height": 2, "material": "concrete"}
+        {"id": "stadium_axis", "x": 11, "y": 6, "width": 2, "height": 14, "material": "stone"},
+        {"id": "stadium_forecourt", "x": 9, "y": 6, "width": 6, "height": 2, "material": "stone"},
+        {"id": "team_building_walk", "x": 5, "y": 11, "width": 8, "height": 2, "material": "stone"},
+        {"id": "coach_office_walk", "x": 11, "y": 13, "width": 7, "height": 2, "material": "stone"},
+        {"id": "south_landing", "x": 9, "y": 17, "width": 6, "height": 3, "material": "dirt"}
       ],
       "waterBodies": [],
       "blockers": [
-        {"id": "west_forest_border", "kind": "forest_mass", "x": 0, "y": 0, "width": 2, "height": 31},
-        {"id": "east_forest_border", "kind": "forest_mass", "x": 46, "y": 0, "width": 2, "height": 31},
-        {"id": "northwest_forest_border", "kind": "forest_mass", "x": 2, "y": 0, "width": 14, "height": 2},
-        {"id": "northeast_forest_border", "kind": "forest_mass", "x": 31, "y": 0, "width": 15, "height": 2},
-        {"id": "southwest_forest_border", "kind": "forest_mass", "x": 2, "y": 27, "width": 21, "height": 4},
-        {"id": "southeast_forest_border", "kind": "forest_mass", "x": 25, "y": 27, "width": 21, "height": 4},
-        {"id": "memory_garden_west", "kind": "hedge", "x": 14, "y": 10, "width": 6, "height": 4, "collisionMask": ["######", "#....#", "#....#", "######"]},
-        {"id": "memory_garden_east", "kind": "hedge", "x": 28, "y": 10, "width": 6, "height": 4, "collisionMask": ["######", "#....#", "#....#", "######"]}
+        {"id": "west_forest_border", "kind": "forest_mass", "x": 0, "y": 0, "width": 2, "height": 20},
+        {"id": "east_forest_border", "kind": "forest_mass", "x": 22, "y": 0, "width": 2, "height": 20},
+        {"id": "northwest_forest_border", "kind": "forest_mass", "x": 2, "y": 0, "width": 4, "height": 3},
+        {"id": "northeast_forest_border", "kind": "forest_mass", "x": 17, "y": 0, "width": 5, "height": 3},
+        {"id": "southwest_forest_border", "kind": "forest_mass", "x": 2, "y": 16, "width": 9, "height": 4},
+        {"id": "southeast_forest_border", "kind": "forest_mass", "x": 13, "y": 16, "width": 9, "height": 4},
+        {"id": "memory_garden", "kind": "hedge", "x": 3, "y": 13, "width": 5, "height": 3, "collisionMask": ["#####", "#...#", "#####"]},
+        {"id": "practice_pond", "kind": "water", "x": 18, "y": 14, "width": 4, "height": 2, "collisionMask": ["####", "####"]}
       ],
       "buildings": [
-        {"id": "team_building", "name": "Team Building", "kind": "home", "x": 5, "y": 14, "width": 7, "height": 4, "door": {"x": 8, "y": 17}, "interior": "team_locker_room"},
-        {"id": "coach_office", "name": "Coach's Office", "kind": "story", "x": 36, "y": 14, "width": 6, "height": 4, "door": {"x": 38, "y": 17}, "interior": "coach_office"}
+        {"id": "team_building", "name": "Team Building", "kind": "home", "x": 2, "y": 7, "width": 7, "height": 4, "door": {"x": 5, "y": 10}, "interior": "team_locker_room"},
+        {"id": "coach_office", "name": "Coach's Office", "kind": "story", "x": 15, "y": 9, "width": 6, "height": 4, "door": {"x": 17, "y": 12}, "interior": "coach_office"}
       ],
       "landmarks": [
-        {"id": "camp_randall_stadium", "name": "Camp Randall Stadium", "kind": "x_factor", "x": 16, "y": 1, "width": 15, "height": 6, "door": {"x": 23, "y": 6}, "interior": "stadium_tunnel", "gate": "season_complete"}
+        {"id": "camp_randall_stadium", "name": "Camp Randall Stadium", "kind": "x_factor", "x": 6, "y": 1, "width": 11, "height": 5, "door": {"x": 11, "y": 5}, "collisionMask": [".#########.", "###########", "###########", "###########", "#####.#####"], "interior": "stadium_tunnel", "gate": "season_complete"}
       ],
       "decorations": [
-        {"id": "forest_west_0", "stamp": "forest_edge_west", "x": 0, "y": 0},
-        {"id": "forest_west_1", "stamp": "forest_edge_west_b", "x": 0, "y": 6},
-        {"id": "forest_west_2", "stamp": "forest_edge_west", "x": 0, "y": 12},
-        {"id": "forest_west_3", "stamp": "forest_edge_west_b", "x": 0, "y": 18},
-        {"id": "forest_west_4", "stamp": "forest_edge_west", "x": 0, "y": 24},
-        {"id": "forest_east_0", "stamp": "forest_edge_east", "x": 46, "y": 0},
-        {"id": "forest_east_1", "stamp": "forest_edge_east_b", "x": 46, "y": 6},
-        {"id": "forest_east_2", "stamp": "forest_edge_east", "x": 46, "y": 12},
-        {"id": "forest_east_3", "stamp": "forest_edge_east_b", "x": 46, "y": 18},
-        {"id": "forest_east_4", "stamp": "forest_edge_east", "x": 46, "y": 24},
-        {"id": "forest_north_0", "stamp": "forest_edge_north", "x": 2, "y": 0},
-        {"id": "forest_north_1", "stamp": "forest_edge_north", "x": 9, "y": 0},
-        {"id": "forest_north_2", "stamp": "forest_edge_north", "x": 31, "y": 0},
-        {"id": "forest_north_3", "stamp": "forest_edge_north", "x": 38, "y": 0},
-        {"id": "forest_south_0", "stamp": "forest_edge_south", "x": 2, "y": 27},
-        {"id": "forest_south_1", "stamp": "forest_edge_south", "x": 9, "y": 27},
-        {"id": "forest_south_2", "stamp": "forest_edge_south", "x": 16, "y": 27},
-        {"id": "forest_south_3", "stamp": "forest_edge_south", "x": 25, "y": 27},
-        {"id": "forest_south_4", "stamp": "forest_edge_south", "x": 32, "y": 27},
-        {"id": "forest_south_5", "stamp": "forest_edge_south", "x": 39, "y": 27},
-        {"id": "grove_southwest", "stamp": "forest_grove_small", "x": 2, "y": 22},
-        {"id": "grove_southeast", "stamp": "forest_grove_small", "x": 41, "y": 22},
-        {"id": "oak_southwest", "stamp": "tree_oak_a", "x": 10, "y": 23},
-        {"id": "oak_southeast", "stamp": "tree_oak_b", "x": 36, "y": 23},
-        {"id": "pine_west", "stamp": "tree_pine", "x": 3, "y": 9},
-        {"id": "pine_east", "stamp": "tree_pine_b", "x": 43, "y": 9},
-        {"id": "stadium_threshold", "stamp": "stone_threshold", "x": 23, "y": 7, "depthMode": "row-sliced"},
-        {"id": "team_threshold", "stamp": "stone_threshold", "x": 7, "y": 18, "depthMode": "row-sliced"},
-        {"id": "office_threshold", "stamp": "stone_threshold", "x": 37, "y": 18, "depthMode": "row-sliced"},
-        {"id": "stadium_lamp_west", "stamp": "campus_lamp", "x": 18, "y": 7},
-        {"id": "stadium_lamp_east", "stamp": "campus_lamp", "x": 29, "y": 7},
-        {"id": "quad_lamp_west", "stamp": "campus_lamp", "x": 21, "y": 15},
-        {"id": "quad_lamp_east", "stamp": "campus_lamp", "x": 26, "y": 15},
-        {"id": "team_sign", "stamp": "team_building_sign", "x": 12, "y": 16},
-        {"id": "office_sign", "stamp": "coach_office_sign", "x": 33, "y": 16},
-        {"id": "team_bike_rack", "stamp": "bike_rack", "x": 5, "y": 20},
-        {"id": "office_bike_rack", "stamp": "bike_rack", "x": 40, "y": 20},
-        {"id": "quad_bench_west", "stamp": "wood_bench", "x": 14, "y": 22},
-        {"id": "quad_bench_east", "stamp": "wood_bench", "x": 31, "y": 22},
-        {"id": "banner_west", "stamp": "banner_pole", "x": 20, "y": 23},
-        {"id": "banner_east", "stamp": "banner_pole", "x": 27, "y": 23},
-        {"id": "trash_west", "stamp": "trash_can", "x": 17, "y": 23},
-        {"id": "trash_east", "stamp": "trash_can", "x": 30, "y": 23},
-        {"id": "flower_west", "stamp": "shrub_flowering", "x": 18, "y": 25},
-        {"id": "flower_east", "stamp": "shrub_flowering_b", "x": 29, "y": 25}
+        {"id": "forest_west_long", "stamp": "forest_border_west_long", "x": 0, "y": 0},
+        {"id": "forest_west_south", "stamp": "forest_edge_west_b", "x": 0, "y": 14},
+        {"id": "forest_east_long", "stamp": "forest_border_east_long", "x": 22, "y": 0},
+        {"id": "forest_east_south", "stamp": "forest_edge_east_b", "x": 22, "y": 14},
+        {"id": "grove_northwest", "stamp": "forest_grove_small", "x": 1, "y": 0},
+        {"id": "grove_northeast", "stamp": "forest_grove_small", "x": 17, "y": 0},
+        {"id": "forest_southwest", "stamp": "forest_edge_south", "x": 2, "y": 16},
+        {"id": "forest_southeast", "stamp": "forest_edge_south", "x": 15, "y": 16},
+        {"id": "tree_southwest_gate", "stamp": "tree_oak_a", "x": 9, "y": 17},
+        {"id": "tree_southeast_gate", "stamp": "tree_oak_b", "x": 13, "y": 17},
+        {"id": "stadium_threshold", "stamp": "stone_threshold", "x": 11, "y": 6, "depthMode": "row-sliced"},
+        {"id": "team_threshold", "stamp": "stone_threshold", "x": 5, "y": 11, "depthMode": "row-sliced"},
+        {"id": "office_threshold", "stamp": "stone_threshold", "x": 17, "y": 13, "depthMode": "row-sliced"},
+        {"id": "stadium_lamp_west", "stamp": "campus_lamp", "x": 8, "y": 6},
+        {"id": "stadium_lamp_east", "stamp": "campus_lamp", "x": 15, "y": 6},
+        {"id": "team_sign", "stamp": "team_building_sign", "x": 2, "y": 11},
+        {"id": "office_sign", "stamp": "coach_office_sign", "x": 19, "y": 7},
+        {"id": "garden_bench", "stamp": "wood_bench", "x": 8, "y": 14},
+        {"id": "garden_flower", "stamp": "shrub_flowering", "x": 9, "y": 13},
+        {"id": "pond_flower", "stamp": "shrub_flowering_b", "x": 15, "y": 15}
       ],
       "actors": [
-        {"id": "assistant_coach", "sheet": "coach", "x": 26, "y": 20, "facing": "left", "dialogue": "Camp Randall is home. The Team Building is west across the quad."},
-        {"id": "camp_quad_student", "sheet": "student", "x": 14, "y": 19, "facing": "right", "dialogue": "The stadium axis connects every place the team needs.", "patrol": {"axis": "horizontal", "radius": 1, "interval": 1700}},
-        {"id": "team_bus_manager", "sheet": "manager", "x": 20, "y": 25, "facing": "down", "dialogue": "The team bus is ready for the airport.", "condition": "ready_for_airport"},
-        {"id": "homecoming_captain", "sheet": "captain", "x": 24, "y": 8, "facing": "down", "dialogue": "Captain: Take the championship through the stadium tunnel.", "condition": "homecoming"}
+        {"id": "assistant_coach", "sheet": "coach", "x": 14, "y": 12, "facing": "left", "dialogue": "Camp Randall is home. The Team Building is west across the walk."},
+        {"id": "camp_quad_student", "sheet": "student", "x": 9, "y": 9, "facing": "right", "dialogue": "The limestone walk connects every place the team needs.", "patrol": {"axis": "vertical", "radius": 1, "interval": 1700}},
+        {"id": "team_bus_manager", "sheet": "manager", "x": 9, "y": 17, "facing": "down", "dialogue": "The team bus is ready for the airport.", "condition": "ready_for_airport"},
+        {"id": "homecoming_captain", "sheet": "captain", "x": 12, "y": 6, "facing": "up", "dialogue": "Captain: Take the championship through the stadium tunnel.", "condition": "homecoming"}
       ],
       "connections": [
-        {"to": "r1", "edge": "south", "start": 23, "span": 2, "toEdge": "north", "toStart": 8}
+        {"to": "r1", "edge": "south", "start": 11, "span": 2, "toEdge": "north", "toStart": 8}
       ],
       "events": [
-        {"id": "opening_spawn", "label": "Opening Day quad", "x": 12, "y": 20, "beat": 1},
-        {"id": "stadium_final_gate", "label": "Ending gate", "x": 25, "y": 7, "beat": 40},
-        {"id": "camp_garden_plaque", "label": "Memory garden", "x": 20, "y": 14, "kind": "message", "text": "Memory Garden: every path back to the stadium carries a Badger story.", "once": true}
+        {"id": "opening_spawn", "label": "Opening Day quad", "x": 5, "y": 11, "beat": 1},
+        {"id": "stadium_final_gate", "label": "Ending gate", "x": 11, "y": 6, "beat": 40},
+        {"id": "camp_garden_plaque", "label": "Memory garden", "x": 8, "y": 14, "kind": "message", "text": "Memory Garden: every path back to the stadium carries a Badger story.", "once": true},
+        {"id": "camp_pond_flavor", "label": "Practice pond", "x": 17, "y": 15, "kind": "message", "text": "The practice pond is still between morning drills.", "once": true}
       ],
       "cameraReviews": [
-        {"id": "stadium_front", "label": "Stadium identity", "x": 16, "y": 1, "width": 15, "height": 10},
-        {"id": "team_building", "label": "Team Building", "x": 2, "y": 12, "width": 15, "height": 10},
-        {"id": "coach_office", "label": "Coach's Office", "x": 31, "y": 12, "width": 15, "height": 10},
-        {"id": "south_exit", "label": "Route 1 departure", "x": 16, "y": 21, "width": 15, "height": 10}
+        {"id": "stadium_front", "label": "Stadium identity", "x": 4, "y": 0, "width": 15, "height": 10},
+        {"id": "home_core", "label": "Team Building and quad", "x": 0, "y": 5, "width": 15, "height": 10},
+        {"id": "coach_garden", "label": "Coach office and relief", "x": 9, "y": 7, "width": 15, "height": 10},
+        {"id": "south_exit", "label": "Route 1 departure", "x": 5, "y": 10, "width": 15, "height": 10}
       ]
     },
     "r1": {
@@ -207,7 +183,7 @@
         {"id": "route_wrestler_two", "sheet": "athlete", "x": 10, "y": 18, "facing": "right", "dialogue": "The Field House is just ahead."}
       ],
       "connections": [
-        {"to": "camp_randall", "edge": "north", "start": 8, "span": 2, "toEdge": "south", "toStart": 23},
+        {"to": "camp_randall", "edge": "north", "start": 8, "span": 2, "toEdge": "south", "toStart": 11},
         {"to": "field_house", "edge": "south", "start": 8, "span": 2, "toEdge": "north", "toStart": 20}
       ],
       "events": [

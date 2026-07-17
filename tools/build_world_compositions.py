@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 
 from PIL import Image, ImageDraw
+
+from hash_utils import sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,10 +21,7 @@ TILE = 16
 
 
 def source_hash(path: Path) -> str:
-    if path.suffix.lower() == ".json":
-        text = path.read_text(encoding="utf-8").replace("\r\n", "\n").replace("\r", "\n")
-        return hashlib.sha256(text.encode("utf-8")).hexdigest()
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_file(path)
 
 
 def visible_bbox(image: Image.Image) -> tuple[int, int, int, int]:

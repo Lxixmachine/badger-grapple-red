@@ -96,7 +96,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 15, metatileVersion: 20});
+  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 16, metatileVersion: 20});
   expect(state.project.actorPixelContract).toEqual({
     logicalFrameWidth: 16,
     logicalFrameHeight: 32,
@@ -123,10 +123,10 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     expect(actor.pixelMetrics.frameVisibleSizes).toHaveLength(12);
   }
   expect(state.project.groundSystem).toMatchObject({
-    primaryMaterial: 'brick',
+    primaryMaterial: 'stone',
     connectedComponentCount: 1,
     anchorCount: 5,
-    transitionFamilies: ['surface_brick', 'surface_concrete'],
+    transitionFamilies: ['surface_dirt', 'surface_stone'],
     rawCutCount: 0
   });
   expect(state.project.groundMaterialMetrics.grass).toMatchObject({
@@ -188,7 +188,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     'buckys_locker_room', 'field_house_floor', 'capitol_interior', 'brittingham_boats',
     'kohl_bracket_floor', 'nationals_floor', 'bascom_classroom', 'stadium_tunnel'
   ]);
-  expect(state.project.maps.camp_randall).toMatchObject({width: 48, height: 31, cellSize: 32});
+  expect(state.project.maps.camp_randall).toMatchObject({width: 24, height: 20, cellSize: 32});
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
   expect(state.project.assets.groundTiles).toHaveLength(698);
   expect(state.project.assets.groundStamps).toHaveLength(28);
@@ -197,20 +197,20 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'shore_water_blob_n_e_s_w_ne_se_sw_nw').behavior).toBe('water');
   expect(state.project.assets.objects.some(asset => asset.id === 'world:tree_oak_a')).toBe(true);
   expect(state.project.maps.camp_randall.objects.every(object => object.metatiles?.length === object.height)).toBe(true);
-  expect(state.project.maps.camp_randall.objects).toHaveLength(50);
+  expect(state.project.maps.camp_randall.objects).toHaveLength(25);
   expect(state.project.maps.camp_randall.objects.filter(object => object.sourceKind === 'planned-metatile')).toHaveLength(5);
-  expect(state.project.maps.camp_randall.objects.filter(object => object.sourceKind === 'metatile')).toHaveLength(45);
+  expect(state.project.maps.camp_randall.objects.filter(object => object.sourceKind === 'metatile')).toHaveLength(20);
   const camp = state.project.maps.camp_randall;
-  expect(camp.terrain[10][5]).toBe('grass');
-  expect(camp.terrain[10][23]).toMatch(/^surface_brick_blob_/);
-  expect(camp.terrain[18][7]).toMatch(/^surface_concrete_blob_/);
-  expect(camp.terrain[18][8]).toMatch(/^surface_concrete_blob_/);
-  expect(camp.terrain[18][11]).toMatch(/^surface_brick_blob_/);
-  expect(camp.terrain[7][23]).toMatch(/^surface_concrete_blob_/);
-  expect(camp.terrain[17][7]).toMatch(/^lawn_mowed_blob_/);
-  expect(camp.terrain[17][8]).toMatch(/^lawn_mowed_blob_/);
-  await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '1536');
-  await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '992');
+  expect(camp.terrain[10][5]).toMatch(/^lawn_mowed_blob_/);
+  expect(camp.terrain[10][23]).toBe('grass');
+  expect(camp.terrain[11][5]).toMatch(/^surface_stone_blob_/);
+  expect(camp.terrain[13][17]).toMatch(/^surface_stone_blob_/);
+  expect(camp.terrain[18][11]).toMatch(/^surface_dirt_blob_/);
+  expect(camp.terrain[7][11]).toMatch(/^surface_stone_blob_/);
+  expect(camp.terrain[17][11]).toMatch(/^surface_dirt_blob_/);
+  expect(camp.terrain[17][12]).toMatch(/^surface_dirt_blob_/);
+  await expect(page.locator('#mapCanvas')).toHaveAttribute('width', '768');
+  await expect(page.locator('#mapCanvas')).toHaveAttribute('height', '640');
   expect(issues).toEqual([]);
 });
 
@@ -235,7 +235,7 @@ test('every planned location is grid-native, editable, and linked to its playtes
   await openEditor(page);
   const {project} = await editorState(page);
   const exteriorSizes = {
-    camp_randall: [48, 31], r1: [18, 24], field_house: [40, 28], lakeshore_path: [56, 14],
+    camp_randall: [24, 20], r1: [18, 24], field_house: [40, 28], lakeshore_path: [56, 14],
     picnic_point: [48, 18], state_street: [44, 18], bascom_hill: [18, 18],
     capitol_square: [40, 28], monona_shore: [18, 24], kohl_center: [40, 28],
     airport: [15, 10], st_louis: [42, 30]
@@ -321,22 +321,22 @@ test('assets place on whole cells and undo restores the prior map', async ({page
   await openEditor(page);
   await page.getByRole('tab', {name: 'Stamps'}).click();
   await page.getByRole('combobox', {name: 'Family'}).selectOption('blockers');
-  await page.getByRole('button', {name: 'memory garden west', exact: true}).click();
+  await page.getByRole('button', {name: 'memory garden', exact: true}).click();
   await clickCell(page, 3, 4);
 
   await expect.poll(
     async () => (await editorState(page)).project.maps.camp_randall.objects.length,
     {timeout: 15000}
-  ).toBe(51);
+  ).toBe(26);
   let state = await editorState(page);
   const placed = state.project.maps.camp_randall.objects.find(entry => (
-    entry.assetId === 'camp_randall:memory_garden_west' && entry.x === 3 && entry.y === 4
+    entry.assetId === 'camp_randall:memory_garden' && entry.x === 3 && entry.y === 4
   ));
-  expect(placed).toMatchObject({x: 3, y: 4, width: 6, height: 4, depthMode: 'row-sliced'});
-  expect(placed.metatiles).toHaveLength(4);
+  expect(placed).toMatchObject({x: 3, y: 4, width: 5, height: 3, depthMode: 'row-sliced'});
+  expect(placed.metatiles).toHaveLength(3);
 
   await page.getByRole('button', {name: 'Undo'}).click();
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(50);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(25);
   expect(issues).toEqual([]);
 });
 
@@ -358,9 +358,9 @@ test('object dragging, collision painting, and doors stay grid-owned', async ({p
   await page.getByRole('button', {name: 'Undo'}).click();
 
   await page.getByRole('combobox', {name: 'Map'}).selectOption('camp_randall');
-  await clickCell(page, 5, 14);
+  await clickCell(page, 2, 7);
   await page.getByRole('button', {name: 'Collision', exact: true}).click();
-  await clickCell(page, 5, 14);
+  await clickCell(page, 2, 7);
   let state = await editorState(page);
   let building = state.project.maps.camp_randall.objects.find(entry => entry.id === 'team_building');
   expect(building.collisionMask[0][0]).toBe('.');
@@ -368,12 +368,12 @@ test('object dragging, collision painting, and doors stay grid-owned', async ({p
   await page.getByRole('button', {name: 'Undo'}).click();
 
   await page.getByRole('button', {name: 'Door', exact: true}).click();
-  await clickCell(page, 5, 17);
+  await clickCell(page, 4, 10);
   state = await editorState(page);
   building = state.project.maps.camp_randall.objects.find(entry => entry.id === 'team_building');
-  expect(building.door).toEqual({x: 0, y: 3});
-  expect(building.collisionMask[3][0]).toBe('.');
-  expect(state.project.assets.metatiles.find(tile => tile.id === building.metatiles[3][0]).behavior).toBe('warp');
+  expect(building.door).toEqual({x: 2, y: 3});
+  expect(building.collisionMask[3][2]).toBe('.');
+  expect(state.project.assets.metatiles.find(tile => tile.id === building.metatiles[3][2]).behavior).toBe('warp');
   expect(state.state.validation.valid).toBe(true);
   expect(issues).toEqual([]);
 });
@@ -446,10 +446,10 @@ test('explicit transition tiles remain selected and individual trees place as gr
   await page.getByRole('tab', {name: 'Stamps'}).click();
   await page.getByRole('combobox', {name: 'Family'}).selectOption('trees');
   await page.getByRole('button', {name: 'Shade Tree A', exact: true}).click();
-  await clickCell(page, 9, 7);
+  await clickCell(page, 2, 4);
   const state = await editorState(page);
   const tree = state.project.maps.camp_randall.objects.find(entry => entry.id === 'tree_oak_a');
-  expect(tree).toMatchObject({sourceKind: 'metatile', x: 9, y: 7, width: 2, height: 3});
+  expect(tree).toMatchObject({sourceKind: 'metatile', x: 2, y: 4, width: 2, height: 3});
   expect(tree.collisionMask).toEqual(['..', '..', '##']);
   expect(state.state.validation.valid).toBe(true);
   expect(issues).toEqual([]);
@@ -482,8 +482,8 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
     draft.metatileVersion = 3;
     draft.maps.camp_randall.originalTerrain[10][5] = 'stone';
     draft.maps.camp_randall.terrain[10][5] = 'stone';
-    draft.maps.camp_randall.originalTerrain[10][23] = 'grass';
-    draft.maps.camp_randall.terrain[10][23] = 'grass';
+    draft.maps.camp_randall.originalTerrain[10][23] = 'stone';
+    draft.maps.camp_randall.terrain[10][23] = 'stone';
     draft.maps.camp_randall.terrain[14][10] = 'dirt';
     const fieldHouse = draft.maps.field_house.objects.find(object => object.id === 'field_house_arena');
     fieldHouse.x = 13;
@@ -499,9 +499,9 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 15, metatileVersion: 20});
-  expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
-  expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
+  expect(state.project).toMatchObject({layoutRevision: 16, metatileVersion: 20});
+  expect(state.project.maps.camp_randall.terrain[10][5]).toMatch(/^lawn_mowed_blob_/);
+  expect(state.project.maps.camp_randall.terrain[10][23]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
   const migratedArena = state.project.maps.field_house.objects.find(object => object.id === 'field_house_arena');
   expect(migratedArena.x).toBe(13);
@@ -539,9 +539,10 @@ test('terrain, events, actors, and camera reviews are editable layers', async ({
   await clickCell(page, 10, 15);
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.terrain[15][10]).toBe('brick');
 
+  const eventCount = (await editorState(page)).project.maps.camp_randall.events.length;
   await page.getByRole('button', {name: 'Events', exact: true}).click();
-  await clickCell(page, 10, 14);
-  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.length).toBe(4);
+  await clickCell(page, 13, 15);
+  await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.events.length).toBe(eventCount + 1);
 
   await page.getByRole('tab', {name: 'Actors'}).click();
   const actorAssets = (await editorState(page)).project.assets.actors.map(asset => asset.sourceId);
@@ -570,7 +571,7 @@ test('door destinations, message events, and edge connections are editable', asy
   const validationValid = () => page.evaluate(() => window.__badgerMapEditorTest.state().validation.valid);
 
   // Door destination dropdown rewires where a building leads.
-  await clickCell(page, 5, 14);
+  await clickCell(page, 5, 9);
   const before = await teamBuildingInterior();
   await page.getByRole('combobox', {name: 'Destination'}).selectOption('trainer_room');
   await expect.poll(teamBuildingInterior).toBe('trainer_room');
@@ -580,7 +581,7 @@ test('door destinations, message events, and edge connections are editable', asy
 
   // Events carry a kind, text, and once flag the runtime can execute.
   await page.getByRole('button', {name: 'Events', exact: true}).click();
-  await clickCell(page, 10, 14);
+  await clickCell(page, 13, 15);
   await page.getByRole('combobox', {name: 'Kind'}).selectOption('message');
   await page.getByRole('textbox', {name: 'Text'}).fill('Chalk dust hangs in the air.');
   await page.getByRole('textbox', {name: 'Text'}).blur();
@@ -593,7 +594,7 @@ test('door destinations, message events, and edge connections are editable', asy
 
   // Edge connections are listed on the map inspector and can be added, edited, and removed.
   await page.getByRole('button', {name: 'Select', exact: true}).click();
-  await clickCell(page, 23, 20);
+  await clickCell(page, 12, 18);
   const connectionCount = (await connections()).length;
   await page.getByRole('button', {name: 'Add connection'}).click();
   await expect.poll(async () => (await connections()).length).toBe(connectionCount + 1);
@@ -722,17 +723,17 @@ test('pick, fill, and erase operate on explicit grid cells', async ({page}) => {
 
   await page.getByRole('button', {name: 'Dirt', exact: true}).click();
   await page.getByRole('button', {name: 'Fill', exact: true}).click();
-  await clickCell(page, 10, 10);
+  await clickCell(page, 2, 4);
   let state = await editorState(page);
-  expect(state.project.maps.camp_randall.terrain[10][10]).toBe('dirt');
-  expect(state.project.maps.camp_randall.terrain[10][11]).toBe('dirt');
+  expect(state.project.maps.camp_randall.terrain[4][2]).toBe('dirt');
+  expect(state.project.maps.camp_randall.terrain[4][3]).toBe('dirt');
   await page.getByRole('button', {name: 'Undo'}).click();
 
   await page.getByRole('button', {name: 'Pick', exact: true}).click();
-  await clickCell(page, 23, 10);
+  await clickCell(page, 11, 14);
   state = await editorState(page);
   expect(state.state.mode).toBe('terrain');
-  expect(state.state.selectedTerrain).toMatch(/^surface_brick_blob_/);
+  expect(state.state.selectedTerrain).toMatch(/^surface_stone_blob_/);
 
   const map = state.project.maps.camp_randall;
   const occupied = (x, y) => map.objects.some(object => (

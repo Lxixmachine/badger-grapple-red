@@ -622,8 +622,8 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   leaveInterior() {
     const fallback = {
-      team_locker_room: {mapId: 'camp_randall', x: 8, y: 18, facing: 'down'},
-      coach_office: {mapId: 'camp_randall', x: 38, y: 18, facing: 'down'},
+      team_locker_room: {mapId: 'camp_randall', x: 5, y: 11, facing: 'down'},
+      coach_office: {mapId: 'camp_randall', x: 17, y: 13, facing: 'down'},
       wrestling_room: {mapId: 'team_locker_room', x: 7, y: 1, facing: 'down'}
     }[this.currentMapId] || {mapId: 'camp_randall', ...defaultSeasonSpawn('camp_randall')};
     const destination = this.returnStack.pop() || fallback;
@@ -831,7 +831,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         this.setObjective('Report to Coach in the Camp Randall office.');
         this.persistState();
         return this.showMessage('Bus Manager: All credentials verified. Returning to Camp Randall.', () => {
-          this.changeMap('camp_randall', {x: 23, y: 25, facing: 'up'});
+          this.changeMap('camp_randall', {x: 11, y: 17, facing: 'up'});
         });
       case 'camp_randall:team_bus':
         if (!this.state.keyItems.flightTicket) return this.showMessage('Coach still has the flight packet.');
@@ -856,7 +856,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         this.state.flags.homecoming = true;
         this.setObjective('Carry the title through the Camp Randall stadium tunnel.');
         this.persistState();
-        return this.showMessage('The team walks beneath the Arch with the national trophy.', () => this.changeMap('camp_randall', {x: 23, y: 8, facing: 'up'}));
+        return this.showMessage('The team walks beneath the Arch with the national trophy.', () => this.changeMap('camp_randall', {x: 11, y: 7, facing: 'up'}));
       case 'camp_randall:homecoming':
         return this.showMessage('Captain: The tunnel is open. Bring the trophy home.');
       case 'team_locker_room:homecoming_case':
@@ -974,7 +974,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   registerSeasonTravel() {
     const destinations = [
-      {id: 'campRandall', name: 'Camp Randall', area: 'camp_randall', pos: {x: 23, y: 25}},
+      {id: 'campRandall', name: 'Camp Randall', area: 'camp_randall', pos: {x: 11, y: 17}},
       {id: 'fieldHouse', name: 'Field House', area: 'field_house', pos: {x: 20, y: 8}},
       {id: 'capitolSquare', name: 'Capitol Square', area: 'capitol_square', pos: {x: 8, y: 14}},
       {id: 'kohlCenter', name: 'Kohl Center', area: 'kohl_center', pos: {x: 20, y: 18}}

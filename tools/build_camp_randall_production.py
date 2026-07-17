@@ -7,12 +7,12 @@ and rejects blocked cells whose rendered alpha does not visibly occupy them.
 
 from __future__ import annotations
 
-import hashlib
 import json
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageOps
 
+from hash_utils import sha256_file
 from season_one_pixel_art import export_2x, material_tile
 
 
@@ -36,7 +36,7 @@ ACTOR_MAX_OPAQUE_COLORS = 15
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_file(path)
 
 
 def public_path(path: Path) -> str:
@@ -345,6 +345,43 @@ def stadium_grid_native(size: tuple[int, int]) -> Image.Image:
     return image
 
 
+def generated_grid_native(source_key: str, size: tuple[int, int], colors: int = 24) -> Image.Image:
+    """Normalize generated source art onto the world's exact 16px logical grid."""
+    source = SOURCES[source_key].convert("RGBA")
+    bounds = source.getchannel("A").getbbox()
+    if not bounds:
+        raise SystemExit(f"{source_key}: generated source is empty")
+    source = source.crop(bounds)
+    logical_size = (size[0] // 2, size[1] // 2)
+    fitted = ImageOps.fit(source, logical_size, method=Image.Resampling.LANCZOS, centering=(0.5, 0.5))
+    alpha = fitted.getchannel("A").point(lambda value: 255 if value >= 128 else 0)
+    opaque = [pixel[:3] for pixel in fitted.get_flattened_data() if pixel[3] >= 128]
+    if not opaque:
+        raise SystemExit(f"{source_key}: generated source lost all opaque pixels")
+    sample = Image.new("RGB", (len(opaque), 1))
+    sample.putdata(opaque)
+    palette_sample = sample.quantize(colors=colors, method=Image.Quantize.MEDIANCUT, dither=Image.Dither.NONE).convert("RGB")
+    palette = list(dict.fromkeys(palette_sample.get_flattened_data()))
+    cache: dict[tuple[int, int, int], tuple[int, int, int]] = {}
+
+    def nearest(color: tuple[int, int, int]) -> tuple[int, int, int]:
+        if color not in cache:
+            cache[color] = min(
+                palette,
+                key=lambda candidate: sum((color[index] - candidate[index]) ** 2 for index in range(3)),
+            )
+        return cache[color]
+
+    logical = Image.new("RGBA", logical_size, (0, 0, 0, 0))
+    source_pixels = fitted.load()
+    output_pixels = logical.load()
+    for y in range(logical.height):
+        for x in range(logical.width):
+            if alpha.getpixel((x, y)):
+                output_pixels[x, y] = (*nearest(source_pixels[x, y][:3]), 255)
+    return logical.resize(size, Image.Resampling.NEAREST)
+
+
 def forest_strip(size: tuple[int, int], mirrored: bool) -> Image.Image:
     image = Image.new("RGBA", size, (31, 74, 48, 255))
     sample = source_crop("terrain", "forest")
@@ -421,6 +458,8 @@ def fit_art(spec: dict, size: tuple[int, int]) -> Image.Image:
         return ImageOps.mirror(image) if spec.get("mirror") else image
     if art == "stadium_grid_native":
         return stadium_grid_native(size)
+    if art == "stadium_compact_grid_native":
+        return generated_grid_native("stadium_compact", size)
     if art == "forest_strip":
         return forest_strip(size, False)
     if art == "forest_strip_mirrored":

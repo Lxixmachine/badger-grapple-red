@@ -64,7 +64,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "039d8ccc21abc7077141987ca99e84120b4252a5eb073a29e84712ac5ab6a149",
+      "sha256": "8a420132124b750c6d88f403fa9e7977b3f04933fec39a6ad0cbe855067c331f",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
@@ -89,7 +89,7 @@
       "width": 16,
       "height": 16,
       "colors": 3,
-      "sha256": "b1efa64b92bebb0e2a8fa691a7bbb1b3e81d03e1b27e6e26578e3c0726ea283d",
+      "sha256": "3935e08b3025c9797d0f0093ff69cdc71f88bf2c71b1d4dcd18f47fa2e993a7e",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -339,7 +339,7 @@
       "width": 16,
       "height": 16,
       "colors": 2,
-      "sha256": "a789661733cbca460b35188e99157cddf97614cb8d462d2a00b1f865c9e0e892",
+      "sha256": "77689827154926fce4c0155e7c64fb2fbe7357492701093a8704b5d18d6b3ee2",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
@@ -2378,8 +2378,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/dirt_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 3,
-      "sha256": "236dfc22573661b5e586ff516b4e8b40e9132f74612937884d7d404df682b73d",
+      "colors": 2,
+      "sha256": "fa43ff1b58ac7a33ab371bdf057f7ade72eac9ed2c11b92c1ea553a9bfb7aff7",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
@@ -2387,13 +2387,11 @@
           "dirt"
         ],
         "materialColorCounts": {
-          "grass": 1,
           "dirt": 2
         },
         "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
-          "grass": 83,
-          "dirt": 173
+          "dirt": 256
         },
         "outlinePixelCount": 46,
         "inputPartialAlphaPixelCount": 16,
@@ -2406,8 +2404,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/dirt_corner.png",
       "width": 16,
       "height": 16,
-      "colors": 3,
-      "sha256": "f0325a5ca52487877ce062d702331c697be94827ec93f50de7e278da75f7b07e",
+      "colors": 2,
+      "sha256": "f2034f2c1d479bdf18cdf88ca8efbf2f3e0dca77197b10a0cf806618b2553e54",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -2415,13 +2413,11 @@
           "dirt"
         ],
         "materialColorCounts": {
-          "grass": 1,
           "dirt": 2
         },
         "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
-          "grass": 89,
-          "dirt": 167
+          "dirt": 256
         },
         "outlinePixelCount": 48,
         "inputPartialAlphaPixelCount": 16,
@@ -2435,7 +2431,7 @@
       "width": 16,
       "height": 16,
       "colors": 7,
-      "sha256": "60b8e9f366c0643e04a85ed1e6a16e8b823408a75d6972dbcbe98591e1317a1b",
+      "sha256": "e36a15784818c74a60dc14630d895d1b37613fc824c56e3e46650956641059ec",
       "sourcePanel": 2,
       "materialDiscipline": {
         "materials": [
@@ -2450,9 +2446,9 @@
         },
         "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "grass": 8,
+          "grass": 4,
           "brick": 128,
-          "limestone": 120
+          "limestone": 124
         },
         "outlinePixelCount": 60,
         "inputPartialAlphaPixelCount": 42,
@@ -2465,8 +2461,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/stone_grass_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 6,
-      "sha256": "d518986affb1c4fe8692b811c47cd57dabcbcca694d0522462fc0aa0e8970403",
+      "colors": 5,
+      "sha256": "5b4b0f3715869ae3ce61543b47101184621d50d2158bc49a09827ef4a768bf78",
       "sourcePanel": 3,
       "materialDiscipline": {
         "materials": [
@@ -2474,13 +2470,13 @@
           "stone"
         ],
         "materialColorCounts": {
-          "grass": 2,
+          "grass": 1,
           "stone": 4
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 58,
-          "stone": 198
+          "grass": 13,
+          "stone": 243
         },
         "outlinePixelCount": 42,
         "inputPartialAlphaPixelCount": 16,
@@ -2493,8 +2489,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/shoreline_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 6,
-      "sha256": "4eb9d501184e646374348c9df36ab81a0929069c423526976da016c35c6f8b0c",
+      "colors": 5,
+      "sha256": "7010589d0d526855a7428f566adcd8753175a25b3b2f8fa92c3db4994282c477",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
@@ -2505,13 +2501,13 @@
         "materialColorCounts": {
           "grass": 1,
           "sand": 2,
-          "water": 3
+          "water": 2
         },
-        "maxColorsPerMaterial": 3,
+        "maxColorsPerMaterial": 2,
         "pixelsByMaterial": {
-          "grass": 80,
-          "sand": 43,
-          "water": 133
+          "grass": 7,
+          "sand": 121,
+          "water": 128
         },
         "outlinePixelCount": 53,
         "inputPartialAlphaPixelCount": 15,
@@ -2524,8 +2520,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/shoreline_corner.png",
       "width": 16,
       "height": 16,
-      "colors": 8,
-      "sha256": "8d48b902addd2326a770f649853fc0f2d6a4256d24a117e39c35c1d9e66617c4",
+      "colors": 7,
+      "sha256": "e6faee1f70ecc0cc9a45663caff9b5c7a733616f1f4d861b7569542e5e1a68d7",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
@@ -2536,13 +2532,13 @@
         "materialColorCounts": {
           "grass": 1,
           "sand": 3,
-          "water": 4
+          "water": 3
         },
-        "maxColorsPerMaterial": 4,
+        "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "grass": 116,
-          "sand": 54,
-          "water": 86
+          "grass": 4,
+          "sand": 168,
+          "water": 84
         },
         "outlinePixelCount": 57,
         "inputPartialAlphaPixelCount": 15,
@@ -2555,8 +2551,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/asphalt_curb_edge.png",
       "width": 16,
       "height": 16,
-      "colors": 9,
-      "sha256": "72f3e321f285d06f51b1552047f691dc4503cae150aaab61f6ce6b3840ab8a48",
+      "colors": 7,
+      "sha256": "cc33f7c4875cd656fdb37ca77ba910c2bf717d118cd63d3819d1763f662e11fe",
       "sourcePanel": 6,
       "materialDiscipline": {
         "materials": [
@@ -2565,15 +2561,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 3,
+          "grass": 1,
           "asphalt": 4,
           "limestone": 2
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 26,
+          "grass": 16,
           "asphalt": 143,
-          "limestone": 87
+          "limestone": 97
         },
         "outlinePixelCount": 56,
         "inputPartialAlphaPixelCount": 16,
@@ -2612,8 +2608,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/cliff_face.png",
       "width": 48,
       "height": 32,
-      "colors": 10,
-      "sha256": "877549b6db810bc2ed8196d8376726f740e6892f24976d715a00cab684678c86",
+      "colors": 9,
+      "sha256": "38c6551c9d94213e6b3c1dd4c9826229c82e611afec8ac24fe9c3f79630eab8b",
       "sourcePanel": 8,
       "materialDiscipline": {
         "materials": [
@@ -2622,15 +2618,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 3,
+          "grass": 2,
           "stone": 4,
           "limestone": 4
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 175,
-          "stone": 400,
-          "limestone": 961
+          "grass": 55,
+          "stone": 415,
+          "limestone": 1066
         },
         "outlinePixelCount": 145,
         "inputPartialAlphaPixelCount": 26,
@@ -2643,8 +2639,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/cliff_corner.png",
       "width": 32,
       "height": 32,
-      "colors": 7,
-      "sha256": "9ea50de0f1dc8072bdb8a2cbad24d951b6a390626531e6c66f24b4f079d82dfc",
+      "colors": 6,
+      "sha256": "6afe4a0d21d3bf5650881876f6ee9d06fa2ed50a123502dfdd4d096d2e9ed08d",
       "sourcePanel": 9,
       "materialDiscipline": {
         "materials": [
@@ -2653,15 +2649,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 2,
+          "grass": 1,
           "stone": 3,
           "limestone": 3
         },
         "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "grass": 176,
-          "stone": 124,
-          "limestone": 724
+          "grass": 10,
+          "stone": 142,
+          "limestone": 872
         },
         "outlinePixelCount": 119,
         "inputPartialAlphaPixelCount": 7,
@@ -2674,8 +2670,8 @@
       "path": "art/tilesets/imagegen_v3/transitions/cliff_stairs.png",
       "width": 32,
       "height": 32,
-      "colors": 8,
-      "sha256": "dca175b45e0b94d8e582d2f5fc6205995a2e9cb7caa44de85764ee9a2b1cb023",
+      "colors": 7,
+      "sha256": "a66fe890729045d2e4161c49f949a9afd80fd592bc121b1c61f15d81630bbef5",
       "sourcePanel": 10,
       "materialDiscipline": {
         "materials": [
@@ -2684,15 +2680,15 @@
           "limestone"
         ],
         "materialColorCounts": {
-          "grass": 2,
+          "grass": 1,
           "stone": 4,
           "limestone": 3
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 148,
-          "stone": 237,
-          "limestone": 639
+          "grass": 8,
+          "stone": 254,
+          "limestone": 762
         },
         "outlinePixelCount": 110,
         "inputPartialAlphaPixelCount": 12,
@@ -2706,7 +2702,7 @@
       "width": 48,
       "height": 16,
       "colors": 8,
-      "sha256": "2a44228027ba54c26e7787700da290f6d42f7bbc435925e0eca1ff030d8eaf14",
+      "sha256": "2c86286b48a903aee3b356edff3e236209ad0c6a40fba8f5ba025d0c11bc702e",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
@@ -2721,9 +2717,9 @@
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "grass": 24,
+          "grass": 6,
           "stone": 342,
-          "limestone": 402
+          "limestone": 420
         },
         "outlinePixelCount": 87,
         "inputPartialAlphaPixelCount": 17,

@@ -66,7 +66,7 @@ test('R1 is a grid-authoritative three-beat route with reachable story and exits
   });
   expect(map.cameraReviews).toHaveLength(3);
   expect(map.connections).toEqual([
-    {to: 'camp_randall', edge: 'north', start: 8, span: 2, toEdge: 'south', toStart: 23},
+    {to: 'camp_randall', edge: 'north', start: 8, span: 2, toEdge: 'south', toStart: 11},
     {to: 'field_house', edge: 'south', start: 8, span: 2, toEdge: 'north', toStart: 20}
   ]);
 

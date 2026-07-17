@@ -34,6 +34,7 @@ from season_one_pixel_art import (
 )
 from prepare_imagegen_tileset_sources import MANIFEST_PATH as IMAGEGEN_SOURCE_MANIFEST_PATH
 from prepare_imagegen_tileset_sources import build as prepare_imagegen_sources
+from hash_utils import sha256_file
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -75,7 +76,7 @@ def load_json(path: Path) -> dict:
 
 
 def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    return sha256_file(path)
 
 
 def public_path(path: Path) -> str:

@@ -1,7 +1,7 @@
 {
   "version": 1,
   "inputSha256": {
-    "art/imagegen/world_composition_manifest.json": "8a2a7ce3670d060670fa4bf3f2eb64d4d1d63da0fa281ac2684c3fb6393f341f",
+    "art/imagegen/world_composition_manifest.json": "5b6823189a0c6c26f651f691fcee84867a09e6fc60e3d896dae122d2c925c28a",
     "art/imagegen/lakeshore_path_full_v1_2026-07-11.png": "890a8f1147e69c7ff83c3d9af196ba1fa2f978a4e1f4776254da82a3125c91bb",
     "art/imagegen/lakeshore_path_full_v1_2026-07-11.prompt.md": "b95b1bf38480527e5455c12358fa923335026988a865847e1c812fb980fc1c83",
     "art/imagegen/picnic_point_full_v1_2026-07-11.png": "ba2059b346bf97dccea20d71f045f756d11c4289b34bb196c032d19b2d2e162d",

@@ -3454,3 +3454,37 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   release smoke, and production builds pass. Broad validation stops only on
   Tony's protected State Street composition checksum; do not regenerate,
   stage, revert, or include those separate user-owned files.
+
+## Codex Compact Camp Pass (v22.33)
+
+- Camp Randall's former 48x31 campus collage has been replaced by the approved
+  24x20 FireRed-scale hometown contract. It now uses the same full-map coverage
+  as the fixed Pallet Town reference: one south arrival, a two-cell route seam,
+  a compact path network, Team Building home, Coach's Office story building,
+  memory garden, practice pond, and one dominant stadium landmark.
+- ChatGPT built-in image generation produced an original compact stadium
+  facade specifically for the 11x5 owner grid. Its source, alpha master, and
+  prompt record are retained under `art/imagegen/`. The production compositor
+  exports it at exact nearest-neighbor 2x; no fractional scaling is used.
+- Layout revision 16 is authoritative for terrain, planned structures,
+  decorations, actors, events, doors, collision masks, camera reviews, and the
+  reciprocal R1 seam. The obsolete Camp polish layer is empty so a second set
+  of objects cannot drift away from the production grid. Every visible door is
+  a reachable warp cell and every story/event/exit anchor shares the rendered
+  metatile behavior map.
+- Ground hierarchy now follows the visual-parity brief: quiet high-key grass,
+  pale limestone circulation, dirt only at the route landing, and cardinal
+  reserved for identity architecture. The practice pond was reduced to an
+  honest 4x2 owner and moved off the office threshold; visible paving never
+  advertises a blocked water cell.
+- The fixed A/B ritual compares the clean 768x640 Camp review PNG against a
+  nearest-neighbor 2x crop of FireRed Pallet Town at identical 24x20 coverage.
+  `tools/capture_visual_parity.mjs` now captures the browser-composited canvas
+  box because direct WebGL framebuffer screenshots could produce false black
+  regions. Tony's phone/A-B verdict remains the visual close condition.
+- App version is v22.33. The production build, battle-art contract, balance,
+  map lint, targeted collision/editor gates, and complete sequential browser
+  suite pass; final suite count is 122/122. Broad validation reaches only the
+  protected State Street composition checksum. Do not run
+  `npm run build:world-compositions` or stage, regenerate, revert, or overwrite
+  those separate user-owned files.
