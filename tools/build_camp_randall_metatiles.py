@@ -131,7 +131,9 @@ def paint_maintained_lawn(raw: list[list[str]], layout: dict) -> None:
     if layout.get("kind") in {"home_town", "town"}:
         owners.extend(
             owner for owner in layout.get("landmarks", [])
-            if not owner.get("walkable") and owner.get("kind") not in {"water", "deep_water"}
+            if not owner.get("walkable")
+            and owner.get("kind") not in {"water", "deep_water"}
+            and owner.get("maintainedLawn", owner.get("width", 0) >= 5 and owner.get("height", 0) >= 4)
         )
     for owner in owners:
         left = max(0, owner["x"] - 1)

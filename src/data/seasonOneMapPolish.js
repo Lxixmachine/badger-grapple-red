@@ -60,6 +60,22 @@ export const SEASON_ONE_MAP_POLISH = {
       {id: 'camp_pond_flavor', label: 'Pond flavor', x: 15, y: 16, kind: 'message', text: 'The practice pond. A team manager skips stones between drills.', once: true}
     ]
   },
+  r1: {
+    objects: [
+      stamp('r1_island_tree', 'tree_ornamental', 7, 6, 1, 2)
+    ],
+    terrain: [
+      {id: 'r1_grass_nw', tile: 'tall_grass', x: 3, y: 2, width: 3, height: 2, mask: ['###', '##.']},
+      {id: 'r1_grass_ne', tile: 'tall_grass', x: 12, y: 3, width: 3, height: 2, mask: ['###', '.##']},
+      {id: 'r1_grass_mid_w', tile: 'tall_grass', x: 2, y: 7, width: 3, height: 3, mask: ['##.', '###', '.##']},
+      {id: 'r1_grass_mid_e', tile: 'tall_grass', x: 12, y: 8, width: 3, height: 3, mask: ['.##', '###', '##.']},
+      {id: 'r1_grass_south_w', tile: 'tall_grass', x: 4, y: 14, width: 3, height: 3, mask: ['###', '##.', '.##']},
+      {id: 'r1_grass_south_e', tile: 'tall_grass', x: 13, y: 19, width: 2, height: 3, mask: ['##', '##', '#.']},
+      {id: 'r1_flowers_white', tile: 'grass_white_flowers', x: 11, y: 2, width: 1, height: 1},
+      {id: 'r1_flowers_cardinal', tile: 'grass_red_flowers', x: 3, y: 12, width: 1, height: 1},
+      {id: 'r1_flowers_gold', tile: 'grass_gold_flowers', x: 14, y: 12, width: 1, height: 1}
+    ]
+  },
   monona_shore: {
     objects: [
       stamp('monona_rack', 'kayak_rack', 11, 5, 3, 2),
@@ -102,7 +118,7 @@ export const SEASON_ONE_MAP_POLISH = {
   },
   airport: {
     objects: [
-      stamp('airport_sign', 'blank_plaque', 6, 0, 2, 2),
+      stamp('airport_sign', 'blank_plaque', 6, 0, 2, 1),
       stamp('airport_trash_w', 'trash_can', 0, 6, 1, 1),
       stamp('airport_trash_e', 'trash_can', 14, 6, 1, 1),
       stamp('airport_bollard_w', 'bollard', 5, 6, 1, 2),
@@ -147,12 +163,21 @@ export const SEASON_ONE_MAP_POLISH = {
     ]
   },
   trainer_room: {
+    objects: [
+      stamp('trainer_cabinet_w', 'medical_cabinet', 1, 1, 2, 2),
+      stamp('trainer_cabinet_e', 'medical_cabinet', 12, 1, 2, 2),
+      stamp('trainer_waiting_bench', 'wood_bench', 6, 6, 3, 2)
+    ],
     actors: [
       actor('trainer_attendant', 'trainer', 7, 4, 'down', 'Full Condition and Stamina before you leave.'),
-      actor('trainer_locker_attendant', 'manager', 4, 4, 'right', 'The team locker connects to every Trainer\'s Room.')
+      actor('trainer_locker_attendant', 'manager', 4, 5, 'up', 'The team locker connects to every Trainer\'s Room.')
     ]
   },
   buckys_locker_room: {
+    objects: [
+      stamp('buckys_center_display', 'singlet_shelf', 6, 5, 3, 2),
+      stamp('buckys_wall_plaque', 'blank_plaque', 6, 0, 2, 1)
+    ],
     actors: [
       actor('buckys_clerk', 'manager', 7, 4, 'down', 'Bucky\'s Locker Room carries road-tested equipment.')
     ]

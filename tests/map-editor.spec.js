@@ -187,7 +187,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   ]);
   expect(state.project.maps.camp_randall).toMatchObject({width: 48, height: 31, cellSize: 32});
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
-  expect(state.project.assets.groundTiles).toHaveLength(695);
+  expect(state.project.assets.groundTiles).toHaveLength(697);
   expect(state.project.assets.groundStamps).toHaveLength(28);
   expect(state.project.assets.metatiles.length).toBeGreaterThan(1000);
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'water').behavior).toBe('water');
@@ -611,6 +611,65 @@ test('mobile layout keeps the canvas and touch palette usable', async ({page}) =
   await expect(page.locator('.inspector-panel')).toBeVisible();
   await page.getByRole('button', {name: 'Close inspector'}).click();
   await expect(page.locator('.inspector-panel')).toBeHidden();
+  expect(issues).toEqual([]);
+});
+
+test('planned world art uses only exact or declared same-axis tile assembly', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  const audit = await page.evaluate(() => {
+    const project = window.__badgerMapEditorTest.project();
+    const violations = [];
+    let plannedCount = 0;
+    let modularCount = 0;
+    for (const [mapId, map] of Object.entries(project.maps)) {
+      for (const object of map.objects || []) {
+        if (object.sourceKind !== 'planned-metatile') continue;
+        plannedCount += 1;
+        const source = object.sourceFootprint;
+        const policy = object.compositionPolicy;
+        if (!source) {
+          violations.push(`${mapId}.${object.id}: missing source footprint`);
+          continue;
+        }
+        if (policy === 'exact' && (source.width !== object.width || source.height !== object.height)) {
+          violations.push(`${mapId}.${object.id}: exact footprint changed`);
+        } else if (policy === 'repeat-x') {
+          modularCount += 1;
+          if (source.height !== object.height) violations.push(`${mapId}.${object.id}: horizontal module changed height`);
+        } else if (policy === 'repeat-y') {
+          modularCount += 1;
+          if (source.width !== object.width) violations.push(`${mapId}.${object.id}: vertical module changed width`);
+        } else if (policy !== 'exact') {
+          violations.push(`${mapId}.${object.id}: undeclared assembly policy`);
+        }
+      }
+    }
+    return {
+      violations,
+      plannedCount,
+      modularCount,
+      trainerMaterials: [...new Set(project.maps.trainer_room.terrain.flat())],
+      shopMaterials: [...new Set(project.maps.buckys_locker_room.terrain.flat())],
+      trainerShell: project.maps.trainer_room.objects.filter(object => object.id.startsWith('room_wall_')).map(object => object.id),
+      r1TallGrass: project.maps.r1.terrain.flat().filter(tile => tile === 'tall_grass').length,
+      r1HasIslandTree: project.maps.r1.objects.some(object => object.id === 'r1_island_tree')
+    };
+  });
+
+  expect(audit.violations).toEqual([]);
+  expect(audit.plannedCount).toBeGreaterThan(50);
+  expect(audit.modularCount).toBeGreaterThan(0);
+  expect(audit.trainerMaterials).toEqual(['clinic_floor']);
+  expect(audit.shopMaterials).toEqual(['shop_floor']);
+  expect(audit.trainerShell).toEqual(['room_wall_north']);
+  expect(audit.r1TallGrass).toBeGreaterThan(0);
+  expect(audit.r1HasIslandTree).toBe(true);
+
+  await page.getByRole('combobox', {name: 'Map'}).selectOption('field_house');
+  await clickCell(page, 22, 3);
+  await expect(page.getByText('Exact 3 x 2 stamp', {exact: true})).toBeVisible();
+  await expect(page.getByText('3 x 2 locked', {exact: true})).toBeVisible();
   expect(issues).toEqual([]);
 });
 

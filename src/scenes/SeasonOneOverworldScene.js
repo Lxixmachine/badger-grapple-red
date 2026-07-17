@@ -41,6 +41,16 @@ const DIRS = {
 };
 const OPPOSITE = {down: 'up', up: 'down', left: 'right', right: 'left'};
 
+function assertNativePixelSize(image, width, height, label) {
+  if (image.width !== width || image.height !== height || image.scaleX !== 1 || image.scaleY !== 1) {
+    throw new Error(
+      `${label} violates the native pixel contract: ${image.width}x${image.height} at `
+      + `${image.scaleX}x${image.scaleY}; expected ${width}x${height} at 1x1`
+    );
+  }
+  return image;
+}
+
 const ACTOR_STORY_KEYS = {
   captain: 'team_locker_room:captain_block',
   coach: 'wrestling_room:coach_found',
@@ -313,7 +323,14 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   renderGround() {
     if (this.map.renderModel === 'object' && this.map.background?.path) {
-      this.trackWorld(this.add.image(0, 0, `season-bg:${this.currentMapId}`).setOrigin(0).setDepth(0));
+      const background = this.add.image(0, 0, `season-bg:${this.currentMapId}`).setOrigin(0).setDepth(0);
+      assertNativePixelSize(
+        background,
+        this.map.width * CELL_SIZE,
+        this.map.height * CELL_SIZE,
+        `${this.currentMapId} background`
+      );
+      this.trackWorld(background);
       return;
     }
     const data = Array.from({length: this.map.height}, (_, y) => Array.from({length: this.map.width}, (_, x) => {
@@ -351,12 +368,18 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       }
       const asset = objectAsset(object);
       if (!asset?.path) continue;
-      this.trackWorld(this.add.image(
+      const image = this.add.image(
         object.x * CELL_SIZE,
         object.y * CELL_SIZE,
         `season-object:${asset.id}`
-      ).setOrigin(0).setDisplaySize(object.width * CELL_SIZE, object.height * CELL_SIZE)
-        .setDepth((object.y + object.height) * CELL_SIZE - 1));
+      ).setOrigin(0).setDepth((object.y + object.height) * CELL_SIZE - 1);
+      assertNativePixelSize(
+        image,
+        object.width * CELL_SIZE,
+        object.height * CELL_SIZE,
+        `${this.currentMapId}.${object.id}`
+      );
+      this.trackWorld(image);
     }
   }
 

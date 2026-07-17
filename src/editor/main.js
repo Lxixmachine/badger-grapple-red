@@ -782,6 +782,16 @@ function coordinateFields(entry) {
   </div>`;
 }
 
+function gridArtLabel(object) {
+  const source = object.sourceFootprint;
+  if (!source) return 'Custom grid object';
+  const sourceSize = `${source.width} x ${source.height}`;
+  if (object.compositionPolicy === 'exact') return `Exact ${sourceSize} stamp`;
+  if (object.compositionPolicy === 'repeat-x') return `Horizontal modular ${sourceSize} -> ${object.width} x ${object.height}`;
+  if (object.compositionPolicy === 'repeat-y') return `Vertical modular ${sourceSize} -> ${object.width} x ${object.height}`;
+  return `Native ${sourceSize} stamp`;
+}
+
 function updateObjectInspector(object) {
   inspectorContent.innerHTML = `
     <div class="field-group">
@@ -789,6 +799,7 @@ function updateObjectInspector(object) {
       <label class="field-label"><span>Name</span><input data-field="name" value="${escapeHtml(object.name)}" /></label>
       ${coordinateFields(object)}
       <label class="field-label"><span>Footprint</span><span class="read-only-value">${object.width} x ${object.height} locked</span></label>
+      <label class="field-label"><span>Tile assembly</span><span class="read-only-value">${escapeHtml(gridArtLabel(object))}</span></label>
       <label class="field-label"><span>Depth</span><select data-field="depthMode"><option value="row-sliced" ${object.depthMode === 'row-sliced' ? 'selected' : ''}>Row sliced</option><option value="flat" ${object.depthMode === 'flat' ? 'selected' : ''}>Flat object</option></select></label>
       <label class="field-label"><span>Destination</span><select data-field="interior"><option value="">None</option>${Object.values(project.maps).filter(map => map.type === 'interior').map(map => `<option value="${map.id}" ${object.interior === map.id ? 'selected' : ''}>${escapeHtml(map.name)}</option>`).join('')}</select></label>
     </div>

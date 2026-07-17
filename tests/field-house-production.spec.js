@@ -53,7 +53,7 @@ function flood(map, start, blocked) {
   return reachable;
 }
 
-test('Field House is a grid-authored town with an honest arch and reachable services', async ({page}) => {
+test('Field House has an open arrival, grid-exact wayfinding, and reachable services', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
   const project = await page.evaluate(() => window.__badgerMapEditorTest.project());
@@ -69,11 +69,20 @@ test('Field House is a grid-authored town with an honest arch and reachable serv
   expect(source.decorations.filter(entry => /^tree_/.test(entry.stamp)).length).toBeGreaterThanOrEqual(40);
   expect(source.decorations.some(entry => /^forest_/.test(entry.stamp))).toBe(false);
 
-  const arch = map.objects.find(object => object.id === 'field_house_arch');
-  expect(arch).toMatchObject({x: 17, y: 4, width: 7, height: 4});
-  expect(arch.collisionMask).toEqual(['##...##', '##...##', '##...##', '##...##']);
-  expect(arch.metatiles).toHaveLength(4);
-  expect(arch.metatiles.every(row => row.length === 7)).toBe(true);
+  const wayfinding = map.objects.find(object => object.id === 'field_house_arch');
+  expect(wayfinding).toMatchObject({
+    name: 'Field House Wayfinding',
+    sourceId: 'campus_sign',
+    x: 22,
+    y: 3,
+    width: 3,
+    height: 2,
+    compositionPolicy: 'exact',
+    sourceFootprint: {width: 3, height: 2}
+  });
+  expect(wayfinding.collisionMask).toEqual(['...', '#.#']);
+  expect(wayfinding.metatiles).toHaveLength(2);
+  expect(wayfinding.metatiles.every(row => row.length === 3)).toBe(true);
 
   const serviceIds = ['trainer_room_field', 'field_house_arena', 'buckys_field'];
   expect(serviceIds.every(id => map.objects.some(object => object.id === id))).toBe(true);

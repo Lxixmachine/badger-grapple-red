@@ -486,6 +486,37 @@ def quiet_dirt(source: Image.Image, ramp) -> Image.Image:
     return output
 
 
+def quiet_water(source: Image.Image, ramp) -> Image.Image:
+    """Keep generated ripple placement without turning open water into static."""
+    rgba = source.convert("RGBA")
+    dark, base, light, _foam = sorted(ramp, key=_luma)
+    output = Image.new("RGBA", rgba.size, base)
+    candidates = []
+    for y in range(1, rgba.height - 1):
+        for x in range(1, rgba.width - 2):
+            center = _luma(rgba.getpixel((x, y)))
+            horizontal = (_luma(rgba.getpixel((x - 1, y))) + _luma(rgba.getpixel((x + 1, y)))) // 2
+            candidates.append((center - horizontal, y, x))
+
+    selected: list[tuple[int, int]] = []
+
+    def place(ordered: list[tuple[int, int, int]], color, count: int, length: int) -> None:
+        placed = 0
+        for contrast, y, x in ordered:
+            if contrast == 0 or any(abs(x - px) <= 3 and abs(y - py) <= 2 for px, py in selected):
+                continue
+            for offset in range(length):
+                output.putpixel((min(output.width - 1, x + offset), y), color)
+            selected.append((x, y))
+            placed += 1
+            if placed >= count:
+                break
+
+    place(sorted(candidates, key=lambda entry: entry[0], reverse=True), light, 3, 2)
+    place(sorted(candidates, key=lambda entry: entry[0]), dark, 2, 1)
+    return output
+
+
 def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
     """Keep Imagegen's material read while replacing micro-noise with placed seams."""
     rgba = source.convert("RGBA")
@@ -539,6 +570,8 @@ def discipline_ground_material(asset_id: str, image: Image.Image) -> Image.Image
         return quiet_mowed_grass(image, ramp)
     if asset_id == "dirt" and ramp:
         return quiet_dirt(image, ramp)
+    if asset_id == "water" and ramp:
+        return quiet_water(image, ramp)
     if asset_id in {"brick", "concrete", "stone"} and ramp:
         return disciplined_paver(image, ramp, asset_id)
     return posterize_to_ramp(image, ramp) if ramp else image

@@ -256,17 +256,17 @@
       "path": "art/tilesets/imagegen_v3/ground/water.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "7afd9d62fa5e457e4c1cf8eacb5b48974244b3ca2bbc034ea2ad643e472a4776",
+      "colors": 3,
+      "sha256": "156ee44eeffc6ad9f2984c05e3ee2e21be2f88111e433ccff89190db4ce9b002",
       "sourcePanel": 8,
       "materialDiscipline": {
         "materials": [
           "water"
         ],
         "materialColorCounts": {
-          "water": 4
+          "water": 3
         },
-        "maxColorsPerMaterial": 4,
+        "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
           "water": 256
         },
@@ -669,7 +669,7 @@
       "width": 16,
       "height": 16,
       "colors": 6,
-      "sha256": "968ab4bfaa294ceb8fb84809d8f120a0208348aa699075bab08ea62a0b1bbefc",
+      "sha256": "3ddc14c63f7d2d83191a78fae0bdf1f1c0be7dc6b55a9c869bb612185107a746",
       "sourcePanel": 11,
       "materialDiscipline": {
         "materials": [
@@ -683,8 +683,8 @@
         },
         "maxColorsPerMaterial": 3,
         "pixelsByMaterial": {
-          "foliage": 14,
-          "wood": 149
+          "foliage": 15,
+          "wood": 148
         },
         "outlinePixelCount": 49,
         "inputPartialAlphaPixelCount": 79,
@@ -806,8 +806,8 @@
       "path": "art/tilesets/imagegen_v3/architecture/window_limestone.png",
       "width": 16,
       "height": 16,
-      "colors": 9,
-      "sha256": "edf6d5c65f0b7d1b6fc54deea24e39c14e3f1e26b480b8ae09c090e34d546111",
+      "colors": 10,
+      "sha256": "192ffcc92468cc72da1e0bd48baeb5633394105abc279c46d6f2528d72142f65",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
@@ -817,7 +817,7 @@
         ],
         "materialColorCounts": {
           "limestone": 4,
-          "glass": 2,
+          "glass": 3,
           "slate": 3
         },
         "maxColorsPerMaterial": 4,
@@ -868,8 +868,8 @@
       "path": "art/tilesets/imagegen_v3/architecture/door_red.png",
       "width": 16,
       "height": 32,
-      "colors": 15,
-      "sha256": "6ac5c3a957b1f835468d07d1227f9483c24095f77056a43ab763ff0b5ff45de3",
+      "colors": 16,
+      "sha256": "55f111d011c3f07511818a58a6d75a600733b880fdd92a750864bffcbcd454ef",
       "sourcePanel": 6,
       "materialDiscipline": {
         "materials": [
@@ -881,7 +881,7 @@
         "materialColorCounts": {
           "limestone": 4,
           "cardinal": 4,
-          "glass": 2,
+          "glass": 3,
           "metal": 4
         },
         "maxColorsPerMaterial": 4,
@@ -902,8 +902,8 @@
       "path": "art/tilesets/imagegen_v3/architecture/storefront.png",
       "width": 32,
       "height": 32,
-      "colors": 12,
-      "sha256": "459191489067cccfa72aa3cd0dd7e95202a70f1e35b746d235765a31cf2c2647",
+      "colors": 13,
+      "sha256": "da9a6e67294aff584778b7ea8a7e9c9572230ce516acfb733ba45565cee53fcb",
       "sourcePanel": 7,
       "materialDiscipline": {
         "materials": [
@@ -914,7 +914,7 @@
         ],
         "materialColorCounts": {
           "limestone": 3,
-          "glass": 2,
+          "glass": 3,
           "slate": 4,
           "metal": 4
         },
@@ -1058,7 +1058,7 @@
       "width": 80,
       "height": 64,
       "colors": 28,
-      "sha256": "ecf562dd60881ee75cda08d7615d3172de6ad833d88ce0408b555ba627f8b6ff",
+      "sha256": "0d6314ca469844191e7273a25cc3a24b55d2b135b5e67caa917dda0bd668a987",
       "sourcePanel": 0,
       "materialDiscipline": {
         "materials": [
@@ -1104,8 +1104,8 @@
       "path": "art/tilesets/imagegen_v3/service_buildings/buckys_locker_room_exterior.png",
       "width": 80,
       "height": 64,
-      "colors": 25,
-      "sha256": "6c7772c6f794198700fa0d382fbad7299b3a72799582b50400df96493175b715",
+      "colors": 26,
+      "sha256": "f119a840ea7ff858986fb67b5b1be99aae6f80c56c6e23cd3a708261d92e9617",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -1124,7 +1124,7 @@
           "brick": 3,
           "limestone": 4,
           "slate": 3,
-          "glass": 1,
+          "glass": 2,
           "wood": 4,
           "metal": 4,
           "gold": 4
@@ -2155,7 +2155,7 @@
       "width": 16,
       "height": 16,
       "colors": 6,
-      "sha256": "3f2af9b97ac9bd5eeaa883aee00316e9ba6e823c25c5c730f1ba3527066957a0",
+      "sha256": "4eb9d501184e646374348c9df36ab81a0929069c423526976da016c35c6f8b0c",
       "sourcePanel": 4,
       "materialDiscipline": {
         "materials": [
@@ -2186,7 +2186,7 @@
       "width": 16,
       "height": 16,
       "colors": 8,
-      "sha256": "75b384e369760cac4526aa48ec20bd49a647874e964cffd6705be9aba9da6ad3",
+      "sha256": "8d48b902addd2326a770f649853fc0f2d6a4256d24a117e39c35c1d9e66617c4",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
@@ -2428,8 +2428,8 @@
       "path": "art/tilesets/imagegen_v3/route_landmarks/terrace_chair_trio.png",
       "width": 64,
       "height": 32,
-      "colors": 19,
-      "sha256": "53c3b8640f936ceb4f2d06ab42fecc25059018f0e2b19b4065aba7dba92d6650",
+      "colors": 20,
+      "sha256": "a7880fc1b01207ef3f5efc618f6d4d866c212ebf4a9071ec54670b1ad0d19e32",
       "sourcePanel": 1,
       "materialDiscipline": {
         "materials": [
@@ -2442,7 +2442,7 @@
         "materialColorCounts": {
           "cardinal": 4,
           "gold": 4,
-          "glass": 3,
+          "glass": 4,
           "slate": 4,
           "metal": 4
         },
@@ -2466,7 +2466,7 @@
       "width": 80,
       "height": 80,
       "colors": 24,
-      "sha256": "d4a1d34574171d2fc01299d0ba9b5434187d71075d7a08c3e893aa5cd39bc611",
+      "sha256": "aab83e2eebd33b7cb9ddfa6cd92c04d65c590f1813ce3866ba8e9f9318e5b9c4",
       "sourcePanel": 2,
       "materialDiscipline": {
         "materials": [
@@ -2489,10 +2489,10 @@
         "pixelsByMaterial": {
           "cardinal": 760,
           "slate": 2693,
-          "limestone": 736,
+          "limestone": 755,
           "wood": 821,
           "foliage": 483,
-          "glass": 216
+          "glass": 197
         },
         "outlinePixelCount": 286,
         "inputPartialAlphaPixelCount": 145,
@@ -2568,7 +2568,7 @@
       "width": 64,
       "height": 32,
       "colors": 18,
-      "sha256": "a2c89c9c7261f1fe573ab8380b2fa6f0192dc3d179a024a724b41636de14c7b6",
+      "sha256": "4a235ca2309c1e9e715a9e980e4978594c4fb52460fe061353f8461fe6127ce0",
       "sourcePanel": 5,
       "materialDiscipline": {
         "materials": [
@@ -2588,10 +2588,10 @@
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
           "foliage": 91,
-          "stone": 215,
+          "stone": 213,
           "dirt": 102,
-          "water": 228,
-          "wood": 363
+          "water": 215,
+          "wood": 378
         },
         "outlinePixelCount": 161,
         "inputPartialAlphaPixelCount": 151,
@@ -2820,8 +2820,8 @@
       "path": "art/tilesets/imagegen_v3/landmarks/nationals_arena_exterior.png",
       "width": 224,
       "height": 128,
-      "colors": 30,
-      "sha256": "2cda7c88ace9b52993072bbd48187d62a8623e32a56af68a1c7a4a1c683ccc0f",
+      "colors": 31,
+      "sha256": "95ba0405edc9d2557317db9f2486368e23aac6a67c607899c9a77fc24b85f62c",
       "sourceFile": "season_one_nationals_arena_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -2841,7 +2841,7 @@
           "brick": 1,
           "limestone": 4,
           "slate": 4,
-          "glass": 3,
+          "glass": 4,
           "wood": 4,
           "metal": 4,
           "gold": 4,
@@ -2871,7 +2871,7 @@
       "width": 160,
       "height": 80,
       "colors": 30,
-      "sha256": "3a2566d95b14672e18e47ac7efb97aaa70993f87b53f6c04827aae90ff0ac966",
+      "sha256": "8b3d33dde940c54d71944cb2a15397b60df54ec25e6485ef8e57fbb8b089801e",
       "sourceFile": "season_one_bascom_hall_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3021,7 +3021,7 @@
       "width": 160,
       "height": 128,
       "colors": 30,
-      "sha256": "a715005a4b4413a9ca3b65603c88101dccf446bcdee107fddaf04d37605ca9e4",
+      "sha256": "e908a2d32b2b0198edd0ee8f144621bceaf32064c4eab401e34df869cdbb0dd1",
       "sourceFile": "season_one_gateway_arch_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3118,7 +3118,7 @@
       "width": 128,
       "height": 64,
       "colors": 26,
-      "sha256": "d32bc421faf83f8461d7fcdc3c0db67d54586c175e82d2d035807fd2288953b0",
+      "sha256": "90fd619a1bc7485b66a96dedbd3c12064d181b87e085cabbf329157eb5591368",
       "sourceFile": "campus_housing_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3305,8 +3305,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/capitol_hotel_exterior.png",
       "width": 80,
       "height": 64,
-      "colors": 27,
-      "sha256": "db45c433aab7c23a66122bc80c1d9fd624dde6512b8136a187cdc8b416d46698",
+      "colors": 28,
+      "sha256": "52b8061cc739aa05790b4492966367ba3431b060813112a710459f5d98881feb",
       "sourceFile": "capitol_hotel_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3325,7 +3325,7 @@
           "brick": 1,
           "limestone": 4,
           "slate": 3,
-          "glass": 1,
+          "glass": 2,
           "wood": 4,
           "metal": 4,
           "gold": 4,
@@ -3355,7 +3355,7 @@
       "width": 80,
       "height": 112,
       "colors": 26,
-      "sha256": "9c76bbbad2b224e58646b7328be5b947a89c67ff17e95fa6e2c813b37a4aed14",
+      "sha256": "e1979153083c9cd817a5b60959e4ab1720c98ca7b14f4081db3f0b4febffb9da",
       "sourceFile": "civic_offices_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3401,8 +3401,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/transit_hotel_exterior.png",
       "width": 144,
       "height": 48,
-      "colors": 24,
-      "sha256": "e961f2300819e620262b4968567b24e63e44c3a9d9fee862d90b5762ee604d0a",
+      "colors": 25,
+      "sha256": "f5dde2c69c6833ad8e190c33845146fcd1ed0d1a2bf6acdb63dab5ad7e68433f",
       "sourceFile": "transit_hotel_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3421,7 +3421,7 @@
           "brick": 1,
           "limestone": 4,
           "slate": 4,
-          "glass": 2,
+          "glass": 3,
           "wood": 4,
           "metal": 4,
           "gold": 2
@@ -3448,8 +3448,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/team_hotel_exterior.png",
       "width": 128,
       "height": 96,
-      "colors": 28,
-      "sha256": "280093aaa051ad1856a2e02a895ea821afd400fb99a119e7e32742efa75699b4",
+      "colors": 29,
+      "sha256": "df322e4c4894c1c6e336ba8e04e815e1674cd297deb47f05c599235ffd743aa0",
       "sourceFile": "team_hotel_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3468,7 +3468,7 @@
           "brick": 1,
           "limestone": 4,
           "slate": 4,
-          "glass": 1,
+          "glass": 2,
           "wood": 4,
           "metal": 4,
           "gold": 4,
@@ -3498,7 +3498,7 @@
       "width": 112,
       "height": 64,
       "colors": 28,
-      "sha256": "16778fb83cd23a37d65bff7a7aacb31c4027e12abc8379ee0e7f31f61c4a82aa",
+      "sha256": "179bb59551d357241f46c40b2a409ce3ccc5469e6067b65ab24bd0fa4bdd4e5a",
       "sourceFile": "riverfront_hotel_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3546,8 +3546,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_11x5.png",
       "width": 176,
       "height": 80,
-      "colors": 27,
-      "sha256": "9857fc52d57d02a0290d85a3cbff2ae950579f7f5be6b8fffeb2a21e42c8df26",
+      "colors": 28,
+      "sha256": "6a77dac30f9bd7150253b4de59fc53620f88ae07ab1c71ba38c228e9ac211c94",
       "sourceFile": "state_facade_11x5_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3566,7 +3566,7 @@
           "brick": 3,
           "limestone": 4,
           "slate": 4,
-          "glass": 2,
+          "glass": 3,
           "wood": 4,
           "metal": 4,
           "gold": 4
@@ -3593,8 +3593,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_10x3.png",
       "width": 160,
       "height": 48,
-      "colors": 26,
-      "sha256": "6fc747bb7215ab7252db8c556979431470406693f0181d97ccfeb654c882c34d",
+      "colors": 28,
+      "sha256": "167e0a2aa4caa341264561a432ad9b276edc6c13756a847f6d94e994e2bf6a5f",
       "sourceFile": "state_facade_10x3_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3613,7 +3613,7 @@
           "brick": 3,
           "limestone": 4,
           "slate": 4,
-          "glass": 1,
+          "glass": 3,
           "wood": 4,
           "metal": 4,
           "gold": 4
@@ -3640,8 +3640,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/state_facade_13x5.png",
       "width": 208,
       "height": 80,
-      "colors": 27,
-      "sha256": "cc6d6075d9fd42ba66138c9669d8801f13c3c17fc53377a8ece01bde8e9e4f1f",
+      "colors": 28,
+      "sha256": "10bc16dfd21094bfb6796d4eb9ca2b85b96a9af5735a14e120bba5c3aab0a302",
       "sourceFile": "state_facade_13x5_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3660,7 +3660,7 @@
           "brick": 2,
           "limestone": 4,
           "slate": 4,
-          "glass": 2,
+          "glass": 3,
           "wood": 4,
           "metal": 4,
           "gold": 4
@@ -3688,7 +3688,7 @@
       "width": 128,
       "height": 80,
       "colors": 28,
-      "sha256": "a178d565ee66e67980d78765929a6eda6769304cfd018358e95fa355f2c82ab4",
+      "sha256": "9aee060e0121087d3b176f8a79848ae1c7c34e0e0cfcfe3c6100c67856262e73",
       "sourceFile": "state_facade_8x5_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3735,7 +3735,7 @@
       "width": 128,
       "height": 64,
       "colors": 28,
-      "sha256": "528b2650b4fc71287ad85cd2b3387af2cf1e3f651f3e4024dfec21d7b5d3c2cb",
+      "sha256": "fe12862b273052d23648653f4163ee21e62f0e9e5d1b112b05866fd84acae710",
       "sourceFile": "state_facade_8x4_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3782,7 +3782,7 @@
       "width": 160,
       "height": 80,
       "colors": 30,
-      "sha256": "5916c5e65e4c7afa7f2e360ce33981c8b63d4bcfa641cead068c3caede9c949a",
+      "sha256": "f387e5c0313e55975a043f95653d4252f3525391a075329d15eb0dcc0385ac7e",
       "sourceFile": "state_facade_10x5_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3831,7 +3831,7 @@
       "width": 80,
       "height": 80,
       "colors": 28,
-      "sha256": "15902939a102a2afebcc8ba770471b88b8cfa23bc80e3ee385a4fda761367647",
+      "sha256": "30d4ecfa6f0617fae48987ab02a366296660b6c7ed75a4d6ec45f12ee54e4ef8",
       "sourceFile": "state_facade_5x5_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3878,7 +3878,7 @@
       "width": 128,
       "height": 32,
       "colors": 26,
-      "sha256": "b2563d36e3fc938881f955c55473cae8fba462cdee0630c06b9d7b18ee9ad420",
+      "sha256": "35d3d94d4974f73d5c6787972c5e780f9015db43739d16526bc4ce78491e4fcb",
       "sourceFile": "city_edge_horizontal_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3924,8 +3924,8 @@
       "path": "art/tilesets/imagegen_v3/ordinary_buildings/city_edge_vertical.png",
       "width": 32,
       "height": 128,
-      "colors": 24,
-      "sha256": "ca1c63393944733533470632a60743bb5265241a12cddbdae54be6e18cb4b2f3",
+      "colors": 25,
+      "sha256": "7b63a0a601e5e4efbddc5b8004bc66cb6a081c57cfa66315e53edc2a9842da60",
       "sourceFile": "city_edge_vertical_source_v1.png",
       "materialDiscipline": {
         "materials": [
@@ -3944,7 +3944,7 @@
           "brick": 1,
           "limestone": 4,
           "slate": 4,
-          "glass": 1,
+          "glass": 2,
           "wood": 4,
           "metal": 4,
           "gold": 3

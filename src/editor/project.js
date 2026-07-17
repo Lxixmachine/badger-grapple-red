@@ -38,8 +38,9 @@ function collisionMask(owner) {
 }
 
 function doorFor(owner) {
-  if (!owner?.door) return null;
-  return {x: owner.door.x - owner.x, y: owner.door.y - owner.y};
+  if (owner?.door) return {x: owner.door.x - owner.x, y: owner.door.y - owner.y};
+  if (owner?.to && owner.width === 1 && owner.height === 1) return {x: 0, y: 0};
+  return null;
 }
 
 function terrainRows(layout, interior = false) {
@@ -124,31 +125,74 @@ function behaviorVariant(tileId, behavior) {
   return tile ? behaviorVariants.get(`${tile.visual}:${behavior}`) || tileId : tileId;
 }
 
-function sampleIndex(index, targetSize, sourceSize) {
-  if (sourceSize <= 1 || targetSize <= 1) return Math.floor((sourceSize - 1) / 2);
-  if (targetSize <= sourceSize) return Math.round(index * (sourceSize - 1) / (targetSize - 1));
+const STAMP_COMPOSITION_POLICY = Object.freeze({
+  blank_plaque: 'repeat-x',
+  city_edge_horizontal: 'repeat-x',
+  city_edge_vertical: 'repeat-y',
+  fence_long: 'repeat-x',
+  gear_shop_counter: 'repeat-x',
+  hedge_vertical: 'repeat-y',
+  medical_cabinet: 'repeat-x',
+  retaining_wall_brick: 'repeat-x',
+  retaining_wall_stone: 'repeat-x',
+  recovery_counter: 'repeat-x',
+  singlet_shelf: 'repeat-x',
+  wood_bench: 'repeat-x'
+});
+
+function modularIndex(index, targetSize, sourceSize) {
+  if (targetSize === sourceSize) return index;
+  if (sourceSize === 1) return 0;
+  if (targetSize === 1) return Math.floor(sourceSize / 2);
   if (index === 0) return 0;
   if (index === targetSize - 1) return sourceSize - 1;
-  if (sourceSize <= 2) return index % sourceSize;
+  if (sourceSize === 2) return index % 2;
   return 1 + ((index - 1) % (sourceSize - 2));
 }
 
-function resizeStampCells(stamp, width, height) {
-  return Array.from({length: height}, (_, y) => Array.from({length: width}, (_, x) => {
-    const sourceY = sampleIndex(y, height, stamp.height);
-    const sourceX = sampleIndex(x, width, stamp.width);
-    return stamp.cells[sourceY][sourceX];
-  }));
+function composeStampCells(stamp, width, height) {
+  if (stamp.width === width && stamp.height === height) {
+    return {cells: deepClone(stamp.cells), policy: 'exact'};
+  }
+  const policy = STAMP_COMPOSITION_POLICY[stamp.id];
+  if (policy === 'repeat-x' && height === stamp.height) {
+    return {
+      cells: Array.from({length: height}, (_, y) => Array.from({length: width}, (_, x) => (
+        stamp.cells[y][modularIndex(x, width, stamp.width)]
+      ))),
+      policy
+    };
+  }
+  if (policy === 'repeat-y' && width === stamp.width) {
+    return {
+      cells: Array.from({length: height}, (_, y) => Array.from({length: width}, (_, x) => (
+        stamp.cells[modularIndex(y, height, stamp.height)][x]
+      ))),
+      policy
+    };
+  }
+  throw new Error(
+    `${stamp.id}: ${stamp.width}x${stamp.height} stamp cannot fill ${width}x${height}; `
+      + 'use an exact stamp or a declared same-axis modular run'
+  );
 }
 
 function stampForOwner(sourceStamp, owner) {
   const mask = collisionMask(owner);
   const door = doorFor(owner);
-  const cells = resizeStampCells(sourceStamp, owner.width, owner.height).map((row, y) => row.map((tileId, x) => {
+  const composition = composeStampCells(sourceStamp, owner.width, owner.height);
+  const cells = composition.cells.map((row, y) => row.map((tileId, x) => {
     const behavior = door?.x === x && door?.y === y ? 'warp' : mask[y][x] === '#' ? 'solid' : 'walkable';
     return behaviorVariant(tileId, behavior);
   }));
-  return {...sourceStamp, width: owner.width, height: owner.height, cells};
+  return {
+    ...sourceStamp,
+    width: owner.width,
+    height: owner.height,
+    cells,
+    compositionPolicy: composition.policy,
+    sourceFootprint: {width: sourceStamp.width, height: sourceStamp.height}
+  };
 }
 
 const terrainTileIds = new Set((metatileBuild.terrain.catalog || []).map(tile => tile.id));
@@ -218,6 +262,8 @@ function campGridObject(id, stampId, x, y, extra = {}) {
       : `world:${stampId}`,
     sourceId: stampId,
     sourceKind: productionCampObjectIds.has(stampId) ? 'planned-metatile' : 'metatile',
+    compositionPolicy: 'exact',
+    sourceFootprint: {width: stamp.width, height: stamp.height},
     name: extra.name || stamp.name || id.replaceAll('_', ' '),
     x,
     y,
@@ -335,8 +381,11 @@ const DEDICATED_FIXTURE_STAMPS = {
   recovery_counter: 'recovery_counter',
   treatment_bench: 'recovery_counter',
   shop_counter: 'gear_shop_counter',
+  roster_lockers: 'medical_cabinet',
   singlet_wall: 'singlet_shelf',
   supply_wall: 'singlet_shelf',
+  booster_gallery: 'championship_trophy_case',
+  rental_counter: 'gear_shop_counter',
   kayak_rack: 'kayak_rack',
   bracket_board: 'tournament_bracket_board',
   bracket_desk: 'tournament_bracket_board',
@@ -346,6 +395,7 @@ const DEDICATED_FIXTURE_STAMPS = {
 
 function sourceStampId(owner, group, layout) {
   const id = owner.id || '';
+  if (owner.editorStampId && metatileBuild.stamps[owner.editorStampId]) return owner.editorStampId;
   if (DEDICATED_FIXTURE_STAMPS[id]) return DEDICATED_FIXTURE_STAMPS[id];
   const dedicatedLandmarks = {
     field_house_arena: 'field_house_arena_exterior',
@@ -385,7 +435,6 @@ function sourceStampId(owner, group, layout) {
   if (owner.kind === 'city') {
     return owner.width > owner.height ? 'city_edge_horizontal' : 'city_edge_vertical';
   }
-  if (owner.editorStampId && metatileBuild.stamps[owner.editorStampId]) return owner.editorStampId;
   if (id.includes('trainer_room')) return 'trainer_room_exterior';
   if (id.includes('buckys')) return 'buckys_locker_room_exterior';
   if (id.includes('locker') || id.includes('singlet') || id.includes('supply')) return 'wall_brick_wide';
@@ -445,9 +494,33 @@ function plannedObject(mapId, owner, group, layout, mapType = 'exterior') {
     object: {
       ...makeObjectInstance(mapId, entry, effectiveOwner, stamp),
       sourceId: sourceStamp.id,
-      sourceKind: 'planned-metatile'
+      sourceKind: 'planned-metatile',
+      compositionPolicy: stamp.compositionPolicy,
+      sourceFootprint: deepClone(stamp.sourceFootprint)
     }
   };
+}
+
+function applyTerrainPolish(terrain, polish, mapId) {
+  for (const patch of polish.terrain || []) {
+    if (!terrainTileIds.has(patch.tile)) throw new Error(`${mapId}: unknown terrain polish tile ${patch.tile}`);
+    const mask = patch.mask || Array.from({length: patch.height}, () => '#'.repeat(patch.width));
+    if (!Array.isArray(mask) || mask.length !== patch.height || mask.some(row => row.length !== patch.width)) {
+      throw new Error(`${mapId}: terrain polish patch ${patch.id || patch.tile} has an invalid mask`);
+    }
+    for (let y = 0; y < patch.height; y += 1) {
+      for (let x = 0; x < patch.width; x += 1) {
+        if (mask[y][x] !== '#') continue;
+        const targetY = patch.y + y;
+        const targetX = patch.x + x;
+        if (!terrain[targetY]?.[targetX]) {
+          throw new Error(`${mapId}: terrain polish patch ${patch.id || patch.tile} leaves the map`);
+        }
+        terrain[targetY][targetX] = patch.tile;
+      }
+    }
+  }
+  return terrain;
 }
 
 function plannedExterior(mapId, layout, objectAssets) {
@@ -482,6 +555,10 @@ function plannedExterior(mapId, layout, objectAssets) {
   }
   for (const patch of layout.editorObjects || []) objects.push(deepClone(patch));
   const planned = metatileBuild.plannedMaps[mapId];
+  // The deterministic atlas build resolves special ground languages such as
+  // shoreline water and terminal asphalt into exact grid cells.
+  const layoutTerrain = deepClone(planned.terrain);
+  const terrain = applyTerrainPolish(layoutTerrain, polish, mapId);
   return {
     id: mapId,
     name: layout.displayName,
@@ -493,8 +570,8 @@ function plannedExterior(mapId, layout, objectAssets) {
     background: null,
     metatileAtlas: deepClone(metatileBuild.atlas),
     terrainTiles: deepClone(metatileBuild.terrain.tiles),
-    originalTerrain: deepClone(planned.terrain),
-    terrain: deepClone(planned.terrain),
+    originalTerrain: deepClone(terrain),
+    terrain,
     objects,
     actors: [...(layout.actors || []), ...(polish.actors || [])].map(actor => makeActor(actor, mapId)),
     events: deepClone([...(layout.events || []), ...(polish.events || [])]),
@@ -509,14 +586,16 @@ function plannedExterior(mapId, layout, objectAssets) {
 
 function roomShellOwners(layout) {
   const width = layout.size.width;
-  const height = layout.size.height;
-  const exitX = layout.exit?.x ?? Math.floor(width / 2);
   return [
-    {id: 'room_wall_north', x: 0, y: 0, width, height: 1},
-    {id: 'room_wall_west', x: 0, y: 1, width: 1, height: height - 2},
-    {id: 'room_wall_east', x: width - 1, y: 1, width: 1, height: height - 2},
-    ...(exitX > 0 ? [{id: 'room_wall_south_west', x: 0, y: height - 1, width: exitX, height: 1}] : []),
-    ...(exitX < width - 1 ? [{id: 'room_wall_south_east', x: exitX + 1, y: height - 1, width: width - exitX - 1, height: 1}] : [])
+    {
+      id: 'room_wall_north',
+      editorStampId: 'retaining_wall_brick',
+      x: 0,
+      y: 0,
+      width,
+      height: 1,
+      collisionMask: ['#'.repeat(width)]
+    }
   ];
 }
 
@@ -524,7 +603,7 @@ function plannedInterior(mapId, layout, objectAssets) {
   const hasTerrainOverride = Boolean(layout.terrainOverride);
   const terrain = hasTerrainOverride
     ? deepClone(layout.terrainOverride)
-    : Array.from({length: layout.size.height}, () => Array(layout.size.width).fill('stone'));
+    : Array.from({length: layout.size.height}, () => Array(layout.size.width).fill(layout.floor || 'stone'));
   const objects = [];
   const add = (owner, group = 'fixtures') => {
     const built = plannedObject(mapId, owner, group, layout, 'interior');
@@ -551,6 +630,7 @@ function plannedInterior(mapId, layout, objectAssets) {
   const polish = mapPolish(mapId);
   for (const owner of polish.objects || []) add(owner, 'decorations');
   for (const patch of layout.editorObjects || []) objects.push(deepClone(patch));
+  applyTerrainPolish(terrain, polish, mapId);
   return {
     id: mapId,
     name: layout.displayName,
@@ -793,6 +873,21 @@ export function validateProject(project) {
                 errors.push(`${mapId}.${object.id}: metatile behavior at ${x},${y} is ${tile.behavior}, expected ${expected}`);
               }
             }
+          }
+        }
+        if (object.sourceKind === 'planned-metatile') {
+          const source = object.sourceFootprint;
+          const policy = object.compositionPolicy;
+          if (!source || !Number.isInteger(source.width) || !Number.isInteger(source.height)) {
+            errors.push(`${mapId}.${object.id}: planned stamp is missing its source footprint`);
+          } else if (policy === 'exact' && (source.width !== object.width || source.height !== object.height)) {
+            errors.push(`${mapId}.${object.id}: exact stamp footprint was changed`);
+          } else if (policy === 'repeat-x' && source.height !== object.height) {
+            errors.push(`${mapId}.${object.id}: horizontal stamp changed height`);
+          } else if (policy === 'repeat-y' && source.width !== object.width) {
+            errors.push(`${mapId}.${object.id}: vertical stamp changed width`);
+          } else if (!['exact', 'repeat-x', 'repeat-y'].includes(policy)) {
+            errors.push(`${mapId}.${object.id}: undeclared stamp composition policy`);
           }
         }
       }

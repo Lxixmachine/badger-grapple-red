@@ -1,6 +1,6 @@
 {
   "schema": "badger-grapple-tileset-contract/v1",
-  "version": 5,
+  "version": 6,
   "cellSize": 32,
   "logicalCellSize": 16,
   "renderScale": 2,
@@ -38,8 +38,8 @@
   ],
   "groundFamilies": {
     "base_surfaces": {
-      "minimum": 14,
-      "required": ["grass", "grass_b", "mowed_grass", "meadow_grass", "dirt", "brick", "stone", "concrete", "water", "asphalt", "sand", "gravel", "timber"]
+      "minimum": 16,
+      "required": ["grass", "grass_b", "mowed_grass", "meadow_grass", "dirt", "brick", "stone", "concrete", "water", "asphalt", "sand", "gravel", "timber", "clinic_floor", "shop_floor"]
     },
     "natural_details": {
       "minimum": 12,

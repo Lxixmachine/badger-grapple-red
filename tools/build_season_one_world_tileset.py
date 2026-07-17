@@ -563,6 +563,8 @@ def build() -> dict:
     gravel = export_2x(material_tile("gravel"))
     timber = export_2x(material_tile("timber"))
     meadow = export_2x(material_tile("meadow_grass"))
+    clinic_floor = export_2x(material_tile("clinic_floor"))
+    shop_floor = export_2x(material_tile("shop_floor"))
 
     add_ground("grass", "Grass", "grass", grass, ["base", "natural"])
     add_ground("grass_b", "Grass B", "grass", grass_b, ["base", "natural", "variation"])
@@ -580,6 +582,8 @@ def build() -> dict:
     add_ground("asphalt_b", "Asphalt B", "roads", export_2x(material_tile("asphalt", 1)), ["base", "road", "variation"])
     add_ground("timber", "Timber Boardwalk", "surface_timber", timber, ["base", "route", "boardwalk"])
     add_ground("meadow_grass", "Meadow Grass", "meadow", meadow, ["base", "natural", "flowering"])
+    add_ground("clinic_floor", "Trainer Room Tile", "service_floor", clinic_floor, ["base", "interior", "recovery"])
+    add_ground("shop_floor", "Equipment Shop Tile", "service_floor", shop_floor, ["base", "interior", "shop"])
 
     ground_material_metrics = {
         "grass": material_metrics(grass_logical),

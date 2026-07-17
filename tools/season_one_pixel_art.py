@@ -52,15 +52,21 @@ PALETTE = {
     "gravel": (170, 168, 151, 255),
     "gravel_light": (205, 199, 176, 255),
     "gravel_dark": (121, 122, 113, 255),
-    "water": (66, 139, 181, 255),
-    "water_light": (123, 194, 207, 255),
-    "water_dark": (42, 96, 145, 255),
+    "water": (69, 143, 181, 255),
+    "water_light": (111, 184, 201, 255),
+    "water_dark": (47, 105, 147, 255),
     "foam": (205, 224, 207, 255),
     "asphalt": (72, 79, 82, 255),
     "asphalt_light": (104, 109, 107, 255),
     "asphalt_dark": (48, 54, 58, 255),
     "curb": (235, 230, 214, 255),
     "curb_dark": (166, 159, 142, 255),
+    "clinic_floor": (234, 224, 194, 255),
+    "clinic_floor_light": (246, 239, 211, 255),
+    "clinic_floor_dark": (193, 177, 137, 255),
+    "shop_floor": (120, 157, 168, 255),
+    "shop_floor_light": (158, 188, 190, 255),
+    "shop_floor_dark": (77, 115, 130, 255),
     "leaf_deep": (31, 83, 53, 255),
     "leaf_dark": (47, 112, 57, 255),
     "leaf": (73, 142, 62, 255),
@@ -208,6 +214,24 @@ def material_tile(name: str, phase: int = 0) -> Image.Image:
         _dot(draw, 12, 4, p["stone_light"])
         _dot(draw, 6, 11, p["stone_light"])
         return image
+    if name == "clinic_floor":
+        image = canvas(fill=p["clinic_floor"])
+        draw = ImageDraw.Draw(image)
+        draw.rectangle((1, 2, 6, 3), fill=p["clinic_floor_light"])
+        draw.rectangle((9, 10, 14, 11), fill=p["clinic_floor_light"])
+        draw.line((3, 6, 6, 6), fill=p["clinic_floor_dark"])
+        draw.line((10, 14, 13, 14), fill=p["clinic_floor_dark"])
+        draw.point((12, 4), fill=p["clinic_floor_light"])
+        return image
+    if name == "shop_floor":
+        image = canvas(fill=p["shop_floor"])
+        draw = ImageDraw.Draw(image)
+        draw.line((2, 3, 7, 3), fill=p["shop_floor_light"])
+        draw.line((9, 10, 14, 10), fill=p["shop_floor_light"])
+        draw.line((4, 7, 7, 7), fill=p["shop_floor_dark"])
+        draw.line((10, 14, 13, 14), fill=p["shop_floor_dark"])
+        draw.point((13, 5), fill=p["shop_floor_dark"])
+        return image
     if name == "sand":
         image = canvas(fill=p["sand"])
         draw = ImageDraw.Draw(image)
@@ -229,13 +253,11 @@ def material_tile(name: str, phase: int = 0) -> Image.Image:
     if name == "water":
         image = canvas(fill=p["water"])
         draw = ImageDraw.Draw(image)
-        for y, offset in ((3, 1 + phase), (9, 7 - phase), (14, 3 + phase)):
+        for y, offset in ((5, 1 + phase), (12, 7 - phase)):
             x = offset % 8 - 4
             while x < 16:
-                draw.line((x, y, min(15, x + 4), y), fill=p["water_light"])
-                if x + 5 < 16:
-                    _dot(draw, x + 5, y - 1, p["water_light"])
-                x += 10
+                draw.line((x, y, min(15, x + 3), y), fill=p["water_light"])
+                x += 11
         return image
     if name == "asphalt":
         image = canvas(fill=p["asphalt"])
@@ -438,10 +460,19 @@ def ground_detail(detail_id: str) -> Image.Image:
             flowers = ImageOps.mirror(flowers)
         image.alpha_composite(flowers)
     elif detail_id == "tall_grass":
-        for x in range(1, 16, 3):
-            height = 4 + (x % 4)
-            draw.line((x, 14, x, 14 - height), fill=PALETTE["grass_dark"])
-            draw.point((max(0, x - 1), 12 - height // 2), fill=PALETTE["grass_light"])
+        draw.rectangle((0, 11, 15, 15), fill=PALETTE["grass_dark"])
+        for index, start in enumerate((0, 3, 6, 9, 12)):
+            tip = 4 + (index % 3)
+            draw.polygon(
+                (
+                    (start, 15), (start, 8 + index % 2), (start + 1, 11),
+                    (start + 2, tip), (start + 2, 12), (min(15, start + 3), 7 + index % 3),
+                    (min(15, start + 3), 15),
+                ),
+                fill=PALETTE["grass_dark"],
+            )
+            draw.line((start + 1, 13, start + 2, tip + 2), fill=PALETTE["grass_light"])
+        draw.line((0, 14, 15, 14), fill=PALETTE["grass_shadow"])
     elif detail_id == "shore_reeds":
         image.alpha_composite(source_asset("vegetation", "shore_reeds"))
     else:
