@@ -1103,15 +1103,16 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.areaToast?.destroy?.(true);
     const container = this.add.container(0, 0).setScrollFactor(0).setDepth(4900);
     const graphics = this.add.graphics().setScrollFactor(0);
+    const width = Math.min(190, Math.max(142, name.length * 8 + 30));
     graphics.fillStyle(0x17151a, 0.94);
-    graphics.fillRoundedRect(12, 10, 220, 37, 4);
+    graphics.fillRoundedRect(10, 8, width, 32, 3);
     graphics.fillStyle(0xb51d30, 1);
-    graphics.fillRect(12, 10, 7, 37);
+    graphics.fillRect(10, 8, 5, 32);
     graphics.lineStyle(2, 0xe3c76d, 1);
-    graphics.strokeRoundedRect(12, 10, 220, 37, 4);
-    const text = this.add.text(29, 18, name.toUpperCase(), {fontFamily: FONT, fontSize: '16px', fontStyle: 'bold', color: '#fff1c7'}).setScrollFactor(0);
+    graphics.strokeRoundedRect(10, 8, width, 32, 3);
+    const text = this.add.text(24, 15, name.toUpperCase(), {fontFamily: FONT, fontSize: '14px', fontStyle: 'bold', color: '#fff1c7'}).setScrollFactor(0);
     container.add([graphics, text]);
     this.areaToast = container;
-    this.tweens.add({targets: container, alpha: 0, delay: 1050, duration: 400, onComplete: () => container.destroy(true)});
+    this.tweens.add({targets: container, alpha: 0, delay: 800, duration: 300, onComplete: () => container.destroy(true)});
   }
 }

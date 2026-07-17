@@ -34,6 +34,7 @@
     "tree_oak_autumn": ["foliage", "gold", "wood"],
     "tree_pine": ["foliage", "wood"],
     "tree_ornamental": ["foliage", "cardinal", "wood"],
+    "tall_grass_cluster": ["foliage"],
     "forest_top": ["foliage", "wood"],
     "forest_middle": ["foliage", "wood"],
     "forest_bottom": ["foliage", "wood"],

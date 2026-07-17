@@ -96,7 +96,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 13, metatileVersion: 20});
+  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 14, metatileVersion: 20});
   expect(state.project.actorPixelContract).toEqual({
     logicalFrameWidth: 16,
     logicalFrameHeight: 32,
@@ -174,7 +174,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     version: 4,
     profileVersion: 1,
     maxColorsPerMaterial: 4,
-    assetCount: 115,
+    assetCount: 116,
     outputPartialAlphaPixelCount: 0,
     paletteViolationCount: 0
   });
@@ -486,7 +486,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 13, metatileVersion: 20});
+  expect(state.project).toMatchObject({layoutRevision: 14, metatileVersion: 20});
   expect(state.project.maps.camp_randall.terrain[10][5]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[10][23]).toMatch(/^surface_brick_blob_/);
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
@@ -653,7 +653,8 @@ test('planned world art uses only exact or declared same-axis tile assembly', as
       shopMaterials: [...new Set(project.maps.buckys_locker_room.terrain.flat())],
       trainerShell: project.maps.trainer_room.objects.filter(object => object.id.startsWith('room_wall_')).map(object => object.id),
       r1TallGrass: project.maps.r1.terrain.flat().filter(tile => tile === 'tall_grass').length,
-      r1HasIslandTree: project.maps.r1.objects.some(object => object.id === 'r1_island_tree')
+      r1ForestFrameCount: project.maps.r1.objects.filter(object => object.id.startsWith('r1_forest_')).length,
+      r1GroveCount: project.maps.r1.objects.filter(object => object.id.startsWith('r1_grove_')).length
     };
   });
 
@@ -664,7 +665,8 @@ test('planned world art uses only exact or declared same-axis tile assembly', as
   expect(audit.shopMaterials).toEqual(['shop_floor']);
   expect(audit.trainerShell).toEqual(['room_wall_north']);
   expect(audit.r1TallGrass).toBeGreaterThan(0);
-  expect(audit.r1HasIslandTree).toBe(true);
+  expect(audit.r1ForestFrameCount).toBe(8);
+  expect(audit.r1GroveCount).toBe(3);
 
   await page.getByRole('combobox', {name: 'Map'}).selectOption('field_house');
   await clickCell(page, 22, 3);

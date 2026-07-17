@@ -597,6 +597,9 @@ def ground_material_discipline_metrics(asset_id: str, image: Image.Image) -> dic
     }
 
 STANDALONE_ASSETS = {
+    "vegetation": [
+        ("tall_grass_cluster", SOURCE_DIR / "season_one_tall_grass_source_v1.png", (16, 16), 20, "fit"),
+    ],
     "landmarks": [
         ("field_house_arena_exterior", SOURCE_DIR / "season_one_field_house_arena_source_v1.png", (192, 112), 36),
         ("kohl_arena_exterior", SOURCE_DIR / "season_one_kohl_arena_source_v1.png", (192, 112), 36),

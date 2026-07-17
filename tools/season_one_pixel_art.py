@@ -460,19 +460,7 @@ def ground_detail(detail_id: str) -> Image.Image:
             flowers = ImageOps.mirror(flowers)
         image.alpha_composite(flowers)
     elif detail_id == "tall_grass":
-        draw.rectangle((0, 11, 15, 15), fill=PALETTE["grass_dark"])
-        for index, start in enumerate((0, 3, 6, 9, 12)):
-            tip = 4 + (index % 3)
-            draw.polygon(
-                (
-                    (start, 15), (start, 8 + index % 2), (start + 1, 11),
-                    (start + 2, tip), (start + 2, 12), (min(15, start + 3), 7 + index % 3),
-                    (min(15, start + 3), 15),
-                ),
-                fill=PALETTE["grass_dark"],
-            )
-            draw.line((start + 1, 13, start + 2, tip + 2), fill=PALETTE["grass_light"])
-        draw.line((0, 14, 15, 14), fill=PALETTE["grass_shadow"])
+        image.alpha_composite(source_asset("vegetation", "tall_grass_cluster"))
     elif detail_id == "shore_reeds":
         image.alpha_composite(source_asset("vegetation", "shore_reeds"))
     else:

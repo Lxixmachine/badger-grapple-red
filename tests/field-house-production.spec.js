@@ -53,7 +53,7 @@ function flood(map, start, blocked) {
   return reachable;
 }
 
-test('Field House has an open arrival, grid-exact wayfinding, and reachable services', async ({page}) => {
+test('Field House has a framed arrival, grid-exact wayfinding, and reachable services', async ({page}) => {
   const issues = runtimeIssues(page);
   await openEditor(page);
   const project = await page.evaluate(() => window.__badgerMapEditorTest.project());
@@ -66,8 +66,8 @@ test('Field House has an open arrival, grid-exact wayfinding, and reachable serv
   });
   expect(source.blockers).toEqual([]);
   expect(source.cameraReviews).toHaveLength(7);
-  expect(source.decorations.filter(entry => /^tree_/.test(entry.stamp)).length).toBeGreaterThanOrEqual(40);
-  expect(source.decorations.some(entry => /^forest_/.test(entry.stamp))).toBe(false);
+  expect(source.decorations.filter(entry => /^forest_/.test(entry.stamp)).length).toBeGreaterThanOrEqual(15);
+  expect(source.decorations.filter(entry => entry.stamp === 'forest_grove_small')).toHaveLength(5);
 
   const wayfinding = map.objects.find(object => object.id === 'field_house_arch');
   expect(wayfinding).toMatchObject({

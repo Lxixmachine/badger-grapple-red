@@ -12,7 +12,7 @@
     "materialDiscipline": {
       "profileVersion": 1,
       "maxColorsPerMaterial": 4,
-      "assetCount": 115,
+      "assetCount": 116,
       "outputPartialAlphaPixelCount": 0,
       "paletteViolationCount": 0
     }
@@ -21,7 +21,7 @@
     "path": "./assets/metatiles/season_one_world_tileset_v12.png",
     "columns": 16,
     "visualCount": 2411,
-    "sha256": "f8f403a56e90c73cb0f3b62f25878b84dd0f614f665cac1587b28597d48188b3",
+    "sha256": "15e5cb06686214d29c5752744abcd082612b5d8d1853c0d5f588941eec1e3d06",
     "entries": [
       {
         "index": 0,
@@ -117277,7 +117277,7 @@
     },
     "groundAssemblyCount": 28,
     "blobSignatureCount": 47,
-    "preparedImagegenAssetCount": 115,
+    "preparedImagegenAssetCount": 116,
     "exactNearestNeighborVisualCount": 2411,
     "logicalCellSize": 16,
     "groundMaterialMetrics": {
@@ -117343,10 +117343,10 @@
       "schema": "badger-grapple-imagegen-tileset-sources/v2",
       "version": 4,
       "profilePath": "art/tilesets/imagegen_material_profiles.json",
-      "profileSha256": "4bf67a01e532a192bf436913a2acbd79eebae36331ba84aac9040ed981ab76a0",
+      "profileSha256": "6796d93f86ddfc388608d96b92053ee00e9138c6205381e757c78852c978bc44",
       "profileVersion": 1,
       "maxColorsPerMaterial": 4,
-      "assetCount": 115,
+      "assetCount": 116,
       "materialCount": 22,
       "materialAssetCounts": {
         "asphalt": 2,
@@ -117356,7 +117356,7 @@
         "cream": 9,
         "dirt": 4,
         "fire": 1,
-        "foliage": 24,
+        "foliage": 25,
         "glass": 34,
         "gold": 41,
         "grass": 12,
@@ -117380,7 +117380,7 @@
         "cream": 2313,
         "dirt": 698,
         "fire": 45,
-        "foliage": 4995,
+        "foliage": 5236,
         "glass": 4106,
         "gold": 31212,
         "grass": 1239,
@@ -117396,8 +117396,8 @@
         "water": 690,
         "wood": 42658
       },
-      "outlinePixelCount": 20347,
-      "inputPartialAlphaPixelCount": 12536,
+      "outlinePixelCount": 20407,
+      "inputPartialAlphaPixelCount": 12579,
       "outputPartialAlphaPixelCount": 0,
       "paletteViolationCount": 0
     },
@@ -117415,10 +117415,10 @@
   "sources": {
     "manifest": "ce655b86985fef2efea0c2fcbc03820a4fef3c265f6a14400280a6696d5954f1",
     "contract": "77ea43d1604d9cea3ca4cdf4fdea5e5528e8ec6275f4e32c08184de8f6f82ffb",
-    "pixelArtModule": "34e65ed1f474368ec54c6afb258d449151182dc9a4be8d7cbb545bd52d0a5bfa",
-    "preparedImagegenManifest": "6bf14f1dd267502492a6b98a79d152bf6ed3de5e95a793725c6934191587a416",
-    "preparedImagegenAssetCount": 115,
-    "materialProfile": "4bf67a01e532a192bf436913a2acbd79eebae36331ba84aac9040ed981ab76a0",
+    "pixelArtModule": "1d18f1d9f4b31f95c599563d4df7b9f3d0e971162dda6eb253157c437c352b9b",
+    "preparedImagegenManifest": "a802714678955d5a9ff1a80f1384b5bedbfbc8b2afd874a1cb4b95e100a90916",
+    "preparedImagegenAssetCount": 116,
+    "materialProfile": "6796d93f86ddfc388608d96b92053ee00e9138c6205381e757c78852c978bc44",
     "referenceBoards": {
       "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
       "vegetation": "94453f4bef0f9849be3395e49db53ffe9c0f89f431d3aa87a6ff147ed8e72b20",

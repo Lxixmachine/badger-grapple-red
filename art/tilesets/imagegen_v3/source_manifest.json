@@ -5,10 +5,10 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "4bf67a01e532a192bf436913a2acbd79eebae36331ba84aac9040ed981ab76a0",
+    "profileSha256": "6796d93f86ddfc388608d96b92053ee00e9138c6205381e757c78852c978bc44",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
-    "disciplinedAssetCount": 115
+    "disciplinedAssetCount": 116
   },
   "sourceBoards": {
     "ground": "9824dd2720145de8d6373d1ff441a5ee53b2ee04919cd6129cd6459baafe3621",
@@ -22,6 +22,7 @@
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
     "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
     "bascom_landmarks": "cc8bc27bba589daca622593304c1ab749a59108314e1ea56d458611ead57f725",
+    "vegetation:tall_grass_cluster": "c2b087a6666f2f2ce4b2b8aefc03a6d292eea84b3a6e2237c43bb333d80c5077",
     "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
     "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
     "landmarks:nationals_arena_exterior": "ca455a729265756657ba63fcdd81983032c4af4718c328f438947a963d28ab08",
@@ -2713,6 +2714,31 @@
         },
         "outlinePixelCount": 68,
         "inputPartialAlphaPixelCount": 28,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "tall_grass_cluster": {
+      "category": "vegetation",
+      "path": "art/tilesets/imagegen_v3/vegetation/tall_grass_cluster.png",
+      "width": 16,
+      "height": 16,
+      "colors": 4,
+      "sha256": "8ffccdbed318865f938df5cbf019cde7bccd050dbf332dd0fbaa5272a4835afa",
+      "sourceFile": "season_one_tall_grass_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "foliage"
+        ],
+        "materialColorCounts": {
+          "foliage": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "foliage": 241
+        },
+        "outlinePixelCount": 60,
+        "inputPartialAlphaPixelCount": 43,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }

@@ -52,12 +52,12 @@ async function walk(page, direction, steps) {
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
-  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.26-grid-exact-overworld');
+  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.27-route-town-framing');
   await expect(page.locator('canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 13, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 14, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');

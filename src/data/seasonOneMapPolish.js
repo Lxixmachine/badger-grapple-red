@@ -62,18 +62,16 @@ export const SEASON_ONE_MAP_POLISH = {
   },
   r1: {
     objects: [
-      stamp('r1_island_tree', 'tree_ornamental', 7, 6, 1, 2)
+      stamp('r1_waypoint_tree', 'tree_ornamental', 5, 8, 1, 2)
     ],
     terrain: [
-      {id: 'r1_grass_nw', tile: 'tall_grass', x: 3, y: 2, width: 3, height: 2, mask: ['###', '##.']},
-      {id: 'r1_grass_ne', tile: 'tall_grass', x: 12, y: 3, width: 3, height: 2, mask: ['###', '.##']},
-      {id: 'r1_grass_mid_w', tile: 'tall_grass', x: 2, y: 7, width: 3, height: 3, mask: ['##.', '###', '.##']},
-      {id: 'r1_grass_mid_e', tile: 'tall_grass', x: 12, y: 8, width: 3, height: 3, mask: ['.##', '###', '##.']},
-      {id: 'r1_grass_south_w', tile: 'tall_grass', x: 4, y: 14, width: 3, height: 3, mask: ['###', '##.', '.##']},
-      {id: 'r1_grass_south_e', tile: 'tall_grass', x: 13, y: 19, width: 2, height: 3, mask: ['##', '##', '#.']},
-      {id: 'r1_flowers_white', tile: 'grass_white_flowers', x: 11, y: 2, width: 1, height: 1},
-      {id: 'r1_flowers_cardinal', tile: 'grass_red_flowers', x: 3, y: 12, width: 1, height: 1},
-      {id: 'r1_flowers_gold', tile: 'grass_gold_flowers', x: 14, y: 12, width: 1, height: 1}
+      {id: 'r1_grass_rex', tile: 'tall_grass', x: 3, y: 7, width: 3, height: 3},
+      {id: 'r1_grass_marker', tile: 'tall_grass', x: 12, y: 3, width: 3, height: 2},
+      {id: 'r1_grass_gauntlet', tile: 'tall_grass', x: 3, y: 16, width: 3, height: 2},
+      {id: 'r1_grass_finish', tile: 'tall_grass', x: 13, y: 18, width: 3, height: 2},
+      {id: 'r1_flowers_white', tile: 'grass_white_flowers', x: 11, y: 3, width: 1, height: 1},
+      {id: 'r1_flowers_cardinal', tile: 'grass_red_flowers', x: 7, y: 12, width: 1, height: 1},
+      {id: 'r1_flowers_gold', tile: 'grass_gold_flowers', x: 15, y: 12, width: 1, height: 1}
     ]
   },
   monona_shore: {

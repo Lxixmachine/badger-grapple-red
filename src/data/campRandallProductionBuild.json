@@ -1,7 +1,7 @@
 {
   "version": 3,
   "status": "logical-grid-actor-production-pilot",
-  "layoutRevision": 13,
+  "layoutRevision": 14,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "map": {
@@ -2454,9 +2454,9 @@
     }
   },
   "sources": {
-    "manifest": "76e6f4373f29f9880469e7a78bb0db15925f82df218491bfecbf515945f5689d",
-    "layout": "3160a7297db688c76a960d96be0173251a220bdd81fe943134aa96b471b89e53",
-    "worldTileset": "c64bc4d66aa30bd8007d0ed5567f53e4f5c0813958beb2eb9a0f47551d08a40c",
+    "manifest": "9c23deea758dab1b162d0df9bcb6c6a61b1e3f8a630bb06b8e54c4f1b4d1083f",
+    "layout": "e5c0faaa22f55e49da7f08bcd2e93c7314cccf7bf38af4e8b93cc554d243a274",
+    "worldTileset": "d58cf9673aef761a7735fe8b0936501328837726e14de8116755153ae8ed656e",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",

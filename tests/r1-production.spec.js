@@ -70,10 +70,9 @@ test('R1 is a grid-authoritative three-beat route with reachable story and exits
     {to: 'field_house', edge: 'south', start: 8, span: 2, toEdge: 'north', toStart: 20}
   ]);
 
-  const forbiddenStamps = /^(forest_edge|forest_grove|forest_mass|forest_border)/;
-  expect(source.decorations.some(entry => forbiddenStamps.test(entry.stamp))).toBe(false);
-  expect(source.decorations.filter(entry => /^tree_/.test(entry.stamp))).toHaveLength(29);
-  expect(map.objects.some(object => object.width >= 5 && object.height >= 4)).toBe(false);
+  expect(source.decorations.filter(entry => /^forest_/.test(entry.stamp))).toHaveLength(11);
+  expect(source.decorations.filter(entry => /forest_border_(west|east)_long/.test(entry.stamp))).toHaveLength(2);
+  expect(source.decorations.filter(entry => entry.stamp === 'forest_grove_small')).toHaveLength(3);
   expect(map.objects.every(object => (
     Number.isInteger(object.x) && Number.isInteger(object.y)
       && object.metatiles?.length === object.height
@@ -82,8 +81,8 @@ test('R1 is a grid-authoritative three-beat route with reachable story and exits
 
   const dirtWidths = map.terrain.map(row => row.filter(tile => tile.startsWith('surface_dirt_blob_')).length);
   expect(Math.min(...dirtWidths)).toBe(2);
-  expect(Math.max(...dirtWidths)).toBe(8);
-  expect(new Set(dirtWidths).size).toBeGreaterThanOrEqual(5);
+  expect(Math.max(...dirtWidths)).toBe(5);
+  expect(new Set(dirtWidths).size).toBeGreaterThanOrEqual(3);
 
   const mat = map.objects.find(object => object.id === 'r1_open_mat');
   expect(mat).toMatchObject({name: 'R1 Open Wrestling Mat', x: 11, y: 15, width: 4, height: 3});
