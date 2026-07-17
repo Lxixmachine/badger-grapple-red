@@ -190,9 +190,8 @@ export const SEASON_ONE_MAP_POLISH = {
   },
   trainer_room: {
     objects: [
-      stamp('trainer_cabinet_w', 'medical_cabinet', 1, 1, 2, 2),
-      stamp('trainer_cabinet_e', 'medical_cabinet', 12, 1, 2, 2),
-      stamp('trainer_waiting_bench', 'wood_bench', 6, 6, 3, 2)
+      stamp('trainer_waiting_bench', 'wood_bench', 1, 7, 3, 2),
+      stamp('trainer_floor_medallion', 'trainer_floor_inlay', 6, 6, 3, 3, {walkable: true})
     ],
     actors: [
       actor('trainer_attendant', 'trainer', 7, 4, 'down', 'Full Condition and Stamina before you leave.'),
@@ -200,10 +199,7 @@ export const SEASON_ONE_MAP_POLISH = {
     ]
   },
   buckys_locker_room: {
-    objects: [
-      stamp('buckys_center_display', 'singlet_shelf', 6, 5, 3, 2),
-      stamp('buckys_wall_plaque', 'blank_plaque', 6, 0, 2, 1)
-    ],
+    objects: [],
     actors: [
       actor('buckys_clerk', 'manager', 7, 4, 'down', 'Bucky\'s Locker Room carries road-tested equipment.')
     ]

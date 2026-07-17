@@ -12,7 +12,7 @@
     "materialDiscipline": {
       "profileVersion": 1,
       "maxColorsPerMaterial": 4,
-      "assetCount": 128,
+      "assetCount": 143,
       "outputPartialAlphaPixelCount": 0,
       "paletteViolationCount": 0
     }
@@ -20,8 +20,8 @@
   "atlas": {
     "path": "./assets/metatiles/season_one_world_tileset_v12.png",
     "columns": 16,
-    "visualCount": 2644,
-    "sha256": "fa23c588ad0748311aee9d1c2ba5e4d12f61b1de2bc60a09eb916e18cf20cf9c",
+    "visualCount": 2759,
+    "sha256": "5f8582c18e0f3bcdfa7c067001c5cddbf61ffc68eb6f07eb8f4976ba8b464581",
     "entries": [
       {
         "index": 0,
@@ -26954,6 +26954,1156 @@
         ],
         "names": [
           "Retaining Wall Corner 4,1"
+        ]
+      },
+      {
+        "index": 2644,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 1,1"
+        ]
+      },
+      {
+        "index": 2645,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 2,1"
+        ]
+      },
+      {
+        "index": 2646,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 3,1"
+        ]
+      },
+      {
+        "index": 2647,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 4,1"
+        ]
+      },
+      {
+        "index": 2648,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 5,1"
+        ]
+      },
+      {
+        "index": 2649,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 1,2"
+        ]
+      },
+      {
+        "index": 2650,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 2,2"
+        ]
+      },
+      {
+        "index": 2651,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 3,2"
+        ]
+      },
+      {
+        "index": 2652,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 4,2"
+        ]
+      },
+      {
+        "index": 2653,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room North Wall Module 5,2"
+        ]
+      },
+      {
+        "index": 2654,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Side Wall Module 1,1"
+        ]
+      },
+      {
+        "index": 2655,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Side Wall Module 1,2"
+        ]
+      },
+      {
+        "index": 2656,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 1,1"
+        ]
+      },
+      {
+        "index": 2657,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 2,1"
+        ]
+      },
+      {
+        "index": 2658,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 3,1"
+        ]
+      },
+      {
+        "index": 2659,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 4,1"
+        ]
+      },
+      {
+        "index": 2660,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 5,1"
+        ]
+      },
+      {
+        "index": 2661,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 6,1"
+        ]
+      },
+      {
+        "index": 2662,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 7,1"
+        ]
+      },
+      {
+        "index": 2663,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 8,1"
+        ]
+      },
+      {
+        "index": 2664,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 9,1"
+        ]
+      },
+      {
+        "index": 2665,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 10,1"
+        ]
+      },
+      {
+        "index": 2666,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 11,1"
+        ]
+      },
+      {
+        "index": 2667,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 12,1"
+        ]
+      },
+      {
+        "index": 2668,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 13,1"
+        ]
+      },
+      {
+        "index": 2669,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 14,1"
+        ]
+      },
+      {
+        "index": 2670,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room South Wall 15,1"
+        ]
+      },
+      {
+        "index": 2671,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 1,1"
+        ]
+      },
+      {
+        "index": 2672,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 2,1"
+        ]
+      },
+      {
+        "index": 2673,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 3,1"
+        ]
+      },
+      {
+        "index": 2674,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 4,1"
+        ]
+      },
+      {
+        "index": 2675,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 5,1"
+        ]
+      },
+      {
+        "index": 2676,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 6,1"
+        ]
+      },
+      {
+        "index": 2677,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 7,1"
+        ]
+      },
+      {
+        "index": 2678,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 1,2"
+        ]
+      },
+      {
+        "index": 2679,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 2,2"
+        ]
+      },
+      {
+        "index": 2680,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 3,2"
+        ]
+      },
+      {
+        "index": 2681,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 4,2"
+        ]
+      },
+      {
+        "index": 2682,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 5,2"
+        ]
+      },
+      {
+        "index": 2683,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 6,2"
+        ]
+      },
+      {
+        "index": 2684,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Recovery Counter 7,2"
+        ]
+      },
+      {
+        "index": 2685,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Roster Terminal 1,1"
+        ]
+      },
+      {
+        "index": 2686,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Roster Terminal 2,1"
+        ]
+      },
+      {
+        "index": 2687,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Roster Terminal 3,1"
+        ]
+      },
+      {
+        "index": 2688,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Roster Terminal 1,2"
+        ]
+      },
+      {
+        "index": 2689,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Roster Terminal 2,2"
+        ]
+      },
+      {
+        "index": 2690,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Roster Terminal 3,2"
+        ]
+      },
+      {
+        "index": 2691,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Treatment Table 1,1"
+        ]
+      },
+      {
+        "index": 2692,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Treatment Table 2,1"
+        ]
+      },
+      {
+        "index": 2693,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Treatment Table 3,1"
+        ]
+      },
+      {
+        "index": 2694,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Treatment Table 1,2"
+        ]
+      },
+      {
+        "index": 2695,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Treatment Table 2,2"
+        ]
+      },
+      {
+        "index": 2696,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Treatment Table 3,2"
+        ]
+      },
+      {
+        "index": 2697,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 1,1"
+        ]
+      },
+      {
+        "index": 2698,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 2,1"
+        ]
+      },
+      {
+        "index": 2699,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 3,1"
+        ]
+      },
+      {
+        "index": 2700,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 1,2"
+        ]
+      },
+      {
+        "index": 2701,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 2,2"
+        ]
+      },
+      {
+        "index": 2702,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 3,2"
+        ]
+      },
+      {
+        "index": 2703,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 1,3"
+        ]
+      },
+      {
+        "index": 2704,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 2,3"
+        ]
+      },
+      {
+        "index": 2705,
+        "kind": "structure",
+        "families": [
+          "service_clinic"
+        ],
+        "names": [
+          "Trainer's Room Floor Inlay 3,3"
+        ]
+      },
+      {
+        "index": 2706,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 1,1"
+        ]
+      },
+      {
+        "index": 2707,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 2,1"
+        ]
+      },
+      {
+        "index": 2708,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 3,1"
+        ]
+      },
+      {
+        "index": 2709,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 4,1"
+        ]
+      },
+      {
+        "index": 2710,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 5,1"
+        ]
+      },
+      {
+        "index": 2711,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 1,2"
+        ]
+      },
+      {
+        "index": 2712,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 2,2"
+        ]
+      },
+      {
+        "index": 2713,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 3,2"
+        ]
+      },
+      {
+        "index": 2714,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 4,2"
+        ]
+      },
+      {
+        "index": 2715,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room North Wall Module 5,2"
+        ]
+      },
+      {
+        "index": 2716,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room Side Wall Module 1,1"
+        ]
+      },
+      {
+        "index": 2717,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room Side Wall Module 1,2"
+        ]
+      },
+      {
+        "index": 2718,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 1,1"
+        ]
+      },
+      {
+        "index": 2719,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 2,1"
+        ]
+      },
+      {
+        "index": 2720,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 3,1"
+        ]
+      },
+      {
+        "index": 2721,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 4,1"
+        ]
+      },
+      {
+        "index": 2722,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 5,1"
+        ]
+      },
+      {
+        "index": 2723,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 6,1"
+        ]
+      },
+      {
+        "index": 2724,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 7,1"
+        ]
+      },
+      {
+        "index": 2725,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 8,1"
+        ]
+      },
+      {
+        "index": 2726,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 9,1"
+        ]
+      },
+      {
+        "index": 2727,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 10,1"
+        ]
+      },
+      {
+        "index": 2728,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 11,1"
+        ]
+      },
+      {
+        "index": 2729,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 12,1"
+        ]
+      },
+      {
+        "index": 2730,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 13,1"
+        ]
+      },
+      {
+        "index": 2731,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 14,1"
+        ]
+      },
+      {
+        "index": 2732,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Locker Room South Wall 15,1"
+        ]
+      },
+      {
+        "index": 2733,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 1,1"
+        ]
+      },
+      {
+        "index": 2734,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 2,1"
+        ]
+      },
+      {
+        "index": 2735,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 3,1"
+        ]
+      },
+      {
+        "index": 2736,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 4,1"
+        ]
+      },
+      {
+        "index": 2737,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 5,1"
+        ]
+      },
+      {
+        "index": 2738,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 6,1"
+        ]
+      },
+      {
+        "index": 2739,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 7,1"
+        ]
+      },
+      {
+        "index": 2740,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 1,2"
+        ]
+      },
+      {
+        "index": 2741,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 2,2"
+        ]
+      },
+      {
+        "index": 2742,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 3,2"
+        ]
+      },
+      {
+        "index": 2743,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 4,2"
+        ]
+      },
+      {
+        "index": 2744,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 5,2"
+        ]
+      },
+      {
+        "index": 2745,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 6,2"
+        ]
+      },
+      {
+        "index": 2746,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Equipment Counter 7,2"
+        ]
+      },
+      {
+        "index": 2747,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Singlet Display 1,1"
+        ]
+      },
+      {
+        "index": 2748,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Singlet Display 2,1"
+        ]
+      },
+      {
+        "index": 2749,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Singlet Display 3,1"
+        ]
+      },
+      {
+        "index": 2750,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Singlet Display 1,2"
+        ]
+      },
+      {
+        "index": 2751,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Singlet Display 2,2"
+        ]
+      },
+      {
+        "index": 2752,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Singlet Display 3,2"
+        ]
+      },
+      {
+        "index": 2753,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Supply Display 1,1"
+        ]
+      },
+      {
+        "index": 2754,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Supply Display 2,1"
+        ]
+      },
+      {
+        "index": 2755,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Supply Display 3,1"
+        ]
+      },
+      {
+        "index": 2756,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Supply Display 1,2"
+        ]
+      },
+      {
+        "index": 2757,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Supply Display 2,2"
+        ]
+      },
+      {
+        "index": 2758,
+        "kind": "structure",
+        "families": [
+          "service_shop"
+        ],
+        "names": [
+          "Bucky's Supply Display 3,2"
         ]
       }
     ]
@@ -117262,6 +118412,4491 @@
       "names": [
         "Retaining Wall Corner 4,1"
       ]
+    },
+    "mt_8297ea16e34e": {
+      "id": "mt_8297ea16e34e",
+      "visual": 2644,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 1,1"
+      ]
+    },
+    "mt_f023a49757dc": {
+      "id": "mt_f023a49757dc",
+      "visual": 2644,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 1,1"
+      ]
+    },
+    "mt_ad5446f7268e": {
+      "id": "mt_ad5446f7268e",
+      "visual": 2644,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 1,1"
+      ]
+    },
+    "mt_694fd8affc0d": {
+      "id": "mt_694fd8affc0d",
+      "visual": 2645,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 2,1"
+      ]
+    },
+    "mt_1169035b97ed": {
+      "id": "mt_1169035b97ed",
+      "visual": 2645,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 2,1"
+      ]
+    },
+    "mt_3f2f920fc328": {
+      "id": "mt_3f2f920fc328",
+      "visual": 2645,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 2,1"
+      ]
+    },
+    "mt_07baae3fc74c": {
+      "id": "mt_07baae3fc74c",
+      "visual": 2646,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 3,1"
+      ]
+    },
+    "mt_9748b06081aa": {
+      "id": "mt_9748b06081aa",
+      "visual": 2646,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 3,1"
+      ]
+    },
+    "mt_d55d6889f137": {
+      "id": "mt_d55d6889f137",
+      "visual": 2646,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 3,1"
+      ]
+    },
+    "mt_47f942b9d739": {
+      "id": "mt_47f942b9d739",
+      "visual": 2647,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 4,1"
+      ]
+    },
+    "mt_f2b5a1012b30": {
+      "id": "mt_f2b5a1012b30",
+      "visual": 2647,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 4,1"
+      ]
+    },
+    "mt_05fae09e2267": {
+      "id": "mt_05fae09e2267",
+      "visual": 2647,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 4,1"
+      ]
+    },
+    "mt_7d1043b51f5d": {
+      "id": "mt_7d1043b51f5d",
+      "visual": 2648,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 5,1"
+      ]
+    },
+    "mt_caffb6decae7": {
+      "id": "mt_caffb6decae7",
+      "visual": 2648,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 5,1"
+      ]
+    },
+    "mt_a97a898f08cf": {
+      "id": "mt_a97a898f08cf",
+      "visual": 2648,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 5,1"
+      ]
+    },
+    "mt_b1f7f171f6c5": {
+      "id": "mt_b1f7f171f6c5",
+      "visual": 2649,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 1,2"
+      ]
+    },
+    "mt_5cd6c060c25e": {
+      "id": "mt_5cd6c060c25e",
+      "visual": 2649,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 1,2"
+      ]
+    },
+    "mt_d64b2da56762": {
+      "id": "mt_d64b2da56762",
+      "visual": 2649,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 1,2"
+      ]
+    },
+    "mt_4a1b7a5d1c9f": {
+      "id": "mt_4a1b7a5d1c9f",
+      "visual": 2650,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 2,2"
+      ]
+    },
+    "mt_5c9169b339e5": {
+      "id": "mt_5c9169b339e5",
+      "visual": 2650,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 2,2"
+      ]
+    },
+    "mt_4c3287bcf81d": {
+      "id": "mt_4c3287bcf81d",
+      "visual": 2650,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 2,2"
+      ]
+    },
+    "mt_657135f5b971": {
+      "id": "mt_657135f5b971",
+      "visual": 2651,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 3,2"
+      ]
+    },
+    "mt_afb494c3c241": {
+      "id": "mt_afb494c3c241",
+      "visual": 2651,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 3,2"
+      ]
+    },
+    "mt_136f3662ad33": {
+      "id": "mt_136f3662ad33",
+      "visual": 2651,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 3,2"
+      ]
+    },
+    "mt_d101ded23020": {
+      "id": "mt_d101ded23020",
+      "visual": 2652,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 4,2"
+      ]
+    },
+    "mt_520e1f81c029": {
+      "id": "mt_520e1f81c029",
+      "visual": 2652,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 4,2"
+      ]
+    },
+    "mt_310f4b6a3478": {
+      "id": "mt_310f4b6a3478",
+      "visual": 2652,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 4,2"
+      ]
+    },
+    "mt_f0b0c8209398": {
+      "id": "mt_f0b0c8209398",
+      "visual": 2653,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 5,2"
+      ]
+    },
+    "mt_2105cd6310f5": {
+      "id": "mt_2105cd6310f5",
+      "visual": 2653,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 5,2"
+      ]
+    },
+    "mt_8538cb334317": {
+      "id": "mt_8538cb334317",
+      "visual": 2653,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room North Wall Module 5,2"
+      ]
+    },
+    "mt_56c0ca292489": {
+      "id": "mt_56c0ca292489",
+      "visual": 2654,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Side Wall Module 1,1"
+      ]
+    },
+    "mt_38ccf23fcfe1": {
+      "id": "mt_38ccf23fcfe1",
+      "visual": 2654,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Side Wall Module 1,1"
+      ]
+    },
+    "mt_042c015ea3c5": {
+      "id": "mt_042c015ea3c5",
+      "visual": 2654,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Side Wall Module 1,1"
+      ]
+    },
+    "mt_8f15dc9a0614": {
+      "id": "mt_8f15dc9a0614",
+      "visual": 2655,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Side Wall Module 1,2"
+      ]
+    },
+    "mt_44da610a2dcb": {
+      "id": "mt_44da610a2dcb",
+      "visual": 2655,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Side Wall Module 1,2"
+      ]
+    },
+    "mt_3c5a8f4111f3": {
+      "id": "mt_3c5a8f4111f3",
+      "visual": 2655,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Side Wall Module 1,2"
+      ]
+    },
+    "mt_b4bb827ec05d": {
+      "id": "mt_b4bb827ec05d",
+      "visual": 2656,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 1,1"
+      ]
+    },
+    "mt_d8e40c2ef319": {
+      "id": "mt_d8e40c2ef319",
+      "visual": 2656,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 1,1"
+      ]
+    },
+    "mt_ec1e3fa877e7": {
+      "id": "mt_ec1e3fa877e7",
+      "visual": 2656,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 1,1"
+      ]
+    },
+    "mt_9032df7289c1": {
+      "id": "mt_9032df7289c1",
+      "visual": 2657,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 2,1"
+      ]
+    },
+    "mt_38c595114c22": {
+      "id": "mt_38c595114c22",
+      "visual": 2657,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 2,1"
+      ]
+    },
+    "mt_1b28eeb09dcf": {
+      "id": "mt_1b28eeb09dcf",
+      "visual": 2657,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 2,1"
+      ]
+    },
+    "mt_1458b484ee8f": {
+      "id": "mt_1458b484ee8f",
+      "visual": 2658,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 3,1"
+      ]
+    },
+    "mt_c7a0de4791c5": {
+      "id": "mt_c7a0de4791c5",
+      "visual": 2658,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 3,1"
+      ]
+    },
+    "mt_a768f2bc0ddc": {
+      "id": "mt_a768f2bc0ddc",
+      "visual": 2658,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 3,1"
+      ]
+    },
+    "mt_3661f5e9df95": {
+      "id": "mt_3661f5e9df95",
+      "visual": 2659,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 4,1"
+      ]
+    },
+    "mt_8cdd8fe5d5be": {
+      "id": "mt_8cdd8fe5d5be",
+      "visual": 2659,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 4,1"
+      ]
+    },
+    "mt_481ffa7ac700": {
+      "id": "mt_481ffa7ac700",
+      "visual": 2659,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 4,1"
+      ]
+    },
+    "mt_29e21862728c": {
+      "id": "mt_29e21862728c",
+      "visual": 2660,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 5,1"
+      ]
+    },
+    "mt_c3904821f484": {
+      "id": "mt_c3904821f484",
+      "visual": 2660,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 5,1"
+      ]
+    },
+    "mt_12efa13f10c8": {
+      "id": "mt_12efa13f10c8",
+      "visual": 2660,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 5,1"
+      ]
+    },
+    "mt_806a7f93a138": {
+      "id": "mt_806a7f93a138",
+      "visual": 2661,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 6,1"
+      ]
+    },
+    "mt_d5edd5121654": {
+      "id": "mt_d5edd5121654",
+      "visual": 2661,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 6,1"
+      ]
+    },
+    "mt_4c668c65e5a6": {
+      "id": "mt_4c668c65e5a6",
+      "visual": 2661,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 6,1"
+      ]
+    },
+    "mt_dc5b5f330300": {
+      "id": "mt_dc5b5f330300",
+      "visual": 2662,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 7,1"
+      ]
+    },
+    "mt_8e74e5d70b8d": {
+      "id": "mt_8e74e5d70b8d",
+      "visual": 2662,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 7,1"
+      ]
+    },
+    "mt_a14452859626": {
+      "id": "mt_a14452859626",
+      "visual": 2662,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 7,1"
+      ]
+    },
+    "mt_4157145b8a89": {
+      "id": "mt_4157145b8a89",
+      "visual": 2663,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 8,1"
+      ]
+    },
+    "mt_931689a2cbbd": {
+      "id": "mt_931689a2cbbd",
+      "visual": 2663,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 8,1"
+      ]
+    },
+    "mt_07aed10f9960": {
+      "id": "mt_07aed10f9960",
+      "visual": 2663,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 8,1"
+      ]
+    },
+    "mt_a787771da65d": {
+      "id": "mt_a787771da65d",
+      "visual": 2664,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 9,1"
+      ]
+    },
+    "mt_e4402c1742b0": {
+      "id": "mt_e4402c1742b0",
+      "visual": 2664,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 9,1"
+      ]
+    },
+    "mt_2a21fbd8b982": {
+      "id": "mt_2a21fbd8b982",
+      "visual": 2664,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 9,1"
+      ]
+    },
+    "mt_40240aad4a48": {
+      "id": "mt_40240aad4a48",
+      "visual": 2665,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 10,1"
+      ]
+    },
+    "mt_1c5781b2a61f": {
+      "id": "mt_1c5781b2a61f",
+      "visual": 2665,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 10,1"
+      ]
+    },
+    "mt_5f58fb336286": {
+      "id": "mt_5f58fb336286",
+      "visual": 2665,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 10,1"
+      ]
+    },
+    "mt_56f832a5a7cf": {
+      "id": "mt_56f832a5a7cf",
+      "visual": 2666,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 11,1"
+      ]
+    },
+    "mt_62a842bca8c9": {
+      "id": "mt_62a842bca8c9",
+      "visual": 2666,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 11,1"
+      ]
+    },
+    "mt_28b2c6f90e6b": {
+      "id": "mt_28b2c6f90e6b",
+      "visual": 2666,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 11,1"
+      ]
+    },
+    "mt_3b7bd75aef3f": {
+      "id": "mt_3b7bd75aef3f",
+      "visual": 2667,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 12,1"
+      ]
+    },
+    "mt_44e649daa2cf": {
+      "id": "mt_44e649daa2cf",
+      "visual": 2667,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 12,1"
+      ]
+    },
+    "mt_26494d1c6fd8": {
+      "id": "mt_26494d1c6fd8",
+      "visual": 2667,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 12,1"
+      ]
+    },
+    "mt_98ecade7a5af": {
+      "id": "mt_98ecade7a5af",
+      "visual": 2668,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 13,1"
+      ]
+    },
+    "mt_5051ab1b015a": {
+      "id": "mt_5051ab1b015a",
+      "visual": 2668,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 13,1"
+      ]
+    },
+    "mt_e370cfd4ef28": {
+      "id": "mt_e370cfd4ef28",
+      "visual": 2668,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 13,1"
+      ]
+    },
+    "mt_6096c4417de9": {
+      "id": "mt_6096c4417de9",
+      "visual": 2669,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 14,1"
+      ]
+    },
+    "mt_d34ea2dac00e": {
+      "id": "mt_d34ea2dac00e",
+      "visual": 2669,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 14,1"
+      ]
+    },
+    "mt_38962fd9377e": {
+      "id": "mt_38962fd9377e",
+      "visual": 2669,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 14,1"
+      ]
+    },
+    "mt_6d3013bd8801": {
+      "id": "mt_6d3013bd8801",
+      "visual": 2670,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 15,1"
+      ]
+    },
+    "mt_2866ed12e8ed": {
+      "id": "mt_2866ed12e8ed",
+      "visual": 2670,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 15,1"
+      ]
+    },
+    "mt_d232aa15f678": {
+      "id": "mt_d232aa15f678",
+      "visual": 2670,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room South Wall 15,1"
+      ]
+    },
+    "mt_40a39fa786a8": {
+      "id": "mt_40a39fa786a8",
+      "visual": 2671,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 1,1"
+      ]
+    },
+    "mt_46b23dabece0": {
+      "id": "mt_46b23dabece0",
+      "visual": 2671,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 1,1"
+      ]
+    },
+    "mt_47bcd5659af9": {
+      "id": "mt_47bcd5659af9",
+      "visual": 2671,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 1,1"
+      ]
+    },
+    "mt_e1e48fd404cb": {
+      "id": "mt_e1e48fd404cb",
+      "visual": 2672,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 2,1"
+      ]
+    },
+    "mt_24c9caa2d7de": {
+      "id": "mt_24c9caa2d7de",
+      "visual": 2672,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 2,1"
+      ]
+    },
+    "mt_d4d2263e0a54": {
+      "id": "mt_d4d2263e0a54",
+      "visual": 2672,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 2,1"
+      ]
+    },
+    "mt_487fe302083d": {
+      "id": "mt_487fe302083d",
+      "visual": 2673,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 3,1"
+      ]
+    },
+    "mt_ef838c37f2d9": {
+      "id": "mt_ef838c37f2d9",
+      "visual": 2673,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 3,1"
+      ]
+    },
+    "mt_c8f993b66d0c": {
+      "id": "mt_c8f993b66d0c",
+      "visual": 2673,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 3,1"
+      ]
+    },
+    "mt_1d111fff5227": {
+      "id": "mt_1d111fff5227",
+      "visual": 2674,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 4,1"
+      ]
+    },
+    "mt_0dc77893fabf": {
+      "id": "mt_0dc77893fabf",
+      "visual": 2674,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 4,1"
+      ]
+    },
+    "mt_09c01ccf48c8": {
+      "id": "mt_09c01ccf48c8",
+      "visual": 2674,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 4,1"
+      ]
+    },
+    "mt_8af843dfa8e0": {
+      "id": "mt_8af843dfa8e0",
+      "visual": 2675,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 5,1"
+      ]
+    },
+    "mt_37d5a6aeb70f": {
+      "id": "mt_37d5a6aeb70f",
+      "visual": 2675,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 5,1"
+      ]
+    },
+    "mt_618ebb41a110": {
+      "id": "mt_618ebb41a110",
+      "visual": 2675,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 5,1"
+      ]
+    },
+    "mt_a040ad907448": {
+      "id": "mt_a040ad907448",
+      "visual": 2676,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 6,1"
+      ]
+    },
+    "mt_8f75ecb0c2b3": {
+      "id": "mt_8f75ecb0c2b3",
+      "visual": 2676,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 6,1"
+      ]
+    },
+    "mt_f799fb6e65fe": {
+      "id": "mt_f799fb6e65fe",
+      "visual": 2676,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 6,1"
+      ]
+    },
+    "mt_a888b8287b59": {
+      "id": "mt_a888b8287b59",
+      "visual": 2677,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 7,1"
+      ]
+    },
+    "mt_3bbb37e1c41f": {
+      "id": "mt_3bbb37e1c41f",
+      "visual": 2677,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 7,1"
+      ]
+    },
+    "mt_220919bb02fd": {
+      "id": "mt_220919bb02fd",
+      "visual": 2677,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 7,1"
+      ]
+    },
+    "mt_9dc3aaff2ffb": {
+      "id": "mt_9dc3aaff2ffb",
+      "visual": 2678,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 1,2"
+      ]
+    },
+    "mt_5633a7136259": {
+      "id": "mt_5633a7136259",
+      "visual": 2678,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 1,2"
+      ]
+    },
+    "mt_b9b65473fb96": {
+      "id": "mt_b9b65473fb96",
+      "visual": 2678,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 1,2"
+      ]
+    },
+    "mt_424508bcf491": {
+      "id": "mt_424508bcf491",
+      "visual": 2679,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 2,2"
+      ]
+    },
+    "mt_1c3a2676dd70": {
+      "id": "mt_1c3a2676dd70",
+      "visual": 2679,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 2,2"
+      ]
+    },
+    "mt_e2438d813379": {
+      "id": "mt_e2438d813379",
+      "visual": 2679,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 2,2"
+      ]
+    },
+    "mt_8be1bfb4331c": {
+      "id": "mt_8be1bfb4331c",
+      "visual": 2680,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 3,2"
+      ]
+    },
+    "mt_9e67182ca0ca": {
+      "id": "mt_9e67182ca0ca",
+      "visual": 2680,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 3,2"
+      ]
+    },
+    "mt_3b47539ad612": {
+      "id": "mt_3b47539ad612",
+      "visual": 2680,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 3,2"
+      ]
+    },
+    "mt_af529f6ef194": {
+      "id": "mt_af529f6ef194",
+      "visual": 2681,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 4,2"
+      ]
+    },
+    "mt_1b1c17b25f40": {
+      "id": "mt_1b1c17b25f40",
+      "visual": 2681,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 4,2"
+      ]
+    },
+    "mt_b317b270a96d": {
+      "id": "mt_b317b270a96d",
+      "visual": 2681,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 4,2"
+      ]
+    },
+    "mt_0d846f14da89": {
+      "id": "mt_0d846f14da89",
+      "visual": 2682,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 5,2"
+      ]
+    },
+    "mt_7f7f08bd0abe": {
+      "id": "mt_7f7f08bd0abe",
+      "visual": 2682,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 5,2"
+      ]
+    },
+    "mt_5cdff036dd61": {
+      "id": "mt_5cdff036dd61",
+      "visual": 2682,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 5,2"
+      ]
+    },
+    "mt_536d2a8e3c90": {
+      "id": "mt_536d2a8e3c90",
+      "visual": 2683,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 6,2"
+      ]
+    },
+    "mt_6ca5c6592395": {
+      "id": "mt_6ca5c6592395",
+      "visual": 2683,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 6,2"
+      ]
+    },
+    "mt_795894ae0750": {
+      "id": "mt_795894ae0750",
+      "visual": 2683,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 6,2"
+      ]
+    },
+    "mt_92aabfff7142": {
+      "id": "mt_92aabfff7142",
+      "visual": 2684,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 7,2"
+      ]
+    },
+    "mt_0b7b5bd9ce00": {
+      "id": "mt_0b7b5bd9ce00",
+      "visual": 2684,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 7,2"
+      ]
+    },
+    "mt_a36ad2568681": {
+      "id": "mt_a36ad2568681",
+      "visual": 2684,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Recovery Counter 7,2"
+      ]
+    },
+    "mt_5e3b10b83306": {
+      "id": "mt_5e3b10b83306",
+      "visual": 2685,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 1,1"
+      ]
+    },
+    "mt_e87fa53cd865": {
+      "id": "mt_e87fa53cd865",
+      "visual": 2685,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 1,1"
+      ]
+    },
+    "mt_b55761bed3be": {
+      "id": "mt_b55761bed3be",
+      "visual": 2685,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 1,1"
+      ]
+    },
+    "mt_ca1911017045": {
+      "id": "mt_ca1911017045",
+      "visual": 2686,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 2,1"
+      ]
+    },
+    "mt_db5693cbcd55": {
+      "id": "mt_db5693cbcd55",
+      "visual": 2686,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 2,1"
+      ]
+    },
+    "mt_78bfec0971cb": {
+      "id": "mt_78bfec0971cb",
+      "visual": 2686,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 2,1"
+      ]
+    },
+    "mt_5c1f6eaaeb56": {
+      "id": "mt_5c1f6eaaeb56",
+      "visual": 2687,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 3,1"
+      ]
+    },
+    "mt_e3021b1f0ec1": {
+      "id": "mt_e3021b1f0ec1",
+      "visual": 2687,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 3,1"
+      ]
+    },
+    "mt_a8512b82dfb4": {
+      "id": "mt_a8512b82dfb4",
+      "visual": 2687,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 3,1"
+      ]
+    },
+    "mt_1e8fe2f9c2f3": {
+      "id": "mt_1e8fe2f9c2f3",
+      "visual": 2688,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 1,2"
+      ]
+    },
+    "mt_d0f39edaee7b": {
+      "id": "mt_d0f39edaee7b",
+      "visual": 2688,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 1,2"
+      ]
+    },
+    "mt_609ba3007cad": {
+      "id": "mt_609ba3007cad",
+      "visual": 2688,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 1,2"
+      ]
+    },
+    "mt_d4e7726af29e": {
+      "id": "mt_d4e7726af29e",
+      "visual": 2689,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 2,2"
+      ]
+    },
+    "mt_a481d6fbbfa5": {
+      "id": "mt_a481d6fbbfa5",
+      "visual": 2689,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 2,2"
+      ]
+    },
+    "mt_89ebf2b6d5b7": {
+      "id": "mt_89ebf2b6d5b7",
+      "visual": 2689,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 2,2"
+      ]
+    },
+    "mt_2cb2cd605321": {
+      "id": "mt_2cb2cd605321",
+      "visual": 2690,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 3,2"
+      ]
+    },
+    "mt_dcca208defd2": {
+      "id": "mt_dcca208defd2",
+      "visual": 2690,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 3,2"
+      ]
+    },
+    "mt_73c271c4b623": {
+      "id": "mt_73c271c4b623",
+      "visual": 2690,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Roster Terminal 3,2"
+      ]
+    },
+    "mt_659afdf38cb4": {
+      "id": "mt_659afdf38cb4",
+      "visual": 2691,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 1,1"
+      ]
+    },
+    "mt_5ab4f59cfd80": {
+      "id": "mt_5ab4f59cfd80",
+      "visual": 2691,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 1,1"
+      ]
+    },
+    "mt_c1b425645403": {
+      "id": "mt_c1b425645403",
+      "visual": 2691,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 1,1"
+      ]
+    },
+    "mt_17198f707cfb": {
+      "id": "mt_17198f707cfb",
+      "visual": 2692,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 2,1"
+      ]
+    },
+    "mt_e02c039a1d39": {
+      "id": "mt_e02c039a1d39",
+      "visual": 2692,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 2,1"
+      ]
+    },
+    "mt_72e22892ded0": {
+      "id": "mt_72e22892ded0",
+      "visual": 2692,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 2,1"
+      ]
+    },
+    "mt_41a8202da9d5": {
+      "id": "mt_41a8202da9d5",
+      "visual": 2693,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 3,1"
+      ]
+    },
+    "mt_e907eccbdbeb": {
+      "id": "mt_e907eccbdbeb",
+      "visual": 2693,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 3,1"
+      ]
+    },
+    "mt_f1ac0286138a": {
+      "id": "mt_f1ac0286138a",
+      "visual": 2693,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 3,1"
+      ]
+    },
+    "mt_2e3805267017": {
+      "id": "mt_2e3805267017",
+      "visual": 2694,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 1,2"
+      ]
+    },
+    "mt_61ebfc2e861b": {
+      "id": "mt_61ebfc2e861b",
+      "visual": 2694,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 1,2"
+      ]
+    },
+    "mt_d0fc3e6ff371": {
+      "id": "mt_d0fc3e6ff371",
+      "visual": 2694,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 1,2"
+      ]
+    },
+    "mt_de89c9776e78": {
+      "id": "mt_de89c9776e78",
+      "visual": 2695,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 2,2"
+      ]
+    },
+    "mt_78842c525053": {
+      "id": "mt_78842c525053",
+      "visual": 2695,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 2,2"
+      ]
+    },
+    "mt_d81425aeba3d": {
+      "id": "mt_d81425aeba3d",
+      "visual": 2695,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 2,2"
+      ]
+    },
+    "mt_a1530b1d0a91": {
+      "id": "mt_a1530b1d0a91",
+      "visual": 2696,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 3,2"
+      ]
+    },
+    "mt_21fafaac3243": {
+      "id": "mt_21fafaac3243",
+      "visual": 2696,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 3,2"
+      ]
+    },
+    "mt_9c8b3daf5541": {
+      "id": "mt_9c8b3daf5541",
+      "visual": 2696,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Treatment Table 3,2"
+      ]
+    },
+    "mt_d4c4d73650c4": {
+      "id": "mt_d4c4d73650c4",
+      "visual": 2697,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,1"
+      ]
+    },
+    "mt_ec83e187be24": {
+      "id": "mt_ec83e187be24",
+      "visual": 2697,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,1"
+      ]
+    },
+    "mt_ac87ca7c5913": {
+      "id": "mt_ac87ca7c5913",
+      "visual": 2697,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,1"
+      ]
+    },
+    "mt_e547abcffc2a": {
+      "id": "mt_e547abcffc2a",
+      "visual": 2698,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,1"
+      ]
+    },
+    "mt_2b7b32dcc382": {
+      "id": "mt_2b7b32dcc382",
+      "visual": 2698,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,1"
+      ]
+    },
+    "mt_3b711d820b13": {
+      "id": "mt_3b711d820b13",
+      "visual": 2698,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,1"
+      ]
+    },
+    "mt_7425fefedd09": {
+      "id": "mt_7425fefedd09",
+      "visual": 2699,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,1"
+      ]
+    },
+    "mt_434752650657": {
+      "id": "mt_434752650657",
+      "visual": 2699,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,1"
+      ]
+    },
+    "mt_569cde6b6107": {
+      "id": "mt_569cde6b6107",
+      "visual": 2699,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,1"
+      ]
+    },
+    "mt_ee6918a943e3": {
+      "id": "mt_ee6918a943e3",
+      "visual": 2700,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,2"
+      ]
+    },
+    "mt_47a75ae03ef8": {
+      "id": "mt_47a75ae03ef8",
+      "visual": 2700,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,2"
+      ]
+    },
+    "mt_73a20dc1fe6a": {
+      "id": "mt_73a20dc1fe6a",
+      "visual": 2700,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,2"
+      ]
+    },
+    "mt_dd2feddb576f": {
+      "id": "mt_dd2feddb576f",
+      "visual": 2701,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,2"
+      ]
+    },
+    "mt_2ed97a1373a8": {
+      "id": "mt_2ed97a1373a8",
+      "visual": 2701,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,2"
+      ]
+    },
+    "mt_205a066f1718": {
+      "id": "mt_205a066f1718",
+      "visual": 2701,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,2"
+      ]
+    },
+    "mt_0b439235e034": {
+      "id": "mt_0b439235e034",
+      "visual": 2702,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,2"
+      ]
+    },
+    "mt_b53b9e8e8237": {
+      "id": "mt_b53b9e8e8237",
+      "visual": 2702,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,2"
+      ]
+    },
+    "mt_77d76e2622b9": {
+      "id": "mt_77d76e2622b9",
+      "visual": 2702,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,2"
+      ]
+    },
+    "mt_2e9af681b43e": {
+      "id": "mt_2e9af681b43e",
+      "visual": 2703,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,3"
+      ]
+    },
+    "mt_384f2a3c447b": {
+      "id": "mt_384f2a3c447b",
+      "visual": 2703,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,3"
+      ]
+    },
+    "mt_69fa350a6f0d": {
+      "id": "mt_69fa350a6f0d",
+      "visual": 2703,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 1,3"
+      ]
+    },
+    "mt_29f1d8b6683d": {
+      "id": "mt_29f1d8b6683d",
+      "visual": 2704,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,3"
+      ]
+    },
+    "mt_31432521313f": {
+      "id": "mt_31432521313f",
+      "visual": 2704,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,3"
+      ]
+    },
+    "mt_366c282e5ed5": {
+      "id": "mt_366c282e5ed5",
+      "visual": 2704,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 2,3"
+      ]
+    },
+    "mt_fe08834d4220": {
+      "id": "mt_fe08834d4220",
+      "visual": 2705,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,3"
+      ]
+    },
+    "mt_f325977b3c1e": {
+      "id": "mt_f325977b3c1e",
+      "visual": 2705,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,3"
+      ]
+    },
+    "mt_b36626bb887e": {
+      "id": "mt_b36626bb887e",
+      "visual": 2705,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_clinic"
+      ],
+      "names": [
+        "Trainer's Room Floor Inlay 3,3"
+      ]
+    },
+    "mt_3d23c3309e32": {
+      "id": "mt_3d23c3309e32",
+      "visual": 2706,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 1,1"
+      ]
+    },
+    "mt_28c712c638c0": {
+      "id": "mt_28c712c638c0",
+      "visual": 2706,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 1,1"
+      ]
+    },
+    "mt_2f2c5fcb4ed3": {
+      "id": "mt_2f2c5fcb4ed3",
+      "visual": 2706,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 1,1"
+      ]
+    },
+    "mt_948b422a2ad7": {
+      "id": "mt_948b422a2ad7",
+      "visual": 2707,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 2,1"
+      ]
+    },
+    "mt_f6b07b07eedb": {
+      "id": "mt_f6b07b07eedb",
+      "visual": 2707,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 2,1"
+      ]
+    },
+    "mt_a9335d9184e4": {
+      "id": "mt_a9335d9184e4",
+      "visual": 2707,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 2,1"
+      ]
+    },
+    "mt_1b5d3c0dedf5": {
+      "id": "mt_1b5d3c0dedf5",
+      "visual": 2708,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 3,1"
+      ]
+    },
+    "mt_d8b159f7034b": {
+      "id": "mt_d8b159f7034b",
+      "visual": 2708,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 3,1"
+      ]
+    },
+    "mt_85d89be55c71": {
+      "id": "mt_85d89be55c71",
+      "visual": 2708,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 3,1"
+      ]
+    },
+    "mt_aaaf072eeb53": {
+      "id": "mt_aaaf072eeb53",
+      "visual": 2709,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 4,1"
+      ]
+    },
+    "mt_53034ab83560": {
+      "id": "mt_53034ab83560",
+      "visual": 2709,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 4,1"
+      ]
+    },
+    "mt_1e1eb407f183": {
+      "id": "mt_1e1eb407f183",
+      "visual": 2709,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 4,1"
+      ]
+    },
+    "mt_df30e1ae8a26": {
+      "id": "mt_df30e1ae8a26",
+      "visual": 2710,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 5,1"
+      ]
+    },
+    "mt_252ba16f6b18": {
+      "id": "mt_252ba16f6b18",
+      "visual": 2710,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 5,1"
+      ]
+    },
+    "mt_038efc0affb8": {
+      "id": "mt_038efc0affb8",
+      "visual": 2710,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 5,1"
+      ]
+    },
+    "mt_7f5100b926e6": {
+      "id": "mt_7f5100b926e6",
+      "visual": 2711,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 1,2"
+      ]
+    },
+    "mt_ae0b595106af": {
+      "id": "mt_ae0b595106af",
+      "visual": 2711,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 1,2"
+      ]
+    },
+    "mt_9dd8b957a860": {
+      "id": "mt_9dd8b957a860",
+      "visual": 2711,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 1,2"
+      ]
+    },
+    "mt_45a6f741232a": {
+      "id": "mt_45a6f741232a",
+      "visual": 2712,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 2,2"
+      ]
+    },
+    "mt_98c706ae1433": {
+      "id": "mt_98c706ae1433",
+      "visual": 2712,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 2,2"
+      ]
+    },
+    "mt_05b7d6c54fbd": {
+      "id": "mt_05b7d6c54fbd",
+      "visual": 2712,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 2,2"
+      ]
+    },
+    "mt_88fe40f71c95": {
+      "id": "mt_88fe40f71c95",
+      "visual": 2713,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 3,2"
+      ]
+    },
+    "mt_3795d12fb07b": {
+      "id": "mt_3795d12fb07b",
+      "visual": 2713,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 3,2"
+      ]
+    },
+    "mt_f53f927e03dc": {
+      "id": "mt_f53f927e03dc",
+      "visual": 2713,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 3,2"
+      ]
+    },
+    "mt_b61c395a47cb": {
+      "id": "mt_b61c395a47cb",
+      "visual": 2714,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 4,2"
+      ]
+    },
+    "mt_eb831a722816": {
+      "id": "mt_eb831a722816",
+      "visual": 2714,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 4,2"
+      ]
+    },
+    "mt_adc4c96a2d6e": {
+      "id": "mt_adc4c96a2d6e",
+      "visual": 2714,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 4,2"
+      ]
+    },
+    "mt_a34461d711ce": {
+      "id": "mt_a34461d711ce",
+      "visual": 2715,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 5,2"
+      ]
+    },
+    "mt_f9db340c7b15": {
+      "id": "mt_f9db340c7b15",
+      "visual": 2715,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 5,2"
+      ]
+    },
+    "mt_b2df92d3f581": {
+      "id": "mt_b2df92d3f581",
+      "visual": 2715,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room North Wall Module 5,2"
+      ]
+    },
+    "mt_335208c41ab5": {
+      "id": "mt_335208c41ab5",
+      "visual": 2716,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room Side Wall Module 1,1"
+      ]
+    },
+    "mt_973922b49201": {
+      "id": "mt_973922b49201",
+      "visual": 2716,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room Side Wall Module 1,1"
+      ]
+    },
+    "mt_9ff505078da5": {
+      "id": "mt_9ff505078da5",
+      "visual": 2716,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room Side Wall Module 1,1"
+      ]
+    },
+    "mt_6a33308d77b8": {
+      "id": "mt_6a33308d77b8",
+      "visual": 2717,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room Side Wall Module 1,2"
+      ]
+    },
+    "mt_dacd875bbc3a": {
+      "id": "mt_dacd875bbc3a",
+      "visual": 2717,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room Side Wall Module 1,2"
+      ]
+    },
+    "mt_455968a0aa8e": {
+      "id": "mt_455968a0aa8e",
+      "visual": 2717,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room Side Wall Module 1,2"
+      ]
+    },
+    "mt_dbc4712ae684": {
+      "id": "mt_dbc4712ae684",
+      "visual": 2718,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 1,1"
+      ]
+    },
+    "mt_ba945bd6625c": {
+      "id": "mt_ba945bd6625c",
+      "visual": 2718,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 1,1"
+      ]
+    },
+    "mt_f484360dde4a": {
+      "id": "mt_f484360dde4a",
+      "visual": 2718,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 1,1"
+      ]
+    },
+    "mt_0fc2ad8ad347": {
+      "id": "mt_0fc2ad8ad347",
+      "visual": 2719,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 2,1"
+      ]
+    },
+    "mt_8aeb1f98105c": {
+      "id": "mt_8aeb1f98105c",
+      "visual": 2719,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 2,1"
+      ]
+    },
+    "mt_629a2c2c7d60": {
+      "id": "mt_629a2c2c7d60",
+      "visual": 2719,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 2,1"
+      ]
+    },
+    "mt_fbfa7062ddbd": {
+      "id": "mt_fbfa7062ddbd",
+      "visual": 2720,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 3,1"
+      ]
+    },
+    "mt_c17c997e642f": {
+      "id": "mt_c17c997e642f",
+      "visual": 2720,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 3,1"
+      ]
+    },
+    "mt_a5e5897a1387": {
+      "id": "mt_a5e5897a1387",
+      "visual": 2720,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 3,1"
+      ]
+    },
+    "mt_c22ad8009751": {
+      "id": "mt_c22ad8009751",
+      "visual": 2721,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 4,1"
+      ]
+    },
+    "mt_9995a8b8cf8f": {
+      "id": "mt_9995a8b8cf8f",
+      "visual": 2721,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 4,1"
+      ]
+    },
+    "mt_423025ea7a87": {
+      "id": "mt_423025ea7a87",
+      "visual": 2721,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 4,1"
+      ]
+    },
+    "mt_47587fd8ed88": {
+      "id": "mt_47587fd8ed88",
+      "visual": 2722,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 5,1"
+      ]
+    },
+    "mt_3ebd6f77bee5": {
+      "id": "mt_3ebd6f77bee5",
+      "visual": 2722,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 5,1"
+      ]
+    },
+    "mt_8dbb8b85124f": {
+      "id": "mt_8dbb8b85124f",
+      "visual": 2722,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 5,1"
+      ]
+    },
+    "mt_5baedac93149": {
+      "id": "mt_5baedac93149",
+      "visual": 2723,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 6,1"
+      ]
+    },
+    "mt_4ab424a26f6c": {
+      "id": "mt_4ab424a26f6c",
+      "visual": 2723,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 6,1"
+      ]
+    },
+    "mt_0a23e6ae3f8f": {
+      "id": "mt_0a23e6ae3f8f",
+      "visual": 2723,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 6,1"
+      ]
+    },
+    "mt_704b12b33795": {
+      "id": "mt_704b12b33795",
+      "visual": 2724,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 7,1"
+      ]
+    },
+    "mt_b8de8defa4b2": {
+      "id": "mt_b8de8defa4b2",
+      "visual": 2724,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 7,1"
+      ]
+    },
+    "mt_aea57fa6b390": {
+      "id": "mt_aea57fa6b390",
+      "visual": 2724,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 7,1"
+      ]
+    },
+    "mt_01153b4553a2": {
+      "id": "mt_01153b4553a2",
+      "visual": 2725,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 8,1"
+      ]
+    },
+    "mt_0444cdd4079e": {
+      "id": "mt_0444cdd4079e",
+      "visual": 2725,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 8,1"
+      ]
+    },
+    "mt_74c2b2658780": {
+      "id": "mt_74c2b2658780",
+      "visual": 2725,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 8,1"
+      ]
+    },
+    "mt_dce58e241cb1": {
+      "id": "mt_dce58e241cb1",
+      "visual": 2726,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 9,1"
+      ]
+    },
+    "mt_5323dc780b25": {
+      "id": "mt_5323dc780b25",
+      "visual": 2726,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 9,1"
+      ]
+    },
+    "mt_e8c1a24d2f34": {
+      "id": "mt_e8c1a24d2f34",
+      "visual": 2726,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 9,1"
+      ]
+    },
+    "mt_32d09e5d1860": {
+      "id": "mt_32d09e5d1860",
+      "visual": 2727,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 10,1"
+      ]
+    },
+    "mt_40a481ebbbaf": {
+      "id": "mt_40a481ebbbaf",
+      "visual": 2727,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 10,1"
+      ]
+    },
+    "mt_d43acaf33a97": {
+      "id": "mt_d43acaf33a97",
+      "visual": 2727,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 10,1"
+      ]
+    },
+    "mt_5e7aa4b223f4": {
+      "id": "mt_5e7aa4b223f4",
+      "visual": 2728,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 11,1"
+      ]
+    },
+    "mt_7f572461d909": {
+      "id": "mt_7f572461d909",
+      "visual": 2728,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 11,1"
+      ]
+    },
+    "mt_ef4f9ccf422b": {
+      "id": "mt_ef4f9ccf422b",
+      "visual": 2728,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 11,1"
+      ]
+    },
+    "mt_c269c97af9a8": {
+      "id": "mt_c269c97af9a8",
+      "visual": 2729,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 12,1"
+      ]
+    },
+    "mt_f9af5060ea59": {
+      "id": "mt_f9af5060ea59",
+      "visual": 2729,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 12,1"
+      ]
+    },
+    "mt_fa824cdd25ef": {
+      "id": "mt_fa824cdd25ef",
+      "visual": 2729,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 12,1"
+      ]
+    },
+    "mt_cee2da1d61c7": {
+      "id": "mt_cee2da1d61c7",
+      "visual": 2730,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 13,1"
+      ]
+    },
+    "mt_6b2c1032192b": {
+      "id": "mt_6b2c1032192b",
+      "visual": 2730,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 13,1"
+      ]
+    },
+    "mt_32d978502715": {
+      "id": "mt_32d978502715",
+      "visual": 2730,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 13,1"
+      ]
+    },
+    "mt_73fac05e2399": {
+      "id": "mt_73fac05e2399",
+      "visual": 2731,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 14,1"
+      ]
+    },
+    "mt_d991795cfa9a": {
+      "id": "mt_d991795cfa9a",
+      "visual": 2731,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 14,1"
+      ]
+    },
+    "mt_90a187c4bc73": {
+      "id": "mt_90a187c4bc73",
+      "visual": 2731,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 14,1"
+      ]
+    },
+    "mt_079e9af06e56": {
+      "id": "mt_079e9af06e56",
+      "visual": 2732,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 15,1"
+      ]
+    },
+    "mt_4d7c73951406": {
+      "id": "mt_4d7c73951406",
+      "visual": 2732,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 15,1"
+      ]
+    },
+    "mt_acda980d5747": {
+      "id": "mt_acda980d5747",
+      "visual": 2732,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Locker Room South Wall 15,1"
+      ]
+    },
+    "mt_fcccc79ebce7": {
+      "id": "mt_fcccc79ebce7",
+      "visual": 2733,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 1,1"
+      ]
+    },
+    "mt_50bb1d6c7a54": {
+      "id": "mt_50bb1d6c7a54",
+      "visual": 2733,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 1,1"
+      ]
+    },
+    "mt_ab8394360b4d": {
+      "id": "mt_ab8394360b4d",
+      "visual": 2733,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 1,1"
+      ]
+    },
+    "mt_9411220275ed": {
+      "id": "mt_9411220275ed",
+      "visual": 2734,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 2,1"
+      ]
+    },
+    "mt_1488e065f306": {
+      "id": "mt_1488e065f306",
+      "visual": 2734,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 2,1"
+      ]
+    },
+    "mt_7069035a516d": {
+      "id": "mt_7069035a516d",
+      "visual": 2734,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 2,1"
+      ]
+    },
+    "mt_306712924009": {
+      "id": "mt_306712924009",
+      "visual": 2735,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 3,1"
+      ]
+    },
+    "mt_7313aba163b8": {
+      "id": "mt_7313aba163b8",
+      "visual": 2735,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 3,1"
+      ]
+    },
+    "mt_767f0cf89057": {
+      "id": "mt_767f0cf89057",
+      "visual": 2735,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 3,1"
+      ]
+    },
+    "mt_ca5e5705235d": {
+      "id": "mt_ca5e5705235d",
+      "visual": 2736,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 4,1"
+      ]
+    },
+    "mt_984212e85596": {
+      "id": "mt_984212e85596",
+      "visual": 2736,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 4,1"
+      ]
+    },
+    "mt_b4e8b33e249c": {
+      "id": "mt_b4e8b33e249c",
+      "visual": 2736,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 4,1"
+      ]
+    },
+    "mt_5fa612bb86e6": {
+      "id": "mt_5fa612bb86e6",
+      "visual": 2737,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 5,1"
+      ]
+    },
+    "mt_d10f94e6dfa4": {
+      "id": "mt_d10f94e6dfa4",
+      "visual": 2737,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 5,1"
+      ]
+    },
+    "mt_4ad506060f36": {
+      "id": "mt_4ad506060f36",
+      "visual": 2737,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 5,1"
+      ]
+    },
+    "mt_05855ec8bdc0": {
+      "id": "mt_05855ec8bdc0",
+      "visual": 2738,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 6,1"
+      ]
+    },
+    "mt_f71723e242bb": {
+      "id": "mt_f71723e242bb",
+      "visual": 2738,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 6,1"
+      ]
+    },
+    "mt_4e59b2be7c2e": {
+      "id": "mt_4e59b2be7c2e",
+      "visual": 2738,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 6,1"
+      ]
+    },
+    "mt_32ab52e1c36b": {
+      "id": "mt_32ab52e1c36b",
+      "visual": 2739,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 7,1"
+      ]
+    },
+    "mt_4208800cc69d": {
+      "id": "mt_4208800cc69d",
+      "visual": 2739,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 7,1"
+      ]
+    },
+    "mt_5e2f5b12dcbd": {
+      "id": "mt_5e2f5b12dcbd",
+      "visual": 2739,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 7,1"
+      ]
+    },
+    "mt_837c6d4da588": {
+      "id": "mt_837c6d4da588",
+      "visual": 2740,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 1,2"
+      ]
+    },
+    "mt_47b382783324": {
+      "id": "mt_47b382783324",
+      "visual": 2740,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 1,2"
+      ]
+    },
+    "mt_8015d5fd7497": {
+      "id": "mt_8015d5fd7497",
+      "visual": 2740,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 1,2"
+      ]
+    },
+    "mt_20671cf2d0c6": {
+      "id": "mt_20671cf2d0c6",
+      "visual": 2741,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 2,2"
+      ]
+    },
+    "mt_cb154cede8ae": {
+      "id": "mt_cb154cede8ae",
+      "visual": 2741,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 2,2"
+      ]
+    },
+    "mt_1061c50e963d": {
+      "id": "mt_1061c50e963d",
+      "visual": 2741,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 2,2"
+      ]
+    },
+    "mt_581e3d68ca79": {
+      "id": "mt_581e3d68ca79",
+      "visual": 2742,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 3,2"
+      ]
+    },
+    "mt_0ee23e90c204": {
+      "id": "mt_0ee23e90c204",
+      "visual": 2742,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 3,2"
+      ]
+    },
+    "mt_1f8dd62f1739": {
+      "id": "mt_1f8dd62f1739",
+      "visual": 2742,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 3,2"
+      ]
+    },
+    "mt_c9bcb2db14bf": {
+      "id": "mt_c9bcb2db14bf",
+      "visual": 2743,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 4,2"
+      ]
+    },
+    "mt_4000499c7052": {
+      "id": "mt_4000499c7052",
+      "visual": 2743,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 4,2"
+      ]
+    },
+    "mt_b037f969aed3": {
+      "id": "mt_b037f969aed3",
+      "visual": 2743,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 4,2"
+      ]
+    },
+    "mt_ac21a8679c1e": {
+      "id": "mt_ac21a8679c1e",
+      "visual": 2744,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 5,2"
+      ]
+    },
+    "mt_aeda4960216d": {
+      "id": "mt_aeda4960216d",
+      "visual": 2744,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 5,2"
+      ]
+    },
+    "mt_4a620c88de89": {
+      "id": "mt_4a620c88de89",
+      "visual": 2744,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 5,2"
+      ]
+    },
+    "mt_e160e74575e6": {
+      "id": "mt_e160e74575e6",
+      "visual": 2745,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 6,2"
+      ]
+    },
+    "mt_9bdc7845bf04": {
+      "id": "mt_9bdc7845bf04",
+      "visual": 2745,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 6,2"
+      ]
+    },
+    "mt_d508d05fe6b0": {
+      "id": "mt_d508d05fe6b0",
+      "visual": 2745,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 6,2"
+      ]
+    },
+    "mt_a8e095adbbcc": {
+      "id": "mt_a8e095adbbcc",
+      "visual": 2746,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 7,2"
+      ]
+    },
+    "mt_6b20ea6d5ab0": {
+      "id": "mt_6b20ea6d5ab0",
+      "visual": 2746,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 7,2"
+      ]
+    },
+    "mt_da6e8ab3af61": {
+      "id": "mt_da6e8ab3af61",
+      "visual": 2746,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Equipment Counter 7,2"
+      ]
+    },
+    "mt_b776c2ab75e1": {
+      "id": "mt_b776c2ab75e1",
+      "visual": 2747,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 1,1"
+      ]
+    },
+    "mt_d71f170d7f98": {
+      "id": "mt_d71f170d7f98",
+      "visual": 2747,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 1,1"
+      ]
+    },
+    "mt_a990fabfd881": {
+      "id": "mt_a990fabfd881",
+      "visual": 2747,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 1,1"
+      ]
+    },
+    "mt_7915ae9c37bc": {
+      "id": "mt_7915ae9c37bc",
+      "visual": 2748,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 2,1"
+      ]
+    },
+    "mt_66f9653e59e9": {
+      "id": "mt_66f9653e59e9",
+      "visual": 2748,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 2,1"
+      ]
+    },
+    "mt_12e622fceaff": {
+      "id": "mt_12e622fceaff",
+      "visual": 2748,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 2,1"
+      ]
+    },
+    "mt_19f1c6f454ba": {
+      "id": "mt_19f1c6f454ba",
+      "visual": 2749,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 3,1"
+      ]
+    },
+    "mt_19aa684daf71": {
+      "id": "mt_19aa684daf71",
+      "visual": 2749,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 3,1"
+      ]
+    },
+    "mt_584d823235d2": {
+      "id": "mt_584d823235d2",
+      "visual": 2749,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 3,1"
+      ]
+    },
+    "mt_5fb90dc37e80": {
+      "id": "mt_5fb90dc37e80",
+      "visual": 2750,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 1,2"
+      ]
+    },
+    "mt_8ad7c6e2efa1": {
+      "id": "mt_8ad7c6e2efa1",
+      "visual": 2750,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 1,2"
+      ]
+    },
+    "mt_dd258f9c5850": {
+      "id": "mt_dd258f9c5850",
+      "visual": 2750,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 1,2"
+      ]
+    },
+    "mt_726d4840d83c": {
+      "id": "mt_726d4840d83c",
+      "visual": 2751,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 2,2"
+      ]
+    },
+    "mt_da23c4383e43": {
+      "id": "mt_da23c4383e43",
+      "visual": 2751,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 2,2"
+      ]
+    },
+    "mt_785187d8bc9a": {
+      "id": "mt_785187d8bc9a",
+      "visual": 2751,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 2,2"
+      ]
+    },
+    "mt_d8c086de66a2": {
+      "id": "mt_d8c086de66a2",
+      "visual": 2752,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 3,2"
+      ]
+    },
+    "mt_bf67cade7d28": {
+      "id": "mt_bf67cade7d28",
+      "visual": 2752,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 3,2"
+      ]
+    },
+    "mt_830947295532": {
+      "id": "mt_830947295532",
+      "visual": 2752,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Singlet Display 3,2"
+      ]
+    },
+    "mt_10bb23f624b4": {
+      "id": "mt_10bb23f624b4",
+      "visual": 2753,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 1,1"
+      ]
+    },
+    "mt_da28b0d28c7a": {
+      "id": "mt_da28b0d28c7a",
+      "visual": 2753,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 1,1"
+      ]
+    },
+    "mt_f6f6fcbebd4d": {
+      "id": "mt_f6f6fcbebd4d",
+      "visual": 2753,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 1,1"
+      ]
+    },
+    "mt_2c631a67bbc1": {
+      "id": "mt_2c631a67bbc1",
+      "visual": 2754,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 2,1"
+      ]
+    },
+    "mt_ae7dee3e92be": {
+      "id": "mt_ae7dee3e92be",
+      "visual": 2754,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 2,1"
+      ]
+    },
+    "mt_47663a80d55a": {
+      "id": "mt_47663a80d55a",
+      "visual": 2754,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 2,1"
+      ]
+    },
+    "mt_dabb2550bb8f": {
+      "id": "mt_dabb2550bb8f",
+      "visual": 2755,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 3,1"
+      ]
+    },
+    "mt_49c25ac19545": {
+      "id": "mt_49c25ac19545",
+      "visual": 2755,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 3,1"
+      ]
+    },
+    "mt_f171d5409ee5": {
+      "id": "mt_f171d5409ee5",
+      "visual": 2755,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 3,1"
+      ]
+    },
+    "mt_e275b45115a5": {
+      "id": "mt_e275b45115a5",
+      "visual": 2756,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 1,2"
+      ]
+    },
+    "mt_aca27f4da8a7": {
+      "id": "mt_aca27f4da8a7",
+      "visual": 2756,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 1,2"
+      ]
+    },
+    "mt_54a7646db256": {
+      "id": "mt_54a7646db256",
+      "visual": 2756,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 1,2"
+      ]
+    },
+    "mt_742a3fbf4921": {
+      "id": "mt_742a3fbf4921",
+      "visual": 2757,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 2,2"
+      ]
+    },
+    "mt_5ea44fdc3596": {
+      "id": "mt_5ea44fdc3596",
+      "visual": 2757,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 2,2"
+      ]
+    },
+    "mt_3ca351fe08e2": {
+      "id": "mt_3ca351fe08e2",
+      "visual": 2757,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 2,2"
+      ]
+    },
+    "mt_6bdff9e43a1f": {
+      "id": "mt_6bdff9e43a1f",
+      "visual": 2758,
+      "behavior": "solid",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 3,2"
+      ]
+    },
+    "mt_fd18984fdf4e": {
+      "id": "mt_fd18984fdf4e",
+      "visual": 2758,
+      "behavior": "walkable",
+      "layer": "structure",
+      "layerType": "covered",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 3,2"
+      ]
+    },
+    "mt_8005448389ad": {
+      "id": "mt_8005448389ad",
+      "visual": 2758,
+      "behavior": "warp",
+      "layer": "structure",
+      "layerType": "normal",
+      "families": [
+        "service_shop"
+      ],
+      "names": [
+        "Bucky's Supply Display 3,2"
+      ]
     }
   },
   "palette": [
@@ -119237,7 +124872,122 @@
     "mt_1755e771ba14",
     "mt_3635e478e268",
     "mt_9a23d605374e",
-    "mt_2636f30ee109"
+    "mt_2636f30ee109",
+    "mt_8297ea16e34e",
+    "mt_694fd8affc0d",
+    "mt_07baae3fc74c",
+    "mt_47f942b9d739",
+    "mt_7d1043b51f5d",
+    "mt_b1f7f171f6c5",
+    "mt_4a1b7a5d1c9f",
+    "mt_657135f5b971",
+    "mt_d101ded23020",
+    "mt_f0b0c8209398",
+    "mt_56c0ca292489",
+    "mt_8f15dc9a0614",
+    "mt_b4bb827ec05d",
+    "mt_9032df7289c1",
+    "mt_1458b484ee8f",
+    "mt_3661f5e9df95",
+    "mt_29e21862728c",
+    "mt_806a7f93a138",
+    "mt_dc5b5f330300",
+    "mt_4157145b8a89",
+    "mt_a787771da65d",
+    "mt_40240aad4a48",
+    "mt_56f832a5a7cf",
+    "mt_3b7bd75aef3f",
+    "mt_98ecade7a5af",
+    "mt_6096c4417de9",
+    "mt_6d3013bd8801",
+    "mt_40a39fa786a8",
+    "mt_e1e48fd404cb",
+    "mt_487fe302083d",
+    "mt_1d111fff5227",
+    "mt_8af843dfa8e0",
+    "mt_a040ad907448",
+    "mt_a888b8287b59",
+    "mt_9dc3aaff2ffb",
+    "mt_424508bcf491",
+    "mt_8be1bfb4331c",
+    "mt_af529f6ef194",
+    "mt_0d846f14da89",
+    "mt_536d2a8e3c90",
+    "mt_92aabfff7142",
+    "mt_5e3b10b83306",
+    "mt_ca1911017045",
+    "mt_5c1f6eaaeb56",
+    "mt_1e8fe2f9c2f3",
+    "mt_d4e7726af29e",
+    "mt_2cb2cd605321",
+    "mt_659afdf38cb4",
+    "mt_17198f707cfb",
+    "mt_41a8202da9d5",
+    "mt_2e3805267017",
+    "mt_de89c9776e78",
+    "mt_a1530b1d0a91",
+    "mt_d4c4d73650c4",
+    "mt_e547abcffc2a",
+    "mt_7425fefedd09",
+    "mt_ee6918a943e3",
+    "mt_dd2feddb576f",
+    "mt_0b439235e034",
+    "mt_2e9af681b43e",
+    "mt_29f1d8b6683d",
+    "mt_fe08834d4220",
+    "mt_3d23c3309e32",
+    "mt_948b422a2ad7",
+    "mt_1b5d3c0dedf5",
+    "mt_aaaf072eeb53",
+    "mt_df30e1ae8a26",
+    "mt_7f5100b926e6",
+    "mt_45a6f741232a",
+    "mt_88fe40f71c95",
+    "mt_b61c395a47cb",
+    "mt_a34461d711ce",
+    "mt_335208c41ab5",
+    "mt_6a33308d77b8",
+    "mt_dbc4712ae684",
+    "mt_0fc2ad8ad347",
+    "mt_fbfa7062ddbd",
+    "mt_c22ad8009751",
+    "mt_47587fd8ed88",
+    "mt_5baedac93149",
+    "mt_704b12b33795",
+    "mt_01153b4553a2",
+    "mt_dce58e241cb1",
+    "mt_32d09e5d1860",
+    "mt_5e7aa4b223f4",
+    "mt_c269c97af9a8",
+    "mt_cee2da1d61c7",
+    "mt_73fac05e2399",
+    "mt_079e9af06e56",
+    "mt_fcccc79ebce7",
+    "mt_9411220275ed",
+    "mt_306712924009",
+    "mt_ca5e5705235d",
+    "mt_5fa612bb86e6",
+    "mt_05855ec8bdc0",
+    "mt_32ab52e1c36b",
+    "mt_837c6d4da588",
+    "mt_20671cf2d0c6",
+    "mt_581e3d68ca79",
+    "mt_c9bcb2db14bf",
+    "mt_ac21a8679c1e",
+    "mt_e160e74575e6",
+    "mt_a8e095adbbcc",
+    "mt_b776c2ab75e1",
+    "mt_7915ae9c37bc",
+    "mt_19f1c6f454ba",
+    "mt_5fb90dc37e80",
+    "mt_726d4840d83c",
+    "mt_d8c086de66a2",
+    "mt_10bb23f624b4",
+    "mt_2c631a67bbc1",
+    "mt_dabb2550bb8f",
+    "mt_e275b45115a5",
+    "mt_742a3fbf4921",
+    "mt_6bdff9e43a1f"
   ],
   "stamps": {
     "tree_oak_a": {
@@ -128345,6 +134095,624 @@
         "retaining_wall",
         "authored16"
       ]
+    },
+    "trainer_wall_north_module": {
+      "id": "trainer_wall_north_module",
+      "name": "Trainer's Room North Wall Module",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_wall_north_module.png",
+      "width": 5,
+      "height": 2,
+      "cells": [
+        [
+          "mt_8297ea16e34e",
+          "mt_694fd8affc0d",
+          "mt_07baae3fc74c",
+          "mt_47f942b9d739",
+          "mt_7d1043b51f5d"
+        ],
+        [
+          "mt_b1f7f171f6c5",
+          "mt_4a1b7a5d1c9f",
+          "mt_657135f5b971",
+          "mt_d101ded23020",
+          "mt_f0b0c8209398"
+        ]
+      ],
+      "collisionMask": [
+        "#####",
+        "#####"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "clinic_wall",
+      "coverageAudit": {
+        "0,0": 1.0,
+        "1,0": 1.0,
+        "2,0": 1.0,
+        "3,0": 1.0,
+        "4,0": 1.0,
+        "0,1": 1.0,
+        "1,1": 1.0,
+        "2,1": 1.0,
+        "3,1": 1.0,
+        "4,1": 1.0
+      },
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "trainer_wall_side_module": {
+      "id": "trainer_wall_side_module",
+      "name": "Trainer's Room Side Wall Module",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_wall_side_module.png",
+      "width": 1,
+      "height": 2,
+      "cells": [
+        [
+          "mt_56c0ca292489"
+        ],
+        [
+          "mt_8f15dc9a0614"
+        ]
+      ],
+      "collisionMask": [
+        "#",
+        "#"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "clinic_wall",
+      "coverageAudit": {
+        "0,0": 1.0,
+        "0,1": 1.0
+      },
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "trainer_wall_south": {
+      "id": "trainer_wall_south",
+      "name": "Trainer's Room South Wall",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_wall_south.png",
+      "width": 15,
+      "height": 1,
+      "cells": [
+        [
+          "mt_b4bb827ec05d",
+          "mt_9032df7289c1",
+          "mt_1458b484ee8f",
+          "mt_3661f5e9df95",
+          "mt_29e21862728c",
+          "mt_806a7f93a138",
+          "mt_dc5b5f330300",
+          "mt_4157145b8a89",
+          "mt_a787771da65d",
+          "mt_40240aad4a48",
+          "mt_56f832a5a7cf",
+          "mt_3b7bd75aef3f",
+          "mt_98ecade7a5af",
+          "mt_6096c4417de9",
+          "mt_6d3013bd8801"
+        ]
+      ],
+      "collisionMask": [
+        "#######.#######"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "clinic_threshold",
+      "coverageAudit": {
+        "0,0": 1.0,
+        "1,0": 1.0,
+        "2,0": 1.0,
+        "3,0": 1.0,
+        "4,0": 1.0,
+        "5,0": 1.0,
+        "6,0": 1.0,
+        "8,0": 1.0,
+        "9,0": 1.0,
+        "10,0": 1.0,
+        "11,0": 1.0,
+        "12,0": 1.0,
+        "13,0": 1.0,
+        "14,0": 1.0
+      },
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "trainer_recovery_counter": {
+      "id": "trainer_recovery_counter",
+      "name": "Trainer's Room Recovery Counter",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_recovery_counter.png",
+      "width": 7,
+      "height": 2,
+      "cells": [
+        [
+          "mt_40a39fa786a8",
+          "mt_e1e48fd404cb",
+          "mt_487fe302083d",
+          "mt_1d111fff5227",
+          "mt_8af843dfa8e0",
+          "mt_a040ad907448",
+          "mt_a888b8287b59"
+        ],
+        [
+          "mt_9dc3aaff2ffb",
+          "mt_424508bcf491",
+          "mt_8be1bfb4331c",
+          "mt_af529f6ef194",
+          "mt_0d846f14da89",
+          "mt_536d2a8e3c90",
+          "mt_92aabfff7142"
+        ]
+      ],
+      "collisionMask": [
+        "#######",
+        "#######"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "recovery_counter",
+      "coverageAudit": {
+        "0,0": 0.5508,
+        "1,0": 1.0,
+        "2,0": 0.957,
+        "3,0": 0.9375,
+        "4,0": 0.9609,
+        "5,0": 1.0,
+        "6,0": 0.4883,
+        "0,1": 0.5508,
+        "1,1": 1.0,
+        "2,1": 1.0,
+        "3,1": 1.0,
+        "4,1": 1.0,
+        "5,1": 1.0,
+        "6,1": 0.4883
+      },
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "trainer_roster_terminal": {
+      "id": "trainer_roster_terminal",
+      "name": "Trainer's Room Roster Terminal",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_roster_terminal.png",
+      "width": 3,
+      "height": 2,
+      "cells": [
+        [
+          "mt_5e3b10b83306",
+          "mt_ca1911017045",
+          "mt_5c1f6eaaeb56"
+        ],
+        [
+          "mt_1e8fe2f9c2f3",
+          "mt_d4e7726af29e",
+          "mt_2cb2cd605321"
+        ]
+      ],
+      "collisionMask": [
+        "###",
+        "###"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "roster_terminal",
+      "coverageAudit": {
+        "0,0": 0.9961,
+        "1,0": 1.0,
+        "2,0": 0.9336,
+        "0,1": 0.9961,
+        "1,1": 1.0,
+        "2,1": 0.9336
+      },
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "trainer_treatment_table": {
+      "id": "trainer_treatment_table",
+      "name": "Trainer's Room Treatment Table",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_treatment_table.png",
+      "width": 3,
+      "height": 2,
+      "cells": [
+        [
+          "mt_659afdf38cb4",
+          "mt_17198f707cfb",
+          "mt_41a8202da9d5"
+        ],
+        [
+          "mt_2e3805267017",
+          "mt_de89c9776e78",
+          "mt_a1530b1d0a91"
+        ]
+      ],
+      "collisionMask": [
+        "###",
+        "###"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "treatment_table",
+      "coverageAudit": {
+        "0,0": 0.9336,
+        "1,0": 1.0,
+        "2,0": 0.9336,
+        "0,1": 0.9336,
+        "1,1": 1.0,
+        "2,1": 0.9336
+      },
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "trainer_floor_inlay": {
+      "id": "trainer_floor_inlay",
+      "name": "Trainer's Room Floor Inlay",
+      "category": "service_clinic",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_trainer_floor_inlay.png",
+      "width": 3,
+      "height": 3,
+      "cells": [
+        [
+          "mt_d4c4d73650c4",
+          "mt_e547abcffc2a",
+          "mt_7425fefedd09"
+        ],
+        [
+          "mt_ee6918a943e3",
+          "mt_dd2feddb576f",
+          "mt_0b439235e034"
+        ],
+        [
+          "mt_2e9af681b43e",
+          "mt_29f1d8b6683d",
+          "mt_fe08834d4220"
+        ]
+      ],
+      "collisionMask": [
+        "...",
+        "...",
+        "..."
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "walkable_inlay",
+      "coverageAudit": {},
+      "tags": [
+        "service_clinic",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "shop_wall_north_module": {
+      "id": "shop_wall_north_module",
+      "name": "Bucky's Locker Room North Wall Module",
+      "category": "service_shop",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_shop_wall_north_module.png",
+      "width": 5,
+      "height": 2,
+      "cells": [
+        [
+          "mt_3d23c3309e32",
+          "mt_948b422a2ad7",
+          "mt_1b5d3c0dedf5",
+          "mt_aaaf072eeb53",
+          "mt_df30e1ae8a26"
+        ],
+        [
+          "mt_7f5100b926e6",
+          "mt_45a6f741232a",
+          "mt_88fe40f71c95",
+          "mt_b61c395a47cb",
+          "mt_a34461d711ce"
+        ]
+      ],
+      "collisionMask": [
+        "#####",
+        "#####"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "shop_wall",
+      "coverageAudit": {
+        "0,0": 1.0,
+        "1,0": 1.0,
+        "2,0": 1.0,
+        "3,0": 1.0,
+        "4,0": 1.0,
+        "0,1": 1.0,
+        "1,1": 1.0,
+        "2,1": 1.0,
+        "3,1": 1.0,
+        "4,1": 1.0
+      },
+      "tags": [
+        "service_shop",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "shop_wall_side_module": {
+      "id": "shop_wall_side_module",
+      "name": "Bucky's Locker Room Side Wall Module",
+      "category": "service_shop",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_shop_wall_side_module.png",
+      "width": 1,
+      "height": 2,
+      "cells": [
+        [
+          "mt_335208c41ab5"
+        ],
+        [
+          "mt_6a33308d77b8"
+        ]
+      ],
+      "collisionMask": [
+        "#",
+        "#"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "shop_wall",
+      "coverageAudit": {
+        "0,0": 1.0,
+        "0,1": 1.0
+      },
+      "tags": [
+        "service_shop",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "shop_wall_south": {
+      "id": "shop_wall_south",
+      "name": "Bucky's Locker Room South Wall",
+      "category": "service_shop",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_shop_wall_south.png",
+      "width": 15,
+      "height": 1,
+      "cells": [
+        [
+          "mt_dbc4712ae684",
+          "mt_0fc2ad8ad347",
+          "mt_fbfa7062ddbd",
+          "mt_c22ad8009751",
+          "mt_47587fd8ed88",
+          "mt_5baedac93149",
+          "mt_704b12b33795",
+          "mt_01153b4553a2",
+          "mt_dce58e241cb1",
+          "mt_32d09e5d1860",
+          "mt_5e7aa4b223f4",
+          "mt_c269c97af9a8",
+          "mt_cee2da1d61c7",
+          "mt_73fac05e2399",
+          "mt_079e9af06e56"
+        ]
+      ],
+      "collisionMask": [
+        "#######.#######"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "shop_threshold",
+      "coverageAudit": {
+        "0,0": 0.9648,
+        "1,0": 1.0,
+        "2,0": 1.0,
+        "3,0": 1.0,
+        "4,0": 1.0,
+        "5,0": 1.0,
+        "6,0": 1.0,
+        "8,0": 1.0,
+        "9,0": 1.0,
+        "10,0": 1.0,
+        "11,0": 1.0,
+        "12,0": 1.0,
+        "13,0": 1.0,
+        "14,0": 0.9648
+      },
+      "tags": [
+        "service_shop",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "buckys_equipment_counter": {
+      "id": "buckys_equipment_counter",
+      "name": "Bucky's Equipment Counter",
+      "category": "service_shop",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_buckys_equipment_counter.png",
+      "width": 7,
+      "height": 2,
+      "cells": [
+        [
+          "mt_fcccc79ebce7",
+          "mt_9411220275ed",
+          "mt_306712924009",
+          "mt_ca5e5705235d",
+          "mt_5fa612bb86e6",
+          "mt_05855ec8bdc0",
+          "mt_32ab52e1c36b"
+        ],
+        [
+          "mt_837c6d4da588",
+          "mt_20671cf2d0c6",
+          "mt_581e3d68ca79",
+          "mt_c9bcb2db14bf",
+          "mt_ac21a8679c1e",
+          "mt_e160e74575e6",
+          "mt_a8e095adbbcc"
+        ]
+      ],
+      "collisionMask": [
+        "#######",
+        "#######"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "shop_counter",
+      "coverageAudit": {
+        "0,0": 0.2734,
+        "1,0": 0.2578,
+        "2,0": 0.2617,
+        "3,0": 0.5781,
+        "4,0": 0.2852,
+        "5,0": 0.2734,
+        "6,0": 0.3008,
+        "0,1": 0.9258,
+        "1,1": 0.9375,
+        "2,1": 0.9688,
+        "3,1": 1.0,
+        "4,1": 0.9805,
+        "5,1": 0.9375,
+        "6,1": 0.9023
+      },
+      "tags": [
+        "service_shop",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "buckys_singlet_display": {
+      "id": "buckys_singlet_display",
+      "name": "Bucky's Singlet Display",
+      "category": "service_shop",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_buckys_singlet_display.png",
+      "width": 3,
+      "height": 2,
+      "cells": [
+        [
+          "mt_b776c2ab75e1",
+          "mt_7915ae9c37bc",
+          "mt_19f1c6f454ba"
+        ],
+        [
+          "mt_5fb90dc37e80",
+          "mt_726d4840d83c",
+          "mt_d8c086de66a2"
+        ]
+      ],
+      "collisionMask": [
+        "###",
+        "###"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "shop_singlets",
+      "coverageAudit": {
+        "0,0": 0.6211,
+        "1,0": 0.625,
+        "2,0": 0.6211,
+        "0,1": 1.0,
+        "1,1": 1.0,
+        "2,1": 1.0
+      },
+      "tags": [
+        "service_shop",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
+    },
+    "buckys_supply_display": {
+      "id": "buckys_supply_display",
+      "name": "Bucky's Supply Display",
+      "category": "service_shop",
+      "thumbnail": "./assets/metatiles/stamps/v4/season_one_buckys_supply_display.png",
+      "width": 3,
+      "height": 2,
+      "cells": [
+        [
+          "mt_10bb23f624b4",
+          "mt_2c631a67bbc1",
+          "mt_dabb2550bb8f"
+        ],
+        [
+          "mt_e275b45115a5",
+          "mt_742a3fbf4921",
+          "mt_6bdff9e43a1f"
+        ]
+      ],
+      "collisionMask": [
+        "###",
+        "###"
+      ],
+      "door": null,
+      "sourceKind": "metatile",
+      "semanticBehavior": "shop_supplies",
+      "coverageAudit": {
+        "0,0": 0.5586,
+        "1,0": 0.5625,
+        "2,0": 0.5586,
+        "0,1": 1.0,
+        "1,1": 1.0,
+        "2,1": 1.0
+      },
+      "tags": [
+        "service_shop",
+        "season_one_world_kit",
+        "service_interior",
+        "imagegen_direct",
+        "authored16",
+        "grid_native"
+      ]
     }
   },
   "coverage": {
@@ -128377,7 +134745,7 @@
       "road_asphalt_grass": 47,
       "road_asphalt_curb": 47
     },
-    "structureStampCount": 153,
+    "structureStampCount": 166,
     "structureFamilyCounts": {
       "trees": 6,
       "forest_masses": 16,
@@ -128402,12 +134770,14 @@
       "arena_mats": 4,
       "ordinary_buildings": 19,
       "town_landmarks": 8,
-      "elevation": 8
+      "elevation": 8,
+      "service_clinic": 7,
+      "service_shop": 6
     },
     "groundAssemblyCount": 28,
     "blobSignatureCount": 47,
-    "preparedImagegenAssetCount": 128,
-    "exactNearestNeighborVisualCount": 2644,
+    "preparedImagegenAssetCount": 143,
+    "exactNearestNeighborVisualCount": 2759,
     "logicalCellSize": 16,
     "groundMaterialMetrics": {
       "grass": {
@@ -128482,61 +134852,65 @@
       "schema": "badger-grapple-imagegen-tileset-sources/v2",
       "version": 4,
       "profilePath": "art/tilesets/imagegen_material_profiles.json",
-      "profileSha256": "d72a38112f03f1c3c58f6858b3ae6c0b67c42465fc88b561d0a959b7eba7b950",
+      "profileSha256": "37a373a5e470103db8cd7d743c20295873bb288c6481448de56effbd7e268232",
       "profileVersion": 1,
       "maxColorsPerMaterial": 4,
-      "assetCount": 128,
-      "materialCount": 22,
+      "assetCount": 143,
+      "materialCount": 24,
       "materialAssetCounts": {
         "asphalt": 2,
         "brick": 33,
-        "cardinal": 52,
+        "cardinal": 65,
+        "clinic_floor": 1,
         "concrete": 1,
-        "cream": 9,
+        "cream": 10,
         "dirt": 4,
         "fire": 1,
         "foliage": 37,
-        "glass": 34,
-        "gold": 40,
+        "glass": 39,
+        "gold": 46,
         "grass": 12,
         "gravel": 1,
-        "limestone": 65,
+        "limestone": 76,
         "meadow_grass": 1,
-        "metal": 57,
+        "metal": 63,
         "mowed_grass": 1,
         "sand": 3,
-        "slate": 40,
+        "shop_floor": 1,
+        "slate": 46,
         "stone": 25,
         "timber": 1,
         "water": 5,
-        "wood": 67
+        "wood": 68
       },
       "materialPixelCounts": {
         "asphalt": 399,
         "brick": 5613,
-        "cardinal": 72778,
+        "cardinal": 76248,
+        "clinic_floor": 256,
         "concrete": 256,
-        "cream": 2504,
+        "cream": 3040,
         "dirt": 698,
         "fire": 45,
         "foliage": 62342,
-        "glass": 4106,
-        "gold": 31015,
+        "glass": 5474,
+        "gold": 31863,
         "grass": 1239,
         "gravel": 256,
-        "limestone": 61454,
+        "limestone": 67482,
         "meadow_grass": 256,
-        "metal": 72290,
+        "metal": 77714,
         "mowed_grass": 256,
         "sand": 353,
-        "slate": 37136,
+        "shop_floor": 256,
+        "slate": 43951,
         "stone": 11487,
         "timber": 256,
         "water": 691,
-        "wood": 47455
+        "wood": 48429
       },
-      "outlinePixelCount": 23378,
-      "inputPartialAlphaPixelCount": 13924,
+      "outlinePixelCount": 25242,
+      "inputPartialAlphaPixelCount": 14646,
       "outputPartialAlphaPixelCount": 0,
       "paletteViolationCount": 0
     },
@@ -128555,9 +134929,9 @@
     "manifest": "7eef371b5e0cedf1bfbfa8a6c828820bafa67f387f214145ceb19350aa9b542d",
     "contract": "77ea43d1604d9cea3ca4cdf4fdea5e5528e8ec6275f4e32c08184de8f6f82ffb",
     "pixelArtModule": "05180cbf0fb16c07bf9df9157ce7604705dd78b949decd2a5ea292a5bd1fceaa",
-    "preparedImagegenManifest": "eeefa41f90278f6cd41310791bfff49adb0ac6a6b6b7349381f6f69c7bf73749",
-    "preparedImagegenAssetCount": 128,
-    "materialProfile": "d72a38112f03f1c3c58f6858b3ae6c0b67c42465fc88b561d0a959b7eba7b950",
+    "preparedImagegenManifest": "47d93b399c8c3c4eb5a441bd674979f445d842d998815643ee3b837ec57d0964",
+    "preparedImagegenAssetCount": 143,
+    "materialProfile": "37a373a5e470103db8cd7d743c20295873bb288c6481448de56effbd7e268232",
     "referenceBoards": {
       "ground": "c15787339ca288799232ea2a7da119d911b571a7c2ed28b62641bb4c83df33f9",
       "vegetation": "084b33eef647f09fc0e38ab8a39e3ea777c57d0ef1994711be3b2cdd61accf9a",

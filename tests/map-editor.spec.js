@@ -177,7 +177,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     version: 4,
     profileVersion: 1,
     maxColorsPerMaterial: 4,
-    assetCount: 128,
+    assetCount: 143,
     outputPartialAlphaPixelCount: 0,
     paletteViolationCount: 0
   });
@@ -295,7 +295,17 @@ test('every planned location is grid-native, editable, and linked to its playtes
     expect(project.assets.objects.find(entry => entry.id === assetId).path).toContain('assets/camp-production/');
   }
   expect(project.maps.trainer_room).toMatchObject({type: 'interior', width: 15, height: 10, renderModel: 'metatile'});
-  expect(project.maps.trainer_room.objects.some(object => object.id === 'recovery_counter')).toBe(true);
+  const trainerObjects = Object.fromEntries(project.maps.trainer_room.objects.map(object => [object.id, object]));
+  expect(trainerObjects.recovery_counter).toMatchObject({sourceId: 'trainer_recovery_counter', width: 7, height: 2});
+  expect(trainerObjects.roster_lockers).toMatchObject({sourceId: 'trainer_roster_terminal', width: 3, height: 2});
+  expect(trainerObjects.treatment_bench).toMatchObject({sourceId: 'trainer_treatment_table', width: 3, height: 2});
+  expect(trainerObjects.room_wall_south.collisionMask).toEqual(['#######.#######']);
+
+  const shopObjects = Object.fromEntries(project.maps.buckys_locker_room.objects.map(object => [object.id, object]));
+  expect(shopObjects.shop_counter).toMatchObject({sourceId: 'buckys_equipment_counter', width: 7, height: 2});
+  expect(shopObjects.singlet_wall).toMatchObject({sourceId: 'buckys_singlet_display', width: 3, height: 2});
+  expect(shopObjects.supply_wall).toMatchObject({sourceId: 'buckys_supply_display', width: 3, height: 2});
+  expect(shopObjects.room_wall_south.collisionMask).toEqual(['#######.#######']);
   await expect(page.locator('#mapSelect option')).toHaveCount(24);
 
   await page.getByRole('combobox', {name: 'Map'}).selectOption('state_street');
@@ -655,6 +665,7 @@ test('planned world art uses only exact or declared same-axis tile assembly', as
       trainerMaterials: [...new Set(project.maps.trainer_room.terrain.flat())],
       shopMaterials: [...new Set(project.maps.buckys_locker_room.terrain.flat())],
       trainerShell: project.maps.trainer_room.objects.filter(object => object.id.startsWith('room_wall_')).map(object => object.id),
+      shopShell: project.maps.buckys_locker_room.objects.filter(object => object.id.startsWith('room_wall_')).map(object => object.id),
       r1TallGrass: project.maps.r1.terrain.flat().filter(tile => tile === 'tall_grass').length,
       r1ForestFrameCount: project.maps.r1.objects.filter(object => object.id.startsWith('r1_forest_')).length,
       r1GroveCount: project.maps.r1.objects.filter(object => object.id.startsWith('r1_grove_')).length
@@ -666,7 +677,8 @@ test('planned world art uses only exact or declared same-axis tile assembly', as
   expect(audit.modularCount).toBeGreaterThan(0);
   expect(audit.trainerMaterials).toEqual(['clinic_floor']);
   expect(audit.shopMaterials).toEqual(['shop_floor']);
-  expect(audit.trainerShell).toEqual(['room_wall_north']);
+  expect(audit.trainerShell).toEqual(['room_wall_north', 'room_wall_west', 'room_wall_east', 'room_wall_south']);
+  expect(audit.shopShell).toEqual(['room_wall_north', 'room_wall_west', 'room_wall_east', 'room_wall_south']);
   expect(audit.r1TallGrass).toBeGreaterThan(0);
   expect(audit.r1ForestFrameCount).toBe(8);
   expect(audit.r1GroveCount).toBe(3);

@@ -97,11 +97,69 @@ test('generated arena stamps and story opponents are present together', async ({
 test('service buildings are recognizable, staffed, and reusable', async ({page}) => {
   const trainer = await bootMap(page, 'trainer_room');
   expect(trainer.actorIds).toEqual(expect.arrayContaining(['trainer_attendant', 'trainer_locker_attendant']));
-  expect(trainer.objectIds).toEqual(expect.arrayContaining(['recovery_counter', 'treatment_bench']));
+  expect(trainer.objectIds).toEqual(expect.arrayContaining([
+    'room_wall_north', 'room_wall_west', 'room_wall_east', 'room_wall_south',
+    'recovery_counter', 'roster_lockers', 'treatment_bench'
+  ]));
+  const trainerContract = await page.evaluate(() => {
+    const scene = window.badgerGame.scene.getScene('OverworldScene');
+    const objects = Object.fromEntries(scene.map.objects.map(object => [object.id, object]));
+    return {
+      sources: {
+        recovery: objects.recovery_counter.sourceId,
+        roster: objects.roster_lockers.sourceId,
+        treatment: objects.treatment_bench.sourceId
+      },
+      aisle: [5, 6, 7, 8].map(y => scene.pass(7, y)),
+      exit: scene.pass(7, 9),
+      sealedSouth: [scene.pass(6, 9), scene.pass(8, 9)],
+      sealedSides: [scene.pass(0, 5), scene.pass(14, 5)]
+    };
+  });
+  expect(trainerContract).toEqual({
+    sources: {
+      recovery: 'trainer_recovery_counter',
+      roster: 'trainer_roster_terminal',
+      treatment: 'trainer_treatment_table'
+    },
+    aisle: [true, true, true, true],
+    exit: true,
+    sealedSouth: [false, false],
+    sealedSides: [false, false]
+  });
 
   const shop = await bootMap(page, 'buckys_locker_room');
   expect(shop.actorIds).toContain('buckys_clerk');
-  expect(shop.objectIds).toEqual(expect.arrayContaining(['shop_counter', 'singlet_wall']));
+  expect(shop.objectIds).toEqual(expect.arrayContaining([
+    'room_wall_north', 'room_wall_west', 'room_wall_east', 'room_wall_south',
+    'shop_counter', 'singlet_wall', 'supply_wall'
+  ]));
+  const shopContract = await page.evaluate(() => {
+    const scene = window.badgerGame.scene.getScene('OverworldScene');
+    const objects = Object.fromEntries(scene.map.objects.map(object => [object.id, object]));
+    return {
+      sources: {
+        counter: objects.shop_counter.sourceId,
+        singlets: objects.singlet_wall.sourceId,
+        supplies: objects.supply_wall.sourceId
+      },
+      aisle: [5, 6, 7, 8].map(y => scene.pass(7, y)),
+      exit: scene.pass(7, 9),
+      sealedSouth: [scene.pass(6, 9), scene.pass(8, 9)],
+      sealedSides: [scene.pass(0, 5), scene.pass(14, 5)]
+    };
+  });
+  expect(shopContract).toEqual({
+    sources: {
+      counter: 'buckys_equipment_counter',
+      singlets: 'buckys_singlet_display',
+      supplies: 'buckys_supply_display'
+    },
+    aisle: [true, true, true, true],
+    exit: true,
+    sealedSouth: [false, false],
+    sealedSides: [false, false]
+  });
 });
 
 test('Season One movement plays a directional walk cycle and lands on its idle frame', async ({page}) => {

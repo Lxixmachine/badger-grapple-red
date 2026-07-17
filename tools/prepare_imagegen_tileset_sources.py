@@ -208,6 +208,42 @@ BOARDS = {
 }
 
 
+# Imagegen occasionally chooses a composition that is better for the assets
+# than a uniform contact sheet. These boards keep explicit, reviewed source
+# regions so the compiler still has deterministic ownership for every module.
+REGION_BOARDS = {
+    "service_clinic": {
+        "path": SOURCE_DIR / "season_one_trainer_room_service_kit_source_v1.png",
+        "entries": [
+            ("trainer_wall_north_module", (80, 32), "fit", 28, (125, 107, 868, 368)),
+            ("trainer_wall_side_module", (16, 32), "fit", 20, (1036, 107, 1126, 362)),
+            ("trainer_wall_south", (240, 16), "fit", 24, (125, 448, 868, 554)),
+            ("trainer_recovery_counter", (112, 32), "contain", 32, (125, 623, 1007, 840)),
+            ("trainer_roster_terminal", (48, 32), "contain", 28, (125, 908, 449, 1127)),
+            ("trainer_treatment_table", (48, 32), "contain", 28, (693, 908, 1010, 1127)),
+        ],
+    },
+    "service_shop": {
+        "path": SOURCE_DIR / "season_one_buckys_service_kit_source_v1.png",
+        "entries": [
+            ("shop_wall_north_module", (80, 32), "fit", 28, (100, 90, 988, 355)),
+            ("shop_wall_side_module", (16, 32), "fit", 20, (1063, 93, 1156, 355)),
+            ("shop_wall_south", (240, 16), "fit", 24, (101, 451, 987, 553)),
+            ("buckys_equipment_counter", (112, 32), "contain", 32, (100, 623, 990, 832)),
+            ("buckys_singlet_display", (48, 32), "contain", 28, (96, 902, 563, 1151)),
+            ("buckys_supply_display", (48, 32), "contain", 28, (679, 902, 1150, 1151)),
+        ],
+    },
+    "service_floors": {
+        "path": SOURCE_DIR / "season_one_service_floors_source_v1.png",
+        "entries": [
+            ("clinic_floor", (16, 16), "fit", 12, (104, 105, 783, 777)),
+            ("shop_floor", (16, 16), "fit", 12, (990, 106, 1668, 778)),
+        ],
+    },
+}
+
+
 # Imagegen establishes the material texture and value grouping. The compiler
 # reduces every ground panel to a declared material ramp so generated
 # noise cannot leak into the game, while preserving substantially more authored
@@ -229,6 +265,8 @@ GROUND_RAMPS = {
     "asphalt": (PALETTE["asphalt_dark"], PALETTE["asphalt"], PALETTE["asphalt_light"]),
     "timber": (PALETTE["trunk_dark"], PALETTE["trunk"], PALETTE["wood_light"]),
     "meadow_grass": (PALETTE["grass_dark"], PALETTE["grass"], PALETTE["grass_light"], PALETTE["cream"]),
+    "clinic_floor": (PALETTE["clinic_floor_dark"], PALETTE["clinic_floor"], PALETTE["clinic_floor_light"]),
+    "shop_floor": (PALETTE["shop_floor_dark"], PALETTE["shop_floor"], PALETTE["shop_floor_light"]),
 }
 
 
@@ -670,6 +708,22 @@ STANDALONE_ASSETS = {
     "vegetation": [
         ("tall_grass_cluster", SOURCE_DIR / "season_one_tall_grass_source_v2.png", (16, 16), 20, "contain"),
     ],
+    "service_clinic": [
+        (
+            "trainer_recovery_counter",
+            SOURCE_DIR / "season_one_trainer_recovery_counter_source_v2.png",
+            (112, 32),
+            32,
+            "contain",
+        ),
+        (
+            "trainer_floor_inlay",
+            SOURCE_DIR / "season_one_trainer_floor_inlay_source_v1.png",
+            (48, 48),
+            24,
+            "contain",
+        ),
+    ],
     "story_props": [
         (
             "outdoor_wrestling_mat",
@@ -973,6 +1027,43 @@ def build() -> dict:
                 "colors": len(normalized.convert("RGB").getcolors(maxcolors=65536) or []),
                 "sha256": sha256(output_path),
                 "sourcePanel": index,
+                "materialDiscipline": discipline,
+            }
+
+    for category, spec in REGION_BOARDS.items():
+        path: Path = spec["path"]
+        if not path.exists():
+            raise SystemExit(f"Missing Imagegen source board: {path}")
+        board = Image.open(path).convert("RGBA")
+        sources[category] = sha256(path)
+        for index, (asset_id, size, mode, colors, region) in enumerate(spec["entries"]):
+            left, top, right, bottom = region
+            if left < 0 or top < 0 or right > board.width or bottom > board.height:
+                raise SystemExit(f"{category}.{asset_id}: source region leaves the board")
+            panel = extract_panel(board.crop(region), 1, 1, 0)
+            geometry = normalize_geometry(panel, size, mode)
+            if category == "service_floors":
+                normalized = discipline_ground_material(
+                    asset_id,
+                    make_ground_seamless(geometry),
+                )
+                discipline = ground_material_discipline_metrics(asset_id, normalized)
+            else:
+                normalized, discipline = discipline_material_zones(
+                    geometry,
+                    material_profile_for(asset_id, category),
+                )
+            output_path = OUTPUT_DIR / category / f"{asset_id}.png"
+            save_png(normalized, output_path)
+            outputs[asset_id] = {
+                "category": category,
+                "path": output_path.relative_to(ROOT).as_posix(),
+                "width": normalized.width,
+                "height": normalized.height,
+                "colors": len(normalized.convert("RGB").getcolors(maxcolors=65536) or []),
+                "sha256": sha256(output_path),
+                "sourceRegion": list(region),
+                "sourceRegionIndex": index,
                 "materialDiscipline": discipline,
             }
 

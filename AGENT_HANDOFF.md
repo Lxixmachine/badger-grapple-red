@@ -3432,3 +3432,25 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   suite count is 122/122. Broad validation stops only on Tony's protected
   State Street composition checksum. Those six files remain deliberately
   unstaged and must not be regenerated, reverted, or included in this release.
+
+## Codex Service Grammar Pass (v22.32)
+
+- The reusable Trainer's Room and Bucky's Locker Room now use dedicated,
+  original Imagegen service families. Each has a complete 15x10 four-wall
+  shell, one exact south threshold, a centered seven-cell counter, distinct
+  three-cell side fixtures, and a clear north-south interaction aisle.
+- Floors, wall modules, fixtures, collision, and interactions share the same
+  32px ownership grid. The room shell compiler blocks every perimeter cell
+  except the declared exit; tests also assert the central aisle and both side
+  walls directly.
+- Trainer identity comes from the red recovery counter, roster terminal,
+  treatment table, bench, and walkable floor inlay. Shop identity comes from
+  the equipment counter, singlet display, supply display, and navy retail
+  shell. Generic reused cabinets and counters were removed.
+- The standing visual board compares native 480x320 room captures against the
+  fixed FireRed Center/Mart study references. F-017 is implemented but remains
+  awaiting Tony's phone verdict; do not close it from metrics or tests.
+- Full Playwright coverage is 122/122. Battle art, balance, map lint, focused
+  release smoke, and production builds pass. Broad validation stops only on
+  Tony's protected State Street composition checksum; do not regenerate,
+  stage, revert, or include those separate user-owned files.

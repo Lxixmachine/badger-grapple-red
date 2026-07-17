@@ -136,7 +136,11 @@ const STAMP_COMPOSITION_POLICY = Object.freeze({
   retaining_wall_brick: 'repeat-x',
   retaining_wall_stone: 'repeat-x',
   recovery_counter: 'repeat-x',
+  shop_wall_north_module: 'repeat-x',
+  shop_wall_side_module: 'repeat-y',
   singlet_shelf: 'repeat-x',
+  trainer_wall_north_module: 'repeat-x',
+  trainer_wall_side_module: 'repeat-y',
   wood_bench: 'repeat-x'
 });
 
@@ -379,12 +383,12 @@ const DEDICATED_FIXTURE_STAMPS = {
   west_seating: 'airport_departure_seats',
   east_seating: 'airport_departure_seats',
   departure_gate: 'airport_gate_desk',
-  recovery_counter: 'recovery_counter',
-  treatment_bench: 'recovery_counter',
-  shop_counter: 'gear_shop_counter',
-  roster_lockers: 'medical_cabinet',
-  singlet_wall: 'singlet_shelf',
-  supply_wall: 'singlet_shelf',
+  recovery_counter: 'trainer_recovery_counter',
+  treatment_bench: 'trainer_treatment_table',
+  shop_counter: 'buckys_equipment_counter',
+  roster_lockers: 'trainer_roster_terminal',
+  singlet_wall: 'buckys_singlet_display',
+  supply_wall: 'buckys_supply_display',
   booster_gallery: 'championship_trophy_case',
   rental_counter: 'gear_shop_counter',
   kayak_rack: 'kayak_rack',
@@ -588,8 +592,62 @@ function plannedExterior(mapId, layout, objectAssets) {
   };
 }
 
-function roomShellOwners(layout) {
+function roomShellOwners(mapId, layout) {
   const width = layout.size.width;
+  const southMask = Array(width).fill('#');
+  southMask[layout.exit?.x ?? Math.floor(width / 2)] = '.';
+  const serviceShell = {
+    trainer_room: {
+      north: 'trainer_wall_north_module',
+      side: 'trainer_wall_side_module',
+      south: 'trainer_wall_south'
+    },
+    buckys_locker_room: {
+      north: 'shop_wall_north_module',
+      side: 'shop_wall_side_module',
+      south: 'shop_wall_south'
+    }
+  }[mapId];
+  if (serviceShell) {
+    return [
+      {
+        id: 'room_wall_north',
+        editorStampId: serviceShell.north,
+        x: 0,
+        y: 0,
+        width,
+        height: 2,
+        collisionMask: ['#'.repeat(width), '#'.repeat(width)]
+      },
+      {
+        id: 'room_wall_west',
+        editorStampId: serviceShell.side,
+        x: 0,
+        y: 2,
+        width: 1,
+        height: layout.size.height - 2,
+        collisionMask: Array(layout.size.height - 2).fill('#')
+      },
+      {
+        id: 'room_wall_east',
+        editorStampId: serviceShell.side,
+        x: width - 1,
+        y: 2,
+        width: 1,
+        height: layout.size.height - 2,
+        collisionMask: Array(layout.size.height - 2).fill('#')
+      },
+      {
+        id: 'room_wall_south',
+        editorStampId: serviceShell.south,
+        x: 0,
+        y: layout.size.height - 1,
+        width,
+        height: 1,
+        collisionMask: [southMask.join('')]
+      }
+    ];
+  }
   return [
     {
       id: 'room_wall_north',
@@ -616,7 +674,7 @@ function plannedInterior(mapId, layout, objectAssets) {
   };
 
   if (mapId !== 'stadium_tunnel') {
-    for (const owner of roomShellOwners(layout)) add(owner, 'room_shell');
+    for (const owner of roomShellOwners(mapId, layout)) add(owner, 'room_shell');
   }
   for (const fixture of layout.fixtures || []) {
     if (fixture.walkable) {

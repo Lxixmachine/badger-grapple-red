@@ -27,6 +27,11 @@ const captures = [
     scene: 'OverworldScene'
   },
   {
+    id: 'service-shop',
+    url: '/?test=1&scene=overworld&reset=1&area=buckys_locker_room&x=7&y=7&facing=up',
+    scene: 'OverworldScene'
+  },
+  {
     id: 'battle-command',
     url: '/?test=1&scene=battle&starter=buckshot&enemyId=drillpartner&enemyLevel=12&battleType=trainer',
     scene: 'BattleScene'
@@ -47,6 +52,7 @@ async function waitForScene(page, capture) {
       if (id === 'natural-route') return state.area === 'lakeshore_path' && state.inputLocked === false;
       if (id === 'team-interior') return state.area === 'team_locker_room' && state.inputLocked === false;
       if (id === 'service-interior') return state.area === 'trainer_room' && state.inputLocked === false;
+      if (id === 'service-shop') return state.area === 'buckys_locker_room' && state.inputLocked === false;
       return state.mode === 'command' && state.inputLocked === false;
     },
     {scene: capture.scene, id: capture.id},

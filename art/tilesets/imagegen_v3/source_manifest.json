@@ -5,10 +5,10 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "d72a38112f03f1c3c58f6858b3ae6c0b67c42465fc88b561d0a959b7eba7b950",
+    "profileSha256": "37a373a5e470103db8cd7d743c20295873bb288c6481448de56effbd7e268232",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
-    "disciplinedAssetCount": 128
+    "disciplinedAssetCount": 143
   },
   "sourceBoards": {
     "ground": "b73a16ebf62cb8fc8c7374864c2879b25ad032bf1552450395dddb7464bb3124",
@@ -22,7 +22,12 @@
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
     "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
     "bascom_landmarks": "cc8bc27bba589daca622593304c1ab749a59108314e1ea56d458611ead57f725",
+    "service_clinic": "352a7c07348e9ee46cf14ab6fde89451a03543ccab5792a8d0ec7495a364bbd0",
+    "service_shop": "61c4cd2d24559b8e6828f40d51a7af43e6125c15dc7f0b79c20500ca7d4a2fc2",
+    "service_floors": "87031385172dfc77c7ccb13c9c82c33f443de82a862de9fa18b235620f4125f3",
     "vegetation:tall_grass_cluster": "27deab4f2d9efe5758babd6a849338c10e449722d8c8652c9001ef5c989fad21",
+    "service_clinic:trainer_recovery_counter": "2a17f541c685d9e2c643fe448494d58e7cb03df2d0fad9102cae938e589892ae",
+    "service_clinic:trainer_floor_inlay": "ea26b82fa36a0ef94fa51a6abab9f463a4d35c505ad2cb46c2594d3c6391374b",
     "story_props:outdoor_wrestling_mat": "b9965bd00d1930cc1e2a37594cc9466bb29ad355b2bad3c53ca4228bd0c4ef0c",
     "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
     "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
@@ -3051,6 +3056,536 @@
         "paletteViolationCount": 0
       }
     },
+    "trainer_wall_north_module": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_wall_north_module.png",
+      "width": 80,
+      "height": 32,
+      "colors": 14,
+      "sha256": "9b4d3879c95f2fde9c7ca22176bcff1777e42b8b45f43994c197b24cf8e38c9e",
+      "sourceRegion": [
+        125,
+        107,
+        868,
+        368
+      ],
+      "sourceRegionIndex": 0,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "glass",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "limestone": 3,
+          "glass": 3,
+          "metal": 4,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 1145,
+          "glass": 309,
+          "metal": 1034,
+          "cardinal": 72
+        },
+        "outlinePixelCount": 170,
+        "inputPartialAlphaPixelCount": 56,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "trainer_wall_side_module": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_wall_side_module.png",
+      "width": 16,
+      "height": 32,
+      "colors": 11,
+      "sha256": "913af54b471d5197004fa3fe7676e731fa51d9f7114c290271645b343414c2c8",
+      "sourceRegion": [
+        1036,
+        107,
+        1126,
+        362
+      ],
+      "sourceRegionIndex": 1,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "metal": 4,
+          "cardinal": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 315,
+          "metal": 157,
+          "cardinal": 40
+        },
+        "outlinePixelCount": 82,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "trainer_wall_south": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_wall_south.png",
+      "width": 240,
+      "height": 16,
+      "colors": 12,
+      "sha256": "d7b8c6da14da17eba91d6f643c9e3fcfaafac21236705bebaba721f7312e1219",
+      "sourceRegion": [
+        125,
+        448,
+        868,
+        554
+      ],
+      "sourceRegionIndex": 2,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "metal": 4,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 1335,
+          "metal": 1540,
+          "cardinal": 965
+        },
+        "outlinePixelCount": 52,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "trainer_recovery_counter": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_recovery_counter.png",
+      "width": 112,
+      "height": 32,
+      "colors": 15,
+      "sha256": "e96d00940cfb44011d6ee1f0d6f92a359c2718d8d18a57fac440bdbf2ce62d8e",
+      "sourceFile": "season_one_trainer_recovery_counter_source_v2.png",
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "glass",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "glass": 2,
+          "metal": 4,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 850,
+          "glass": 346,
+          "metal": 1316,
+          "cardinal": 543
+        },
+        "outlinePixelCount": 210,
+        "inputPartialAlphaPixelCount": 13,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "trainer_roster_terminal": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_roster_terminal.png",
+      "width": 48,
+      "height": 32,
+      "colors": 14,
+      "sha256": "4741d2aa87bfe66da376e2d8ad6e86d5ca9cbba8f212a7bd47447cc6b768536d",
+      "sourceRegion": [
+        125,
+        908,
+        449,
+        1127
+      ],
+      "sourceRegionIndex": 4,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "glass",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "glass": 4,
+          "metal": 4,
+          "cardinal": 1
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 400,
+          "glass": 326,
+          "metal": 757,
+          "cardinal": 17
+        },
+        "outlinePixelCount": 150,
+        "inputPartialAlphaPixelCount": 19,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "trainer_treatment_table": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_treatment_table.png",
+      "width": 48,
+      "height": 32,
+      "colors": 16,
+      "sha256": "3052c290c6af9eccab4a3f1443b34c9c002b72d406eb23a6805e1f04155f41f8",
+      "sourceRegion": [
+        693,
+        908,
+        1010,
+        1127
+      ],
+      "sourceRegionIndex": 5,
+      "materialDiscipline": {
+        "materials": [
+          "limestone",
+          "glass",
+          "metal",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "limestone": 4,
+          "glass": 3,
+          "metal": 4,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "limestone": 542,
+          "glass": 294,
+          "metal": 620,
+          "cardinal": 12
+        },
+        "outlinePixelCount": 148,
+        "inputPartialAlphaPixelCount": 8,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "shop_wall_north_module": {
+      "category": "service_shop",
+      "path": "art/tilesets/imagegen_v3/service_shop/shop_wall_north_module.png",
+      "width": 80,
+      "height": 32,
+      "colors": 15,
+      "sha256": "2e07dabb5d663ea7c95f4f3c59ce5c8bbb1e440519f7a1a8d9b9fbfc31b8bb6b",
+      "sourceRegion": [
+        100,
+        90,
+        988,
+        355
+      ],
+      "sourceRegionIndex": 0,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "limestone",
+          "gold",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "slate": 4,
+          "limestone": 4,
+          "gold": 3,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 1608,
+          "limestone": 597,
+          "gold": 117,
+          "cardinal": 238
+        },
+        "outlinePixelCount": 183,
+        "inputPartialAlphaPixelCount": 132,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "shop_wall_side_module": {
+      "category": "service_shop",
+      "path": "art/tilesets/imagegen_v3/service_shop/shop_wall_side_module.png",
+      "width": 16,
+      "height": 32,
+      "colors": 13,
+      "sha256": "6a3e62ce1fb4e743e48246eea43b849d4f991e90b825be9b1a89a1f0f43154ae",
+      "sourceRegion": [
+        1063,
+        93,
+        1156,
+        355
+      ],
+      "sourceRegionIndex": 1,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "limestone",
+          "gold",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "slate": 4,
+          "limestone": 3,
+          "gold": 3,
+          "cardinal": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 441,
+          "limestone": 30,
+          "gold": 10,
+          "cardinal": 31
+        },
+        "outlinePixelCount": 75,
+        "inputPartialAlphaPixelCount": 62,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "shop_wall_south": {
+      "category": "service_shop",
+      "path": "art/tilesets/imagegen_v3/service_shop/shop_wall_south.png",
+      "width": 240,
+      "height": 16,
+      "colors": 14,
+      "sha256": "413b09458a0932c16fa3f15aa52f0b15a258bcf78bb2e624533e36b24437ff7e",
+      "sourceRegion": [
+        101,
+        451,
+        987,
+        553
+      ],
+      "sourceRegionIndex": 2,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "limestone",
+          "gold",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "slate": 3,
+          "limestone": 3,
+          "gold": 4,
+          "cardinal": 3
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 2488,
+          "limestone": 372,
+          "gold": 398,
+          "cardinal": 564
+        },
+        "outlinePixelCount": 90,
+        "inputPartialAlphaPixelCount": 5,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "buckys_equipment_counter": {
+      "category": "service_shop",
+      "path": "art/tilesets/imagegen_v3/service_shop/buckys_equipment_counter.png",
+      "width": 112,
+      "height": 32,
+      "colors": 15,
+      "sha256": "875b81330aed80d7231dea27ed6d137546e895e183899f6da563cf48e222e385",
+      "sourceRegion": [
+        100,
+        623,
+        990,
+        832
+      ],
+      "sourceRegionIndex": 3,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "wood",
+          "gold",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "slate": 3,
+          "wood": 4,
+          "gold": 4,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 912,
+          "wood": 974,
+          "gold": 97,
+          "cardinal": 291
+        },
+        "outlinePixelCount": 258,
+        "inputPartialAlphaPixelCount": 142,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "buckys_singlet_display": {
+      "category": "service_shop",
+      "path": "art/tilesets/imagegen_v3/service_shop/buckys_singlet_display.png",
+      "width": 48,
+      "height": 32,
+      "colors": 16,
+      "sha256": "6f5e0384670c4e3f28eeb7921fb6967955c683a046e5d6016781917ba79cdc54",
+      "sourceRegion": [
+        96,
+        902,
+        563,
+        1151
+      ],
+      "sourceRegionIndex": 4,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "limestone",
+          "gold",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "slate": 4,
+          "limestone": 4,
+          "gold": 3,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 639,
+          "limestone": 271,
+          "gold": 80,
+          "cardinal": 256
+        },
+        "outlinePixelCount": 98,
+        "inputPartialAlphaPixelCount": 50,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "buckys_supply_display": {
+      "category": "service_shop",
+      "path": "art/tilesets/imagegen_v3/service_shop/buckys_supply_display.png",
+      "width": 48,
+      "height": 32,
+      "colors": 16,
+      "sha256": "7f4c71c8b754a78e608bef704a0451bd6910f1cec71727af292f6f078d234d0d",
+      "sourceRegion": [
+        679,
+        902,
+        1150,
+        1151
+      ],
+      "sourceRegionIndex": 5,
+      "materialDiscipline": {
+        "materials": [
+          "slate",
+          "limestone",
+          "gold",
+          "cardinal"
+        ],
+        "materialColorCounts": {
+          "slate": 4,
+          "limestone": 4,
+          "gold": 3,
+          "cardinal": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "slate": 727,
+          "limestone": 171,
+          "gold": 146,
+          "cardinal": 154
+        },
+        "outlinePixelCount": 96,
+        "inputPartialAlphaPixelCount": 47,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "clinic_floor": {
+      "category": "service_floors",
+      "path": "art/tilesets/imagegen_v3/service_floors/clinic_floor.png",
+      "width": 16,
+      "height": 16,
+      "colors": 3,
+      "sha256": "8b9189e36aa47ce8ff1b4bee86f0e9d3f29e21cf30ec0007d805d6b6eef394b3",
+      "sourceRegion": [
+        104,
+        105,
+        783,
+        777
+      ],
+      "sourceRegionIndex": 0,
+      "materialDiscipline": {
+        "materials": [
+          "clinic_floor"
+        ],
+        "materialColorCounts": {
+          "clinic_floor": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "clinic_floor": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "shop_floor": {
+      "category": "service_floors",
+      "path": "art/tilesets/imagegen_v3/service_floors/shop_floor.png",
+      "width": 16,
+      "height": 16,
+      "colors": 3,
+      "sha256": "31e9d6ac9bac37d237d10e53fd7967f424d168f757f7441b20cd1e069f6ca743",
+      "sourceRegion": [
+        990,
+        106,
+        1668,
+        778
+      ],
+      "sourceRegionIndex": 1,
+      "materialDiscipline": {
+        "materials": [
+          "shop_floor"
+        ],
+        "materialColorCounts": {
+          "shop_floor": 3
+        },
+        "maxColorsPerMaterial": 3,
+        "pixelsByMaterial": {
+          "shop_floor": 256
+        },
+        "outlinePixelCount": 0,
+        "inputPartialAlphaPixelCount": 0,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
     "tall_grass_cluster": {
       "category": "vegetation",
       "path": "art/tilesets/imagegen_v3/vegetation/tall_grass_cluster.png",
@@ -3072,6 +3607,37 @@
         },
         "outlinePixelCount": 46,
         "inputPartialAlphaPixelCount": 52,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "trainer_floor_inlay": {
+      "category": "service_clinic",
+      "path": "art/tilesets/imagegen_v3/service_clinic/trainer_floor_inlay.png",
+      "width": 48,
+      "height": 48,
+      "colors": 13,
+      "sha256": "4c6b8a3b1a23c24d78d51371b298f6cf4d69cdc1a01ae3bd14bfe6d45dfa042e",
+      "sourceFile": "season_one_trainer_floor_inlay_source_v1.png",
+      "materialDiscipline": {
+        "materials": [
+          "cream",
+          "cardinal",
+          "glass"
+        ],
+        "materialColorCounts": {
+          "cream": 4,
+          "cardinal": 4,
+          "glass": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cream": 536,
+          "cardinal": 287,
+          "glass": 93
+        },
+        "outlinePixelCount": 252,
+        "inputPartialAlphaPixelCount": 188,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }

@@ -76,6 +76,16 @@ tracker for looks.
   masks, sealed repeat joins, and per-material four-color discipline. Lakeshore
   and Picnic now use connected canopy compositions; actor-aware reachability
   and both seams pass. Tony's fixed A/B verdict remains the close condition.
+- **F-017 [OBJ-007/SIL-004/service grammar] reusable service interiors - IMPLEMENTED, AWAITING TONY REVIEW.**
+  The Trainer's Room and Bucky's Locker Room previously inherited generic room
+  shells and reused fixtures, so their recovery/shop roles depended on labels.
+  v22.32 replaces them with original Imagegen-authored, grid-native service
+  families: complete four-wall shells, a centered seven-cell service counter,
+  distinct three-cell side fixtures, an unobstructed north-south aisle, and one
+  exact south threshold. Floor, walls, fixtures, collision, and interactions
+  share the same 32px ownership grid. The standing 2-up board compares both
+  480x320 captures with fixed FireRed Center/Mart references; Tony's phone
+  verdict remains the close condition.
 - **F-011 [TG-013/edge continuity] route water seams — OPEN.**
   Found by the world stitch: Picnic Point's north shore sits one row
   higher than Lakeshore's (water rows 0-2 vs 1-4), so Mendota steps at

@@ -1045,9 +1045,9 @@
       "size": {"width": 15, "height": 10},
       "exit": {"x": 7, "y": 9},
       "fixtures": [
-        {"id": "recovery_counter", "name": "Recovery Counter", "x": 5, "y": 1, "width": 4, "height": 2},
-        {"id": "roster_lockers", "name": "Roster Lockers", "x": 1, "y": 3, "width": 4, "height": 2},
-        {"id": "treatment_bench", "name": "Treatment Bench", "x": 10, "y": 3, "width": 4, "height": 2}
+        {"id": "recovery_counter", "name": "Recovery Counter", "x": 4, "y": 2, "width": 7, "height": 2},
+        {"id": "roster_lockers", "name": "Roster Terminal", "x": 1, "y": 4, "width": 3, "height": 2},
+        {"id": "treatment_bench", "name": "Treatment Table", "x": 11, "y": 4, "width": 3, "height": 2}
       ],
       "events": [
         {"id": "recover", "label": "Restore Condition/Stamina", "x": 7, "y": 4, "beat": 0},
@@ -1061,9 +1061,9 @@
       "size": {"width": 15, "height": 10},
       "exit": {"x": 7, "y": 9},
       "fixtures": [
-        {"id": "shop_counter", "name": "Equipment Counter", "x": 5, "y": 1, "width": 4, "height": 2},
-        {"id": "singlet_wall", "name": "Singlet Wall", "x": 1, "y": 3, "width": 3, "height": 2},
-        {"id": "supply_wall", "name": "Supply Wall", "x": 11, "y": 3, "width": 3, "height": 2}
+        {"id": "shop_counter", "name": "Equipment Counter", "x": 4, "y": 2, "width": 7, "height": 2},
+        {"id": "singlet_wall", "name": "Singlet Display", "x": 1, "y": 4, "width": 3, "height": 2},
+        {"id": "supply_wall", "name": "Supply Display", "x": 11, "y": 4, "width": 3, "height": 2}
       ],
       "events": [
         {"id": "shop", "label": "Buy equipment", "x": 7, "y": 4, "beat": 0}

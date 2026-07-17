@@ -584,8 +584,8 @@ def build() -> dict:
     gravel = export_2x(material_tile("gravel"))
     timber = export_2x(material_tile("timber"))
     meadow = export_2x(material_tile("meadow_grass"))
-    clinic_floor = export_2x(material_tile("clinic_floor"))
-    shop_floor = export_2x(material_tile("shop_floor"))
+    clinic_floor = export_2x(source_asset("service_floors", "clinic_floor"))
+    shop_floor = export_2x(source_asset("service_floors", "shop_floor"))
 
     add_ground("grass", "Grass", "grass", grass, ["base", "natural"])
     add_ground("grass_b", "Grass B", "grass", grass_b, ["base", "natural", "variation"])
@@ -895,6 +895,60 @@ def build() -> dict:
             minimum_coverage=0.08,
         )
 
+    service_interior_specs = [
+        (
+            "trainer_wall_north_module", "Trainer's Room North Wall Module", "service_clinic",
+            5, 2, ["#####", "#####"], "clinic_wall",
+        ),
+        (
+            "trainer_wall_side_module", "Trainer's Room Side Wall Module", "service_clinic",
+            1, 2, ["#", "#"], "clinic_wall",
+        ),
+        (
+            "trainer_wall_south", "Trainer's Room South Wall", "service_clinic",
+            15, 1, ["#######.#######"], "clinic_threshold",
+        ),
+        (
+            "trainer_recovery_counter", "Trainer's Room Recovery Counter", "service_clinic",
+            7, 2, ["#######", "#######"], "recovery_counter",
+        ),
+        (
+            "trainer_roster_terminal", "Trainer's Room Roster Terminal", "service_clinic",
+            3, 2, ["###", "###"], "roster_terminal",
+        ),
+        (
+            "trainer_treatment_table", "Trainer's Room Treatment Table", "service_clinic",
+            3, 2, ["###", "###"], "treatment_table",
+        ),
+        (
+            "trainer_floor_inlay", "Trainer's Room Floor Inlay", "service_clinic",
+            3, 3, ["...", "...", "..."], "walkable_inlay",
+        ),
+        (
+            "shop_wall_north_module", "Bucky's Locker Room North Wall Module", "service_shop",
+            5, 2, ["#####", "#####"], "shop_wall",
+        ),
+        (
+            "shop_wall_side_module", "Bucky's Locker Room Side Wall Module", "service_shop",
+            1, 2, ["#", "#"], "shop_wall",
+        ),
+        (
+            "shop_wall_south", "Bucky's Locker Room South Wall", "service_shop",
+            15, 1, ["#######.#######"], "shop_threshold",
+        ),
+        (
+            "buckys_equipment_counter", "Bucky's Equipment Counter", "service_shop",
+            7, 2, ["#######", "#######"], "shop_counter",
+        ),
+        (
+            "buckys_singlet_display", "Bucky's Singlet Display", "service_shop",
+            3, 2, ["###", "###"], "shop_singlets",
+        ),
+        (
+            "buckys_supply_display", "Bucky's Supply Display", "service_shop",
+            3, 2, ["###", "###"], "shop_supplies",
+        ),
+    ]
     route_landmark_specs = [
         (
             "lakeshore_pier", "Lake Mendota Pier", 3, 4,
@@ -1058,6 +1112,17 @@ def build() -> dict:
     ledge = export_2x(cliff(4, 1))
     register_stamp("stone_ledge", "Stone Ledge", "elevation", ledge, 4, 1, ["####"], tags=["ledge", "authored16"], semantic_behavior="ledge")
     register_stamp("retaining_corner", "Retaining Wall Corner", "elevation", ImageOps.mirror(ledge), 4, 1, ["####"], tags=["retaining_wall", "authored16"], semantic_behavior="ledge")
+
+    # Append new families so established atlas indices remain stable across releases.
+    for stamp_id, name, category, width, height, mask, semantic in service_interior_specs:
+        register_stamp(
+            stamp_id, name, category,
+            export_2x(source_asset(category, stamp_id)),
+            width, height, mask,
+            tags=["service_interior", "imagegen_direct", "authored16", "grid_native"],
+            semantic_behavior=semantic,
+            minimum_coverage=0.08,
+        )
 
     ground_stamps: dict[str, dict] = {}
 

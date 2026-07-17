@@ -28,7 +28,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.31-canopy-grammar');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.32-service-grammar');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',
