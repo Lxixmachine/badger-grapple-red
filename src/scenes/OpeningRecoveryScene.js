@@ -3,7 +3,7 @@ import {restoreParty} from '../systems/mechanics.js';
 import {ROSTER} from '../data/roster.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
 import {playMusic,setMuted,sfx,unlockAudio} from '../systems/audio.js';
-import {fitLegacyViewport} from '../systems/legacyViewport.js';
+import {useNativeViewport} from '../systems/nativeViewport.js';
 
 const Phaser=window.Phaser;
 const PAGES=[
@@ -24,7 +24,7 @@ const PAGES=[
 export class OpeningRecoveryScene extends Phaser.Scene{
   constructor(){super('OpeningRecoveryScene');}
   create(){
-    fitLegacyViewport(this);
+    useNativeViewport(this);
     this.state=loadState();this.page=0;this.phase='arrival';this.restored=false;this.finishing=false;
     setMuted(this.state.audioMuted);playMusic('overworld');
     this.cameras.main.setBackgroundColor('#111c2d');
@@ -58,23 +58,23 @@ export class OpeningRecoveryScene extends Phaser.Scene{
   }
   draw(){
     this.tweens.killAll();this.children.removeAll(true);
-    this.add.image(0,0,'area_recovery').setOrigin(0).setDisplaySize(320,183);
-    const shade=this.add.graphics();shade.fillStyle(0x07101b,.22);shade.fillRect(0,0,320,145);shade.fillStyle(0x111c2d,.9);shade.fillRect(0,0,320,21);
-    this.add.text(160,6,"TRAINER'S ROOM",{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5,0);
-    this.add.image(76,143,'trainer_intro').setOrigin(.5,1);
+    this.add.image(0,0,'story_recovery_room').setOrigin(0);
+    const shade=this.add.graphics();shade.fillStyle(0x07101b,.2);shade.fillRect(0,0,480,204);shade.fillStyle(0x111c2d,.92);shade.fillRect(0,0,480,32);
+    this.add.text(240,8,"TRAINER'S ROOM",{fontFamily:FONT,fontSize:17,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5,0);
+    this.add.image(100,224,'trainer_intro_native').setOrigin(.5,1);
     const lead=this.state.party[0],record=lead?ROSTER[lead.id]:null;
-    const spiritPlate=this.add.graphics();spiritPlate.fillStyle(0x111c2d,.76);spiritPlate.fillCircle(232,86,45);spiritPlate.lineStyle(2,0xf0c65b,.9);spiritPlate.strokeCircle(232,86,45);
-    if(record)this.add.image(232,86,'portrait_'+record.asset).setDisplaySize(86,86);
+    const spiritPlate=this.add.graphics();spiritPlate.fillStyle(0x111c2d,.76);spiritPlate.fillCircle(350,116,58);spiritPlate.lineStyle(3,0xf0c65b,.9);spiritPlate.strokeCircle(350,116,58);
+    if(record)this.add.image(350,116,'portrait_'+record.asset);
     if(this.page===1){
       for(let index=0;index<3;index++){
-        const ring=this.add.circle(232,86,18+index*10,0x000000,0).setStrokeStyle(2,0xf0c65b,.9-index*.2);
-        this.tweens.add({targets:ring,scale:1.28,alpha:0,duration:700,delay:index*130,repeat:-1});
+        const ring=this.add.circle(350,116,30+index*12,0x000000,0).setStrokeStyle(3,0xf0c65b,.9-index*.2);
+        this.tweens.add({targets:ring,alpha:.1,duration:700,delay:index*130,yoyo:true,repeat:-1});
       }
     }
-    uiBox(this,13,145,294,73);
+    uiBox(this,16,204,448,112);
     const page=PAGES[this.page];
-    this.add.text(25,153,page.speaker,{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
-    this.add.text(25,170,page.text,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:1,wordWrap:{width:266}});
-    this.add.text(289,201,'A',{fontFamily:FONT,fontSize:10,color:'#655f53',fontStyle:'bold'});
+    this.add.text(32,216,page.speaker,{fontFamily:FONT,fontSize:15,color:'#b41820',fontStyle:'bold'});
+    this.add.text(32,241,page.text,{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold',lineSpacing:3,wordWrap:{width:404}});
+    this.add.text(442,292,'A',{fontFamily:FONT,fontSize:14,color:'#655f53',fontStyle:'bold'});
   }
 }

@@ -1,6 +1,6 @@
 import {loadState,saveState} from '../systems/save.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
-import {fitLegacyViewport} from '../systems/legacyViewport.js';
+import {useNativeViewport} from '../systems/nativeViewport.js';
 const Phaser=window.Phaser;
 
 const PAGES=[
@@ -12,11 +12,12 @@ const PAGES=[
 ];
 const NAME_KEYS=[...'ABCDEFGHIJKLMNOPQRSTUVWXYZ','DEL','OK'];
 const NAME_COLS=7;
+const NAME_ROWS=Math.ceil(NAME_KEYS.length/NAME_COLS);
 
 export class IntroScene extends Phaser.Scene{
   constructor(){super('IntroScene');}
   create(){
-    fitLegacyViewport(this);
+    useNativeViewport(this);
     this.state=loadState();
     this.page=0;
     this.phase='story';
@@ -48,7 +49,7 @@ export class IntroScene extends Phaser.Scene{
   moveName(dx,dy){
     if(this.phase!=='naming')return;
     const row=Math.floor(this.nameCursor/NAME_COLS),col=this.nameCursor%NAME_COLS;
-    const nextRow=Phaser.Math.Wrap(row+dy,0,4),nextCol=Phaser.Math.Wrap(col+dx,0,NAME_COLS);
+    const nextRow=Phaser.Math.Wrap(row+dy,0,NAME_ROWS),nextCol=Phaser.Math.Wrap(col+dx,0,NAME_COLS);
     this.nameCursor=nextRow*NAME_COLS+nextCol;
     this.draw();
   }
@@ -95,56 +96,56 @@ export class IntroScene extends Phaser.Scene{
     this.state.message='Opening Day. The captain is waiting at the wrestling-room doorway.';
     saveState(this.state);
     this.cameras.main.fadeOut(420,3,8,18);
-    if(this.readyPlayer)this.tweens.add({targets:this.readyPlayer,scaleX:.12,scaleY:.12,y:122,duration:330,ease:'Quad.In'});
+    if(this.readyPlayer)this.tweens.add({targets:this.readyPlayer,alpha:0,y:190,duration:330,ease:'Quad.In'});
     this.time.delayedCall(430,()=>this.scene.start('OverworldScene'));
   }
   drawBackdrop(){
     const g=this.add.graphics();
-    g.fillStyle(0x111c2d,1);g.fillRect(0,0,320,224);
-    g.fillStyle(0x182b43,1);g.fillRect(0,24,320,116);
-    g.fillStyle(0x711824,1);g.fillRect(0,24,7,116);g.fillRect(313,24,7,116);
-    g.fillStyle(0xe0b64d,.65);g.fillRect(7,24,306,2);
-    g.fillStyle(0xf4e8c8,.08);g.fillEllipse(160,91,142,118);
-    this.add.text(160,7,'OPENING DAY',{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);
+    g.fillStyle(0x111c2d,1);g.fillRect(0,0,480,320);
+    g.fillStyle(0x182b43,1);g.fillRect(0,34,480,174);
+    g.fillStyle(0x711824,1);g.fillRect(0,34,10,174);g.fillRect(470,34,10,174);
+    g.fillStyle(0xe0b64d,.65);g.fillRect(10,34,460,3);
+    g.fillStyle(0xf4e8c8,.08);g.fillEllipse(240,122,214,170);
+    this.add.text(18,9,'OPENING DAY',{fontFamily:FONT,fontSize:17,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3});
   }
   drawSubject(subject){
-    if(subject==='coach')this.add.image(160,9,'coach_intro').setOrigin(.5,0);
-    if(subject==='spirit')this.add.image(160,88,'battle_buckshot').setScale(1);
-    if(subject==='player')this.add.sprite(160,140,'player',1).setOrigin(.5,1).setScale(2.65);
-    if(subject==='rex')this.add.sprite(160,140,'npc_rex',1).setOrigin(.5,1).setScale(2.65);
+    if(subject==='coach')this.add.image(240,224,'coach_intro_native').setOrigin(.5,1);
+    if(subject==='spirit')this.add.image(240,204,'battle_buckshot').setOrigin(.5,1);
+    if(subject==='player')this.add.image(240,207,'intro_player').setOrigin(.5,1);
+    if(subject==='rex')this.add.image(240,207,'intro_rex').setOrigin(.5,1);
   }
   drawStory(){
     this.drawBackdrop();
     const page=PAGES[this.page];
     this.drawSubject(page.subject);
-    uiBox(this,13,143,294,75);
-    this.add.text(25,150,page.speaker,{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
-    this.add.text(25,166,page.text,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:1,wordWrap:{width:270}});
-    this.add.text(289,201,'A',{fontFamily:FONT,fontSize:10,color:'#655f53',fontStyle:'bold'});
-    for(let index=0;index<PAGES.length;index++)this.add.circle(142+index*9,134,index===this.page?2.5:1.5,index===this.page?0xf0c65b:0x7d8897,1);
+    uiBox(this,16,204,448,112);
+    this.add.text(32,216,page.speaker,{fontFamily:FONT,fontSize:15,color:'#b41820',fontStyle:'bold'});
+    this.add.text(32,240,page.text,{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold',lineSpacing:3,wordWrap:{width:408}});
+    this.add.text(442,292,'A',{fontFamily:FONT,fontSize:14,color:'#655f53',fontStyle:'bold'});
+    for(let index=0;index<PAGES.length;index++)this.add.circle(216+index*12,196,index===this.page?4:2,index===this.page?0xf0c65b:0x7d8897,1);
   }
   drawNaming(){
-    const g=this.add.graphics();g.fillStyle(0x111c2d,1);g.fillRect(0,0,320,224);g.fillStyle(0x7d1826,1);g.fillRect(0,0,320,6);
-    this.add.text(160,12,'YOUR NAME',{fontFamily:FONT,fontSize:13,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);
-    uiBox(this,28,30,264,39);
+    const g=this.add.graphics();g.fillStyle(0x111c2d,1);g.fillRect(0,0,480,320);g.fillStyle(0x7d1826,1);g.fillRect(0,0,480,8);
+    this.add.text(240,14,'YOUR NAME',{fontFamily:FONT,fontSize:19,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5,0);
+    uiBox(this,72,42,336,52);
     const shown=this.nameDraft||'________';
-    this.add.text(160,39,shown,{fontFamily:FONT,fontSize:16,color:this.nameDraft?'#111':'#817968',fontStyle:'bold'}).setOrigin(.5,0);
-    uiBox(this,19,76,282,132);
+    this.add.text(240,53,shown,{fontFamily:FONT,fontSize:24,color:this.nameDraft?'#111':'#817968',fontStyle:'bold'}).setOrigin(.5,0);
+    uiBox(this,28,104,424,196);
     NAME_KEYS.forEach((key,index)=>{
-      const col=index%NAME_COLS,row=Math.floor(index/NAME_COLS),x=42+col*39,y=91+row*27,selected=index===this.nameCursor;
-      if(selected){const mark=this.add.graphics();mark.fillStyle(0xb41820,.14);mark.fillRoundedRect(x-17,y-5,34,22,2);mark.lineStyle(1,0xb41820,1);mark.strokeRoundedRect(x-17,y-5,34,22,2);}
-      this.add.text(x,y,key,{fontFamily:FONT,fontSize:key.length>1?10:12,color:selected?'#b41820':'#111',fontStyle:'bold'}).setOrigin(.5,0);
+      const col=index%NAME_COLS,row=Math.floor(index/NAME_COLS),x=60+col*60,y=126+row*42,selected=index===this.nameCursor;
+      if(selected){const mark=this.add.graphics();mark.fillStyle(0xb41820,.14);mark.fillRoundedRect(x-24,y-7,48,32,3);mark.lineStyle(2,0xb41820,1);mark.strokeRoundedRect(x-24,y-7,48,32,3);}
+      this.add.text(x,y,key,{fontFamily:FONT,fontSize:key.length>1?14:17,color:selected?'#b41820':'#111',fontStyle:'bold'}).setOrigin(.5,0);
     });
   }
   drawReady(){
-    this.add.image(0,0,'area_fieldhouse').setOrigin(0).setDisplaySize(320,183);
-    const shade=this.add.graphics();shade.fillStyle(0x09111c,.48);shade.fillRect(0,0,320,145);
-    this.add.text(160,10,'CAMP RANDALL',{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5);
-    this.readyPlayer=this.add.sprite(160,132,'player',1).setOrigin(.5,1).setScale(2.55);
-    uiBox(this,13,145,294,73);
-    this.add.text(25,154,`${this.state.playerName.toUpperCase()}.`,{fontFamily:FONT,fontSize:12,color:'#b41820',fontStyle:'bold'});
-    this.add.text(25,173,'Your first season starts now.\nEarn your place in the room.',{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:2});
-    this.add.text(289,201,'A',{fontFamily:FONT,fontSize:10,color:'#655f53',fontStyle:'bold'});
+    this.add.image(0,0,'story_fieldhouse').setOrigin(0);
+    const shade=this.add.graphics();shade.fillStyle(0x09111c,.46);shade.fillRect(0,0,480,204);
+    this.add.text(240,12,'CAMP RANDALL',{fontFamily:FONT,fontSize:17,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:4}).setOrigin(.5,0);
+    this.readyPlayer=this.add.image(240,208,'intro_player').setOrigin(.5,1);
+    uiBox(this,16,204,448,112);
+    this.add.text(32,217,`${this.state.playerName.toUpperCase()}.`,{fontFamily:FONT,fontSize:17,color:'#b41820',fontStyle:'bold'});
+    this.add.text(32,244,'Your first season starts now.\nEarn your place in the room.',{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold',lineSpacing:4});
+    this.add.text(442,292,'A',{fontFamily:FONT,fontSize:14,color:'#655f53',fontStyle:'bold'});
   }
   draw(){
     this.children.removeAll(true);

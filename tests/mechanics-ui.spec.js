@@ -251,13 +251,53 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   expect(Date.now()-started).toBeGreaterThan(4200);
 });
 
-test('legacy 320px scenes render text at higher internal resolution',async({page})=>{
+test('every product UI scene uses the native integer viewport',async({page})=>{
+  const inspect=sceneKey=>page.evaluate(key=>{
+    const scene=window.badgerGame.scene.getScene(key),camera=scene.cameras.main;
+    return {
+      width:camera.width,height:camera.height,zoom:camera.zoom,x:camera.x,y:camera.y,
+      scaledImages:scene.children.list.filter(child=>child.type==='Image'&&(child.scaleX!==1||child.scaleY!==1))
+        .map(child=>({key:child.texture.key,scaleX:child.scaleX,scaleY:child.scaleY}))
+    };
+  },sceneKey);
+  const expectNative=async sceneKey=>expect(await inspect(sceneKey)).toEqual({
+    width:480,height:320,zoom:1,x:0,y:0,scaledImages:[]
+  });
+
   await page.goto('/?test=1&reset=1');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
-  const resolutions=await page.evaluate(()=>window.badgerGame.scene.getScene('TitleScene').children.list
-    .filter(child=>child.type==='Text').map(child=>child.style.resolution));
-  expect(resolutions.length).toBeGreaterThan(0);
-  expect(resolutions.every(value=>value>=2)).toBe(true);
+  await expectNative('TitleScene');
+  const nativeAssets=await page.evaluate(()=>{
+    const textures=window.badgerGame.textures;
+    return Object.fromEntries(['title_hero_native','story_wrestling_room','story_recovery_room','story_fieldhouse','coach_intro_native','intro_player']
+      .map(key=>{const image=textures.get(key).getSourceImage();return [key,[image.width,image.height]];}));
+  });
+  expect(nativeAssets).toEqual({
+    title_hero_native:[480,320],story_wrestling_room:[480,240],story_recovery_room:[480,240],story_fieldhouse:[480,240],
+    coach_intro_native:[160,224],intro_player:[64,128]
+  });
+
+  await press(page,'start');await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('IntroScene');
+  await expectNative('IntroScene');
+
+  await page.goto('/?test=1&scene=starter');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('StarterScene');
+  await expectNative('StarterScene');
+
+  await page.goto('/?test=1&scene=recovery');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('OpeningRecoveryScene');
+  await expectNative('OpeningRecoveryScene');
+
+  await page.goto('/?test=1&scene=scout&id=drillpartner&lvl=7&area=lakeshore');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('ScoutScene');
+  await expectNative('ScoutScene');
+
+  await page.goto('/?test=1&reset=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  await page.evaluate(()=>window.__badgerTest.startMenu());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').active)).toBe(true);
+  await expectNative('MenuScene');
 });
 
 test('B backs out of submenus but cannot silently leave a match',async({page})=>{

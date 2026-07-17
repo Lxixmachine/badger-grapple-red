@@ -1,7 +1,7 @@
 import {STARTERS,ROSTER,counterStarterFor,personaFor} from '../data/roster.js';
 import {chooseStarter} from '../systems/save.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
-import {fitLegacyViewport} from '../systems/legacyViewport.js';
+import {useNativeViewport} from '../systems/nativeViewport.js';
 
 const Phaser=window.Phaser;
 const SINGLET_KEYS={Shooter:'singlet_shooter',Rider:'singlet_rider',Scrambler:'singlet_scrambler'};
@@ -9,7 +9,7 @@ const SINGLET_KEYS={Shooter:'singlet_shooter',Rider:'singlet_rider',Scrambler:'s
 export class StarterScene extends Phaser.Scene{
   constructor(){super('StarterScene');}
   create(data={}){
-    fitLegacyViewport(this);
+    useNativeViewport(this);
     this.story=!!data.story;
     this.returnArea=data.returnArea||'wrestling_room';
     this.returnPos=data.returnPos||{x:7,y:7};
@@ -72,66 +72,65 @@ export class StarterScene extends Phaser.Scene{
     }));
   }
   drawRoom(){
-    this.add.image(0,0,'area_wrestlingroom').setOrigin(0).setDisplaySize(320,183);
-    const shade=this.add.graphics();shade.fillStyle(0x07101b,.18);shade.fillRect(0,0,320,150);shade.fillStyle(0x111c2d,.9);shade.fillRect(0,0,320,21);
-    this.add.text(160,6,'WRESTLING ROOM',{fontFamily:FONT,fontSize:11,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5,0);
+    this.add.image(0,0,'story_wrestling_room').setOrigin(0);
+    const shade=this.add.graphics();shade.fillStyle(0x07101b,.16);shade.fillRect(0,0,480,204);shade.fillStyle(0x111c2d,.92);shade.fillRect(0,0,480,32);
+    this.add.text(18,8,'WRESTLING ROOM',{fontFamily:FONT,fontSize:17,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3});
   }
   drawIntro(){
     this.drawRoom();
-    const wash=this.add.graphics();wash.fillStyle(0x09111c,.34);wash.fillRect(0,21,320,125);
-    this.add.image(160,22,'coach_intro').setOrigin(.5,0).setScale(.92);
-    uiBox(this,13,143,294,75);
-    this.add.text(25,151,'HEAD COACH',{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
-    this.add.text(25,168,'Three singlets. Three ways to wrestle.\nPick the one that fits who you are on the mat.',{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:2,wordWrap:{width:268}});
-    this.add.text(289,201,'A',{fontFamily:FONT,fontSize:10,color:'#655f53',fontStyle:'bold'});
+    const wash=this.add.graphics();wash.fillStyle(0x09111c,.34);wash.fillRect(0,32,480,172);
+    this.add.image(240,224,'coach_intro_native').setOrigin(.5,1);
+    uiBox(this,16,204,448,112);
+    this.add.text(32,216,'HEAD COACH',{fontFamily:FONT,fontSize:15,color:'#b41820',fontStyle:'bold'});
+    this.add.text(32,241,'Three singlets. Three ways to wrestle.\nPick the one that fits who you are on the mat.',{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold',lineSpacing:4,wordWrap:{width:404}});
+    this.add.text(442,292,'A',{fontFamily:FONT,fontSize:14,color:'#655f53',fontStyle:'bold'});
   }
   drawSelection(){
     this.drawRoom();
     STARTERS.forEach((id,index)=>{
-      const record=ROSTER[id],x=68+index*92,selected=index===this.sel;
-      if(selected){const ring=this.add.graphics();ring.fillStyle(0x111c2d,.78);ring.fillCircle(x,83,38);ring.lineStyle(2,0xf0c65b,1);ring.strokeCircle(x,83,38);}
-      this.add.image(x,84,SINGLET_KEYS[record.style]).setDisplaySize(selected?66:56,selected?66:56);
-      const label=this.add.text(x,124,record.style.toUpperCase(),{fontFamily:FONT,fontSize:9,color:selected?'#fff2c7':'#f8f0d8',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5);
+      const record=ROSTER[id],x=96+index*144,selected=index===this.sel;
+      if(selected){const ring=this.add.graphics();ring.fillStyle(0x111c2d,.78);ring.fillCircle(x,104,55);ring.lineStyle(3,0xf0c65b,1);ring.strokeCircle(x,104,55);}
+      this.add.image(x,106,SINGLET_KEYS[record.style]).setAlpha(selected?1:.72);
+      const label=this.add.text(x,160,record.style.toUpperCase(),{fontFamily:FONT,fontSize:14,color:selected?'#fff2c7':'#f8f0d8',fontStyle:'bold',stroke:'#111',strokeThickness:4}).setOrigin(.5,0);
       if(selected)this.tweens.add({targets:label,alpha:.68,yoyo:true,duration:520,repeat:-1});
     });
-    this.add.text(68+this.sel*92,39,'\u25bc',{fontFamily:FONT,fontSize:14,color:'#f0c65b',stroke:'#111',strokeThickness:3}).setOrigin(.5);
+    this.add.text(96+this.sel*144,39,'v',{fontFamily:FONT,fontSize:20,color:'#f0c65b',fontStyle:'bold',stroke:'#111',strokeThickness:4}).setOrigin(.5,0);
     const id=STARTERS[this.sel],record=ROSTER[id];
-    uiBox(this,10,151,300,68);
-    this.add.text(21,159,`${personaFor(id).toUpperCase()} / ${record.style.toUpperCase()}`,{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
-    this.add.text(21,176,record.name,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold'});
-    this.add.text(21,193,record.bio,{fontFamily:FONT,fontSize:10,color:'#3c382f',fontStyle:'bold',wordWrap:{width:225}});
-    this.add.image(278,185,'portrait_'+record.asset).setDisplaySize(47,47);
+    uiBox(this,16,208,448,108);
+    this.add.text(32,219,`${personaFor(id).toUpperCase()} / ${record.style.toUpperCase()}`,{fontFamily:FONT,fontSize:15,color:'#b41820',fontStyle:'bold'});
+    this.add.text(32,244,record.name,{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold'});
+    this.add.text(32,270,record.bio,{fontFamily:FONT,fontSize:14,color:'#3c382f',fontStyle:'bold',wordWrap:{width:320}});
+    this.add.image(408,264,'portrait_'+record.asset);
   }
   drawConfirm(){
     this.drawRoom();
     const id=STARTERS[this.sel],record=ROSTER[id];
-    this.add.image(103,84,SINGLET_KEYS[record.style]).setDisplaySize(86,86);
-    this.add.image(222,84,'portrait_'+record.asset).setDisplaySize(104,104);
-    uiBox(this,12,150,296,69);
-    this.add.text(25,159,`Take the ${personaFor(id)} singlet?`,{fontFamily:FONT,fontSize:12,color:'#111',fontStyle:'bold'});
+    this.add.image(130,116,SINGLET_KEYS[record.style]);
+    this.add.image(350,116,'portrait_'+record.asset);
+    uiBox(this,16,208,448,108);
+    this.add.text(32,224,`Take the ${personaFor(id)} singlet?`,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
     ['NO','YES'].forEach((label,index)=>{
-      const x=219+index*52,selected=index===this.confirmSel;
-      if(selected)this.add.text(x-21,193,'\u25b6',{fontFamily:FONT,fontSize:10,color:'#b41820',fontStyle:'bold'}).setOrigin(.5);
-      this.add.text(x,187,label,{fontFamily:FONT,fontSize:11,color:selected?'#b41820':'#111',fontStyle:'bold'}).setOrigin(.5,0);
+      const x=288+index*104,selected=index===this.confirmSel;
+      this.add.text(x,272,`${selected?'> ':''}${label}`,{fontFamily:FONT,fontSize:18,color:selected?'#b41820':'#111',fontStyle:'bold'}).setOrigin(.5,0);
     });
   }
   drawRival(){
     this.drawRoom();
     const player=ROSTER[this.playerId],rival=ROSTER[this.rivalId];
-    this.add.image(88,47,SINGLET_KEYS[player.style]).setDisplaySize(36,36);
-    this.add.image(232,47,SINGLET_KEYS[rival.style]).setDisplaySize(36,36);
-    this.add.sprite(88,142,'player',1).setOrigin(.5,1).setScale(1.9);
-    this.add.sprite(232,142,'npc_rex',1).setOrigin(.5,1).setScale(1.9);
-    this.add.text(88,27,'YOU',{fontFamily:FONT,fontSize:9,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);
-    this.add.text(232,27,'REX',{fontFamily:FONT,fontSize:9,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:2}).setOrigin(.5);
-    uiBox(this,13,145,294,73);
+    this.add.image(112,100,SINGLET_KEYS[player.style]).setAlpha(.42);
+    this.add.image(368,100,SINGLET_KEYS[rival.style]).setAlpha(.42);
+    this.add.image(112,207,'intro_player').setOrigin(.5,1);
+    this.add.image(368,207,'intro_rex').setOrigin(.5,1);
+    this.add.text(112,42,'YOU',{fontFamily:FONT,fontSize:15,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5,0);
+    this.add.text(368,42,'REX',{fontFamily:FONT,fontSize:15,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5,0);
+    uiBox(this,16,204,448,112);
     const speaker=this.rivalPage===0?'REX':'HEAD COACH';
     const text=this.rivalPage===0
       ?`You took the ${personaFor(this.playerId)}. I know that matchup. I will take the ${personaFor(this.rivalId)}.`
       :'First wrestle-off. One match. Show me how you respond.';
-    this.add.text(25,153,speaker,{fontFamily:FONT,fontSize:11,color:'#b41820',fontStyle:'bold'});
-    this.add.text(25,170,text,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:1,wordWrap:{width:266}});
-    this.add.text(289,201,'A',{fontFamily:FONT,fontSize:10,color:'#655f53',fontStyle:'bold'});
+    this.add.text(32,216,speaker,{fontFamily:FONT,fontSize:15,color:'#b41820',fontStyle:'bold'});
+    this.add.text(32,241,text,{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold',lineSpacing:3,wordWrap:{width:404}});
+    this.add.text(442,292,'A',{fontFamily:FONT,fontSize:14,color:'#655f53',fontStyle:'bold'});
   }
   draw(){
     this.tweens.killAll();this.children.removeAll(true);

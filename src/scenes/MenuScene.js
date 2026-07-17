@@ -1,5 +1,6 @@
 import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,currentMoveStamina,scaledStats,personaFor,wrestlerName} from '../data/roster.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {experienceProgress} from '../data/experience.js';import {effortTotal,MAX_TOTAL_EFFORT,natureFor,STAT_LABELS} from '../data/stats.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,restoreTechniqueStamina,SHOP_STOCK,swapLockerWrestler,totalMoveStamina,totalMoveStaminaMax,useFilmStudy,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
-import {fitLegacyViewport} from '../systems/legacyViewport.js';
+import {useNativeViewport} from '../systems/nativeViewport.js';
+import {installNativeLayoutGrid} from '../systems/nativeLayoutGrid.js';
 import seasonLayouts from '../data/seasonOneLayouts.json';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['Field House Badge','Capitol Badge','Kohl Badge','Picnic Point Badge'];
@@ -25,7 +26,7 @@ function icon(scene,x,y,kind,active){
 }
 export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
-  create(data={}){fitLegacyViewport(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-N',()=>this.renameSelected());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
+  create(data={}){useNativeViewport(this);installNativeLayoutGrid(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-N',()=>this.renameSelected());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='left')this.side(-1);if(k==='right')this.side(1);if(k==='a')this.choose();if(k==='start')this.renameSelected();if(k==='b')this.back();}
   optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map'||this.tab==='summary')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 6;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
@@ -90,9 +91,9 @@ export class MenuScene extends Phaser.Scene{
     });
     uiBox(this,206,6,108,212);
     const l=lead(this.state),r=l?ROSTER[l.id]:null;
-    if(r&&this.textures.exists('portrait_'+r.asset)){this.add.image(260,40,'portrait_'+r.asset).setScale(.3);}
-    this.add.text(260,69,l?wrestlerName(l,{short:true}):'No lead',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'}).setOrigin(.5);
-    if(l)this.add.text(260,84,`Lv ${l.lvl}  ${personaFor(l.id)}`,{fontFamily:FONT,fontSize:10,color:'#444'}).setOrigin(.5);
+    if(r&&this.textures.exists('portrait_'+r.asset))this.add.image(260,34,'portrait_'+r.asset);
+    this.add.text(260,75,l?wrestlerName(l,{short:true}):'No lead',{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'}).setOrigin(.5);
+    if(l)this.add.text(260,89,`Lv ${l.lvl}  ${personaFor(l.id)}`,{fontFamily:FONT,fontSize:10,color:'#444'}).setOrigin(.5);
     this.add.line(0,0,214,96,306,96,0xa58d65,.6).setOrigin(0);
     this.add.text(214,100,'BADGES',{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
     BADGE_ORDER.forEach((b,i)=>{const cx=224+i*22,cy=121,got=this.state.badges.includes(b);const g=this.add.graphics();g.lineStyle(1,0x8a6a42,1);g.fillStyle(got?0xd6a336:0xe8dcc0,1);g.fillCircle(cx,cy,7);g.strokeCircle(cx,cy,7);if(got)this.add.text(cx,cy,'★',{fontFamily:FONT,fontSize:9,color:'#7d1017'}).setOrigin(.5);});
@@ -142,7 +143,6 @@ export class MenuScene extends Phaser.Scene{
     this.state.party.slice(0,6).forEach((m,i)=>{
       const r=ROSTER[m.id],st=scaledStats(m.id,m.lvl,m),y=76+i*18,active=i===this.sel;
       if(active){const hi=this.add.graphics();hi.fillStyle(0xb41820,.1);hi.fillRoundedRect(18,y-8,284,18,3);}
-      if(this.textures.exists('portrait_'+r.asset))this.add.image(32,y+1,'portrait_'+r.asset).setScale(.13);
       this.add.text(46,y-7,`${active?'▶':' '}${wrestlerName(m,{short:true})} L${m.lvl}${i===0?' ★':''}`,{fontFamily:FONT,fontSize:10,color:active?'#b41820':'#111',fontStyle:active?'bold':'normal'});
       this.add.text(137,y-7,'C',{fontFamily:FONT,fontSize:9,color:'#3a8a52',fontStyle:'bold'});
       hpBar(this,148,y-3,65,4,m.hp/st.hp,0x55b867);
@@ -185,7 +185,7 @@ export class MenuScene extends Phaser.Scene{
     this.add.text(160,16,`WRESTLER SUMMARY  ${this.summaryPage+1}/2`,{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'}).setOrigin(.5,0);
     this.add.line(0,0,18,35,302,35,0xa58d65,.7).setOrigin(0);
     if(this.summaryPage===0){
-      if(this.textures.exists('portrait_'+record.asset))this.add.image(47,68,'portrait_'+record.asset).setScale(.24);
+      if(this.textures.exists('portrait_'+record.asset))this.add.image(47,68,'portrait_'+record.asset);
       this.add.text(79,42,wrestlerName(mon),{fontFamily:FONT,fontSize:13,color:'#8a1720',fontStyle:'bold',wordWrap:{width:135}});
       if(mon.nickname)this.add.text(79,56,record.name,{fontFamily:FONT,fontSize:9,color:'#555',fontStyle:'bold',wordWrap:{width:135}});
       this.add.text(79,mon.nickname?69:61,`Lv ${mon.lvl}  ${record.style}`,{fontFamily:FONT,fontSize:10,color:'#333',fontStyle:'bold'});
@@ -241,7 +241,7 @@ export class MenuScene extends Phaser.Scene{
     ids.slice(start,start+7).forEach((id,j)=>{const i=start+j,r=ROSTER[id],known=this.state.dex.seen[id],caught=this.state.dex.caught[id],defeated=this.state.dex.defeated[id],y=68+j*18,active=i===this.sel;this.add.text(24,y,`${active?'>':' '} ${caught?'+':defeated?'x':known?'.':'?'} ${known?r.name:'UNKNOWN'}`,{fontFamily:FONT,fontSize:10,color:active?'#b41820':known?'#111':'#777',fontStyle:active?'bold':'normal'});});
     const id=ids[this.sel],r=ROSTER[id],known=this.state.dex.seen[id];
     if(!known){this.add.text(206,82,'NO SCOUT REPORT',{fontFamily:FONT,fontSize:10,color:'#777',fontStyle:'bold'});this.add.text(206,101,'Meet this wrestler to add an entry.',{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold',wordWrap:{width:96}});return;}
-    if(this.textures.exists('portrait_'+r.asset))this.add.image(252,78,'portrait_'+r.asset).setScale(.22);
+    if(this.textures.exists('portrait_'+r.asset))this.add.image(252,78,'portrait_'+r.asset);
     this.add.text(204,104,r.name,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',wordWrap:{width:98}});
     this.add.text(204,130,`${r.style}\n${personaFor(id)} / ${r.rarity}`,{fontFamily:FONT,fontSize:10,color:'#444',lineSpacing:4});
     this.add.text(204,166,r.bio,{fontFamily:FONT,fontSize:9,color:'#333',wordWrap:{width:98}});

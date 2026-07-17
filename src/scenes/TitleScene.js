@@ -1,13 +1,13 @@
 import {loadState,resetState,caughtRecruitCount} from '../systems/save.js';
 import {FONT,uiBox,setVirtualHandler} from '../systems/ui.js';
 import {unlockAudio,playMusic,setMuted} from '../systems/audio.js';
-import {fitLegacyViewport} from '../systems/legacyViewport.js';
+import {useNativeViewport} from '../systems/nativeViewport.js';
 const Phaser=window.Phaser;
 
 export class TitleScene extends Phaser.Scene{
   constructor(){super('TitleScene');}
   create(){
-    fitLegacyViewport(this);
+    useNativeViewport(this);
     this.state=loadState();
     this.mode='splash';
     this.sel=0;
@@ -63,35 +63,36 @@ export class TitleScene extends Phaser.Scene{
     if(option==='ERASE DATA'){this.mode='erase';this.confirmSel=0;this.render();}
   }
   drawBackdrop(dim=false){
-    this.add.image(0,0,'title_hero').setOrigin(0);
-    if(dim){const veil=this.add.graphics();veil.fillStyle(0x06101f,.72);veil.fillRect(0,0,320,224);}
-    this.add.image(160,5,'logo').setOrigin(.5,0).setDisplaySize(dim?154:188,dim?70:86);
+    this.add.image(0,0,'title_hero_native').setOrigin(0);
+    if(dim){const veil=this.add.graphics();veil.fillStyle(0x06101f,.76);veil.fillRect(0,0,480,320);}
+    this.add.image(240,4,'logo').setOrigin(.5,0).setAlpha(dim ? .82 : 1);
   }
   drawSplash(){
     this.drawBackdrop(false);
-    const strip=this.add.graphics();strip.fillStyle(0x050b14,.78);strip.fillRect(76,188,168,27);strip.lineStyle(1,0xd5aa45,.9);strip.lineBetween(84,189,236,189);strip.lineBetween(84,214,236,214);
-    const prompt=this.add.text(160,194,'PRESS START',{fontFamily:FONT,fontSize:13,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:3}).setOrigin(.5);
+    const strip=this.add.graphics();strip.fillStyle(0x050b14,.82);strip.fillRect(112,262,256,44);strip.lineStyle(2,0xd5aa45,.95);strip.lineBetween(120,264,360,264);strip.lineBetween(120,304,360,304);
+    const prompt=this.add.text(240,274,'PRESS START',{fontFamily:FONT,fontSize:18,color:'#fff2c7',fontStyle:'bold',stroke:'#111',strokeThickness:4}).setOrigin(.5,0);
     this.tweens.add({targets:prompt,alpha:.36,duration:650,yoyo:true,repeat:-1});
   }
   drawMenu(){
     this.drawBackdrop(true);
     const opts=this.options();
     const hasSave=this.hasSave();
-    const y=hasSave?88:137,h=hasSave?124:52;
-    uiBox(this,38,y,244,h);
-    this.add.text(52,y+10,opts.map((option,index)=>`${index===this.sel?'>':' '} ${option}`).join('\n'),{fontFamily:FONT,fontSize:12,color:'#111',fontStyle:'bold',lineSpacing:5});
+    const y=hasSave?98:222,h=hasSave?206:78;
+    uiBox(this,56,y,368,h);
+    opts.forEach((option,index)=>this.add.text(80,y+18+index*36,`${index===this.sel?'>':' '} ${option}`,{fontFamily:FONT,fontSize:18,color:index===this.sel?'#a51620':'#111',fontStyle:'bold'}));
     if(!hasSave)return;
     const stats=this.state.stats||{};
-    this.add.text(52,161,`${this.state.playerName.toUpperCase()}   ROSTER ${caughtRecruitCount(this.state)}   BADGES ${(this.state.badges||[]).length}`,{fontFamily:FONT,fontSize:10,color:'#5d2a2f',fontStyle:'bold'});
-    this.add.text(52,180,`WINS ${stats.wins||0}   SCOUTED ${stats.scouts||0}${this.state.tournament?.champion?'   CHAMPION':''}`,{fontFamily:FONT,fontSize:10,color:'#444',fontStyle:'bold'});
+    this.add.line(0,0,72,218,408,218,0xa58d65,.65).setOrigin(0);
+    this.add.text(80,232,`${this.state.playerName.toUpperCase()}   ROSTER ${caughtRecruitCount(this.state)}   BADGES ${(this.state.badges||[]).length}`,{fontFamily:FONT,fontSize:15,color:'#5d2a2f',fontStyle:'bold'});
+    this.add.text(80,258,`WINS ${stats.wins||0}   SCOUTED ${stats.scouts||0}${this.state.tournament?.champion?'   CHAMPION':''}`,{fontFamily:FONT,fontSize:15,color:'#444',fontStyle:'bold'});
   }
   drawConfirmation(){
     this.drawBackdrop(true);
-    uiBox(this,38,113,244,82);
+    uiBox(this,54,176,372,124);
     const erase=this.mode==='erase';
-    this.add.text(160,126,erase?'ERASE ALL SAVE DATA?':'BEGIN A NEW SEASON?',{fontFamily:FONT,fontSize:12,color:'#111',fontStyle:'bold'}).setOrigin(.5);
-    this.add.text(160,148,erase?'This cannot be undone.':'Current progress will be erased.',{fontFamily:FONT,fontSize:10,color:'#555',fontStyle:'bold'}).setOrigin(.5);
-    ['NO','YES'].forEach((label,index)=>this.add.text(112+index*96,173,`${index===this.confirmSel?'> ':''}${label}`,{fontFamily:FONT,fontSize:12,color:index===this.confirmSel?'#b41820':'#111',fontStyle:'bold'}).setOrigin(.5));
+    this.add.text(240,196,erase?'ERASE ALL SAVE DATA?':'BEGIN A NEW SEASON?',{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'}).setOrigin(.5,0);
+    this.add.text(240,226,erase?'This cannot be undone.':'Current progress will be erased.',{fontFamily:FONT,fontSize:15,color:'#555',fontStyle:'bold'}).setOrigin(.5,0);
+    ['NO','YES'].forEach((label,index)=>this.add.text(168+index*144,266,`${index===this.confirmSel?'> ':''}${label}`,{fontFamily:FONT,fontSize:18,color:index===this.confirmSel?'#b41820':'#111',fontStyle:'bold'}).setOrigin(.5,0));
   }
   render(){
     this.tweens.killAll();

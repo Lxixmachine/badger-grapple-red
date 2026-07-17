@@ -5,7 +5,7 @@ import {NPC_LOOKS} from '../data/npcLooks.js';
 import {preloadSeasonOneAssets, SEASON_ONE_PROJECT} from '../data/seasonOneRuntime.js';
 import {makeMon, ROSTER} from '../data/roster.js';
 const Phaser = window.Phaser;
-const V='271';
+const V='272';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){
@@ -23,7 +23,7 @@ export class BootScene extends Phaser.Scene{
       this.load.image(`battle_${battleAsset}_back`,`./assets/sprites/battle_${battleAsset}_back_v3.png?v=${V}`);
     });
     ['badger','neutral','top','scramble','pace'].forEach(k=>this.load.image('portrait_'+k,`./assets/portraits/${k}.png?v=${V}`));
-    this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('title_hero',`./assets/ui/title_hero.png?v=${V}`);this.load.image('coach_intro',`./assets/portraits/coach_intro.png?v=${V}`);this.load.image('trainer_intro',`./assets/portraits/trainer_intro.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena_v2.png?v=${V}`);
+    this.load.image('logo',`./assets/ui/logo.png?v=${V}`);this.load.image('title_bg',`./assets/ui/title_bg.png?v=${V}`);this.load.image('title_hero',`./assets/ui/title_hero.png?v=${V}`);this.load.image('title_hero_native',`./assets/ui/title_hero_native.png?v=${V}`);this.load.image('story_wrestling_room',`./assets/ui/story_wrestling_room.png?v=${V}`);this.load.image('story_recovery_room',`./assets/ui/story_recovery_room.png?v=${V}`);this.load.image('story_fieldhouse',`./assets/ui/story_fieldhouse.png?v=${V}`);this.load.image('coach_intro',`./assets/portraits/coach_intro.png?v=${V}`);this.load.image('trainer_intro',`./assets/portraits/trainer_intro.png?v=${V}`);this.load.image('coach_intro_native',`./assets/portraits/coach_intro_native.png?v=${V}`);this.load.image('trainer_intro_native',`./assets/portraits/trainer_intro_native.png?v=${V}`);this.load.image('intro_player',`./assets/sprites/intro_player.png?v=${V}`);this.load.image('intro_rex',`./assets/sprites/intro_rex.png?v=${V}`);this.load.image('battle_arena',`./assets/ui/battle_arena_v2.png?v=${V}`);
     ['shooter','rider','scrambler'].forEach(style=>this.load.image('singlet_'+style,`./assets/ui/singlet_${style}.png?v=${V}`));
   }
   create(){
