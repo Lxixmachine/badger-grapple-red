@@ -85,8 +85,8 @@ test('R1 is a grid-authoritative three-beat route with reachable story and exits
   expect(new Set(dirtWidths).size).toBeGreaterThanOrEqual(3);
 
   const mat = map.objects.find(object => object.id === 'r1_open_mat');
-  expect(mat).toMatchObject({name: 'R1 Open Wrestling Mat', x: 11, y: 15, width: 4, height: 3});
-  expect(mat.collisionMask).toEqual(['....', '....', '....']);
+  expect(mat).toMatchObject({name: 'R1 Open Wrestling Mat', x: 11, y: 15, width: 3, height: 2});
+  expect(mat.collisionMask).toEqual(['...', '...']);
 
   const routeBlocked = blockedCells(map, true);
   const route = flood(map, {x: 8, y: 0}, routeBlocked);

@@ -370,6 +370,7 @@ function forestStamp(owner, mapWidth, mapHeight) {
 
 const DEDICATED_FIXTURE_STAMPS = {
   funk_mat: 'outdoor_wrestling_mat',
+  practice_mat: 'field_house_competition_mat',
   competition_mat: 'field_house_competition_mat',
   rotunda: 'capitol_exhibition_mat',
   conference_mat: 'kohl_conference_mat',
@@ -503,7 +504,10 @@ function plannedObject(mapId, owner, group, layout, mapType = 'exterior') {
 
 function applyTerrainPolish(terrain, polish, mapId) {
   for (const patch of polish.terrain || []) {
-    if (!terrainTileIds.has(patch.tile)) throw new Error(`${mapId}: unknown terrain polish tile ${patch.tile}`);
+    const tiles = patch.tiles || [patch.tile];
+    if (!tiles.length || tiles.some(tile => !terrainTileIds.has(tile))) {
+      throw new Error(`${mapId}: unknown terrain polish tile ${tiles.find(tile => !terrainTileIds.has(tile)) || patch.tile}`);
+    }
     const mask = patch.mask || Array.from({length: patch.height}, () => '#'.repeat(patch.width));
     if (!Array.isArray(mask) || mask.length !== patch.height || mask.some(row => row.length !== patch.width)) {
       throw new Error(`${mapId}: terrain polish patch ${patch.id || patch.tile} has an invalid mask`);
@@ -516,7 +520,7 @@ function applyTerrainPolish(terrain, polish, mapId) {
         if (!terrain[targetY]?.[targetX]) {
           throw new Error(`${mapId}: terrain polish patch ${patch.id || patch.tile} leaves the map`);
         }
-        terrain[targetY][targetX] = patch.tile;
+        terrain[targetY][targetX] = tiles[(x + y) % tiles.length];
       }
     }
   }

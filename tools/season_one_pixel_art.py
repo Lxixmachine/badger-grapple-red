@@ -459,8 +459,11 @@ def ground_detail(detail_id: str) -> Image.Image:
         if detail_id == "grass_gold_flowers":
             flowers = ImageOps.mirror(flowers)
         image.alpha_composite(flowers)
-    elif detail_id == "tall_grass":
-        image.alpha_composite(source_asset("vegetation", "tall_grass_cluster"))
+    elif detail_id in {"tall_grass", "tall_grass_b"}:
+        grass = source_asset("vegetation", "tall_grass_cluster")
+        if detail_id == "tall_grass_b":
+            grass = ImageOps.mirror(grass)
+        image.alpha_composite(grass)
     elif detail_id == "shore_reeds":
         image.alpha_composite(source_asset("vegetation", "shore_reeds"))
     else:

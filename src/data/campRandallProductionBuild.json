@@ -2455,8 +2455,8 @@
   },
   "sources": {
     "manifest": "25c5545973dc5b7f366e8032c9a43a4d89f38a2f9359c788e8006a166d87fbd4",
-    "layout": "b6ddf8c4e107707e0faeff323764afd3b6059f2d617dbf4666e341ef375b4f6d",
-    "worldTileset": "d58cf9673aef761a7735fe8b0936501328837726e14de8116755153ae8ed656e",
+    "layout": "95055d2cac3a334fc1e55fa60fb6cd30f208ba01d91d54b13bee56cb003e7115",
+    "worldTileset": "101c2248ad615da843f6cefe5561dd9556f5cd2e8928be75e0efe7402745f788",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "locker": "3c3ed974a3979f841eba61722f637d8cc393c077291b82654abcb6af90d6cd64",
@@ -2513,6 +2513,6 @@
     "wrestling-room__practice_station.png": "bfc017ffbd6d844ee0f2e24c59e25466f61deadb917022c479274f4972f83d8d",
     "wrestling-room__weights.png": "7ba68638bb1e283ef64490af7f6960d03615411c2af0a07f162a74cb2dada463",
     "wrestling-room__wrestling_exit_frame.png": "35f99d18bf469bd636ffff9b6a30848196c7945647b19500f8bc355f1a044e94",
-    "wrestling_room_base_v2.png": "8498cc5d07a99791be42d2dcceaed41561b4e67fbbc6c0d32ec75ab85b4db25a"
+    "wrestling_room_base_v2.png": "6ba187a5a0c4512657cb7908d796db73e4d52cf020de576dd6bbe5587bb879ae"
   }
 }

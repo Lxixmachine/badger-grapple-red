@@ -25,7 +25,8 @@
     {"id": "grass_white_flowers", "name": "White flowers", "family": "grass_detail", "source": "vegetation", "crop": [44, 554, 141, 641]},
     {"id": "grass_red_flowers", "name": "Cardinal flowers", "family": "grass_detail", "source": "vegetation", "crop": [198, 552, 301, 644]},
     {"id": "grass_gold_flowers", "name": "Gold flowers", "family": "grass_detail", "source": "vegetation", "crop": [352, 553, 450, 644]},
-    {"id": "tall_grass", "name": "Tall grass", "family": "grass_detail", "source": "vegetation", "crop": [499, 541, 608, 649]},
+    {"id": "tall_grass", "name": "Tall grass A", "family": "grass_detail", "source": "vegetation", "crop": [499, 541, 608, 649]},
+    {"id": "tall_grass_b", "name": "Tall grass B", "family": "grass_detail", "source": "vegetation", "crop": [499, 541, 608, 649]},
     {"id": "shore_reeds", "name": "Shore reeds", "family": "grass_detail", "source": "vegetation", "crop": [658, 539, 756, 652]}
   ],
   "sprites": [

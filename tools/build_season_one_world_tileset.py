@@ -846,7 +846,7 @@ def build() -> dict:
     )
 
     story_prop_specs = [
-        ("outdoor_wrestling_mat", "Outdoor Wrestling Mat", 4, 3, ["....", "....", "...."], "practice_mat"),
+        ("outdoor_wrestling_mat", "Outdoor Wrestling Mat", 3, 2, ["...", "..."], "practice_mat"),
         ("campfire_ring", "Campfire Ring", 3, 3, ["###", "###", "###"], "campfire"),
         ("kayak_rack", "Kayak Rack", 3, 2, ["###", "###"], "kayak_rack"),
         ("timber_dock", "Timber Dock", 4, 2, ["....", "...."], "dock"),

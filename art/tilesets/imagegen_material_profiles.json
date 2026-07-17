@@ -82,7 +82,7 @@
     "bascom_stair_landing": ["limestone", "stone"],
     "bascom_history_marker": ["metal", "limestone", "cardinal"],
 
-    "outdoor_wrestling_mat": ["cardinal", "cream", "gold", "slate"],
+    "outdoor_wrestling_mat": ["cardinal", "cream", "slate"],
     "campfire_ring": ["stone", "wood", "fire"],
     "kayak_rack": ["cardinal", "gold", "wood", "metal"],
     "timber_dock": ["wood", "water", "stone"],

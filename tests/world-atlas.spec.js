@@ -52,7 +52,7 @@ async function walk(page, direction, steps) {
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
-  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.28-mendota-routes');
+  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.29-route-art');
   await expect(page.locator('canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({

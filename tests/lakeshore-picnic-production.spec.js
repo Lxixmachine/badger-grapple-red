@@ -4,6 +4,7 @@ import {SEASON_ONE_MAP_POLISH} from '../src/data/seasonOneMapPolish.js';
 
 const layouts = JSON.parse(readFileSync(new URL('../src/data/seasonOneLayouts.json', import.meta.url), 'utf8'));
 const worldTileset = JSON.parse(readFileSync(new URL('../src/data/seasonOneWorldTilesetBuild.json', import.meta.url), 'utf8'));
+const imagegenSources = JSON.parse(readFileSync(new URL('../art/tilesets/imagegen_v3/source_manifest.json', import.meta.url), 'utf8'));
 
 async function openStudio(page) {
   await page.goto('/map-editor.html');
@@ -141,7 +142,61 @@ test('route scenery uses stepped shorelines, clustered trees, and compact grass 
     const grass = SEASON_ONE_MAP_POLISH[mapId].terrain.filter(entry => entry.tile === 'tall_grass');
     expect(grass.length, `${mapId} grass encounters`).toBeGreaterThanOrEqual(4);
     expect(grass.every(entry => entry.width <= 3 && entry.height <= 2), `${mapId} compact grass`).toBe(true);
+    expect(grass.every(entry => entry.tiles?.join(',') === 'tall_grass,tall_grass_b'), `${mapId} grass variants`).toBe(true);
+    expect(new Set(project.maps[mapId].terrain.flat().filter(tile => tile.startsWith('tall_grass'))))
+      .toEqual(new Set(['tall_grass', 'tall_grass_b']));
   }
+});
+
+test('shared route art keeps the phone-scale footprint and logical-pixel contract', async ({page}) => {
+  const project = await openStudio(page);
+  const grassSource = imagegenSources.assets.tall_grass_cluster;
+  const matSource = imagegenSources.assets.outdoor_wrestling_mat;
+  const matStamp = worldTileset.stamps.outdoor_wrestling_mat;
+
+  expect(grassSource).toMatchObject({
+    width: 16,
+    height: 16,
+    colors: 5,
+    sourceFile: 'season_one_tall_grass_source_v2.png'
+  });
+  expect(grassSource.materialDiscipline).toMatchObject({
+    materials: ['foliage'],
+    maxColorsPerMaterial: 4,
+    outputPartialAlphaPixelCount: 0
+  });
+  expect(matSource).toMatchObject({
+    width: 48,
+    height: 32,
+    sourceFile: 'season_one_outdoor_wrestling_mat_source_v4.png'
+  });
+  expect(matSource.materialDiscipline.materials).toEqual(['cardinal', 'cream', 'slate']);
+  expect(matSource.materialDiscipline.pixelsByMaterial.cream).toBeGreaterThan(50);
+  expect(matSource.materialDiscipline.outputPartialAlphaPixelCount).toBe(0);
+  expect(matStamp).toMatchObject({
+    width: 3,
+    height: 2,
+    collisionMask: ['...', '...'],
+    semanticBehavior: 'practice_mat'
+  });
+
+  for (const mapId of ['lakeshore_path', 'picnic_point']) {
+    const routeMats = project.maps[mapId].objects.filter(object => object.sourceId === 'outdoor_wrestling_mat');
+    expect(routeMats.length, `${mapId} mats`).toBeGreaterThanOrEqual(2);
+    expect(routeMats.every(object => object.width === 3 && object.height === 2), `${mapId} mat footprint`).toBe(true);
+  }
+
+  const firstMat = project.maps.lakeshore_path.objects.find(object => object.id === 'lake_mat_first');
+  const firstRecruit = project.maps.lakeshore_path.events.find(event => event.id === 'first_recruit_zone');
+  expect(firstRecruit.x).toBeGreaterThanOrEqual(firstMat.x);
+  expect(firstRecruit.x).toBeLessThan(firstMat.x + firstMat.width);
+  expect(firstRecruit.y).toBeGreaterThanOrEqual(firstMat.y);
+  expect(firstRecruit.y).toBeLessThan(firstMat.y + firstMat.height);
+
+  const practiceMat = layouts.interiors.wrestling_room.fixtures.find(fixture => fixture.id === 'practice_mat');
+  expect(practiceMat).toMatchObject({width: 9, height: 7, walkable: true});
+  expect(project.maps.wrestling_room.background.path).toContain('wrestling_room_base_v2.png');
+  expect(project.maps.wrestling_room.objects.some(object => object.sourceId === 'outdoor_wrestling_mat')).toBe(false);
 });
 
 test('the complete route remains traversable with actors and exact object collision enabled', async ({page}) => {

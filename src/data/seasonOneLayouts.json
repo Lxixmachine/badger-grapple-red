@@ -423,7 +423,7 @@
         {"to": "field_house", "edge": "east", "start": 7, "span": 2, "toEdge": "west", "toStart": 17}
       ],
       "events": [
-        {"id": "first_recruit_zone", "label": "First recruiting mat", "x": 43, "y": 7, "beat": 12},
+        {"id": "first_recruit_zone", "label": "First recruiting mat", "x": 42, "y": 6, "beat": 12},
         {"id": "blue_chip_cove", "label": "Rare scout cove", "x": 14, "y": 8, "beat": 27},
         {"id": "locked_boathouse", "label": "Locked boathouse", "x": 24, "y": 6, "kind": "message", "text": "The Lakeshore Boathouse is locked for the season. A faded team schedule hangs inside.", "once": true},
         {"id": "mendota_pier_view", "label": "Mendota pier", "x": 29, "y": 1, "kind": "message", "text": "Lake Mendota stretches past the end of the pier. The next test waits west.", "once": true},
@@ -481,7 +481,7 @@
       "blockers": [],
       "buildings": [],
       "landmarks": [
-        {"id": "funk_mat", "name": "Funk Doctor's Mat", "kind": "arena", "x": 10, "y": 5, "width": 4, "height": 3, "editorStampId": "outdoor_wrestling_mat", "collisionMask": ["....", "....", "...."]},
+        {"id": "funk_mat", "name": "Funk Doctor's Mat", "kind": "arena", "x": 10, "y": 5, "width": 3, "height": 2, "editorStampId": "outdoor_wrestling_mat", "collisionMask": ["...", "..."]},
         {"id": "fire_circle", "name": "Picnic Point Fire Circle", "kind": "route_landmark", "x": 4, "y": 5, "width": 4, "height": 4, "editorStampId": "picnic_fire_circle", "collisionMask": [".###", "####", "####", ".###"]}
       ],
       "decorations": [
@@ -1044,7 +1044,7 @@
       "size": {"width": 15, "height": 10},
       "exit": {"x": 7, "y": 9},
       "fixtures": [
-        {"id": "practice_mat", "name": "Practice Mat", "x": 3, "y": 1, "width": 9, "height": 6, "walkable": true},
+        {"id": "practice_mat", "name": "Practice Mat", "x": 3, "y": 1, "width": 9, "height": 7, "walkable": true},
         {"id": "weights", "name": "Weights", "x": 1, "y": 2, "width": 2, "height": 3},
         {"id": "practice_station", "name": "Practice Station", "x": 12, "y": 2, "width": 2, "height": 3},
         {"id": "wrestling_exit_frame", "name": "Locker Room Exit", "x": 6, "y": 8, "width": 3, "height": 1, "walkable": true}

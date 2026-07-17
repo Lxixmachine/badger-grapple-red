@@ -5,7 +5,7 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "6796d93f86ddfc388608d96b92053ee00e9138c6205381e757c78852c978bc44",
+    "profileSha256": "c420074001cba377cf81d9873d618e1b1953d68fc084bb54d8c271d2dc5769ee",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
     "disciplinedAssetCount": 116
@@ -22,7 +22,8 @@
     "transitions": "2461863e26042cda4de856baeb715e70d2fa5fe0252e8dbe989fc256581d15a0",
     "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
     "bascom_landmarks": "cc8bc27bba589daca622593304c1ab749a59108314e1ea56d458611ead57f725",
-    "vegetation:tall_grass_cluster": "c2b087a6666f2f2ce4b2b8aefc03a6d292eea84b3a6e2237c43bb333d80c5077",
+    "vegetation:tall_grass_cluster": "27deab4f2d9efe5758babd6a849338c10e449722d8c8652c9001ef5c989fad21",
+    "story_props:outdoor_wrestling_mat": "b9965bd00d1930cc1e2a37594cc9466bb29ad355b2bad3c53ca4228bd0c4ef0c",
     "landmarks:field_house_arena_exterior": "c73c4ab8f2aeeccdd999e14b02568049b9085c2d6e581756edd88a35a84cf4cb",
     "landmarks:kohl_arena_exterior": "26d9c6730674eabe87abc0b4bb7b6544e8c8cf9be23b04f92abc90dc16b5e1cb",
     "landmarks:nationals_arena_exterior": "ca455a729265756657ba63fcdd81983032c4af4718c328f438947a963d28ab08",
@@ -1499,33 +1500,30 @@
     "outdoor_wrestling_mat": {
       "category": "story_props",
       "path": "art/tilesets/imagegen_v3/story_props/outdoor_wrestling_mat.png",
-      "width": 64,
-      "height": 48,
-      "colors": 12,
-      "sha256": "f5e1da363fda8e7f2ae715473ef1a0f9f330f6978f6008bb69d195492df543b0",
-      "sourcePanel": 0,
+      "width": 48,
+      "height": 32,
+      "colors": 9,
+      "sha256": "422c47b4070cbf8e63c720522521844b00b274ff9dc514068d625b541dfa40d6",
+      "sourceFile": "season_one_outdoor_wrestling_mat_source_v4.png",
       "materialDiscipline": {
         "materials": [
           "cardinal",
           "cream",
-          "gold",
           "slate"
         ],
         "materialColorCounts": {
           "cardinal": 4,
-          "cream": 1,
-          "gold": 3,
-          "slate": 3
+          "cream": 3,
+          "slate": 1
         },
         "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "cardinal": 2068,
-          "cream": 13,
-          "gold": 197,
-          "slate": 397
+          "cardinal": 1197,
+          "cream": 204,
+          "slate": 87
         },
-        "outlinePixelCount": 201,
-        "inputPartialAlphaPixelCount": 40,
+        "outlinePixelCount": 154,
+        "inputPartialAlphaPixelCount": 89,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }
@@ -2723,22 +2721,22 @@
       "path": "art/tilesets/imagegen_v3/vegetation/tall_grass_cluster.png",
       "width": 16,
       "height": 16,
-      "colors": 4,
-      "sha256": "8ffccdbed318865f938df5cbf019cde7bccd050dbf332dd0fbaa5272a4835afa",
-      "sourceFile": "season_one_tall_grass_source_v1.png",
+      "colors": 5,
+      "sha256": "5c48144cc0bb62afa6fdc0639977fb68fa678d4496fe6702e1be919ee91dad31",
+      "sourceFile": "season_one_tall_grass_source_v2.png",
       "materialDiscipline": {
         "materials": [
           "foliage"
         ],
         "materialColorCounts": {
-          "foliage": 3
+          "foliage": 4
         },
-        "maxColorsPerMaterial": 3,
+        "maxColorsPerMaterial": 4,
         "pixelsByMaterial": {
-          "foliage": 241
+          "foliage": 77
         },
-        "outlinePixelCount": 60,
-        "inputPartialAlphaPixelCount": 43,
+        "outlinePixelCount": 46,
+        "inputPartialAlphaPixelCount": 52,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }

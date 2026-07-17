@@ -187,7 +187,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   ]);
   expect(state.project.maps.camp_randall).toMatchObject({width: 48, height: 31, cellSize: 32});
   expect(state.project.maps.camp_randall).toMatchObject({renderModel: 'metatile'});
-  expect(state.project.assets.groundTiles).toHaveLength(697);
+  expect(state.project.assets.groundTiles).toHaveLength(698);
   expect(state.project.assets.groundStamps).toHaveLength(28);
   expect(state.project.assets.metatiles.length).toBeGreaterThan(1000);
   expect(state.project.assets.groundTiles.find(tile => tile.id === 'water').behavior).toBe('water');

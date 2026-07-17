@@ -19,6 +19,17 @@ const actor = (id, sheet, x, y, facing, dialogue, extra = {}) => ({
   ...extra
 });
 
+const tallGrass = (id, x, y, width, height, extra = {}) => ({
+  id,
+  tile: 'tall_grass',
+  tiles: ['tall_grass', 'tall_grass_b'],
+  x,
+  y,
+  width,
+  height,
+  ...extra
+});
+
 // These placements are the production detail pass over the structural layout
 // atlas. Every entry names a grid-native metatile stamp, so Map Studio and the
 // live game use the same pixels, collision mask, and row-sliced occlusion.
@@ -65,10 +76,10 @@ export const SEASON_ONE_MAP_POLISH = {
       stamp('r1_waypoint_tree', 'tree_ornamental', 5, 8, 1, 2)
     ],
     terrain: [
-      {id: 'r1_grass_rex', tile: 'tall_grass', x: 3, y: 7, width: 3, height: 3},
-      {id: 'r1_grass_marker', tile: 'tall_grass', x: 12, y: 3, width: 3, height: 2},
-      {id: 'r1_grass_gauntlet', tile: 'tall_grass', x: 3, y: 16, width: 3, height: 2},
-      {id: 'r1_grass_finish', tile: 'tall_grass', x: 13, y: 18, width: 3, height: 2},
+      tallGrass('r1_grass_rex', 3, 7, 3, 3),
+      tallGrass('r1_grass_marker', 12, 3, 3, 2),
+      tallGrass('r1_grass_gauntlet', 3, 16, 3, 2),
+      tallGrass('r1_grass_finish', 13, 18, 3, 2),
       {id: 'r1_flowers_white', tile: 'grass_white_flowers', x: 11, y: 3, width: 1, height: 1},
       {id: 'r1_flowers_cardinal', tile: 'grass_red_flowers', x: 7, y: 12, width: 1, height: 1},
       {id: 'r1_flowers_gold', tile: 'grass_gold_flowers', x: 15, y: 12, width: 1, height: 1}
@@ -76,22 +87,22 @@ export const SEASON_ONE_MAP_POLISH = {
   },
   lakeshore_path: {
     terrain: [
-      {id: 'lake_grass_west_north', tile: 'tall_grass', x: 5, y: 5, width: 3, height: 2},
-      {id: 'lake_grass_west_south', tile: 'tall_grass', x: 6, y: 7, width: 2, height: 2},
-      {id: 'lake_grass_middle_north', tile: 'tall_grass', x: 18, y: 6, width: 3, height: 2},
-      {id: 'lake_grass_middle_south', tile: 'tall_grass', x: 19, y: 8, width: 2, height: 2},
-      {id: 'lake_grass_first_north', tile: 'tall_grass', x: 37, y: 6, width: 2, height: 2},
-      {id: 'lake_grass_first_south', tile: 'tall_grass', x: 36, y: 8, width: 3, height: 2},
+      tallGrass('lake_grass_west_north', 5, 5, 3, 2),
+      tallGrass('lake_grass_west_south', 6, 7, 2, 2),
+      tallGrass('lake_grass_middle_north', 18, 6, 3, 2),
+      tallGrass('lake_grass_middle_south', 19, 8, 2, 2),
+      tallGrass('lake_grass_first_north', 37, 6, 2, 2),
+      tallGrass('lake_grass_first_south', 36, 8, 3, 2),
       {id: 'lake_flowers_white', tile: 'grass_white_flowers', x: 7, y: 5, width: 1, height: 1},
       {id: 'lake_flowers_cardinal', tile: 'grass_red_flowers', x: 46, y: 5, width: 1, height: 1}
     ]
   },
   picnic_point: {
     terrain: [
-      {id: 'picnic_grass_arrival', tile: 'tall_grass', x: 39, y: 8, width: 3, height: 2},
-      {id: 'picnic_grass_arrival_tail', tile: 'tall_grass', x: 40, y: 10, width: 2, height: 1},
-      {id: 'picnic_grass_first', tile: 'tall_grass', x: 28, y: 8, width: 3, height: 2},
-      {id: 'picnic_grass_middle', tile: 'tall_grass', x: 18, y: 8, width: 3, height: 2},
+      tallGrass('picnic_grass_arrival', 39, 8, 3, 2),
+      tallGrass('picnic_grass_arrival_tail', 40, 10, 2, 1),
+      tallGrass('picnic_grass_first', 28, 8, 3, 2),
+      tallGrass('picnic_grass_middle', 18, 8, 3, 2),
       {id: 'picnic_flowers_white', tile: 'grass_white_flowers', x: 36, y: 6, width: 1, height: 1},
       {id: 'picnic_flowers_cardinal', tile: 'grass_red_flowers', x: 8, y: 10, width: 1, height: 1}
     ]
@@ -116,7 +127,7 @@ export const SEASON_ONE_MAP_POLISH = {
   },
   kohl_center: {
     objects: [
-      stamp('kohl_plaza_mat', 'outdoor_wrestling_mat', 4, 5, 4, 3),
+      stamp('kohl_plaza_mat', 'outdoor_wrestling_mat', 4, 5, 3, 2),
       stamp('kohl_plaza_bench', 'wood_bench', 8, 8, 3, 2),
       stamp('kohl_plaza_banner_w', 'banner_pole', 3, 8, 1, 2),
       stamp('kohl_plaza_banner_e', 'banner_pole', 12, 8, 1, 2),
@@ -170,11 +181,6 @@ export const SEASON_ONE_MAP_POLISH = {
     actors: [
       actor('stl_trainer', 'trainer', 5, 25, 'up', "The Trainer's Room is west of the arena district."),
       actor('stl_fan', 'student', 31, 10, 'up', 'The Arch passage opens after the final.', {patrol: {axis: 'horizontal', radius: 2, interval: 1350}})
-    ]
-  },
-  wrestling_room: {
-    objects: [
-      stamp('wrestling_center_mat', 'outdoor_wrestling_mat', 5, 3, 4, 3)
     ]
   },
   coach_office: {
