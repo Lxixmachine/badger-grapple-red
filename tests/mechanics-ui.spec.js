@@ -113,8 +113,8 @@ test('Travel Lineup naming persists a nickname and battle HUD uses it',async({pa
       options:texts.filter(child=>['YES','NO'].includes(child.text)).map(child=>child.text)
     };
   });
-  expect(promptLayout.question.bottom).toBeLessThanOrEqual(promptLayout.portrait.top);
-  expect(promptLayout.portrait.bottom).toBeLessThanOrEqual(promptLayout.persona.top);
+  expect(promptLayout.portrait.right).toBeLessThanOrEqual(promptLayout.question.left);
+  expect(promptLayout.question.bottom).toBeLessThanOrEqual(promptLayout.persona.top);
   expect(promptLayout.persona.bottom).toBeLessThanOrEqual(promptLayout.optionTop);
   expect(promptLayout.options).toEqual(['YES','NO']);
   await press(page,'a');
@@ -130,7 +130,7 @@ test('Travel Lineup naming persists a nickname and battle HUD uses it',async({pa
   expect(labels).toContain('ACE do?');
 });
 
-test('rear-view sprite exceptions face the opponent from the player side',async({page})=>{
+test('compiled rear-view sprites face the opponent without runtime mirroring',async({page})=>{
   await bootWithSave(page,{
     party:[legacyWrestler('fieldflyer',8)],active:0,box:[],items:{},badges:[],
     dex:{seen:{},caught:{fieldflyer:true}},flags:{introDone:true,assignment:true},stats:{}
@@ -138,7 +138,7 @@ test('rear-view sprite exceptions face the opponent from the player side',async(
   await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'scrambleboss',enemyLevel:8,battleType:'trainer'}));
   await waitForBattleCommand(page);
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battleSprites)).toMatchObject({
-    playerTexture:'battle_fieldflyer_back',playerFlipX:true,
+    playerTexture:'battle_fieldflyer_back',playerFlipX:false,
     enemyTexture:'battle_scrambleboss',enemyFlipX:false
   });
 });
@@ -210,16 +210,21 @@ test('battle presentation is native resolution and preserves FireRed-style actio
       width:scene.cameras.main.width,height:scene.cameras.main.height,zoom:scene.cameras.main.zoom,
       playerTexture:scene.playerSprite.texture.key,enemyTexture:scene.enemySprite.texture.key,
       playerWidth:scene.playerSprite.displayWidth,enemyWidth:scene.enemySprite.displayWidth,
+      playerScale:scene.playerSprite.scaleX,enemyScale:scene.enemySprite.scaleX,
+      playerSourceWidth:scene.playerSprite.texture.getSourceImage().width,
+      enemySourceWidth:scene.enemySprite.texture.getSourceImage().width,
+      arenaSource:[scene.textures.get('battle_arena').getSourceImage().width,scene.textures.get('battle_arena').getSourceImage().height],
       playerFlipX:scene.playerSprite.flipX,enemyFlipX:scene.enemySprite.flipX
     };
   });
   expect(presentation).toMatchObject({
     width:480,height:320,zoom:1,
-    playerTexture:'battle_buckshot_back',enemyTexture:'battle_drillpartner',
+    playerTexture:'battle_buckshot_back',enemyTexture:'battle_drillpartner',playerScale:1,enemyScale:1,
+    playerSourceWidth:128,enemySourceWidth:128,arenaSource:[480,238],
     playerFlipX:false,enemyFlipX:false
   });
-  expect(presentation.playerWidth).toBeGreaterThanOrEqual(140);
-  expect(presentation.enemyWidth).toBeGreaterThanOrEqual(140);
+  expect(presentation.playerWidth).toBe(128);
+  expect(presentation.enemyWidth).toBe(128);
 
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
@@ -229,6 +234,17 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
   await page.waitForTimeout(300);
   expect(await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:4_000}).toBe('impact');
+  const impactContract=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    return {
+      zoom:scene.cameras.main.zoom,
+      playerScale:[scene.playerSprite.scaleX,scene.playerSprite.scaleY],
+      enemyScale:[scene.enemySprite.scaleX,scene.enemySprite.scaleY],
+      integerPositions:[scene.playerSprite.x,scene.playerSprite.y,scene.enemySprite.x,scene.enemySprite.y].every(Number.isInteger)
+    };
+  });
+  expect(impactContract).toEqual({zoom:1,playerScale:[1,1],enemyScale:[1,1],integerPositions:true});
   await waitForBattleCommand(page);
   const phases=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory);
   expect(phases).toEqual(expect.arrayContaining(['announce','impact','message','between','command']));

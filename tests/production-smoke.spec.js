@@ -28,7 +28,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.24-complete-overworld-cast');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.25-pixel-battle-contract');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',

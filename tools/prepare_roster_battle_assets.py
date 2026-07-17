@@ -2,15 +2,19 @@
 
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageOps
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "art" / "imagegen"
 OUTPUT_DIR = ROOT / "public" / "assets" / "sprites"
 SOURCE_SUFFIX = "_v3_2026-07-14_alpha.png"
-SPRITE_SIZE = 144
-MAX_FILL = 136
+LOGICAL_SPRITE_SIZE = 64
+RUNTIME_SCALE = 2
+SPRITE_SIZE = LOGICAL_SPRITE_SIZE * RUNTIME_SCALE
+MAX_FILL = 59
+OPAQUE_COLORS = 15
+ALPHA_THRESHOLD = 96
 
 BOARDS = (
     ("roster_battle_bucky", ("buckshot", "buckvarsity", "buckallam")),
@@ -34,6 +38,15 @@ VISUAL_SCALE = {
     "drillpartner": 0.86,
     "lakechain": 0.86,
 }
+
+# These generated rear poses look toward screen-left in their source boards.
+# Normalize them here so every committed rear asset faces screen-right and the
+# runtime never needs identity-specific mirroring.
+BACK_SOURCE_FLIP_IDS = frozenset({
+    "matreturner", "matgeneral", "rideking",
+    "fieldflyer", "funkflyer", "scramblesaint",
+    "whizzkid", "scrambleboss",
+})
 
 
 def keep_main_subject(image: Image.Image) -> Image.Image:
@@ -97,9 +110,26 @@ def fit_pair(front: Image.Image, back: Image.Image, roster_id: str) -> tuple[Ima
     def fit(subject: Image.Image) -> Image.Image:
         size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
         subject = subject.resize(size, Image.Resampling.LANCZOS)
-        canvas = Image.new("RGBA", (SPRITE_SIZE, SPRITE_SIZE), (0, 0, 0, 0))
-        canvas.alpha_composite(subject, ((SPRITE_SIZE - subject.width) // 2, SPRITE_SIZE - subject.height - 3))
-        return canvas
+        alpha = subject.getchannel("A").point(lambda value: 255 if value >= ALPHA_THRESHOLD else 0)
+
+        # Quantize the authored logical sprite, not the enlarged runtime copy.
+        # A dark matte protects outline colors while transparent pixels are
+        # restored immediately afterward.
+        rgb = Image.new("RGB", subject.size, (19, 20, 22))
+        rgb.paste(subject.convert("RGB"), (0, 0), alpha)
+        reduced = rgb.quantize(
+            colors=OPAQUE_COLORS,
+            method=Image.Quantize.MEDIANCUT,
+            dither=Image.Dither.NONE,
+        ).convert("RGBA")
+        reduced.putalpha(alpha)
+
+        logical = Image.new("RGBA", (LOGICAL_SPRITE_SIZE, LOGICAL_SPRITE_SIZE), (0, 0, 0, 0))
+        logical.alpha_composite(
+            reduced,
+            ((LOGICAL_SPRITE_SIZE - reduced.width) // 2, LOGICAL_SPRITE_SIZE - reduced.height - 2),
+        )
+        return logical.resize((SPRITE_SIZE, SPRITE_SIZE), Image.Resampling.NEAREST)
 
     return fit(front), fit(back)
 
@@ -110,8 +140,23 @@ def validate_sprite(path: Path) -> None:
     bbox = alpha.getbbox()
     if image.size != (SPRITE_SIZE, SPRITE_SIZE):
         raise RuntimeError(f"{path.name} is {image.size}; expected {SPRITE_SIZE}px square")
-    if not bbox or bbox[2] - bbox[0] < 42 or bbox[3] - bbox[1] < 72:
+    if not bbox or bbox[2] - bbox[0] < 36 or bbox[3] - bbox[1] < 64:
         raise RuntimeError(f"{path.name} has an invalid battle silhouette {bbox}")
+    if set(alpha.get_flattened_data()) - {0, 255}:
+        raise RuntimeError(f"{path.name} contains translucent anti-aliased pixels")
+    colors = {pixel[:3] for pixel in image.get_flattened_data() if pixel[3] == 255}
+    if len(colors) > OPAQUE_COLORS:
+        raise RuntimeError(f"{path.name} uses {len(colors)} opaque colors; maximum is {OPAQUE_COLORS}")
+    pixels = image.load()
+    for y in range(0, SPRITE_SIZE, RUNTIME_SCALE):
+        for x in range(0, SPRITE_SIZE, RUNTIME_SCALE):
+            block = {
+                pixels[x + dx, y + dy]
+                for dx in range(RUNTIME_SCALE)
+                for dy in range(RUNTIME_SCALE)
+            }
+            if len(block) != 1:
+                raise RuntimeError(f"{path.name} breaks the exact {RUNTIME_SCALE}x integer pixel grid at {x},{y}")
     corners = ((0, 0), (SPRITE_SIZE - 1, 0), (0, SPRITE_SIZE - 1), (SPRITE_SIZE - 1, SPRITE_SIZE - 1))
     if any(alpha.getpixel(point) for point in corners):
         raise RuntimeError(f"{path.name} touches a canvas corner")
@@ -123,11 +168,11 @@ def compile_board(source_name: str, roster_ids: tuple[str, ...]) -> int:
     if sheet.size != (1536, 1024):
         raise RuntimeError(f"Unexpected source size for {source.name}: {sheet.size}")
     for column, roster_id in enumerate(roster_ids):
-        front, back = fit_pair(
-            source_cell(sheet, len(roster_ids), column, 0),
-            source_cell(sheet, len(roster_ids), column, 1),
-            roster_id,
-        )
+        front_source = source_cell(sheet, len(roster_ids), column, 0)
+        back_source = source_cell(sheet, len(roster_ids), column, 1)
+        if roster_id in BACK_SOURCE_FLIP_IDS:
+            back_source = ImageOps.mirror(back_source)
+        front, back = fit_pair(front_source, back_source, roster_id)
         for image, suffix in ((front, ""), (back, "_back")):
             path = OUTPUT_DIR / f"battle_{roster_id}{suffix}_v3.png"
             image.save(path, optimize=True)
@@ -138,7 +183,10 @@ def compile_board(source_name: str, roster_ids: tuple[str, ...]) -> int:
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     count = sum(compile_board(source_name, roster_ids) for source_name, roster_ids in BOARDS)
-    print(f"Prepared {count} roster-specific battle sprites at {SPRITE_SIZE}px.")
+    print(
+        f"Prepared {count} roster-specific battle sprites at "
+        f"{LOGICAL_SPRITE_SIZE}px logical / {SPRITE_SIZE}px runtime."
+    )
 
 
 if __name__ == "__main__":

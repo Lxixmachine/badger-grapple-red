@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from PIL import Image, ImageFilter
+from PIL import Image
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -12,8 +12,13 @@ SPRITES = ROOT / "public" / "assets" / "sprites"
 ARENA_OUT = ROOT / "public" / "assets" / "ui" / "battle_arena_v2.png"
 
 ASSETS = ("badger", "neutral", "top", "scramble", "pace")
-SPRITE_SIZE = 144
-MAX_FILL = 136
+LOGICAL_SPRITE_SIZE = 64
+RUNTIME_SCALE = 2
+SPRITE_SIZE = LOGICAL_SPRITE_SIZE * RUNTIME_SCALE
+MAX_FILL = 59
+OPAQUE_COLORS = 15
+ALPHA_THRESHOLD = 96
+ARENA_LOGICAL_SIZE = (240, 119)
 ARENA_SIZE = (480, 238)
 
 
@@ -74,11 +79,20 @@ def fit_pair(front: Image.Image, back: Image.Image) -> tuple[Image.Image, Image.
     def fit(subject: Image.Image) -> Image.Image:
         size = (max(1, round(subject.width * scale)), max(1, round(subject.height * scale)))
         subject = subject.resize(size, Image.Resampling.LANCZOS)
-        canvas = Image.new("RGBA", (SPRITE_SIZE, SPRITE_SIZE), (0, 0, 0, 0))
-        x = (SPRITE_SIZE - subject.width) // 2
-        y = SPRITE_SIZE - subject.height - 3
-        canvas.alpha_composite(subject, (x, y))
-        return canvas
+        alpha = subject.getchannel("A").point(lambda value: 255 if value >= ALPHA_THRESHOLD else 0)
+        rgb = Image.new("RGB", subject.size, (19, 20, 22))
+        rgb.paste(subject.convert("RGB"), (0, 0), alpha)
+        reduced = rgb.quantize(
+            colors=OPAQUE_COLORS,
+            method=Image.Quantize.MEDIANCUT,
+            dither=Image.Dither.NONE,
+        ).convert("RGBA")
+        reduced.putalpha(alpha)
+        logical = Image.new("RGBA", (LOGICAL_SPRITE_SIZE, LOGICAL_SPRITE_SIZE), (0, 0, 0, 0))
+        x = (LOGICAL_SPRITE_SIZE - reduced.width) // 2
+        y = LOGICAL_SPRITE_SIZE - reduced.height - 2
+        logical.alpha_composite(reduced, (x, y))
+        return logical.resize((SPRITE_SIZE, SPRITE_SIZE), Image.Resampling.NEAREST)
 
     return fit(front), fit(back)
 
@@ -91,8 +105,10 @@ def validate_sprite(path: Path) -> None:
     if any(alpha.getpixel(point) for point in ((0, 0), (SPRITE_SIZE - 1, 0), (0, SPRITE_SIZE - 1), (SPRITE_SIZE - 1, SPRITE_SIZE - 1))):
         raise RuntimeError(f"{path.name} touches a canvas corner")
     bbox = alpha.getbbox()
-    if not bbox or bbox[3] < SPRITE_SIZE - 6 or bbox[1] > 18:
+    if not bbox or bbox[3] < SPRITE_SIZE - 10 or bbox[1] > 38:
         raise RuntimeError(f"{path.name} has an invalid battle silhouette {bbox}")
+    if set(alpha.get_flattened_data()) - {0, 255}:
+        raise RuntimeError(f"{path.name} contains translucent anti-aliased pixels")
 
 
 def build_sprites() -> None:
@@ -122,8 +138,13 @@ def build_arena() -> None:
         height = round(arena.width / target_ratio)
         top = (arena.height - height) // 2
         arena = arena.crop((0, top, arena.width, top + height))
-    arena = arena.resize(ARENA_SIZE, Image.Resampling.LANCZOS)
-    arena = arena.filter(ImageFilter.UnsharpMask(radius=0.65, percent=115, threshold=3))
+    arena = arena.resize(ARENA_LOGICAL_SIZE, Image.Resampling.LANCZOS)
+    arena = arena.quantize(
+        colors=32,
+        method=Image.Quantize.MEDIANCUT,
+        dither=Image.Dither.NONE,
+    ).convert("RGB")
+    arena = arena.resize(ARENA_SIZE, Image.Resampling.NEAREST)
     ARENA_OUT.parent.mkdir(parents=True, exist_ok=True)
     arena.save(ARENA_OUT, optimize=True)
 
@@ -131,7 +152,10 @@ def build_arena() -> None:
 def main() -> None:
     build_sprites()
     build_arena()
-    print(f"Prepared {len(ASSETS) * 2} battle sprites at {SPRITE_SIZE}px and {ARENA_OUT.name} at {ARENA_SIZE}.")
+    print(
+        f"Prepared {len(ASSETS) * 2} battle sprites at {LOGICAL_SPRITE_SIZE}px logical / "
+        f"{SPRITE_SIZE}px runtime and {ARENA_OUT.name} at {ARENA_SIZE}."
+    )
 
 
 if __name__ == "__main__":

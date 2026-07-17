@@ -68,13 +68,10 @@ export const PERSONAS={badger:'Badger',neutral:'Grizzly',top:'Gorilla',scramble:
 export function personaFor(id){return (ROSTER[id]||ROSTER.buckshot).spirit||'Badger';}
 export function battleAssetFor(id){return (ROSTER[id]||ROSTER.buckshot).battleAsset;}
 export function battleTextureFor(id,back=false){return `battle_${battleAssetFor(id)}${back?'_back':''}`;}
-// Imagegen kept these rear poses looking toward screen-left. The player owns
-// the lower-left battle position, so its back sprite must look screen-right.
-export const BATTLE_BACK_FLIP_IDS=Object.freeze([
-  'matreturner','matgeneral','rideking',
-  'fieldflyer','funkflyer','scramblesaint',
-  'whizzkid','scrambleboss'
-]);
+// Rear poses are normalized during asset compilation. Every committed back
+// sprite already looks from the lower-left toward the opponent, so runtime
+// identity-specific mirroring is forbidden.
+export const BATTLE_BACK_FLIP_IDS=Object.freeze([]);
 const BATTLE_BACK_FLIPS=new Set(BATTLE_BACK_FLIP_IDS);
 export function battleFlipXFor(id,back=false){return !!back&&BATTLE_BACK_FLIPS.has(battleAssetFor(id));}
 export const MAX_WRESTLER_NICKNAME_LENGTH=10;

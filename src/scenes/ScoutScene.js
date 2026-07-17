@@ -80,9 +80,9 @@ export class ScoutScene extends Phaser.Scene{
 
   drawProspect(r,s,odds){
     this.drawBox(12,40,296,96);
-    const shadow=this.add.ellipse(82,118,82,18,0x000000,.28);
+    const shadow=this.add.ellipse(82,130,82,18,0x000000,.28);
     shadow.setDepth(0);
-    this.add.image(82,98,battleTextureFor(r.id)).setScale(.82);
+    this.add.image(82,138,battleTextureFor(r.id)).setOrigin(.5,1).setScale(1);
     this.drawTag(28,46,r.rarity.toUpperCase(),this.styleColor(r.style));
     this.add.text(132,46,r.name,{fontFamily:FONT,fontSize:13,color:'#111',fontStyle:'bold'});
     this.add.text(132,63,`LV ${this.lvl}  ${r.style.toUpperCase()}`,{fontFamily:FONT,fontSize:10,color:'#333'});

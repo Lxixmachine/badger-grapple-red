@@ -95,14 +95,15 @@ export class NamingScene extends Phaser.Scene{
     this.drawFrame();this.panel(30,52,420,242);
     const subject=this.rename?wrestlerName(this.target):ROSTER[this.target.id].name;
     const question=this.rename?`Change ${subject}'s nickname?`:`Give a nickname to ${subject}?`;
-    this.add.text(240,67,question,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',align:'center',wordWrap:{width:380}}).setOrigin(.5,0);
-    this.add.image(240,198,battleTextureFor(this.target.id)).setOrigin(.5,1).setDisplaySize(100,100);
-    this.add.text(240,204,`${personaFor(this.target.id).toUpperCase()} WRESTLER`,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(.5,0);
-    this.add.line(0,0,52,230,428,230,0xc9bda4,.8).setOrigin(0);
+    this.add.image(116,214,battleTextureFor(this.target.id)).setOrigin(.5,1).setScale(1);
+    this.add.text(210,78,question,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',wordWrap:{width:205},lineSpacing:4});
+    this.add.text(210,161,`${personaFor(this.target.id).toUpperCase()} WRESTLER`,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'});
+    this.add.text(210,184,'Register this nickname?',{fontFamily:FONT,fontSize:13,color:'#555'});
+    this.add.line(0,0,52,224,428,224,0xc9bda4,.8).setOrigin(0);
     ['YES','NO'].forEach((label,index)=>{
       const x=160+index*160,selected=index===this.confirmSel,g=this.add.graphics();
-      if(selected){g.fillStyle(0x7b1d2a,.14);g.fillRoundedRect(x-62,239,124,39,4);g.lineStyle(2,0x7b1d2a,1);g.strokeRoundedRect(x-62,239,124,39,4);g.fillStyle(0x7b1d2a,1);g.fillTriangle(x-43,252,x-43,266,x-32,259);}
-      this.add.text(x+(selected?8:0),247,label,{fontFamily:FONT,fontSize:18,color:selected?'#7b1d2a':'#111',fontStyle:'bold'}).setOrigin(.5,0);
+      if(selected){g.fillStyle(0x7b1d2a,.14);g.fillRoundedRect(x-62,233,124,39,4);g.lineStyle(2,0x7b1d2a,1);g.strokeRoundedRect(x-62,233,124,39,4);g.fillStyle(0x7b1d2a,1);g.fillTriangle(x-43,246,x-43,260,x-32,253);}
+      this.add.text(x+(selected?8:0),241,label,{fontFamily:FONT,fontSize:18,color:selected?'#7b1d2a':'#111',fontStyle:'bold'}).setOrigin(.5,0);
     });
   }
   drawNaming(){

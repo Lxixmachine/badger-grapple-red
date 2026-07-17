@@ -204,7 +204,6 @@ export class BattleScene extends Phaser.Scene{
       this.drawBattle();
       this.setResolveText(announcement);
       const feedback=res.hit?[res.dmg>0?`Landed for ${res.dmg} Condition!`:`${attName} changed the position.`,...this.resultMessages(res.result,attName,wrestlerName(def,{short:true}))]:[`It slipped - no contact.`];
-      if(res.hit&&res.dmg>0){const target=defIsEnemy?this.enemySprite:this.playerSprite;if(target&&target.scene)this.tweens.add({targets:target,alpha:.15,yoyo:true,repeat:2,duration:65});}
       this.time.delayedCall(res.dmg>0?560:430,()=>this.playResolveSequence(feedback,()=>{
         if(this.over)return;
         if(def.hp<=0)return this.faintBeat(defIsEnemy,onKO);
@@ -219,45 +218,49 @@ export class BattleScene extends Phaser.Scene{
     const target=defIsEnemy?this.enemySprite:this.playerSprite;
     this.setBattlePhase('faint');this.setResolveText(`${name} is out!`);
     this.addLog([`${name} is out.`]);
-    if(target&&target.scene)this.tweens.add({targets:target,y:'+=28',alpha:0,duration:430,ease:'Quad.In'});
+    if(target&&target.scene)this.tweenSpritePixels(target,{y:'+=28',alpha:0,duration:430,ease:'Quad.In'});
     this.playSafe('lose');
     this.time.delayedCall(840,()=>{if(!this.over)onKO();});
   }
   playSafe(kind){try{if(sfx[kind])sfx[kind]();}catch{}}
   playTechniqueSound(style,phase){try{sfx.technique?.(style,phase);}catch{}}
+  tweenSpritePixels(sprite,config){
+    const onUpdate=config.onUpdate;
+    return this.tweens.add({...config,targets:sprite,onUpdate:(tween,target)=>{
+      target.x=Math.round(target.x);target.y=Math.round(target.y);target.setScale(1);target.setAngle(0);
+      if(onUpdate)onUpdate(tween,target);
+    }});
+  }
   techniqueColor(style){return {Shooter:0xfff2a4,Rider:0xb9a8ff,Scrambler:0xffb36b,Bull:0x8fe0a6,Wall:0xbdb6ff,Thrower:0x8fd0ff}[style]||0xfff2a4;}
   playTechniqueWindup(sprite,style,isPlayer){
     const direction=isPlayer?1:-1;
-    const motion={Shooter:[48,8,0,1.07,.91],Rider:[24,-5,0,1.03,.96],Scrambler:[34,-15,8,1.03,.96],Bull:[56,1,0,1.1,.94],Wall:[-12,0,0,1.05,1.02],Thrower:[31,-19,10,1.05,.94]}[style]||[34,0,0,1.05,.95];
+    const motion={Shooter:[48,8],Rider:[24,-5],Scrambler:[34,-15],Bull:[56,1],Wall:[-12,0],Thrower:[31,-19]}[style]||[34,0];
     this.playTechniqueSound(style,'windup');
     this.drawMotionTrail(sprite.x,sprite.y-58,sprite.x+motion[0]*direction,sprite.y-58+motion[1],style,.55);
-    this.tweens.add({targets:sprite,x:`+=${motion[0]*direction}`,y:`+=${motion[1]}`,angle:motion[2]*direction,scaleX:motion[3],scaleY:motion[4],duration:210,yoyo:true,ease:style==='Bull'?'Expo.In':'Cubic.InOut'});
+    this.tweenSpritePixels(sprite,{x:`+=${motion[0]*direction}`,y:`+=${motion[1]}`,duration:210,yoyo:true,ease:style==='Bull'?'Expo.In':'Cubic.InOut'});
   }
   playTechniqueImpact(attacker,target,style){
     const playerAttacks=attacker===this.playerSprite,direction=playerAttacks?1:-1;
     const force={Shooter:[28,16,.008],Rider:[18,10,.007],Scrambler:[31,14,.006],Bull:[40,25,.013],Wall:[12,9,.005],Thrower:[27,22,.011]}[style]||[24,14,.008];
     this.drawMotionTrail(attacker.x,attacker.y-58,target.x,target.y-70,style,.82);
     this.drawImpactBurst(target.x,target.y-70,style);
-    this.tweens.add({targets:attacker,x:`+=${force[0]*direction}`,y:style==='Thrower'?'-=13':style==='Scrambler'?'-=8':'+=0',angle:(style==='Scrambler'||style==='Thrower')?7*direction:0,duration:75,yoyo:true,hold:70,ease:'Cubic.Out'});
+    this.tweenSpritePixels(attacker,{x:`+=${force[0]*direction}`,y:style==='Thrower'?'-=13':style==='Scrambler'?'-=8':'+=0',duration:75,yoyo:true,hold:70,ease:'Cubic.Out'});
     target.setTintFill(0xfff7da);
-    this.cameras.main.shake(150,force[2]);
-    this.cameras.main.zoomTo(1.025,65,'Sine.easeOut');
+    this.cameras.main.flash(70,255,247,218,false);
     this.time.delayedCall(72,()=>{
-      if(target.scene){target.clearTint();this.tweens.add({targets:target,x:`+=${force[1]*direction}`,alpha:.26,angle:style==='Thrower'?8*direction:0,duration:72,yoyo:true,repeat:1,ease:'Quad.Out'});}
-      this.cameras.main.zoomTo(1,120,'Sine.easeInOut');
+      if(target.scene){target.clearTint();this.tweenSpritePixels(target,{x:`+=${force[1]*direction}`,alpha:.48,duration:72,yoyo:true,repeat:1,ease:'Quad.Out'});}
     });
   }
   playTechniqueSetup(sprite,style){
     this.personaFlash(sprite);
     this.drawImpactBurst(sprite.x,sprite.y-70,style);
-    const angle=style==='Scrambler'?7:0;
-    this.tweens.add({targets:sprite,scaleX:1.08,scaleY:1.08,angle,yoyo:true,duration:180,ease:'Back.Out'});
+    this.tweenSpritePixels(sprite,{y:'-=6',yoyo:true,duration:180,ease:'Back.Out'});
   }
   playTechniqueMiss(attacker,style){
     const direction=attacker===this.playerSprite?1:-1;
     this.drawMotionTrail(attacker.x,attacker.y-58,attacker.x+66*direction,attacker.y-68,style,.38);
     this.drawMissWhiff(240,126);
-    this.tweens.add({targets:attacker,x:`+=${44*direction}`,y:'-=8',alpha:.52,duration:100,yoyo:true,ease:'Cubic.Out'});
+    this.tweenSpritePixels(attacker,{x:`+=${44*direction}`,y:'-=8',alpha:.52,duration:100,yoyo:true,ease:'Cubic.Out'});
   }
   drawMotionTrail(x1,y1,x2,y2,style,alpha=.7){
     const color=this.techniqueColor(style),g=this.add.graphics().setDepth(65);
@@ -302,7 +305,7 @@ export class BattleScene extends Phaser.Scene{
         this.mode='resolving';this.drawBattle();
         this.setResolveText(`${this.trainerName||'Opponent'} sends out ${wrestlerName(next)} - ${personaFor(next.id)} form!`);
         this.addLog([`${this.trainerName||'Opponent'} sends out ${wrestlerName(next)}!`]);
-        if(this.enemySprite&&this.enemySprite.scene){this.enemySprite.x=GAME_W+80;this.enemySprite.setAlpha(1);this.tweens.add({targets:this.enemySprite,x:ENEMY_POS.x,duration:520,ease:'Cubic.Out'});this.personaFlash(this.enemySprite,520);}
+        if(this.enemySprite&&this.enemySprite.scene){this.enemySprite.x=GAME_W+80;this.enemySprite.setAlpha(1);this.tweenSpritePixels(this.enemySprite,{x:ENEMY_POS.x,duration:520,ease:'Cubic.Out'});this.personaFlash(this.enemySprite,520);}
         this.time.delayedCall(1180,()=>{if(this.over)return;this.inputLocked=false;this.mode='command';this.sel=0;saveState(this.state);this.drawBattle();});
         return;
       }
@@ -413,12 +416,12 @@ export class BattleScene extends Phaser.Scene{
     this.drawBattleBases();
     const eX=ENEMY_POS.x,eY=ENEMY_POS.y,pX=PLAYER_POS.x,pY=PLAYER_POS.y;
     const eStart=this.firstBattleDraw?GAME_W+90:eX,pStart=this.firstBattleDraw?-90:pX;
-    const eimg=this.add.image(eStart,eY,battleTextureFor(er.id)).setOrigin(.5,1).setFlipX(battleFlipXFor(er.id,false));
-    const pimg=this.add.image(pStart,pY,battleTextureFor(lr.id,true)).setOrigin(.5,1).setFlipX(battleFlipXFor(lr.id,true));
+    const eimg=this.add.image(eStart,eY,battleTextureFor(er.id)).setOrigin(.5,1).setScale(1).setFlipX(battleFlipXFor(er.id,false));
+    const pimg=this.add.image(pStart,pY,battleTextureFor(lr.id,true)).setOrigin(.5,1).setScale(1).setFlipX(battleFlipXFor(lr.id,true));
     this.enemySprite=eimg;this.playerSprite=pimg;
     if(this.firstBattleDraw){
-      this.tweens.add({targets:eimg,x:eX,duration:540,ease:'Cubic.Out',delay:90});
-      this.tweens.add({targets:pimg,x:pX,duration:540,ease:'Cubic.Out',delay:240});
+      this.tweenSpritePixels(eimg,{x:eX,duration:540,ease:'Cubic.Out',delay:90});
+      this.tweenSpritePixels(pimg,{x:pX,duration:540,ease:'Cubic.Out',delay:240});
       this.personaFlash(eimg,650);this.personaFlash(pimg,780);
     }
     if(this.attackAnim==='enemy')this.playTechniqueImpact(pimg,eimg,this.moveStyle);
@@ -554,11 +557,11 @@ export class BattleScene extends Phaser.Scene{
     let pulses=0;
     const pulse=()=>{if(this.transitioning||!img.scene)return;img.setTintFill(0xfff3d0);this.time.delayedCall(150,()=>{if(img.scene)img.clearTint();});pulses++;if(pulses<4)this.time.delayedCall(380,pulse);};
     pulse();
-    this.tweens.add({targets:img,scale:1.12,yoyo:true,repeat:3,duration:360,ease:'Sine.InOut'});
+    this.tweenSpritePixels(img,{y:'-=6',yoyo:true,repeat:3,duration:360,ease:'Sine.InOut'});
     this.time.delayedCall(1750,()=>{
       if(this.transitioning||!txt.scene)return;
       this.playSafe('badge');this.cameras.main.flash(170,255,243,208);
-      this.tweens.add({targets:img,scale:1.08,duration:260,ease:'Back.Out'});
+      this.tweenSpritePixels(img,{y:'-=4',yoyo:true,duration:260,ease:'Back.Out'});
       this.typeText(txt,`${wrestlerName(pr.after)} developed into ${newR.name}! The ${personaFor(pr.after.id)} spirit grows stronger!`);
     });
   }
@@ -566,7 +569,7 @@ export class BattleScene extends Phaser.Scene{
   drawAnimatedMeter(x,y,w,h,start,end,color){const g=this.add.graphics();const value={p:Phaser.Math.Clamp(start??end,0,1)};const draw=()=>{const p=Phaser.Math.Clamp(value.p,0,1);g.clear();g.fillStyle(0x111111,1);g.fillRoundedRect(x-1,y-1,w+2,h+2,1);g.fillStyle(0x3d3d3d,1);g.fillRect(x,y,w,h);g.fillStyle(p<.22?0xd84c35:p<.5?0xd6b545:color,1);g.fillRect(x,y,Math.max(1,w*p),h);g.fillStyle(0xffffff,.3);g.fillRect(x,y,Math.max(1,w*p),1);g.lineStyle(1,0x080808,1);g.strokeRect(x-1,y-1,w+2,h+2);};draw();if(start!==undefined&&Math.abs(start-end)>.01){this.tweens.add({targets:value,p:Phaser.Math.Clamp(end,0,1),duration:520,ease:'Sine.Out',onUpdate:draw,onComplete:()=>{this.prevMeters=null;}});}return g;}
   drawTextBox(x,y,w,h){const g=this.add.graphics();g.fillStyle(0x000000,.42);g.fillRoundedRect(x+4,y+4,w,h,5);g.fillStyle(0xfff7df,1);g.fillRoundedRect(x,y,w,h,5);g.lineStyle(3,0x17151a,1);g.strokeRoundedRect(x,y,w,h,5);g.lineStyle(2,0xffffff,.75);g.strokeRoundedRect(x+3,y+3,w-6,h-6,4);g.lineStyle(1,0x9d8258,1);g.strokeRoundedRect(x+6,y+6,w-12,h-12,3);return g;}
   drawCommandBox(x,y,w,h){const g=this.drawTextBox(x,y,w,h);g.fillStyle(0x7b1d2a,1);g.fillRect(x+8,y+6,w-16,2);g.lineStyle(1,0xd6a336,.9);g.strokeRoundedRect(x+8,y+9,w-16,h-17,3);return g;}
-  drawArenaBackdrop(){this.add.image(0,0,'battle_arena').setOrigin(0).setDisplaySize(GAME_W,ARENA_H);const g=this.add.graphics();g.fillStyle(0x08080a,.16);g.fillRect(0,0,GAME_W,ARENA_H);g.fillStyle(0x0a090b,1);g.fillRect(0,ARENA_H,GAME_W,GAME_H-ARENA_H);g.lineStyle(3,0x7b1d2a,1);g.lineBetween(0,ARENA_H-2,GAME_W,ARENA_H-2);g.lineStyle(1,0xd6a336,.9);g.lineBetween(0,ARENA_H+1,GAME_W,ARENA_H+1);}
+  drawArenaBackdrop(){this.add.image(0,0,'battle_arena').setOrigin(0);const g=this.add.graphics();g.fillStyle(0x08080a,.16);g.fillRect(0,0,GAME_W,ARENA_H);g.fillStyle(0x0a090b,1);g.fillRect(0,ARENA_H,GAME_W,GAME_H-ARENA_H);g.lineStyle(3,0x7b1d2a,1);g.lineBetween(0,ARENA_H-2,GAME_W,ARENA_H-2);g.lineStyle(1,0xd6a336,.9);g.lineBetween(0,ARENA_H+1,GAME_W,ARENA_H+1);}
   playBattleIntro(){
     this.inputLocked=true;this.mode='resolving';this.sel=0;this.firstBattleDraw=true;this.drawBattle();
     this.setResolveText(this.log[0]||'');
