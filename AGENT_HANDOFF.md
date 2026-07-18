@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.41 Technique Choreography)
+
+The complete 27-technique catalog now has declarative, move-specific battle
+choreography in `src/data/battleAnimations.js`. Each entry owns its motion,
+effect, integer windup and impact values, effect height, timing, and multi-hit
+cadence. The battle scene no longer collapses Single Leg, Sprawl, Headlock
+Toss, Flurry, and the rest into one of six broad style flashes.
+
+The renderer composes original pixel-safe line, ring, arrow, clamp, shield,
+spiral, cage, pressure, and finish primitives at native 480x320 resolution.
+Actors remain scale 1 with rounded coordinates. Setup moves animate the user;
+contact moves animate the opponent; misses preserve their move trajectory; and
+Tilt Series or Flurry replay the actual resolved hit count with staggered
+impact and sound cues. Low attacks place their effect at the opponent's feet
+instead of reusing a torso impact point.
+
+`techniqueAnimation` and bounded `techniqueAnimationHistory` are available in
+test state. `tests/battle-choreography.spec.js` verifies representative visual
+identities, multi-hit cadence, camera zoom, scale, and integer positions.
+`tools/capture_battle_choreography.mjs` produces phone review captures through
+`npm run review:battle-motion`. The complete battle UI suite passes 21/21 and
+the choreography/mechanics slice passes 27/27. The full serial suite passed
+130 tests; its sole `ERR_NO_BUFFER_SPACE` navigation failure passed immediately
+when rerun after closing extra preview servers, establishing effective 131/131
+coverage. Tony's dirty State Street composition files remain protected and
+must not be rebuilt, staged, reverted, or overwritten during integration.
+
 ## Latest Codex Turn (v22.39 Battle Ceremony)
 
 The opening Rex wrestle-off is now the golden battle-presentation slice. The

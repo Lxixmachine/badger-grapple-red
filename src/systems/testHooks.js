@@ -27,6 +27,8 @@ export function installTestHooks(game, routeVirtualButton) {
       mode: scene.mode ?? null,
       battlePhase: scene.battlePhase ?? null,
       battlePhaseHistory: [...(scene.battlePhaseHistory || [])],
+      techniqueAnimation: scene.techniqueAnimation ? {...scene.techniqueAnimation} : null,
+      techniqueAnimationHistory: (scene.techniqueAnimationHistory || []).map(cue => ({...cue})),
       introStage: scene.introStage ?? null,
       postBattleStage: scene.postBattleStage ?? null,
       inputLocked: scene.inputLocked ?? null,

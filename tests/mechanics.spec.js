@@ -1,6 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
+import {BATTLE_CHOREOGRAPHY,battleChoreographyFor,choreographySignature} from '../src/data/battleAnimations.js';
 import {BATTLE_BACK_FLIP_IDS,ROSTER,addXp,allMovesSpent,battleAssetFor,battleFlipXFor,battleTextureFor,counterStarterFor,currentMoveStamina,makeMon,normalizeWrestlerNickname,personaFor,restoreMoveStamina,scaledStats,setWrestlerNickname,wrestlerName,xpNeed} from '../src/data/roster.js';
 import {calculateStat,effortTotal,MAX_TOTAL_EFFORT,potentialFor,STAT_KEYS} from '../src/data/stats.js';
 import {defaultState,defeatedWrestlerCount,normalizeState,rosterBookComplete} from '../src/systems/save.js';
@@ -32,6 +33,28 @@ import {LAYERED_MAPS} from '../src/data/layeredMaps.js';
 
 function mon(id,lvl=10){const result=makeMon(id,lvl);result.ivs=Object.fromEntries(STAT_KEYS.map(key=>[key,15]));result.effort=Object.fromEntries(STAT_KEYS.map(key=>[key,0]));result.nature=0;return restoreWrestler(result);}
 function setMoves(wrestler,moves){wrestler.moves=[...moves];restoreMoveStamina(wrestler);return wrestler;}
+
+test('every technique owns distinct, pixel-safe battle choreography',()=>{
+  expect(Object.keys(BATTLE_CHOREOGRAPHY).sort()).toEqual(Object.keys(MOVES).sort());
+  const validStages=entry=>{
+    expect(entry.motion).toMatch(/^[a-z][a-z-]+$/);
+    expect(entry.effect).toMatch(/^[a-z][a-z-]+$/);
+    expect(Number.isInteger(entry.windup.dx)).toBe(true);
+    expect(Number.isInteger(entry.windup.dy)).toBe(true);
+    expect(Number.isInteger(entry.windup.duration)).toBe(true);
+    Object.values(entry.impact).forEach(value=>expect(Number.isInteger(value)).toBe(true));
+    expect(entry.tempo.feedback).toBeGreaterThanOrEqual(500);
+  };
+  Object.values(BATTLE_CHOREOGRAPHY).forEach(validStages);
+  expect(new Set(Object.values(BATTLE_CHOREOGRAPHY).map(choreographySignature)).size).toBe(Object.keys(MOVES).length);
+  expect(battleChoreographyFor('single').effect).toBe('low-sweep');
+  expect(battleChoreographyFor('sprawl').effect).toBe('sprawl-shield');
+  expect(battleChoreographyFor('headlock').effect).toBe('headlock-arc');
+  expect(battleChoreographyFor('flurry').effect).toBe('flurry-streaks');
+  for(const [key,definition] of Object.entries(MOVES)){
+    if(definition.hits)expect(BATTLE_CHOREOGRAPHY[key].tempo.hitStagger).toBeGreaterThan(0);
+  }
+});
 
 test('six-style chart preserves the starter triangle and two advantages per style',()=>{
   for(const strengths of Object.values(ADV))expect(strengths).toHaveLength(2);

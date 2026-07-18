@@ -1,4 +1,4 @@
-import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,restoreTechniqueStamina,turnOrder,useFilmStudy} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
+import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,restoreTechniqueStamina,turnOrder,useFilmStudy} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
 const Phaser = window.Phaser;
 const GAME_W=480,GAME_H=320,ARENA_H=238,BOTTOM_Y=238;
 const ENEMY_POS={x:370,y:158},PLAYER_POS={x:112,y:233};
@@ -23,7 +23,7 @@ export class BattleScene extends Phaser.Scene{
     this.winMsg=data.winMsg||null;
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.battlePhase='intro';this.battlePhaseHistory=['intro'];this.introStage='transition';this.postBattleStage='';this.over=false;this.recruit=false;this.forcedSwap=false;this.preOpponentSwitch=false;this.pendingOpponentIndex=null;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;this.pendingNickname=null;
-    this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.attackSide=null;this.moveStyle='';this.moveCategory='';this.lastChooseAt=0;this.inputLocked=true;
+    this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.attackSide=null;this.moveKey='';this.moveHitCount=1;this.techniqueAnimation=null;this.techniqueAnimationHistory=[];this.lastChooseAt=0;this.inputLocked=true;
     this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();this.rewardEvent=null;this.rewardHistory=[];this.rewardViewLevel=null;this.rewardViewProgress=0;this.rewardViewHp=0;this.rewardText='';this.levelSummary=null;this.developmentEvent=null;this.finalizingBattle=false;
     const openLine=this.type==='opening'
       ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
@@ -203,7 +203,7 @@ export class BattleScene extends Phaser.Scene{
   }
   enemyOnlyStrike(){
     const l=lead(this.state),e=this.enemy();
-    this.inputLocked=true;this.mode='resolving';this.impact='';this.attackAnim=null;this.attackSide=null;this.moveStyle='';this.moveCategory='';this.prevMeters=null;this.drawBattle();
+    this.inputLocked=true;this.mode='resolving';this.impact='';this.attackAnim=null;this.attackSide=null;this.prevMeters=null;this.drawBattle();
     const ek=chooseAiMove(e,l,{wild:this.type==='wild',attackerState:this.combatState(e),defenderState:this.combatState(l)});
     this.attackBeat({att:e,def:l,key:ek,attName:wrestlerName(e,{short:true}),defIsEnemy:false,
       onKO:()=>{this.clearBattleTurn();this.inputLocked=false;this.playerDown();},
@@ -256,13 +256,14 @@ export class BattleScene extends Phaser.Scene{
     }
     const actualKey=key!=='desperation'&&currentMoveStamina(att,key)<=0&&allMovesSpent(att)?'desperation':(key||'stall');
     const mv=MOVES[actualKey]||MOVES.stall;
+    const choreography=battleChoreographyFor(actualKey);
     const announcement=actualKey!==key?`${attName} has no Stamina - DESPERATION SHOT!`:`${attName} used ${mv.name.toUpperCase()}!`;
     this.setBattlePhase('announce');this.setResolveText(announcement);
     const attacker=defIsEnemy?this.playerSprite:this.enemySprite;
     this.playSafe('talk');
-    const announceDuration=Phaser.Math.Clamp(announcement.length*18+390,820,1080);
-    this.time.delayedCall(Math.max(280,announceDuration-500),()=>{
-      if(attacker&&attacker.scene)this.playTechniqueWindup(attacker,mv.style,defIsEnemy);
+    const announceDuration=Phaser.Math.Clamp(announcement.length*18+choreography.tempo.announceBase,choreography.tempo.announceMin,choreography.tempo.announceMax);
+    this.time.delayedCall(Math.max(280,announceDuration-choreography.tempo.windupLead),()=>{
+      if(attacker&&attacker.scene)this.playTechniqueWindup(attacker,actualKey,defIsEnemy);
     });
     this.time.delayedCall(announceDuration,()=>{
       if(this.over)return;
@@ -271,8 +272,8 @@ export class BattleScene extends Phaser.Scene{
       const res=this.resolve(att,def,actualKey,attName);
       this.setBattlePhase('impact');
       this.prevMeters=defIsEnemy?this.captureMeters(l.hp,beforeDefHp):this.captureMeters(beforeDefHp,this.enemy().hp);
-      this.moveStyle=res.result.move.style;
-      this.moveCategory=res.result.move.category;
+      this.moveKey=res.result.key||actualKey;
+      this.moveHitCount=Math.max(1,res.result.hits||1);
       this.attackSide=defIsEnemy?'player':'enemy';
       this.impact=res.hit?(res.dmg>0?`-${res.dmg}`:'SET'):'MISS';
       this.attackAnim=res.hit?(res.dmg>0?(defIsEnemy?'enemy':'player'):(defIsEnemy?'playerSetup':'enemySetup')):'miss';
@@ -280,7 +281,8 @@ export class BattleScene extends Phaser.Scene{
       this.drawBattle();
       this.setResolveText(announcement);
       const feedback=res.hit?[res.dmg>0?`Landed for ${res.dmg} Condition!`:`${attName} changed the position.`,...this.resultMessages(res.result,attName,wrestlerName(def,{short:true}))]:[`It slipped - no contact.`];
-      this.time.delayedCall(res.dmg>0?560:430,()=>this.playResolveSequence(feedback,()=>{
+      const animationTime=res.dmg>0?Math.max(choreography.tempo.feedback,(this.moveHitCount-1)*choreography.tempo.hitStagger+360):Math.min(choreography.tempo.feedback,520);
+      this.time.delayedCall(animationTime,()=>this.playResolveSequence(feedback,()=>{
         if(this.over)return;
         if(def.hp<=0)return this.faintBeat(defIsEnemy,onKO);
         if(att.hp<=0)return this.faintBeat(!defIsEnemy,()=>defIsEnemy?this.playerDown():this.enemyDown());
@@ -308,35 +310,52 @@ export class BattleScene extends Phaser.Scene{
     }});
   }
   techniqueColor(style){return {Shooter:0xfff2a4,Rider:0xb9a8ff,Scrambler:0xffb36b,Bull:0x8fe0a6,Wall:0xbdb6ff,Thrower:0x8fd0ff}[style]||0xfff2a4;}
-  playTechniqueWindup(sprite,style,isPlayer){
-    const direction=isPlayer?1:-1;
-    const motion={Shooter:[48,8],Rider:[24,-5],Scrambler:[34,-15],Bull:[56,1],Wall:[-12,0],Thrower:[31,-19]}[style]||[34,0];
-    this.playTechniqueSound(style,'windup');
-    this.drawMotionTrail(sprite.x,sprite.y-58,sprite.x+motion[0]*direction,sprite.y-58+motion[1],style,.55);
-    this.tweenSpritePixels(sprite,{x:`+=${motion[0]*direction}`,y:`+=${motion[1]}`,duration:210,yoyo:true,ease:style==='Bull'?'Expo.In':'Cubic.InOut'});
+  recordTechniqueAnimation(moveKey,stage,detail={}){
+    const choreography=battleChoreographyFor(moveKey);
+    const cue={moveKey,stage,motion:choreography.motion,effect:choreography.effect,hitCount:detail.hitCount||1,side:detail.side||this.attackSide||null};
+    this.techniqueAnimation=cue;this.techniqueAnimationHistory.push(cue);
+    if(this.techniqueAnimationHistory.length>32)this.techniqueAnimationHistory.shift();
   }
-  playTechniqueImpact(attacker,target,style){
-    const playerAttacks=attacker===this.playerSprite,direction=playerAttacks?1:-1;
-    const force={Shooter:[28,16,.008],Rider:[18,10,.007],Scrambler:[31,14,.006],Bull:[40,25,.013],Wall:[12,9,.005],Thrower:[27,22,.011]}[style]||[24,14,.008];
-    this.drawMotionTrail(attacker.x,attacker.y-58,target.x,target.y-70,style,.82);
-    this.drawImpactBurst(target.x,target.y-70,style);
-    this.tweenSpritePixels(attacker,{x:`+=${force[0]*direction}`,y:style==='Thrower'?'-=13':style==='Scrambler'?'-=8':'+=0',duration:75,yoyo:true,hold:70,ease:'Cubic.Out'});
-    target.setTintFill(0xfff7da);
-    this.cameras.main.flash(70,255,247,218,false);
-    this.time.delayedCall(72,()=>{
-      if(target.scene){target.clearTint();this.tweenSpritePixels(target,{x:`+=${force[1]*direction}`,alpha:.48,duration:72,yoyo:true,repeat:1,ease:'Quad.Out'});}
-    });
+  playTechniqueWindup(sprite,moveKey,isPlayer){
+    const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,direction=isPlayer?1:-1,w=choreography.windup;
+    this.recordTechniqueAnimation(moveKey,'windup',{side:isPlayer?'player':'enemy'});
+    this.playTechniqueSound(mv.style,'windup');
+    this.drawMotionTrail(sprite.x,sprite.y-58,sprite.x+w.dx*direction,sprite.y-58+w.dy,mv.style,.55);
+    this.drawWindupGlyph(sprite.x,sprite.y-66,choreography.motion,mv.style,direction);
+    this.tweenSpritePixels(sprite,{x:`+=${w.dx*direction}`,y:`+=${w.dy}`,duration:w.duration,yoyo:true,ease:['power-rush','deep-charge','last-charge'].includes(choreography.motion)?'Expo.In':'Cubic.InOut'});
   }
-  playTechniqueSetup(sprite,style){
+  playTechniqueImpact(attacker,target,moveKey,hitCount=1){
+    const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,playerAttacks=attacker===this.playerSprite,direction=playerAttacks?1:-1,force=choreography.impact;
+    const hits=Math.max(1,hitCount),stagger=choreography.tempo.hitStagger||0;
+    this.recordTechniqueAnimation(moveKey,'impact',{hitCount:hits,side:playerAttacks?'player':'enemy'});
+    this.drawMotionTrail(attacker.x,attacker.y-58,target.x,target.y+force.effectY,mv.style,.8);
+    this.tweenSpritePixels(attacker,{x:`+=${force.lunge*direction}`,y:`+=${force.lift}`,duration:78,yoyo:true,hold:Math.max(60,(hits-1)*stagger),ease:'Cubic.Out'});
+    for(let index=0;index<hits;index++){
+      this.time.delayedCall(index*stagger,()=>{
+        if(!target.scene)return;
+        if(index>0){this.playSafe('hit');this.playTechniqueSound(mv.style,'impact');}
+        this.drawTechniqueEffect(target.x,target.y+force.effectY,moveKey,direction,index);
+        target.setTintFill(index%2?0xffd86b:0xfff7da);
+        if(index===0&&force.flash)this.cameras.main.flash(force.flash,255,247,218,false);
+        this.time.delayedCall(64,()=>{if(target.scene)target.clearTint();});
+        const knock=Math.max(2,force.knockback-(index*2)),vertical=index%2?Math.sign(force.targetLift||-1)*-3:force.targetLift;
+        this.tweenSpritePixels(target,{x:`+=${knock*direction}`,y:`+=${vertical}`,duration:64,yoyo:true,repeat:Math.max(0,force.shake-1),ease:'Quad.Out'});
+      });
+    }
+  }
+  playTechniqueSetup(sprite,moveKey){
+    const choreography=battleChoreographyFor(moveKey),direction=sprite===this.playerSprite?1:-1;
+    this.recordTechniqueAnimation(moveKey,'setup',{side:sprite===this.playerSprite?'player':'enemy'});
     this.personaFlash(sprite);
-    this.drawImpactBurst(sprite.x,sprite.y-70,style);
-    this.tweenSpritePixels(sprite,{y:'-=6',yoyo:true,duration:180,ease:'Back.Out'});
+    this.drawTechniqueEffect(sprite.x,sprite.y+choreography.impact.effectY,moveKey,direction,0);
+    this.tweenSpritePixels(sprite,{x:`+=${choreography.impact.lunge*direction}`,y:`+=${choreography.impact.lift||-6}`,yoyo:true,duration:190,ease:'Back.Out'});
   }
-  playTechniqueMiss(attacker,style){
-    const direction=attacker===this.playerSprite?1:-1;
-    this.drawMotionTrail(attacker.x,attacker.y-58,attacker.x+66*direction,attacker.y-68,style,.38);
-    this.drawMissWhiff(240,126);
-    this.tweenSpritePixels(attacker,{x:`+=${44*direction}`,y:'-=8',alpha:.52,duration:100,yoyo:true,ease:'Cubic.Out'});
+  playTechniqueMiss(attacker,moveKey){
+    const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,direction=attacker===this.playerSprite?1:-1,target=attacker===this.playerSprite?this.enemySprite:this.playerSprite;
+    this.recordTechniqueAnimation(moveKey,'miss',{side:attacker===this.playerSprite?'player':'enemy'});
+    this.drawMotionTrail(attacker.x,attacker.y-58,target?.x||240,(target?.y||194)-74,mv.style,.38);
+    this.drawMissWhiff((target?.x||240)+22*direction,(target?.y||194)-72);
+    this.tweenSpritePixels(attacker,{x:`+=${Math.max(30,choreography.windup.dx)*direction}`,y:`+=${Math.min(-4,choreography.windup.dy)}`,alpha:.52,duration:100,yoyo:true,ease:'Cubic.Out'});
   }
   drawMotionTrail(x1,y1,x2,y2,style,alpha=.7){
     const color=this.techniqueColor(style),g=this.add.graphics().setDepth(65);
@@ -345,7 +364,84 @@ export class BattleScene extends Phaser.Scene{
     if(style==='Scrambler'){g.lineStyle(2,color,alpha*.7);g.beginPath();g.arc((x1+x2)/2,(y1+y2)/2,24,.1,5.4,false);g.strokePath();}
     this.tweens.add({targets:g,alpha:0,duration:300,ease:'Cubic.Out',onComplete:()=>g.destroy()});
   }
-  personaFlash(sprite,delay=0){if(!sprite)return;this.time.delayedCall(delay,()=>{if(!sprite.scene)return;sprite.setTintFill(0xfff3d0);this.time.delayedCall(150,()=>{if(sprite.scene)sprite.clearTint();});});}
+  drawWindupGlyph(x,y,motion,style,direction){
+    const c=this.techniqueColor(style),g=this.add.graphics().setDepth(66),rush=/rush|charge|pressure|surge/.test(motion),turn=/turn|roll|scramble|wheel|direction|circle/.test(motion),brace=/brace|close|fold/.test(motion);
+    g.lineStyle(3,c,.75);
+    if(rush){for(let i=0;i<3;i++){const px=x-(18+i*11)*direction;g.lineBetween(px,y-10,px+9*direction,y);g.lineBetween(px+9*direction,y,px,y+10);}}
+    else if(turn){g.beginPath();g.arc(x,y,23,.35,5.45,false);g.strokePath();g.fillStyle(0xffffff,.8);g.fillTriangle(x+21*direction,y-7,x+29*direction,y,x+18*direction,y+4);}
+    else if(brace){g.strokeRoundedRect(x-25,y-20,50,40,8);g.lineStyle(2,0xffffff,.7);g.lineBetween(x-17,y,x+17,y);}
+    else{g.lineBetween(x,y+18,x,y-22);g.fillStyle(0xffffff,.8);g.fillTriangle(x,y-28,x-7,y-17,x+7,y-17);}
+    this.tweens.add({targets:g,alpha:0,duration:330,ease:'Cubic.Out',onComplete:()=>g.destroy()});
+  }
+  drawTechniqueEffect(x,y,moveKey,direction=1,hitIndex=0){
+    const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,c=this.techniqueColor(mv.style),g=this.add.graphics().setDepth(70),effect=choreography.effect;
+    const X=offset=>Math.round(x+offset*direction),Y=offset=>Math.round(y+offset);
+    const line=(x1,y1,x2,y2,width=3,color=c,alpha=.95)=>{g.lineStyle(width,color,alpha);g.lineBetween(X(x1),Y(y1),X(x2),Y(y2));};
+    const ellipse=(cx,cy,w,h,width=3,color=c,alpha=.9)=>{g.lineStyle(width,color,alpha);g.strokeEllipse(X(cx),Y(cy),w,h);};
+    const arc=(cx,cy,r,start,end,width=3,color=c,alpha=.9)=>{g.lineStyle(width,color,alpha);g.beginPath();g.arc(X(cx),Y(cy),r,direction>0?start:Math.PI-end,direction>0?end:Math.PI-start,direction<0);g.strokePath();};
+    const arrow=(x1,y1,x2,y2,width=3,color=c)=>{line(x1,y1,x2,y2,width,color);const a=Math.atan2(y2-y1,(x2-x1)*direction),hx=X(x2),hy=Y(y2),s=9;g.fillStyle(color,.95);g.fillTriangle(hx,hy,Math.round(hx-Math.cos(a-.55)*s),Math.round(hy-Math.sin(a-.55)*s),Math.round(hx-Math.cos(a+.55)*s),Math.round(hy-Math.sin(a+.55)*s));};
+    g.fillStyle(c,.16);g.fillCircle(Math.round(x),Math.round(y),mv.category==='strength'?34:27);
+    switch(effect){
+      case 'low-sweep':
+        arc(-5,13,39,3.35,6.05,5,0x8a1720,1);arc(-5,13,31,3.35,6.05,3,0xffffff,1);line(-41,20,39,20,3,c,1);arrow(-34,1,27,13,4,0xffffff);break;
+      case 'rising-lift':
+        arrow(-18,25,8,-31,4);ellipse(9,-17,38,18,3,0xffffff,.8);line(-28,19,-4,19,3);break;
+      case 'ankle-rings':
+        ellipse(0,25,68,16,4);ellipse(0,22,45,10,2,0xffffff,.85);arrow(-31,3,-12,21,3);break;
+      case 'double-burst':
+        for(let i=-2;i<=2;i++)arrow(-48,i*9,34,i*5,i===0?5:2,i%2?0xffffff:c);break;
+      case 'blast-wave':
+        ellipse(0,2,82,56,5);ellipse(0,2,52,34,3,0xffffff,.88);for(let i=-2;i<=2;i++)line(-56,i*13,56,i*13,2,i%2?0xffffff:c,.8);break;
+      case 'snap-chop':
+        arrow(-22,-35,0,19,5);arrow(20,-29,4,22,3,0xffffff);line(-31,24,31,24,3);break;
+      case 'throwby-cross':
+        arrow(-44,-18,37,14,4);arrow(31,-28,-25,25,3,0xffffff);ellipse(4,8,52,20,2);break;
+      case 'body-clamp':
+        line(-35,-28,-35,29,5);line(-35,-28,-16,-28,5);line(-35,29,-16,29,5);line(35,-28,35,29,5);line(35,-28,16,-28,5);line(35,29,16,29,5);arrow(-27,0,-8,0,3,0xffffff);arrow(27,0,8,0,3,0xffffff);break;
+      case 'headlock-arc':
+        arc(-2,2,43,3.45,6.1,5);arrow(37,-9,19,30,4,0xffffff);ellipse(0,29,72,17,3);break;
+      case 'sprawl-shield':
+        g.lineStyle(5,c,.95);g.strokeRoundedRect(X(-34),Y(-27),68,55,9);line(-27,-15,27,15,3,0xffffff);line(-27,15,27,-15,3,0xffffff);break;
+      case 'counter-chevrons':
+        arrow(27,-17,-26,-17,3,0xffffff);arrow(-31,3,38,3,5);arrow(-17,23,25,23,3,c);break;
+      case 'whizzer-spiral':
+        arc(0,0,35,.15,5.5,4);arc(0,0,20,3.2,8.1,2,0xffffff);arrow(24,-23,38,-2,3);break;
+      case 'mat-return':
+        arrow(-18,27,-18,-28,4);arrow(15,-27,15,25,5,0xffffff);line(-39,28,39,28,5);ellipse(0,26,78,14,2,c);break;
+      case 'tilt-rolls':
+        arc(-8,0,32,.2,5.7,4);arc(14,4,24,3.35,8.9,3,0xffffff);ellipse(0,23,64,14,2);break;
+      case 'claw-rake':
+        for(let i=-1;i<=1;i++)line(-30+i*10,-31,18+i*10,28,i===0?5:3,i===0?0xffffff:c);line(-33,29,35,29,3);break;
+      case 'gut-rings':
+        ellipse(0,3,70,46,5);ellipse(0,3,47,30,3,0xffffff);ellipse(0,3,23,15,2,c);arrow(-42,0,-25,0,3);arrow(42,0,25,0,3);break;
+      case 'cradle-cage':
+        line(-37,-29,37,-18,5);line(37,-18,29,31,5);line(29,31,-34,25,5);line(-34,25,-37,-29,5);line(-30,-21,26,25,3,0xffffff);line(29,-12,-27,18,3,0xffffff);break;
+      case 'scramble-spiral':
+        arc(0,0,36,.3,5.65,4);arc(0,0,22,3.3,8.65,3,0xffffff);for(let i=0;i<4;i++)line(-42+i*12,31,-34+i*12,22,2);break;
+      case 'granby-loop':
+        arc(-7,1,37,.15,6.05,5);ellipse(10,6,38,24,3,0xffffff);arrow(27,17,42,2,3);break;
+      case 'funk-wheel':
+        ellipse(0,0,65,65,4);for(let i=0;i<8;i++){const a=Math.PI*2*i/8;line(0,0,Math.round(Math.cos(a)*32),Math.round(Math.sin(a)*32),i%2?2:3,i%2?0xffffff:c);}break;
+      case 'switch-arrows':
+        arrow(-39,-15,31,-15,4);arrow(34,16,-34,16,4,0xffffff);line(-8,-28,8,28,2,c);break;
+      case 'pace-pulse':
+        for(let i=0;i<3;i++){const inset=i*9;g.lineStyle(i===1?2:4,i===1?0xffffff:c,.9);g.strokeRoundedRect(X(-36+inset),Y(-28+inset),72-inset*2,56-inset*2,7);}break;
+      case 'flurry-streaks':
+        for(let i=-2;i<=2;i++)arrow(-50+(hitIndex%2)*8,i*10,39,i*6,i===hitIndex%5-2?5:2,i%2?0xffffff:c);break;
+      case 'grind-lines':
+        for(let i=-2;i<=2;i++){line(-42,i*10,39,i*10+(i%2?7:-7),i===0?6:3,i%2?0xffffff:c);line(34,i*10+(i%2?7:-7),45,i*10,2,c);}break;
+      case 'pin-frame':
+        g.lineStyle(5,c,.95);g.strokeRect(X(-37),Y(-31),74,62);g.lineStyle(2,0xffffff,.88);g.strokeRect(X(-27),Y(-21),54,42);arrow(0,-45,0,25,5);line(-42,31,42,31,5);break;
+      case 'circle-guard':
+        ellipse(0,0,70,58,5);ellipse(0,0,46,36,2,0xffffff);arrow(-35,19,-49,4,3);arrow(35,-19,49,-4,3);break;
+      case 'desperation-star':
+        for(let i=0;i<12;i++){const a=Math.PI*2*i/12,r=i%2?52:45;line(Math.round(Math.cos(a)*13),Math.round(Math.sin(a)*13),Math.round(Math.cos(a)*r),Math.round(Math.sin(a)*r),i%3===0?5:2,i%2?0xffffff:c);}ellipse(0,0,41,41,4);break;
+      default:
+        ellipse(0,0,58,44,4);for(let i=0;i<8;i++){const a=Math.PI*2*i/8;line(Math.round(Math.cos(a)*10),Math.round(Math.sin(a)*8),Math.round(Math.cos(a)*42),Math.round(Math.sin(a)*31),2,i%2?0xffffff:c);}
+    }
+    this.tweens.add({targets:g,alpha:0,duration:440,ease:'Cubic.Out',onComplete:()=>g.destroy()});
+  }
+  personaFlash(sprite,delay=0){if(!sprite)return;this.time.delayedCall(delay,()=>{if(!sprite.scene)return;sprite.setTint(0xffe7b0);this.time.delayedCall(150,()=>{if(sprite.scene)sprite.clearTint();});});}
   resolveTurn(key){
     const l=lead(this.state),e=this.enemy();
     this.inputLocked=true;this.mode='resolving';this.impact='';this.attackAnim=null;this.prevMeters=null;this.drawBattle();
@@ -629,11 +725,11 @@ export class BattleScene extends Phaser.Scene{
       this.tweenSpritePixels(pimg,{x:pX,duration:540,ease:'Cubic.Out',delay:240});
       this.personaFlash(eimg,650);this.personaFlash(pimg,780);
     }
-    if(this.attackAnim==='enemy')this.playTechniqueImpact(pimg,eimg,this.moveStyle);
-    if(this.attackAnim==='player')this.playTechniqueImpact(eimg,pimg,this.moveStyle);
-    if(this.attackAnim==='playerSetup')this.playTechniqueSetup(pimg,this.moveStyle);
-    if(this.attackAnim==='enemySetup')this.playTechniqueSetup(eimg,this.moveStyle);
-    if(this.attackAnim==='miss')this.playTechniqueMiss(this.attackSide==='player'?pimg:eimg,this.moveStyle);
+    if(this.attackAnim==='enemy')this.playTechniqueImpact(pimg,eimg,this.moveKey,this.moveHitCount);
+    if(this.attackAnim==='player')this.playTechniqueImpact(eimg,pimg,this.moveKey,this.moveHitCount);
+    if(this.attackAnim==='playerSetup')this.playTechniqueSetup(pimg,this.moveKey);
+    if(this.attackAnim==='enemySetup')this.playTechniqueSetup(eimg,this.moveKey);
+    if(this.attackAnim==='miss')this.playTechniqueMiss(this.attackSide==='player'?pimg:eimg,this.moveKey);
     if(this.impact){
       const target=this.attackAnim==='player'||this.attackAnim==='playerSetup'?PLAYER_POS:ENEMY_POS;
       const t=this.add.text(target.x,target.y-120,this.impact,{fontFamily:FONT,fontSize:22,color:'#fff1a6',fontStyle:'bold',stroke:'#111',strokeThickness:5}).setOrigin(.5);
@@ -642,25 +738,6 @@ export class BattleScene extends Phaser.Scene{
     this.attackAnim=null;this.attackSide=null;
   }
   drawBattleBases(){const g=this.add.graphics();g.fillStyle(0x0b0b0d,.32);g.fillEllipse(ENEMY_POS.x,ENEMY_POS.y-4,118,21);g.fillEllipse(PLAYER_POS.x,PLAYER_POS.y-4,148,25);g.lineStyle(1,0xffe2a0,.32);g.strokeEllipse(ENEMY_POS.x,ENEMY_POS.y-7,102,15);g.strokeEllipse(PLAYER_POS.x,PLAYER_POS.y-7,132,18);}
-  drawImpactBurst(x,y,style='Shooter'){
-    const c=this.techniqueColor(style);
-    const g=this.add.graphics().setDepth(70),wide=this.moveCategory==='strength'||style==='Bull'||style==='Thrower';
-    g.fillStyle(c,.24);g.fillCircle(x,y,wide?34:27);
-    if(style==='Rider'){
-      g.lineStyle(4,c,.95);g.lineBetween(x-24,y-27,x,y+25);g.lineBetween(x+24,y-27,x,y+25);g.lineStyle(2,0xffffff,.8);g.strokeEllipse(x,y+25,70,18);
-    }else if(style==='Scrambler'){
-      g.lineStyle(4,c,.95);g.beginPath();g.arc(x,y,31,.2,5.8,false);g.strokePath();g.lineStyle(2,0xffffff,.85);g.beginPath();g.arc(x,y,20,3.3,8.8,false);g.strokePath();
-    }else if(style==='Bull'){
-      for(let i=-2;i<=2;i++){g.lineStyle(i===0?5:2,i%2?0xffffff:c,.9);g.lineBetween(x-54,y+i*9,x+47,y+i*4);}
-    }else if(style==='Wall'){
-      g.lineStyle(5,c,.95);g.strokeRoundedRect(x-29,y-34,58,68,18);g.lineStyle(2,0xffffff,.85);g.strokeRoundedRect(x-20,y-25,40,50,12);
-    }else if(style==='Thrower'){
-      g.lineStyle(5,c,.95);g.beginPath();g.arc(x-3,y+8,44,3.6,6.1,false);g.strokePath();g.lineStyle(2,0xffffff,.9);g.lineBetween(x+34,y-14,x+48,y+1);g.lineBetween(x+34,y-14,x+29,y+5);
-    }else{
-      g.lineStyle(3,c,.95);g.strokeCircle(x,y,18);g.lineStyle(2,0xffffff,.85);g.strokeCircle(x,y,29);for(let i=0;i<8;i++){const a=(Math.PI*2/8)*i;g.lineBetween(x+Math.cos(a)*10,y+Math.sin(a)*8,x+Math.cos(a)*43,y+Math.sin(a)*31);}
-    }
-    this.tweens.add({targets:g,alpha:0,scale:1.42,duration:600,ease:'Cubic.Out',onComplete:()=>g.destroy()});
-  }
   drawMissWhiff(x,y){
     const g=this.add.graphics().setDepth(70);
     g.lineStyle(4,0xffffff,.62);g.beginPath();g.arc(x,y,34,5.1,1.4,false);g.strokePath();
