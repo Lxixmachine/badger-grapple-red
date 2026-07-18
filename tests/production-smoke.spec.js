@@ -1,4 +1,5 @@
 import {expect, test} from '@playwright/test';
+import {ROSTER} from '../src/data/roster.js';
 
 function collectRuntimeIssues(page) {
   const issues = [];
@@ -28,7 +29,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.46-mat-status');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.47-battle-identity');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',
@@ -67,6 +68,18 @@ test('production build boots the Season One atlas and generated character art', 
   for (const actor of textures.filter(texture => texture.key.startsWith('season-actor:'))) {
     expect(actor.width, `${actor.key} full 3-column sheet width`).toBe(96);
     expect(actor.height, `${actor.key} full 4-row sheet height`).toBe(256);
+  }
+  const rosterTextures = await page.evaluate(ids => ids.flatMap(id => [
+    `battle_${id}`,
+    `battle_${id}_back`
+  ]).map(key => {
+    const texture = window.badgerGame.textures.get(key);
+    const source = texture?.getSourceImage?.();
+    return {key, exists: texture?.key !== '__MISSING', width: source?.width || 0, height: source?.height || 0};
+  }), Object.keys(ROSTER));
+  expect(rosterTextures).toHaveLength(52);
+  for (const texture of rosterTextures) {
+    expect(texture, texture.key).toEqual({key: texture.key, exists: true, width: 128, height: 128});
   }
   await expect(page.locator('#game canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('#game canvas')).toHaveAttribute('height', '320');

@@ -7,9 +7,9 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SHEET = ROOT / "art" / "imagegen" / "wrestler_battle_sheet_v2_2026-07-14_alpha.png"
-ARENA = ROOT / "art" / "imagegen" / "battle_arena_v2_2026-07-14.png"
+ARENA = ROOT / "art" / "imagegen" / "battle_arena_v3_2026-07-18.png"
 SPRITES = ROOT / "public" / "assets" / "sprites"
-ARENA_OUT = ROOT / "public" / "assets" / "ui" / "battle_arena_v2.png"
+ARENA_OUT = ROOT / "public" / "assets" / "ui" / "battle_arena_v3.png"
 
 ASSETS = ("badger", "neutral", "top", "scramble", "pace")
 LOGICAL_SPRITE_SIZE = 64

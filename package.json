@@ -1,6 +1,6 @@
 {
   "name": "badger-grapple-red",
-  "version": "22.46.0",
+  "version": "22.47.0",
   "private": true,
   "type": "module",
   "description": "Source-first Phaser wrestling RPG built toward FireRed-style production quality",
@@ -14,6 +14,7 @@
     "build:camp-tiles": "python tools/build_camp_randall_tilemaps.py",
     "build:world-compositions": "python tools/build_world_compositions.py",
     "build:native-ui": "python tools/build_native_ui_assets.py",
+    "build:battle-art": "python tools/prepare_roster_battle_assets.py && python tools/prepare_battle_presentation_assets.py && python tools/build_battle_art_review.py",
     "build:maps": "npm run build:camp-manifest && npm run build:world-compositions",
     "validate:battle-art": "python tools/validate_battle_assets.py",
     "validate": "node tools/validate.mjs",
@@ -25,8 +26,9 @@
     "review:battle-feedback": "node tools/capture_battle_feedback.mjs",
     "review:battle-impact": "node tools/capture_battle_impact.mjs",
     "review:battle-knockout": "node tools/capture_battle_knockout.mjs",
+    "review:battle-art": "python tools/build_battle_art_review.py",
     "smoke": "playwright test",
-    "check": "npm run build:maps && npm run build:camp-production && npm run build:camp-metatiles && npm run build:native-ui && npm run validate:battle-art && npm run validate && npm run balance && npm run lint-maps && npm run build && npm run smoke",
+    "check": "npm run build:maps && npm run build:camp-production && npm run build:camp-metatiles && npm run build:native-ui && npm run build:battle-art && npm run validate:battle-art && npm run validate && npm run balance && npm run lint-maps && npm run build && npm run smoke",
     "build": "vite build",
     "preview": "vite preview --host 0.0.0.0",
     "lint-maps": "node tools/lint_maps.mjs"

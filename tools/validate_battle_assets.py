@@ -1,5 +1,7 @@
 """Enforce the native pixel contract for production battle artwork."""
 
+import colorsys
+
 from pathlib import Path
 
 from PIL import Image
@@ -7,12 +9,13 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SPRITE_DIR = ROOT / "public" / "assets" / "sprites"
-ARENA_PATH = ROOT / "public" / "assets" / "ui" / "battle_arena_v2.png"
+ARENA_PATH = ROOT / "public" / "assets" / "ui" / "battle_arena_v3.png"
 SPRITE_SIZE = (128, 128)
 ARENA_SIZE = (480, 238)
 RUNTIME_SCALE = 2
 MAX_SPRITE_COLORS = 15
 MAX_ARENA_COLORS = 32
+MAX_ARENA_FIELD_SATURATION = 0.42
 EXPECTED_ROSTER_SIZE = 26
 LEGACY_ASSETS = ("badger", "neutral", "top", "scramble", "pace")
 TRAINER_ASSETS = ("player", "rex")
@@ -60,6 +63,16 @@ def validate_arena() -> None:
     if colors is None:
         raise RuntimeError(
             f"{ARENA_PATH.name} uses more than {MAX_ARENA_COLORS} colors"
+        )
+    field = arena.crop((0, 80, arena.width, arena.height))
+    saturation = sum(
+        colorsys.rgb_to_hsv(*(channel / 255 for channel in pixel))[1]
+        for pixel in field.get_flattened_data()
+    ) / (field.width * field.height)
+    if saturation > MAX_ARENA_FIELD_SATURATION:
+        raise RuntimeError(
+            f"{ARENA_PATH.name} field saturation {saturation:.3f} exceeds "
+            f"the quiet-backdrop ceiling {MAX_ARENA_FIELD_SATURATION:.2f}"
         )
     assert_integer_blocks(arena, ARENA_PATH.name)
 

@@ -3768,3 +3768,31 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   checks, and all four force-win story checks pass.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Battle Identity Pass (v22.47)
+
+- The full 26-wrestler roster now has paired, identity-matched front and rear
+  battle poses authored with ChatGPT image generation. The retained v4 source
+  boards cover eight visual families; the deterministic compiler produces all
+  52 runtime textures at 64 logical pixels / 128 runtime pixels with exact 2x
+  pixels, binary alpha, and at most 15 opaque colors.
+- Battle orientation is authored into the art contract: opponents face left,
+  player backs face right, and `BATTLE_BACK_FLIP_IDS` remains empty. One source
+  cell is corrected during deterministic compilation; there is no runtime
+  identity-specific mirroring.
+- The arena was rebuilt as a quiet warm-tan wrestling space. Cardinal is now
+  reserved for rings, banners, and identity accents instead of filling the
+  floor. The lower-field mean saturation fell from 0.583 to 0.372, and the
+  validator enforces a 0.42 ceiling.
+- `npm run build:battle-art` rebuilds the roster, arena, and permanent review
+  sheet. `art/imagegen/validation/battle_roster_v4_review.png` shows every
+  front/back pair with facing, silhouette dimensions, and palette count.
+- Asset validation, world validation, balance, map lint, and production build
+  pass. A direct real-Chromium release audit verified the 480x320 canvas,
+  480x238 arena, all 52 roster textures at 128x128, actor scale 1, no battle
+  sprite mirroring, and no browser errors. On this Windows session the general
+  Playwright command lists tests but stalls before spawning its worker; it was
+  not represented as a full-suite pass. Re-run the sequential suite in a fresh
+  process session before the next broad release.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

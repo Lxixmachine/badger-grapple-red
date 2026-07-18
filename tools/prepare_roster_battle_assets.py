@@ -8,7 +8,6 @@ from PIL import Image, ImageOps
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "art" / "imagegen"
 OUTPUT_DIR = ROOT / "public" / "assets" / "sprites"
-SOURCE_SUFFIX = "_v3_2026-07-14_alpha.png"
 LOGICAL_SPRITE_SIZE = 64
 RUNTIME_SCALE = 2
 SPRITE_SIZE = LOGICAL_SPRITE_SIZE * RUNTIME_SCALE
@@ -17,14 +16,14 @@ OPAQUE_COLORS = 15
 ALPHA_THRESHOLD = 96
 
 BOARDS = (
-    ("roster_battle_bucky", ("buckshot", "buckvarsity", "buckallam")),
-    ("roster_battle_mat", ("matreturner", "matgeneral", "rideking")),
-    ("roster_battle_scramble", ("fieldflyer", "funkflyer", "scramblesaint")),
-    ("roster_battle_pace_drill", ("pacesetter", "pacecommand", "drillpartner", "drillveteran")),
-    ("roster_battle_lake_specialists", ("lakechain", "chainmaster", "whizzkid", "lockthrow")),
-    ("roster_battle_rare_specialists", ("riverroller", "tilttech", "funklord")),
-    ("roster_battle_elite_one", ("captainneutral", "scrambleboss", "topboss")),
-    ("roster_battle_elite_two", ("senator", "professor", "closer")),
+    ("roster_battle_bucky_v4_2026-07-18_alpha.png", ("buckshot", "buckvarsity", "buckallam")),
+    ("roster_battle_mat_v4_2026-07-18_alpha.png", ("matreturner", "matgeneral", "rideking")),
+    ("roster_battle_scramble_v4_2026-07-18_alpha.png", ("fieldflyer", "funkflyer", "scramblesaint")),
+    ("roster_battle_pace_drill_v4_2026-07-18_alpha.png", ("pacesetter", "pacecommand", "drillpartner", "drillveteran")),
+    ("roster_battle_lake_specialists_v4_2026-07-18_alpha.png", ("lakechain", "chainmaster", "whizzkid", "lockthrow")),
+    ("roster_battle_rare_specialists_v4_2026-07-18_alpha.png", ("riverroller", "tilttech", "funklord")),
+    ("roster_battle_elite_one_v4_2026-07-18_alpha.png", ("captainneutral", "scrambleboss", "topboss")),
+    ("roster_battle_elite_two_v4_2026-07-18_alpha.png", ("senator", "professor", "closer")),
 )
 
 VISUAL_SCALE = {
@@ -39,14 +38,10 @@ VISUAL_SCALE = {
     "lakechain": 0.86,
 }
 
-# These generated rear poses look toward screen-left in their source boards.
-# Normalize them here so every committed rear asset faces screen-right and the
-# runtime never needs identity-specific mirroring.
-BACK_SOURCE_FLIP_IDS = frozenset({
-    "matreturner", "matgeneral", "rideking",
-    "fieldflyer", "funkflyer", "scramblesaint",
-    "whizzkid", "scrambleboss",
-})
+# Source normalization happens once during compilation. Whizzer Wizard's quill
+# mass makes the generated rear cell read left; mirror that source cell so every
+# committed rear asset faces screen-right and runtime mirroring stays forbidden.
+BACK_SOURCE_FLIP_IDS: frozenset[str] = frozenset({"whizzkid"})
 
 
 def keep_main_subject(image: Image.Image) -> Image.Image:
@@ -162,8 +157,8 @@ def validate_sprite(path: Path) -> None:
         raise RuntimeError(f"{path.name} touches a canvas corner")
 
 
-def compile_board(source_name: str, roster_ids: tuple[str, ...]) -> int:
-    source = SOURCE_DIR / f"{source_name}{SOURCE_SUFFIX}"
+def compile_board(source_filename: str, roster_ids: tuple[str, ...]) -> int:
+    source = SOURCE_DIR / source_filename
     sheet = Image.open(source).convert("RGBA")
     if sheet.size != (1536, 1024):
         raise RuntimeError(f"Unexpected source size for {source.name}: {sheet.size}")
@@ -182,7 +177,7 @@ def compile_board(source_name: str, roster_ids: tuple[str, ...]) -> int:
 
 def main() -> None:
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    count = sum(compile_board(source_name, roster_ids) for source_name, roster_ids in BOARDS)
+    count = sum(compile_board(source_filename, roster_ids) for source_filename, roster_ids in BOARDS)
     print(
         f"Prepared {count} roster-specific battle sprites at "
         f"{LOGICAL_SPRITE_SIZE}px logical / {SPRITE_SIZE}px runtime."
