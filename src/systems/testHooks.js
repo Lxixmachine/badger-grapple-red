@@ -32,6 +32,14 @@ export function installTestHooks(game, routeVirtualButton) {
       presentedCondition: scene.presentedCondition ? {...scene.presentedCondition} : null,
       conditionHitIndex: scene.conditionHitIndex ?? null,
       conditionPresentationHistory: (scene.conditionPresentationHistory || []).map(step => ({...step})),
+      battleFeedback: scene.currentFeedback ? {
+        ...scene.currentFeedback,
+        typeComplete: !scene.typeTimer,
+        promptVisible: Boolean(scene.messagePrompt?.scene),
+        remaining: Math.max(0,(scene.feedbackSequence?.queue?.length||0)-(scene.feedbackSequence?.index||0)),
+        renderedText: scene.resolveText?.text ?? ''
+      } : null,
+      battleFeedbackHistory: (scene.feedbackHistory || []).map(event => ({...event})),
       introStage: scene.introStage ?? null,
       postBattleStage: scene.postBattleStage ?? null,
       inputLocked: scene.inputLocked ?? null,

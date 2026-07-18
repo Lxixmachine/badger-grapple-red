@@ -1,11 +1,13 @@
 import {expect,test} from '@playwright/test';
 
-const player={id:'pacesetter',lvl:50,xp:0,hp:999,score:0,moves:['flurry']};
+// Keep this presentation fixture decisively faster than the defender so
+// temperament modifiers cannot reverse the turn being asserted.
+const player={id:'closer',lvl:50,xp:0,hp:999,score:0,moves:['flurry']};
 
 function saveWithPlayer(){
   return {
     party:[{...player}],active:0,box:[],items:{},badges:[],
-    dex:{seen:{},caught:{pacesetter:true}},flags:{introDone:true,assignment:true},stats:{}
+    dex:{seen:{},caught:{closer:true}},flags:{introDone:true,assignment:true},stats:{}
   };
 }
 

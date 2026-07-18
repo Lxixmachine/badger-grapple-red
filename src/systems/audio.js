@@ -82,6 +82,11 @@ export const sfx = {
   warp: () => { tone(300, 0.12, { type: 'sawtooth', gainStart: 0.2, slideTo: 700 }); tone(700, 0.1, { type: 'sawtooth', gainStart: 0.16, slideTo: 1200, delay: 0.1 }); },
   hit: () => { noiseThud(0.12, { gain: 0.35, filterFreq: 500 }); tone(180, 0.1, { type: 'square', gainStart: 0.25, slideTo: 80, delay: 0.02 }); },
   miss: () => tone(300, 0.15, { type: 'sine', gainStart: 0.18, slideTo: 200 }),
+  critical: () => { tone(740, 0.07, {type:'square',gainStart:0.18,slideTo:980});tone(1100,0.09,{type:'triangle',gainStart:0.16,delay:0.06}); },
+  edge: () => { tone(440,0.07,{type:'square',gainStart:0.15});tone(660,0.09,{type:'square',gainStart:0.17,delay:0.06}); },
+  resist: () => { tone(360,0.08,{type:'triangle',gainStart:0.14});tone(220,0.12,{type:'triangle',gainStart:0.13,delay:0.06}); },
+  statusUp: () => { tone(520,0.06,{type:'square',gainStart:0.14});tone(780,0.08,{type:'square',gainStart:0.16,delay:0.055}); },
+  statusDown: () => { tone(420,0.06,{type:'square',gainStart:0.14});tone(240,0.1,{type:'square',gainStart:0.14,delay:0.055}); },
   technique: (style = 'Open', phase = 'windup') => {
     const impact = phase === 'impact';
     if (style === 'Shooter') {

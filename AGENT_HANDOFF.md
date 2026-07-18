@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.43 Battle Feedback)
+
+Battle consequences now resolve through an ordered FireRed-style message queue
+instead of appearing as one generic result dump. Critical hits, matchup edges
+and resistance, counters, multi-hit totals, stat changes, Stamina drain,
+position loss, recharge, recoil, misses, and blocked actions each own a typed,
+semantic feedback beat with a restrained color and original sound cue. Setup
+techniques no longer announce a false matchup advantage when they deal no
+damage.
+
+The A button now finishes the current typed result first and advances it on the
+next deliberate press after a short debounce. Completed lines show a blinking
+continuation marker, while automatic advance remains available if the player
+does not press anything. Feedback history and current queue state are exposed
+through the test hooks so ordering, completion source, prompt visibility, and
+native pixel invariants remain regression-testable.
+
+`tests/battle-feedback.spec.js` covers semantic ordering and interactive
+advancement in the real Phaser battle. The older multi-hit presentation fixture
+now uses a decisively faster attacker so temperament cannot reverse the turn it
+asserts. `npm run review:battle-feedback` produces fixed 390x844 phone captures
+of the critical-hit and matchup beats. Battle-art validation, data validation,
+balance, map lint, build, whitespace checks, the 20-test menu/input slice, and
+the complete serial Chromium suite pass; full count is 136/136. Tony's dirty
+State Street composition files remain protected and must not be rebuilt,
+staged, reverted, or overwritten during future integration.
+
 ## Latest Codex Turn (v22.42 Per-Hit Condition)
 
 Battle damage now resolves and presents as an ordered hit sequence instead of

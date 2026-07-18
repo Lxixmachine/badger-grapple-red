@@ -24,7 +24,7 @@ export class BattleScene extends Phaser.Scene{
     this.winMsg=data.winMsg||null;
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.battlePhase='intro';this.battlePhaseHistory=['intro'];this.introStage='transition';this.postBattleStage='';this.over=false;this.recruit=false;this.forcedSwap=false;this.preOpponentSwitch=false;this.pendingOpponentIndex=null;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;this.pendingNickname=null;
-    this.firstBattleDraw=true;this.transitioning=false;this.attackAnim=null;this.attackSide=null;this.moveKey='';this.moveHitCount=1;this.moveHitResults=[];this.moveRecoilResult=null;this.techniqueAnimation=null;this.techniqueAnimationHistory=[];this.presentedCondition=null;this.conditionMeters={};this.conditionValueTexts={};this.conditionHitIndex=null;this.conditionPresentationHistory=[];this.lastChooseAt=0;this.inputLocked=true;
+    this.firstBattleDraw=true;this.transitioning=false;this.attackAnim=null;this.attackSide=null;this.moveKey='';this.moveHitCount=1;this.moveHitResults=[];this.moveRecoilResult=null;this.techniqueAnimation=null;this.techniqueAnimationHistory=[];this.presentedCondition=null;this.conditionMeters={};this.conditionValueTexts={};this.conditionHitIndex=null;this.conditionPresentationHistory=[];this.feedbackSequence=null;this.currentFeedback=null;this.feedbackHistory=[];this.feedbackTimer=null;this.feedbackReadyAt=0;this.messagePrompt=null;this.lastChooseAt=0;this.inputLocked=true;
     this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();this.rewardEvent=null;this.rewardHistory=[];this.rewardViewLevel=null;this.rewardViewProgress=0;this.rewardViewHp=0;this.rewardText='';this.levelSummary=null;this.developmentEvent=null;this.finalizingBattle=false;
     const openLine=this.type==='opening'
       ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
@@ -94,10 +94,10 @@ export class BattleScene extends Phaser.Scene{
     if(this.type==='opening')return [`${player} lost the wrestle-off to Rex.`,'Rex: The first result is not the last word.','Report to the Trainer\'s Room.'];
     return [`${player} lost to ${this.opponentName()}.`,'The Trainer restored the travel lineup.'];
   }
-  handleVirtualButton(k){unlockAudio();if(k==='a'&&this.inputLocked&&this.typeTimer)return this.finishTypeText();if(k==='left')this.move(-1,0);if(k==='right')this.move(1,0);if(k==='up')this.move(0,-1);if(k==='down')this.move(0,1);if(k==='a')this.choose();if(k==='b')this.back();}
+  handleVirtualButton(k){unlockAudio();if(k==='left')this.move(-1,0);if(k==='right')this.move(1,0);if(k==='up')this.move(0,-1);if(k==='down')this.move(0,1);if(k==='a')this.choose();if(k==='b')this.back();}
   count(){if(this.mode==='fight'){const l=lead(this.state);return (l?.moves||ROSTER[l?.id]?.moves||[]).length||1;}if(this.mode==='party')return Math.max(1,this.state.party.length);if(this.mode==='bag')return BAG_ITEMS.length;if(this.mode==='learnMove')return (this.moveLearn?.mon?.moves?.length||0)+1;if(this.mode==='learnInspect'||this.mode==='learnConfirm'||this.mode==='switchPrompt')return 2;return 4;}
   move(dx,dy){if(this.over||this.inputLocked)return;const old=this.sel;let cols=this.mode==='party'||this.mode==='learnMove'?1:2;let rows=Math.ceil(this.count()/cols);let x=old%cols,y=Math.floor(old/cols);if(dx)x=Phaser.Math.Wrap(x+dx,0,cols);if(dy)y=Phaser.Math.Wrap(y+dy,0,rows);this.sel=Math.min(y*cols+x,this.count()-1);this.impact='';this.drawBattle();}
-  choose(){const now=this.time.now||performance.now();if(this.inputLocked)return;if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();if(this.mode==='switchPrompt')return this.chooseSwitchPrompt();}
+  choose(){const now=this.time.now||performance.now();if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;if(this.inputLocked){if(this.typeTimer)return this.finishTypeText();if(this.advanceResolveSequence('input'))return;return;}if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();if(this.mode==='switchPrompt')return this.chooseSwitchPrompt();}
   back(){if(this.inputLocked)return;if(this.over)return this.returnMap();if(this.mode==='learnInspect'){this.mode='learnMove';this.sel=this.moveLearn?.replaceIndex??0;return this.drawBattle();}if(this.mode==='learnConfirm'){this.mode='learnMove';this.sel=0;return this.drawBattle();}if(this.mode==='learnMove')return this.confirmStopLearning();if(this.preOpponentSwitch&&this.mode==='party'){this.preOpponentSwitch=false;this.mode='switchPrompt';this.sel=0;return this.drawBattle();}if(this.forcedSwap)return;if(this.mode!=='command'){this.mode='command';this.sel=0;this.drawBattle();}}
   addLog(lines){this.log=[...lines,...this.log].slice(0,5);}
   resolvePendingMoves(onDone){
@@ -214,46 +214,81 @@ export class BattleScene extends Phaser.Scene{
   // announce ("BUCKY used SINGLE LEG!" typed out, attacker lunges), then
   // impact (damage number, defender flicker + knockback, HP drain), with
   // faint and send-out beats when a wrestler goes down.
-  typeText(t,str,speed=19){if(this.typeTimer)this.typeTimer.remove(false);this.typeTarget=t;this.typeFull=str;let i=0;t.setText('');this.typeTimer=this.time.addEvent({delay:speed,repeat:Math.max(0,str.length-1),callback:()=>{i++;if(t&&t.scene)t.setText(str.slice(0,i));if(i>=str.length)this.typeTimer=null;}});}
-  finishTypeText(){if(this.typeTimer)this.typeTimer.remove(false);this.typeTimer=null;if(this.typeTarget?.scene)this.typeTarget.setText(this.typeFull||'');}
-  setResolveText(str){if(!this.resolveText||!this.resolveText.scene){if(this.mode!=='intro'&&this.mode!=='postBattle')this.mode='resolving';this.drawBattle();}this.typeText(this.resolveText,str);}
-  playResolveSequence(lines,onDone){
-    const queue=lines.filter(Boolean);let index=0;
-    const next=()=>{if(this.over)return;if(index>=queue.length)return onDone();const line=queue[index++];this.setBattlePhase('message');this.setResolveText(line);const dwell=Phaser.Math.Clamp(line.length*22+420,860,1320);this.time.delayedCall(dwell,next);};
-    next();
+  typeText(t,str,speed=19){
+    if(this.typeTimer)this.typeTimer.remove(false);this.clearMessagePrompt();this.typeTarget=t;this.typeFull=str;let i=0;t.setText('');
+    this.typeTimer=this.time.addEvent({delay:speed,repeat:Math.max(0,str.length-1),callback:()=>{i++;if(t&&t.scene)t.setText(str.slice(0,i));if(i>=str.length){this.typeTimer=null;this.updateMessagePrompt();}}});
   }
-  effectLine(event,attName,defName){
+  finishTypeText(){if(this.typeTimer)this.typeTimer.remove(false);this.typeTimer=null;if(this.typeTarget?.scene)this.typeTarget.setText(this.typeFull||'');this.updateMessagePrompt();}
+  feedbackColor(kind){return {critical:'#8a5200',edge:'#8a1720',resisted:'#355f87','stat-up':'#276943','stat-down':'#8a1720','stamina-down':'#355f87',recoil:'#8a1720'}[kind]||'#111';}
+  clearMessagePrompt(){if(this.messagePrompt?.scene)this.messagePrompt.destroy();this.messagePrompt=null;}
+  updateMessagePrompt(){
+    this.clearMessagePrompt();if(this.typeTimer||!this.currentFeedback||!this.resolveText?.scene)return;
+    this.messagePrompt=this.add.text(451,BOTTOM_Y+50,'\u25bc',{fontFamily:FONT,fontSize:12,color:'#8a1720',fontStyle:'bold'}).setOrigin(.5,0).setDepth(120);
+    this.tweens.add({targets:this.messagePrompt,y:'+=3',duration:320,yoyo:true,repeat:-1,ease:'Sine.InOut'});
+  }
+  setResolveText(str){if(!this.resolveText||!this.resolveText.scene){if(this.mode!=='intro'&&this.mode!=='postBattle')this.mode='resolving';this.drawBattle();}this.resolveText.setColor(this.feedbackColor(this.currentFeedback?.kind));this.typeText(this.resolveText,str);}
+  normalizeFeedback(event){if(typeof event==='string')return {kind:'message',text:event};return {kind:'message',...(event||{}),text:String(event?.text||'')};}
+  playResolveSequence(events,onDone){
+    const queue=events.map(event=>this.normalizeFeedback(event)).filter(event=>event.text);
+    if(this.feedbackTimer)this.feedbackTimer.remove(false);this.feedbackTimer=null;this.feedbackSequence=null;this.currentFeedback=null;this.clearMessagePrompt();
+    if(!queue.length)return onDone();
+    this.feedbackSequence={queue,index:0,onDone,currentRecord:null};this.showNextFeedback();
+  }
+  showNextFeedback(){
+    const sequence=this.feedbackSequence;if(!sequence)return;
+    if(sequence.index>=sequence.queue.length)return this.finishResolveSequence();
+    const event=sequence.queue[sequence.index++],record={...event,index:sequence.index,completed:false,advancedBy:null};
+    sequence.currentRecord=record;this.currentFeedback=event;this.feedbackHistory.push(record);if(this.feedbackHistory.length>64)this.feedbackHistory.shift();
+    this.setBattlePhase('message');if(event.sound)this.playSafe(event.sound);this.setResolveText(event.text);
+    this.feedbackReadyAt=(this.time.now||0)+180;
+    const dwell=event.duration??Phaser.Math.Clamp(event.text.length*22+420,860,1320);
+    this.feedbackTimer=this.time.delayedCall(dwell,()=>this.advanceResolveSequence('auto'));
+  }
+  advanceResolveSequence(source='input'){
+    const sequence=this.feedbackSequence;if(!sequence)return false;
+    if(source==='input'&&this.typeTimer){this.finishTypeText();return true;}
+    if(source==='input'&&(this.time.now||0)<this.feedbackReadyAt)return true;
+    if(this.feedbackTimer)this.feedbackTimer.remove(false);this.feedbackTimer=null;
+    if(sequence.currentRecord){sequence.currentRecord.completed=true;sequence.currentRecord.advancedBy=source;sequence.currentRecord=null;}
+    this.showNextFeedback();return true;
+  }
+  finishResolveSequence(){
+    const sequence=this.feedbackSequence;if(!sequence)return;
+    const onDone=sequence.onDone;this.feedbackSequence=null;this.currentFeedback=null;this.feedbackTimer=null;this.feedbackReadyAt=0;this.clearMessagePrompt();onDone();
+  }
+  effectFeedback(event,attName,defName){
     const name=event.target==='attacker'?attName:defName;
     const stat={attack:'Strength',defense:'Defense',technique:'Technique',awareness:'Awareness',speed:'Speed',accuracy:'Accuracy'}[event.stat]||event.stat;
-    if(event.type==='multiHit')return `Hit ${event.hits} ${event.hits===1?'time':'times'}!`;
-    if(event.type==='counter')return `${attName} caught the opening with a re-attack!`;
-    if(event.type==='staminaDrain')return `${event.moveName} lost ${event.amount} Stamina!`;
-    if(event.type==='recoil')return `${attName} took ${event.amount} recoil!`;
-    if(event.type==='flinch')return `${defName} lost position!`;
-    if(event.type==='recharge')return `${attName} must reset position next turn.`;
-    if(event.type==='stageLimit')return `${name}'s ${stat} cannot shift any further.`;
+    if(event.type==='multiHit')return {kind:'hit-count',text:`Hit ${event.hits} ${event.hits===1?'time':'times'}!`};
+    if(event.type==='counter')return {kind:'counter',text:`${attName} caught the opening with a re-attack!`,sound:'open'};
+    if(event.type==='staminaDrain')return {kind:'stamina-down',text:`${event.moveName} lost ${event.amount} Stamina!`,sound:'statusDown'};
+    if(event.type==='recoil')return {kind:'recoil',text:`${attName} took ${event.amount} recoil!`};
+    if(event.type==='flinch')return {kind:'position-break',text:`${defName} lost position!`,sound:'statusDown'};
+    if(event.type==='recharge')return {kind:'recharge',text:`${attName} must reset position next turn.`};
+    if(event.type==='stageLimit')return {kind:'stage-limit',text:`${name}'s ${stat} cannot shift any further.`};
     if(event.type==='stage'){
-      if(event.delta>=2)return `${name}'s ${stat} rose sharply!`;
-      if(event.delta>0)return `${name}'s ${stat} rose!`;
-      if(event.delta<=-2)return `${name}'s ${stat} fell sharply!`;
-      return `${name}'s ${stat} fell!`;
+      if(event.delta>=2)return {kind:'stat-up',text:`${name}'s ${stat} rose sharply!`,sound:'statusUp'};
+      if(event.delta>0)return {kind:'stat-up',text:`${name}'s ${stat} rose!`,sound:'statusUp'};
+      if(event.delta<=-2)return {kind:'stat-down',text:`${name}'s ${stat} fell sharply!`,sound:'statusDown'};
+      return {kind:'stat-down',text:`${name}'s ${stat} fell!`,sound:'statusDown'};
     }
-    return '';
+    return null;
   }
-  resultMessages(result,attName,defName){
-    const lines=[];
-    if(result.critical)lines.push(result.criticalHits>1?`${result.criticalHits} critical hits!`:'A critical hit!');
-    if(result.multiplier>1)lines.push(`It's a style edge!`);
-    if(result.multiplier<1)lines.push(`The matchup blunted the technique.`);
-    result.events.forEach(event=>lines.push(this.effectLine(event,attName,defName)));
-    return lines.filter(Boolean);
+  resultFeedback(result,attName,defName){
+    const feedback=[];
+    const criticalHits=(result.hitResults||[]).filter(hit=>hit.critical);
+    criticalHits.forEach(hit=>feedback.push({kind:'critical',text:result.hits>1?`Hit ${hit.index} was critical!`:'A critical hit!',sound:'critical'}));
+    if(result.hitResults?.length&&result.multiplier>1)feedback.push({kind:'edge',text:`It's a style edge!`,sound:'edge'});
+    if(result.hitResults?.length&&result.multiplier<1)feedback.push({kind:'resisted',text:`The matchup resisted the technique.`,sound:'resist'});
+    result.events.forEach(event=>feedback.push(this.effectFeedback(event,attName,defName)));
+    return feedback.filter(Boolean);
   }
   attackBeat({att,def,key,attName,defIsEnemy,onKO,onDone}){
     const attState=this.combatState(att),defState=this.combatState(def);
     const blocked=consumeActionBlock(attState);
     if(blocked){
       const line=blocked==='recharge'?`${attName} is resetting position!`:`${attName} could not regain position!`;
-      this.setBattlePhase('message');this.addLog([line]);this.setResolveText(line);this.playSafe('talk');this.time.delayedCall(980,onDone);return;
+      this.addLog([line]);this.playResolveSequence([{kind:'action-blocked',text:line,sound:'talk'}],onDone);return;
     }
     const actualKey=key!=='desperation'&&currentMoveStamina(att,key)<=0&&allMovesSpent(att)?'desperation':(key||'stall');
     const mv=MOVES[actualKey]||MOVES.stall;
@@ -283,7 +318,7 @@ export class BattleScene extends Phaser.Scene{
       this.addLog([res.line]);
       this.drawBattle();
       this.setResolveText(announcement);
-      const feedback=res.hit?this.resultMessages(res.result,attName,wrestlerName(def,{short:true})):[`It slipped - no contact.`];
+      const feedback=res.hit?this.resultFeedback(res.result,attName,wrestlerName(def,{short:true})):[{kind:'miss',text:'It slipped - no contact.',sound:'miss'}];
       const animationTime=res.dmg>0?this.conditionSequenceDuration(choreography,this.moveHitResults,this.moveRecoilResult):Math.min(choreography.tempo.feedback,520);
       this.time.delayedCall(animationTime,()=>this.playResolveSequence(feedback,()=>{
         if(this.over)return;
@@ -624,7 +659,7 @@ export class BattleScene extends Phaser.Scene{
   }
   drawBattleMessage(){
     this.drawTextBox(7,BOTTOM_Y,466,75);
-    this.resolveText=this.add.text(22,BOTTOM_Y+15,'',{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',wordWrap:{width:430},lineSpacing:5});
+    this.resolveText=this.add.text(22,BOTTOM_Y+15,'',{fontFamily:FONT,fontSize:18,color:this.feedbackColor(this.currentFeedback?.kind),fontStyle:'bold',wordWrap:{width:420},lineSpacing:5});
   }
   drawIntroStage(l,lr,er){
     this.playerSprite=null;this.enemySprite=null;

@@ -28,7 +28,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.42-per-hit-condition');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.43-battle-feedback');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',
