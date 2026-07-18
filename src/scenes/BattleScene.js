@@ -1,6 +1,7 @@
 import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort,consumeConditionAction,resolveConditionResidual} from '../data/conditions.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,turnOrder,useFilmStudy,useRecoveryItem} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
 import {drawLineupScreen} from '../systems/rosterUi.js';
 import {menuFooter,menuFrame,menuItemIcon,menuListRow,menuPanel,menuSectionLabel} from '../systems/nativeMenuUi.js';
+import {battleDecisionButtons,battleDecisionConfirm,battleTechniqueDetail,battleTechniqueRow,techniqueCategoryColor,techniqueCategoryLabel,techniqueStyleColor} from '../systems/battleDecisionUi.js';
 const Phaser = window.Phaser;
 const GAME_W=480,GAME_H=320,ARENA_H=238,BOTTOM_Y=238;
 const ENEMY_POS={x:370,y:158},PLAYER_POS={x:112,y:233};
@@ -84,15 +85,13 @@ export class BattleScene extends Phaser.Scene{
     this.time.delayedCall(step.duration,()=>{if(this.scene.isActive()&&!this.over)this.runIntroSequence(index+1);});
   }
   runPostBattleSequence(lines,onDone=()=>this.showBattleResult()){
-    const queue=lines.filter(Boolean);let index=0;
-    const next=()=>{
-      if(!this.scene.isActive())return;
-      if(index>=queue.length){this.postBattleStage='complete';return onDone();}
-      this.postBattleStage=index===0?'decision':'response';this.mode='postBattle';this.inputLocked=true;this.setBattlePhase('post-battle-message');this.drawBattle();
-      const line=queue[index++];this.typeText(this.resolveText,line,17);
-      this.time.delayedCall(Phaser.Math.Clamp(line.length*24+520,1200,1850),next);
-    };
-    next();
+    const queue=lines.filter(Boolean).map((text,index)=>({
+      kind:index===0?'result':'message',text,
+      duration:Phaser.Math.Clamp(text.length*24+520,1200,1850)
+    }));
+    if(!queue.length){this.postBattleStage='complete';return onDone();}
+    this.postBattleStage='decision';this.mode='postBattle';this.inputLocked=true;this.setBattlePhase('post-battle-message');this.drawBattle();
+    this.playResolveSequence(queue,()=>{this.postBattleStage='complete';onDone();});
   }
   winPresentationLines(grit,rep,badgeName,badgeEarned){
     const player=this.state.playerName||'Walk-On';
@@ -312,7 +311,9 @@ export class BattleScene extends Phaser.Scene{
     if(sequence.index>=sequence.queue.length)return this.finishResolveSequence();
     const event=sequence.queue[sequence.index++],record={...event,index:sequence.index,completed:false,advancedBy:null};
     sequence.currentRecord=record;this.currentFeedback=event;this.feedbackHistory.push(record);if(this.feedbackHistory.length>64)this.feedbackHistory.shift();
-    this.setBattlePhase('message');this.recordBattleBeat('result-message',{moveKey:this.moveKey,side:this.moveActorSide,kind:event.kind,index:sequence.index});if(event.sound)this.playSafe(event.sound);this.setResolveText(event.text);
+    if(this.mode==='postBattle'){this.postBattleStage=sequence.index===1?'decision':'response';this.setBattlePhase('post-battle-message');}
+    else this.setBattlePhase('message');
+    this.recordBattleBeat('result-message',{moveKey:this.moveKey,side:this.moveActorSide,kind:event.kind,index:sequence.index});if(event.sound)this.playSafe(event.sound);this.setResolveText(event.text);
     this.feedbackReadyAt=(this.time.now||0)+180;
     const dwell=event.duration??Phaser.Math.Clamp(event.text.length*22+420,860,1320);
     this.feedbackTimer=this.time.delayedCall(dwell,()=>this.advanceResolveSequence('auto'));
@@ -952,32 +953,33 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(21,BOTTOM_Y+10,`${this.opponentName()} will send`,{fontFamily:FONT,fontSize:15,color:'#222'});this.add.text(21,BOTTOM_Y+34,`${wrestlerName(next,{short:true})}. Switch?`,{fontFamily:FONT,fontSize:17,color:'#111',fontStyle:'bold'});
     ['SWITCH','STAY'].forEach((label,index)=>this.add.text(326,BOTTOM_Y+12+index*31,`${index===this.sel?'\u25b6':' '} ${label}`,{fontFamily:FONT,fontSize:16,color:index===this.sel?'#8a1720':'#111',fontStyle:index===this.sel?'bold':'normal'}));
   }
-  drawLearnMove(){
+  drawLearnMove(selectedIndex=this.sel){
     const choice=this.moveLearn,mon=choice?.mon,move=MOVES[choice?.move];if(!mon||!move)return;
-    this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,70,460,240);
-    this.add.text(28,84,`${wrestlerName(mon)} wants to learn`,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
-    this.add.text(28,110,`NEW: ${move.name.toUpperCase()}`,{fontFamily:FONT,fontSize:17,color:'#8a1720',fontStyle:'bold'});
-    this.add.text(28,134,'Choose a technique to forget.',{fontFamily:FONT,fontSize:14,color:'#444'});
-    const options=[...mon.moves,null];
-    options.forEach((key,i)=>this.add.text(30,158+i*27,`${i===this.sel?'\u25b6':' '} ${key?MOVES[key].name:'KEEP CURRENT MOVES'}`,{fontFamily:FONT,fontSize:16,color:i===this.sel?'#8a1720':'#111',fontStyle:i===this.sel?'bold':'normal'}));
+    const shortName=wrestlerName(mon,{short:true}),form=ROSTER[mon.id]?.style;
+    menuFrame(this,'TECHNIQUE TRAINING',`${shortName.toUpperCase()}  Lv.${mon.lvl}   A REVIEW   B SKIP`);
+    menuPanel(this,10,49,250,228);
+    menuSectionLabel(this,22,59,'CURRENT TECHNIQUES',226);
+    mon.moves.forEach((key,index)=>battleTechniqueRow(this,{
+      x:18,y:82+index*34,width:234,height:32,move:MOVES[key],active:index===selectedIndex,striped:index%2===1,
+      stamina:`${currentMoveStamina(mon,key)}/${moveStaminaMax(key)}`
+    }));
+    battleTechniqueRow(this,{x:18,y:224,width:234,height:35,active:selectedIndex>=mon.moves.length,skip:true,label:'DO NOT LEARN'});
+    battleTechniqueDetail(this,{x:268,y:49,width:202,height:228,title:'NEW TECHNIQUE',move,stamina:`${move.pp}/${move.pp}`,formMatch:form===move.style});
+    menuFooter(this,'CHOOSE A CURRENT TECHNIQUE TO REPLACE');
   }
   drawLearnInspect(){
     const choice=this.moveLearn,mon=choice?.mon,newMove=MOVES[choice?.move],oldMove=MOVES[mon?.moves?.[choice?.replaceIndex]];if(!mon||!newMove||!oldMove)return;
-    const stats=move=>`${move.style.toUpperCase()}  ${move.category.toUpperCase()}  PWR ${move.power||'--'}  ACC ${Math.round(move.acc*100)}%  STA ${move.pp}`;
-    this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,76,460,234);
-    this.add.text(28,90,'CONFIRM TECHNIQUE CHANGE',{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
-    this.add.text(28,123,`FORGET: ${oldMove.name.toUpperCase()}`,{fontFamily:FONT,fontSize:16,color:'#444',fontStyle:'bold'});
-    this.add.text(28,147,stats(oldMove),{fontFamily:FONT,fontSize:13,color:'#333'});
-    this.add.text(28,181,`LEARN:  ${newMove.name.toUpperCase()}`,{fontFamily:FONT,fontSize:16,color:'#8a1720',fontStyle:'bold'});
-    this.add.text(28,205,stats(newMove),{fontFamily:FONT,fontSize:13,color:'#333'});
-    ['REPLACE','BACK'].forEach((label,i)=>this.add.text(95+i*220,269,`${i===this.sel?'\u25b6':' '} ${label}`,{fontFamily:FONT,fontSize:17,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'}).setOrigin(.5,0));
+    const shortName=wrestlerName(mon,{short:true}),form=ROSTER[mon.id]?.style,oldKey=mon.moves[choice.replaceIndex];
+    menuFrame(this,'TECHNIQUE CHANGE',`${shortName.toUpperCase()}  Lv.${mon.lvl}   A CONFIRM   B BACK`);
+    menuPanel(this,10,49,222,228);menuPanel(this,240,49,230,228);
+    battleTechniqueDetail(this,{x:10,y:49,width:222,height:228,panel:false,title:'FORGET',move:oldMove,stamina:`${currentMoveStamina(mon,oldKey)}/${moveStaminaMax(oldKey)}`,formMatch:form===oldMove.style});
+    battleTechniqueDetail(this,{x:240,y:49,width:230,height:228,panel:false,title:'LEARN',move:newMove,stamina:`${newMove.pp}/${newMove.pp}`,formMatch:form===newMove.style});
+    battleDecisionButtons(this,{labels:['REPLACE','BACK'],selected:this.sel});
   }
   drawLearnConfirm(){
-    const move=MOVES[this.moveLearn?.move];if(!move)return;
-    this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(66,151,348,151);
-    this.add.text(88,172,`Skip ${move.name}?`,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
-    this.add.text(88,202,'The new technique will be lost.',{fontFamily:FONT,fontSize:15,color:'#444'});
-    ['YES','NO'].forEach((label,i)=>this.add.text(150+i*180,254,`${i===this.sel?'\u25b6':' '} ${label}`,{fontFamily:FONT,fontSize:17,color:i===this.sel?'#8a1720':'#111',fontStyle:'bold'}).setOrigin(.5,0));
+    const mon=this.moveLearn?.mon,move=MOVES[this.moveLearn?.move];if(!mon||!move)return;
+    this.drawLearnMove(mon.moves.length);
+    battleDecisionConfirm(this,{title:'SKIP THIS TECHNIQUE?',body:`${wrestlerName(mon,{short:true})} will not learn ${move.name}.`,labels:['YES','NO'],selected:this.sel});
   }
   drawCommand(lr,leadMon){
     const name=wrestlerName(leadMon,{short:true});
@@ -987,13 +989,21 @@ export class BattleScene extends Phaser.Scene{
   drawFight(r){
     this.drawCommandBox(7,BOTTOM_Y,300,75);this.drawCommandBox(313,BOTTOM_Y,160,75);
     const leadMon=lead(this.state),moves=leadMon?.moves||r.moves||[];
-    moves.forEach((key,i)=>{const m=MOVES[key],x=20+(i%2)*142,y=BOTTOM_Y+13+(i>1?31:0),available=currentMoveStamina(leadMon,key)>0;this.add.text(x,y,`${i===this.sel?'\u25b6':' '}${m.name}`,{fontFamily:FONT,fontSize:15,color:i===this.sel?'#8a1720':available?'#111':'#888',fontStyle:i===this.sel?'bold':'normal'});});
+    const cells=this.add.graphics();
+    moves.forEach((key,i)=>{
+      const m=MOVES[key],cellX=14+(i%2)*145,cellY=BOTTOM_Y+8+(i>1?31:0),available=currentMoveStamina(leadMon,key)>0,active=i===this.sel;
+      if(active){cells.fillStyle(0x7b1d2a,.13);cells.fillRect(cellX,cellY,140,28);cells.lineStyle(1,0x7b1d2a,.9);cells.strokeRect(cellX,cellY,140,28);}
+      else if(!available){cells.fillStyle(0x5f5c57,.1);cells.fillRect(cellX,cellY,140,28);}
+      const fontSize=m.name.length>16?12:m.name.length>12?13:14;
+      this.add.text(cellX+6,cellY+5,`${active?'> ':''}${m.name}`,{fontFamily:FONT,fontSize,color:active?'#8a1720':available?'#111':'#888',fontStyle:active?'bold':'normal'});
+    });
     const mv=MOVES[moves[this.sel]];if(!mv)return;
     const moveKey=moves[this.sel],sameForm=ROSTER[leadMon.id]?.style===mv.style,power=mv.power>0?mv.power:'--';
-    this.add.text(325,BOTTOM_Y+9,`${mv.style.toUpperCase()}${sameForm?' *':''}`,{fontFamily:FONT,fontSize:13,color:sameForm?'#8a1720':'#111',fontStyle:'bold'});
-    this.add.text(325,BOTTOM_Y+28,`${mv.category==='technique'?'TECHNIQUE':mv.category==='strength'?'STRENGTH':'SETUP'}`,{fontFamily:FONT,fontSize:12,color:'#444',fontStyle:'bold'});
-    this.add.text(325,BOTTOM_Y+46,`PWR ${power}  ACC ${Math.round(mv.acc*100)}%`,{fontFamily:FONT,fontSize:12,color:'#333'});
-    this.add.text(325,BOTTOM_Y+59,`STA ${currentMoveStamina(leadMon,moveKey)}/${moveStaminaMax(moveKey)}`,{fontFamily:FONT,fontSize:12,color:'#355f87',fontStyle:'bold'});
+    const styleColor=`#${techniqueStyleColor(mv).toString(16).padStart(6,'0')}`,categoryColor=`#${techniqueCategoryColor(mv).toString(16).padStart(6,'0')}`;
+    this.add.text(325,BOTTOM_Y+8,`${mv.style.toUpperCase()}${sameForm?'  x1.5':''}`,{fontFamily:FONT,fontSize:12,color:sameForm?'#8a1720':styleColor,fontStyle:'bold'});
+    this.add.text(325,BOTTOM_Y+24,techniqueCategoryLabel(mv),{fontFamily:FONT,fontSize:10,color:categoryColor,fontStyle:'bold'});
+    this.add.text(325,BOTTOM_Y+40,`PWR ${power}   ACC ${Math.round(mv.acc*100)}%`,{fontFamily:FONT,fontSize:11,color:'#333',fontStyle:'bold'});
+    this.add.text(325,BOTTOM_Y+56,`STA ${currentMoveStamina(leadMon,moveKey)} / ${moveStaminaMax(moveKey)}`,{fontFamily:FONT,fontSize:11,color:'#355f87',fontStyle:'bold'});
   }
   drawBagNative(){
     const leadMon=lead(this.state),selected=BAG_ITEMS[this.sel],definition=selected&&ITEM_DEFS[selected.key],quantity=selected?(this.state.items?.[selected.key]||0):0;
@@ -1024,8 +1034,10 @@ export class BattleScene extends Phaser.Scene{
     this.drawTextBox(7,BOTTOM_Y,466,75);
     const headings={VICTORY:'Match won.',CHAMPION:'Championship won.',LOSS:'Match complete.',JOINED:'Wrestler joined.',LEFT:'Scouting ended.'};
     const heading=headings[this.resultTitle]||this.resultTitle;
-    this.add.text(22,BOTTOM_Y+12,heading,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
-    this.add.text(22,BOTTOM_Y+43,'A  CONTINUE',{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'});
+    const detail=this.resultTitle==='VICTORY'?`${this.opponentName()} defeated.`:this.resultTitle==='CHAMPION'?'Season championship secured.':this.resultTitle==='LOSS'?'The lineup has been restored.':'';
+    this.add.text(22,BOTTOM_Y+9,heading,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
+    if(detail)this.add.text(22,BOTTOM_Y+38,detail,{fontFamily:FONT,fontSize:12,color:'#444',fontStyle:'bold'});
+    this.add.text(451,BOTTOM_Y+42,'A  CONTINUE',{fontFamily:FONT,fontSize:12,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(1,0);
   }
   developmentCeremony(mon,onDone){
     if(this.transitioning)return onDone();const before=this.wrestlerSnapshot(mon),result=applyPendingDevelopment(mon);if(!result)return onDone();

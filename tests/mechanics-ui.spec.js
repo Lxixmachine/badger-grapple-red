@@ -385,6 +385,10 @@ test('trainer victory resolves through typed defeat dialogue before the continue
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
     over:true,inputLocked:true,mode:'postBattle',battlePhase:'post-battle-message'
   });
+  await expect.poll(async()=>page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    return scene.mode==='postBattle'&&!scene.typeTimer&&scene.messagePrompt?.text==='\u25bc';
+  }),{timeout:4_000}).toBe(true);
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:8_000}).toBe('result');
   const result=await page.evaluate(()=>{
     const scene=window.badgerGame.scene.getScene('BattleScene');
@@ -475,11 +479,25 @@ test('a fifth level-up technique requires an explicit replacement choice',async(
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
     mode:'learnMove',selected:0,moveLearning:{wrestlerId:'buckvarsity',move:'reattack'}
   });
+  const learningUi=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    const visible=scene.children.list.filter(child=>child.visible&&(child.type==='Text'||child.type==='Image'));
+    return {
+      labels:visible.filter(child=>child.type==='Text').map(child=>child.text),
+      outOfBounds:visible.map(child=>child.getBounds()).filter(bounds=>bounds.left<0||bounds.top<0||bounds.right>480||bounds.bottom>320),
+      scaledImages:visible.filter(child=>child.type==='Image'&&(child.scaleX!==1||child.scaleY!==1)).length
+    };
+  });
+  expect(learningUi.labels).toEqual(expect.arrayContaining(['TECHNIQUE TRAINING','CURRENT TECHNIQUES','NEW TECHNIQUE','DO NOT LEARN','NO FORM BONUS']));
+  expect(learningUi.outOfBounds).toEqual([]);
+  expect(learningUi.scaledImages).toBe(0);
   await press(page,'down');
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
     mode:'learnInspect',selected:1
   });
+  const comparisonLabels=await page.evaluate(()=>window.badgerGame.scene.getScene('BattleScene').children.list.filter(child=>child.type==='Text').map(child=>child.text));
+  expect(comparisonLabels).toEqual(expect.arrayContaining(['TECHNIQUE CHANGE','FORGET','LEARN','REPLACE','> BACK']));
   await page.waitForTimeout(180);
   await press(page,'left');
   await press(page,'a');

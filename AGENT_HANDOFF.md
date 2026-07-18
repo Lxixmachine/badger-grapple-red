@@ -3848,3 +3848,32 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   sequential browser suite pass; final suite count is 147/147.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Battle Decision Pass (v22.50)
+
+- Technique learning is now a native 480x320 roster decision workflow. The
+  player sees all four current techniques, current/max Stamina, the incoming
+  technique's Power, Accuracy, Stamina, category, style, summary, and the
+  exact x1.5 form bonus before choosing a replacement.
+- Replacement review compares the forgotten and learned techniques side by
+  side. Skipping uses an explicit YES/NO confirmation over the same training
+  screen. Existing controls and mechanics are preserved: one-column technique
+  selection, B to back out, and the pending move blocks progression until a
+  real decision is made.
+- `src/systems/battleDecisionUi.js` owns the shared technique rows, detail
+  cards, decision buttons, and confirmation presentation. The in-battle move
+  grid now exposes selected and exhausted cells clearly while retaining the
+  working arena, status HUD, and four-command structure.
+- Post-match dialogue now runs through the standard typed battle-feedback
+  sequence. It retains automatic pacing but also exposes the same visible
+  prompt and A-button advance behavior as technique results and combat
+  consequences. The final result panel has clearer outcome hierarchy.
+- `npm run review:battle-decisions` captures command, move, switch, technique
+  learning, comparison, skip confirmation, post-match dialogue, and result
+  screens from the native Phaser framebuffer. It asserts the 480x320 / zoom 1
+  contract, no out-of-bounds text or images, and no scaled image actors.
+- Battle workflow tests pass 23/23. Static validation, battle-art validation,
+  balance, map lint, production build, the visual workflow audit, and the
+  complete sequential browser suite pass; final suite count is 147/147.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.
