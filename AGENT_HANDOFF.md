@@ -1,5 +1,29 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.39 Battle Ceremony)
+
+The opening Rex wrestle-off is now the golden battle-presentation slice. The
+live battle stages a trainer challenge, opponent send-out, player send-out,
+typed defeat response, and restrained result/EXP panel instead of collapsing
+both introductions into one transition and ending on an arcade-style victory
+plaque. Input remains locked during ceremony phases and returns only when the
+command or result screen is ready.
+
+Player and Rex trainer figures are compiled from the retained approved
+ImageGen overworld masters into native 128x128 runtime assets. They use 64px
+logical silhouettes, exact 2x pixels, binary alpha, at most 15 colors, scale 1,
+and opposing side poses so they face each other. The compiler is
+`tools/prepare_battle_trainer_assets.py`; `validate_battle_assets.py` now
+enforces the same pixel contract for both trainer assets.
+
+`tests/mechanics-ui.spec.js` covers the exact challenge/send-out phase order,
+native trainer texture dimensions, post-battle input lock, typed resolution,
+opening-story persistence, and removal of the old `VICTORY` plaque. Keep the
+next battle work focused on per-KO EXP choreography, broader trainer-class
+portraits, move breadth, and the remaining FireRed-style battle transitions.
+Tony's dirty State Street composition files were not rebuilt, staged, or
+reverted.
+
 ## Latest Codex Turn (v22.15 Lakeshore Journey)
 
 Lakeshore Path and Picnic Point are now a continuous production route rather

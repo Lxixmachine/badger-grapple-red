@@ -28,7 +28,7 @@ async function press(page, key) {
 test('production build boots the Season One atlas and generated character art', async ({page}) => {
   const issues = collectRuntimeIssues(page);
   await openTestBuild(page);
-  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.38-field-house-arrival');
+  await expect.poll(async () => page.evaluate(() => window.BADGER_VERSION)).toBe('22.39-battle-ceremony');
 
   const textures = await page.evaluate(() => [
     'season-one-metatiles',
@@ -151,10 +151,11 @@ test('opening persona choice gives Rex the counter style and launches the wrestl
   await press(page, 'a');
   await expect.poll(async () => page.evaluate(() => window.__badgerTest.activeSceneKeys()), {timeout: 8_000})
     .toContain('BattleScene');
-  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
+  await expect.poll(async () => page.evaluate(() => window.__badgerTest.sceneState('BattleScene')), {timeout: 10_000}).toMatchObject({
     battleType: 'opening',
     trainerName: 'Rex',
-    inputLocked: false
+    inputLocked: false,
+    battlePhase: 'command'
   });
   expect(issues).toEqual([]);
 });

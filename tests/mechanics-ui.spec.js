@@ -251,6 +251,57 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   expect(Date.now()-started).toBeGreaterThan(4200);
 });
 
+test('opening wrestle-off stages the challenge and both send-outs before command input',async({page})=>{
+  await bootWithSave(page,{
+    playerName:'Walk-On',party:[legacyWrestler('buckshot',5)],active:0,box:[],items:{},
+    dex:{seen:{},caught:{buckshot:true}},flags:{introDone:true,personaChosen:true,openingBattleReady:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({team:[['fieldflyer',5]],battleType:'opening',trainerName:'Rex',reward:{grit:0,rep:0}}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:5_000}).toBe('trainer-challenge');
+  const challenge=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    return scene.children.list.filter(child=>child.type==='Image').map(child=>({
+      key:child.texture.key,scale:[child.scaleX,child.scaleY],display:[child.displayWidth,child.displayHeight]
+    }));
+  });
+  expect(challenge).toEqual(expect.arrayContaining([
+    {key:'battle_trainer_player',scale:[1,1],display:[128,128]},
+    {key:'battle_trainer_rex',scale:[1,1],display:[128,128]}
+  ]));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:5_000}).toBe('opponent-send-out');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:5_000}).toBe('player-send-out');
+  await waitForBattleCommand(page);
+  const state=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'));
+  expect(state.battlePhaseHistory).toEqual(['intro','trainer-challenge','opponent-send-out','player-send-out','command']);
+  expect(state).toMatchObject({introStage:'complete',inputLocked:false,mode:'command'});
+});
+
+test('trainer victory resolves through typed defeat dialogue before the continue prompt',async({page})=>{
+  await bootWithSave(page,{
+    playerName:'Walk-On',party:[legacyWrestler('buckshot',5)],active:0,box:[],items:{},
+    dex:{seen:{},caught:{buckshot:true}},flags:{introDone:true,personaChosen:true,openingBattleReady:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({team:[['fieldflyer',5]],battleType:'opening',trainerName:'Rex',reward:{grit:0,rep:0}}));
+  await waitForBattleCommand(page);
+  await page.evaluate(()=>window.__badgerTest.winBattle());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
+    over:true,inputLocked:true,mode:'postBattle',battlePhase:'post-battle-message'
+  });
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:8_000}).toBe('result');
+  const result=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    return {
+      state:window.__badgerTest.sceneState('BattleScene'),
+      labels:scene.children.list.filter(child=>child.type==='Text').map(child=>child.text)
+    };
+  });
+  expect(result.state.battlePhaseHistory).toEqual(expect.arrayContaining(['post-battle-message','result']));
+  expect(result.labels).toContain('Match won.');
+  expect(result.labels).toContain('A  CONTINUE');
+  expect(result.labels).not.toContain('VICTORY');
+  expect(await page.evaluate(()=>window.__badgerTest.storage().flags.openingBattleComplete)).toBe(true);
+});
+
 test('every product UI scene uses the native integer viewport',async({page})=>{
   const inspect=sceneKey=>page.evaluate(key=>{
     const scene=window.badgerGame.scene.getScene(key),camera=scene.cameras.main;

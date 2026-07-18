@@ -15,6 +15,7 @@ MAX_SPRITE_COLORS = 15
 MAX_ARENA_COLORS = 32
 EXPECTED_ROSTER_SIZE = 26
 LEGACY_ASSETS = ("badger", "neutral", "top", "scramble", "pace")
+TRAINER_ASSETS = ("player", "rex")
 
 
 def assert_integer_blocks(image: Image.Image, label: str) -> None:
@@ -82,10 +83,13 @@ def main() -> None:
     for asset in LEGACY_ASSETS:
         validate_sprite(SPRITE_DIR / f"battle_{asset}_v2.png")
         validate_sprite(SPRITE_DIR / f"battle_{asset}_back_v2.png")
+    for asset in TRAINER_ASSETS:
+        validate_sprite(SPRITE_DIR / f"battle_trainer_{asset}_v1.png")
     validate_arena()
     print(
         f"Battle art contract clean: {len(fronts)} roster identities and "
-        f"{len(LEGACY_ASSETS)} fallbacks, 64px logical sprites, binary alpha, "
+        f"{len(LEGACY_ASSETS)} fallbacks plus {len(TRAINER_ASSETS)} trainers, "
+        "64px logical sprites, binary alpha, "
         "limited palettes, exact 2x runtime pixels."
     )
 
