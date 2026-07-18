@@ -3567,3 +3567,27 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   targeted traversal/door checks, and the complete sequential browser suite
   pass; final suite count is 123/123. Tony's phone verdict remains the visual
   close condition; tests establish correctness, not FireRed parity by fiat.
+
+## Codex Knockout Progression Pass (v22.40)
+
+- Battle progression now follows the FireRed order for every defeated
+  wrestler: faint, per-recipient EXP message and animated bar, level-up fanfare
+  and six-stat delta panel, automatic technique message, required fifth-move
+  decision, optional trainer-match switch prompt, then the next send-out.
+- Trainer matches with another opponent offer `SWITCH / STAY`. Choosing a
+  healthy reserve changes the lead before the next send-out and does not grant
+  the opponent a free attack. B returns from the optional lineup screen to the
+  prompt; forced replacements still cannot be cancelled.
+- EXP is no longer replayed as an aggregate on the final result screen.
+  Development is a locked, front-sprite post-match ceremony and pending
+  development is honored after losses instead of being silently deleted.
+- `knockOutEnemy()` is the behavioral test hook for timed progression. The
+  older `winBattle()` hook remains an immediate story-test shortcut and awards
+  EXP before bypassing timed decisions; do not use it to validate ceremony
+  timing.
+- Phone captures verified the 480x320 presentation for EXP, level-up stats,
+  and the switch prompt. Static validation, battle-art validation, balance,
+  map lint, build, 127 unaffected browser checks, all four real progression
+  checks, and all four force-win story checks pass.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

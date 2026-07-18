@@ -22,15 +22,14 @@ export class BattleScene extends Phaser.Scene{
     this.roundLabel=data.roundLabel||null;
     this.winMsg=data.winMsg||null;
     this.beatenMsg=data.beatenMsg||null;
-    this.turn=1;this.sel=0;this.mode='command';this.battlePhase='intro';this.battlePhaseHistory=['intro'];this.introStage='transition';this.postBattleStage='';this.over=false;this.recruit=false;this.forcedSwap=false;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;this.pendingNickname=null;
-    this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.attackSide=null;this.moveStyle='';this.moveCategory='';this.expGain=0;this.lastChooseAt=0;this.inputLocked=true;
-    this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();
+    this.turn=1;this.sel=0;this.mode='command';this.battlePhase='intro';this.battlePhaseHistory=['intro'];this.introStage='transition';this.postBattleStage='';this.over=false;this.recruit=false;this.forcedSwap=false;this.preOpponentSwitch=false;this.pendingOpponentIndex=null;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;this.pendingNickname=null;
+    this.firstBattleDraw=true;this.transitioning=false;this.prevMeters=null;this.attackAnim=null;this.attackSide=null;this.moveStyle='';this.moveCategory='';this.lastChooseAt=0;this.inputLocked=true;
+    this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();this.rewardEvent=null;this.rewardHistory=[];this.rewardViewLevel=null;this.rewardViewProgress=0;this.rewardViewHp=0;this.rewardText='';this.levelSummary=null;this.developmentEvent=null;this.finalizingBattle=false;
     const openLine=this.type==='opening'
       ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
       :this.type==='wild'?`${wrestlerName(this.enemy())} takes the mat as the ${personaFor(this.enemy().id)}!`:`${this.trainerName||'Opponent'} sends out ${wrestlerName(this.enemy())} - ${personaFor(this.enemy().id)} form!`;
     this.log=[openLine];
     const l=lead(this.state);if(l){const s=scaledStats(l.id,l.lvl,l);if(!Number.isFinite(l.hp)||l.hp<=0)l.hp=s.hp;l.score=0;}this.participants=new Set(l?[l]:[]);this.enemyTeam.forEach(e=>e.score=0);
-    this.progressMon=l;this.leadProgressStart=l?{lvl:l.lvl,xp:l.xp,id:l.id,nickname:l.nickname}:null;
     this.state.stats={scouts:0,battles:0,wins:0,recruits:0,streak:0,...(this.state.stats||{})};this.state.stats.battles++;saveState(this.state);
     this.input.keyboard.on('keydown-LEFT',()=>this.move(-1,0));this.input.keyboard.on('keydown-RIGHT',()=>this.move(1,0));this.input.keyboard.on('keydown-UP',()=>this.move(0,-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(0,1));
     this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-ESC',()=>this.back());
@@ -66,11 +65,11 @@ export class BattleScene extends Phaser.Scene{
     this.mode='intro';this.introStage=step.stage;this.setBattlePhase(step.phase);this.drawBattle();this.typeText(this.resolveText,step.text,17);
     this.time.delayedCall(step.duration,()=>{if(this.scene.isActive()&&!this.over)this.runIntroSequence(index+1);});
   }
-  runPostBattleSequence(lines){
+  runPostBattleSequence(lines,onDone=()=>this.showBattleResult()){
     const queue=lines.filter(Boolean);let index=0;
     const next=()=>{
       if(!this.scene.isActive())return;
-      if(index>=queue.length){this.postBattleStage='complete';this.mode='result';this.inputLocked=false;this.setBattlePhase('result');this.drawBattle();return;}
+      if(index>=queue.length){this.postBattleStage='complete';return onDone();}
       this.postBattleStage=index===0?'decision':'response';this.mode='postBattle';this.inputLocked=true;this.setBattlePhase('post-battle-message');this.drawBattle();
       const line=queue[index++];this.typeText(this.resolveText,line,17);
       this.time.delayedCall(Phaser.Math.Clamp(line.length*24+520,1200,1850),next);
@@ -95,10 +94,10 @@ export class BattleScene extends Phaser.Scene{
     return [`${player} lost to ${this.opponentName()}.`,'The Trainer restored the travel lineup.'];
   }
   handleVirtualButton(k){unlockAudio();if(k==='a'&&this.inputLocked&&this.typeTimer)return this.finishTypeText();if(k==='left')this.move(-1,0);if(k==='right')this.move(1,0);if(k==='up')this.move(0,-1);if(k==='down')this.move(0,1);if(k==='a')this.choose();if(k==='b')this.back();}
-  count(){if(this.mode==='fight'){const l=lead(this.state);return (l?.moves||ROSTER[l?.id]?.moves||[]).length||1;}if(this.mode==='party')return Math.max(1,this.state.party.length);if(this.mode==='bag')return BAG_ITEMS.length;if(this.mode==='learnMove')return (this.moveLearn?.mon?.moves?.length||0)+1;if(this.mode==='learnInspect'||this.mode==='learnConfirm')return 2;return 4;}
+  count(){if(this.mode==='fight'){const l=lead(this.state);return (l?.moves||ROSTER[l?.id]?.moves||[]).length||1;}if(this.mode==='party')return Math.max(1,this.state.party.length);if(this.mode==='bag')return BAG_ITEMS.length;if(this.mode==='learnMove')return (this.moveLearn?.mon?.moves?.length||0)+1;if(this.mode==='learnInspect'||this.mode==='learnConfirm'||this.mode==='switchPrompt')return 2;return 4;}
   move(dx,dy){if(this.over||this.inputLocked)return;const old=this.sel;let cols=this.mode==='party'||this.mode==='learnMove'?1:2;let rows=Math.ceil(this.count()/cols);let x=old%cols,y=Math.floor(old/cols);if(dx)x=Phaser.Math.Wrap(x+dx,0,cols);if(dy)y=Phaser.Math.Wrap(y+dy,0,rows);this.sel=Math.min(y*cols+x,this.count()-1);this.impact='';this.drawBattle();}
-  choose(){const now=this.time.now||performance.now();if(this.inputLocked)return;if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();}
-  back(){if(this.inputLocked)return;if(this.over)return this.returnMap();if(this.mode==='learnInspect'){this.mode='learnMove';this.sel=this.moveLearn?.replaceIndex??0;return this.drawBattle();}if(this.mode==='learnConfirm'){this.mode='learnMove';this.sel=0;return this.drawBattle();}if(this.mode==='learnMove')return this.confirmStopLearning();if(this.forcedSwap)return;if(this.mode!=='command'){this.mode='command';this.sel=0;this.drawBattle();}}
+  choose(){const now=this.time.now||performance.now();if(this.inputLocked)return;if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();if(this.mode==='switchPrompt')return this.chooseSwitchPrompt();}
+  back(){if(this.inputLocked)return;if(this.over)return this.returnMap();if(this.mode==='learnInspect'){this.mode='learnMove';this.sel=this.moveLearn?.replaceIndex??0;return this.drawBattle();}if(this.mode==='learnConfirm'){this.mode='learnMove';this.sel=0;return this.drawBattle();}if(this.mode==='learnMove')return this.confirmStopLearning();if(this.preOpponentSwitch&&this.mode==='party'){this.preOpponentSwitch=false;this.mode='switchPrompt';this.sel=0;return this.drawBattle();}if(this.forcedSwap)return;if(this.mode!=='command'){this.mode='command';this.sel=0;this.drawBattle();}}
   addLog(lines){this.log=[...lines,...this.log].slice(0,5);}
   resolvePendingMoves(onDone){
     const mon=this.state.party.find(wrestler=>wrestler.pendingMoves?.length);
@@ -166,8 +165,8 @@ export class BattleScene extends Phaser.Scene{
     if(picked.hp<=0){this.addLog([`${wrestlerName(picked)} cannot wrestle right now.`]);this.drawBattle();return;}
     const idx=this.state.party.indexOf(picked);
     if(idx<0)return;
-    const wasForced=this.forcedSwap;
-    if(idx===0&&!wasForced){this.addLog([`${wrestlerName(picked)} is already wrestling.`]);this.mode='command';this.sel=0;this.drawBattle();return;}
+    const wasForced=this.forcedSwap,wasPreOpponent=this.preOpponentSwitch;
+    if(idx===0&&!wasForced){this.addLog([`${wrestlerName(picked)} is already wrestling.`]);this.mode=wasPreOpponent?'switchPrompt':'command';this.preOpponentSwitch=false;this.sel=0;this.drawBattle();return;}
     if(idx>0){this.state.party.splice(idx,1);this.state.party.unshift(picked);}
     this.state.active=0;
     this.combatState(picked,true);
@@ -176,7 +175,31 @@ export class BattleScene extends Phaser.Scene{
     this.addLog([`${wrestlerName(picked)} steps onto the mat!`]);
     this.mode='command';this.sel=0;
     if(wasForced){this.forcedSwap=false;this.drawBattle();return;}
+    if(wasPreOpponent){this.preOpponentSwitch=false;this.sendNextOpponent();return;}
     this.enemyOnlyStrike();
+  }
+  chooseSwitchPrompt(){
+    if(this.sel===0){
+      this.preOpponentSwitch=true;this.mode='party';this.sel=Math.max(0,this.state.party.findIndex((mon,index)=>index>0&&mon.hp>0));this.drawBattle();return;
+    }
+    this.sendNextOpponent();
+  }
+  offerNextOpponent(){
+    this.pendingOpponentIndex=this.enemyIdx+1;
+    const canSwitch=this.type!=='wild'&&this.state.party.some((mon,index)=>index>0&&mon.hp>0);
+    if(!canSwitch)return this.sendNextOpponent();
+    this.inputLocked=false;this.mode='switchPrompt';this.sel=0;this.setBattlePhase('switch-prompt');this.drawBattle();
+  }
+  sendNextOpponent(){
+    const nextIndex=this.pendingOpponentIndex??(this.enemyIdx+1);
+    if(nextIndex>=this.enemyTeam.length){this.pendingOpponentIndex=null;return this.win();}
+    this.enemyIdx=nextIndex;this.pendingOpponentIndex=null;const next=this.enemy();this.combatState(next,true);
+    const current=lead(this.state);this.participants=new Set(current?[current]:[]);
+    this.impact='';this.attackAnim=null;this.prevMeters=null;this.inputLocked=true;this.mode='resolving';this.setBattlePhase('opponent-send-out');this.drawBattle();
+    const line=`${this.trainerName||'Opponent'} sends out ${wrestlerName(next)} - ${personaFor(next.id)} form!`;
+    this.setResolveText(line);this.addLog([`${this.trainerName||'Opponent'} sends out ${wrestlerName(next)}!`]);
+    if(this.enemySprite&&this.enemySprite.scene){this.enemySprite.x=GAME_W+80;this.enemySprite.setAlpha(1);this.tweenSpritePixels(this.enemySprite,{x:ENEMY_POS.x,duration:520,ease:'Cubic.Out'});this.personaFlash(this.enemySprite,520);}
+    this.time.delayedCall(1180,()=>{if(this.over)return;this.inputLocked=false;this.mode='command';this.setBattlePhase('command');this.sel=0;saveState(this.state);this.drawBattle();});
   }
   enemyOnlyStrike(){
     const l=lead(this.state),e=this.enemy();
@@ -338,35 +361,67 @@ export class BattleScene extends Phaser.Scene{
     act(order[0],()=>act(order[1],finish));
   }
   resolve(att,def,key,label){const result=resolveTechnique(att,def,key,Math.random,{attackerState:this.combatState(att),defenderState:this.combatState(def)});const mv=result.move;if(!result.hit){sfx.miss();return {result,line:`${label} missed ${mv.name}.`,hit:false,dmg:0};}if(result.damage>0){sfx.hit();this.playTechniqueSound(mv.style,'impact');}else{this.playSafe('talk');this.playTechniqueSound(mv.style,'setup');}return {result,line:result.damage>0?`${label}: ${mv.name} ${result.damage}${result.multiplier>1?' EDGE':''}${result.critical?' CRITICAL':''}.`:`${label} set ${mv.name}.`,hit:true,dmg:result.damage};}
+  wrestlerSnapshot(mon){return {id:mon.id,lvl:mon.lvl,xp:mon.xp,hp:mon.hp,nickname:mon.nickname,moves:[...(mon.moves||[])]};}
   awardEnemyXp(defeated){
     if(!defeated||this.awardedEnemies.has(defeated))return [];
     this.awardedEnemies.add(defeated);
     const {awards}=distributeDefeatExperience({defeated,party:this.state.party,participants:[...this.participants],trainerBattle:this.type!=='wild'});
-    const messages=[];
-    awards.forEach(({mon,amount})=>{awardEffortForDefeat(mon,defeated);this.expGain+=amount;messages.push(`${wrestlerName(mon,{short:true})} gained ${amount} EXP!`);messages.push(...addXp(mon,amount,{deferDevelopment:true}));});
-    this.addLog(messages);
-    return messages;
+    const events=awards.map(({mon,amount,participated,viaExpShare})=>{
+      awardEffortForDefeat(mon,defeated);const before=this.wrestlerSnapshot(mon),messages=addXp(mon,amount,{deferDevelopment:true}),after=this.wrestlerSnapshot(mon);
+      const levelSteps=[];
+      for(let level=before.lvl+1;level<=after.lvl;level++)levelSteps.push({level,beforeStats:scaledStats(before.id,level-1,mon),afterStats:scaledStats(before.id,level,mon)});
+      const automaticMessages=messages.filter(line=>line.includes(' learned ')&&!line.includes(' wants to learn '));
+      return {mon,amount,participated,viaExpShare,before,after,levelSteps,automaticMessages};
+    });
+    const messages=events.flatMap(event=>[`${wrestlerName(event.mon,{short:true})} gained ${event.amount} EXP!`,...event.automaticMessages]);
+    this.addLog(messages);this.rewardHistory.push(...events.map(event=>({wrestlerId:event.mon.id,amount:event.amount,beforeLevel:event.before.lvl,afterLevel:event.after.lvl,viaExpShare:event.viaExpShare})));
+    return events;
+  }
+  runKnockoutRewards(events,onDone){
+    const queue=[...events];let index=0;
+    const next=()=>{
+      if(index>=queue.length){this.rewardEvent=null;this.levelSummary=null;this.rewardText='';saveState(this.state);return onDone();}
+      this.startRewardEvent(queue[index++],next);
+    };
+    next();
+  }
+  startRewardEvent(event,onDone){
+    this.rewardEvent=event;this.rewardViewLevel=event.before.lvl;this.rewardViewProgress=experienceProgress(event.before);this.rewardViewHp=event.before.hp;this.levelSummary=null;
+    this.rewardText=`${wrestlerName(event.mon,{short:true})} gained ${event.amount} EXP!`;this.inputLocked=true;this.mode='expReward';this.setBattlePhase('exp-gain');this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);
+    const segments=[];let level=event.before.lvl,xp=event.before.xp;
+    while(level<event.after.lvl){segments.push({from:experienceProgress({id:event.before.id,lvl:level,xp}),to:1,levelUpTo:level+1});level++;xp=experienceAtLevel(event.before.id,level);}
+    segments.push({from:experienceProgress({id:event.after.id,lvl:level,xp}),to:experienceProgress(event.after),levelUpTo:null});
+    this.time.delayedCall(760,()=>this.animateRewardSegments(event,segments,0,()=>this.playRewardMessages(event.automaticMessages,onDone)));
+  }
+  animateRewardSegments(event,segments,index,onDone){
+    if(index>=segments.length)return onDone();
+    const segment=segments[index],value={progress:segment.from};this.rewardViewProgress=segment.from;this.paintRewardExp(segment.from);
+    this.tweens.add({targets:value,progress:segment.to,duration:Math.max(280,620*Math.max(.18,segment.to-segment.from)),ease:'Sine.Out',onUpdate:()=>{this.rewardViewProgress=value.progress;this.paintRewardExp(value.progress);},onComplete:()=>{
+      if(!segment.levelUpTo)return this.animateRewardSegments(event,segments,index+1,onDone);
+      this.rewardViewLevel=segment.levelUpTo;this.rewardViewProgress=0;this.levelSummary=event.levelSteps.find(step=>step.level===segment.levelUpTo)||null;
+      if(this.levelSummary)this.rewardViewHp=Math.min(this.levelSummary.afterStats.hp,this.rewardViewHp+Math.max(0,this.levelSummary.afterStats.hp-this.levelSummary.beforeStats.hp));
+      this.rewardText=`${wrestlerName(event.mon,{short:true})} grew to Lv. ${segment.levelUpTo}!`;this.mode='levelUp';this.setBattlePhase('level-up');this.playSafe('levelup');this.cameras.main.flash(100,255,240,180);this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);
+      this.time.delayedCall(1250,()=>{this.levelSummary=null;this.mode='expReward';this.drawBattle();this.animateRewardSegments(event,segments,index+1,onDone);});
+    }});
+  }
+  playRewardMessages(messages,onDone){
+    const queue=[...messages];let index=0;
+    const next=()=>{
+      if(index>=queue.length)return this.time.delayedCall(320,onDone);
+      this.rewardText=queue[index++];this.mode='expReward';this.setBattlePhase('move-learned');this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);this.time.delayedCall(Phaser.Math.Clamp(this.rewardText.length*20+420,900,1300),next);
+    };
+    next();
   }
   enemyDown(){
     const defeated=this.enemy();this.state.dex.seen[defeated.id]=true;this.state.dex.defeated[defeated.id]=true;
     this.inputLocked=true;
     const proceed=()=>{
-      if(this.enemyIdx<this.enemyTeam.length-1){
-        this.enemyIdx++;const next=this.enemy();this.combatState(next,true);
-        const current=lead(this.state);this.participants=new Set(current?[current]:[]);
-        this.impact='';this.attackAnim=null;this.prevMeters=null;
-        this.mode='resolving';this.drawBattle();
-        this.setResolveText(`${this.trainerName||'Opponent'} sends out ${wrestlerName(next)} - ${personaFor(next.id)} form!`);
-        this.addLog([`${this.trainerName||'Opponent'} sends out ${wrestlerName(next)}!`]);
-        if(this.enemySprite&&this.enemySprite.scene){this.enemySprite.x=GAME_W+80;this.enemySprite.setAlpha(1);this.tweenSpritePixels(this.enemySprite,{x:ENEMY_POS.x,duration:520,ease:'Cubic.Out'});this.personaFlash(this.enemySprite,520);}
-        this.time.delayedCall(1180,()=>{if(this.over)return;this.inputLocked=false;this.mode='command';this.sel=0;saveState(this.state);this.drawBattle();});
-        return;
-      }
+      if(this.enemyIdx<this.enemyTeam.length-1)return this.offerNextOpponent();
       this.inputLocked=false;this.win();
     };
-    const messages=this.awardEnemyXp(defeated);
+    const events=this.awardEnemyXp(defeated);
     const handleMoves=()=>this.resolvePendingMoves(proceed);
-    if(messages.length)this.playResolveSequence(messages,handleMoves);else handleMoves();
+    if(events.length)this.runKnockoutRewards(events,handleMoves);else handleMoves();
   }
   playerDown(){
     const anyHealthy=this.state.party.some(m=>m.hp>0);
@@ -379,16 +434,15 @@ export class BattleScene extends Phaser.Scene{
     this.lose();
   }
   win(){
-    const l=lead(this.state);this.over=true;this.inputLocked=true;this.mode='postBattle';this.resultTitle='VICTORY';
+    if(this.finalizingBattle)return;
+    const pendingEvents=this.enemyTeam.flatMap(mon=>this.awardEnemyXp(mon));
+    if(pendingEvents.length){this.inputLocked=true;return this.runKnockoutRewards(pendingEvents,()=>this.resolvePendingMoves(()=>this.win()));}
+    const l=lead(this.state);this.finalizingBattle=true;this.over=true;this.inputLocked=true;this.mode='postBattle';this.resultTitle='VICTORY';
     this.enemyTeam.forEach(mon=>{this.state.dex.seen[mon.id]=true;this.state.dex.defeated[mon.id]=true;});
-    this.enemyTeam.forEach(mon=>this.awardEnemyXp(mon));
-    const developments=this.state.party.map(applyPendingDevelopment).filter(Boolean);
-    if(developments.length)this.addLog(developments.map(result=>`${result.fromName} developed into ${result.toName}!`));
     this.state.stats.wins++;this.state.stats.streak++;
     const grit=this.reward?.grit??(this.type==='gym'?22:Phaser.Math.Between(6,10));
     const rep=this.reward?.rep??(this.type==='gym'?14:Phaser.Math.Between(2,5));
     this.state.grit+=grit;this.state.rep+=rep;
-    if(this.progressMon&&this.leadProgressStart)this.progress={before:this.leadProgressStart,after:{lvl:this.progressMon.lvl,xp:this.progressMon.xp,id:this.progressMon.id,nickname:this.progressMon.nickname},played:false};
     const badgeName=this.badge?canonicalBadge(this.badge):null;
     const badgeEarned=badgeName&&!this.state.badges.includes(badgeName);
     if(badgeEarned){this.state.badges.push(badgeName);if(this.badge!==badgeName)this.state.badges.push(this.badge);this.log.unshift(`Badge: ${badgeName}.`);}
@@ -412,11 +466,11 @@ export class BattleScene extends Phaser.Scene{
     if(this.type==='wild'&&this.state.objective?.id==='scout_quad'){this.state.objective={id:'recruit_first',stage:3,complete:false,log:['Recruit your first wrestler',...(this.state.objective?.log||[])]};}
     if(this.state.objective?.id==='win_spar'){this.state.objective={id:'return_coach',stage:5,complete:false,log:['Return to Coach',...(this.state.objective?.log||[])]};}
     this.state.message=this.type==='opening'?'':this.type==='tournament'?(this.winMsg||`Won the ${this.roundLabel||'round'}.`):`Won vs ${this.trainerName||ROSTER[this.enemy().id].name}.`;
-    saveState(this.state);this.runPostBattleSequence(this.winPresentationLines(grit,rep,badgeName,badgeEarned));
+    const developing=this.state.party.filter(mon=>mon.pendingDevelopment);
+    saveState(this.state);this.runPostBattleSequence(this.winPresentationLines(grit,rep,badgeName,badgeEarned),()=>this.runDevelopmentCeremonies(developing,()=>this.showBattleResult()));
   }
   lose(){
     this.over=true;this.inputLocked=true;this.recruit=false;this.mode='postBattle';this.resultTitle='LOSS';this.state.stats.streak=0;
-    this.state.party.forEach(mon=>delete mon.pendingDevelopment);
     if(this.type==='opening'){
       this.state.flags.openingBattleReady=false;this.state.flags.openingBattleComplete=true;this.state.flags.openingBattleWon=false;
       this.state.opening={...(this.state.opening||{}),battleResult:'loss'};
@@ -426,10 +480,19 @@ export class BattleScene extends Phaser.Scene{
       this.state.grit+=4;this.state.rep+=2;restoreParty(this.state);
       this.addLog(['Team recovered. +4 Grit +2 Rep.']);this.state.message='Loss. Team recovered.';
     }
-    stopMusic();sfx.lose();saveState(this.state);this.runPostBattleSequence(this.lossPresentationLines());
+    const developing=this.state.party.filter(mon=>mon.pendingDevelopment);
+    stopMusic();sfx.lose();saveState(this.state);this.runPostBattleSequence(this.lossPresentationLines(),()=>this.runDevelopmentCeremonies(developing,()=>this.showBattleResult()));
+  }
+  showBattleResult(){this.mode='result';this.inputLocked=false;this.setBattlePhase('result');saveState(this.state);this.drawBattle();}
+  runDevelopmentCeremonies(mons,onDone){
+    const queue=[...mons];let index=0;
+    const next=()=>{if(index>=queue.length){this.developmentEvent=null;return onDone();}this.developmentCeremony(queue[index++],next);};
+    next();
   }
   drawBattle(){this.children.removeAll();this.drawArenaBackdrop();const l=lead(this.state),lr=l?ROSTER[l.id]:ROSTER.buckshot,er=ROSTER[this.enemy().id];
     if(this.mode==='intro'){this.drawIntroStage(l,lr,er);return;}
+    if(this.mode==='development'){this.drawDevelopmentStage();return;}
+    if(this.mode==='expReward'||this.mode==='levelUp'||this.mode==='switchPrompt'||(this.preOpponentSwitch&&this.mode==='party')){this.drawIntermissionStage(l,lr);return;}
     if(this.mode==='postBattle'||(this.over&&this.mode==='result'&&['VICTORY','CHAMPION','LOSS'].includes(this.resultTitle))){this.drawPostBattleStage(l,lr);return;}
     this.drawWrestlers(lr,er);this.drawStatusPanels(l,lr,er);this.drawBottom(lr,l);this.firstBattleDraw=false;}
   drawLineupMarkers(x,y,count,label,alignRight=false){
@@ -483,6 +546,41 @@ export class BattleScene extends Phaser.Scene{
     if(this.type!=='wild')this.drawOpponentTrainer(ENEMY_POS.x,ENEMY_POS.y+20);
     if(l)this.drawStatusBox(250,151,218,80,wrestlerName(l,{short:true}),l,lr,true);
     if(this.mode==='postBattle')this.drawBattleMessage();else this.drawResult();
+  }
+  drawIntermissionStage(l,lr){
+    this.drawBattleBases();this.enemySprite=null;
+    this.playerSprite=this.add.image(PLAYER_POS.x,PLAYER_POS.y,battleTextureFor(lr.id,true)).setOrigin(.5,1).setFlipX(battleFlipXFor(lr.id,true));
+    if(this.mode==='expReward'||this.mode==='levelUp')this.drawRewardStatus();else if(l)this.drawStatusBox(250,151,218,80,wrestlerName(l,{short:true}),l,lr,true);
+    if(this.levelSummary)this.drawLevelSummary();
+    this.drawBottom(lr,l);
+  }
+  drawRewardStatus(){
+    const event=this.rewardEvent,mon=event?.mon;if(!mon)return;
+    const x=250,y=151,w=218,h=80,viewLevel=this.rewardViewLevel??mon.lvl,stats=scaledStats(mon.id,viewLevel,mon),hp=Math.max(0,Math.min(stats.hp,Math.round(this.rewardViewHp))),g=this.add.graphics();
+    g.fillStyle(0x000000,.24);g.fillRoundedRect(x+3,y+3,w,h,3);g.fillStyle(0xf9f2dc,1);g.fillRoundedRect(x,y,w,h,3);g.lineStyle(2,0x101010,1);g.strokeRoundedRect(x,y,w,h,3);g.lineStyle(1,0xd3a13a,1);g.strokeRoundedRect(x+3,y+3,w-6,h-6,2);g.fillStyle(0x25313a,1);g.fillRect(x+6,y+6,w-12,2);
+    this.add.text(x+11,y+9,wrestlerName(mon,{short:true}),{fontFamily:FONT,fontSize:17,color:'#111',fontStyle:'bold'});
+    this.rewardLevelText=this.add.text(x+w-11,y+10,`Lv.${viewLevel}`,{fontFamily:FONT,fontSize:14,color:'#222',fontStyle:'bold'}).setOrigin(1,0);
+    this.add.text(x+11,y+36,'COND',{fontFamily:FONT,fontSize:12,color:'#333',fontStyle:'bold'});this.drawAnimatedMeter(x+58,y+39,w-71,9,undefined,hp/Math.max(1,stats.hp),0x55b867);
+    this.add.text(x+11,y+55,'EXP',{fontFamily:FONT,fontSize:11,color:'#355f87',fontStyle:'bold'});this.rewardExpGraphics=this.add.graphics();this.paintRewardExp(this.rewardViewProgress);
+    this.add.text(x+w-12,y+67,`${hp}/${stats.hp}`,{fontFamily:FONT,fontSize:12,color:'#222',fontStyle:'bold'}).setOrigin(1,0);
+  }
+  paintRewardExp(progress){
+    const g=this.rewardExpGraphics;if(!g?.scene)return;const p=Phaser.Math.Clamp(progress??0,0,1),x=308,y=209,w=147,h=6;
+    g.clear();g.fillStyle(0x111111,1);g.fillRect(x-1,y-1,w+2,h+2);g.fillStyle(0x3d3d3d,1);g.fillRect(x,y,w,h);g.fillStyle(0x3aa5d1,1);g.fillRect(x,y,Math.max(1,w*p),h);g.fillStyle(0xffffff,.3);g.fillRect(x,y,Math.max(1,w*p),1);g.lineStyle(1,0x080808,1);g.strokeRect(x-1,y-1,w+2,h+2);
+  }
+  drawLevelSummary(){
+    const step=this.levelSummary;if(!step)return;const g=this.drawTextBox(178,18,292,192);g.setDepth(80);
+    this.add.text(194,31,'LEVEL UP!',{fontFamily:FONT,fontSize:20,color:'#8a1720',fontStyle:'bold'}).setDepth(81);
+    this.add.text(451,34,`Lv.${step.level}`,{fontFamily:FONT,fontSize:16,color:'#222',fontStyle:'bold'}).setOrigin(1,0).setDepth(81);
+    const rows=[['CONDITION','hp'],['STRENGTH','attack'],['DEFENSE','defense'],['TECHNIQUE','technique'],['AWARENESS','awareness'],['SPEED','speed']];
+    rows.forEach(([label,key],index)=>{const column=Math.floor(index/3),row=index%3,x=194+column*134,y=72+row*39,gain=step.afterStats[key]-step.beforeStats[key];this.add.text(x,y,label,{fontFamily:FONT,fontSize:12,color:'#555',fontStyle:'bold'}).setDepth(81);this.add.text(x,y+16,`${step.afterStats[key]}  +${gain}`,{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold'}).setDepth(81);});
+  }
+  drawDevelopmentStage(){
+    const event=this.developmentEvent;if(!event)return;this.add.rectangle(GAME_W/2,ARENA_H/2,GAME_W,ARENA_H,0x08080c,.72);
+    this.add.text(GAME_W/2,18,'DEVELOPMENT',{fontFamily:FONT,fontSize:18,color:'#ffd56a',fontStyle:'bold'}).setOrigin(.5,0);
+    const id=event.revealed?event.after.id:event.before.id;this.developmentSprite=this.add.image(GAME_W/2,225,battleTextureFor(id)).setOrigin(.5,1);
+    if(!event.revealed)this.developmentSprite.setTint(0x322b3a);
+    this.drawBattleMessage();
   }
   drawStatusPanels(l,lr,er){
     const tag=this.enemyTeam.length>1?` ${this.enemyIdx+1}/${this.enemyTeam.length}`:'';
@@ -571,6 +669,8 @@ export class BattleScene extends Phaser.Scene{
   }
   drawBottom(lr,leadMon){
     if(this.mode==='resolving')return this.drawResolving();
+    if(this.mode==='expReward'||this.mode==='levelUp')return this.drawRewardMessage();
+    if(this.mode==='switchPrompt')return this.drawSwitchPrompt();
     if(this.mode==='learnMove')return this.drawLearnMove();
     if(this.mode==='learnInspect')return this.drawLearnInspect();
     if(this.mode==='learnConfirm')return this.drawLearnConfirm();
@@ -581,6 +681,12 @@ export class BattleScene extends Phaser.Scene{
     return this.drawResult();
   }
   drawResolving(){this.drawTextBox(7,BOTTOM_Y,466,75);this.resolveText=this.add.text(22,BOTTOM_Y+15,'',{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',wordWrap:{width:430},lineSpacing:5});}
+  drawRewardMessage(){this.drawTextBox(7,BOTTOM_Y,466,75);this.resolveText=this.add.text(22,BOTTOM_Y+15,this.rewardText||'',{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',wordWrap:{width:430},lineSpacing:5});}
+  drawSwitchPrompt(){
+    const next=this.enemyTeam[this.pendingOpponentIndex];this.drawTextBox(7,BOTTOM_Y,300,75);this.drawCommandBox(313,BOTTOM_Y,160,75);
+    this.add.text(21,BOTTOM_Y+10,`${this.opponentName()} will send`,{fontFamily:FONT,fontSize:15,color:'#222'});this.add.text(21,BOTTOM_Y+34,`${wrestlerName(next,{short:true})}. Switch?`,{fontFamily:FONT,fontSize:17,color:'#111',fontStyle:'bold'});
+    ['SWITCH','STAY'].forEach((label,index)=>this.add.text(326,BOTTOM_Y+12+index*31,`${index===this.sel?'\u25b6':' '} ${label}`,{fontFamily:FONT,fontSize:16,color:index===this.sel?'#8a1720':'#111',fontStyle:index===this.sel?'bold':'normal'}));
+  }
   drawLearnMove(){
     const choice=this.moveLearn,mon=choice?.mon,move=MOVES[choice?.move];if(!mon||!move)return;
     this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,70,460,240);
@@ -625,59 +731,23 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(325,BOTTOM_Y+59,`STA ${currentMoveStamina(leadMon,moveKey)}/${moveStaminaMax(moveKey)}`,{fontFamily:FONT,fontSize:12,color:'#355f87',fontStyle:'bold'});
   }
   drawBag(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,72,460,238);this.add.text(28,86,'BAG',{fontFamily:FONT,fontSize:20,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0,x=28+(i>2?218:0),y=124+(i%3)*35;this.add.text(x,y,`${i===this.sel?'\u25b6':' '} ${ITEM_DEFS[it.key].short} x${n}`,{fontFamily:FONT,fontSize:16,color:i===this.sel?'#8a1720':'#111',fontStyle:i===this.sel?'bold':'normal'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(28,248,it.desc,{fontFamily:FONT,fontSize:14,color:'#333',wordWrap:{width:420}});}
-  drawParty(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,65,460,245);this.add.text(28,80,this.forcedSwap?'CHOOSE NEXT WRESTLER':'TRAVEL LINEUP',{fontFamily:FONT,fontSize:19,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const s=scaledStats(m.id,m.lvl,m),tag=m.hp<=0?'  OUT':'';this.add.text(28,116+i*29,`${i===this.sel?'\u25b6':' '} ${wrestlerName(m)}  Lv.${m.lvl}`,{fontFamily:FONT,fontSize:15,color:i===this.sel?'#8a1720':m.hp<=0?'#888':'#111',fontStyle:i===this.sel?'bold':'normal'});this.add.text(440,116+i*29,`C ${m.hp}/${s.hp}${tag}`,{fontFamily:FONT,fontSize:14,color:m.hp<=0?'#888':'#333',fontStyle:'bold'}).setOrigin(1,0);});}
+  drawParty(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,65,460,245);const title=this.forcedSwap?'CHOOSE NEXT WRESTLER':this.preOpponentSwitch?'SWITCH WRESTLER':'TRAVEL LINEUP';this.add.text(28,80,title,{fontFamily:FONT,fontSize:19,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const s=scaledStats(m.id,m.lvl,m),tag=m.hp<=0?'  OUT':'';this.add.text(28,116+i*29,`${i===this.sel?'\u25b6':' '} ${wrestlerName(m)}  Lv.${m.lvl}`,{fontFamily:FONT,fontSize:15,color:i===this.sel?'#8a1720':m.hp<=0?'#888':'#111',fontStyle:i===this.sel?'bold':'normal'});this.add.text(440,116+i*29,`C ${m.hp}/${s.hp}${tag}`,{fontFamily:FONT,fontSize:14,color:m.hp<=0?'#888':'#333',fontStyle:'bold'}).setOrigin(1,0);});}
   drawResult(){
     this.drawTextBox(7,BOTTOM_Y,466,75);
     const headings={VICTORY:'Match won.',CHAMPION:'Championship won.',LOSS:'Match complete.',JOINED:'Wrestler joined.',LEFT:'Scouting ended.'};
     const heading=headings[this.resultTitle]||this.resultTitle;
     this.add.text(22,BOTTOM_Y+12,heading,{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold'});
     this.add.text(22,BOTTOM_Y+43,'A  CONTINUE',{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'});
-    if(['VICTORY','CHAMPION'].includes(this.resultTitle)&&this.progress){
-      this.add.text(232,BOTTOM_Y+12,`EXP +${this.expGain}`,{fontFamily:FONT,fontSize:13,color:'#355f87',fontStyle:'bold'});
-      if(this.progress.played)this.drawExpBar(experienceProgress(this.progress.after),this.progress.after.lvl);else this.playProgress();
-    }
   }
-  drawExpBar(p,lvl){const g=this.add.graphics();g.fillStyle(0x111111,1);g.fillRoundedRect(232,BOTTOM_Y+35,184,13,3);g.fillStyle(0x3aa5d1,1);g.fillRect(235,BOTTOM_Y+38,Math.max(1,178*Math.min(1,p)),7);g.lineStyle(1,0x080808,1);g.strokeRoundedRect(232,BOTTOM_Y+35,184,13,3);this.add.text(417,BOTTOM_Y+31,`Lv.${lvl}`,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'});return g;}
-  // FireRed victory payoff: the EXP bar fills segment by segment, each level
-  // boundary dings + flashes, and a development (evolution) plays as its own
-  // full ceremony afterward.
-  playProgress(){
-    const pr=this.progress;pr.played=true;
-    const segs=[];let lvl=pr.before.lvl,xp=pr.before.xp;
-    while(lvl<pr.after.lvl){segs.push({from:experienceProgress({id:pr.before.id,lvl,xp}),to:1,lvlUpTo:lvl+1});lvl++;xp=experienceAtLevel(pr.before.id,lvl);}
-    segs.push({from:experienceProgress({id:pr.after.id,lvl,xp}),to:experienceProgress(pr.after),lvlUpTo:null});
-    const g=this.add.graphics();
-    const lvText=this.add.text(417,BOTTOM_Y+31,`Lv.${pr.before.lvl}`,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold'});
-    const draw=p=>{if(!g.scene)return;g.clear();g.fillStyle(0x111111,1);g.fillRoundedRect(232,BOTTOM_Y+35,184,13,3);g.fillStyle(0x3aa5d1,1);g.fillRect(235,BOTTOM_Y+38,Math.max(1,178*Math.min(1,p)),7);g.lineStyle(1,0x080808,1);g.strokeRoundedRect(232,BOTTOM_Y+35,184,13,3);};
-    const run=i=>{
-      if(this.transitioning||!g.scene)return;
-      if(i>=segs.length){if(pr.before.id!==pr.after.id)this.time.delayedCall(430,()=>this.developmentCeremony(pr));return;}
-      const sgm=segs[i];const value={p:sgm.from};draw(value.p);
-      this.tweens.add({targets:value,p:sgm.to,duration:Math.max(240,520*Math.max(.15,sgm.to-sgm.from)),ease:'Sine.Out',onUpdate:()=>draw(value.p),onComplete:()=>{
-        if(sgm.lvlUpTo){this.playSafe('levelup');if(lvText.scene)lvText.setText(`Lv.${sgm.lvlUpTo}`);this.cameras.main.flash(90,255,240,180);this.time.delayedCall(360,()=>run(i+1));}
-        else run(i+1);
-      }});
-    };
-    run(0);
-  }
-  developmentCeremony(pr){
-    if(this.transitioning)return;
-    const oldR=ROSTER[pr.before.id],newR=ROSTER[pr.after.id];
-    this.playSafe('open');
-    const dim=this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.85).setDepth(500);
-    const img=this.add.image(GAME_W/2,190,battleTextureFor(newR.id,true)).setOrigin(.5,1).setDepth(501);
-    const box=this.drawTextBox(7,BOTTOM_Y,466,75);box.setDepth(502);
-    const txt=this.add.text(22,BOTTOM_Y+15,'',{fontFamily:FONT,fontSize:17,color:'#111',fontStyle:'bold',wordWrap:{width:430},lineSpacing:5}).setDepth(503);
-    this.typeText(txt,`What? ${wrestlerName(pr.before)} is developing...`);
-    let pulses=0;
-    const pulse=()=>{if(this.transitioning||!img.scene)return;img.setTintFill(0xfff3d0);this.time.delayedCall(150,()=>{if(img.scene)img.clearTint();});pulses++;if(pulses<4)this.time.delayedCall(380,pulse);};
-    pulse();
-    this.tweenSpritePixels(img,{y:'-=6',yoyo:true,repeat:3,duration:360,ease:'Sine.InOut'});
-    this.time.delayedCall(1750,()=>{
-      if(this.transitioning||!txt.scene)return;
-      this.playSafe('badge');this.cameras.main.flash(170,255,243,208);
-      this.tweenSpritePixels(img,{y:'-=4',yoyo:true,duration:260,ease:'Back.Out'});
-      this.typeText(txt,`${wrestlerName(pr.after)} developed into ${newR.name}! The ${personaFor(pr.after.id)} spirit grows stronger!`);
+  developmentCeremony(mon,onDone){
+    if(this.transitioning)return onDone();const before=this.wrestlerSnapshot(mon),result=applyPendingDevelopment(mon);if(!result)return onDone();
+    const after=this.wrestlerSnapshot(mon);this.developmentEvent={mon,before,after,result,revealed:false};this.inputLocked=true;this.mode='development';this.setBattlePhase('development');this.playSafe('open');this.drawBattle();
+    this.typeText(this.resolveText,`What? ${wrestlerName(before)} is developing...`,17);
+    this.tweenSpritePixels(this.developmentSprite,{y:'-=6',yoyo:true,repeat:3,duration:330,ease:'Sine.InOut'});
+    this.time.delayedCall(1600,()=>{
+      if(this.transitioning||!this.scene.isActive())return;this.developmentEvent.revealed=true;this.playSafe('badge');this.cameras.main.flash(170,255,243,208);this.drawBattle();
+      const line=`${wrestlerName(after)} developed into ${result.toName}!`;this.typeText(this.resolveText,line,17);this.addLog([line]);saveState(this.state);
+      this.time.delayedCall(1500,onDone);
     });
   }
   captureMeters(playerHp,enemyHp){const l=lead(this.state);return {playerHp:l?playerHp/scaledStats(l.id,l.lvl,l).hp:1,enemyHp:enemyHp/scaledStats(this.enemy().id,this.enemy().lvl,this.enemy()).hp};}

@@ -388,3 +388,80 @@ test('a fifth level-up technique requires an explicit replacement choice',async(
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].moves)).toEqual(['single','reattack','sprawl','pace']);
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].pendingMoves)).toEqual([]);
 });
+
+test('each knockout resolves EXP and level-up stats before battle progression',async({page})=>{
+  const starter={...legacyWrestler('buckshot',3),xp:57,moves:['single']};
+  await bootWithSave(page,{
+    party:[starter],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'trainer',trainerName:'Coach Lane'}));
+  await waitForBattleCommand(page);
+  await page.evaluate(()=>window.__badgerTest.knockOutEnemy());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({
+    mode:'expReward',battlePhase:'exp-gain',inputLocked:true,reward:{wrestlerId:'buckshot'}
+  });
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:6000}).toBe('level-up');
+  const levelUp=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'));
+  expect(levelUp.levelSummary.level).toBe(4);
+  expect(levelUp.levelSummary.afterStats.hp).toBeGreaterThan(levelUp.levelSummary.beforeStats.hp);
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0]),{timeout:7000}).toMatchObject({lvl:4,moves:['single','sprawl']});
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory),{timeout:7000}).toEqual(expect.arrayContaining(['faint','exp-gain','level-up','move-learned','post-battle-message']));
+});
+
+test('trainer shift prompt switches before the next opponent without a free attack',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler('buckshot',8),legacyWrestler('fieldflyer',8)],active:0,box:[],items:{},
+    dex:{seen:{},caught:{buckshot:true,fieldflyer:true}},flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({team:[['drillpartner',5],['pacesetter',5]],battleType:'trainer',trainerName:'Coach Lane'}));
+  await waitForBattleCommand(page);
+  await page.evaluate(()=>window.__badgerTest.knockOutEnemy());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene')),{timeout:7000}).toMatchObject({
+    mode:'switchPrompt',battlePhase:'switch-prompt',pendingOpponent:1,selected:0
+  });
+  const beforeHp=await page.evaluate(()=>window.__badgerTest.storage().party.find(mon=>mon.id==='fieldflyer').hp);
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({mode:'party',preOpponentSwitch:true,selected:1});
+  await page.waitForTimeout(180);await press(page,'a');
+  await waitForBattleCommand(page);
+  const result=await page.evaluate(()=>({save:window.__badgerTest.storage(),battle:window.__badgerTest.sceneState('BattleScene')}));
+  expect(result.save.party[0].id).toBe('fieldflyer');
+  expect(result.save.party[0].hp).toBe(beforeHp);
+  expect(result.battle.enemyIndex).toBe(1);
+  const prompt=result.battle.battlePhaseHistory.indexOf('switch-prompt'),send=result.battle.battlePhaseHistory.lastIndexOf('opponent-send-out'),command=result.battle.battlePhaseHistory.lastIndexOf('command');
+  expect(prompt).toBeGreaterThan(-1);expect(send).toBeGreaterThan(prompt);expect(command).toBeGreaterThan(send);
+});
+
+test('a naturally earned fifth technique blocks the victory sequence for a decision',async({page})=>{
+  const wrestler={...legacyWrestler('buckvarsity',12),xp:973,moves:['single','sprawl','highc','ankle']};
+  await bootWithSave(page,{
+    party:[wrestler],active:0,box:[],items:{},dex:{seen:{},caught:{buckvarsity:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'topboss',enemyLevel:10,battleType:'trainer',trainerName:'Captain'}));
+  await waitForBattleCommand(page);await page.evaluate(()=>window.__badgerTest.knockOutEnemy());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:6000}).toBe('level-up');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene')),{timeout:7000}).toMatchObject({
+    mode:'learnMove',over:false,moveLearning:{wrestlerId:'buckvarsity',move:'reattack'}
+  });
+  for(let i=0;i<4;i++)await press(page,'down');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({mode:'learnConfirm',selected:1});
+  await page.waitForTimeout(180);await press(page,'left');await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].pendingMoves),{timeout:5000}).toEqual([]);
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:7000}).toBe('post-battle-message');
+});
+
+test('pending development is honored after a loss instead of being discarded',async({page})=>{
+  const wrestler={...legacyWrestler('buckshot',10),xp:1000,pendingDevelopment:'buckvarsity'};
+  await bootWithSave(page,{
+    party:[wrestler],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
+    flags:{introDone:true,assignment:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:10,battleType:'trainer',trainerName:'Coach Lane'}));
+  await waitForBattleCommand(page);await page.evaluate(()=>window.__badgerTest.loseBattle());
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene')),{timeout:8000}).toMatchObject({mode:'development',battlePhase:'development',inputLocked:true});
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().party[0].id),{timeout:5000}).toBe('buckvarsity');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:5000}).toBe('result');
+});

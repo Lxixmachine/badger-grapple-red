@@ -67,6 +67,7 @@ export function installTestHooks(game, routeVirtualButton) {
         : null,
       trainerName: scene.trainerName ?? null,
       battleType: scene.type ?? null,
+      enemyIndex: scene.enemyIdx ?? null,
       battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,
       battleSprites: scene.enemySprite && scene.playerSprite ? {
         enemyTexture: scene.enemySprite.texture?.key ?? null,
@@ -78,6 +79,27 @@ export function installTestHooks(game, routeVirtualButton) {
         wrestlerId: scene.moveLearn.mon?.id ?? null,
         move: scene.moveLearn.move ?? null,
         moves: [...(scene.moveLearn.mon?.moves || [])]
+      } : null,
+      reward: scene.rewardEvent ? {
+        wrestlerId: scene.rewardEvent.mon?.id ?? null,
+        amount: scene.rewardEvent.amount ?? 0,
+        viewLevel: scene.rewardViewLevel ?? null,
+        viewProgress: scene.rewardViewProgress ?? null,
+        viewHp: scene.rewardViewHp ?? null
+      } : null,
+      rewardHistory: [...(scene.rewardHistory || [])],
+      levelSummary: scene.levelSummary ? {
+        level: scene.levelSummary.level,
+        beforeStats: {...scene.levelSummary.beforeStats},
+        afterStats: {...scene.levelSummary.afterStats}
+      } : null,
+      pendingOpponent: scene.pendingOpponentIndex ?? null,
+      preOpponentSwitch: scene.preOpponentSwitch ?? false,
+      development: scene.developmentEvent ? {
+        wrestlerId: scene.developmentEvent.mon?.id ?? null,
+        from: scene.developmentEvent.before?.id ?? null,
+        to: scene.developmentEvent.after?.id ?? null,
+        revealed: Boolean(scene.developmentEvent.revealed)
       } : null,
       npcTiles: scene.actorEntries ? scene.actorEntries.map(e => ({x: e.data.x, y: e.data.y})) : scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
       layered: scene.layeredMapVersion ? {
@@ -199,7 +221,19 @@ export function installTestHooks(game, routeVirtualButton) {
     winBattle() {
       const scene = game.scene.getScene('BattleScene');
       if (!scene?.scene?.isActive?.() || scene.over) return false;
+      // Story tests use this as an immediate result shortcut. Knockout timing and
+      // move-learning decisions are exercised separately through knockOutEnemy.
+      scene.enemyTeam.forEach(mon => scene.awardEnemyXp(mon));
+      scene.state.party.forEach(mon => { mon.pendingMoves = []; });
       scene.win();
+      return true;
+    },
+    knockOutEnemy() {
+      const scene = game.scene.getScene('BattleScene');
+      if (!scene?.scene?.isActive?.() || scene.over || !scene.enemy?.()) return false;
+      scene.enemy().hp = 0;
+      scene.setBattlePhase('faint');
+      scene.enemyDown();
       return true;
     },
     loseBattle() {
