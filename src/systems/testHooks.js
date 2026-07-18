@@ -28,6 +28,7 @@ export function installTestHooks(game, routeVirtualButton) {
       summaryPage: scene.summaryPage ?? null,
       summaryIndex: scene.summaryIndex ?? null,
       mode: scene.mode ?? null,
+      typing: Boolean(scene.typeTimer),
       battlePhase: scene.battlePhase ?? null,
       battlePhaseHistory: [...(scene.battlePhaseHistory || [])],
       battleMessage: scene.resolveText?.text ?? null,
@@ -125,6 +126,7 @@ export function installTestHooks(game, routeVirtualButton) {
       rewardHistory: [...(scene.rewardHistory || [])],
       levelSummary: scene.levelSummary ? {
         level: scene.levelSummary.level,
+        page: scene.levelSummaryPage ?? 0,
         beforeStats: {...scene.levelSummary.beforeStats},
         afterStats: {...scene.levelSummary.afterStats}
       } : null,
@@ -134,7 +136,9 @@ export function installTestHooks(game, routeVirtualButton) {
         wrestlerId: scene.developmentEvent.mon?.id ?? null,
         from: scene.developmentEvent.before?.id ?? null,
         to: scene.developmentEvent.after?.id ?? null,
-        revealed: Boolean(scene.developmentEvent.revealed)
+        phase: scene.developmentEvent.phase ?? null,
+        revealed: Boolean(scene.developmentEvent.revealed),
+        cancelled: Boolean(scene.developmentEvent.cancelled)
       } : null,
       npcTiles: scene.actorEntries ? scene.actorEntries.map(e => ({x: e.data.x, y: e.data.y})) : scene.npcList ? scene.npcList.map(e => ({x: e.npc.tile?.x ?? null, y: e.npc.tile?.y ?? null})) : null,
       layered: scene.layeredMapVersion ? {

@@ -3877,3 +3877,30 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   complete sequential browser suite pass; final suite count is 147/147.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Progression Ceremony Pass (v22.51)
+
+- Level-up presentation now follows FireRed's player-controlled two-page
+  structure. `STAT GAINS` shows all six increases, `NEW TOTALS` shows the six
+  resulting values, and neither page can close on a timer. A completes active
+  typing before it advances gains, totals, or the remaining EXP sequence.
+- Development no longer mutates the wrestler when the animation begins. The
+  original and target forms alternate during `forming` at native scale; the
+  save changes exactly at reveal. B cancels while forming, preserves the
+  original form, clears the queued change, and waits for A before continuing.
+  Reveal and cancellation also wait for A instead of auto-closing.
+- `docs/BATTLE_PROGRESSION_CEREMONY_CONTRACT.md` fixes the required order from
+  faint through EXP, level-up, technique decisions, substitution, match
+  dialogue, development, result, and world return. No later beat may bypass an
+  unresolved player decision.
+- `npm run review:battle-progression` captures stat gains, new totals,
+  development forming, reveal, and cancellation from the native Phaser
+  framebuffer. It enforces 480x320 at zoom 1, scale-1 artwork, native bounds,
+  and complete HUD replacement under the level summary.
+- Progression workflow tests cover blocking pages, post-loss development,
+  reveal-time persistence, and cancellation. Faint/contact timing, EXP and
+  learnset formulas, battle-art validation, world validation, balance, map
+  lint, production build, the native visual audit, and the complete sequential
+  browser suite pass; final suite count is 148/148.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

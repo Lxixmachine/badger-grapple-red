@@ -13,7 +13,6 @@ export const KNOCKOUT_CEREMONY_TIMING=Object.freeze({
   faintMessageLead:90,
   faintMessageHold:920,
   expAnnouncement:760,
-  levelUpHold:1250,
   switchWithdraw:980,
   playerSend:1180,
   opponentSendLead:280,
@@ -41,7 +40,7 @@ export class BattleScene extends Phaser.Scene{
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.battlePhase='intro';this.battlePhaseHistory=['intro'];this.introStage='transition';this.postBattleStage='';this.over=false;this.recruit=false;this.forcedSwap=false;this.preOpponentSwitch=false;this.pendingOpponentIndex=null;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;this.pendingNickname=null;
     this.firstBattleDraw=true;this.transitioning=false;this.attackAnim=null;this.attackSide=null;this.moveActorSide=null;this.moveKey='';this.moveHitCount=1;this.moveHitResults=[];this.moveRecoilResult=null;this.techniqueAnimation=null;this.techniqueAnimationHistory=[];this.battleBeatHistory=[];this.battleCeremonyHistory=[];this.knockoutTiming=KNOCKOUT_CEREMONY_TIMING;this.switchCeremony=null;this.presentedCondition=null;this.conditionMeters={};this.conditionValueTexts={};this.conditionHitIndex=null;this.conditionPresentationHistory=[];this.feedbackSequence=null;this.currentFeedback=null;this.feedbackHistory=[];this.feedbackTimer=null;this.feedbackReadyAt=0;this.messagePrompt=null;this.lastChooseAt=0;this.inputLocked=true;
-    this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();this.rewardEvent=null;this.rewardHistory=[];this.rewardViewLevel=null;this.rewardViewProgress=0;this.rewardViewHp=0;this.rewardText='';this.levelSummary=null;this.developmentEvent=null;this.finalizingBattle=false;
+    this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();this.rewardEvent=null;this.rewardHistory=[];this.rewardViewLevel=null;this.rewardViewProgress=0;this.rewardViewHp=0;this.rewardText='';this.levelSummary=null;this.levelSummaryPage=0;this.levelSummaryOnDone=null;this.developmentEvent=null;this.developmentTimer=null;this.developmentPulse=null;this.developmentTween=null;this.finalizingBattle=false;
     const openLine=this.type==='opening'
       ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
       :this.type==='wild'?`${wrestlerName(this.enemy())} takes the mat as the ${personaFor(this.enemy().id)}!`:`${this.trainerName||'Opponent'} sends out ${wrestlerName(this.enemy())} - ${personaFor(this.enemy().id)} form!`;
@@ -113,8 +112,21 @@ export class BattleScene extends Phaser.Scene{
   handleVirtualButton(k){unlockAudio();if(k==='left')this.move(-1,0);if(k==='right')this.move(1,0);if(k==='up')this.move(0,-1);if(k==='down')this.move(0,1);if(k==='a')this.choose();if(k==='b')this.back();}
   count(){if(this.mode==='fight'){const l=lead(this.state);return (l?.moves||ROSTER[l?.id]?.moves||[]).length||1;}if(this.mode==='party')return Math.max(1,this.state.party.length);if(this.mode==='bag')return BAG_ITEMS.length;if(this.mode==='learnMove')return (this.moveLearn?.mon?.moves?.length||0)+1;if(this.mode==='learnInspect'||this.mode==='learnConfirm'||this.mode==='switchPrompt')return 2;return 4;}
   move(dx,dy){if(this.over||this.inputLocked)return;const old=this.sel;let cols=this.mode==='party'||this.mode==='learnMove'||this.mode==='bag'?1:2;let rows=Math.ceil(this.count()/cols);let x=old%cols,y=Math.floor(old/cols);if(dx)x=Phaser.Math.Wrap(x+dx,0,cols);if(dy)y=Phaser.Math.Wrap(y+dy,0,rows);this.sel=Math.min(y*cols+x,this.count()-1);this.impact='';this.drawBattle();}
-  choose(){const now=this.time.now||performance.now();if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;if(this.inputLocked){if(this.typeTimer)return this.finishTypeText();if(this.advanceResolveSequence('input'))return;return;}if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();if(this.mode==='switchPrompt')return this.chooseSwitchPrompt();}
-  back(){if(this.inputLocked)return;if(this.over)return this.returnMap();if(this.mode==='learnInspect'){this.mode='learnMove';this.sel=this.moveLearn?.replaceIndex??0;return this.drawBattle();}if(this.mode==='learnConfirm'){this.mode='learnMove';this.sel=0;return this.drawBattle();}if(this.mode==='learnMove')return this.confirmStopLearning();if(this.preOpponentSwitch&&this.mode==='party'){this.preOpponentSwitch=false;this.mode='switchPrompt';this.sel=0;return this.drawBattle();}if(this.forcedSwap)return;if(this.mode!=='command'){this.mode='command';this.sel=0;this.drawBattle();}}
+  choose(){
+    const now=this.time.now||performance.now();if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;
+    if(this.inputLocked){
+      if(this.typeTimer)return this.finishTypeText();
+      if(this.mode==='levelUp')return this.advanceLevelSummary();
+      if(this.mode==='development'&&['revealed','cancelled'].includes(this.developmentEvent?.phase))return this.finishDevelopmentCeremony();
+      if(this.advanceResolveSequence('input'))return;
+      return;
+    }
+    if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();if(this.mode==='switchPrompt')return this.chooseSwitchPrompt();
+  }
+  back(){
+    if(this.mode==='development'&&this.inputLocked&&this.developmentEvent?.phase==='forming')return this.cancelDevelopmentCeremony();
+    if(this.inputLocked)return;if(this.over)return this.returnMap();if(this.mode==='learnInspect'){this.mode='learnMove';this.sel=this.moveLearn?.replaceIndex??0;return this.drawBattle();}if(this.mode==='learnConfirm'){this.mode='learnMove';this.sel=0;return this.drawBattle();}if(this.mode==='learnMove')return this.confirmStopLearning();if(this.preOpponentSwitch&&this.mode==='party'){this.preOpponentSwitch=false;this.mode='switchPrompt';this.sel=0;return this.drawBattle();}if(this.forcedSwap)return;if(this.mode!=='command'){this.mode='command';this.sel=0;this.drawBattle();}
+  }
   addLog(lines){this.log=[...lines,...this.log].slice(0,5);}
   resolvePendingMoves(onDone){
     const mon=this.state.party.find(wrestler=>wrestler.pendingMoves?.length);
@@ -672,9 +684,15 @@ export class BattleScene extends Phaser.Scene{
       if(!segment.levelUpTo)return this.animateRewardSegments(event,segments,index+1,onDone);
       this.rewardViewLevel=segment.levelUpTo;this.rewardViewProgress=0;this.levelSummary=event.levelSteps.find(step=>step.level===segment.levelUpTo)||null;
       if(this.levelSummary)this.rewardViewHp=Math.min(this.levelSummary.afterStats.hp,this.rewardViewHp+Math.max(0,this.levelSummary.afterStats.hp-this.levelSummary.beforeStats.hp));
-      this.rewardText=`${wrestlerName(event.mon,{short:true})} grew to Lv. ${segment.levelUpTo}!`;this.mode='levelUp';this.setBattlePhase('level-up');this.recordBattleCeremony('level-up',{side:'player',wrestlerId:event.mon.id,level:segment.levelUpTo});this.playSafe('levelup');this.cameras.main.flash(100,255,240,180);this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);
-      this.time.delayedCall(KNOCKOUT_CEREMONY_TIMING.levelUpHold,()=>{this.levelSummary=null;this.mode='expReward';this.drawBattle();this.animateRewardSegments(event,segments,index+1,onDone);});
+      this.rewardText=`${wrestlerName(event.mon,{short:true})} grew to Lv. ${segment.levelUpTo}!`;this.levelSummaryPage=0;this.levelSummaryOnDone=()=>this.animateRewardSegments(event,segments,index+1,onDone);this.mode='levelUp';this.setBattlePhase('level-up');this.recordBattleCeremony('level-up',{side:'player',wrestlerId:event.mon.id,level:segment.levelUpTo});this.recordBattleCeremony('level-summary-page',{side:'player',wrestlerId:event.mon.id,level:segment.levelUpTo,page:'gains'});this.playSafe('levelup');this.cameras.main.flash(100,255,240,180);this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);
     }});
+  }
+  advanceLevelSummary(){
+    if(!this.levelSummary)return;
+    if(this.levelSummaryPage===0){
+      this.levelSummaryPage=1;this.recordBattleCeremony('level-summary-page',{side:'player',wrestlerId:this.rewardEvent?.mon?.id||null,level:this.levelSummary.level,page:'totals'});this.playSafe('select');this.drawBattle();return;
+    }
+    const resume=this.levelSummaryOnDone;this.levelSummaryOnDone=null;this.levelSummary=null;this.levelSummaryPage=0;this.mode='expReward';this.playSafe('select');this.drawBattle();if(resume)resume();
   }
   playRewardMessages(messages,onDone){
     const queue=[...messages];let index=0;
@@ -853,17 +871,21 @@ export class BattleScene extends Phaser.Scene{
     g.clear();g.fillStyle(0x111111,1);g.fillRect(x-1,y-1,w+2,h+2);g.fillStyle(0x3d3d3d,1);g.fillRect(x,y,w,h);g.fillStyle(0x3aa5d1,1);g.fillRect(x,y,Math.max(1,w*p),h);g.fillStyle(0xffffff,.3);g.fillRect(x,y,Math.max(1,w*p),1);g.lineStyle(1,0x080808,1);g.strokeRect(x-1,y-1,w+2,h+2);
   }
   drawLevelSummary(){
-    const step=this.levelSummary;if(!step)return;const g=this.drawTextBox(178,18,292,192);g.setDepth(80);
-    this.add.text(194,31,'LEVEL UP!',{fontFamily:FONT,fontSize:20,color:'#8a1720',fontStyle:'bold'}).setDepth(81);
-    this.add.text(451,34,`Lv.${step.level}`,{fontFamily:FONT,fontSize:16,color:'#222',fontStyle:'bold'}).setOrigin(1,0).setDepth(81);
+    const step=this.levelSummary;if(!step)return;const gains=this.levelSummaryPage===0,g=this.drawTextBox(174,10,296,220);g.setDepth(80);
+    this.add.text(190,24,gains?'STAT GAINS':'NEW TOTALS',{fontFamily:FONT,fontSize:18,color:'#8a1720',fontStyle:'bold'}).setDepth(81);
+    this.add.text(451,27,`Lv.${step.level}`,{fontFamily:FONT,fontSize:16,color:'#222',fontStyle:'bold'}).setOrigin(1,0).setDepth(81);
+    this.add.text(190,49,gains?'Growth from this level':'Updated wrestler stats',{fontFamily:FONT,fontSize:11,color:'#655f55',fontStyle:'bold'}).setDepth(81);
     const rows=[['CONDITION','hp'],['STRENGTH','attack'],['DEFENSE','defense'],['TECHNIQUE','technique'],['AWARENESS','awareness'],['SPEED','speed']];
-    rows.forEach(([label,key],index)=>{const column=Math.floor(index/3),row=index%3,x=194+column*134,y=72+row*39,gain=step.afterStats[key]-step.beforeStats[key];this.add.text(x,y,label,{fontFamily:FONT,fontSize:12,color:'#555',fontStyle:'bold'}).setDepth(81);this.add.text(x,y+16,`${step.afterStats[key]}  +${gain}`,{fontFamily:FONT,fontSize:16,color:'#111',fontStyle:'bold'}).setDepth(81);});
+    rows.forEach(([label,key],index)=>{const column=Math.floor(index/3),row=index%3,x=190+column*136,y=74+row*37,gain=step.afterStats[key]-step.beforeStats[key],value=gains?`+${gain}`:`${step.afterStats[key]}`;this.add.text(x,y,label,{fontFamily:FONT,fontSize:11,color:'#555',fontStyle:'bold'}).setDepth(81);this.add.text(x+114,y-2,value,{fontFamily:FONT,fontSize:17,color:gains?'#276943':'#111',fontStyle:'bold'}).setOrigin(1,0).setDepth(81);});
+    this.add.text(451,208,gains?'A  NEXT':'A  DONE',{fontFamily:FONT,fontSize:11,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(1,0).setDepth(81);
   }
   drawDevelopmentStage(){
-    const event=this.developmentEvent;if(!event)return;this.add.rectangle(GAME_W/2,ARENA_H/2,GAME_W,ARENA_H,0x08080c,.72);
+    const event=this.developmentEvent;if(!event)return;this.add.rectangle(GAME_W/2,ARENA_H/2,GAME_W,ARENA_H,0x08080c,.82);
     this.add.text(GAME_W/2,18,'DEVELOPMENT',{fontFamily:FONT,fontSize:18,color:'#ffd56a',fontStyle:'bold'}).setOrigin(.5,0);
-    const id=event.revealed?event.after.id:event.before.id;this.developmentSprite=this.add.image(GAME_W/2,225,battleTextureFor(id)).setOrigin(.5,1);
-    if(!event.revealed)this.developmentSprite.setTint(0x322b3a);
+    const rings=this.add.graphics();rings.lineStyle(2,event.phase==='revealed'?0xffd56a:0x6b5b7d,.75);[42,58,74].forEach(radius=>rings.strokeCircle(GAME_W/2,150,radius));
+    const id=event.phase==='revealed'?event.after.id:event.before.id;this.developmentSprite=this.add.image(GAME_W/2,225,battleTextureFor(id)).setOrigin(.5,1);
+    if(event.phase==='forming')this.developmentSprite.setTint(0x514962);
+    const prompt=event.phase==='forming'?'B  CANCEL':'A  CONTINUE';this.add.text(458,211,prompt,{fontFamily:FONT,fontSize:11,color:'#ffd56a',fontStyle:'bold'}).setOrigin(1,0);
     this.drawBattleMessage();
   }
   drawStatusPanels(l,lr,er){
@@ -1040,15 +1062,36 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(451,BOTTOM_Y+42,'A  CONTINUE',{fontFamily:FONT,fontSize:12,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(1,0);
   }
   developmentCeremony(mon,onDone){
-    if(this.transitioning)return onDone();const before=this.wrestlerSnapshot(mon),result=applyPendingDevelopment(mon);if(!result)return onDone();
-    const after=this.wrestlerSnapshot(mon);this.developmentEvent={mon,before,after,result,revealed:false};this.inputLocked=true;this.mode='development';this.setBattlePhase('development');this.playSafe('open');this.drawBattle();
+    if(this.transitioning)return onDone();
+    const before=this.wrestlerSnapshot(mon),target=mon?.pendingDevelopment,from=ROSTER[before.id],to=ROSTER[target];
+    if(!from||from.evolvesTo!==target||!to){delete mon.pendingDevelopment;saveState(this.state);return onDone();}
+    const preview={...before,id:target};
+    this.developmentEvent={mon,before,after:preview,result:{from:before.id,to:target,fromName:from.name,toName:to.name},phase:'forming',revealed:false,cancelled:false,onDone};this.inputLocked=true;this.mode='development';this.setBattlePhase('development-forming');this.recordBattleCeremony('development-forming',{side:'player',wrestlerId:before.id,target});this.playSafe('open');this.drawBattle();
     this.typeText(this.resolveText,`What? ${wrestlerName(before)} is developing...`,17);
-    this.tweenSpritePixels(this.developmentSprite,{y:'-=6',yoyo:true,repeat:3,duration:330,ease:'Sine.InOut'});
-    this.time.delayedCall(1600,()=>{
-      if(this.transitioning||!this.scene.isActive())return;this.developmentEvent.revealed=true;this.playSafe('badge');this.cameras.main.flash(170,255,243,208);this.drawBattle();
-      const line=`${wrestlerName(after)} developed into ${result.toName}!`;this.typeText(this.resolveText,line,17);this.addLog([line]);saveState(this.state);
-      this.time.delayedCall(1500,onDone);
-    });
+    this.developmentTween=this.tweenSpritePixels(this.developmentSprite,{y:'-=6',yoyo:true,repeat:3,duration:200,ease:'Sine.InOut'});
+    let pulseTarget=false;this.developmentPulse=this.time.addEvent({delay:130,repeat:10,callback:()=>{const event=this.developmentEvent,sprite=this.developmentSprite;if(event?.phase!=='forming'||!sprite?.scene)return;pulseTarget=!pulseTarget;sprite.setTexture(battleTextureFor(pulseTarget?event.after.id:event.before.id)).setTint(pulseTarget?0x6f6384:0x514962);}});
+    this.developmentTimer=this.time.delayedCall(1600,()=>this.revealDevelopmentCeremony());
+  }
+  stopDevelopmentMotion(){
+    if(this.developmentTimer)this.developmentTimer.remove(false);this.developmentTimer=null;
+    if(this.developmentPulse)this.developmentPulse.remove(false);this.developmentPulse=null;
+    if(this.developmentTween)this.developmentTween.stop();this.developmentTween=null;
+  }
+  revealDevelopmentCeremony(){
+    const event=this.developmentEvent;if(!event||event.phase!=='forming'||this.transitioning||!this.scene.isActive())return;
+    this.stopDevelopmentMotion();const result=applyPendingDevelopment(event.mon);
+    if(!result)return this.cancelDevelopmentCeremony('Development stopped.');
+    event.result=result;event.after=this.wrestlerSnapshot(event.mon);event.phase='revealed';event.revealed=true;this.setBattlePhase('development-revealed');this.recordBattleCeremony('development-revealed',{side:'player',wrestlerId:event.after.id,from:event.before.id});this.playSafe('badge');this.cameras.main.flash(170,255,243,208);this.drawBattle();
+    const line=`${wrestlerName(event.before)} developed into ${result.toName}!`;this.typeText(this.resolveText,line,17);this.addLog([line]);saveState(this.state);
+  }
+  cancelDevelopmentCeremony(line=null){
+    const event=this.developmentEvent;if(!event||event.phase!=='forming')return;
+    this.stopDevelopmentMotion();if(this.typeTimer)this.typeTimer.remove(false);this.typeTimer=null;this.clearMessagePrompt();delete event.mon.pendingDevelopment;event.phase='cancelled';event.cancelled=true;event.revealed=false;event.after=event.before;this.setBattlePhase('development-cancelled');this.recordBattleCeremony('development-cancelled',{side:'player',wrestlerId:event.before.id});this.playSafe('select');this.drawBattle();
+    const message=line||`${wrestlerName(event.before)} stopped developing.`;this.typeText(this.resolveText,message,17);this.addLog([message]);saveState(this.state);
+  }
+  finishDevelopmentCeremony(){
+    const event=this.developmentEvent;if(!event||!['revealed','cancelled'].includes(event.phase))return;
+    const onDone=event.onDone;event.onDone=null;this.recordBattleCeremony('development-complete',{side:'player',wrestlerId:event.mon?.id||event.before.id,result:event.phase});if(onDone)onDone();
   }
   beginConditionPresentation(defIsEnemy,beforeAttHp,beforeDefHp){
     this.presentedCondition=defIsEnemy
