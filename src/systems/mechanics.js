@@ -3,6 +3,7 @@ import {ROSTER,allMovesSpent,currentMoveStamina,normalizeWrestlerNickname,restor
 import {MAX_LEVEL,experienceAtLevel} from '../data/experience.js';
 import {movesForLevel} from '../data/learnsets.js';
 import {addEffort,effortTotal,MAX_EFFORT_PER_STAT,MAX_TOTAL_EFFORT,normalizeEffortValues,normalizeIndividualValues,normalizeNature,potentialFor,PRACTICE_EFFORT_GAIN,STAT_KEYS,wrestlerSeed} from '../data/stats.js';
+import {clearCondition,conditionFor,inflictCondition,normalizeCondition} from '../data/conditions.js';
 
 export const PARTY_LIMIT=6;
 export const TRAINING_CAP=MAX_EFFORT_PER_STAT;
@@ -12,13 +13,14 @@ export const STYLE_COLORS={Shooter:0xb41820,Rider:0x5f4cc8,Scrambler:0xe47c27,Bu
 export const ITEM_DEFS={
  sportsDrink:{name:'SPORTS DRINK',short:'DRINK',description:'Restores 10 Stamina to every technique.',price:6,kind:'recovery'},
  athleticTape:{name:'ATHLETIC TAPE',short:'TAPE',description:'Restores 20 Condition.',price:9,kind:'recovery'},
+ trainerKit:{name:'TRAINER KIT',short:'KIT',description:'Clears Gassed, Strained, Stunned, or Tied Up.',price:14,kind:'recovery'},
  filmStudy:{name:'FILM STUDY',short:'FILM',description:'Improves the next three recruiting attempts.',price:12,kind:'scouting'},
  practiceSinglet:{name:'PRACTICE SINGLET',short:'PRACTICE',description:'A standard Wisconsin recruiting singlet.',price:18,kind:'singlet',modifier:1},
  travelSinglet:{name:'TRAVEL QUAD SINGLET',short:'TRAVEL',description:'A coveted travel-team singlet with better odds.',price:42,kind:'singlet',modifier:1.55},
  starterSinglet:{name:'STARTER SINGLET',short:'STARTER',description:'A rare starting-lineup singlet. Never refused.',price:null,kind:'singlet',modifier:255}
 };
 
-export const BAG_ORDER=['sportsDrink','athleticTape','filmStudy','practiceSinglet','travelSinglet','starterSinglet'];
+export const BAG_ORDER=['sportsDrink','athleticTape','trainerKit','filmStudy','practiceSinglet','travelSinglet','starterSinglet'];
 export const SHOP_STOCK=BAG_ORDER.filter(key=>ITEM_DEFS[key].price!==null).map(key=>({key,...ITEM_DEFS[key]}));
 export const SINGLET_KEYS=BAG_ORDER.filter(key=>ITEM_DEFS[key].kind==='singlet');
 
@@ -97,6 +99,8 @@ export function normalizeWrestler(mon={}){
   const normalized={...mon,id,lvl,xp:clamp(Math.floor(Number(mon.xp)||levelFloor),levelFloor,levelCap),ivs:normalizeIndividualValues(mon.ivs,mon.iv,seed),effort:normalizeEffortValues(mon.effort,mon.training),nature:normalizeNature(mon.nature,seed)};
   normalized.nickname=normalizeWrestlerNickname(mon.nickname);
   if(!normalized.nickname)delete normalized.nickname;
+  normalized.condition=normalizeCondition(mon.condition);
+  if(!normalized.condition)delete normalized.condition;
   normalized.potential=potentialFor(normalized.ivs);
   normalized.moves=(Array.isArray(mon.moves)?mon.moves:movesForLevel(id,lvl)).filter(key=>MOVES[key]&&key!=='desperation').slice(0,4);
   if(!normalized.moves.length)normalized.moves=movesForLevel(id,lvl).slice(0,4);
@@ -115,7 +119,7 @@ export function normalizeWrestler(mon={}){
 
 export function restoreWrestler(mon){
   const stats=scaledStats(mon.id,mon.lvl,mon);
-  mon.hp=stats.hp;restoreMoveStamina(mon);mon.score=0;
+  mon.hp=stats.hp;restoreMoveStamina(mon);clearCondition(mon);mon.score=0;
   return mon;
 }
 
@@ -127,6 +131,29 @@ export function restoreTechniqueStamina(mon,amount=10){
   syncMoveStamina(mon);let restored=0;
   for(const key of mon.moves||[]){const before=currentMoveStamina(mon,key),after=Math.min(moveStaminaMax(key),before+Math.max(0,Math.trunc(amount)));mon.moveStamina[key]=after;restored+=after-before;}
   return restored;
+}
+
+export function useRecoveryItem(state,mon,key){
+  const item=ITEM_DEFS[key];
+  if(!state||!mon||!item||item.kind!=='recovery')return {used:false,reason:'invalid',message:'That item cannot be used now.'};
+  if((state.items?.[key]||0)<=0)return {used:false,reason:'empty',message:`No ${item.name}.`};
+  if(key==='sportsDrink'){
+    const restored=restoreTechniqueStamina(mon,10);
+    if(!restored)return {used:false,reason:'full',message:'Every technique already has full Stamina.'};
+    state.items[key]--;return {used:true,restored,message:`${restored} Stamina restored across the technique set.`};
+  }
+  if(key==='athleticTape'){
+    const max=scaledStats(mon.id,mon.lvl,mon).hp;
+    if(mon.hp>=max)return {used:false,reason:'full',message:'Condition is already full.'};
+    const before=mon.hp;mon.hp=clamp(mon.hp+20,0,max);state.items[key]--;
+    return {used:true,restored:mon.hp-before,message:`${mon.hp-before} Condition restored.`};
+  }
+  if(key==='trainerKit'){
+    const cleared=clearCondition(mon);
+    if(!cleared)return {used:false,reason:'healthy',message:'No major condition to clear.'};
+    state.items[key]--;return {used:true,cleared:cleared.key,message:`${conditionFor(cleared).name} cleared.`};
+  }
+  return {used:false,reason:'invalid',message:'That item cannot be used now.'};
 }
 
 export function styleMultiplier(attackStyle,defenderStyle){
@@ -144,7 +171,10 @@ export function effectiveBattleStat(mon,stat,state){
   const stats=scaledStats(mon.id,mon.lvl,mon);
   const raw=stats[stat]||0;
   if(!BATTLE_STAGE_KEYS.includes(stat)||stat==='accuracy')return raw;
-  return raw*stageMultiplier(battleState(state).stages[stat]);
+  let value=raw*stageMultiplier(battleState(state).stages[stat]);
+  const condition=conditionFor(mon.condition);
+  if(stat==='speed'&&condition?.speedMultiplier)value*=condition.speedMultiplier;
+  return value;
 }
 
 export function accuracyFor(attacker,move,attackerState=null){
@@ -154,6 +184,7 @@ export function accuracyFor(attacker,move,attackerState=null){
 
 function expectedHitCount(move){return move.hits?(move.hits.min+move.hits.max)/2:1;}
 function damageStatKeys(move){return move.category==='technique'?['technique','awareness']:['attack','defense'];}
+function conditionOffenseMultiplier(mon,move){const condition=conditionFor(mon?.condition);return move.category==='strength'?(condition?.strengthMultiplier||1):1;}
 export function baseTechniqueDamage(level,power,attack,defense){
   const levelFactor=Math.floor((2*Math.max(1,Math.trunc(level)))/5)+2;
   return Math.floor(Math.floor(levelFactor*Math.max(1,power)*Math.max(1,attack)/Math.max(1,defense))/50)+2;
@@ -163,7 +194,7 @@ export function previewDamage(attacker,defender,moveKey,{attackerState=null,defe
   const move=MOVES[moveKey]||MOVES.stall;
   if(move.power<=0)return 0;
   const [attackKey,defenseKey]=damageStatKeys(move);
-  const atk=effectiveBattleStat(attacker,attackKey,attackerState),def=effectiveBattleStat(defender,defenseKey,defenderState);
+  const atk=effectiveBattleStat(attacker,attackKey,attackerState)*conditionOffenseMultiplier(attacker,move),def=effectiveBattleStat(defender,defenseKey,defenderState);
   const matchup=styleMultiplier(move.style,ROSTER[defender.id]?.style);
   const proficiency=proficiencyMultiplier(move.style,ROSTER[attacker.id]?.style);
   const countered=move.counterMultiplier&&(assumeCounter||battleState(attackerState).damageTakenThisTurn>0);
@@ -196,7 +227,7 @@ export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,conte
     if(critical)criticalHits++;
     const atkStage=critical?Math.max(0,attackerState.stages[attackKey]):attackerState.stages[attackKey];
     const defStage=critical?Math.min(0,defenderState.stages[defenseKey]):defenderState.stages[defenseKey];
-    const atk=as[attackKey]*stageMultiplier(atkStage),def=ds[defenseKey]*stageMultiplier(defStage);
+    const atk=as[attackKey]*stageMultiplier(atkStage)*conditionOffenseMultiplier(attacker,MOV),def=ds[defenseKey]*stageMultiplier(defStage);
     const variance=.85+rng()*.15;
     const counterScale=countered?MOV.counterMultiplier:1;
     const rawDamage=Math.max(1,Math.floor(baseTechniqueDamage(attacker.lvl,MOV.power,atk,def)*multiplier*proficiency*(critical?2:1)*variance*counterScale));
@@ -216,6 +247,15 @@ export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,conte
   };
   applyStage(attackerState,'attacker',MOV.selfStage);
   if(defender.hp>0)applyStage(defenderState,'defender',MOV.targetStage);
+  if(MOV.cureCondition){
+    const cleared=clearCondition(attacker);
+    events.push(cleared?{type:'conditionCured',target:'attacker',key:cleared.key}:{type:'conditionCureMiss',target:'attacker'});
+  }
+  if(MOV.inflictCondition&&defender.hp>0&&rng()<=(MOV.inflictCondition.chance??1)){
+    const outcome=inflictCondition(defender,MOV.inflictCondition.key,rng);
+    if(outcome.applied)events.push({type:'conditionInflicted',target:'defender',key:outcome.condition.key,turns:outcome.condition.turns||null});
+    else if(MOV.power<=0)events.push({type:'conditionBlocked',target:'defender',key:MOV.inflictCondition.key,existing:outcome.condition?.key||null});
+  }
   if(MOV.staminaDrain&&defender.hp>0){
     syncMoveStamina(defender);
     const targetKey=(defenderState.lastMove&&currentMoveStamina(defender,defenderState.lastMove)>0?defenderState.lastMove:null)||(defender.moves||[]).find(move=>currentMoveStamina(defender,move)>0);
@@ -238,6 +278,19 @@ function stageEffectValue(spec,state,targetWeight=1){
   return statWeight*Math.abs(spec.delta)*(spec.chance??1)*targetWeight;
 }
 
+function conditionEffectValue(move,attacker,defender,attackerSpeed,defenderSpeed){
+  let value=0;
+  if(move.cureCondition)value+=conditionFor(attacker.condition)?22:-24;
+  const effect=move.inflictCondition;
+  if(!effect)return value;
+  if(conditionFor(defender.condition))return value+(move.power<=0?-30:0);
+  const base={gassed:14,strained:17,stunned:18,tiedUp:24}[effect.key]||10;
+  value+=base*(effect.chance??1);
+  if(effect.key==='stunned'&&defenderSpeed>attackerSpeed)value+=8*(effect.chance??1);
+  if((effect.key==='gassed'||effect.key==='strained')&&defender.hp>previewDamage(attacker,defender,'desperation'))value+=3*(effect.chance??1);
+  return value;
+}
+
 export function chooseAiMove(attacker,defender,{wild=false,rng=Math.random,attackerState=null,defenderState=null}={}){
   const moves=(attacker.moves||ROSTER[attacker.id]?.moves||['stall']).filter(key=>MOVES[key]);
   const viable=moves.filter(key=>currentMoveStamina(attacker,key)>0);
@@ -253,6 +306,7 @@ export function chooseAiMove(attacker,defender,{wild=false,rng=Math.random,attac
     const effectWeight=move.power<=0?3.25:1;
     value+=stageEffectValue(move.selfStage,attackerState)*setupWindow*effectWeight;
     value+=stageEffectValue(move.targetStage,defenderState)*setupWindow*effectWeight;
+    value+=conditionEffectValue(move,attacker,defender,attackerSpeed,defenderSpeed)*setupWindow*effectWeight;
     value+=(move.staminaDrain||0)*2.6+(move.flinchChance||0)*(attackerSpeed>=defenderSpeed?10:2);
     value+=(move.priority||0)>0&&damage>=defender.hp?12:0;
     if(move.recharge)value-=damage*.28;

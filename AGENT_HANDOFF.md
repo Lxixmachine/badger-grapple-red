@@ -1,5 +1,42 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.46 Mat Status)
+
+Battles now own four persistent, mutually exclusive FireRed-shaped mat statuses:
+Gassed, Strained, Stunned, and Tied Up. Gassed and Strained remove one eighth
+of maximum Condition after each complete turn; Strained also halves Strength
+damage. Stunned quarters Speed and has a 25 percent action-loss check. Tied Up
+uses a saved two-to-five-count escape timer and can clear before the wrestler's
+action. Status survives switches and saves, while full Trainer's Room recovery
+clears it. These formulas and turn order were audited against the local
+`pret/pokefirered` study checkout rather than inferred from memory.
+
+Twelve new authored techniques give every style both broader level-up identity
+and access to the status rules. They have distinct integer-safe choreography,
+effects, Stamina values, accuracy, and learnset positions. Trainer AI values
+status based on current matchup state, including Stunned against a faster foe,
+Tied Up setup windows, self-cleansing, and avoiding redundant status-only
+attempts. The new Trainer Kit is sold through the shared shop catalog, fits the
+seven-item Bag on the 480x320 battle canvas, clears any mat status, and consumes
+the battle turn.
+
+The battle HUD, travel lineup, summaries, and Team Locker expose short status
+labels without replacing the established `COND` HP label. Residual damage owns
+an explicit typed message, colored reaction, animated meter drain, and existing
+faint ceremony. A phone capture pass also found and fixed stale `SET` impact
+text leaking into the following command screen. `npm run
+review:battle-condition` now captures multi-hit drains, status infliction,
+persistent HUD state, and the Trainer Kit Bag at a fixed 390x844 viewport.
+
+Battle-art validation, data validation, balance, map lint, build, whitespace,
+the 41-test mechanics/experience slice, and all four real-browser status tests
+pass. The complete serial browser run passed 143/144; its final Map Studio page
+open hit Windows `ERR_NO_BUFFER_SPACE` after 9.6 minutes, and that exact importer
+test passed immediately on isolated retry. Every 144 test case therefore passed.
+No world art or composition build was regenerated. Tony's dirty State Street
+composition files remain protected and must not be rebuilt, staged, reverted,
+or overwritten during future integration.
+
 ## Latest Codex Turn (v22.45 Knockout Ceremony)
 
 Knockouts now use an explicit FireRed-shaped ceremony instead of redrawing the

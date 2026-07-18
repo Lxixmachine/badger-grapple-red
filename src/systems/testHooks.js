@@ -93,6 +93,10 @@ export function installTestHooks(game, routeVirtualButton) {
       battleType: scene.type ?? null,
       enemyIndex: scene.enemyIdx ?? null,
       battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,
+      battleConditions: scene.state&&scene.enemy ? {
+        player: scene.state.party?.[0]?.condition ? {...scene.state.party[0].condition} : null,
+        enemy: scene.enemy()?.condition ? {...scene.enemy().condition} : null
+      } : null,
       battleSprites: scene.enemySprite && scene.playerSprite ? {
         enemyTexture: scene.enemySprite.texture?.key ?? null,
         enemyFlipX: Boolean(scene.enemySprite.flipX),

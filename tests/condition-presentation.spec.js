@@ -4,15 +4,15 @@ import {expect,test} from '@playwright/test';
 // temperament modifiers cannot reverse the turn being asserted.
 const player={id:'closer',lvl:50,xp:0,hp:999,score:0,moves:['flurry']};
 
-function saveWithPlayer(){
+function saveWithPlayer(wrestler=player,items={}){
   return {
-    party:[{...player}],active:0,box:[],items:{},badges:[],
-    dex:{seen:{},caught:{closer:true}},flags:{introDone:true,assignment:true},stats:{}
+    party:[{...wrestler}],active:0,box:[],items,badges:[],
+    dex:{seen:{},caught:{[wrestler.id]:true}},flags:{introDone:true,assignment:true},stats:{}
   };
 }
 
-async function bootBattle(page,data){
-  await page.addInitScript(state=>localStorage.setItem('badger_grapple_red_engine_v2',JSON.stringify(state)),saveWithPlayer());
+async function bootBattle(page,data,wrestler=player,items={}){
+  await page.addInitScript(state=>localStorage.setItem('badger_grapple_red_engine_v2',JSON.stringify(state)),saveWithPlayer(wrestler,items));
   await page.goto('/?test=1');
   await expect(page.locator('#bootError')).toBeHidden();
   await page.evaluate(options=>window.__badgerTest.startBattle({...options,rng:()=>.5}),data);
@@ -78,4 +78,43 @@ test('a knockout stops remaining hits and fainting waits for the final drain',as
   expect(result.actualCondition).toBe(0);
   expect(result.phases).toEqual(expect.arrayContaining(['impact','condition-drain','message','faint']));
   expect(result.phases.indexOf('condition-drain')).toBeLessThan(result.phases.indexOf('faint'));
+});
+
+test('major conditions persist in the HUD and resolve through a visible end-turn ceremony',async({page})=>{
+  await bootBattle(page,{
+    enemyMon:{id:'drillpartner',lvl:5,xp:0,hp:80,score:0,moves:['stall']},
+    battleType:'trainer',trainerName:'Coach Lane'
+  },{...player,moves:['handfight']});
+  await useOnlyMove(page);
+
+  await expect.poll(()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory),{timeout:12_000})
+    .toContain('condition-residual');
+  await expect.poll(()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:12_000}).toBe('command');
+  const result=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'));
+  expect(result.battleConditions.enemy).toEqual({key:'gassed'});
+  expect(result.conditionPresentationHistory).toContainEqual(expect.objectContaining({
+    side:'enemy',kind:'residual',completed:true
+  }));
+  expect(result.battleFeedbackHistory).toEqual(expect.arrayContaining([
+    expect.objectContaining({kind:'condition-inflicted'}),
+    expect.objectContaining({kind:'condition-residual'})
+  ]));
+});
+
+test('the Trainer Kit clears a persistent condition and consumes the battle turn',async({page})=>{
+  await bootBattle(page,{
+    enemyMon:{id:'drillpartner',lvl:5,xp:0,hp:80,score:0,moves:['stall']},
+    battleType:'trainer',trainerName:'Coach Lane'
+  },{...player,moves:['handfight'],condition:{key:'stunned'}},{trainerKit:1});
+
+  await page.evaluate(()=>window.__badgerTest.press('right'));
+  await page.evaluate(()=>window.__badgerTest.press('a'));
+  await expect.poll(()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('bag');
+  await page.evaluate(()=>window.__badgerTest.press('down'));
+  await page.waitForTimeout(180);
+  await page.evaluate(()=>window.__badgerTest.press('a'));
+
+  await expect.poll(()=>page.evaluate(()=>window.__badgerTest.storage().items.trainerKit),{timeout:10_000}).toBe(0);
+  await expect.poll(()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode),{timeout:12_000}).toBe('command');
+  expect(await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battleConditions.player)).toBeNull();
 });

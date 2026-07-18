@@ -32,7 +32,7 @@ test('all wrestlers have ordered, valid level-up learnsets',()=>{
 
 test('creation grants only legal level-up moves and caps the set at the latest four',()=>{
   expect(makeMon('buckshot',6).moves).toEqual(['single','sprawl']);
-  expect(makeMon('buckallam',31).moves).toEqual(['reattack','double','blast','flurry']);
+  expect(makeMon('buckallam',31).moves).toEqual(['double','chainshot','blast','flurry']);
   expect(movesForLevel('matreturner',3)).toEqual(['claw']);
 });
 

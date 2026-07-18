@@ -25,6 +25,18 @@ export const MOVES={
  grind:{name:'Grind Ride',style:'Bull',category:'strength',power:50,acc:.90,pp:20,points:1,staminaDrain:3,summary:'Heavily drains Stamina.'},
  pin:{name:'Pin Combo',style:'Rider',category:'strength',power:120,acc:.60,pp:5,points:6,recharge:true,summary:'Must reset next turn.'},
  stall:{name:'Circle Out',style:'Wall',category:'status',power:0,acc:1,pp:15,points:0,selfStage:{stat:'defense',delta:1},summary:'Creates space; raises Defense.'},
+ chainshot:{name:'Chain Shot',style:'Shooter',category:'technique',power:28,acc:.88,pp:15,points:2,hits:{min:2,max:3},summary:'Chains two or three attacks.'},
+ lowankle:{name:'Low Ankle',style:'Shooter',category:'technique',power:45,acc:.92,pp:20,points:1,inflictCondition:{key:'stunned',chance:.25},summary:'May leave the foe Stunned.'},
+ spiralride:{name:'Spiral Ride',style:'Rider',category:'technique',power:55,acc:.88,pp:15,points:2,staminaDrain:1,inflictCondition:{key:'gassed',chance:.3},summary:'May leave the foe Gassed.'},
+ powerhalf:{name:'Power Half',style:'Rider',category:'status',power:0,acc:.8,pp:15,points:0,inflictCondition:{key:'tiedUp',chance:1},summary:'Ties up the foe for several turns.'},
+ shakeout:{name:'Shake Out',style:'Scrambler',category:'status',power:0,acc:1,pp:15,points:0,cureCondition:true,selfStage:{stat:'speed',delta:1},summary:'Clears a condition; raises Speed.'},
+ peterson:{name:'Peterson Roll',style:'Scrambler',category:'technique',power:65,acc:.82,pp:15,points:2,inflictCondition:{key:'strained',chance:.25},summary:'May leave the foe Strained.'},
+ handfight:{name:'Heavy Hand Fight',style:'Bull',category:'status',power:0,acc:.9,pp:20,points:0,inflictCondition:{key:'gassed',chance:1},summary:'Wears the foe down until Gassed.'},
+ matpressure:{name:'Mat Pressure',style:'Bull',category:'strength',power:55,acc:.9,pp:20,points:1,inflictCondition:{key:'gassed',chance:.25},summary:'May leave the foe Gassed.'},
+ fronthead:{name:'Front Headlock',style:'Wall',category:'status',power:0,acc:.8,pp:15,points:0,inflictCondition:{key:'tiedUp',chance:1},summary:'Ties up the foe for several turns.'},
+ hardwhizzer:{name:'Hard Whizzer',style:'Wall',category:'strength',power:50,acc:.88,pp:20,points:1,inflictCondition:{key:'strained',chance:.3},summary:'May leave the foe Strained.'},
+ clubcollar:{name:'Club and Collar',style:'Thrower',category:'strength',power:45,acc:.9,pp:20,points:1,inflictCondition:{key:'stunned',chance:.3},summary:'May leave the foe Stunned.'},
+ insidetrip:{name:'Inside Trip',style:'Thrower',category:'strength',power:70,acc:.8,pp:15,points:2,inflictCondition:{key:'strained',chance:.2},summary:'May leave the foe Strained.'},
  desperation:{name:'Desperation Shot',style:'Open',category:'strength',power:50,acc:1,pp:null,points:1,recoil:.25,summary:'Used only when every technique is spent.'}
 };
 

@@ -42,6 +42,18 @@ export const BATTLE_CHOREOGRAPHY=Object.freeze({
   grind:move('driving-pressure','grind-lines',{dx:38,dy:5,duration:260,lunge:27,lift:2,knockback:8,targetLift:4,effectY:-52,shake:3,flash:72,feedback:710}),
   pin:move('elevated-finish','pin-frame',{dx:40,dy:-21,duration:330,lunge:34,lift:-16,knockback:18,targetLift:10,shake:4,flash:115,feedback:940,announceBase:460}),
   stall:move('circle-away','circle-guard',{dx:-18,dy:-3,duration:245,lunge:-10,lift:-2,knockback:0,shake:0,flash:38,feedback:570}),
+  chainshot:move('chain-entry','chain-arrows',{dx:42,dy:6,duration:220,lunge:28,knockback:9,targetLift:2,effectY:-32,feedback:790,hitStagger:390}),
+  lowankle:move('ankle-snag','ankle-stun',{dx:37,dy:12,duration:215,lunge:25,knockback:10,targetLift:3,effectY:-22,feedback:640}),
+  spiralride:move('spiral-pressure','spiral-pressure',{dx:29,dy:-8,duration:260,lunge:21,lift:-6,knockback:9,targetLift:7,effectY:-43,shake:3,flash:76,feedback:730}),
+  powerhalf:move('half-nelson-set','power-half-cage',{dx:20,dy:-5,duration:280,lunge:13,lift:-4,knockback:0,effectY:-55,shake:0,flash:62,feedback:760}),
+  shakeout:move('rapid-reset','shakeout-burst',{dx:-13,dy:-8,duration:225,lunge:-7,lift:-6,knockback:0,shake:0,flash:58,feedback:650}),
+  peterson:move('peterson-turn','peterson-wheel',{dx:33,dy:-15,duration:285,lunge:25,lift:-11,knockback:15,targetLift:-6,shake:3,flash:86,feedback:780}),
+  handfight:move('handfight-grind','handfight-pulse',{dx:18,dy:-2,duration:260,lunge:10,knockback:0,effectY:-58,shake:0,flash:48,feedback:710}),
+  matpressure:move('mat-pressure','mat-pressure-lines',{dx:40,dy:5,duration:250,lunge:29,lift:2,knockback:9,targetLift:4,effectY:-49,shake:3,flash:74,feedback:720}),
+  fronthead:move('front-head-catch','front-head-frame',{dx:27,dy:-7,duration:255,lunge:18,lift:-5,knockback:0,effectY:-55,shake:1,flash:60,feedback:740}),
+  hardwhizzer:move('hard-hip-turn','hard-whizzer-cross',{dx:30,dy:-9,duration:245,lunge:20,lift:-7,knockback:13,targetLift:-4,shake:3,flash:78,feedback:700}),
+  clubcollar:move('collar-club','collar-club',{dx:30,dy:-12,duration:225,lunge:21,lift:-8,knockback:12,targetLift:6,shake:3,flash:82,feedback:690}),
+  insidetrip:move('inside-step','inside-trip',{dx:36,dy:-7,duration:275,lunge:27,lift:-6,knockback:18,targetLift:9,shake:3,flash:92,feedback:790}),
   desperation:move('last-charge','desperation-star',{dx:60,dy:7,duration:320,lunge:46,lift:-5,knockback:28,targetLift:-7,shake:4,flash:120,feedback:900,announceBase:470})
 });
 

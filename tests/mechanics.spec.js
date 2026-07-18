@@ -1,6 +1,7 @@
 import {expect,test} from '@playwright/test';
 import {SEASON_ONE_BADGES} from '../src/data/campaign.js';
 import {ADV,MOVES} from '../src/data/moves.js';
+import {CONDITIONS,clearCondition,consumeConditionAction,inflictCondition,resolveConditionResidual} from '../src/data/conditions.js';
 import {BATTLE_CHOREOGRAPHY,battleChoreographyFor,choreographySignature} from '../src/data/battleAnimations.js';
 import {BATTLE_BACK_FLIP_IDS,ROSTER,addXp,allMovesSpent,battleAssetFor,battleFlipXFor,battleTextureFor,counterStarterFor,currentMoveStamina,makeMon,normalizeWrestlerNickname,personaFor,restoreMoveStamina,scaledStats,setWrestlerNickname,wrestlerName,xpNeed} from '../src/data/roster.js';
 import {calculateStat,effortTotal,MAX_TOTAL_EFFORT,potentialFor,STAT_KEYS} from '../src/data/stats.js';
@@ -12,6 +13,7 @@ import {
   createBattleState,
   depositWrestler,
   effortYieldFor,
+  effectiveBattleStat,
   modifyBattleStage,
   normalizeItems,
   practiceWrestler,
@@ -24,6 +26,7 @@ import {
   styleMultiplier,
   swapLockerWrestler,
   turnOrder,
+  useRecoveryItem,
   withdrawWrestler
 } from '../src/systems/mechanics.js';
 import {canFastTravel,canFlyToNationals,earnedBadgeCount,grantKeyItem,missingSeasonBadges,registerTravelDestination,travelTo,unlockTown} from '../src/systems/progression.js';
@@ -236,6 +239,60 @@ test('technique effects support setup, multi-hit pressure, counters, and forced 
   expect(consumeActionBlock(bullState)).toBeNull();
 });
 
+test('major wrestling conditions follow the FireRed turn, damage, and persistence formulas',()=>{
+  expect(Object.keys(CONDITIONS)).toEqual(['gassed','strained','stunned','tiedUp']);
+  const attacker=setMoves(mon('pacesetter',30),['double','single']),defender=mon('drillpartner',30);
+  const attackerState=createBattleState(),defenderState=createBattleState();
+  const baseSpeed=effectiveBattleStat(attacker,'speed',attackerState);
+  expect(inflictCondition(attacker,'stunned',()=>0)).toMatchObject({applied:true,condition:{key:'stunned'}});
+  expect(effectiveBattleStat(attacker,'speed',attackerState)).toBe(baseSpeed*.25);
+  expect(consumeConditionAction(attacker,()=>0)).toMatchObject({blocked:true,key:'stunned'});
+  expect(consumeConditionAction(attacker,()=>.99)).toMatchObject({blocked:false,key:'stunned'});
+  clearCondition(attacker);
+
+  const strengthDamage=previewDamage(attacker,defender,'double',{attackerState,defenderState});
+  const techniqueDamage=previewDamage(attacker,defender,'single',{attackerState,defenderState});
+  inflictCondition(attacker,'strained',()=>0);
+  expect(previewDamage(attacker,defender,'double',{attackerState,defenderState})).toBeLessThan(strengthDamage);
+  expect(previewDamage(attacker,defender,'single',{attackerState,defenderState})).toBe(techniqueDamage);
+  const existing=inflictCondition(attacker,'gassed',()=>0);
+  expect(existing).toMatchObject({applied:false,reason:'occupied',condition:{key:'strained'}});
+
+  clearCondition(attacker);inflictCondition(attacker,'gassed',()=>0);attacker.hp=40;
+  expect(resolveConditionResidual(attacker,80)).toMatchObject({key:'gassed',damage:10,hpBefore:40,hpAfter:30});
+  clearCondition(attacker);inflictCondition(attacker,'tiedUp',()=>0);
+  expect(attacker.condition).toEqual({key:'tiedUp',turns:2});
+  expect(consumeConditionAction(attacker,()=>.5)).toMatchObject({blocked:true,turns:1});
+  expect(consumeConditionAction(attacker,()=>.5)).toMatchObject({blocked:false,cleared:true});
+  expect(attacker.condition).toBeUndefined();
+});
+
+test('condition techniques, trainer AI, items, and full recovery share one ruleset',()=>{
+  const styles=new Map();
+  for(const [key,move] of Object.entries(MOVES))if(move.inflictCondition||move.cureCondition)styles.set(move.style,(styles.get(move.style)||[]).concat(key));
+  for(const style of ['Shooter','Rider','Scrambler','Bull','Wall','Thrower'])expect(styles.get(style)?.length).toBeGreaterThanOrEqual(1);
+
+  const bull=setMoves(mon('pacesetter',20),['handfight','stall']),foe=mon('drillpartner',20);
+  const bullState=createBattleState(),foeState=createBattleState();
+  expect(chooseAiMove(bull,foe,{rng:()=>.99,attackerState:bullState,defenderState:foeState})).toBe('handfight');
+  const pressure=resolveTechnique(bull,foe,'handfight',()=>0,{attackerState:bullState,defenderState:foeState});
+  expect(pressure.events).toContainEqual(expect.objectContaining({type:'conditionInflicted',key:'gassed'}));
+  expect(foe.condition).toEqual({key:'gassed'});
+  expect(chooseAiMove(bull,foe,{rng:()=>.99,attackerState:bullState,defenderState:foeState})).toBe('stall');
+  const repeat=resolveTechnique(bull,foe,'handfight',()=>0,{attackerState:bullState,defenderState:foeState});
+  expect(repeat.events).toContainEqual(expect.objectContaining({type:'conditionBlocked',existing:'gassed'}));
+
+  const scrambler=setMoves(mon('fieldflyer',20),['shakeout']);inflictCondition(scrambler,'strained',()=>0);
+  const reset=resolveTechnique(scrambler,foe,'shakeout',()=>0,{attackerState:createBattleState(),defenderState:foeState});
+  expect(reset.events).toContainEqual(expect.objectContaining({type:'conditionCured',key:'strained'}));
+  expect(scrambler.condition).toBeUndefined();
+
+  clearCondition(foe);inflictCondition(foe,'stunned',()=>0);const state={items:{trainerKit:1}};
+  expect(useRecoveryItem(state,foe,'trainerKit')).toMatchObject({used:true,cleared:'stunned'});
+  expect(state.items.trainerKit).toBe(0);expect(foe.condition).toBeUndefined();
+  inflictCondition(foe,'gassed',()=>0);restoreWrestler(foe);expect(foe.condition).toBeUndefined();
+});
+
 test('misses expose no phantom hits and criticals belong to their individual hit records',()=>{
   const rider=setMoves(mon('matreturner',10),['tilt']),anchor=mon('topboss',50);
   const miss=resolveTechnique(rider,anchor,'tilt',()=>1);
@@ -336,7 +393,7 @@ test('legacy and canonical badge aliases count as one season win',()=>{
 });
 
 test('normalizing an empty item payload does not invent legacy quantities',()=>{
-  expect(normalizeItems({})).toEqual({sportsDrink:0,athleticTape:0,filmStudy:0,practiceSinglet:0,travelSinglet:0,starterSinglet:0});
+  expect(normalizeItems({})).toEqual({sportsDrink:0,athleticTape:0,trainerKit:0,filmStudy:0,practiceSinglet:0,travelSinglet:0,starterSinglet:0});
 });
 
 test('save migration moves lineup overflow into the locker without losing wrestlers',()=>{

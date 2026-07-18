@@ -1,4 +1,4 @@
-import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,restoreTechniqueStamina,turnOrder,useFilmStudy} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
+import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort,consumeConditionAction,resolveConditionResidual} from '../data/conditions.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,turnOrder,useFilmStudy,useRecoveryItem} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
 const Phaser = window.Phaser;
 const GAME_W=480,GAME_H=320,ARENA_H=238,BOTTOM_Y=238;
 const ENEMY_POS={x:370,y:158},PLAYER_POS={x:112,y:233};
@@ -151,10 +151,8 @@ export class BattleScene extends Phaser.Scene{
       const msg=this.trySinglet(item.key),consumed=(this.state.items?.[item.key]||0)<count;this.addLog([msg]);this.mode='command';this.sel=0;saveState(this.state);if(this.over||!consumed)this.drawBattle();else this.enemyOnlyStrike();return;
     }
     let msg='';
-    if(item.key==='sportsDrink'){
-      const restored=restoreTechniqueStamina(l,10);if(!restored)msg='Every technique already has full Stamina.';else{this.state.items.sportsDrink--;msg=`${wrestlerName(l)}'s techniques recovered ${restored} Stamina.`;}
-    }else if(item.key==='athleticTape'){
-      const max=scaledStats(l.id,l.lvl,l).hp;if(l.hp>=max)msg='Condition is already full.';else{l.hp=Phaser.Math.Clamp(l.hp+20,0,max);this.state.items.athleticTape--;msg=`${wrestlerName(l)} recovered Condition.`;}
+    if(item.kind==='recovery'){
+      const result=useRecoveryItem(this.state,l,item.key);msg=result.used?`${wrestlerName(l)}: ${result.message}`:result.message;
     }else if(item.key==='filmStudy'){
       msg=useFilmStudy(this.state)?'Film Study prepared: next three recruit attempts improved.':'No Film Study left.';
     }
@@ -248,7 +246,35 @@ export class BattleScene extends Phaser.Scene{
     const ek=chooseAiMove(e,l,{wild:this.type==='wild',attackerState:this.combatState(e),defenderState:this.combatState(l)});
     this.attackBeat({att:e,def:l,key:ek,attName:wrestlerName(e,{short:true}),defIsEnemy:false,
       onKO:()=>{this.clearBattleTurn();this.inputLocked=false;this.playerDown();},
-      onDone:()=>{this.clearBattleTurn();this.turn++;this.inputLocked=false;this.mode='command';this.sel=0;saveState(this.state);this.drawBattle();}});
+      onDone:()=>this.completeBattleTurn()});
+  }
+  completeBattleTurn(){
+    this.impact='';
+    this.runConditionEndTurn(()=>{this.clearBattleTurn();this.turn++;this.inputLocked=false;this.mode='command';this.setBattlePhase('command');this.sel=0;saveState(this.state);this.drawBattle();});
+  }
+  runConditionEndTurn(onDone){
+    const queue=[
+      {mon:lead(this.state),side:'player',defIsEnemy:false,onKO:()=>this.playerDown()},
+      {mon:this.enemy(),side:'enemy',defIsEnemy:true,onKO:()=>this.enemyDown()}
+    ].filter(entry=>entry.mon?.hp>0&&conditionFor(entry.mon.condition)?.residualFraction);
+    let index=0;
+    const next=()=>{
+      if(this.over||!this.scene.isActive())return;
+      if(index>=queue.length){this.clearConditionPresentation();return onDone();}
+      const entry=queue[index++],maximum=scaledStats(entry.mon.id,entry.mon.lvl,entry.mon).hp,result=resolveConditionResidual(entry.mon,maximum);
+      if(!result)return next();
+      const player=lead(this.state),enemy=this.enemy(),condition=conditionFor(result.key),name=wrestlerName(entry.mon,{short:true});
+      this.presentedCondition={player:player?.hp||0,enemy:enemy?.hp||0};this.presentedCondition[entry.side]=result.hpBefore;
+      this.inputLocked=true;this.mode='resolving';this.setBattlePhase('condition-residual');this.drawBattle();
+      const target=entry.side==='player'?this.playerSprite:this.enemySprite;if(target?.scene){target.setTint(0xd6a336);this.time.delayedCall(260,()=>{if(target.scene)target.clearTint();});}
+      this.animateConditionStep(entry.side,result,battleChoreographyFor('grind'),0,'residual');
+      this.playResolveSequence([{kind:'condition-residual',text:condition.residual(name),sound:'statusDown'}],()=>{
+        this.clearConditionPresentation();
+        if(result.knockedOut){this.clearBattleTurn();return this.faintBeat(entry.defIsEnemy,entry.onKO);}
+        next();
+      });
+    };
+    next();
   }
   // v21.14 Battle Drama: every attack is a two-beat FireRed sequence -
   // announce ("BUCKY used SINGLE LEG!" typed out, attacker lunges), then
@@ -259,7 +285,7 @@ export class BattleScene extends Phaser.Scene{
     this.typeTimer=this.time.addEvent({delay:speed,repeat:Math.max(0,str.length-1),callback:()=>{i++;if(t&&t.scene)t.setText(str.slice(0,i));if(i>=str.length){this.typeTimer=null;this.updateMessagePrompt();}}});
   }
   finishTypeText(){if(this.typeTimer)this.typeTimer.remove(false);this.typeTimer=null;if(this.typeTarget?.scene)this.typeTarget.setText(this.typeFull||'');this.updateMessagePrompt();}
-  feedbackColor(kind){return {critical:'#8a5200',edge:'#8a1720',resisted:'#355f87','stat-up':'#276943','stat-down':'#8a1720','stamina-down':'#355f87',recoil:'#8a1720'}[kind]||'#111';}
+  feedbackColor(kind){return {critical:'#8a5200',edge:'#8a1720',resisted:'#355f87','stat-up':'#276943','stat-down':'#8a1720','stamina-down':'#355f87',recoil:'#8a1720','condition-inflicted':'#8a1720','condition-cleared':'#276943','condition-blocked':'#8a5200','condition-residual':'#8a1720'}[kind]||'#111';}
   clearMessagePrompt(){if(this.messagePrompt?.scene)this.messagePrompt.destroy();this.messagePrompt=null;}
   updateMessagePrompt(){
     this.clearMessagePrompt();if(this.typeTimer||!this.currentFeedback||!this.resolveText?.scene)return;
@@ -310,6 +336,10 @@ export class BattleScene extends Phaser.Scene{
     if(event.type==='recoil')return {kind:'recoil',text:`${attName} took ${event.amount} recoil!`};
     if(event.type==='flinch')return {kind:'position-break',text:`${defName} lost position!`,sound:'statusDown'};
     if(event.type==='recharge')return {kind:'recharge',text:`${attName} must reset position next turn.`};
+    if(event.type==='conditionInflicted')return {kind:'condition-inflicted',text:conditionFor(event.key).inflicted(name),sound:'statusDown'};
+    if(event.type==='conditionBlocked')return {kind:'condition-blocked',text:`${name} already has ${conditionFor(event.existing)?.name||'a major condition'}.`};
+    if(event.type==='conditionCured')return {kind:'condition-cleared',text:`${name} shook off ${conditionFor(event.key).name}!`,sound:'statusUp'};
+    if(event.type==='conditionCureMiss')return {kind:'condition-blocked',text:`${name} has no major condition.`};
     if(event.type==='stageLimit')return {kind:'stage-limit',text:`${name}'s ${stat} cannot shift any further.`};
     if(event.type==='stage'){
       if(event.delta>=2)return {kind:'stat-up',text:`${name}'s ${stat} rose sharply!`,sound:'statusUp'};
@@ -328,8 +358,18 @@ export class BattleScene extends Phaser.Scene{
     result.events.forEach(event=>feedback.push(this.effectFeedback(event,attName,defName)));
     return feedback.filter(Boolean);
   }
-  attackBeat({att,def,key,attName,defIsEnemy,onKO,onDone}){
+  attackBeat({att,def,key,attName,defIsEnemy,onKO,onDone,conditionChecked=false}){
     const attState=this.combatState(att),defState=this.combatState(def);
+    if(!conditionChecked){
+      const gate=consumeConditionAction(att,this.rng),condition=conditionFor(gate.key);
+      if(gate.blocked||gate.cleared){
+        const line=gate.cleared?condition.recovered(attName):condition.blocked(attName),kind=gate.cleared?'condition-cleared':'condition-blocked';
+        this.addLog([line]);this.playResolveSequence([{kind,text:line,sound:gate.cleared?'statusUp':'statusDown'}],()=>{
+          if(gate.blocked)return onDone();
+          this.attackBeat({att,def,key,attName,defIsEnemy,onKO,onDone,conditionChecked:true});
+        });return;
+      }
+    }
     const blocked=consumeActionBlock(attState);
     if(blocked){
       const line=blocked==='recharge'?`${attName} is resetting position!`:`${attName} could not regain position!`;
@@ -543,6 +583,30 @@ export class BattleScene extends Phaser.Scene{
         g.lineStyle(5,c,.95);g.strokeRect(X(-37),Y(-31),74,62);g.lineStyle(2,0xffffff,.88);g.strokeRect(X(-27),Y(-21),54,42);arrow(0,-45,0,25,5);line(-42,31,42,31,5);break;
       case 'circle-guard':
         ellipse(0,0,70,58,5);ellipse(0,0,46,36,2,0xffffff);arrow(-35,19,-49,4,3);arrow(35,-19,49,-4,3);break;
+      case 'chain-arrows':
+        for(let i=-1;i<=1;i++)arrow(-45+i*5,-18+i*18,34-i*4,-12+i*17,i===0?5:3,i%2?0xffffff:c);ellipse(8,4,44,31,2,0xffffff,.75);break;
+      case 'ankle-stun':
+        ellipse(0,25,72,16,4);for(let i=0;i<6;i++){const a=Math.PI*2*i/6;line(Math.round(Math.cos(a)*13),Math.round(Math.sin(a)*10)-9,Math.round(Math.cos(a)*31),Math.round(Math.sin(a)*24)-9,i%2?2:4,i%2?0xffffff:c);}break;
+      case 'spiral-pressure':
+        arc(0,2,39,.15,5.8,5);arc(0,2,26,3.3,8.5,3,0xffffff);arrow(-35,23,31,20,3);line(-37,31,38,31,4);break;
+      case 'power-half-cage':
+        g.lineStyle(5,c,.95);g.strokeRoundedRect(X(-37),Y(-30),74,60,11);line(-29,-22,29,22,4,0xffffff);line(29,-22,-29,22,4,0xffffff);arrow(0,-42,0,22,4);break;
+      case 'shakeout-burst':
+        for(let i=0;i<10;i++){const a=Math.PI*2*i/10;line(Math.round(Math.cos(a)*15),Math.round(Math.sin(a)*12),Math.round(Math.cos(a)*47),Math.round(Math.sin(a)*38),i%2?2:4,i%2?0xffffff:c);}ellipse(0,0,30,24,3);break;
+      case 'peterson-wheel':
+        ellipse(0,0,66,66,4);arc(-8,0,27,.1,5.5,4,0xffffff);arrow(29,-22,39,1,4);line(-33,27,32,-27,3);break;
+      case 'handfight-pulse':
+        for(let i=0;i<3;i++){const inset=i*10;g.lineStyle(i===1?2:4,i===1?0xffffff:c,.9);g.strokeEllipse(Math.round(x),Math.round(y),76-inset*2,56-inset*2);}arrow(-42,0,-12,0,3);arrow(42,0,12,0,3,0xffffff);break;
+      case 'mat-pressure-lines':
+        for(let i=-2;i<=2;i++){arrow(-48,i*11,39,i*7,i===0?6:3,i%2?0xffffff:c);line(31,i*7,44,i*11,2,c);}line(-44,30,44,30,4,0xffffff);break;
+      case 'front-head-frame':
+        g.lineStyle(5,c,.95);g.strokeRoundedRect(X(-35),Y(-29),70,58,8);arc(0,-4,25,3.3,6.05,4,0xffffff);arrow(0,-37,0,19,4);break;
+      case 'hard-whizzer-cross':
+        arrow(-39,-28,31,23,5);arrow(35,-25,-27,27,4,0xffffff);arc(0,0,34,.3,5.6,3);break;
+      case 'collar-club':
+        arrow(-25,-39,5,18,6);line(-38,-25,31,-25,4,0xffffff);ellipse(4,21,69,17,3);for(let i=-1;i<=1;i++)line(19+i*11,-15,26+i*11,1,2,c);break;
+      case 'inside-trip':
+        arrow(-38,-19,27,18,5);arc(-2,11,37,3.35,6.1,4,0xffffff);line(-35,28,39,28,5);arrow(31,-4,8,23,3);break;
       case 'desperation-star':
         for(let i=0;i<12;i++){const a=Math.PI*2*i/12,r=i%2?52:45;line(Math.round(Math.cos(a)*13),Math.round(Math.sin(a)*13),Math.round(Math.cos(a)*r),Math.round(Math.sin(a)*r),i%3===0?5:2,i%2?0xffffff:c);}ellipse(0,0,41,41,4);break;
       default:
@@ -557,7 +621,7 @@ export class BattleScene extends Phaser.Scene{
     const playerState=this.combatState(l),enemyState=this.combatState(e);
     const ek=chooseAiMove(e,l,{wild:this.type==='wild',attackerState:enemyState,defenderState:playerState});
     const order=turnOrder(l,e,key,ek,{playerState,enemyState});
-    const finish=()=>{this.clearBattleTurn();this.turn++;this.inputLocked=false;this.mode='command';this.setBattlePhase('command');this.sel=0;saveState(this.state);this.drawBattle();};
+    const finish=()=>this.completeBattleTurn();
     const act=(role,onDone)=>{
       const playerTurn=role==='player',att=playerTurn?l:e,def=playerTurn?e:l,move=playerTurn?key:ek;
       this.attackBeat({att,def,key:move,attName:wrestlerName(att,{short:true}),defIsEnemy:playerTurn,
@@ -815,7 +879,7 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(x+7,y+1,value,{fontFamily:FONT,fontSize:11,color:'#fff3d0',fontStyle:'bold'});
   }
   drawStatusBox(x,y,w,h,name,mon,rec,isPlayer){
-    const s=scaledStats(mon.id,mon.lvl,mon),side=isPlayer?'player':'enemy',presented=this.presentedCondition?.[side],hp=Math.max(0,Math.round(Number.isFinite(presented)?presented:mon.hp));
+    const s=scaledStats(mon.id,mon.lvl,mon),side=isPlayer?'player':'enemy',presented=this.presentedCondition?.[side],hp=Math.max(0,Math.round(Number.isFinite(presented)?presented:mon.hp)),condition=conditionFor(mon.condition),conditionColor=condition?`#${condition.color.toString(16).padStart(6,'0')}`:'#333';
     const g=this.add.graphics();
     g.fillStyle(0x000000,.24);g.fillRoundedRect(x+3,y+3,w,h,3);
     g.fillStyle(isPlayer?0xf9f2dc:0xfff8e8,1);g.fillRoundedRect(x,y,w,h,3);
@@ -825,6 +889,7 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(x+11,y+9,name,{fontFamily:FONT,fontSize:17,color:'#111',fontStyle:'bold'});
     this.add.text(x+w-11,y+10,`Lv.${mon.lvl}`,{fontFamily:FONT,fontSize:14,color:'#222',fontStyle:'bold'}).setOrigin(1,0);
     this.add.text(x+11,y+36,'COND',{fontFamily:FONT,fontSize:12,color:'#333',fontStyle:'bold'});
+    if(condition)this.add.text(x+w-11,y+26,condition.short,{fontFamily:FONT,fontSize:10,color:conditionColor,fontStyle:'bold'}).setOrigin(1,0);
     this.drawConditionMeter(x+58,y+39,w-71,9,hp,s.hp,side,0x55b867);
     if(isPlayer){
       this.add.text(x+11,y+55,'EXP',{fontFamily:FONT,fontSize:11,color:'#355f87',fontStyle:'bold'});
@@ -928,8 +993,8 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(325,BOTTOM_Y+46,`PWR ${power}  ACC ${Math.round(mv.acc*100)}%`,{fontFamily:FONT,fontSize:12,color:'#333'});
     this.add.text(325,BOTTOM_Y+59,`STA ${currentMoveStamina(leadMon,moveKey)}/${moveStaminaMax(moveKey)}`,{fontFamily:FONT,fontSize:12,color:'#355f87',fontStyle:'bold'});
   }
-  drawBag(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,72,460,238);this.add.text(28,86,'BAG',{fontFamily:FONT,fontSize:20,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0,x=28+(i>2?218:0),y=124+(i%3)*35;this.add.text(x,y,`${i===this.sel?'\u25b6':' '} ${ITEM_DEFS[it.key].short} x${n}`,{fontFamily:FONT,fontSize:16,color:i===this.sel?'#8a1720':'#111',fontStyle:i===this.sel?'bold':'normal'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(28,248,it.desc,{fontFamily:FONT,fontSize:14,color:'#333',wordWrap:{width:420}});}
-  drawParty(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,65,460,245);const title=this.forcedSwap?'CHOOSE NEXT WRESTLER':this.preOpponentSwitch?'SWITCH WRESTLER':'TRAVEL LINEUP';this.add.text(28,80,title,{fontFamily:FONT,fontSize:19,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const s=scaledStats(m.id,m.lvl,m),tag=m.hp<=0?'  OUT':'';this.add.text(28,116+i*29,`${i===this.sel?'\u25b6':' '} ${wrestlerName(m)}  Lv.${m.lvl}`,{fontFamily:FONT,fontSize:15,color:i===this.sel?'#8a1720':m.hp<=0?'#888':'#111',fontStyle:i===this.sel?'bold':'normal'});this.add.text(440,116+i*29,`C ${m.hp}/${s.hp}${tag}`,{fontFamily:FONT,fontSize:14,color:m.hp<=0?'#888':'#333',fontStyle:'bold'}).setOrigin(1,0);});}
+  drawBag(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,52,460,258);this.add.text(28,66,'BAG',{fontFamily:FONT,fontSize:20,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0,x=28+(i%2)*218,y=101+Math.floor(i/2)*31;this.add.text(x,y,`${i===this.sel?'\u25b6':' '} ${ITEM_DEFS[it.key].short} x${n}`,{fontFamily:FONT,fontSize:16,color:i===this.sel?'#8a1720':'#111',fontStyle:i===this.sel?'bold':'normal'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(28,238,it.desc,{fontFamily:FONT,fontSize:14,color:'#333',wordWrap:{width:420}});}
+  drawParty(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,65,460,245);const title=this.forcedSwap?'CHOOSE NEXT WRESTLER':this.preOpponentSwitch?'SWITCH WRESTLER':'TRAVEL LINEUP';this.add.text(28,80,title,{fontFamily:FONT,fontSize:19,color:this.forcedSwap?'#b41820':'#111',fontStyle:'bold'});this.state.party.forEach((m,i)=>{const s=scaledStats(m.id,m.lvl,m),tag=m.hp<=0?'  OUT':conditionShort(m.condition)?`  ${conditionShort(m.condition)}`:'';this.add.text(28,116+i*29,`${i===this.sel?'\u25b6':' '} ${wrestlerName(m)}  Lv.${m.lvl}`,{fontFamily:FONT,fontSize:15,color:i===this.sel?'#8a1720':m.hp<=0?'#888':'#111',fontStyle:i===this.sel?'bold':'normal'});this.add.text(440,116+i*29,`C ${m.hp}/${s.hp}${tag}`,{fontFamily:FONT,fontSize:14,color:m.hp<=0?'#888':'#333',fontStyle:'bold'}).setOrigin(1,0);});}
   drawResult(){
     this.drawTextBox(7,BOTTOM_Y,466,75);
     const headings={VICTORY:'Match won.',CHAMPION:'Championship won.',LOSS:'Match complete.',JOINED:'Wrestler joined.',LEFT:'Scouting ended.'};
@@ -990,7 +1055,8 @@ export class BattleScene extends Phaser.Scene{
   animateConditionStep(side,frame,choreography,index=0,kind='hit'){
     if(!this.presentedCondition)return;
     const from=Math.max(0,frame.hpBefore??this.presentedCondition[side]??0),to=Math.max(0,frame.hpAfter??from-frame.damage),duration=this.conditionStepDuration(frame,choreography),value={hp:from};
-    this.conditionHitIndex=index+1;this.setBattlePhase(kind==='recoil'?'recoil-drain':'condition-drain');this.recordBattleBeat(kind==='recoil'?'recoil-condition':'condition-start',{moveKey:this.moveKey,side:this.moveActorSide,targetSide:side,hitIndex:index+1,damage:frame.damage});
+    const residual=kind==='residual',phase=kind==='recoil'?'recoil-drain':residual?'condition-residual':'condition-drain',startBeat=kind==='recoil'?'recoil-condition':residual?'condition-residual-start':'condition-start',completeBeat=kind==='recoil'?'recoil-complete':residual?'condition-residual-complete':'condition-complete';
+    this.conditionHitIndex=index+1;this.setBattlePhase(phase);this.recordBattleBeat(startBeat,{moveKey:this.moveKey,side:this.moveActorSide,targetSide:side,hitIndex:index+1,damage:frame.damage});
     const presentation={moveKey:this.moveKey,kind,side,hitIndex:index+1,from,to,damage:frame.damage,critical:Boolean(frame.critical),completed:false};
     this.conditionPresentationHistory.push(presentation);
     if(this.conditionPresentationHistory.length>64)this.conditionPresentationHistory.shift();
@@ -999,7 +1065,7 @@ export class BattleScene extends Phaser.Scene{
       const display=this.conditionMeters[side];if(display?.g?.scene)this.paintMeter(display.g,display.x,display.y,display.w,display.h,hp/Math.max(1,display.maxHp),display.color);
       const valueText=this.conditionValueTexts[side];if(valueText?.scene)valueText.setText(`${hp}/${display?.maxHp||hp}`);
     };
-    draw();this.tweens.add({targets:value,hp:to,duration,ease:'Linear',onUpdate:draw,onComplete:()=>{value.hp=to;draw();presentation.completed=true;this.recordBattleBeat(kind==='recoil'?'recoil-complete':'condition-complete',{moveKey:this.moveKey,side:this.moveActorSide,targetSide:side,hitIndex:index+1,damage:frame.damage});}});
+    draw();this.tweens.add({targets:value,hp:to,duration,ease:'Linear',onUpdate:draw,onComplete:()=>{value.hp=to;draw();presentation.completed=true;this.recordBattleBeat(completeBeat,{moveKey:this.moveKey,side:this.moveActorSide,targetSide:side,hitIndex:index+1,damage:frame.damage});}});
   }
   drawAnimatedMeter(x,y,w,h,start,end,color){
     const g=this.add.graphics(),value={p:Phaser.Math.Clamp(start??end,0,1)},draw=()=>this.paintMeter(g,x,y,w,h,value.p,color);draw();
