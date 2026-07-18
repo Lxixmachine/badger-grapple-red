@@ -111,6 +111,7 @@ export const sfx = {
       tone(impact ? 150 : 400, 0.12, {type: 'square', gainStart: 0.15, slideTo: impact ? 80 : 250});
     }
   },
+  exp: () => { [392, 440, 494, 587].forEach((f, i) => tone(f, 0.08, {type: 'square', gainStart: 0.12, delay: i * 0.055})); },
   win: () => { [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.16, { type: 'square', gainStart: 0.22, delay: i * 0.1 })); },
   lose: () => { [392, 349, 294].forEach((f, i) => tone(f, 0.22, { type: 'sine', gainStart: 0.2, delay: i * 0.13 })); },
   badge: () => { [392, 523, 659, 784, 987].forEach((f, i) => tone(f, 0.2, { type: 'square', gainStart: 0.24, delay: i * 0.09 })); },

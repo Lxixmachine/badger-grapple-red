@@ -1,5 +1,35 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.45 Knockout Ceremony)
+
+Knockouts now use an explicit FireRed-shaped ceremony instead of redrawing the
+next wrestler instantly. The live order is faint cry, held pause, downward
+faint animation, knockout message, EXP announcement, visible EXP fill,
+level-up and move-learning events, replacement decision, player withdrawal,
+player send-out, opponent send-out, then command control. Forced replacements
+skip the impossible withdrawal of the defeated wrestler but still receive a
+real send-out. Voluntary and between-opponent switches use the same shared
+ceremony, so party order never changes invisibly.
+
+The sequence was audited against `BattleScript_FaintTarget`,
+`BattleScript_GiveExp`, `BattleScript_LevelUp`, and
+`BattleScript_HandleFaintedMon` in the local `pret/pokefirered` study checkout.
+Integer timing lives in `KNOCKOUT_CEREMONY_TIMING`; a bounded semantic ceremony
+history records faint, EXP, level, prompt, withdrawal, and send-out beats.
+EXP now owns a restrained original fill cue, and the direct knockout test hooks
+exercise the real presentation path instead of bypassing it.
+
+`tests/battle-knockout-ceremony.spec.js` proves the complete enemy-KO shift
+loop and the forced player-replacement loop, including ordering, timing,
+unchanged replacement Condition, no free attack, and saved party order.
+`npm run review:battle-knockout` produces fixed 390x844 phone captures of the
+faint drop, EXP fill, player send-out, and opponent send-out. Battle-art
+validation, data validation, balance, map lint, build, whitespace checks, the
+26-test battle/menu regression slice, and the complete serial Chromium suite
+pass; full count is 140/140. Tony's dirty State Street composition files remain
+protected and must not be rebuilt, staged, reverted, or overwritten during
+future integration.
+
 ## Latest Codex Turn (v22.44 Impact Cadence)
 
 Battle impacts now follow FireRed's presentation order instead of beginning the

@@ -31,6 +31,15 @@ export function installTestHooks(game, routeVirtualButton) {
       techniqueAnimation: scene.techniqueAnimation ? {...scene.techniqueAnimation} : null,
       techniqueAnimationHistory: (scene.techniqueAnimationHistory || []).map(cue => ({...cue})),
       battleBeatHistory: (scene.battleBeatHistory || []).map(beat => ({...beat})),
+      battleCeremonyHistory: (scene.battleCeremonyHistory || []).map(event => ({...event})),
+      knockoutTiming: scene.knockoutTiming ? {...scene.knockoutTiming} : null,
+      switchCeremony: scene.switchCeremony ? {
+        stage: scene.switchCeremony.stage,
+        outgoingId: scene.switchCeremony.outgoing?.id ?? null,
+        incomingId: scene.switchCeremony.incoming?.id ?? null,
+        showEnemy: Boolean(scene.switchCeremony.showEnemy),
+        forced: Boolean(scene.switchCeremony.forced)
+      } : null,
       presentedCondition: scene.presentedCondition ? {...scene.presentedCondition} : null,
       conditionHitIndex: scene.conditionHitIndex ?? null,
       conditionPresentationHistory: (scene.conditionPresentationHistory || []).map(step => ({...step})),
@@ -251,8 +260,23 @@ export function installTestHooks(game, routeVirtualButton) {
       const scene = game.scene.getScene('BattleScene');
       if (!scene?.scene?.isActive?.() || scene.over || !scene.enemy?.()) return false;
       scene.enemy().hp = 0;
-      scene.setBattlePhase('faint');
-      scene.enemyDown();
+      scene.inputLocked = true;
+      scene.mode = 'resolving';
+      scene.clearConditionPresentation();
+      scene.drawBattle();
+      scene.faintBeat(true, () => scene.enemyDown());
+      return true;
+    },
+    knockOutPlayer() {
+      const scene = game.scene.getScene('BattleScene');
+      const current = scene?.state ? scene.state.party?.[0] : null;
+      if (!scene?.scene?.isActive?.() || scene.over || !current) return false;
+      current.hp = 0;
+      scene.inputLocked = true;
+      scene.mode = 'resolving';
+      scene.clearConditionPresentation();
+      scene.drawBattle();
+      scene.faintBeat(false, () => scene.playerDown());
       return true;
     },
     loseBattle() {
