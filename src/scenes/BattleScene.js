@@ -1,4 +1,4 @@
-import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort,consumeConditionAction,resolveConditionResidual} from '../data/conditions.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,turnOrder,useFilmStudy,useRecoveryItem} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
+import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeTrainerMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort,consumeConditionAction,resolveConditionResidual} from '../data/conditions.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,turnOrder,useFilmStudy,useRecoveryItem} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
 import {drawLineupScreen} from '../systems/rosterUi.js';
 import {menuFooter,menuFrame,menuItemIcon,menuListRow,menuPanel,menuSectionLabel} from '../systems/nativeMenuUi.js';
 import {battleDecisionButtons,battleDecisionConfirm,battleTechniqueDetail,battleTechniqueRow,techniqueCategoryColor,techniqueCategoryLabel,techniqueStyleColor} from '../systems/battleDecisionUi.js';
@@ -34,9 +34,14 @@ export class BattleScene extends Phaser.Scene{
     this.trainerAi=trainerAiProfile({battleType:this.type,config:trainerConfig});
     this.trainerItems=normalizeTrainerItems(this.trainerAi.items);
     const team=data.team&&data.team.length?data.team:[[data.enemyId||'pacesetter',data.enemyLevel||4]];
-    this.enemyTeam=data.enemyMon?[normalizeWrestler({...data.enemyMon})]:team.map(([id,lvl])=>makeMon(id,lvl));
+    this.enemyTeam=data.enemyMon?[normalizeWrestler({...data.enemyMon})]:team.map(member=>makeTrainerMon(member,this.trainerAi.tier));
     this.enemyIdx=0;
     this.trainerName=data.trainerName||null;
+    this.trainerClass=data.trainerClass||null;
+    this.trainerPortrait=data.trainerPortrait||(this.trainerName==='Rex'?'rex':null);
+    this.lineupLabel=data.lineupLabel||this.trainerName||'OPPONENT';
+    this.trainerStrategy=data.strategy||null;
+    this.signatureMove=data.signatureMove||null;
     this.reward=data.reward||null;
     this.badge=data.badge||null;
     this.defeatKey=data.defeatKey||null;
@@ -87,6 +92,7 @@ export class BattleScene extends Phaser.Scene{
   recordBattleBeat(stage,detail={}){const beat={stage,at:Math.round(this.time?.now||0),turn:this.turn,...detail};this.battleBeatHistory.push(beat);if(this.battleBeatHistory.length>96)this.battleBeatHistory.shift();return beat;}
   recordBattleCeremony(stage,detail={}){const event={stage,at:Math.round(this.time?.now||0),turn:this.turn,enemyIndex:this.enemyIdx,...detail};this.battleCeremonyHistory.push(event);if(this.battleCeremonyHistory.length>96)this.battleCeremonyHistory.shift();return event;}
   opponentName(){return this.trainerName||'Opponent';}
+  opponentChallengeName(){return [this.trainerClass,this.opponentName()].filter(Boolean).join(' ');}
   introSequence(){
     const player=wrestlerName(lead(this.state),{short:true}),enemy=wrestlerName(this.enemy(),{short:true});
     if(this.type==='wild')return [
@@ -94,8 +100,8 @@ export class BattleScene extends Phaser.Scene{
       {stage:'playerSend',phase:'player-send-out',text:`${player}, take the mat!`,duration:1450}
     ];
     const challenge=this.type==='opening'
-      ?`${this.opponentName()} challenges you for the lineup spot!`
-      :`${this.opponentName()} challenges you to a match!`;
+      ?`${this.opponentChallengeName()} challenges you for the lineup spot!`
+      :`${this.opponentChallengeName()} challenges you to a match!`;
     return [
       {stage:'challenge',phase:'trainer-challenge',text:challenge,duration:1650},
       {stage:'enemySend',phase:'opponent-send-out',text:`${this.opponentName()} sends out ${enemy}!`,duration:1500},
@@ -875,9 +881,10 @@ export class BattleScene extends Phaser.Scene{
     }
   }
   drawOpponentTrainer(x=370,y=178){
-    if(this.opponentName()==='Rex')return this.add.image(x,y,'battle_trainer_rex').setOrigin(.5,1);
+    const portraitKey=this.trainerPortrait?`battle_trainer_${this.trainerPortrait}`:null;
+    if(portraitKey&&this.textures.exists(portraitKey))return this.add.image(x,y,portraitKey).setOrigin(.5,1);
     const g=this.add.graphics();g.fillStyle(0x17151a,.94);g.fillRoundedRect(x-88,y-105,176,92,5);g.lineStyle(2,0xd6a336,1);g.strokeRoundedRect(x-88,y-105,176,92,5);g.fillStyle(0x7b1d2a,1);g.fillRect(x-79,y-96,158,6);
-    this.add.text(x,y-75,'OPPONENT',{fontFamily:FONT,fontSize:11,color:'#d6a336',fontStyle:'bold'}).setOrigin(.5,0);
+    this.add.text(x,y-75,this.trainerClass||'OPPONENT',{fontFamily:FONT,fontSize:11,color:'#d6a336',fontStyle:'bold'}).setOrigin(.5,0);
     this.add.text(x,y-48,this.opponentName(),{fontFamily:FONT,fontSize:18,color:'#fff7df',fontStyle:'bold',wordWrap:{width:150},align:'center'}).setOrigin(.5,.5);
     return g;
   }
@@ -889,12 +896,12 @@ export class BattleScene extends Phaser.Scene{
     this.playerSprite=null;this.enemySprite=null;
     if(this.introStage==='challenge'){
       this.drawLineupMarkers(14,14,this.state.party.length,'YOUR LINEUP');
-      const opponentLabel=this.opponentName()==='Rex'?'REX LINEUP':'OPPONENT LINEUP';
+      const opponentLabel=`${String(this.lineupLabel).toUpperCase()} LINEUP`;
       this.drawLineupMarkers(466,14,this.enemyTeam.length,opponentLabel,true);
       const player=this.add.image(-70,PLAYER_POS.y,'battle_trainer_player').setOrigin(.5,1);this.tweenSpritePixels(player,{x:PLAYER_POS.x,duration:520,ease:'Cubic.Out'});
-      if(this.opponentName()==='Rex'){
-        const opponent=this.add.image(GAME_W+70,ENEMY_POS.y+20,'battle_trainer_rex').setOrigin(.5,1);this.tweenSpritePixels(opponent,{x:ENEMY_POS.x,duration:520,ease:'Cubic.Out'});
-      }else this.drawOpponentTrainer(ENEMY_POS.x,ENEMY_POS.y+20);
+      const portraitKey=this.trainerPortrait?`battle_trainer_${this.trainerPortrait}`:null;
+      const portraitReady=portraitKey&&this.textures.exists(portraitKey),opponent=this.drawOpponentTrainer(portraitReady?GAME_W+70:ENEMY_POS.x,ENEMY_POS.y+20);
+      if(portraitReady)this.tweenSpritePixels(opponent,{x:ENEMY_POS.x,duration:520,ease:'Cubic.Out'});
     }else if(this.introStage==='enemySend'){
       this.drawBattleBases();
       const enemy=this.add.image(GAME_W+80,ENEMY_POS.y,battleTextureFor(er.id)).setOrigin(.5,1).setFlipX(battleFlipXFor(er.id,false));

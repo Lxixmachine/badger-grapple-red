@@ -1,5 +1,6 @@
 import {ROSTER, counterStarterFor} from '../data/roster.js';
 import {canonicalBadge, SEASON_ONE_BADGES} from '../data/campaign.js';
+import {openingRexBattle, TRAINER_BATTLES} from '../data/trainerBattles.js';
 import {
   actorsForMap,
   CELL_SIZE,
@@ -95,25 +96,7 @@ const ACTOR_STORY_KEYS = {
   nationals_rex_inside: 'nationals_floor:rex'
 };
 
-const BATTLES = {
-  'r1:rex_rematch': {team: [['fieldflyer', 7]], trainerName: 'Rex', battleType: 'trainer', trainerAi: {tier: 'standard'}, defeatKey: 'rex_route_one', reward: {grit: 5, rep: 3}},
-  'r1:gauntlet_one': {team: [['pacesetter', 7], ['drillpartner', 7]], trainerName: 'Route Wrestler', battleType: 'trainer', trainerAi: {tier: 'basic'}, defeatKey: 'r1_gauntlet_one', reward: {grit: 5, rep: 4}},
-  'r1:gauntlet_two': {team: [['matreturner', 8], ['riverroller', 8]], trainerName: 'Open Mat Regular', battleType: 'trainer', trainerAi: {tier: 'standard'}, defeatKey: 'r1_gauntlet_two', reward: {grit: 6, rep: 4}},
-  'field_house_floor:opener': {team: [['captainneutral', 10]], trainerName: 'The Opener', battleType: 'gym', trainerAi: {tier: 'advanced', items: {athleticTape: 1}}, defeatKey: 'field_house_opener', badge: 'Field House Badge', requiresFlag: 'rosterBook', requirementMessage: 'Coach must issue the Roster Book before the Field House challenge.', reward: {grit: 12, rep: 10}},
-  'picnic_point:funk_doctor': {team: [['funklord', 16], ['scrambleboss', 17]], trainerName: 'The Funk Doctor', battleType: 'gym', trainerAi: {tier: 'advanced', items: {athleticTape: 1, trainerKit: 1}}, defeatKey: 'picnic_funk_doctor', badge: 'Picnic Point Badge', requiresBadges: ['Field House Badge'], requirementMessage: 'Earn the Field House Badge before challenging the Funk Doctor.', reward: {grit: 15, rep: 13}},
-  'state_street:deion_throw': {team: [['lockthrow', 12]], trainerName: 'Deion', battleType: 'trainer', trainerAi: {tier: 'standard'}, defeatKey: 'state_deion', reward: {grit: 7, rep: 6}},
-  'state_street:throw_trainer_two': {team: [['whizzkid', 13], ['lockthrow', 13]], trainerName: 'State Street Thrower', battleType: 'trainer', trainerAi: {tier: 'standard', items: {athleticTape: 1}}, defeatKey: 'state_thrower', reward: {grit: 8, rep: 7}},
-  'bascom_hill:professor_wall': {team: [['whizzkid', 15], ['professor', 16]], trainerName: 'The Professor', battleType: 'trainer', trainerAi: {tier: 'advanced', items: {trainerKit: 1}}, defeatKey: 'bascom_professor', reward: {grit: 14, rep: 12}},
-  'capitol_interior:senator': {team: [['lockthrow', 15], ['senator', 16]], trainerName: 'The Senator', battleType: 'gym', trainerAi: {tier: 'advanced', items: {athleticTape: 1, trainerKit: 1}}, defeatKey: 'capitol_senator', badge: 'Capitol Badge', requiresKeyItem: 'kayakVoucher', requirementMessage: 'Hear the Capitol booster before challenging the Senator.', reward: {grit: 16, rep: 14}},
-  'monona_shore:water_trainer': {team: [['riverroller', 17], ['lakechain', 17]], trainerName: 'Shoreline Wrestler', battleType: 'trainer', trainerAi: {tier: 'standard', items: {sportsDrink: 1}}, defeatKey: 'monona_trainer', reward: {grit: 10, rep: 8}},
-  'kohl_bracket_floor:round_one': {team: [['tilttech', 18], ['pacecommand', 18]], trainerName: 'Conference Quarterfinalist', battleType: 'tournament', trainerAi: {tier: 'advanced', items: {sportsDrink: 1}}, defeatKey: 'kohl_round_one', requiresBadges: ['Field House Badge', 'Picnic Point Badge', 'Capitol Badge'], requirementMessage: 'Bring the Field House, Picnic Point, and Capitol credentials to the bracket.', reward: {grit: 12, rep: 10}},
-  'kohl_bracket_floor:round_two': {team: [['chainmaster', 19], ['drillveteran', 19]], trainerName: 'Conference Semifinalist', battleType: 'tournament', trainerAi: {tier: 'elite', items: {athleticTape: 1}}, defeatKey: 'kohl_round_two', requiresDefeat: 'kohl_round_one', requirementMessage: 'Win the conference quarterfinal first.', reward: {grit: 13, rep: 11}},
-  'kohl_bracket_floor:anchor': {team: [['tilttech', 19], ['topboss', 20]], trainerName: 'The Anchor', battleType: 'gym', trainerAi: {tier: 'elite', items: {athleticTape: 1, trainerKit: 1}}, defeatKey: 'kohl_anchor', badge: 'Kohl Badge', requiresDefeat: 'kohl_round_two', requirementMessage: 'Win the conference semifinal before facing The Anchor.', reward: {grit: 18, rep: 16}},
-  'kohl_center:anchor_badge': {team: [['tilttech', 19], ['topboss', 20]], trainerName: 'The Anchor', battleType: 'gym', trainerAi: {tier: 'elite', items: {athleticTape: 1, trainerKit: 1}}, defeatKey: 'kohl_anchor', badge: 'Kohl Badge', requiresDefeat: 'kohl_round_two', requirementMessage: 'The Anchor is waiting at the end of the bracket inside Kohl Center.', reward: {grit: 18, rep: 16}},
-  'nationals_floor:round_one': {team: [['chainmaster', 22], ['tilttech', 22], ['pacecommand', 22]], trainerName: 'National Qualifier', battleType: 'tournament', trainerAi: {tier: 'elite', items: {sportsDrink: 1}}, defeatKey: 'nationals_round_one', requiresBadges: [...SEASON_ONE_BADGES], requiresKeyItem: 'flightTicket', requirementMessage: 'Four credentials and the team flight are required for Nationals.', reward: {grit: 16, rep: 15}},
-  'nationals_floor:closer': {team: [['pacecommand', 23], ['closer', 24]], trainerName: 'The Closer', battleType: 'tournament', trainerAi: {tier: 'elite', items: {athleticTape: 1, trainerKit: 1}}, defeatKey: 'nationals_closer', requiresDefeat: 'nationals_round_one', requirementMessage: 'Win the opening round before the semifinal.', reward: {grit: 20, rep: 18}},
-  'nationals_floor:rex': {team: [['scramblesaint', 24], ['rideking', 24], ['buckallam', 25]], trainerName: 'Rex', battleType: 'tournament', trainerAi: {tier: 'elite', items: {athleticTape: 1, trainerKit: 1}}, defeatKey: 'nationals_rex', requiresDefeat: 'nationals_closer', requirementMessage: 'Defeat The Closer before the national final.', reward: {grit: 30, rep: 25}}
-};
+const BATTLES = TRAINER_BATTLES;
 
 const SCOUT_POOLS = {
   r1: [['pacesetter', 6], ['drillpartner', 7], ['matreturner', 7]],
@@ -905,7 +888,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     const rivalId = this.state.opening?.rivalPersona || counterStarterFor(this.state.party[0].id);
     this.state.opening = {...(this.state.opening || {}), playerPersona: this.state.party[0].id, rivalPersona: rivalId, battleResult: null};
     this.savePosition();
-    this.scene.start('BattleScene', {team: [[rivalId, 5]], battleType: 'opening', trainerName: 'Rex', reward: {grit: 0, rep: 0}});
+    this.scene.start('BattleScene', openingRexBattle(rivalId));
   }
 
   startScout() {

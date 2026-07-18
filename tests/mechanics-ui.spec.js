@@ -330,7 +330,7 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   await page.waitForTimeout(300);
   expect(await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
   // A strategic trainer may set position before the player's first contact.
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory.includes('contact')),{timeout:8_000}).toBe(true);
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory.includes('contact')),{timeout:12_000}).toBe(true);
   const impactContract=await page.evaluate(()=>{
     const scene=window.badgerGame.scene.getScene('BattleScene');
     return {

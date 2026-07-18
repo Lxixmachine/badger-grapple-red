@@ -18,7 +18,10 @@ MAX_ARENA_COLORS = 32
 MAX_ARENA_FIELD_SATURATION = 0.42
 EXPECTED_ROSTER_SIZE = 26
 LEGACY_ASSETS = ("badger", "neutral", "top", "scramble", "pace")
-TRAINER_ASSETS = ("player", "rex")
+TRAINER_ASSETS = (
+    "player", "rex", "wrestler", "athlete", "captain", "camper",
+    "opener", "funk_doctor", "professor", "senator", "anchor", "closer",
+)
 
 
 def assert_integer_blocks(image: Image.Image, label: str) -> None:

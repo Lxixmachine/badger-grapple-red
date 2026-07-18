@@ -17,10 +17,27 @@ OPAQUE_COLORS = 15
 SOURCES = {
     "player": ART / "overworld_player_v2_2026-07-16_alpha.png",
     "rex": ART / "overworld_rex_v2_2026-07-16_alpha.png",
+    "wrestler": ART / "overworld_wrestler_v2_2026-07-16_alpha.png",
+    "athlete": ART / "overworld_athlete_v2_2026-07-16_alpha.png",
+    "captain": ART / "overworld_captain_v2_2026-07-16_alpha.png",
+    "camper": ART / "overworld_camper_v2_2026-07-16_alpha.png",
 }
 POSES = {
     "player": (1, 2),  # right-facing idle, toward the opposing corner
     "rex": (1, 1),  # left-facing idle, toward the player's corner
+    "wrestler": (1, 1),
+    "athlete": (1, 1),
+    "captain": (1, 1),
+    "camper": (1, 1),
+}
+IDENTITY_SHEET = ART / "trainer_battle_identity_sheet_v1_2026-07-18_alpha.png"
+IDENTITY_POSES = {
+    "opener": (0, 0),
+    "funk_doctor": (1, 0),
+    "professor": (2, 0),
+    "senator": (0, 1),
+    "anchor": (1, 1),
+    "closer": (2, 1),
 }
 
 
@@ -72,8 +89,7 @@ def pose_subject(source: Image.Image, column: int, row: int) -> Image.Image:
     return cell.crop(bbox)
 
 
-def compile_sprite(source_path: Path, output_path: Path, pose: tuple[int, int]) -> None:
-    subject = pose_subject(Image.open(source_path).convert("RGBA"), *pose)
+def compile_subject(subject: Image.Image, output_path: Path) -> None:
     scale = min(MAX_SUBJECT[0] / subject.width, MAX_SUBJECT[1] / subject.height)
     fitted = subject.resize(
         (max(1, round(subject.width * scale)), max(1, round(subject.height * scale))),
@@ -98,6 +114,25 @@ def compile_sprite(source_path: Path, output_path: Path, pose: tuple[int, int]) 
     runtime.save(output_path, optimize=True)
 
 
+def compile_sprite(source_path: Path, output_path: Path, pose: tuple[int, int]) -> None:
+    compile_subject(pose_subject(Image.open(source_path).convert("RGBA"), *pose), output_path)
+
+
+def sheet_subject(source: Image.Image, column: int, row: int) -> Image.Image:
+    cell_width = source.width // 3
+    cell_height = source.height // 2
+    cell = largest_component(source.crop((
+        column * cell_width,
+        row * cell_height,
+        (column + 1) * cell_width,
+        (row + 1) * cell_height,
+    )))
+    bbox = cell.getchannel("A").getbbox()
+    if not bbox:
+        raise RuntimeError("Trainer identity sheet cell has no visible subject")
+    return cell.crop(bbox)
+
+
 def validate(path: Path) -> None:
     image = Image.open(path).convert("RGBA")
     if image.size != (128, 128):
@@ -118,7 +153,13 @@ def main() -> None:
         output = OUT / f"battle_trainer_{actor}_v1.png"
         compile_sprite(source, output, POSES[actor])
         validate(output)
-    print("Prepared 2 battle trainer sprites at 64px logical / 128px runtime.")
+    identity_sheet = Image.open(IDENTITY_SHEET).convert("RGBA")
+    for actor, pose in IDENTITY_POSES.items():
+        output = OUT / f"battle_trainer_{actor}_v1.png"
+        compile_subject(sheet_subject(identity_sheet, *pose), output)
+        validate(output)
+    total = len(SOURCES) + len(IDENTITY_POSES)
+    print(f"Prepared {total} battle trainer sprites at 64px logical / 128px runtime.")
 
 
 if __name__ == "__main__":

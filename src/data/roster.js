@@ -1,7 +1,7 @@
 import {MAX_LEVEL,experienceAtLevel} from './experience.js';
 import {MOVES,moveStaminaMax} from './moves.js';
 import {movesForLevel,movesLearnedAtLevel} from './learnsets.js';
-import {calculateStats,makeIndividualValues,normalizeEffortValues,potentialFor} from './stats.js';
+import {calculateStats,makeIndividualValues,normalizeEffortValues,potentialFor,STAT_KEYS} from './stats.js';
 
 export const ROSTER={
  // ---- STARTER LINE: SHOOTER ----
@@ -113,6 +113,21 @@ export function makeMon(id,lvl){
   const ivs=makeIndividualValues();
   const m={id,lvl,xp:experienceAtLevel(id,lvl),hp:1,score:0,boost:false,potential:potentialFor(ivs),interest:45+Math.floor(Math.random()*38),ivs,effort:normalizeEffortValues(),nature:Math.floor(Math.random()*25),moves:legalMoves.length?legalMoves:[...(r.moves||[]).slice(0,1)],pendingMoves:[]};
   m.hp=scaledStats(id,lvl,m).hp;restoreMoveStamina(m);return m;
+}
+const TRAINER_IV_BY_TIER=Object.freeze({wild:6,basic:9,standard:15,advanced:21,elite:27});
+export function makeTrainerMon(spec,tier='standard'){
+  const source=Array.isArray(spec)?{id:spec[0],level:spec[1]}:{...(spec||{})};
+  const id=ROSTER[source.id]?source.id:'buckshot',lvl=Math.max(1,Math.trunc(Number(source.level??source.lvl)||1));
+  const mon=makeMon(id,lvl),quality=Math.max(0,Math.min(31,Math.trunc(Number(source.quality??TRAINER_IV_BY_TIER[tier])||0)));
+  mon.ivs=Object.fromEntries(STAT_KEYS.map(key=>[key,quality]));
+  mon.effort=normalizeEffortValues(source.effort);
+  mon.nature=source.nature??'Balanced';
+  const authoredMoves=Array.isArray(source.moves)?[...new Set(source.moves.filter(key=>MOVES[key]&&key!=='desperation'))].slice(0,4):[];
+  if(authoredMoves.length)mon.moves=authoredMoves;
+  mon.ace=Boolean(source.ace);
+  if(source.signatureMove&&MOVES[source.signatureMove])mon.signatureMove=source.signatureMove;
+  mon.potential=potentialFor(mon.ivs);mon.hp=scaledStats(id,lvl,mon).hp;restoreMoveStamina(mon);
+  return mon;
 }
 export function xpNeed(m){
   if(!m||m.lvl>=MAX_LEVEL)return 0;

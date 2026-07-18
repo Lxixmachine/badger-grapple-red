@@ -154,12 +154,16 @@ test('Deion and the second throw trainer launch their authored battles', async (
   await press(page, 'a');
   await expect.poll(() => page.evaluate(() => window.__badgerTest.sceneState('BattleScene')?.trainerName))
     .toBe('Deion');
+  await expect.poll(() => page.evaluate(() => window.__badgerTest.sceneState('BattleScene')?.trainerIdentity?.className))
+    .toBe('THROW SPECIALIST');
 
   await bootStreet(page, 30, 10);
   await press(page, 'left');
   await press(page, 'a');
   await expect.poll(() => page.evaluate(() => window.__badgerTest.sceneState('BattleScene')?.trainerName))
-    .toBe('State Street Thrower');
+    .toBe('Grant');
+  await expect.poll(() => page.evaluate(() => window.__badgerTest.sceneState('BattleScene')?.trainerIdentity?.className))
+    .toBe('STATE STREET THROWER');
 });
 
 test('closed storefront walls do not advertise a fake interaction', async ({page}) => {

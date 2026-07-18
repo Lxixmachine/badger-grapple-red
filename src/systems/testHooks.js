@@ -94,6 +94,14 @@ export function installTestHooks(game, routeVirtualButton) {
         ? scene.promptForTarget()
         : null,
       trainerName: scene.trainerName ?? null,
+      trainerIdentity: scene.trainerName ? {
+        name: scene.trainerName,
+        className: scene.trainerClass ?? null,
+        portrait: scene.trainerPortrait ?? null,
+        lineupLabel: scene.lineupLabel ?? null,
+        strategy: scene.trainerStrategy ?? null,
+        signatureMove: scene.signatureMove ?? null
+      } : null,
       battleType: scene.type ?? null,
       enemyIndex: scene.enemyIdx ?? null,
       battleTurn: scene.turn ?? null,
@@ -103,7 +111,7 @@ export function installTestHooks(game, routeVirtualButton) {
         switchCount: scene.trainerSwitchCount ?? 0,
         lastSwitchTurn: scene.lastTrainerSwitchTurn ?? null,
         actionHistory: (scene.trainerActionHistory || []).map(event => ({...event})),
-        team: (scene.enemyTeam || []).map((mon, index) => ({index, id: mon.id, hp: mon.hp, condition: mon.condition ? {...mon.condition} : null, moves: [...(mon.moves || [])], moveStamina: {...(mon.moveStamina || {})}}))
+        team: (scene.enemyTeam || []).map((mon, index) => ({index, id: mon.id, hp: mon.hp, condition: mon.condition ? {...mon.condition} : null, moves: [...(mon.moves || [])], moveStamina: {...(mon.moveStamina || {})}, ivs: {...(mon.ivs || {})}, nature: mon.nature ?? null, ace: Boolean(mon.ace), signatureMove: mon.signatureMove ?? null}))
       } : null,
       battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,
       battleConditions: scene.state&&scene.enemy ? {

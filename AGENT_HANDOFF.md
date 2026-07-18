@@ -3936,3 +3936,27 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   final suite count is 154/154.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Trainer Identity Pass (v22.53)
+
+- Season One's 17 organized battles now use one authored trainer catalog.
+  Every opponent has a wrestling class, name, portrait role, lineup label,
+  tactical plan, fixed ordered team, exact legal techniques, one closing ace,
+  finite support inventory, and authored defeat dialogue. Major captains also
+  have signature techniques and deterministic progression-appropriate quality.
+- Opposing teams no longer reroll individual values when a match restarts.
+  `makeTrainerMon` builds exact trainer records while preserving the existing
+  wild-scout and player-wrestler generation paths.
+- Trainer challenges now present class plus name, trainer-specific lineup
+  markers, and native-scale portraits. Six major opponents use original
+  Imagegen portraits; reusable wrestler, athlete, captain, and camper roles
+  complete the twelve-portrait runtime library.
+- `docs/TRAINER_IDENTITY_CONTRACT.md` is the standing data and presentation
+  contract. `npm run review:trainer-identity` captures The Opener, The
+  Professor, and The Closer at the native 480x320 / zoom 1 contract.
+- The portrait build is deterministic: all twelve outputs reproduce
+  byte-for-byte. World validation, battle-art validation, balance, map lint,
+  production build, focused trainer and battle regressions, and the complete
+  sequential browser suite pass; final suite count is 158/158.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.
