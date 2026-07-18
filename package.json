@@ -1,6 +1,6 @@
 {
   "name": "badger-grapple-red",
-  "version": "22.43.0",
+  "version": "22.44.0",
   "private": true,
   "type": "module",
   "description": "Source-first Phaser wrestling RPG built toward FireRed-style production quality",
@@ -23,6 +23,7 @@
     "review:battle-motion": "node tools/capture_battle_choreography.mjs",
     "review:battle-condition": "node tools/capture_condition_presentation.mjs",
     "review:battle-feedback": "node tools/capture_battle_feedback.mjs",
+    "review:battle-impact": "node tools/capture_battle_impact.mjs",
     "smoke": "playwright test",
     "check": "npm run build:maps && npm run build:camp-production && npm run build:camp-metatiles && npm run build:native-ui && npm run validate:battle-art && npm run validate && npm run balance && npm run lint-maps && npm run build && npm run smoke",
     "build": "vite build",

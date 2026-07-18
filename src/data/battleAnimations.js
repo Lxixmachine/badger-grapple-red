@@ -1,13 +1,19 @@
-const tempo=(feedback=620,hitStagger=0,announceBase=390)=>({
-  announceBase,announceMin:820,announceMax:1120,windupLead:500,feedback,hitStagger
+const tempo=(feedback=620,hitStagger=0,announceBase=390,{contactHold=72,conditionLead=156,interHitPause=72,recovery=240}={})=>({
+  announceBase,announceMin:820,announceMax:1120,windupLead:500,feedback,hitStagger,
+  contactHold,conditionLead,interHitPause,recovery
 });
 
-const move=(motion,effect,{dx=34,dy=0,duration=210,lunge=24,lift=0,knockback=12,targetLift=0,effectY=-70,shake=2,flash=70,feedback=620,hitStagger=0,announceBase=390}={})=>({
-  motion,effect,
-  windup:{dx,dy,duration},
-  impact:{lunge,lift,knockback,targetLift,effectY,shake,flash},
-  tempo:tempo(feedback,hitStagger,announceBase)
-});
+const move=(motion,effect,{dx=34,dy=0,duration=210,lunge=24,lift=0,knockback=12,targetLift=0,effectY=-70,shake=2,flash=70,feedback=620,hitStagger=0,announceBase=390,contactHold,conditionLead,interHitPause=72,recovery}={})=>{
+  const resolvedHold=contactHold??(52+Math.max(0,shake)*10);
+  const resolvedLead=conditionLead??(resolvedHold+84);
+  const resolvedRecovery=recovery??(210+Math.max(0,shake)*18);
+  return {
+    motion,effect,
+    windup:{dx,dy,duration},
+    impact:{lunge,lift,knockback,targetLift,effectY,shake,flash},
+    tempo:tempo(feedback,hitStagger,announceBase,{contactHold:resolvedHold,conditionLead:resolvedLead,interHitPause,recovery:resolvedRecovery})
+  };
+};
 
 export const BATTLE_CHOREOGRAPHY=Object.freeze({
   single:move('level-change','low-sweep',{dx:43,dy:10,duration:220,lunge:30,knockback:10,targetLift:2,effectY:-24}),

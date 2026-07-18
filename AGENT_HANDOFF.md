@@ -1,5 +1,34 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.44 Impact Cadence)
+
+Battle impacts now follow FireRed's presentation order instead of beginning the
+Condition drain on the same frame as contact. Every technique declares integer
+contact-hold, Condition-lead, inter-hit-pause, and recovery timing. Sounds,
+effects, target reactions, and damage popups belong to the contact beat;
+Condition drains afterward; result feedback follows the completed drain; and
+turn recovery begins only after feedback. Multi-hit techniques wait for each
+prior drain before their next contact, and recoil follows the full target-hit
+sequence.
+
+The complete technique announcement remains visible through contact and drain
+instead of restarting from its first letter at impact. A bounded semantic beat
+history is exposed through the test hooks with announce, windup, contact,
+Condition start/completion, result, recoil, and recovery records. Battle sounds
+now fire with their visible beats rather than during hidden mechanics
+calculation.
+
+`tests/battle-impact-timing.spec.js` proves the full single-hit order and a
+three-hit Flurry cadence in the real Phaser battle, including native 480x320,
+camera zoom 1, actor scale 1, and integer positions. Existing mechanics tests
+now require all 27 technique choreographies to declare the cadence contract.
+`npm run review:battle-impact` produces fixed 390x844 phone captures of contact
+and Condition drain; those captures exposed and closed the announcement-restart
+defect. Battle-art validation, data validation, balance, map lint, build,
+whitespace checks, and the complete serial Chromium suite pass; full count is
+138/138. Tony's dirty State Street composition files remain protected and must
+not be rebuilt, staged, reverted, or overwritten during future integration.
+
 ## Latest Codex Turn (v22.43 Battle Feedback)
 
 Battle consequences now resolve through an ordered FireRed-style message queue

@@ -24,7 +24,7 @@ export class BattleScene extends Phaser.Scene{
     this.winMsg=data.winMsg||null;
     this.beatenMsg=data.beatenMsg||null;
     this.turn=1;this.sel=0;this.mode='command';this.battlePhase='intro';this.battlePhaseHistory=['intro'];this.introStage='transition';this.postBattleStage='';this.over=false;this.recruit=false;this.forcedSwap=false;this.preOpponentSwitch=false;this.pendingOpponentIndex=null;this.impact='';this.resultTitle='';this.messageTimer=0;this.moveLearn=null;this.pendingNickname=null;
-    this.firstBattleDraw=true;this.transitioning=false;this.attackAnim=null;this.attackSide=null;this.moveKey='';this.moveHitCount=1;this.moveHitResults=[];this.moveRecoilResult=null;this.techniqueAnimation=null;this.techniqueAnimationHistory=[];this.presentedCondition=null;this.conditionMeters={};this.conditionValueTexts={};this.conditionHitIndex=null;this.conditionPresentationHistory=[];this.feedbackSequence=null;this.currentFeedback=null;this.feedbackHistory=[];this.feedbackTimer=null;this.feedbackReadyAt=0;this.messagePrompt=null;this.lastChooseAt=0;this.inputLocked=true;
+    this.firstBattleDraw=true;this.transitioning=false;this.attackAnim=null;this.attackSide=null;this.moveActorSide=null;this.moveKey='';this.moveHitCount=1;this.moveHitResults=[];this.moveRecoilResult=null;this.techniqueAnimation=null;this.techniqueAnimationHistory=[];this.battleBeatHistory=[];this.presentedCondition=null;this.conditionMeters={};this.conditionValueTexts={};this.conditionHitIndex=null;this.conditionPresentationHistory=[];this.feedbackSequence=null;this.currentFeedback=null;this.feedbackHistory=[];this.feedbackTimer=null;this.feedbackReadyAt=0;this.messagePrompt=null;this.lastChooseAt=0;this.inputLocked=true;
     this.battleStates=new WeakMap();this.awardedEnemies=new WeakSet();this.rewardEvent=null;this.rewardHistory=[];this.rewardViewLevel=null;this.rewardViewProgress=0;this.rewardViewHp=0;this.rewardText='';this.levelSummary=null;this.developmentEvent=null;this.finalizingBattle=false;
     const openLine=this.type==='opening'
       ?`${this.trainerName||'Rex'} takes the mat as the ${personaFor(this.enemy().id)}!`
@@ -41,6 +41,7 @@ export class BattleScene extends Phaser.Scene{
   clearBattleTurn(){clearTurnFlags(this.combatState(lead(this.state)),this.combatState(this.enemy()));}
   battleDebugState(){const l=lead(this.state);return {player:l?this.combatState(l):null,enemy:this.enemy()?this.combatState(this.enemy()):null};}
   setBattlePhase(phase){this.battlePhase=phase;if(this.battlePhaseHistory?.at(-1)!==phase)this.battlePhaseHistory.push(phase);}
+  recordBattleBeat(stage,detail={}){const beat={stage,at:Math.round(this.time?.now||0),turn:this.turn,...detail};this.battleBeatHistory.push(beat);if(this.battleBeatHistory.length>96)this.battleBeatHistory.shift();return beat;}
   opponentName(){return this.trainerName||'Opponent';}
   introSequence(){
     const player=wrestlerName(lead(this.state),{short:true}),enemy=wrestlerName(this.enemy(),{short:true});
@@ -227,6 +228,11 @@ export class BattleScene extends Phaser.Scene{
     this.tweens.add({targets:this.messagePrompt,y:'+=3',duration:320,yoyo:true,repeat:-1,ease:'Sine.InOut'});
   }
   setResolveText(str){if(!this.resolveText||!this.resolveText.scene){if(this.mode!=='intro'&&this.mode!=='postBattle')this.mode='resolving';this.drawBattle();}this.resolveText.setColor(this.feedbackColor(this.currentFeedback?.kind));this.typeText(this.resolveText,str);}
+  setResolveTextImmediate(str){
+    if(this.typeTimer)this.typeTimer.remove(false);this.typeTimer=null;this.clearMessagePrompt();
+    if(!this.resolveText||!this.resolveText.scene){if(this.mode!=='intro'&&this.mode!=='postBattle')this.mode='resolving';this.drawBattle();}
+    this.typeTarget=this.resolveText;this.typeFull=str;this.resolveText.setColor(this.feedbackColor(this.currentFeedback?.kind)).setText(str);
+  }
   normalizeFeedback(event){if(typeof event==='string')return {kind:'message',text:event};return {kind:'message',...(event||{}),text:String(event?.text||'')};}
   playResolveSequence(events,onDone){
     const queue=events.map(event=>this.normalizeFeedback(event)).filter(event=>event.text);
@@ -239,7 +245,7 @@ export class BattleScene extends Phaser.Scene{
     if(sequence.index>=sequence.queue.length)return this.finishResolveSequence();
     const event=sequence.queue[sequence.index++],record={...event,index:sequence.index,completed:false,advancedBy:null};
     sequence.currentRecord=record;this.currentFeedback=event;this.feedbackHistory.push(record);if(this.feedbackHistory.length>64)this.feedbackHistory.shift();
-    this.setBattlePhase('message');if(event.sound)this.playSafe(event.sound);this.setResolveText(event.text);
+    this.setBattlePhase('message');this.recordBattleBeat('result-message',{moveKey:this.moveKey,side:this.moveActorSide,kind:event.kind,index:sequence.index});if(event.sound)this.playSafe(event.sound);this.setResolveText(event.text);
     this.feedbackReadyAt=(this.time.now||0)+180;
     const dwell=event.duration??Phaser.Math.Clamp(event.text.length*22+420,860,1320);
     this.feedbackTimer=this.time.delayedCall(dwell,()=>this.advanceResolveSequence('auto'));
@@ -294,7 +300,8 @@ export class BattleScene extends Phaser.Scene{
     const mv=MOVES[actualKey]||MOVES.stall;
     const choreography=battleChoreographyFor(actualKey);
     const announcement=actualKey!==key?`${attName} has no Stamina - DESPERATION SHOT!`:`${attName} used ${mv.name.toUpperCase()}!`;
-    this.setBattlePhase('announce');this.setResolveText(announcement);
+    const attackSide=defIsEnemy?'player':'enemy';
+    this.setBattlePhase('announce');this.recordBattleBeat('announce',{moveKey:actualKey,side:attackSide});this.setResolveText(announcement);
     const attacker=defIsEnemy?this.playerSprite:this.enemySprite;
     this.playSafe('talk');
     const announceDuration=Phaser.Math.Clamp(announcement.length*18+choreography.tempo.announceBase,choreography.tempo.announceMin,choreography.tempo.announceMax);
@@ -305,19 +312,20 @@ export class BattleScene extends Phaser.Scene{
       if(this.over)return;
       const beforeAttHp=att.hp,beforeDefHp=def.hp;
       const res=this.resolve(att,def,actualKey,attName);
-      this.setBattlePhase('impact');
+      this.setBattlePhase('impact');this.recordBattleBeat('impact-start',{moveKey:actualKey,side:attackSide,hit:Boolean(res.hit)});
       this.moveKey=res.result.key||actualKey;
+      this.moveActorSide=attackSide;
       this.moveHitCount=Math.max(1,res.result.hits||1);
       this.moveHitResults=[...(res.result.hitResults||[])];
       const recoil=res.result.events.find(event=>event.type==='recoil');
       this.moveRecoilResult=recoil?{damage:recoil.amount,hpBefore:beforeAttHp,hpAfter:att.hp}:null;
       if(res.dmg>0||this.moveRecoilResult)this.beginConditionPresentation(defIsEnemy,beforeAttHp,beforeDefHp);
-      this.attackSide=defIsEnemy?'player':'enemy';
+      this.attackSide=attackSide;
       this.impact=res.hit?(res.dmg>0?'':'SET'):'MISS';
       this.attackAnim=res.hit?(res.dmg>0?(defIsEnemy?'enemy':'player'):(defIsEnemy?'playerSetup':'enemySetup')):'miss';
       this.addLog([res.line]);
       this.drawBattle();
-      this.setResolveText(announcement);
+      this.setResolveTextImmediate(announcement);
       const feedback=res.hit?this.resultFeedback(res.result,attName,wrestlerName(def,{short:true})):[{kind:'miss',text:'It slipped - no contact.',sound:'miss'}];
       const animationTime=res.dmg>0?this.conditionSequenceDuration(choreography,this.moveHitResults,this.moveRecoilResult):Math.min(choreography.tempo.feedback,520);
       this.time.delayedCall(animationTime,()=>this.playResolveSequence(feedback,()=>{
@@ -325,7 +333,7 @@ export class BattleScene extends Phaser.Scene{
         this.clearConditionPresentation();
         if(def.hp<=0)return this.faintBeat(defIsEnemy,onKO);
         if(att.hp<=0)return this.faintBeat(!defIsEnemy,()=>defIsEnemy?this.playerDown():this.enemyDown());
-        this.setBattlePhase('between');this.time.delayedCall(300,onDone);
+        this.setBattlePhase('between');this.recordBattleBeat('recovery',{moveKey:actualKey,side:attackSide});this.time.delayedCall(choreography.tempo.recovery,onDone);
       }));
     });
   }
@@ -358,6 +366,7 @@ export class BattleScene extends Phaser.Scene{
   playTechniqueWindup(sprite,moveKey,isPlayer){
     const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,direction=isPlayer?1:-1,w=choreography.windup;
     this.recordTechniqueAnimation(moveKey,'windup',{side:isPlayer?'player':'enemy'});
+    this.recordBattleBeat('windup',{moveKey,side:isPlayer?'player':'enemy'});
     this.playTechniqueSound(mv.style,'windup');
     this.drawMotionTrail(sprite.x,sprite.y-58,sprite.x+w.dx*direction,sprite.y-58+w.dy,mv.style,.55);
     this.drawWindupGlyph(sprite.x,sprite.y-66,choreography.motion,mv.style,direction);
@@ -365,19 +374,23 @@ export class BattleScene extends Phaser.Scene{
   }
   playTechniqueImpact(attacker,target,moveKey,hitResults=[],recoilResult=null,hitCount=1){
     const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,playerAttacks=attacker===this.playerSprite,direction=playerAttacks?1:-1,force=choreography.impact;
-    const frames=hitResults.length?hitResults:Array.from({length:Math.max(1,hitCount)},(_,index)=>({index:index+1,damage:0,critical:false})),hits=frames.length,stagger=choreography.tempo.hitStagger||0,targetSide=playerAttacks?'enemy':'player',attackerSide=playerAttacks?'player':'enemy';
+    const frames=hitResults.length?hitResults:Array.from({length:Math.max(1,hitCount)},(_,index)=>({index:index+1,damage:0,critical:false})),hits=frames.length,starts=this.impactStartTimes(choreography,frames),targetSide=playerAttacks?'enemy':'player',attackerSide=playerAttacks?'player':'enemy';
     this.recordTechniqueAnimation(moveKey,'impact',{hitCount:hits,side:playerAttacks?'player':'enemy'});
     this.drawMotionTrail(attacker.x,attacker.y-58,target.x,target.y+force.effectY,mv.style,.8);
     frames.forEach((frame,index)=>{
-      this.time.delayedCall(index*stagger,()=>{
+      this.time.delayedCall(starts[index],()=>{
         if(!target.scene)return;
-        if(index>0){this.playSafe('hit');this.playTechniqueSound(mv.style,'impact');}
-        this.tweenSpritePixels(attacker,{x:`+=${force.lunge*direction}`,y:`+=${force.lift}`,duration:72,yoyo:true,hold:48,ease:'Cubic.Out'});
+        this.setBattlePhase('contact');this.recordBattleBeat('contact',{moveKey,side:attackerSide,hitIndex:index+1,damage:frame.damage||0,message:this.resolveText?.text||''});
+        this.playSafe('hit');this.playTechniqueSound(mv.style,'impact');
+        this.tweenSpritePixels(attacker,{x:`+=${force.lunge*direction}`,y:`+=${force.lift}`,duration:72,yoyo:true,hold:choreography.tempo.contactHold,ease:'Cubic.Out'});
         this.drawTechniqueEffect(target.x,target.y+force.effectY,moveKey,direction,index);
-        if(frame.damage>0){this.drawDamagePopup(target.x,target.y-112,frame.damage,frame.critical,index);this.animateConditionStep(targetSide,frame,choreography,index);}
+        if(frame.damage>0){
+          this.drawDamagePopup(target.x,target.y-112,frame.damage,frame.critical,index);
+          this.time.delayedCall(choreography.tempo.conditionLead,()=>{if(target.scene)this.animateConditionStep(targetSide,frame,choreography,index);});
+        }
         target.setTintFill(index%2?0xffd86b:0xfff7da);
         if(index===0&&force.flash)this.cameras.main.flash(force.flash,255,247,218,false);
-        this.time.delayedCall(64,()=>{if(target.scene)target.clearTint();});
+        this.time.delayedCall(Math.max(72,choreography.tempo.contactHold),()=>{if(target.scene)target.clearTint();});
         const knock=Math.max(2,force.knockback-(index*2)),vertical=index%2?Math.sign(force.targetLift||-1)*-3:force.targetLift;
         this.tweenSpritePixels(target,{x:`+=${knock*direction}`,y:`+=${vertical}`,duration:64,yoyo:true,repeat:Math.max(0,force.shake-1),ease:'Quad.Out'});
       });
@@ -396,6 +409,7 @@ export class BattleScene extends Phaser.Scene{
   playTechniqueSetup(sprite,moveKey){
     const choreography=battleChoreographyFor(moveKey),direction=sprite===this.playerSprite?1:-1;
     this.recordTechniqueAnimation(moveKey,'setup',{side:sprite===this.playerSprite?'player':'enemy'});
+    this.setBattlePhase('setup-animation');this.recordBattleBeat('setup-contact',{moveKey,side:sprite===this.playerSprite?'player':'enemy'});this.playSafe('talk');this.playTechniqueSound((MOVES[moveKey]||MOVES.stall).style,'setup');
     this.personaFlash(sprite);
     this.drawTechniqueEffect(sprite.x,sprite.y+choreography.impact.effectY,moveKey,direction,0);
     this.tweenSpritePixels(sprite,{x:`+=${choreography.impact.lunge*direction}`,y:`+=${choreography.impact.lift||-6}`,yoyo:true,duration:190,ease:'Back.Out'});
@@ -403,6 +417,7 @@ export class BattleScene extends Phaser.Scene{
   playTechniqueMiss(attacker,moveKey){
     const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,direction=attacker===this.playerSprite?1:-1,target=attacker===this.playerSprite?this.enemySprite:this.playerSprite;
     this.recordTechniqueAnimation(moveKey,'miss',{side:attacker===this.playerSprite?'player':'enemy'});
+    this.setBattlePhase('miss-animation');this.recordBattleBeat('miss-contact',{moveKey,side:attacker===this.playerSprite?'player':'enemy'});this.playSafe('miss');
     this.drawMotionTrail(attacker.x,attacker.y-58,target?.x||240,(target?.y||194)-74,mv.style,.38);
     this.drawMissWhiff((target?.x||240)+22*direction,(target?.y||194)-72);
     this.tweenSpritePixels(attacker,{x:`+=${Math.max(30,choreography.windup.dx)*direction}`,y:`+=${Math.min(-4,choreography.windup.dy)}`,alpha:.52,duration:100,yoyo:true,ease:'Cubic.Out'});
@@ -506,7 +521,7 @@ export class BattleScene extends Phaser.Scene{
     };
     act(order[0],()=>act(order[1],finish));
   }
-  resolve(att,def,key,label){const result=resolveTechnique(att,def,key,this.rng,{attackerState:this.combatState(att),defenderState:this.combatState(def)});const mv=result.move;if(!result.hit){sfx.miss();return {result,line:`${label} missed ${mv.name}.`,hit:false,dmg:0};}if(result.damage>0){sfx.hit();this.playTechniqueSound(mv.style,'impact');}else{this.playSafe('talk');this.playTechniqueSound(mv.style,'setup');}return {result,line:result.damage>0?`${label}: ${mv.name} ${result.damage}${result.multiplier>1?' EDGE':''}${result.critical?' CRITICAL':''}.`:`${label} set ${mv.name}.`,hit:true,dmg:result.damage};}
+  resolve(att,def,key,label){const result=resolveTechnique(att,def,key,this.rng,{attackerState:this.combatState(att),defenderState:this.combatState(def)});const mv=result.move;if(!result.hit)return {result,line:`${label} missed ${mv.name}.`,hit:false,dmg:0};return {result,line:result.damage>0?`${label}: ${mv.name} ${result.damage}${result.multiplier>1?' EDGE':''}${result.critical?' CRITICAL':''}.`:`${label} set ${mv.name}.`,hit:true,dmg:result.damage};}
   wrestlerSnapshot(mon){return {id:mon.id,lvl:mon.lvl,xp:mon.xp,hp:mon.hp,nickname:mon.nickname,moves:[...(mon.moves||[])]};}
   awardEnemyXp(defeated){
     if(!defeated||this.awardedEnemies.has(defeated))return [];
@@ -888,9 +903,18 @@ export class BattleScene extends Phaser.Scene{
     const cap=choreography.tempo.hitStagger?Math.max(180,choreography.tempo.hitStagger-70):520;
     return Phaser.Math.Clamp((frame?.damage||1)*18,180,cap);
   }
+  impactStartTimes(choreography,frames){
+    let nextStart=0;
+    return frames.map((frame,index)=>{
+      const nominal=index*(choreography.tempo.hitStagger||0),start=Math.max(nominal,nextStart);
+      nextStart=start+choreography.tempo.conditionLead+this.conditionStepDuration(frame,choreography)+choreography.tempo.interHitPause;
+      return start;
+    });
+  }
   conditionImpactDuration(choreography,frames){
     if(!frames.length)return 0;
-    return (frames.length-1)*(choreography.tempo.hitStagger||0)+this.conditionStepDuration(frames.at(-1),choreography);
+    const starts=this.impactStartTimes(choreography,frames);
+    return starts.at(-1)+choreography.tempo.conditionLead+this.conditionStepDuration(frames.at(-1),choreography);
   }
   conditionSequenceDuration(choreography,frames,recoilResult){
     const impact=this.conditionImpactDuration(choreography,frames);
@@ -910,7 +934,7 @@ export class BattleScene extends Phaser.Scene{
   animateConditionStep(side,frame,choreography,index=0,kind='hit'){
     if(!this.presentedCondition)return;
     const from=Math.max(0,frame.hpBefore??this.presentedCondition[side]??0),to=Math.max(0,frame.hpAfter??from-frame.damage),duration=this.conditionStepDuration(frame,choreography),value={hp:from};
-    this.conditionHitIndex=index+1;this.setBattlePhase(kind==='recoil'?'recoil-drain':'condition-drain');
+    this.conditionHitIndex=index+1;this.setBattlePhase(kind==='recoil'?'recoil-drain':'condition-drain');this.recordBattleBeat(kind==='recoil'?'recoil-condition':'condition-start',{moveKey:this.moveKey,side:this.moveActorSide,targetSide:side,hitIndex:index+1,damage:frame.damage});
     const presentation={moveKey:this.moveKey,kind,side,hitIndex:index+1,from,to,damage:frame.damage,critical:Boolean(frame.critical),completed:false};
     this.conditionPresentationHistory.push(presentation);
     if(this.conditionPresentationHistory.length>64)this.conditionPresentationHistory.shift();
@@ -919,7 +943,7 @@ export class BattleScene extends Phaser.Scene{
       const display=this.conditionMeters[side];if(display?.g?.scene)this.paintMeter(display.g,display.x,display.y,display.w,display.h,hp/Math.max(1,display.maxHp),display.color);
       const valueText=this.conditionValueTexts[side];if(valueText?.scene)valueText.setText(`${hp}/${display?.maxHp||hp}`);
     };
-    draw();this.tweens.add({targets:value,hp:to,duration,ease:'Linear',onUpdate:draw,onComplete:()=>{value.hp=to;draw();presentation.completed=true;}});
+    draw();this.tweens.add({targets:value,hp:to,duration,ease:'Linear',onUpdate:draw,onComplete:()=>{value.hp=to;draw();presentation.completed=true;this.recordBattleBeat(kind==='recoil'?'recoil-complete':'condition-complete',{moveKey:this.moveKey,side:this.moveActorSide,targetSide:side,hitIndex:index+1,damage:frame.damage});}});
   }
   drawAnimatedMeter(x,y,w,h,start,end,color){
     const g=this.add.graphics(),value={p:Phaser.Math.Clamp(start??end,0,1)},draw=()=>this.paintMeter(g,x,y,w,h,value.p,color);draw();

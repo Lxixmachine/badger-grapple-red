@@ -234,7 +234,7 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
   await page.waitForTimeout(300);
   expect(await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
-  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase),{timeout:4_000}).toBe('impact');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory.includes('contact')),{timeout:4_000}).toBe(true);
   const impactContract=await page.evaluate(()=>{
     const scene=window.badgerGame.scene.getScene('BattleScene');
     return {
@@ -247,7 +247,18 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   expect(impactContract).toEqual({zoom:1,playerScale:[1,1],enemyScale:[1,1],integerPositions:true});
   await waitForBattleCommand(page);
   const phases=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhaseHistory);
-  expect(phases).toEqual(expect.arrayContaining(['announce','impact','message','between','command']));
+  expect(phases).toEqual(expect.arrayContaining(['announce','impact','contact','condition-drain','between','command']));
+  const contact=phases.indexOf('contact');
+  const ordered=[
+    phases.lastIndexOf('announce',contact),
+    phases.lastIndexOf('impact',contact),
+    contact,
+    phases.indexOf('condition-drain',contact+1),
+    phases.indexOf('between',contact+1),
+    phases.indexOf('command',contact+1)
+  ];
+  expect(ordered).not.toContain(-1);
+  expect(ordered).toEqual([...ordered].sort((a,b)=>a-b));
   expect(Date.now()-started).toBeGreaterThan(4200);
 });
 

@@ -27,8 +27,10 @@ export function installTestHooks(game, routeVirtualButton) {
       mode: scene.mode ?? null,
       battlePhase: scene.battlePhase ?? null,
       battlePhaseHistory: [...(scene.battlePhaseHistory || [])],
+      battleMessage: scene.resolveText?.text ?? null,
       techniqueAnimation: scene.techniqueAnimation ? {...scene.techniqueAnimation} : null,
       techniqueAnimationHistory: (scene.techniqueAnimationHistory || []).map(cue => ({...cue})),
+      battleBeatHistory: (scene.battleBeatHistory || []).map(beat => ({...beat})),
       presentedCondition: scene.presentedCondition ? {...scene.presentedCondition} : null,
       conditionHitIndex: scene.conditionHitIndex ?? null,
       conditionPresentationHistory: (scene.conditionPresentationHistory || []).map(step => ({...step})),
@@ -88,7 +90,9 @@ export function installTestHooks(game, routeVirtualButton) {
         playerTexture: scene.playerSprite.texture?.key ?? null,
         playerFlipX: Boolean(scene.playerSprite.flipX),
         enemyScale: [scene.enemySprite.scaleX, scene.enemySprite.scaleY],
-        playerScale: [scene.playerSprite.scaleX, scene.playerSprite.scaleY]
+        playerScale: [scene.playerSprite.scaleX, scene.playerSprite.scaleY],
+        enemyPosition: [scene.enemySprite.x,scene.enemySprite.y],
+        playerPosition: [scene.playerSprite.x,scene.playerSprite.y]
       } : null,
       moveLearning: scene.moveLearn ? {
         wrestlerId: scene.moveLearn.mon?.id ?? null,

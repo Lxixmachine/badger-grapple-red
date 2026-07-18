@@ -44,6 +44,14 @@ test('every technique owns distinct, pixel-safe battle choreography',()=>{
     expect(Number.isInteger(entry.windup.duration)).toBe(true);
     Object.values(entry.impact).forEach(value=>expect(Number.isInteger(value)).toBe(true));
     expect(entry.tempo.feedback).toBeGreaterThanOrEqual(500);
+    expect(Number.isInteger(entry.tempo.contactHold)).toBe(true);
+    expect(Number.isInteger(entry.tempo.conditionLead)).toBe(true);
+    expect(Number.isInteger(entry.tempo.interHitPause)).toBe(true);
+    expect(Number.isInteger(entry.tempo.recovery)).toBe(true);
+    expect(entry.tempo.contactHold).toBeGreaterThanOrEqual(50);
+    expect(entry.tempo.conditionLead).toBeGreaterThan(entry.tempo.contactHold);
+    expect(entry.tempo.interHitPause).toBeGreaterThanOrEqual(60);
+    expect(entry.tempo.recovery).toBeGreaterThanOrEqual(200);
   };
   Object.values(BATTLE_CHOREOGRAPHY).forEach(validStages);
   expect(new Set(Object.values(BATTLE_CHOREOGRAPHY).map(choreographySignature)).size).toBe(Object.keys(MOVES).length);
