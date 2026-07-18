@@ -291,28 +291,48 @@ function conditionEffectValue(move,attacker,defender,attackerSpeed,defenderSpeed
   return value;
 }
 
-export function chooseAiMove(attacker,defender,{wild=false,rng=Math.random,attackerState=null,defenderState=null}={}){
+export function rankAiMoves(attacker,defender,{skill=2,attackerState=null,defenderState=null}={}){
   const moves=(attacker.moves||ROSTER[attacker.id]?.moves||['stall']).filter(key=>MOVES[key]);
   const viable=moves.filter(key=>currentMoveStamina(attacker,key)>0);
-  if(!viable.length)return 'desperation';
-  if(wild)return viable[Math.floor(rng()*viable.length)]||viable[0];
+  if(!viable.length)return [{key:'desperation',value:0,damage:previewDamage(attacker,defender,'desperation',{attackerState,defenderState})}];
   const attackerSpeed=effectiveBattleStat(attacker,'speed',attackerState),defenderSpeed=effectiveBattleStat(defender,'speed',defenderState);
-  const ranked=viable.map(key=>{
+  return viable.map(key=>{
     const move=MOVES[key],assumeCounter=!!move.counterMultiplier&&attackerSpeed<=defenderSpeed;
     const damage=previewDamage(attacker,defender,key,{attackerState,defenderState,assumeCounter});
     const accuracy=accuracyFor(attacker,move,attackerState);
     const setupWindow=defender.hp>damage?1:.25;
     let value=damage*accuracy+(move.points||0)*1.5;
-    const effectWeight=move.power<=0?3.25:1;
-    value+=stageEffectValue(move.selfStage,attackerState)*setupWindow*effectWeight;
-    value+=stageEffectValue(move.targetStage,defenderState)*setupWindow*effectWeight;
-    value+=conditionEffectValue(move,attacker,defender,attackerSpeed,defenderSpeed)*setupWindow*effectWeight;
-    value+=(move.staminaDrain||0)*2.6+(move.flinchChance||0)*(attackerSpeed>=defenderSpeed?10:2);
-    value+=(move.priority||0)>0&&damage>=defender.hp?12:0;
-    if(move.recharge)value-=damage*.28;
-    return {key,value};
+    if(skill>=2){
+      const effectWeight=move.power<=0?3.25:1;
+      value+=stageEffectValue(move.selfStage,attackerState)*setupWindow*effectWeight;
+      value+=stageEffectValue(move.targetStage,defenderState)*setupWindow*effectWeight;
+      value+=conditionEffectValue(move,attacker,defender,attackerSpeed,defenderSpeed)*setupWindow*effectWeight;
+      value+=(move.staminaDrain||0)*2.6+(move.flinchChance||0)*(attackerSpeed>=defenderSpeed?10:2);
+      value+=(move.priority||0)>0&&damage>=defender.hp?12:0;
+      if(move.recharge)value-=damage*.28;
+    }
+    if(skill>=3){
+      if(damage>=defender.hp)value+=36;
+      if(move.power<=0&&defender.hp<=Math.max(8,damage*2))value-=18;
+      if(move.counterMultiplier&&attackerSpeed<=defenderSpeed)value+=10;
+    }
+    if(skill>=4){
+      if((move.priority||0)>0&&damage>=defender.hp)value+=18;
+      if(move.cureCondition&&conditionFor(attacker.condition))value+=20;
+      if(move.power>0&&accuracy<.75&&defender.hp<=damage)value-=8;
+    }
+    return {key,value,damage,accuracy};
   }).sort((a,b)=>b.value-a.value);
-  if(ranked.length>1&&rng()<.22)return ranked[1].key;
+}
+
+export function chooseAiMove(attacker,defender,{wild=false,rng=Math.random,skill=2,mistakeChance=null,attackerState=null,defenderState=null}={}){
+  const moves=(attacker.moves||ROSTER[attacker.id]?.moves||['stall']).filter(key=>MOVES[key]);
+  const viable=moves.filter(key=>currentMoveStamina(attacker,key)>0);
+  if(!viable.length)return 'desperation';
+  if(wild||skill<=0)return viable[Math.floor(rng()*viable.length)]||viable[0];
+  const ranked=rankAiMoves(attacker,defender,{skill,attackerState,defenderState});
+  const errorRate=Number.isFinite(mistakeChance)?clamp(mistakeChance,0,1):({1:.35,2:.22,3:.08,4:0}[skill]??.22);
+  if(ranked.length>1&&rng()<errorRate)return ranked[1].key;
   return ranked[0].key;
 }
 

@@ -96,6 +96,15 @@ export function installTestHooks(game, routeVirtualButton) {
       trainerName: scene.trainerName ?? null,
       battleType: scene.type ?? null,
       enemyIndex: scene.enemyIdx ?? null,
+      battleTurn: scene.turn ?? null,
+      trainerStrategy: scene.trainerAi ? {
+        tier: scene.trainerAi.tier,
+        items: {...(scene.trainerItems || {})},
+        switchCount: scene.trainerSwitchCount ?? 0,
+        lastSwitchTurn: scene.lastTrainerSwitchTurn ?? null,
+        actionHistory: (scene.trainerActionHistory || []).map(event => ({...event})),
+        team: (scene.enemyTeam || []).map((mon, index) => ({index, id: mon.id, hp: mon.hp, condition: mon.condition ? {...mon.condition} : null, moves: [...(mon.moves || [])], moveStamina: {...(mon.moveStamina || {})}}))
+      } : null,
       battle: scene.state&&scene.battleDebugState?scene.battleDebugState():null,
       battleConditions: scene.state&&scene.enemy ? {
         player: scene.state.party?.[0]?.condition ? {...scene.state.party[0].condition} : null,

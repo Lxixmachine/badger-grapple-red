@@ -3904,3 +3904,35 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   browser suite pass; final suite count is 148/148.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Trainer Strategy Pass (v22.52)
+
+- Organized opponents now own authored `basic`, `standard`, `advanced`, or
+  `elite` intelligence profiles; wild prospects remain deliberately random.
+  Higher tiers improve technique scoring for legal knockouts, priority,
+  counters, conditions, setup, Stamina pressure, and accuracy risk without
+  reading future random rolls.
+- Trainer decisions follow the FireRed action structure: legal tactical
+  switch, then finite trainer item, then technique. The first choice consumes
+  the action. Trainer Kit, Athletic Tape, and Sports Drink use explicit
+  condition, quarter-Condition, meaningful-heal, and low-Stamina thresholds.
+  Season One opponents now carry progression-appropriate tiers and limited
+  inventories in their battle definitions.
+- Voluntary withdrawal is a complete typed battle ceremony. Current HP,
+  Condition, and technique Stamina persist off the mat; temporary stages reset.
+  Withdrawn wrestlers may return, EXP participation remains attached to each
+  opposing wrestler, and victory occurs only when the full opposing lineup is
+  out. Switch caps and cooldowns prevent oscillation.
+- Opponent decisions lock before a player's item or voluntary lineup change
+  resolves, so trainers cannot counter-pick after seeing the result. Test-only
+  `trainerActionHistory` records selection, completion, and cancellation for
+  deterministic proof without exposing strategy diagnostics in the game UI.
+- `docs/TRAINER_BATTLE_STRATEGY_CONTRACT.md` is the standing behavior contract.
+  `npm run review:trainer-strategy` captures trainer item use, withdrawal, and
+  replacement from the native Phaser framebuffer while asserting 480x320,
+  zoom 1, and scale-1 images.
+- World validation, battle-art validation, balance, map lint, production build,
+  focused battle regressions, and the complete sequential browser suite pass;
+  final suite count is 154/154.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.
