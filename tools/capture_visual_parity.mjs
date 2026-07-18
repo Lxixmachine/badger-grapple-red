@@ -24,6 +24,12 @@ const captures = [
     area: 'field_house'
   },
   {
+    id: 'field-house-gateway',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=20&y=6&facing=down',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
     id: 'field-house-trainer-quarter',
     url: '/?test=1&scene=overworld&reset=1&area=field_house&x=8&y=8&facing=left',
     scene: 'OverworldScene',
@@ -32,6 +38,24 @@ const captures = [
   {
     id: 'field-house-forecourt',
     url: '/?test=1&scene=overworld&reset=1&area=field_house&x=20&y=18&facing=up',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'field-house-lakeshore-branch',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=7&y=17&facing=left',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'field-house-state-branch',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=36&y=14&facing=right',
+    scene: 'OverworldScene',
+    area: 'field_house'
+  },
+  {
+    id: 'field-house-south-garden',
+    url: '/?test=1&scene=overworld&reset=1&area=field_house&x=20&y=23&facing=down',
     scene: 'OverworldScene',
     area: 'field_house'
   },

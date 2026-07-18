@@ -1,7 +1,7 @@
 {
   "version": 3,
   "status": "logical-grid-actor-production-pilot",
-  "layoutRevision": 16,
+  "layoutRevision": 17,
   "cellSize": 32,
   "minimumBlockedCellCoverage": 0.55,
   "map": {
@@ -2405,9 +2405,9 @@
     }
   },
   "sources": {
-    "manifest": "84edd60d4bac8c6101431f3a48365ae25d727b18796ea78e8c56c1c1a65955d4",
-    "layout": "6e4e7a246662f76fae06fd0f4619b4a16a662ae87f37e28b52331ba6953bbbd8",
-    "worldTileset": "a49dd25716ced101fab7ed86eaadfd88ace3db048eeb2e758ecacec8dd9fb92e",
+    "manifest": "f2e923f15042e1c20c19b361560665a6b852a01f4573ebc61f93c505fc55634f",
+    "layout": "38a739965a8f5cc55b3540eb11a8bc95a72ee660a3b6e960ee704479c6bd7e5c",
+    "worldTileset": "da6098c09f4f015f1ca5dbc5e6b4752fe4a5f81d547c92d71b44d539932ba87e",
     "terrain": "6ed76ba705f5b1b4cf200fbc918279db75a151c21812a3a02edc6a02cc27d9e6",
     "exterior": "25f24c0f9d6d35e05c2439b105b4f7cf72e6200dcc37003998535aac8d9e75ef",
     "stadium_compact": "28d651b18b77e9925daf80105dad5e5d35b19a2a4e93cd77456e429d5863f6e0",

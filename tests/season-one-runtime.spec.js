@@ -251,6 +251,23 @@ test('first assigned Field House arrival reveals the venue before returning cont
   expect((await sceneState(page)).inputLocked).toBe(false);
 });
 
+test('all three Field House gateway lanes traverse on the authored grid', async ({page}) => {
+  for (const x of [19, 20, 21]) {
+    await bootMap(page, 'field_house', {x, y: 1});
+    await press(page, 'down');
+    await expect.poll(async () => (await sceneState(page))?.facing).toBe('down');
+    await page.waitForTimeout(180);
+    const settledY = (await sceneState(page)).tilePos.y;
+    for (let y = settledY + 1; y <= 9; y += 1) {
+      await press(page, 'down');
+      await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x, y});
+      await expect.poll(async () => (await sceneState(page))?.playerAnimationPlaying).toBe(false);
+      await page.waitForTimeout(20);
+    }
+    expect((await sceneState(page)).passable.down, `gateway lane ${x} stops at the landing`).toBe(true);
+  }
+});
+
 test('Camp Randall, R1, and Field House share exact two-cell transition lanes', async ({page}) => {
   await bootMap(page, 'camp_randall', {x: 11, y: 19});
   await page.evaluate(() => {
@@ -290,8 +307,8 @@ test('Camp Randall, R1, and Field House share exact two-cell transition lanes', 
 });
 
 test('exterior venue doors enter and return through their exact grid cell', async ({page}) => {
-  await bootMap(page, 'field_house', {x: 20, y: 17});
-  await press(page, 'a');
+  await bootMap(page, 'field_house', {x: 20, y: 18});
+  await press(page, 'up');
   await expect.poll(async () => (await sceneState(page))?.area).toBe('field_house_floor');
   await expect.poll(async () => (await sceneState(page))?.tilePos).toMatchObject({x: 7, y: 10});
   await expect.poll(async () => (await sceneState(page))?.inputLocked).toBe(false);
@@ -300,7 +317,7 @@ test('exterior venue doors enter and return through their exact grid cell', asyn
   await press(page, 'down');
   await press(page, 'down');
   await expect.poll(async () => (await sceneState(page))?.area).toBe('field_house');
-  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 20, y: 17});
+  await expect.poll(async () => (await sceneState(page))?.tilePos).toEqual({x: 20, y: 18});
   await expect.poll(async () => (await sceneState(page))?.facing).toBe('down');
 });
 

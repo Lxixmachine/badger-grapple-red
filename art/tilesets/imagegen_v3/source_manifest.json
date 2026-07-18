@@ -5,10 +5,10 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "cdec04504bc38eda04e00608c741117aa87c4d1f447e064eb4deee60eca50db9",
+    "profileSha256": "a81d55ea87a9855361845aa836d655081ee5cc5d731234fdf4bad44b31c32213",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
-    "disciplinedAssetCount": 147
+    "disciplinedAssetCount": 150
   },
   "sourceBoards": {
     "ground": "0200894b42bc8b723dda8089f25807cae3b6da43d434a3382fb620c3f52bc256",
@@ -23,6 +23,7 @@
     "route_landmarks": "f326372e58c535b31aa4ba6f7cc029f1166db550734fd73477f646e1bfc14be0",
     "bascom_landmarks": "cc8bc27bba589daca622593304c1ab749a59108314e1ea56d458611ead57f725",
     "bascom_elevation": "d93135690c29df88da17a7e197e405812982cd7ba53976baabba24f42f214ea0",
+    "field_house_forecourt": "d79d76b1d4be26b6799d715cc1a1b338ad42014dcb82749e664eb863116abe62",
     "service_clinic": "352a7c07348e9ee46cf14ab6fde89451a03543ccab5792a8d0ec7495a364bbd0",
     "service_shop": "61c4cd2d24559b8e6828f40d51a7af43e6125c15dc7f0b79c20500ca7d4a2fc2",
     "service_floors": "87031385172dfc77c7ccb13c9c82c33f443de82a862de9fa18b235620f4125f3",
@@ -55,8 +56,7 @@
     "ordinary_buildings:state_facade_10x5": "673fc4cf6b5a63e91980785865cd4d32ef9573250d5b23c575febfbde6232d92",
     "ordinary_buildings:state_facade_5x5": "5c3068215f0969e6bcea437c93fd5a52c36dcfac442eebbc68cac7007787b68a",
     "ordinary_buildings:city_edge_horizontal": "005322c068ee98c41938572d2636194b23e5219a8dc3f71ec8bedf7fe5643d44",
-    "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279",
-    "landmarks:field_house_entry_arch": "derived:63c27d93c62ef8efe9e366a9f5b1093e346160cd4f28583d7d9c40cdf72ba7bb"
+    "ordinary_buildings:city_edge_vertical": "5bcc4587a844c835a623036c470d05fbaf1f0a51630faedd5dc770d232604279"
   },
   "sourceBoardPaths": {
     "ground": "art/imagegen/tileset_v3/season_one_ground_source_v4.png",
@@ -71,6 +71,7 @@
     "route_landmarks": "art/imagegen/tileset_v3/season_one_lakeshore_landmarks_source_v1.png",
     "bascom_landmarks": "art/imagegen/tileset_v3/season_one_bascom_landmarks_source_v1.png",
     "bascom_elevation": "art/imagegen/tileset_v3/season_one_bascom_elevation_source_v1.png",
+    "field_house_forecourt": "art/imagegen/tileset_v3/season_one_field_house_forecourt_source_v1.png",
     "service_clinic": "art/imagegen/tileset_v3/season_one_trainer_room_service_kit_source_v1.png",
     "service_shop": "art/imagegen/tileset_v3/season_one_buckys_service_kit_source_v1.png",
     "service_floors": "art/imagegen/tileset_v3/season_one_service_floors_source_v1.png",
@@ -103,8 +104,7 @@
     "ordinary_buildings:state_facade_10x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_10x5_source_v1.png",
     "ordinary_buildings:state_facade_5x5": "art/imagegen/tileset_v3/ordinary_buildings/state_facade_5x5_source_v1.png",
     "ordinary_buildings:city_edge_horizontal": "art/imagegen/tileset_v3/ordinary_buildings/city_edge_horizontal_source_v1.png",
-    "ordinary_buildings:city_edge_vertical": "art/imagegen/tileset_v3/ordinary_buildings/city_edge_vertical_source_v1.png",
-    "landmarks:field_house_entry_arch": "art/tilesets/imagegen_v3/landmarks/field_house_arena_exterior.png"
+    "ordinary_buildings:city_edge_vertical": "art/imagegen/tileset_v3/ordinary_buildings/city_edge_vertical_source_v1.png"
   },
   "assets": {
     "grass": {
@@ -3222,6 +3222,169 @@
         "paletteViolationCount": 0
       }
     },
+    "field_house_entry_arch": {
+      "category": "field_house_forecourt",
+      "path": "art/tilesets/imagegen_v3/field_house_forecourt/field_house_entry_arch.png",
+      "width": 112,
+      "height": 80,
+      "colors": 14,
+      "sha256": "7b6366675400b27203b258715454184834b66ad47b8b8d756a80a2d6de45d7da",
+      "sourceRegion": [
+        55,
+        55,
+        695,
+        645
+      ],
+      "sourceRegionIndex": 0,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "gold"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 1,
+          "limestone": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 2528,
+          "brick": 59,
+          "limestone": 1343,
+          "gold": 971
+        },
+        "outlinePixelCount": 406,
+        "inputPartialAlphaPixelCount": 280,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "field_house_forecourt_planter": {
+      "category": "field_house_forecourt",
+      "path": "art/tilesets/imagegen_v3/field_house_forecourt/field_house_forecourt_planter.png",
+      "width": 64,
+      "height": 32,
+      "colors": 15,
+      "sha256": "5a5329b5a44651d65bf7cf72479f1ff7f46385ca8af4e4d505bc54e84197dfa1",
+      "sourceRegion": [
+        720,
+        350,
+        1195,
+        650
+      ],
+      "sourceRegionIndex": 1,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "cardinal",
+          "cream",
+          "limestone",
+          "brick"
+        ],
+        "materialColorCounts": {
+          "foliage": 3,
+          "cardinal": 4,
+          "cream": 4,
+          "limestone": 2,
+          "brick": 2
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 387,
+          "cardinal": 645,
+          "cream": 471,
+          "limestone": 437,
+          "brick": 10
+        },
+        "outlinePixelCount": 177,
+        "inputPartialAlphaPixelCount": 133,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "field_house_history_kiosk": {
+      "category": "field_house_forecourt",
+      "path": "art/tilesets/imagegen_v3/field_house_forecourt/field_house_history_kiosk.png",
+      "width": 48,
+      "height": 48,
+      "colors": 19,
+      "sha256": "5aba7189bc4545996c87d26ffa7b8a0c1262a96e7e78ba68253e9c35e3777b3a",
+      "sourceRegion": [
+        150,
+        680,
+        575,
+        1130
+      ],
+      "sourceRegionIndex": 2,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "brick",
+          "limestone",
+          "slate",
+          "gold"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "brick": 2,
+          "limestone": 4,
+          "slate": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 525,
+          "brick": 22,
+          "limestone": 612,
+          "slate": 329,
+          "gold": 328
+        },
+        "outlinePixelCount": 157,
+        "inputPartialAlphaPixelCount": 102,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "field_house_history_marker": {
+      "category": "field_house_forecourt",
+      "path": "art/tilesets/imagegen_v3/field_house_forecourt/field_house_history_marker.png",
+      "width": 32,
+      "height": 32,
+      "colors": 13,
+      "sha256": "da1a9dd5e95db3168e0478a7b3672462924fd0e2b6a4f2ffd1ef5a797e83f5c8",
+      "sourceRegion": [
+        810,
+        790,
+        1070,
+        1130
+      ],
+      "sourceRegionIndex": 3,
+      "materialDiscipline": {
+        "materials": [
+          "cardinal",
+          "limestone",
+          "gold"
+        ],
+        "materialColorCounts": {
+          "cardinal": 4,
+          "limestone": 4,
+          "gold": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "cardinal": 167,
+          "limestone": 315,
+          "gold": 267
+        },
+        "outlinePixelCount": 100,
+        "inputPartialAlphaPixelCount": 55,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
     "trainer_wall_north_module": {
       "category": "service_clinic",
       "path": "art/tilesets/imagegen_v3/service_clinic/trainer_wall_north_module.png",
@@ -5052,57 +5215,6 @@
           "gold": 339
         },
         "outlinePixelCount": 163,
-        "inputPartialAlphaPixelCount": 0,
-        "outputPartialAlphaPixelCount": 0,
-        "paletteViolationCount": 0
-      }
-    },
-    "field_house_entry_arch": {
-      "category": "landmarks",
-      "path": "art/tilesets/imagegen_v3/landmarks/field_house_entry_arch.png",
-      "width": 112,
-      "height": 64,
-      "colors": 27,
-      "sha256": "a457c91ecd90d63a9f07f4f35f5080cea979d0efe018c6f9deafed30fe9fa482",
-      "sourceFile": "field_house_arena_exterior.png",
-      "derivation": "grid-native gateway from approved Imagegen Field House source",
-      "materialDiscipline": {
-        "materials": [
-          "cardinal",
-          "brick",
-          "limestone",
-          "slate",
-          "glass",
-          "wood",
-          "metal",
-          "gold",
-          "foliage",
-          "stone"
-        ],
-        "materialColorCounts": {
-          "cardinal": 4,
-          "brick": 2,
-          "limestone": 3,
-          "slate": 3,
-          "glass": 1,
-          "wood": 4,
-          "metal": 4,
-          "gold": 4,
-          "stone": 3
-        },
-        "maxColorsPerMaterial": 4,
-        "pixelsByMaterial": {
-          "cardinal": 2377,
-          "brick": 118,
-          "limestone": 618,
-          "slate": 116,
-          "glass": 1,
-          "wood": 393,
-          "metal": 378,
-          "gold": 384,
-          "stone": 176
-        },
-        "outlinePixelCount": 323,
         "inputPartialAlphaPixelCount": 0,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0

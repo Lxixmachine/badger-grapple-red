@@ -96,7 +96,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   await openEditor(page);
   const state = await editorState(page);
   expect(state.state).toMatchObject({activeMapId: 'camp_randall', mode: 'select'});
-  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 16, metatileVersion: 20});
+  expect(state.project).toMatchObject({productionVersion: 3, layoutRevision: 17, metatileVersion: 20});
   expect(state.project.actorPixelContract).toEqual({
     logicalFrameWidth: 16,
     logicalFrameHeight: 32,
@@ -188,7 +188,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     version: 4,
     profileVersion: 1,
     maxColorsPerMaterial: 4,
-    assetCount: 147,
+    assetCount: 150,
     outputPartialAlphaPixelCount: 0,
     paletteViolationCount: 0
   });
@@ -510,7 +510,7 @@ test('saved drafts adopt corrected path defaults without losing explicit terrain
   await page.reload();
   await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest?.state()?.validation?.valid)).toBe(true);
   const state = await editorState(page);
-  expect(state.project).toMatchObject({layoutRevision: 16, metatileVersion: 20});
+  expect(state.project).toMatchObject({layoutRevision: 17, metatileVersion: 20});
   expect(state.project.maps.camp_randall.terrain[10][5]).toMatch(/^lawn_mowed_blob_/);
   expect(state.project.maps.camp_randall.terrain[10][23]).toBe('grass');
   expect(state.project.maps.camp_randall.terrain[14][10]).toBe('dirt');
@@ -696,9 +696,9 @@ test('planned world art uses only exact or declared same-axis tile assembly', as
   expect(audit.r1GroveCount).toBe(3);
 
   await page.getByRole('combobox', {name: 'Map'}).selectOption('field_house');
-  await clickCell(page, 22, 3);
-  await expect(page.getByText('Exact 3 x 2 stamp', {exact: true})).toBeVisible();
-  await expect(page.getByText('3 x 2 locked', {exact: true})).toBeVisible();
+  await clickCell(page, 20, 5);
+  await expect(page.getByText('Exact 7 x 5 stamp', {exact: true})).toBeVisible();
+  await expect(page.getByText('7 x 5 locked', {exact: true})).toBeVisible();
   expect(issues).toEqual([]);
 });
 

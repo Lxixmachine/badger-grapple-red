@@ -862,6 +862,19 @@ def build() -> dict:
         2, 18, ["##"] * 18, tags=["border", "continuous", "authored16"],
     )
 
+    north_edge_source = source_asset("forest_masses", "forest_edge_north_a")
+    for stamp_id, name, width, crop_x in [
+        ("forest_edge_north_5", "Five-Cell Forest Edge North", 5, 16),
+        ("forest_edge_north_4", "Four-Cell Forest Edge North", 4, 32),
+    ]:
+        image = export_2x(north_edge_source.crop((crop_x, 0, crop_x + width * 16, 48)))
+        register_stamp(
+            stamp_id, name, "forest_masses", image, width, 3, ["#" * width] * 3,
+            tags=["border", "continuous", "imagegen_derived", "authored16", "grid_native"],
+            semantic_behavior="forest_boundary",
+            minimum_coverage=contract["rules"]["visibleCollisionCoverage"],
+        )
+
     def service_building(
         stamp_id: str,
         name: str,
@@ -1124,14 +1137,37 @@ def build() -> dict:
     landmark_building("wisconsin_capitol_exterior", "Wisconsin State Capitol", 12, 8, 6)
     landmark_building("brittingham_boats_exterior", "Brittingham Boats", 6, 5, 2)
 
-    field_house_arch = export_2x(source_asset("landmarks", "field_house_entry_arch"))
+    field_house_arch = export_2x(source_asset("field_house_forecourt", "field_house_entry_arch"))
     register_stamp(
         "field_house_entry_arch", "Field House Entry Arch", "town_landmarks",
-        field_house_arch, 7, 4, ["##...##"] * 4,
-        tags=["landmark", "field_house", "walk_under", "imagegen_derived", "authored16"],
+        field_house_arch, 7, 5, ["##...##"] * 5,
+        tags=["landmark", "field_house", "walk_under", "imagegen_direct", "authored16", "grid_native"],
         semantic_behavior="walk_under_landmark",
         minimum_coverage=contract["rules"]["visibleCollisionCoverage"],
     )
+
+    field_house_forecourt_specs = [
+        (
+            "field_house_forecourt_planter", "Field House Forecourt Planter", 4, 2,
+            ["####", "####"], "solid_boundary",
+        ),
+        (
+            "field_house_history_kiosk", "Field House History Kiosk", 3, 3,
+            ["###", "###", "###"], "solid_landmark",
+        ),
+        (
+            "field_house_history_marker", "Field House History Marker", 2, 2,
+            ["##", "##"], "solid_landmark",
+        ),
+    ]
+    for stamp_id, name, width, height, mask, semantic in field_house_forecourt_specs:
+        image = export_2x(source_asset("field_house_forecourt", stamp_id))
+        register_stamp(
+            stamp_id, name, "town_landmarks", image, width, height, mask,
+            tags=["field_house", "forecourt", "imagegen_direct", "authored16", "grid_native"],
+            semantic_behavior=semantic,
+            minimum_coverage=0.08,
+        )
 
     gateway_arch = export_2x(source_asset("landmarks", "gateway_arch_landmark"))
     gateway_mask = collision_mask_from_alpha(

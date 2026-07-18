@@ -46,18 +46,20 @@ async function walk(page, direction, steps) {
     const target = {x: before.x + delta.x, y: before.y + delta.y};
     await press(page, direction);
     await expect.poll(async () => (await state(page)).tilePos, {timeout: 8000}).toEqual(target);
+    await expect.poll(async () => (await state(page)).playerAnimationPlaying).toBe(false);
+    await page.waitForTimeout(20);
   }
 }
 
 test('world atlas boots at the approved scale and opens the selected map', async ({page}) => {
   const issues = runtimeIssues(page);
   await openAtlas(page);
-  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.37-bascom-elevation');
+  await expect.poll(() => page.evaluate(() => window.BADGER_VERSION)).toBe('22.38-field-house-arrival');
   await expect(page.locator('canvas')).toHaveAttribute('width', '480');
   await expect(page.locator('canvas')).toHaveAttribute('height', '320');
   await expect.poll(() => state(page)).toMatchObject({
     active: true,
-    atlas: {version: 16, mode: 'region', selectedMap: 0, overlayMode: 0}
+    atlas: {version: 17, mode: 'region', selectedMap: 0, overlayMode: 0}
   });
 
   await press(page, 'right');
@@ -141,7 +143,7 @@ test('major arena approaches route around the facade to south-facing doors', asy
   const approaches = [
     {
       area: 'field_house', interior: 'field_house_floor',
-      route: [['down', 3], ['left', 7], ['down', 8], ['right', 7]]
+      route: [['down', 3], ['left', 7], ['down', 9], ['right', 7]]
     },
     {
       area: 'kohl_center', interior: 'kohl_bracket_floor',

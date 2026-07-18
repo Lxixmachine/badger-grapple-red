@@ -88,6 +88,11 @@
     "bascom_stair_ascent": ["limestone", "stone"],
     "bascom_wall_end_right": ["grass", "limestone", "stone"],
 
+    "field_house_entry_arch": ["cardinal", "brick", "limestone", "gold"],
+    "field_house_forecourt_planter": ["foliage", "cardinal", "cream", "limestone", "brick"],
+    "field_house_history_kiosk": ["cardinal", "brick", "limestone", "slate", "gold"],
+    "field_house_history_marker": ["cardinal", "limestone", "gold"],
+
     "outdoor_wrestling_mat": ["cardinal", "cream", "slate"],
     "campfire_ring": ["stone", "wood", "fire"],
     "kayak_rack": ["cardinal", "gold", "wood", "metal"],

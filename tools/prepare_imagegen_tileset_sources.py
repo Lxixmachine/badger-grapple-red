@@ -233,6 +233,15 @@ BOARDS = {
 # than a uniform contact sheet. These boards keep explicit, reviewed source
 # regions so the compiler still has deterministic ownership for every module.
 REGION_BOARDS = {
+    "field_house_forecourt": {
+        "path": SOURCE_DIR / "season_one_field_house_forecourt_source_v1.png",
+        "entries": [
+            ("field_house_entry_arch", (112, 80), "fit", 32, (55, 55, 695, 645)),
+            ("field_house_forecourt_planter", (64, 32), "fit", 28, (720, 350, 1195, 650)),
+            ("field_house_history_kiosk", (48, 48), "contain", 32, (150, 680, 575, 1130)),
+            ("field_house_history_marker", (32, 32), "contain", 28, (810, 790, 1070, 1130)),
+        ],
+    },
     "service_clinic": {
         "path": SOURCE_DIR / "season_one_trainer_room_service_kit_source_v1.png",
         "entries": [
@@ -1007,30 +1016,6 @@ def save_png(image: Image.Image, path: Path) -> None:
     image.save(path, format="PNG", optimize=False, compress_level=9)
 
 
-def field_house_entry_arch(arena: Image.Image) -> Image.Image:
-    """Build a grid-native gateway from the approved Imagegen Field House art."""
-    if arena.size != (192, 112):
-        raise SystemExit(f"Field House arena source is {arena.size}, expected 192x112")
-    arch = Image.new("RGBA", (112, 64), (0, 0, 0, 0))
-    left_support = arena.crop((16, 48, 48, 112))
-    right_support = arena.crop((144, 48, 176, 112))
-    top_beam = arena.crop((40, 24, 152, 48))
-    arch.alpha_composite(left_support, (0, 0))
-    arch.alpha_composite(right_support, (80, 0))
-    arch.alpha_composite(top_beam, (0, 0))
-
-    # The route owns the middle three cells. Carve a generous opening while
-    # retaining the generated limestone and cardinal material language.
-    alpha = arch.getchannel("A")
-    opening = Image.new("L", arch.size, 255)
-    draw = ImageDraw.Draw(opening)
-    draw.ellipse((31, 10, 80, 57), fill=0)
-    draw.rectangle((31, 32, 80, 63), fill=0)
-    alpha = ImageChops.multiply(alpha, opening)
-    arch.putalpha(alpha.point(lambda value: 255 if value >= 96 else 0))
-    return quantize_rgba(arch, 36)
-
-
 def build() -> dict:
     outputs: dict[str, dict] = {}
     sources: dict[str, str] = {}
@@ -1149,28 +1134,6 @@ def build() -> dict:
                 "sourceFile": path.name,
                 "materialDiscipline": discipline,
             }
-
-    arena_path = OUTPUT_DIR / "landmarks" / "field_house_arena_exterior.png"
-    arch_geometry = field_house_entry_arch(Image.open(arena_path).convert("RGBA"))
-    arch, discipline = discipline_material_zones(
-        arch_geometry,
-        material_profile_for("field_house_entry_arch", "landmarks"),
-    )
-    arch_path = OUTPUT_DIR / "landmarks" / "field_house_entry_arch.png"
-    save_png(arch, arch_path)
-    sources["landmarks:field_house_entry_arch"] = f"derived:{sha256(arena_path)}"
-    source_paths["landmarks:field_house_entry_arch"] = arena_path.relative_to(ROOT).as_posix()
-    outputs["field_house_entry_arch"] = {
-        "category": "landmarks",
-        "path": arch_path.relative_to(ROOT).as_posix(),
-        "width": arch.width,
-        "height": arch.height,
-        "colors": len(arch.convert("RGB").getcolors(maxcolors=65536) or []),
-        "sha256": sha256(arch_path),
-        "sourceFile": arena_path.name,
-        "derivation": "grid-native gateway from approved Imagegen Field House source",
-        "materialDiscipline": discipline,
-    }
 
     manifest = {
         "schema": "badger-grapple-imagegen-tileset-sources/v2",

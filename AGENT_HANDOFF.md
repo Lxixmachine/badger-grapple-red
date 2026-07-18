@@ -3466,7 +3466,7 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   facade specifically for the 11x5 owner grid. Its source, alpha master, and
   prompt record are retained under `art/imagegen/`. The production compositor
   exports it at exact nearest-neighbor 2x; no fractional scaling is used.
-- Layout revision 16 is authoritative for terrain, planned structures,
+- Layout revision 17 is authoritative for terrain, planned structures,
   decorations, actors, events, doors, collision masks, camera reviews, and the
   reciprocal R1 seam. The obsolete Camp polish layer is empty so a second set
   of objects cannot drift away from the production grid. Every visible door is
@@ -3511,3 +3511,35 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   build, and the complete sequential browser suite pass; final suite count is
   122/122. Rebuilding 576 generated asset/catalog files preserves every SHA-256
   hash. Field House remains the next exterior composition target.
+
+## Codex Field House Arrival Pass (v22.38)
+
+- The Field House's former entrance marker was a three-by-two campus sign,
+  which made the first venue read as an unframed collection of buildings.
+  The 40x28 map now uses FireRed's arrival grammar: one exact three-cell north
+  threshold, a ceremonial gateway, a delayed arena reveal, bypass circulation,
+  separated familiar services, and explicit west/east route branches.
+- ChatGPT built-in image generation produced an original Field House forecourt
+  board. Its retained source and prompt compile into a seven-by-five walk-under
+  arch, paired planters, a history kiosk, and a history marker. Every prepared
+  asset is binary-alpha, nearest-neighbor, and owns whole 32px cells; the arch
+  mask is `##...##` on all five rows so its two pylons are solid and all three
+  visible gateway lanes are walkable.
+- The Field House arena moved behind the arrival landing, the Trainer's Room
+  and Bucky's Locker Room have distinct path approaches, and a continuous
+  forest/fence perimeter closes every edge except the declared north, west,
+  and east connections. Short four- and five-cell forest modules keep the
+  north canopy continuous without hidden shrubs or stray blockers.
+- The raw Season One layout, generated production project, Map Studio, live
+  runtime, and World Atlas now share the same arch mask. This fixes the prior
+  reviewer-only bug where Atlas treated the entire arch rectangle as solid
+  even though the live metatile runtime correctly exposed the opening.
+- Native 480x320 captures cover arrival, gateway, both service quarters,
+  forecourt, both route branches, and the south garden. A full 1280x896 Map
+  Studio export verifies exact edge ownership: north `[19,20,21]`, west
+  `[17,18]`, east `[14,15]`, no south opening, and zero overlapping solids.
+- Rebuilding 586 generated/catalog files preserves the aggregate SHA-256.
+  World validation, battle-art validation, balance, map lint, production build,
+  targeted traversal/door checks, and the complete sequential browser suite
+  pass; final suite count is 123/123. Tony's phone verdict remains the visual
+  close condition; tests establish correctness, not FireRed parity by fiat.
