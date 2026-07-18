@@ -99,6 +99,7 @@ test('wrestler nicknames are FireRed-length, save-safe, and override species lab
   setWrestlerNickname(state.party[0],'');
   expect(state.party[0].nickname).toBeUndefined();
   expect(wrestlerName(state.party[0])).toBe('Bucky Shotmaker');
+  expect(wrestlerName(makeMon('topboss',10),{short:true})).toBe('Anchor');
 });
 
 test('authored overworld characters use semantic generated identities',()=>{
@@ -202,7 +203,19 @@ test('technique effects support setup, multi-hit pressure, counters, and forced 
 
   const flurry=resolveTechnique(bull,foe,'flurry',()=>.5,{attackerState:bullState,defenderState:foeState});
   expect(flurry.hits).toBe(3);
+  expect(flurry.plannedHits).toBe(3);
+  expect(flurry.hitResults).toHaveLength(3);
+  expect(flurry.hitResults.reduce((sum,hit)=>sum+hit.damage,0)).toBe(flurry.damage);
+  expect(flurry.hitResults[0].hpBefore).toBeGreaterThan(flurry.hitResults[0].hpAfter);
+  for(let index=1;index<flurry.hitResults.length;index++)expect(flurry.hitResults[index].hpBefore).toBe(flurry.hitResults[index-1].hpAfter);
+  expect(flurry.hitResults.at(-1).hpAfter).toBe(foe.hp);
   expect(flurry.events[0]).toMatchObject({type:'multiHit',hits:3});
+
+  const wornFoe=mon('drillpartner');wornFoe.hp=1;
+  const finishingFlurry=resolveTechnique(bull,wornFoe,'flurry',()=>.5,{attackerState:bullState,defenderState:createBattleState()});
+  expect(finishingFlurry).toMatchObject({plannedHits:3,hits:1,damage:1});
+  expect(finishingFlurry.hitResults).toEqual([expect.objectContaining({index:1,damage:1,hpBefore:1,hpAfter:0})]);
+  expect(finishingFlurry.events[0]).toMatchObject({type:'multiHit',hits:1});
 
   bullState.damageTakenThisTurn=8;
   const counter=resolveTechnique(bull,foe,'reattack',()=>.5,{attackerState:bullState,defenderState:foeState});
@@ -213,6 +226,17 @@ test('technique effects support setup, multi-hit pressure, counters, and forced 
   expect(reset.events).toContainEqual(expect.objectContaining({type:'recharge'}));
   expect(consumeActionBlock(bullState)).toBe('recharge');
   expect(consumeActionBlock(bullState)).toBeNull();
+});
+
+test('misses expose no phantom hits and criticals belong to their individual hit records',()=>{
+  const rider=setMoves(mon('matreturner',10),['tilt']),anchor=mon('topboss',50);
+  const miss=resolveTechnique(rider,anchor,'tilt',()=>1);
+  expect(miss).toMatchObject({hit:false,hits:0,plannedHits:0,criticalHits:0,hitResults:[]});
+
+  const criticalSeries=resolveTechnique(rider,anchor,'tilt',()=>0);
+  expect(criticalSeries).toMatchObject({hit:true,plannedHits:2,hits:2,critical:true,criticalHits:2});
+  expect(criticalSeries.hitResults).toHaveLength(2);
+  expect(criticalSeries.hitResults.every(hit=>hit.critical&&hit.rawDamage>=hit.damage)).toBe(true);
 });
 
 test('position-breaking and ride techniques deny actions and drain the last-used technique',()=>{

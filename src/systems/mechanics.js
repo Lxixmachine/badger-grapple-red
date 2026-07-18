@@ -178,20 +178,20 @@ export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,conte
   const as=scaledStats(attacker.id,attacker.lvl,attacker),ds=scaledStats(defender.id,defender.lvl,defender);
   if(key!=='desperation'&&currentMoveStamina(attacker,key)<=0){
     if(allMovesSpent(attacker)){key='desperation';MOV=MOVES.desperation;}
-    else return {key,move:MOV,usable:false,hit:false,damage:0,accuracy:accuracyFor(attacker,MOV,attackerState),multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,countered:false,events:[]};
+    else return {key,move:MOV,usable:false,hit:false,damage:0,accuracy:accuracyFor(attacker,MOV,attackerState),multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,plannedHits:0,hitResults:[],countered:false,events:[]};
   }
   if(key!=='desperation'){
     const remaining=currentMoveStamina(attacker,key);attacker.moveStamina[key]=Math.max(0,remaining-1);attackerState.lastMove=key;
   }
   const accuracy=accuracyFor(attacker,MOV,attackerState);
-  if(rng()>accuracy)return {key,move:MOV,usable:true,hit:false,damage:0,accuracy,multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,countered:false,events:[]};
+  if(rng()>accuracy)return {key,move:MOV,usable:true,hit:false,damage:0,accuracy,multiplier:1,proficiency:1,critical:false,criticalHits:0,hits:0,plannedHits:0,hitResults:[],countered:false,events:[]};
   const multiplier=styleMultiplier(MOV.style,ROSTER[defender.id]?.style);
   const proficiency=proficiencyMultiplier(MOV.style,ROSTER[attacker.id]?.style);
-  const hits=MOV.power>0&&MOV.hits?MOV.hits.min+Math.floor(rng()*(MOV.hits.max-MOV.hits.min+1)):1;
+  const plannedHits=MOV.power>0?(MOV.hits?MOV.hits.min+Math.floor(rng()*(MOV.hits.max-MOV.hits.min+1)):1):0;
   const countered=!!(MOV.counterMultiplier&&attackerState.damageTakenThisTurn>0);
   const [attackKey,defenseKey]=damageStatKeys(MOV);
-  let damage=0,criticalHits=0;
-  for(let i=0;i<(MOV.power>0?hits:0);i++){
+  let damage=0,criticalHits=0,remainingHp=Math.max(0,defender.hp),hitResults=[];
+  for(let i=0;i<plannedHits&&remainingHp>0;i++){
     const critical=rng()<(MOV.criticalRate??.0625);
     if(critical)criticalHits++;
     const atkStage=critical?Math.max(0,attackerState.stages[attackKey]):attackerState.stages[attackKey];
@@ -199,9 +199,13 @@ export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,conte
     const atk=as[attackKey]*stageMultiplier(atkStage),def=ds[defenseKey]*stageMultiplier(defStage);
     const variance=.85+rng()*.15;
     const counterScale=countered?MOV.counterMultiplier:1;
-    damage+=Math.max(1,Math.floor(baseTechniqueDamage(attacker.lvl,MOV.power,atk,def)*multiplier*proficiency*(critical?2:1)*variance*counterScale));
+    const rawDamage=Math.max(1,Math.floor(baseTechniqueDamage(attacker.lvl,MOV.power,atk,def)*multiplier*proficiency*(critical?2:1)*variance*counterScale));
+    const appliedDamage=Math.min(remainingHp,rawDamage),hpBefore=remainingHp;
+    remainingHp-=appliedDamage;damage+=appliedDamage;
+    hitResults.push({index:i+1,damage:appliedDamage,rawDamage,critical,hpBefore,hpAfter:remainingHp});
   }
-  if(damage>0){defender.hp=clamp(defender.hp-damage,0,ds.hp);defenderState.damageTakenThisTurn+=damage;}
+  const hits=MOV.power>0?hitResults.length:1;
+  if(damage>0){defender.hp=clamp(remainingHp,0,ds.hp);defenderState.damageTakenThisTurn+=damage;}
   attacker.score=(attacker.score||0)+MOV.points;
   const events=[];
   const applyStage=(target,targetName,spec)=>{
@@ -220,9 +224,9 @@ export function resolveTechnique(attacker,defender,moveKey,rng=Math.random,conte
   if(MOV.flinchChance&&defender.hp>0&&rng()<MOV.flinchChance){defenderState.flinched=true;events.push({type:'flinch',target:'defender'});}
   if(MOV.recharge){attackerState.recharging=true;events.push({type:'recharge',target:'attacker'});}
   if(MOV.recoil&&damage>0){const recoil=Math.max(1,Math.floor(damage*MOV.recoil));attacker.hp=clamp(attacker.hp-recoil,0,as.hp);events.push({type:'recoil',target:'attacker',amount:recoil});}
-  if(hits>1)events.unshift({type:'multiHit',target:'defender',hits});
+  if(MOV.hits&&hits>0)events.unshift({type:'multiHit',target:'defender',hits});
   if(countered)events.unshift({type:'counter',target:'attacker'});
-  return {key,move:MOV,usable:true,hit:true,damage,accuracy,multiplier,proficiency,critical:criticalHits>0,criticalHits,hits,countered,events};
+  return {key,move:MOV,usable:true,hit:true,damage,accuracy,multiplier,proficiency,critical:criticalHits>0,criticalHits,hits,plannedHits,hitResults,countered,events};
 }
 
 function stageEffectValue(spec,state,targetWeight=1){

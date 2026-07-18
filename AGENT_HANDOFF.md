@@ -1,5 +1,32 @@
 # Agent Handoff
 
+## Latest Codex Turn (v22.42 Per-Hit Condition)
+
+Battle damage now resolves and presents as an ordered hit sequence instead of
+one aggregate event. `resolveTechnique` records every landed hit with its own
+damage, critical flag, and exact Condition before/after values. Multi-hit moves
+stop immediately when the defender reaches zero Condition, so they cannot play
+phantom impacts or report overkill damage after a knockout. Misses expose zero
+planned or landed hits.
+
+`BattleScene` consumes that authoritative sequence. Every impact now owns its
+damage popup, reaction, sound, and linear Condition drain; Flurry and Tilt use
+readable per-hit cadence; recoil drains the attacker separately; and fainting
+waits until the last visible drain and result message finish. Internal battle
+rendering remains 480x320, camera zoom 1, and actor scale 1. Elite HUD short
+names now strip the meaningless leading `The`, so The Anchor displays as
+`Anchor` rather than `The`.
+
+`tests/condition-presentation.spec.js` verifies a three-hit chain in the real
+Phaser scene and a one-Condition knockout that stops after one hit. Mechanics
+coverage also locks hit chaining, applied damage totals, misses, per-hit
+criticals, and early knockout behavior. `npm run review:battle-condition`
+produces phone captures of the second hit and completed drain. Asset validation,
+data validation, balance, map lint, build, and whitespace checks pass. The full
+serial Chromium suite passes 134/134. Tony's dirty State Street composition
+files remain protected and must not be rebuilt, staged, reverted, or overwritten
+during future integration.
+
 ## Latest Codex Turn (v22.41 Technique Choreography)
 
 The complete 27-technique catalog now has declarative, move-specific battle

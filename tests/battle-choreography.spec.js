@@ -25,7 +25,7 @@ test('representative techniques render distinct choreography without breaking na
       const scene=window.badgerGame.scene.getScene('BattleScene');
       scene.attackSide='player';
       if(method==='playTechniqueSetup')scene.playTechniqueSetup(scene.playerSprite,key);
-      else scene.playTechniqueImpact(scene.playerSprite,scene.enemySprite,key,hits);
+      else scene.playTechniqueImpact(scene.playerSprite,scene.enemySprite,key,[],null,hits);
     },sample);
     await page.waitForTimeout(80);
     const state=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'));
@@ -40,7 +40,7 @@ test('representative techniques render distinct choreography without breaking na
       };
     });
     expect(contract).toEqual({size:[480,320],zoom:1,scales:[1,1,1,1],integers:true});
-    await page.waitForTimeout(620);
+    await page.waitForTimeout(sample.key==='flurry'?1100:620);
   }
   expect(new Set(effects).size).toBe(samples.length);
   const history=await page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').techniqueAnimationHistory);

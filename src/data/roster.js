@@ -83,7 +83,7 @@ export function wrestlerName(mon,{short=false}={}){
   const nickname=normalizeWrestlerNickname(mon?.nickname);
   if(nickname)return nickname;
   const species=(ROSTER[mon?.id]||ROSTER.buckshot).name;
-  return short?species.split(' ')[0]:species;
+  return short?species.replace(/^The\s+/,'').split(' ')[0]:species;
 }
 export function setWrestlerNickname(mon,value){
   if(!mon)return '';

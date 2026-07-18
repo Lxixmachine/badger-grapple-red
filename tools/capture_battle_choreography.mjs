@@ -9,7 +9,7 @@ const samples=[
   {key:'single',method:'playTechniqueImpact',hits:1,delay:90},
   {key:'sprawl',method:'playTechniqueSetup',hits:1,delay:90},
   {key:'headlock',method:'playTechniqueImpact',hits:1,delay:90},
-  {key:'flurry',method:'playTechniqueImpact',hits:3,delay:245}
+  {key:'flurry',method:'playTechniqueImpact',hits:3,delay:420}
 ];
 
 await mkdir(outputDir,{recursive:true});
@@ -26,13 +26,13 @@ try{
     await page.evaluate(({key,method,hits})=>{
       const scene=window.badgerGame.scene.getScene('BattleScene');scene.attackSide='player';
       if(method==='playTechniqueSetup')scene.playTechniqueSetup(scene.playerSprite,key);
-      else scene.playTechniqueImpact(scene.playerSprite,scene.enemySprite,key,hits);
+      else scene.playTechniqueImpact(scene.playerSprite,scene.enemySprite,key,[],null,hits);
     },sample);
     await page.waitForTimeout(sample.delay);
     const output=path.join(outputDir,`${sample.key}-phone.png`);
     await page.screenshot({path:output});
     console.log(`${sample.key}: ${output}`);
-    await page.waitForTimeout(700);
+    await page.waitForTimeout(sample.key==='flurry'?1100:700);
   }
 }finally{
   await context.close();await browser.close();
