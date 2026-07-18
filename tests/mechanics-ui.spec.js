@@ -93,13 +93,13 @@ test('Travel Lineup exposes identity, stat, and technique summary pages',async({
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
 });
 
-test('roster workflow uses the native viewport and unscaled wrestler art',async({page})=>{
+test('menu workflows use the native viewport and unscaled wrestler art',async({page})=>{
   await bootWithSave(page,{
     party:[legacyWrestler(),legacyWrestler('fieldflyer',8)],box:[legacyWrestler('drillpartner',7)],active:0,items:{},badges:[],
     flags:{introDone:true,assignment:true,lockerUnlocked:true,recruitingUnlocked:true},stats:{}
   },'/?test=1');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
-  for(const tab of ['main','team','locker']){
+  for(const tab of ['main','team','locker','bag','dex','map','travel','badges','practice','objective','options','shop']){
     await page.evaluate(value=>{
       const scene=window.badgerGame.scene.getScene('MenuScene');
       if(scene?.scene?.isActive())scene.scene.stop();
@@ -119,6 +119,62 @@ test('roster workflow uses the native viewport and unscaled wrestler art',async(
     expect(contract.imageScales.every(([x,y])=>x===1&&y===1)).toBe(true);
     expect(contract.outOfBounds).toBe(0);
   }
+});
+
+test('destructive and travel actions require confirmation and B cancels safely',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler()],box:[],active:0,items:{sportsDrink:2},badges:['Field House Badge'],
+    keyItems:{busPass:true},flags:{introDone:true,assignment:true},stats:{},area:'camp_randall',
+    travel:{
+      unlockedTowns:['campRandall','fieldHouse'],
+      destinations:{
+        campRandall:{id:'campRandall',name:'Camp Randall',area:'camp_randall',pos:{x:11,y:17}},
+        fieldHouse:{id:'fieldHouse',name:'Field House',area:'field_house',pos:{x:20,y:24}}
+      }
+    }
+  },'/?test=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  await page.evaluate(()=>window.__badgerTest.startMenu({tab:'travel'}));
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({active:true,tab:'travel',selected:0});
+  await press(page,'down');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').selected)).toBe(1);
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'travel',travelConfirm:'fieldHouse'});
+  expect((await page.evaluate(()=>window.__badgerTest.storage())).area).toBe('camp_randall');
+  await press(page,'b');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'travel',travelConfirm:null});
+
+  await page.evaluate(()=>{
+    window.badgerGame.scene.stop('MenuScene');
+    window.__badgerTest.startMenu({tab:'options'});
+  });
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({active:true,tab:'options',selected:0});
+  await press(page,'down');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'options',confirmReset:true});
+  await press(page,'b');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'options',confirmReset:false});
+  expect(await page.evaluate(()=>window.__badgerTest.storage())).not.toBeNull();
+});
+
+test('Battle Bag uses a one-column menu and consumes recovery items',async({page})=>{
+  const wrestler=legacyWrestler();
+  wrestler.moveStamina={single:5,highc:5,sprawl:5,pace:5};
+  await bootWithSave(page,{
+    party:[wrestler],active:0,box:[],items:{sportsDrink:2},dex:{seen:{},caught:{buckshot:true}},
+    flags:{introDone:true,assignment:true,recruitingUnlocked:true},stats:{},badges:[]
+  },'/?test=1');
+  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:5,battleType:'wild'}));
+  await waitForBattleCommand(page);
+  await press(page,'right');
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene'))).toMatchObject({mode:'bag',selected:0});
+  await press(page,'down');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').selected)).toBe(1);
+  await press(page,'up');
+  await page.waitForTimeout(180);
+  await press(page,'a');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.storage().items.sportsDrink),{timeout:10000}).toBe(1);
 });
 
 test('Travel Lineup naming persists a nickname and battle HUD uses it',async({page})=>{

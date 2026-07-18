@@ -58,8 +58,8 @@ if (modernMode) {
     : atlasMode ? 'Badger Grapple Red - World Atlas' : 'Badger Grapple Red - Scale Slice';
   const note = document.getElementById('note');
   if (note) note.textContent = campDemoMode
-    ? 'v22.48 Roster Workflow'
-    : atlasMode ? 'v22.48 Roster Workflow' : 'v21.63 Scale Slice';
+    ? 'v22.49 Menu Workflow'
+    : atlasMode ? 'v22.49 Menu Workflow' : 'v21.63 Scale Slice';
 }
 
 const config = {
@@ -88,9 +88,9 @@ try {
   game = new Phaser.Game(config);
   window.badgerGame = game;
   window.BADGER_VERSION = atlasMode
-    ? '22.48-roster-workflow'
+    ? '22.49-menu-workflow'
     : sliceMode ? '21.63-scale-slice'
-      : '22.48-roster-workflow';
+      : '22.49-menu-workflow';
 } catch (error) {
   fail(error?.stack || error?.message || String(error));
   throw error;

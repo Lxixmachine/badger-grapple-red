@@ -3824,3 +3824,27 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   this Windows session and was not represented as a full-suite pass.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Menu Workflow Pass (v22.49)
+
+- Bag, Roster Book, Town Map, Bus Pass, Badges, Practice, Objectives,
+  Options, Bucky's Locker Room, and the in-battle Bag now share the native
+  480x320 presentation contract introduced by the roster workflow. The old
+  floating beige forms are no longer reachable from the product menus.
+- `src/systems/nativeMenuUi.js` owns the common frame, panels, readable rows,
+  item icons, meters, footers, and confirmation dialogs. `rosterUi.js` now
+  reuses those primitives instead of maintaining a competing generic skin.
+- Bus travel and save erasure require explicit confirmation; B cancels either
+  prompt without leaving the screen. Battle Bag navigation is one column,
+  item quantities and legal match use are visible, and using an item retains
+  the existing opponent-action consequence.
+- `npm run review:menu-workflow` captures all ten workflows plus both
+  confirmation dialogs and executes real browser checks for item use, shop
+  purchases, practice cost and effort, sound persistence, two-step travel,
+  native bounds, scale-1 artwork, and battle item consumption.
+- Targeted Chromium regressions pass for all native menu contracts,
+  confirmation safety, and the Battle Bag. World validation, balance, map
+  lint, production build, the direct workflow audit, and the complete
+  sequential browser suite pass; final suite count is 147/147.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

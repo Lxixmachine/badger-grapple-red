@@ -1,5 +1,6 @@
 import {ROSTER,allMovesSpent,battleFlipXFor,battleTextureFor,currentMoveStamina,makeMon,scaledStats,addXp,applyPendingDevelopment,personaFor,resolvePendingMove,wrestlerName} from '../data/roster.js';import {distributeDefeatExperience,experienceAtLevel,experienceProgress} from '../data/experience.js';import {battleChoreographyFor} from '../data/battleAnimations.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort,consumeConditionAction,resolveConditionResidual} from '../data/conditions.js';import {canonicalBadge} from '../data/campaign.js';import {loadState,saveState,lead} from '../systems/save.js';import {attemptRecruit,awardEffortForDefeat,BAG_ORDER,chooseAiMove,clearTurnFlags,consumeActionBlock,createBattleState,ITEM_DEFS,normalizeWrestler,resolveTechnique,restoreParty,turnOrder,useFilmStudy,useRecoveryItem} from '../systems/mechanics.js';import {FONT,setVirtualHandler} from '../systems/ui.js';import {unlockAudio,sfx,playMusic,stopMusic,setMuted} from '../systems/audio.js';
 import {drawLineupScreen} from '../systems/rosterUi.js';
+import {menuFooter,menuFrame,menuItemIcon,menuListRow,menuPanel,menuSectionLabel} from '../systems/nativeMenuUi.js';
 const Phaser = window.Phaser;
 const GAME_W=480,GAME_H=320,ARENA_H=238,BOTTOM_Y=238;
 const ENEMY_POS={x:370,y:158},PLAYER_POS={x:112,y:233};
@@ -112,7 +113,7 @@ export class BattleScene extends Phaser.Scene{
   }
   handleVirtualButton(k){unlockAudio();if(k==='left')this.move(-1,0);if(k==='right')this.move(1,0);if(k==='up')this.move(0,-1);if(k==='down')this.move(0,1);if(k==='a')this.choose();if(k==='b')this.back();}
   count(){if(this.mode==='fight'){const l=lead(this.state);return (l?.moves||ROSTER[l?.id]?.moves||[]).length||1;}if(this.mode==='party')return Math.max(1,this.state.party.length);if(this.mode==='bag')return BAG_ITEMS.length;if(this.mode==='learnMove')return (this.moveLearn?.mon?.moves?.length||0)+1;if(this.mode==='learnInspect'||this.mode==='learnConfirm'||this.mode==='switchPrompt')return 2;return 4;}
-  move(dx,dy){if(this.over||this.inputLocked)return;const old=this.sel;let cols=this.mode==='party'||this.mode==='learnMove'?1:2;let rows=Math.ceil(this.count()/cols);let x=old%cols,y=Math.floor(old/cols);if(dx)x=Phaser.Math.Wrap(x+dx,0,cols);if(dy)y=Phaser.Math.Wrap(y+dy,0,rows);this.sel=Math.min(y*cols+x,this.count()-1);this.impact='';this.drawBattle();}
+  move(dx,dy){if(this.over||this.inputLocked)return;const old=this.sel;let cols=this.mode==='party'||this.mode==='learnMove'||this.mode==='bag'?1:2;let rows=Math.ceil(this.count()/cols);let x=old%cols,y=Math.floor(old/cols);if(dx)x=Phaser.Math.Wrap(x+dx,0,cols);if(dy)y=Phaser.Math.Wrap(y+dy,0,rows);this.sel=Math.min(y*cols+x,this.count()-1);this.impact='';this.drawBattle();}
   choose(){const now=this.time.now||performance.now();if(now-this.lastChooseAt<160)return;this.lastChooseAt=now;if(this.inputLocked){if(this.typeTimer)return this.finishTypeText();if(this.advanceResolveSequence('input'))return;return;}if(this.over)return this.returnMap();if(this.mode==='command')return this.chooseCommand();if(this.mode==='fight')return this.chooseMove();if(this.mode==='party')return this.chooseParty();if(this.mode==='bag')return this.chooseBag();if(this.mode==='learnMove')return this.chooseLearnMove();if(this.mode==='learnInspect')return this.chooseLearnInspect();if(this.mode==='learnConfirm')return this.chooseLearnConfirm();if(this.mode==='switchPrompt')return this.chooseSwitchPrompt();}
   back(){if(this.inputLocked)return;if(this.over)return this.returnMap();if(this.mode==='learnInspect'){this.mode='learnMove';this.sel=this.moveLearn?.replaceIndex??0;return this.drawBattle();}if(this.mode==='learnConfirm'){this.mode='learnMove';this.sel=0;return this.drawBattle();}if(this.mode==='learnMove')return this.confirmStopLearning();if(this.preOpponentSwitch&&this.mode==='party'){this.preOpponentSwitch=false;this.mode='switchPrompt';this.sel=0;return this.drawBattle();}if(this.forcedSwap)return;if(this.mode!=='command'){this.mode='command';this.sel=0;this.drawBattle();}}
   addLog(lines){this.log=[...lines,...this.log].slice(0,5);}
@@ -941,7 +942,7 @@ export class BattleScene extends Phaser.Scene{
     if(this.mode==='command')return this.drawCommand(lr,leadMon);
     if(this.mode==='fight')return this.drawFight(lr);
     if(this.mode==='party')return this.drawPartyNative();
-    if(this.mode==='bag')return this.drawBag();
+    if(this.mode==='bag')return this.drawBagNative();
     return this.drawResult();
   }
   drawResolving(){this.drawTextBox(7,BOTTOM_Y,466,75);this.resolveText=this.add.text(22,BOTTOM_Y+15,'',{fontFamily:FONT,fontSize:18,color:'#111',fontStyle:'bold',wordWrap:{width:430},lineSpacing:5});}
@@ -993,6 +994,28 @@ export class BattleScene extends Phaser.Scene{
     this.add.text(325,BOTTOM_Y+28,`${mv.category==='technique'?'TECHNIQUE':mv.category==='strength'?'STRENGTH':'SETUP'}`,{fontFamily:FONT,fontSize:12,color:'#444',fontStyle:'bold'});
     this.add.text(325,BOTTOM_Y+46,`PWR ${power}  ACC ${Math.round(mv.acc*100)}%`,{fontFamily:FONT,fontSize:12,color:'#333'});
     this.add.text(325,BOTTOM_Y+59,`STA ${currentMoveStamina(leadMon,moveKey)}/${moveStaminaMax(moveKey)}`,{fontFamily:FONT,fontSize:12,color:'#355f87',fontStyle:'bold'});
+  }
+  drawBagNative(){
+    const leadMon=lead(this.state),selected=BAG_ITEMS[this.sel],definition=selected&&ITEM_DEFS[selected.key],quantity=selected?(this.state.items?.[selected.key]||0):0;
+    menuFrame(this,'BATTLE BAG',`TARGET ${leadMon?wrestlerName(leadMon,{short:true}).toUpperCase():'NONE'}   A USE   B BACK`);
+    menuPanel(this,10,49,276,228);menuPanel(this,294,49,176,228);
+    BAG_ITEMS.forEach((item,index)=>menuListRow(this,{x:18,y:57+index*30,width:260,height:29,label:item.name,right:`x${this.state.items?.[item.key]||0}`,active:index===this.sel,disabled:(this.state.items?.[item.key]||0)<=0,striped:index%2===1,fontSize:12}));
+    if(selected&&definition){
+      menuItemIcon(this,307,62,selected.key,selected.kind,44);
+      this.add.text(359,62,selected.name,{fontFamily:FONT,fontSize:13,color:'#7b1d2a',fontStyle:'bold',wordWrap:{width:98}});
+      this.add.text(359,101,selected.kind.toUpperCase(),{fontFamily:FONT,fontSize:10,color:'#655f55',fontStyle:'bold'});
+      this.add.text(307,130,selected.desc,{fontFamily:FONT,fontSize:12,color:'#3c3934',fontStyle:'bold',wordWrap:{width:144},lineSpacing:2});
+      menuSectionLabel(this,307,202,'MATCH USE',144);
+      const available=selected.kind==='singlet'
+        ?this.type==='wild'&&this.state.flags?.recruitingUnlocked
+        :selected.kind==='recovery'||selected.key==='filmStudy';
+      const context=selected.kind==='singlet'
+        ?available?'RECRUIT THIS PROSPECT':'SCOUTING MATCHES ONLY'
+        :selected.kind==='recovery'?`RESTORE ${wrestlerName(leadMon,{short:true}).toUpperCase()}`:'NEXT 3 RECRUIT ATTEMPTS';
+      this.add.text(307,229,context,{fontFamily:FONT,fontSize:10,color:available?'#397047':'#8a1720',fontStyle:'bold',wordWrap:{width:144}});
+      this.add.text(457,258,`OWNED ${quantity}`,{fontFamily:FONT,fontSize:10,color:quantity?'#3c3934':'#8a1720',fontStyle:'bold'}).setOrigin(1,0);
+    }
+    menuFooter(this,'USING AN ITEM GIVES THE OPPONENT THE NEXT ACTION');
   }
   drawBag(){this.add.rectangle(GAME_W/2,GAME_H/2,GAME_W,GAME_H,0x08080c,.42);this.drawTextBox(10,52,460,258);this.add.text(28,66,'BAG',{fontFamily:FONT,fontSize:20,color:'#111',fontStyle:'bold'});BAG_ITEMS.forEach((it,i)=>{const n=this.state.items?.[it.key]||0,x=28+(i%2)*218,y=101+Math.floor(i/2)*31;this.add.text(x,y,`${i===this.sel?'\u25b6':' '} ${ITEM_DEFS[it.key].short} x${n}`,{fontFamily:FONT,fontSize:16,color:i===this.sel?'#8a1720':'#111',fontStyle:i===this.sel?'bold':'normal'});});const it=BAG_ITEMS[this.sel];if(it)this.add.text(28,238,it.desc,{fontFamily:FONT,fontSize:14,color:'#333',wordWrap:{width:420}});}
   drawPartyNative(){const title=this.forcedSwap?'CHOOSE NEXT WRESTLER':this.preOpponentSwitch?'SWITCH WRESTLER':'TRAVEL LINEUP';const subtitle=this.forcedSwap?'A SEND OUT':this.preOpponentSwitch?'A SWITCH   B STAY':'A SWITCH   B BACK';drawLineupScreen(this,{party:this.state.party,selected:this.sel,title,subtitle});}

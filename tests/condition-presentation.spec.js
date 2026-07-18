@@ -111,6 +111,7 @@ test('the Trainer Kit clears a persistent condition and consumes the battle turn
   await page.evaluate(()=>window.__badgerTest.press('a'));
   await expect.poll(()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('bag');
   await page.evaluate(()=>window.__badgerTest.press('down'));
+  await page.evaluate(()=>window.__badgerTest.press('down'));
   await page.waitForTimeout(180);
   await page.evaluate(()=>window.__badgerTest.press('a'));
 

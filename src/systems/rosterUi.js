@@ -9,85 +9,12 @@ import {
   wrestlerName
 } from '../data/roster.js';
 import {FONT} from './ui.js';
+import {MENU_UI as ROSTER_UI, menuFrame as rosterFrame, menuMeter as rosterMeter, menuPanel as rosterPanel} from './nativeMenuUi.js';
 
-export const ROSTER_UI = Object.freeze({
-  ink: 0x17151a,
-  paper: 0xfff7df,
-  paperAlt: 0xf3e8ca,
-  navy: 0x111c2d,
-  navyLight: 0x172b43,
-  cardinal: 0x7b1d2a,
-  cardinalBright: 0xb41820,
-  gold: 0xd6a336,
-  line: 0xbca66f,
-  green: 0x55b867,
-  blue: 0x3aa5d1,
-  muted: 0x655f55
-});
+export {ROSTER_UI, rosterFrame, rosterMeter, rosterPanel};
 
 function css(color) {
   return `#${color.toString(16).padStart(6, '0')}`;
-}
-
-export function rosterFrame(scene, title, subtitle = '') {
-  const g = scene.add.graphics();
-  g.fillStyle(ROSTER_UI.navy, 1);
-  g.fillRect(0, 0, 480, 320);
-  g.fillStyle(ROSTER_UI.navyLight, 1);
-  g.fillRect(0, 42, 480, 278);
-  for (let y = 58; y < 320; y += 32) {
-    g.fillStyle(0xffffff, 0.025);
-    g.fillRect(0, y, 480, 1);
-  }
-  g.fillStyle(ROSTER_UI.cardinal, 1);
-  g.fillRect(0, 0, 480, 5);
-  g.fillStyle(ROSTER_UI.gold, 1);
-  g.fillRect(0, 5, 480, 2);
-  g.fillStyle(ROSTER_UI.cardinal, 1);
-  g.fillRect(0, 39, 480, 3);
-  scene.add.text(16, 9, title, {
-    fontFamily: FONT,
-    fontSize: 19,
-    color: '#fff2c7',
-    fontStyle: 'bold'
-  });
-  if (subtitle) {
-    scene.add.text(464, 15, subtitle, {
-      fontFamily: FONT,
-      fontSize: 11,
-      color: '#f0dca8',
-      fontStyle: 'bold'
-    }).setOrigin(1, 0);
-  }
-}
-
-export function rosterPanel(scene, x, y, width, height, fill = ROSTER_UI.paper) {
-  const g = scene.add.graphics();
-  g.fillStyle(0x000000, 0.35);
-  g.fillRect(x + 4, y + 4, width, height);
-  g.fillStyle(fill, 1);
-  g.fillRect(x, y, width, height);
-  g.lineStyle(3, ROSTER_UI.ink, 1);
-  g.strokeRect(x, y, width, height);
-  g.lineStyle(1, ROSTER_UI.gold, 1);
-  g.strokeRect(x + 5, y + 5, width - 10, height - 10);
-  return g;
-}
-
-export function rosterMeter(scene, x, y, width, value, color, height = 7) {
-  const ratio = Math.max(0, Math.min(1, Number(value) || 0));
-  const g = scene.add.graphics();
-  g.fillStyle(ROSTER_UI.ink, 1);
-  g.fillRect(x - 1, y - 1, width + 2, height + 2);
-  g.fillStyle(0x3b3a37, 1);
-  g.fillRect(x, y, width, height);
-  if (ratio > 0) {
-    g.fillStyle(color, 1);
-    g.fillRect(x, y, Math.max(1, Math.floor(width * ratio)), height);
-    g.fillStyle(0xffffff, 0.28);
-    g.fillRect(x, y, Math.max(1, Math.floor(width * ratio)), 1);
-  }
-  return g;
 }
 
 function staminaTotals(mon) {
