@@ -1,12 +1,14 @@
-import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,currentMoveStamina,scaledStats,personaFor,wrestlerName} from '../data/roster.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort} from '../data/conditions.js';import {experienceProgress} from '../data/experience.js';import {effortTotal,MAX_TOTAL_EFFORT,natureFor,STAT_LABELS} from '../data/stats.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,SHOP_STOCK,swapLockerWrestler,totalMoveStamina,totalMoveStaminaMax,useFilmStudy,useRecoveryItem,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
+import {loadState,saveState,lead,resetState,caughtRecruitCount,defeatedWrestlerCount,advancePeriod} from '../systems/save.js';import {ROSTER,battleTextureFor,currentMoveStamina,scaledStats,personaFor,wrestlerName} from '../data/roster.js';import {MOVES,moveStaminaMax} from '../data/moves.js';import {conditionFor,conditionShort} from '../data/conditions.js';import {experienceProgress} from '../data/experience.js';import {effortTotal,MAX_TOTAL_EFFORT,natureFor,STAT_LABELS} from '../data/stats.js';import {BAG_ORDER,depositWrestler,ITEM_DEFS,practiceWrestler,SHOP_STOCK,swapLockerWrestler,totalMoveStamina,totalMoveStaminaMax,useFilmStudy,useRecoveryItem,withdrawWrestler} from '../systems/mechanics.js';import {travelTo} from '../systems/progression.js';import {FONT,uiBox,hpBar,setVirtualHandler} from '../systems/ui.js';import {setMuted,isMuted,sfx} from '../systems/audio.js';import {worldPlane,areaDimensions} from '../data/maps.js';
 import {useNativeViewport} from '../systems/nativeViewport.js';
-import {installNativeLayoutGrid} from '../systems/nativeLayoutGrid.js';
+import {installNativeLayoutGrid, withNativeCoordinates} from '../systems/nativeLayoutGrid.js';
+import {drawLineupScreen, rosterFrame, rosterMeter, rosterPanel, ROSTER_UI} from '../systems/rosterUi.js';
 import seasonLayouts from '../data/seasonOneLayouts.json';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['Field House Badge','Capitol Badge','Kohl Badge','Picnic Point Badge'];
 const MAIN_OPTS=[['TRAVEL LINEUP','team'],['BAG','bag'],['ROSTER BOOK','dex'],['TOWN MAP','map'],['BADGES','badges'],['PRACTICE','practice'],['OBJECTIVES','objective'],['SAVE','save'],['OPTIONS','options']];
 const BAG_ROWS=BAG_ORDER.map(key=>[key,ITEM_DEFS[key].name,ITEM_DEFS[key].description]);
 const ICON_COLOR={team:0x3a6ea8,bag:0x3a8a52,dex:0x7a4ac9,map:0x4a8a9a,badges:0xc9962e,practice:0xc9622e,objective:0x2e9a95,save:0x555f6e,options:0x7d1017};
+const SUMMARY_PAGE_COUNT=3;
 function icon(scene,x,y,kind,active){
   const bg=ICON_COLOR[kind]||0x555;const g=scene.add.graphics();
   g.fillStyle(0x000000,.25);g.fillRoundedRect(x-7,y-6,19,19,4);
@@ -31,8 +33,10 @@ export class MenuScene extends Phaser.Scene{
   optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map'||this.tab==='summary')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 6;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
     this.children.removeAll();
-    if(this.tab==='main')return this.drawMainScreen();
-    if(this.tab==='summary')return this.drawSummary();
+    if(this.tab==='main')return withNativeCoordinates(this,()=>this.drawMainNative());
+    if(this.tab==='team')return withNativeCoordinates(this,()=>this.drawTeamNative());
+    if(this.tab==='locker')return withNativeCoordinates(this,()=>this.drawLockerNative());
+    if(this.tab==='summary')return withNativeCoordinates(this,()=>this.drawSummaryNative());
     uiBox(this,10,10,300,204);
     const titles={shop:"BUCKY'S LOCKER ROOM",locker:'TEAM LOCKER',travel:'BUS PASS',dex:'ROSTER BOOK',team:'TRAVEL LINEUP',practice:'PRACTICE',objective:'OBJECTIVES',bag:'BAG',badges:'BADGES',options:'OPTIONS',map:'TOWN MAP'};
     this.add.text(160,21,titles[this.tab]||'MENU',{fontFamily:FONT,fontSize:14,color:'#111',fontStyle:'bold'}).setOrigin(.5);
@@ -40,6 +44,113 @@ export class MenuScene extends Phaser.Scene{
     this.add.text(22,37,`GRIT ${this.state.grit}  REP ${this.state.rep}  SING ${singlets}`,{fontFamily:FONT,fontSize:10,color:'#333'});
     if(this.tab==='shop')this.drawShop();else if(this.tab==='locker')this.drawLocker();else if(this.tab==='travel')this.drawTravel();else if(this.tab==='dex')this.drawDex();else if(this.tab==='team')this.drawTeam();else if(this.tab==='practice')this.drawPractice();else if(this.tab==='objective')this.drawObjective();else if(this.tab==='bag')this.drawBag();else if(this.tab==='badges')this.drawBadges();else if(this.tab==='options')this.drawOptions();else if(this.tab==='map')this.drawSeasonMap();
     if(this.note)this.add.text(160,200,this.note,{fontFamily:FONT,fontSize:10,color:'#8a1720',fontStyle:'bold'}).setOrigin(.5);
+  }
+  drawMainNative(){
+    const singlets=(this.state.items.practiceSinglet||0)+(this.state.items.travelSinglet||0)+(this.state.items.starterSinglet||0);
+    rosterFrame(this,'TEAM MENU',`GRIT ${this.state.grit}  REP ${this.state.rep}  SING ${singlets}`);
+    rosterPanel(this,10,49,288,261);
+    rosterPanel(this,306,49,164,261);
+    MAIN_OPTS.forEach(([label],index)=>{
+      const y=61+index*27,active=index===this.sel;
+      if(index%2===0){const band=this.add.graphics();band.fillStyle(0x000000,.035);band.fillRect(16,y-8,276,26);}
+      if(active){const hi=this.add.graphics();hi.fillStyle(0x7b1d2a,.14);hi.fillRect(16,y-8,276,26);hi.lineStyle(1,0x7b1d2a,.8);hi.strokeRect(16,y-8,276,26);}
+      icon(this,36,y+3,MAIN_OPTS[index][1],active);
+      this.add.text(57,y-5,label,{fontFamily:FONT,fontSize:14,color:active?'#8a1720':'#17151a',fontStyle:active?'bold':'normal'});
+      this.add.text(283,y-5,'>',{fontFamily:FONT,fontSize:14,color:active?'#8a1720':'#8d887e',fontStyle:'bold'}).setOrigin(1,0);
+    });
+    const mon=lead(this.state),record=mon?ROSTER[mon.id]:null;
+    if(mon){
+      this.add.image(388,55,battleTextureFor(mon.id)).setOrigin(.5,0);
+      this.add.text(388,184,wrestlerName(mon,{short:true}),{fontFamily:FONT,fontSize:16,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(.5,0);
+      this.add.text(388,205,`Lv.${mon.lvl}  ${record.style}`,{fontFamily:FONT,fontSize:12,color:'#3c3934',fontStyle:'bold'}).setOrigin(.5,0);
+      const stats=scaledStats(mon.id,mon.lvl,mon);
+      this.add.text(318,225,'COND',{fontFamily:FONT,fontSize:10,color:'#397047',fontStyle:'bold'});
+      rosterMeter(this,352,228,104,mon.hp/stats.hp,ROSTER_UI.green,7);
+      this.add.text(458,222,`${Math.round(mon.hp)}/${stats.hp}`,{fontFamily:FONT,fontSize:11,color:'#3c3934',fontStyle:'bold'}).setOrigin(1,0);
+      this.add.text(318,247,'EXP',{fontFamily:FONT,fontSize:10,color:'#35658a',fontStyle:'bold'});
+      rosterMeter(this,352,250,104,experienceProgress(mon),ROSTER_UI.blue,7);
+    }else{
+      this.add.text(388,155,'NO LEAD',{fontFamily:FONT,fontSize:16,color:'#3c3934',fontStyle:'bold'}).setOrigin(.5);
+    }
+    this.add.text(318,269,'BADGES',{fontFamily:FONT,fontSize:11,color:'#3c3934',fontStyle:'bold'});
+    BADGE_ORDER.forEach((badge,index)=>{const cx=334+index*36,cy=293,earned=this.state.badges.includes(badge),g=this.add.graphics();g.lineStyle(2,0x8a6a42,1);g.fillStyle(earned?0xd6a336:0xe8dcc0,1);g.fillCircle(cx,cy,10);g.strokeCircle(cx,cy,10);if(earned)this.add.text(cx,cy,'*',{fontFamily:FONT,fontSize:16,color:'#7d1017',fontStyle:'bold'}).setOrigin(.5);});
+    if(this.note)this.add.text(240,301,this.note,{fontFamily:FONT,fontSize:12,color:'#8a1720',fontStyle:'bold',backgroundColor:'#fff7df'}).setOrigin(.5,1);
+  }
+  drawTeamNative(){
+    drawLineupScreen(this,{party:this.state.party,selected:this.sel,title:'TRAVEL LINEUP',subtitle:'A SUMMARY   START NAME   B BACK',note:this.note});
+  }
+  drawSummaryNative(){
+    const mon=this.state.party[this.summaryIndex];
+    if(!mon){this.tab='team';this.sel=0;return this.draw();}
+    const record=ROSTER[mon.id],stats=scaledStats(mon.id,mon.lvl,mon),nature=natureFor(mon.nature);
+    rosterFrame(this,'WRESTLER SUMMARY','L/R PAGE   A LEAD   START NAME');
+    ['IDENTITY','STATS','TECHNIQUES'].forEach((label,index)=>{
+      const x=10+index*154,active=index===this.summaryPage,g=this.add.graphics();
+      g.fillStyle(active?0x7b1d2a:0xf3e8ca,1);g.fillRect(x,47,152,24);g.lineStyle(1,active?0xd6a336:0x17151a,1);g.strokeRect(x,47,152,24);
+      this.add.text(x+76,51,label,{fontFamily:FONT,fontSize:12,color:active?'#fff2c7':'#302d29',fontStyle:'bold'}).setOrigin(.5,0);
+    });
+    rosterPanel(this,10,75,460,235);
+    if(this.summaryPage===0){
+      this.add.image(87,82,battleTextureFor(mon.id)).setOrigin(.5,0);
+      this.add.text(87,213,this.summaryIndex===0?'LEAD WRESTLER':`LINEUP SLOT ${this.summaryIndex+1}`,{fontFamily:FONT,fontSize:11,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(.5,0);
+      this.add.text(166,88,wrestlerName(mon),{fontFamily:FONT,fontSize:20,color:'#7b1d2a',fontStyle:'bold',wordWrap:{width:280}});
+      if(mon.nickname)this.add.text(166,116,record.name,{fontFamily:FONT,fontSize:13,color:'#655f55',fontStyle:'bold'});
+      this.add.text(166,mon.nickname?137:122,`Lv.${mon.lvl}  ${record.style}  ${record.rarity}`,{fontFamily:FONT,fontSize:14,color:'#302d29',fontStyle:'bold'});
+      this.add.text(166,158,`${personaFor(mon.id)} persona${conditionFor(mon.condition)?`  /  ${conditionShort(mon.condition)}`:''}`,{fontFamily:FONT,fontSize:13,color:conditionFor(mon.condition)?'#8a1720':'#655f55',fontStyle:'bold'});
+      this.add.text(166,184,'CONDITION',{fontFamily:FONT,fontSize:11,color:'#397047',fontStyle:'bold'});
+      rosterMeter(this,246,188,205,mon.hp/stats.hp,ROSTER_UI.green,8);
+      this.add.text(451,181,`${Math.round(mon.hp)}/${stats.hp}`,{fontFamily:FONT,fontSize:12,color:'#302d29',fontStyle:'bold'}).setOrigin(1,0);
+      this.add.text(166,211,'EXPERIENCE',{fontFamily:FONT,fontSize:11,color:'#35658a',fontStyle:'bold'});
+      rosterMeter(this,246,215,205,experienceProgress(mon),ROSTER_UI.blue,8);
+      this.add.text(166,241,`TEMPERAMENT  ${nature.name.toUpperCase()}`,{fontFamily:FONT,fontSize:13,color:'#302d29',fontStyle:'bold'});
+      const natureLine=nature.raised?`+${STAT_LABELS[nature.raised]}  -${STAT_LABELS[nature.lowered]}`:'No stat preference';
+      this.add.text(166,263,natureLine,{fontFamily:FONT,fontSize:12,color:'#655f55',fontStyle:'bold'});
+      this.add.text(166,286,`POTENTIAL ${mon.potential||'C'}    EFFORT ${effortTotal(mon.effort)}/${MAX_TOTAL_EFFORT}`,{fontFamily:FONT,fontSize:12,color:'#302d29',fontStyle:'bold'});
+    }else if(this.summaryPage===1){
+      this.add.image(87,83,battleTextureFor(mon.id)).setOrigin(.5,0);
+      this.add.text(87,214,wrestlerName(mon,{short:true}),{fontFamily:FONT,fontSize:15,color:'#7b1d2a',fontStyle:'bold'}).setOrigin(.5,0);
+      this.add.text(87,236,`Lv.${mon.lvl}  ${record.style}`,{fontFamily:FONT,fontSize:12,color:'#3c3934',fontStyle:'bold'}).setOrigin(.5,0);
+      this.add.text(87,262,`EFFORT ${effortTotal(mon.effort)}/${MAX_TOTAL_EFFORT}`,{fontFamily:FONT,fontSize:11,color:'#655f55',fontStyle:'bold'}).setOrigin(.5,0);
+      const rows=[['hp','CONDITION'],['attack','STRENGTH'],['defense','DEFENSE'],['technique','TECHNIQUE'],['awareness','AWARENESS'],['speed','SPEED']];
+      rows.forEach(([key,label],index)=>{const y=86+index*34,changed=nature.raised===key||nature.lowered===key,effort=mon.effort?.[key]||0;this.add.text(166,y,label,{fontFamily:FONT,fontSize:13,color:changed?(nature.raised===key?'#8a1720':'#35658a'):'#3c3934',fontStyle:'bold'});this.add.text(338,y,key==='hp'?`${Math.round(mon.hp)}/${stats.hp}`:`${stats[key]}`,{fontFamily:FONT,fontSize:17,color:'#17151a',fontStyle:'bold'}).setOrigin(1,0);this.add.text(451,y+2,`EFF ${effort}`,{fontFamily:FONT,fontSize:11,color:'#655f55',fontStyle:'bold'}).setOrigin(1,0);this.add.line(0,0,166,y+27,451,y+27,0xc9bda4,.55).setOrigin(0);});
+    }else{
+      const moves=mon.moves||[];
+      for(let index=0;index<4;index++){
+        const key=moves[index],move=key&&MOVES[key],column=index%2,row=Math.floor(index/2),x=24+column*224,y=88+row*105;
+        if(column)this.add.line(0,0,238,y-5,238,y+91,0xc9bda4,.8).setOrigin(0);
+        if(row)this.add.line(0,0,x-4,183,x+207,183,0xc9bda4,.8).setOrigin(0);
+        if(!move){this.add.text(x,y,'OPEN TECHNIQUE SLOT',{fontFamily:FONT,fontSize:14,color:'#8d887e',fontStyle:'bold'});continue;}
+        const current=currentMoveStamina(mon,key),category=move.category==='strength'?'STRENGTH':move.category==='technique'?'TECHNIQUE':'SETUP';
+        this.add.text(x,y,move.name.toUpperCase(),{fontFamily:FONT,fontSize:16,color:'#17151a',fontStyle:'bold'});
+        this.add.text(x+204,y,`STA ${current}/${moveStaminaMax(key)}`,{fontFamily:FONT,fontSize:12,color:current?'#35658a':'#8d887e',fontStyle:'bold'}).setOrigin(1,0);
+        this.add.text(x,y+25,`${move.style.toUpperCase()} / ${category}`,{fontFamily:FONT,fontSize:11,color:'#7b1d2a',fontStyle:'bold'});
+        this.add.text(x,y+44,`POWER ${move.power||'--'}   ACC ${Math.round(move.acc*100)}%`,{fontFamily:FONT,fontSize:12,color:'#3c3934',fontStyle:'bold'});
+        this.add.text(x,y+64,move.summary,{fontFamily:FONT,fontSize:11,color:'#655f55',wordWrap:{width:204},lineSpacing:1});
+      }
+    }
+    if(this.note)this.add.text(240,300,this.note,{fontFamily:FONT,fontSize:12,color:'#8a1720',fontStyle:'bold',backgroundColor:'#fff7df'}).setOrigin(.5,1);
+  }
+  drawLockerNative(){
+    rosterFrame(this,'TEAM LOCKER',this.lockerSwapBoxIndex!==null?'CHOOSE A LINEUP SLOT':'A MOVE   START NAME   B BACK');
+    rosterPanel(this,10,49,222,228);rosterPanel(this,240,49,230,228);rosterPanel(this,10,284,460,26);
+    this.add.text(24,58,`TRAVEL LINEUP  ${this.state.party.length}/6`,{fontFamily:FONT,fontSize:14,color:'#7b1d2a',fontStyle:'bold'});
+    this.add.text(254,58,`TEAM LOCKER  ${this.state.box.length}`,{fontFamily:FONT,fontSize:14,color:'#7b1d2a',fontStyle:'bold'});
+    const drawRow=(mon,globalIndex,x,y,width)=>{
+      const selected=globalIndex===this.sel,stats=scaledStats(mon.id,mon.lvl,mon),status=conditionShort(mon.condition),g=this.add.graphics();
+      if(selected){g.fillStyle(0x7b1d2a,.14);g.fillRect(x,y,width,28);g.lineStyle(1,0x7b1d2a,.8);g.strokeRect(x,y,width,28);}
+      this.add.text(x+5,y+3,selected?'>':' ',{fontFamily:FONT,fontSize:12,color:selected?'#8a1720':'#655f55',fontStyle:'bold'});
+      this.add.text(x+18,y+3,wrestlerName(mon,{short:true}),{fontFamily:FONT,fontSize:12,color:selected?'#8a1720':status?'#8a1720':'#17151a',fontStyle:selected?'bold':'normal'});
+      this.add.text(x+width-5,y+3,`Lv.${mon.lvl}`,{fontFamily:FONT,fontSize:11,color:'#3c3934',fontStyle:'bold'}).setOrigin(1,0);
+      rosterMeter(this,x+18,y+20,86,mon.hp/stats.hp,ROSTER_UI.green,5);
+      this.add.text(x+width-5,y+16,status||`${Math.round(mon.hp)}/${stats.hp}`,{fontFamily:FONT,fontSize:10,color:status?'#8a1720':'#655f55',fontStyle:'bold'}).setOrigin(1,0);
+    };
+    this.state.party.slice(0,6).forEach((mon,index)=>drawRow(mon,index,18,78+index*31,206));
+    const partyCount=this.state.party.length,boxIndex=Math.max(0,this.sel-partyCount),boxStart=Math.max(0,Math.min(boxIndex-2,Math.max(0,this.state.box.length-6)));
+    this.state.box.slice(boxStart,boxStart+6).forEach((mon,index)=>drawRow(mon,partyCount+boxStart+index,248,78+index*31,214));
+    if(this.state.box.length>6)this.add.text(456,260,`${boxStart+1}-${Math.min(boxStart+6,this.state.box.length)} / ${this.state.box.length}`,{fontFamily:FONT,fontSize:10,color:'#655f55',fontStyle:'bold'}).setOrigin(1,0);
+    const rows=[...this.state.party,...this.state.box],selected=rows[this.sel],record=selected&&ROSTER[selected.id];
+    const footer=this.note||(selected?`${wrestlerName(selected,{short:true})}  /  ${record.style}  /  ${conditionShort(selected.condition)||'READY'}`:'NO WRESTLERS STORED');
+    this.add.text(240,289,footer,{fontFamily:FONT,fontSize:11,color:this.note?'#8a1720':'#3c3934',fontStyle:'bold'}).setOrigin(.5,0);
   }
   drawMap(){
     // The Town Map renders the validator-checked world plane: every outdoor
@@ -209,7 +320,8 @@ export class MenuScene extends Phaser.Scene{
   }
   renameSelected(){
     let container=null,index=-1,returnTab='team';
-    if(this.tab==='summary'){container='party';index=this.summaryIndex;}
+    if(this.tab==='team'){container='party';index=this.sel;}
+    else if(this.tab==='summary'){container='party';index=this.summaryIndex;}
     else if(this.tab==='locker'){
       const partyCount=this.state.party.length;
       container=this.sel<partyCount?'party':'box';index=this.sel<partyCount?this.sel:this.sel-partyCount;returnTab='locker';
@@ -249,7 +361,7 @@ export class MenuScene extends Phaser.Scene{
     this.add.text(204,166,r.bio,{fontFamily:FONT,fontSize:9,color:'#333',wordWrap:{width:98}});
   }
   move(d){this.note='';this.confirmReset=false;this.sel=Phaser.Math.Wrap(this.sel+d,0,this.optionCount());this.draw();}
-  side(d){if(this.tab!=='summary')return;this.note='';this.summaryPage=Phaser.Math.Wrap(this.summaryPage+d,0,2);sfx.menu_move();this.draw();}
+  side(d){if(this.tab!=='summary')return;this.note='';this.summaryPage=Phaser.Math.Wrap(this.summaryPage+d,0,SUMMARY_PAGE_COUNT);sfx.menu_move();this.draw();}
   choose(){
     if(this.tab==='main'){const key=MAIN_OPTS[this.sel][1];if(key==='save'){saveState(this.state);this.note='SAVED.';return this.draw();}this.tab=key;this.sel=0;return this.draw();}
     if(this.tab==='objective')return this.back();

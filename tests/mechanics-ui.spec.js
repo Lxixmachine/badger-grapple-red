@@ -73,7 +73,7 @@ test('one mobile D-pad tap advances exactly one menu entry',async({page})=>{
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').selected)).toBe(1);
 });
 
-test('Travel Lineup exposes both wrestler stat and technique summary pages',async({page})=>{
+test('Travel Lineup exposes identity, stat, and technique summary pages',async({page})=>{
   await bootWithSave(page,{
     party:[legacyWrestler()],box:[],active:0,items:{},badges:[],
     flags:{introDone:true,assignment:true},stats:{}
@@ -85,8 +85,40 @@ test('Travel Lineup exposes both wrestler stat and technique summary pages',asyn
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'summary',summaryPage:0,summaryIndex:0});
   await press(page,'right');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').summaryPage)).toBe(1);
+  await press(page,'right');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').summaryPage)).toBe(2);
+  await press(page,'right');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').summaryPage)).toBe(0);
   await press(page,'b');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
+});
+
+test('roster workflow uses the native viewport and unscaled wrestler art',async({page})=>{
+  await bootWithSave(page,{
+    party:[legacyWrestler(),legacyWrestler('fieldflyer',8)],box:[legacyWrestler('drillpartner',7)],active:0,items:{},badges:[],
+    flags:{introDone:true,assignment:true,lockerUnlocked:true,recruitingUnlocked:true},stats:{}
+  },'/?test=1');
+  await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
+  for(const tab of ['main','team','locker']){
+    await page.evaluate(value=>{
+      const scene=window.badgerGame.scene.getScene('MenuScene');
+      if(scene?.scene?.isActive())scene.scene.stop();
+      window.__badgerTest.startMenu({tab:value});
+    },tab);
+    await expect.poll(async()=>page.evaluate(value=>window.__badgerTest.sceneState('MenuScene')?.tab,tab)).toBe(tab);
+    const contract=await page.evaluate(()=>{
+      const scene=window.badgerGame.scene.getScene('MenuScene');
+      const images=scene.children.list.filter(child=>child.type==='Image');
+      return {
+        viewport:[scene.cameras.main.width,scene.cameras.main.height,scene.cameras.main.zoom],
+        imageScales:images.map(image=>[image.scaleX,image.scaleY]),
+        outOfBounds:scene.children.list.filter(child=>child.type==='Text'||child.type==='Image').map(child=>child.getBounds()).filter(bounds=>bounds.left<0||bounds.top<0||bounds.right>480||bounds.bottom>320).length
+      };
+    });
+    expect(contract.viewport).toEqual([480,320,1]);
+    expect(contract.imageScales.every(([x,y])=>x===1&&y===1)).toBe(true);
+    expect(contract.outOfBounds).toBe(0);
+  }
 });
 
 test('Travel Lineup naming persists a nickname and battle HUD uses it',async({page})=>{
@@ -97,7 +129,6 @@ test('Travel Lineup naming persists a nickname and battle HUD uses it',async({pa
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys())).toContain('TitleScene');
   await page.evaluate(()=>window.__badgerTest.startMenu({tab:'team'}));
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene').tab)).toBe('team');
-  await press(page,'a');
   await press(page,'start');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('NamingScene'))).toMatchObject({active:true,phase:'confirm',confirmSelected:0});
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.activeSceneKeys().at(-1))).toBe('NamingScene');

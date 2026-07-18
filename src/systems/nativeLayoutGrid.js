@@ -63,5 +63,27 @@ export function installNativeLayoutGrid(scene, logicalWidth=320, logicalHeight=2
     wrap('fillTriangle',values => [x(values[0]),y(values[1]),x(values[2]),y(values[3]),x(values[4]),y(values[5]),...values.slice(6)]);
     return graphics;
   };
-  add.__nativeLayoutGrid = true;
+  add.__nativeLayoutGrid = {
+    original,
+    projected: {
+      text: add.text,
+      graphics: add.graphics,
+      image: add.image,
+      line: add.line,
+      circle: add.circle
+    }
+  };
+}
+
+export function withNativeCoordinates(scene, draw) {
+  const add = scene.add;
+  const contract = add.__nativeLayoutGrid;
+  if (!contract?.original || !contract?.projected) return draw();
+  const methods = Object.keys(contract.original);
+  methods.forEach(method => { add[method] = contract.original[method]; });
+  try {
+    return draw();
+  } finally {
+    methods.forEach(method => { add[method] = contract.projected[method]; });
+  }
 }

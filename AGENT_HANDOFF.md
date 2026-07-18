@@ -3796,3 +3796,31 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   process session before the next broad release.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Roster Workflow Pass (v22.48)
+
+- The Team Menu, Travel Lineup, three-page wrestler summary, Team Locker,
+  and in-battle switching screen now use one native 480x320 roster grammar.
+  These screens no longer inherit the older 320x224 coordinate projection;
+  text and all 128px wrestler art are authored at final integer size.
+- The main menu pairs the command list with lead condition, experience, and
+  earned badges. The lineup exposes six readable condition rows. Summary now
+  has separate Identity, Stats, and Techniques pages. Team Locker uses a
+  split lineup/storage view with scrolling storage rows and explicit move,
+  exchange, and naming feedback.
+- `START` renames the selected wrestler directly from Travel Lineup as well
+  as Summary and Team Locker. The naming flow, locker deposit/withdraw, and
+  legal battle switching retain the existing save and battle mechanics.
+- `src/systems/rosterUi.js` is the shared presentation contract.
+  `withNativeCoordinates` in `nativeLayoutGrid.js` lets selected migrated
+  screens bypass legacy projection without changing remaining menus.
+- `npm run review:roster-ui` captures the native Phaser framebuffer, not the
+  CSS-scaled phone canvas, and performs a direct Chromium interaction audit.
+  It verifies native bounds, scale 1 artwork, one-step touch D-pad movement,
+  three-page cycling, naming, storage transfers, and a battle switch.
+- The direct release audit passes with all seven 480x320 captures. Static
+  validation, balance, map lint, syntax checks, and production build pass.
+  The general Playwright wrapper still stalls before spawning a worker in
+  this Windows session and was not represented as a full-suite pass.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.
