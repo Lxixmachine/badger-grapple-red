@@ -3,6 +3,7 @@ import {useNativeViewport} from '../systems/nativeViewport.js';
 import {installNativeLayoutGrid, withNativeCoordinates} from '../systems/nativeLayoutGrid.js';
 import {drawLineupScreen, rosterFrame, rosterMeter, rosterPanel, ROSTER_UI} from '../systems/rosterUi.js';
 import {MENU_UI, menuConfirm, menuFooter, menuFrame, menuItemIcon, menuListRow, menuMeter, menuPanel, menuSectionLabel} from '../systems/nativeMenuUi.js';
+import {cyclePlayerSetting,normalizePlayerSettings} from '../systems/playerSettings.js';
 import seasonLayouts from '../data/seasonOneLayouts.json';
 const Phaser = window.Phaser;
 const BADGE_ORDER=['Field House Badge','Capitol Badge','Kohl Badge','Picnic Point Badge'];
@@ -10,6 +11,13 @@ const MAIN_OPTS=[['TRAVEL LINEUP','team'],['BAG','bag'],['ROSTER BOOK','dex'],['
 const BAG_ROWS=BAG_ORDER.map(key=>[key,ITEM_DEFS[key].name,ITEM_DEFS[key].description]);
 const ICON_COLOR={team:0x3a6ea8,bag:0x3a8a52,dex:0x7a4ac9,map:0x4a8a9a,badges:0xc9962e,practice:0xc9622e,objective:0x2e9a95,save:0x555f6e,options:0x7d1017};
 const SUMMARY_PAGE_COUNT=3;
+const OPTION_ROWS=Object.freeze([
+  {key:'textSpeed',label:'TEXT SPEED',secondary:'Dialogue and battle messages'},
+  {key:'battleScene',label:'BATTLE SCENE',secondary:'Technique motion and effects'},
+  {key:'battleStyle',label:'BATTLE STYLE',secondary:'Replacement choice after a knockout'},
+  {key:'sound',label:'SOUND',secondary:'Music and sound effects'},
+  {key:'erase',label:'ERASE SAVE DATA',secondary:'Delete this season permanently'}
+]);
 const NATIVE_TAB_DRAWERS={bag:'drawBagNative',dex:'drawDexNative',map:'drawSeasonMapNative',travel:'drawTravelNative',badges:'drawBadgesNative',practice:'drawPracticeNative',objective:'drawObjectiveNative',options:'drawOptionsNative',shop:'drawShopNative'};
 const PRACTICE_OPTIONS=[
   ['hp','CONDITION'],['attack','STRENGTH'],['defense','DEFENSE'],
@@ -42,7 +50,7 @@ export class MenuScene extends Phaser.Scene{
   constructor(){super('MenuScene');}
   create(data={}){useNativeViewport(this);installNativeLayoutGrid(this);this.parent=data.parent;this.state=loadState();this.tab=data.tab||'main';this.sel=0;this.note='';this.summaryIndex=0;this.summaryPage=0;this.confirmReset=false;this.travelConfirm=null;this.lockerSwapBoxIndex=null;this.cameras.main.setBackgroundColor('rgba(0,0,0,.74)');this.cameras.main.fadeIn(115,0,0,0);this.input.keyboard.on('keydown-UP',()=>this.move(-1));this.input.keyboard.on('keydown-DOWN',()=>this.move(1));this.input.keyboard.on('keydown-LEFT',()=>this.side(-1));this.input.keyboard.on('keydown-RIGHT',()=>this.side(1));this.input.keyboard.on('keydown-ENTER',()=>this.choose());this.input.keyboard.on('keydown-SPACE',()=>this.choose());this.input.keyboard.on('keydown-N',()=>this.renameSelected());this.input.keyboard.on('keydown-ESC',()=>this.back());setVirtualHandler(this);this.draw();}
   handleVirtualButton(k){if(k==='up'){sfx.menu_move();this.move(-1);}if(k==='down'){sfx.menu_move();this.move(1);}if(k==='left')this.side(-1);if(k==='right')this.side(1);if(k==='a')this.choose();if(k==='start')this.renameSelected();if(k==='b')this.back();}
-  optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map'||this.tab==='summary')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 6;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return 2;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
+  optionCount(){if(this.tab==='main')return MAIN_OPTS.length;if(this.tab==='map'||this.tab==='summary')return 1;if(this.tab==='objective')return 1;if(this.tab==='practice')return 6;if(this.tab==='shop')return SHOP_STOCK.length+1;if(this.tab==='locker')return Math.max(1,this.state.party.length+this.state.box.length);if(this.tab==='travel')return Math.max(1,this.travelDestinations().length);if(this.tab==='dex')return Object.keys(ROSTER).length;if(this.tab==='badges')return 1;if(this.tab==='options')return OPTION_ROWS.length;if(this.tab==='bag')return BAG_ROWS.length;if(this.tab==='team')return Math.max(1,this.state.party.length);return 8;}
   draw(){
     this.children.removeAll();
     if(this.tab==='main')return withNativeCoordinates(this,()=>this.drawMainNative());
@@ -306,14 +314,19 @@ export class MenuScene extends Phaser.Scene{
     menuFooter(this,this.state.objective?.complete?'OBJECTIVE COMPLETE':'FOLLOW THE CURRENT GOAL TO ADVANCE THE SEASON');
   }
   drawOptionsNative(){
-    const muted=isMuted();
-    menuFrame(this,'OPTIONS','A CHANGE   B BACK');
-    menuPanel(this,10,49,460,105);menuPanel(this,10,162,460,115);
-    menuListRow(this,{x:18,y:58,width:444,height:38,label:'SOUND',secondary:'Music and sound effects',active:this.sel===0,right:muted?'OFF':'ON'});
-    const toggle=this.add.graphics();[['ON',!muted],['OFF',muted]].forEach(([label,on],index)=>{const x=322+index*64;toggle.fillStyle(on?MENU_UI.cardinal:0xe1d7bf,1);toggle.fillRect(x,108,58,29);toggle.lineStyle(1,on?MENU_UI.gold:MENU_UI.muted,1);toggle.strokeRect(x,108,58,29);this.add.text(x+29,114,label,{fontFamily:FONT,fontSize:12,color:on?'#fff2c7':'#655f55',fontStyle:'bold'}).setOrigin(.5,0);});
-    menuListRow(this,{x:18,y:171,width:444,height:42,label:'ERASE SAVE DATA',secondary:'Delete this season and return to Opening Day',active:this.sel===1});
-    this.add.text(40,228,'This cannot be undone.',{fontFamily:FONT,fontSize:12,color:'#8a1720',fontStyle:'bold'});
-    menuFooter(this,this.note||'UP/DOWN OPTION   A CHANGE   B BACK',{alert:Boolean(this.note)});
+    const settings=normalizePlayerSettings(this.state.settings),muted=isMuted(),values={
+      textSpeed:settings.textSpeed.toUpperCase(),
+      battleScene:settings.battleScene?'ON':'OFF',
+      battleStyle:settings.battleStyle.toUpperCase(),
+      sound:muted?'OFF':'ON',erase:''
+    };
+    menuFrame(this,'OPTIONS','LEFT/RIGHT OR A CHANGE   B BACK');
+    menuPanel(this,10,49,460,228);
+    OPTION_ROWS.forEach((row,index)=>menuListRow(this,{
+      x:18,y:56+index*43,width:444,height:41,label:row.label,secondary:row.secondary,
+      active:this.sel===index,striped:index%2===1,right:values[row.key],rightSize:12
+    }));
+    menuFooter(this,this.note||'CHANGES SAVE IMMEDIATELY',{alert:Boolean(this.note)});
     if(this.confirmReset)menuConfirm(this,{title:'ERASE SAVE DATA?',body:'All wrestlers, badges, story progress, and settings in this save will be deleted.',action:'A ERASE   B CANCEL'});
   }
   drawShopNative(){
@@ -538,7 +551,7 @@ export class MenuScene extends Phaser.Scene{
     this.add.text(204,166,r.bio,{fontFamily:FONT,fontSize:9,color:'#333',wordWrap:{width:98}});
   }
   move(d){this.note='';this.confirmReset=false;this.travelConfirm=null;this.sel=Phaser.Math.Wrap(this.sel+d,0,this.optionCount());this.draw();}
-  side(d){if(this.tab!=='summary')return;this.note='';this.summaryPage=Phaser.Math.Wrap(this.summaryPage+d,0,SUMMARY_PAGE_COUNT);sfx.menu_move();this.draw();}
+  side(d){if(this.tab==='options')return this.changeOption(d);if(this.tab!=='summary')return;this.note='';this.summaryPage=Phaser.Math.Wrap(this.summaryPage+d,0,SUMMARY_PAGE_COUNT);sfx.menu_move();this.draw();}
   choose(){
     if(this.tab==='main'){const key=MAIN_OPTS[this.sel][1];if(key==='save'){saveState(this.state);this.note='SAVED.';return this.draw();}this.tab=key;this.sel=0;return this.draw();}
     if(this.tab==='objective')return this.back();
@@ -568,8 +581,19 @@ export class MenuScene extends Phaser.Scene{
   chooseShop(){const it=SHOP_STOCK[this.sel];if(!it)return this.close();if(this.state.rep>=it.price){this.state.rep-=it.price;this.state.items[it.key]=(this.state.items[it.key]||0)+1;saveState(this.state);this.note=`BOUGHT ${it.name}.`;}else this.note=`NEED ${it.price} REP.`;this.draw();}
   chooseBag(){const key=BAG_ROWS[this.sel]?.[0],l=lead(this.state);if(!key)return;if((this.state.items[key]||0)<=0){this.note='NONE LEFT.';return this.draw();}if(key==='filmStudy'){if(useFilmStudy(this.state)){saveState(this.state);this.note='NEXT THREE RECRUIT ATTEMPTS IMPROVED.';}return this.draw();}if(ITEM_DEFS[key].kind==='singlet'){this.note='USE SINGLETS WHILE SCOUTING.';return this.draw();}if(!l){this.note='NO WRESTLER.';return this.draw();}const result=useRecoveryItem(this.state,l,key);if(!result.used){this.note=result.message.toUpperCase();return this.draw();}saveState(this.state);this.note=`USED ${ITEM_DEFS[key].name}. ${result.message.toUpperCase()}`;this.draw();}
   chooseOptions(){
-    if(this.sel===0){const next=!isMuted();setMuted(next);this.state.audioMuted=next;saveState(this.state);this.note=next?'SOUND OFF.':'SOUND ON.';return this.draw();}
-    return this.resetDemo();
+    if(OPTION_ROWS[this.sel]?.key==='erase')return this.resetDemo();
+    return this.changeOption(1);
+  }
+  changeOption(direction=1){
+    const key=OPTION_ROWS[this.sel]?.key;if(!key||key==='erase')return;
+    if(key==='sound'){
+      const next=!isMuted();setMuted(next);this.state.audioMuted=next;this.note=next?'SOUND OFF.':'SOUND ON.';
+    }else{
+      this.state.settings=cyclePlayerSetting(this.state.settings,key,direction);
+      const value=key==='battleScene'?(this.state.settings.battleScene?'ON':'OFF'):this.state.settings[key].toUpperCase();
+      this.note=`${OPTION_ROWS[this.sel].label} ${value}.`;
+    }
+    saveState(this.state);sfx.menu_move();this.draw();
   }
   resetDemo(){if(!this.confirmReset){this.confirmReset=true;this.note='A AGAIN TO ERASE.';return this.draw();}resetState();this.scene.stop('OverworldScene');this.scene.start('TitleScene');}
   back(){if(this.travelConfirm){this.travelConfirm=null;this.note='TRAVEL CANCELED.';this.draw();return;}if(this.confirmReset){this.confirmReset=false;this.note='ERASE CANCELED.';this.draw();return;}if(this.tab==='locker'&&this.lockerSwapBoxIndex!==null){this.lockerSwapBoxIndex=null;this.sel=0;this.note='EXCHANGE CANCELED.';this.draw();return;}if(this.tab==='summary'){this.tab='team';this.sel=this.summaryIndex;this.note='';this.draw();return;}if(this.tab!=='main'){this.tab='main';this.sel=0;this.confirmReset=false;this.draw();return;}this.close();}

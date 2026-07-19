@@ -157,7 +157,7 @@ test('destructive and travel actions require confirmation and B cancels safely',
     window.__badgerTest.startMenu({tab:'options'});
   });
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({active:true,tab:'options',selected:0});
-  await press(page,'down');
+  for(let index=0;index<4;index++)await press(page,'down');
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('MenuScene'))).toMatchObject({tab:'options',confirmReset:true});
   await press(page,'b');

@@ -149,6 +149,9 @@ try {
 
   await startMenu('options');
   const soundBefore = await storage();
+  await press('down');
+  await press('down');
+  await press('down');
   await press('a');
   const soundAfter = await storage();
   assert(Boolean(soundAfter.audioMuted) !== Boolean(soundBefore.audioMuted), 'Sound option did not persist');

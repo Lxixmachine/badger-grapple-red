@@ -90,6 +90,10 @@ export function installTestHooks(game, routeVirtualButton) {
       tileRuntimeVersion: scene.bg?.getData?.('campTileRuntime') ?? null,
       messageOpen: scene.messageOpen ?? null,
       message: scene.message ?? null,
+      messageText: scene.messageDisplay ?? scene.message ?? null,
+      messageTyping: Boolean(scene.messageTyping),
+      messageTypingDelay: scene.messageTyping?.delay ?? null,
+      playerSettings: scene.state?.settings ? {...scene.state.settings} : null,
       interactionPrompt: scene.promptForTarget && scene.tilePos && scene.facing
         ? scene.promptForTarget()
         : null,

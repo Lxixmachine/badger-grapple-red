@@ -7,7 +7,7 @@ import {makeMon, ROSTER} from '../data/roster.js';
 import {TRAINER_PORTRAITS} from '../data/trainerBattles.js';
 import {BATTLE_ARENA_KEYS} from '../data/battlePresentation.js';
 const Phaser = window.Phaser;
-const V='277';
+const V='278';
 export class BootScene extends Phaser.Scene{
   constructor(){super('BootScene');}
   preload(){

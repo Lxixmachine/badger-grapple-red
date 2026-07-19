@@ -49,6 +49,20 @@ async function press(page, key) {
   await page.evaluate(value => window.__badgerTest.press(value), key);
 }
 
+async function advanceDialogue(page) {
+  const before = await sceneState(page);
+  if (!before?.messageOpen) return;
+  if (before.messageTyping) {
+    await press(page, 'a');
+    await expect.poll(async () => (await sceneState(page))?.messageTyping).toBe(false);
+  }
+  await press(page, 'a');
+  await expect.poll(async () => {
+    const after = await sceneState(page);
+    return !after?.messageOpen || after.message !== before.message;
+  }).toBe(true);
+}
+
 test('every Season One map boots on the shared 32px runtime', async ({page}) => {
   test.setTimeout(90_000);
   const errors = [];
@@ -208,7 +222,7 @@ test('data-driven message events trigger on step and respect their once flag', a
   await stepDone();
 
   // A once event does not replay after leaving and returning.
-  await press(page, 'b');
+  await advanceDialogue(page);
   const opposite = {down: 'up', up: 'down', left: 'right', right: 'left'}[direction];
   await press(page, opposite);
   await expect.poll(async () => (await sceneState(page)).facing).toBe(opposite);
@@ -325,7 +339,7 @@ test('Field House challenge is gated by the Roster Book and awards its credentia
   await bootMap(page, 'field_house_floor', {x: 7, y: 7});
   await press(page, 'a');
   await expect.poll(async () => (await sceneState(page))?.message).toContain('Roster Book');
-  await press(page, 'a');
+  await advanceDialogue(page);
 
   await page.evaluate(() => {
     window.__badgerTest.patchStorage({flags: {rosterBook: true, recruitingUnlocked: true}});

@@ -29,6 +29,8 @@ import {
 } from '../systems/progression.js';
 import {FONT, setVirtualHandler} from '../systems/ui.js';
 import {playMusic, setMuted, sfx, unlockAudio} from '../systems/audio.js';
+import {textDelayFor} from '../systems/playerSettings.js';
+import {beginTypewriter, stopTypewriter} from '../systems/typewriter.js';
 
 const Phaser = window.Phaser;
 const VIEW_W = 480;
@@ -131,6 +133,8 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.tilePos = {x: initialSpawn.x, y: initialSpawn.y};
     this.message = this.state.message || '';
     this.messageOpen = Boolean(this.message);
+    this.messageDisplay = this.message;
+    this.messageTyping = null;
     this.messageAction = null;
     this.moving = false;
     this.inputLocked = false;
@@ -209,7 +213,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     }
     if (phase === 'up') return;
     if (key === 'a') this.interact();
-    else if (key === 'b') this.messageOpen ? this.closeMessage() : null;
+    else if (key === 'b') this.messageOpen ? this.advanceMessage() : null;
     else if (key === 'menu' || key === 'start') this.openMenu();
     else if (key === 'select' && this.demoMode) this.toggleGridOverlay();
     else if (key === 'save') this.savePosition('Game saved.');
@@ -508,10 +512,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   tryMove(direction) {
     if (this.inputLocked || this.moving) return;
-    if (this.messageOpen) {
-      this.closeMessage();
-      return;
-    }
+    if (this.messageOpen) return;
     if (this.facing !== direction) {
       this.setFacing(direction);
       return;
@@ -684,7 +685,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   interact() {
     if (this.inputLocked || this.moving) return;
-    if (this.messageOpen) return this.closeMessage();
+    if (this.messageOpen) return this.advanceMessage();
     const target = this.interactionTarget();
     if (!target) return;
     sfx.talk?.();
@@ -990,7 +991,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
 
   openMenu() {
     if (this.inputLocked || this.moving) return;
-    if (this.messageOpen) return this.closeMessage();
+    if (this.messageOpen) return;
     sfx.open?.();
     this.scene.launch('MenuScene', {parent: this});
   }
@@ -1007,18 +1008,55 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
   }
 
   showMessage(message, action = null) {
+    stopTypewriter(this.messageTyping);
     this.message = message;
     this.messageOpen = Boolean(message);
+    this.messageDisplay = '';
+    this.messageTyping = null;
     this.messageAction = action;
     this.state.message = message || '';
     this.persistState();
     this.drawHud();
+    if (this.messageOpen) this.startMessageTyping();
+  }
+
+  startMessageTyping() {
+    this.messageTyping = beginTypewriter(this, {
+      text: this.message,
+      delay: textDelayFor(this.state),
+      onUpdate: text => {
+        this.messageDisplay = text;
+        this.drawHud();
+      },
+      onComplete: () => {
+        this.messageTyping = null;
+        this.messageDisplay = this.message;
+        this.drawHud();
+      }
+    });
+  }
+
+  finishMessageText() {
+    if (!this.messageOpen || (!this.messageTyping && this.messageDisplay === this.message)) return false;
+    stopTypewriter(this.messageTyping);
+    this.messageTyping = null;
+    this.messageDisplay = this.message;
+    this.drawHud();
+    return true;
+  }
+
+  advanceMessage() {
+    if (this.finishMessageText()) return;
+    this.closeMessage();
   }
 
   closeMessage() {
+    stopTypewriter(this.messageTyping);
     const action = this.messageAction;
     this.message = '';
     this.messageOpen = false;
+    this.messageDisplay = '';
+    this.messageTyping = null;
     this.messageAction = null;
     this.state.message = '';
     this.persistState();
@@ -1057,7 +1095,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
       graphics.strokeRoundedRect(7, 231, 462, 78, 5);
       graphics.lineStyle(2, 0xb51d30, 1);
       graphics.strokeRoundedRect(12, 236, 452, 68, 3);
-      const text = this.add.text(24, 244, this.message, {
+      const text = this.add.text(24, 244, this.messageDisplay, {
         fontFamily: FONT,
         fontSize: '17px',
         fontStyle: 'bold',
@@ -1065,8 +1103,11 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
         lineSpacing: 3,
         wordWrap: {width: 418}
       }).setScrollFactor(0);
-      const advance = this.add.text(446, 286, 'A', {fontFamily: FONT, fontSize: '14px', fontStyle: 'bold', color: '#7a1825'}).setScrollFactor(0);
-      this.hud.add([graphics, text, advance]);
+      this.hud.add([graphics, text]);
+      if (!this.messageTyping && this.messageDisplay === this.message) {
+        const advance = this.add.text(446, 286, 'A', {fontFamily: FONT, fontSize: '14px', fontStyle: 'bold', color: '#7a1825'}).setScrollFactor(0);
+        this.hud.add(advance);
+      }
       return;
     }
     const prompt = this.promptForTarget();

@@ -81,6 +81,20 @@ async function press(page, input) {
   await page.evaluate(value => window.__badgerTest.press(value), input);
 }
 
+async function advanceDialogue(page) {
+  const before = await sceneState(page);
+  if (!before?.messageOpen) return;
+  if (before.messageTyping) {
+    await press(page, 'a');
+    await expect.poll(async () => (await sceneState(page))?.messageTyping).toBe(false);
+  }
+  await press(page, 'a');
+  await expect.poll(async () => {
+    const after = await sceneState(page);
+    return !after?.messageOpen || after.message !== before.message;
+  }).toBe(true);
+}
+
 test('Capitol Square is one grid-owned civic ring with recognizable services', async ({page}) => {
   const project = await openStudio(page);
   const map = project.maps.capitol_square;
@@ -211,7 +225,7 @@ test('the booster, Senator, and Bus Pass form one ordered Capitol story', async 
   await press(page, 'a');
   await expect.poll(async () => (await sceneState(page))?.message).toContain('Capitol wrestling');
   for (const phrase of ['old Field House', 'build a program', 'Kayak Voucher']) {
-    await press(page, 'a');
+    await advanceDialogue(page);
     await expect.poll(async () => (await sceneState(page))?.message).toContain(phrase);
   }
   expect(await page.evaluate(() => window.__badgerTest.storage().keyItems.kayakVoucher)).toBe(true);

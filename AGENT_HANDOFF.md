@@ -3985,3 +3985,30 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   sequential browser suite pass; final suite count is 162/162.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Player Options And Dialogue Pass (v22.55)
+
+- The native Options screen now owns five persistent rows: Text Speed,
+  Battle Scene, Battle Style, Sound, and guarded save erasure. Left/Right or A
+  changes a value and saves it immediately. Existing saves migrate without a
+  version reset to MID / ON / SHIFT.
+- `SLOW`, `MID`, and `FAST` control both world dialogue and battle typing.
+  Automatic battle beats extend when necessary so Slow text is never replaced
+  before its final character. Mid retains the established battle cadence.
+- World dialogue now uses the FireRed two-press rule: the first A or B finishes
+  an active line, the second advances it and may run its story callback.
+  Directional input, Start, and Menu cannot dismiss dialogue or accidentally
+  move the player through a story beat.
+- Battle Style `SHIFT` retains the free replacement choice after a trainer
+  knockout. `SET` sends the next opposing wrestler immediately. Battle Scene
+  `OFF` suppresses technique trails, flashes, damage labels, and sprite motion
+  while preserving accuracy, damage, Condition drains, Stamina, recoil,
+  conditions, AI, knockouts, rewards, and send-out ceremonies.
+- `docs/PLAYER_OPTIONS_CONTRACT.md` is the standing behavior contract.
+  `npm run review:player-options` captures default and configured Options plus
+  partial and completed world dialogue at the native 480x320 framebuffer.
+- Map generation, metatile generation, native UI and battle-art builds,
+  battle-art validation, world validation, balance, map lint, production
+  build, both visual capture audits, and all 167 sequential browser tests pass.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

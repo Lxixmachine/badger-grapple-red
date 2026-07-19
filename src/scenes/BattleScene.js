@@ -4,6 +4,7 @@ import {menuFooter,menuFrame,menuItemIcon,menuListRow,menuPanel,menuSectionLabel
 import {battleDecisionButtons,battleDecisionConfirm,battleTechniqueDetail,battleTechniqueRow,techniqueCategoryColor,techniqueCategoryLabel,techniqueStyleColor} from '../systems/battleDecisionUi.js';
 import {chooseTrainerAction,normalizeTrainerItems,trainerAiProfile} from '../systems/trainerAi.js';
 import {BATTLE_ARENAS,resolveBattleArena} from '../data/battlePresentation.js';
+import {battleSceneEnabled,battleStyleFor,textDelayFor} from '../systems/playerSettings.js';
 const Phaser = window.Phaser;
 const GAME_W=480,GAME_H=320,ARENA_H=238,BOTTOM_Y=238;
 const ENEMY_POS={x:370,y:158},PLAYER_POS={x:112,y:233};
@@ -119,12 +120,12 @@ export class BattleScene extends Phaser.Scene{
     }
     const step=steps[index];
     this.mode='intro';this.introStage=step.stage;this.setBattlePhase(step.phase);this.drawBattle();this.typeText(this.resolveText,step.text,17);
-    this.time.delayedCall(step.duration,()=>{if(this.scene.isActive()&&!this.over)this.runIntroSequence(index+1);});
+    this.time.delayedCall(this.textDwell(step.text,step.duration,17,300),()=>{if(this.scene.isActive()&&!this.over)this.runIntroSequence(index+1);});
   }
   runPostBattleSequence(lines,onDone=()=>this.showBattleResult()){
     const queue=lines.filter(Boolean).map((text,index)=>({
       kind:index===0?'result':'message',text,
-      duration:Phaser.Math.Clamp(text.length*24+520,1200,1850)
+      duration:this.textDwell(text,Phaser.Math.Clamp(text.length*24+520,1200,1850),19,260)
     }));
     if(!queue.length){this.postBattleStage='complete';return onDone();}
     this.postBattleStage='decision';this.mode='postBattle';this.inputLocked=true;this.setBattlePhase('post-battle-message');this.drawBattle();
@@ -277,7 +278,10 @@ export class BattleScene extends Phaser.Scene{
     this.pendingOpponentIndex=nextIndex;
     if(nextIndex<0)return this.win();
     const canSwitch=this.type!=='wild'&&this.state.party.some((mon,index)=>index>0&&mon.hp>0);
-    if(!canSwitch)return this.sendNextOpponent();
+    if(!canSwitch||battleStyleFor(this.state)==='set'){
+      this.recordBattleCeremony('replacement-style',{side:'enemy',style:battleStyleFor(this.state),wrestlerId:this.enemyTeam[this.pendingOpponentIndex]?.id||null});
+      return this.sendNextOpponent();
+    }
     const next=this.enemyTeam[this.pendingOpponentIndex];this.inputLocked=false;this.mode='switchPrompt';this.sel=0;this.setBattlePhase('switch-prompt');this.recordBattleCeremony('replacement-prompt',{side:'enemy',wrestlerId:next?.id||null});this.drawBattle();
   }
   sendNextOpponent(){
@@ -371,8 +375,9 @@ export class BattleScene extends Phaser.Scene{
   // faint and send-out beats when a wrestler goes down.
   typeText(t,str,speed=19){
     if(this.typeTimer)this.typeTimer.remove(false);this.clearMessagePrompt();this.typeTarget=t;this.typeFull=str;let i=0;t.setText('');
-    this.typeTimer=this.time.addEvent({delay:speed,repeat:Math.max(0,str.length-1),callback:()=>{i++;if(t&&t.scene)t.setText(str.slice(0,i));if(i>=str.length){this.typeTimer=null;this.updateMessagePrompt();}}});
+    this.typeTimer=this.time.addEvent({delay:textDelayFor(this.state,speed),repeat:Math.max(0,str.length-1),callback:()=>{i++;if(t&&t.scene)t.setText(str.slice(0,i));if(i>=str.length){this.typeTimer=null;this.updateMessagePrompt();}}});
   }
+  textDwell(text,minimum=0,referenceDelay=19,tail=220){return Math.max(minimum,textDelayFor(this.state,referenceDelay)*String(text||'').length+tail);}
   finishTypeText(){if(this.typeTimer)this.typeTimer.remove(false);this.typeTimer=null;if(this.typeTarget?.scene)this.typeTarget.setText(this.typeFull||'');this.updateMessagePrompt();}
   feedbackColor(kind){return {critical:'#8a5200',edge:'#8a1720',resisted:'#355f87','stat-up':'#276943','stat-down':'#8a1720','stamina-down':'#355f87',recoil:'#8a1720','condition-inflicted':'#8a1720','condition-cleared':'#276943','condition-blocked':'#8a5200','condition-residual':'#8a1720'}[kind]||'#111';}
   clearMessagePrompt(){if(this.messagePrompt?.scene)this.messagePrompt.destroy();this.messagePrompt=null;}
@@ -403,7 +408,7 @@ export class BattleScene extends Phaser.Scene{
     else this.setBattlePhase('message');
     this.recordBattleBeat('result-message',{moveKey:this.moveKey,side:this.moveActorSide,kind:event.kind,index:sequence.index});if(event.sound)this.playSafe(event.sound);this.setResolveText(event.text);
     this.feedbackReadyAt=(this.time.now||0)+180;
-    const dwell=event.duration??Phaser.Math.Clamp(event.text.length*22+420,860,1320);
+    const dwell=this.textDwell(event.text,event.duration??Phaser.Math.Clamp(event.text.length*22+420,860,1320),19,240);
     this.feedbackTimer=this.time.delayedCall(dwell,()=>this.advanceResolveSequence('auto'));
   }
   advanceResolveSequence(source='input'){
@@ -480,7 +485,7 @@ export class BattleScene extends Phaser.Scene{
     this.setBattlePhase('announce');this.recordBattleBeat('announce',{moveKey:actualKey,side:attackSide});this.setResolveText(announcement);
     const attacker=defIsEnemy?this.playerSprite:this.enemySprite;
     this.playSafe('talk');
-    const announceDuration=Phaser.Math.Clamp(announcement.length*18+choreography.tempo.announceBase,choreography.tempo.announceMin,choreography.tempo.announceMax);
+    const announceDuration=this.textDwell(announcement,Phaser.Math.Clamp(announcement.length*18+choreography.tempo.announceBase,choreography.tempo.announceMin,choreography.tempo.announceMax),19,120);
     this.time.delayedCall(Math.max(280,announceDuration-choreography.tempo.windupLead),()=>{
       if(attacker&&attacker.scene)this.playTechniqueWindup(attacker,actualKey,defIsEnemy);
     });
@@ -547,8 +552,10 @@ export class BattleScene extends Phaser.Scene{
   }
   playTechniqueWindup(sprite,moveKey,isPlayer){
     const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,direction=isPlayer?1:-1,w=choreography.windup;
-    this.recordTechniqueAnimation(moveKey,'windup',{side:isPlayer?'player':'enemy'});
-    this.recordBattleBeat('windup',{moveKey,side:isPlayer?'player':'enemy'});
+    const animated=battleSceneEnabled(this.state),stage=animated?'windup':'windup-static';
+    this.recordTechniqueAnimation(moveKey,stage,{side:isPlayer?'player':'enemy'});
+    this.recordBattleBeat(stage,{moveKey,side:isPlayer?'player':'enemy'});
+    if(!animated)return;
     this.playTechniqueSound(mv.style,'windup');
     this.drawMotionTrail(sprite.x,sprite.y-58,sprite.x+w.dx*direction,sprite.y-58+w.dy,mv.style,.55);
     this.drawWindupGlyph(sprite.x,sprite.y-66,choreography.motion,mv.style,direction);
@@ -557,29 +564,34 @@ export class BattleScene extends Phaser.Scene{
   playTechniqueImpact(attacker,target,moveKey,hitResults=[],recoilResult=null,hitCount=1){
     const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,playerAttacks=attacker===this.playerSprite,direction=playerAttacks?1:-1,force=choreography.impact;
     const frames=hitResults.length?hitResults:Array.from({length:Math.max(1,hitCount)},(_,index)=>({index:index+1,damage:0,critical:false})),hits=frames.length,starts=this.impactStartTimes(choreography,frames),targetSide=playerAttacks?'enemy':'player',attackerSide=playerAttacks?'player':'enemy';
-    this.recordTechniqueAnimation(moveKey,'impact',{hitCount:hits,side:playerAttacks?'player':'enemy'});
-    this.drawMotionTrail(attacker.x,attacker.y-58,target.x,target.y+force.effectY,mv.style,.8);
+    const animated=battleSceneEnabled(this.state);
+    this.recordTechniqueAnimation(moveKey,animated?'impact':'impact-static',{hitCount:hits,side:playerAttacks?'player':'enemy'});
+    if(animated)this.drawMotionTrail(attacker.x,attacker.y-58,target.x,target.y+force.effectY,mv.style,.8);
     frames.forEach((frame,index)=>{
       this.time.delayedCall(starts[index],()=>{
         if(!target.scene)return;
         this.setBattlePhase('contact');this.recordBattleBeat('contact',{moveKey,side:attackerSide,hitIndex:index+1,damage:frame.damage||0,message:this.resolveText?.text||''});
         this.playSafe('hit');this.playTechniqueSound(mv.style,'impact');
-        this.tweenSpritePixels(attacker,{x:`+=${force.lunge*direction}`,y:`+=${force.lift}`,duration:72,yoyo:true,hold:choreography.tempo.contactHold,ease:'Cubic.Out'});
-        this.drawTechniqueEffect(target.x,target.y+force.effectY,moveKey,direction,index);
+        if(animated){
+          this.tweenSpritePixels(attacker,{x:`+=${force.lunge*direction}`,y:`+=${force.lift}`,duration:72,yoyo:true,hold:choreography.tempo.contactHold,ease:'Cubic.Out'});
+          this.drawTechniqueEffect(target.x,target.y+force.effectY,moveKey,direction,index);
+        }
         if(frame.damage>0){
-          this.drawDamagePopup(target.x,target.y-112,frame.damage,frame.critical,index);
+          if(animated)this.drawDamagePopup(target.x,target.y-112,frame.damage,frame.critical,index);
           this.time.delayedCall(choreography.tempo.conditionLead,()=>{if(target.scene)this.animateConditionStep(targetSide,frame,choreography,index);});
         }
-        target.setTintFill(index%2?0xffd86b:0xfff7da);
-        if(index===0&&force.flash)this.cameras.main.flash(force.flash,255,247,218,false);
-        this.time.delayedCall(Math.max(72,choreography.tempo.contactHold),()=>{if(target.scene)target.clearTint();});
-        const knock=Math.max(2,force.knockback-(index*2)),vertical=index%2?Math.sign(force.targetLift||-1)*-3:force.targetLift;
-        this.tweenSpritePixels(target,{x:`+=${knock*direction}`,y:`+=${vertical}`,duration:64,yoyo:true,repeat:Math.max(0,force.shake-1),ease:'Quad.Out'});
+        if(animated){
+          target.setTintFill(index%2?0xffd86b:0xfff7da);
+          if(index===0&&force.flash)this.cameras.main.flash(force.flash,255,247,218,false);
+          this.time.delayedCall(Math.max(72,choreography.tempo.contactHold),()=>{if(target.scene)target.clearTint();});
+          const knock=Math.max(2,force.knockback-(index*2)),vertical=index%2?Math.sign(force.targetLift||-1)*-3:force.targetLift;
+          this.tweenSpritePixels(target,{x:`+=${knock*direction}`,y:`+=${vertical}`,duration:64,yoyo:true,repeat:Math.max(0,force.shake-1),ease:'Quad.Out'});
+        }
       });
     });
     if(recoilResult){
       const delay=this.conditionImpactDuration(choreography,frames)+100;
-      this.time.delayedCall(delay,()=>{if(attacker.scene){this.playSafe('hit');this.drawDamagePopup(attacker.x,attacker.y-112,recoilResult.damage,false,0,'RECOIL');this.animateConditionStep(attackerSide,recoilResult,choreography,0,'recoil');this.tweenSpritePixels(attacker,{x:`-=${8*direction}`,alpha:.55,duration:80,yoyo:true,repeat:1,ease:'Quad.Out'});}});
+      this.time.delayedCall(delay,()=>{if(attacker.scene){this.playSafe('hit');if(animated)this.drawDamagePopup(attacker.x,attacker.y-112,recoilResult.damage,false,0,'RECOIL');this.animateConditionStep(attackerSide,recoilResult,choreography,0,'recoil');if(animated)this.tweenSpritePixels(attacker,{x:`-=${8*direction}`,alpha:.55,duration:80,yoyo:true,repeat:1,ease:'Quad.Out'});}});
     }
   }
   drawDamagePopup(x,y,damage,critical=false,index=0,label=''){
@@ -590,16 +602,20 @@ export class BattleScene extends Phaser.Scene{
   }
   playTechniqueSetup(sprite,moveKey){
     const choreography=battleChoreographyFor(moveKey),direction=sprite===this.playerSprite?1:-1;
-    this.recordTechniqueAnimation(moveKey,'setup',{side:sprite===this.playerSprite?'player':'enemy'});
+    const animated=battleSceneEnabled(this.state);
+    this.recordTechniqueAnimation(moveKey,animated?'setup':'setup-static',{side:sprite===this.playerSprite?'player':'enemy'});
     this.setBattlePhase('setup-animation');this.recordBattleBeat('setup-contact',{moveKey,side:sprite===this.playerSprite?'player':'enemy'});this.playSafe('talk');this.playTechniqueSound((MOVES[moveKey]||MOVES.stall).style,'setup');
+    if(!animated)return;
     this.personaFlash(sprite);
     this.drawTechniqueEffect(sprite.x,sprite.y+choreography.impact.effectY,moveKey,direction,0);
     this.tweenSpritePixels(sprite,{x:`+=${choreography.impact.lunge*direction}`,y:`+=${choreography.impact.lift||-6}`,yoyo:true,duration:190,ease:'Back.Out'});
   }
   playTechniqueMiss(attacker,moveKey){
     const choreography=battleChoreographyFor(moveKey),mv=MOVES[moveKey]||MOVES.stall,direction=attacker===this.playerSprite?1:-1,target=attacker===this.playerSprite?this.enemySprite:this.playerSprite;
-    this.recordTechniqueAnimation(moveKey,'miss',{side:attacker===this.playerSprite?'player':'enemy'});
+    const animated=battleSceneEnabled(this.state);
+    this.recordTechniqueAnimation(moveKey,animated?'miss':'miss-static',{side:attacker===this.playerSprite?'player':'enemy'});
     this.setBattlePhase('miss-animation');this.recordBattleBeat('miss-contact',{moveKey,side:attacker===this.playerSprite?'player':'enemy'});this.playSafe('miss');
+    if(!animated)return;
     this.drawMotionTrail(attacker.x,attacker.y-58,target?.x||240,(target?.y||194)-74,mv.style,.38);
     this.drawMissWhiff((target?.x||240)+22*direction,(target?.y||194)-72);
     this.tweenSpritePixels(attacker,{x:`+=${Math.max(30,choreography.windup.dx)*direction}`,y:`+=${Math.min(-4,choreography.windup.dy)}`,alpha:.52,duration:100,yoyo:true,ease:'Cubic.Out'});
@@ -775,7 +791,7 @@ export class BattleScene extends Phaser.Scene{
     const segments=[];let level=event.before.lvl,xp=event.before.xp;
     while(level<event.after.lvl){segments.push({from:experienceProgress({id:event.before.id,lvl:level,xp}),to:1,levelUpTo:level+1});level++;xp=experienceAtLevel(event.before.id,level);}
     segments.push({from:experienceProgress({id:event.after.id,lvl:level,xp}),to:experienceProgress(event.after),levelUpTo:null});
-    this.time.delayedCall(KNOCKOUT_CEREMONY_TIMING.expAnnouncement,()=>{if(!this.scene.isActive())return;this.setBattlePhase('exp-fill');this.recordBattleCeremony('exp-fill-start',{side:'player',wrestlerId:event.mon.id,segments:segments.length});this.playSafe('exp');this.animateRewardSegments(event,segments,0,()=>{this.recordBattleCeremony('exp-fill-complete',{side:'player',wrestlerId:event.mon.id,level:event.after.lvl});this.playRewardMessages(event.automaticMessages,onDone);});});
+    this.time.delayedCall(this.textDwell(this.rewardText,KNOCKOUT_CEREMONY_TIMING.expAnnouncement,17,180),()=>{if(!this.scene.isActive())return;this.setBattlePhase('exp-fill');this.recordBattleCeremony('exp-fill-start',{side:'player',wrestlerId:event.mon.id,segments:segments.length});this.playSafe('exp');this.animateRewardSegments(event,segments,0,()=>{this.recordBattleCeremony('exp-fill-complete',{side:'player',wrestlerId:event.mon.id,level:event.after.lvl});this.playRewardMessages(event.automaticMessages,onDone);});});
   }
   animateRewardSegments(event,segments,index,onDone){
     if(index>=segments.length)return onDone();
@@ -798,7 +814,7 @@ export class BattleScene extends Phaser.Scene{
     const queue=[...messages];let index=0;
     const next=()=>{
       if(index>=queue.length)return this.time.delayedCall(320,onDone);
-      this.rewardText=queue[index++];this.mode='expReward';this.setBattlePhase('move-learned');this.recordBattleCeremony('move-learned',{side:'player',wrestlerId:this.rewardEvent?.mon?.id||null,text:this.rewardText});this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);this.time.delayedCall(Phaser.Math.Clamp(this.rewardText.length*20+420,900,1300),next);
+      this.rewardText=queue[index++];this.mode='expReward';this.setBattlePhase('move-learned');this.recordBattleCeremony('move-learned',{side:'player',wrestlerId:this.rewardEvent?.mon?.id||null,text:this.rewardText});this.drawBattle();this.typeText(this.resolveText,this.rewardText,17);this.time.delayedCall(this.textDwell(this.rewardText,Phaser.Math.Clamp(this.rewardText.length*20+420,900,1300),17,220),next);
     };
     next();
   }

@@ -10,13 +10,15 @@ import {LAYERED_MAP_VERSION,layeredNpcs,layeredUpperDecor,layeredWaterRects} fro
 import {CAMP_TILE_ATLAS,CAMP_TILE_RUNTIME_VERSION,campTilemap} from '../data/campRandallTilemaps.js';
 import {canonicalBadge} from '../data/campaign.js';
 import {npcTextureKey} from '../data/npcLooks.js';
+import {textDelayFor} from '../systems/playerSettings.js';
+import {beginTypewriter,stopTypewriter} from '../systems/typewriter.js';
 const Phaser = window.Phaser;
 const DIRS={down:{dx:0,dy:1,frame:1},left:{dx:-1,dy:0,frame:4},right:{dx:1,dy:0,frame:7},up:{dx:0,dy:-1,frame:10}};
 // Collision is controlled by src/data/maps.js so it matches visible map art.
 const SOLIDS={};
 export class OverworldScene extends Phaser.Scene{
  constructor(){super('OverworldScene');}
- create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);if(isBlocked(this.area,this.tilePos.x,this.tilePos.y))this.tilePos=defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.moving=false;this.sightLocked=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;
+ create(){this.state=loadState();this.area=this.state.area||'fieldhouse';this.tilePos=this.state.pos||defaultPos(this.area);if(isBlocked(this.area,this.tilePos.x,this.tilePos.y))this.tilePos=defaultPos(this.area);this.facing='down';this.message=this.state.message||'';this.messageOpen=!!this.message;this.messageDisplay=this.message;this.messageTyping=null;this.moving=false;this.sightLocked=false;this.lastInputAt=0;this.stepClock=0;this.npcList=[];this.sfxReady=false;
   this.worldLayer=this.add.layer().setDepth(0);this.uiLayer=this.add.layer().setDepth(1000);
   this.worldCamera=this.cameras.main.setName('world').setBackgroundColor('#000').setZoom(OVERWORLD_ZOOM);this.worldCamera.roundPixels=true;
   this.uiCamera=this.cameras.add(0,0,GAME_W,GAME_H,false,'ui').setBackgroundColor('rgba(0,0,0,0)').setZoom(1);this.uiCamera.roundPixels=true;
@@ -47,9 +49,9 @@ export class OverworldScene extends Phaser.Scene{
  fadeSceneOut(duration){this.worldCamera.fadeOut(duration,0,0,0);this.uiCamera.fadeOut(duration,0,0,0);}
  fadeSceneIn(duration){this.worldCamera.fadeIn(duration,0,0,0);this.uiCamera.fadeIn(duration,0,0,0);}
  okInput(){const now=this.time.now||performance.now();if(now-this.lastInputAt<95)return false;this.lastInputAt=now;return true;}
- handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.clearMessage();if(k==='menu'||k==='start')this.openMenu();if(k==='save')this.savePos('Saved.');}
+ handleVirtualButton(k){this.unlockSfx();if(!this.okInput())return;if(k==='up')this.tryMove(0,-1,'up');if(k==='down')this.tryMove(0,1,'down');if(k==='left')this.tryMove(-1,0,'left');if(k==='right')this.tryMove(1,0,'right');if(k==='a')this.interact();if(k==='b'&&this.messageOpen)this.advanceMessage();if(k==='menu'||k==='start')this.openMenu();if(k==='save')this.savePos('Saved.');}
  update(){this.updateDepths();this.updateMarker();this.updateNpcPatrols();if(this.moving)return;const c=this.cursors,k=this.keys;
-  if(this.messageOpen){if([c.left,c.right,c.up,c.down].some(x=>Phaser.Input.Keyboard.JustDown(x)))this.clearMessage();return;}
+  if(this.messageOpen)return;
   // Held keys walk continuously (FireRed): each completed tile re-triggers the next step.
   if(c.left.isDown||k.A.isDown)this.tryMove(-1,0,'left');
   else if(c.right.isDown||k.D.isDown)this.tryMove(1,0,'right');
@@ -61,12 +63,12 @@ export class OverworldScene extends Phaser.Scene{
  applyPlayerPresentation(){const scale=this.actorScale();this.player.setScale(scale);this.shadow.setScale(scale);}
  applyAreaBounds(){const {width,height}=areaDimensions(this.area),zoom=Number(areaFor(this.area).cameraZoom);this.worldCamera.setZoom(Number.isFinite(zoom)&&zoom>0?zoom:OVERWORLD_ZOOM);this.worldCamera.setBounds(0,0,width*16,height*16);}
  face(dir){this.facing=dir;this.player.stop();this.player.setFlipX(false);this.player.clearTint();this.player.setFrame(DIRS[dir]?.frame||1);}
- openMenu(){if(this.messageOpen){this.clearMessage();return;}this.playSfx('open');this.scene.launch('MenuScene',{parent:this});}
+ openMenu(){if(this.messageOpen)return;this.playSfx('open');this.scene.launch('MenuScene',{parent:this});}
  unlockSfx(){unlockAudio();}
  playSfx(kind){if(sfx[kind])sfx[kind]();}
  pass(x,y){if(isBlocked(this.area,x,y))return false;if(this.npcList.some(e=>e.npc.tile&&e.npc.tile.x===x&&e.npc.tile.y===y))return false; // NPCs are solid, FireRed-style
   const blocks=SOLIDS[this.area]||[];return !blocks.some(([x1,y1,x2,y2])=>x>=x1&&x<=x2&&y>=y1&&y<=y2);}
- tryMove(dx,dy,dir){if(this.messageOpen){this.clearMessage();return;}
+ tryMove(dx,dy,dir){if(this.messageOpen)return;
   if(this.moving||this.sightLocked)return; // one step is atomic; ambush/transition beats own the player
   if(this.facing!==dir&&!this.moving){this.face(dir);this.turnPauseUntil=(this.time.now||0)+120;return;} // tap turns in place; holding walks after a short beat (FireRed: ~8 frames)
   if((this.time.now||0)<(this.turnPauseUntil||0))return;
@@ -130,7 +132,7 @@ export class OverworldScene extends Phaser.Scene{
  faceNpcAtFront(){const f=this.frontTile();const entry=this.npcList.find(e=>e.npc.tile&&e.npc.tile.x===f.x&&e.npc.tile.y===f.y);if(!entry)return null;const opp={up:'down',down:'up',left:'right',right:'left'}[this.facing]||'down';entry.npc.setFrame(DIRS[opp]?.frame||1);return entry;}
 interact(){
   this.unlockSfx();
-  if(this.messageOpen){this.clearMessage();return;}
+  if(this.messageOpen){this.advanceMessage();return;}
   const kind=this.kindHere();
   const npcEntry=this.faceNpcAtFront();
   this.time.delayedCall(60,()=>{});
@@ -215,8 +217,19 @@ recover(){restoreParty(this.state);this.savePos("The Trainer's Room restored Con
  startGymBattle(cap){if(!cap)return;if(this.state.badges.some(badge=>canonicalBadge(badge)===canonicalBadge(cap.badge))){this.showMessage(cap.beaten||'Badge already earned.');return;}this.showMessage(cap.intro||'A captain challenges you.');this.savePos();this.time.delayedCall(650,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:cap.team,battleType:'gym',trainerName:ROSTER[cap.id]?.name,badge:cap.badge,reward:cap.reward,trainerAi:cap.trainerAi,trainerItems:cap.trainerItems,area:this.area})));
  startTrainerBattle(tr,msg){if(!tr)return;if(this.state.trainersDefeated?.[tr.id]){this.showMessage(tr.beaten||`${tr.name} has already been beaten.`);return;}this.showMessage(msg||tr.line||`${tr.name} challenges you.`);this.savePos();this.time.delayedCall(550,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:tr.team,battleType:'trainer',trainerName:tr.name,reward:tr.reward,defeatKey:tr.id,trainerAi:tr.trainerAi,trainerItems:tr.trainerItems,area:this.area})));
  savePos(msg=null){this.state.area=this.area;this.state.pos={...this.tilePos};if(msg)this.state.message=msg;saveState(this.state);if(msg)this.showMessage(msg);}
- showMessage(msg){this.message=msg;this.messageOpen=!!msg;this.drawHud();}
- clearMessage(){this.message='';this.messageOpen=false;this.state.message='';saveState(this.state);this.drawHud();}
+ showMessage(msg){
+  stopTypewriter(this.messageTyping);this.message=msg;this.messageOpen=!!msg;this.messageDisplay='';this.messageTyping=null;this.state.message=msg||'';saveState(this.state);this.drawHud();
+  if(this.messageOpen)this.startMessageTyping();
+ }
+ startMessageTyping(){
+  this.messageTyping=beginTypewriter(this,{text:this.message,delay:textDelayFor(this.state),onUpdate:text=>{this.messageDisplay=text;this.drawHud();},onComplete:()=>{this.messageTyping=null;this.messageDisplay=this.message;this.drawHud();}});
+ }
+ finishMessageText(){
+  if(!this.messageOpen||(!this.messageTyping&&this.messageDisplay===this.message))return false;
+  stopTypewriter(this.messageTyping);this.messageTyping=null;this.messageDisplay=this.message;this.drawHud();return true;
+ }
+ advanceMessage(){if(this.finishMessageText())return;this.clearMessage();}
+ clearMessage(){stopTypewriter(this.messageTyping);this.message='';this.messageOpen=false;this.messageDisplay='';this.messageTyping=null;this.state.message='';saveState(this.state);this.drawHud();}
  objective(){
    const caught=caughtRecruitCount(this.state);
    if(!this.state.party.length)return 'Meet Coach in the wrestling room.';
@@ -295,8 +308,8 @@ showObjectivePopup(title,body){const c=this.addUi(this.add.container(0,0).setScr
   if(this.messageOpen&&this.message){
     const box=uiBox(this,5,150,310,68).setScrollFactor(0);
     this.hud.add(box);
-    this.hud.add(this.add.text(14,157,this.message,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:2,wordWrap:{width:286}}).setScrollFactor(0));
-    this.hud.add(this.add.text(291,203,'A',{fontFamily:FONT,fontSize:10,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
+    this.hud.add(this.add.text(14,157,this.messageDisplay,{fontFamily:FONT,fontSize:11,color:'#111',fontStyle:'bold',lineSpacing:2,wordWrap:{width:286}}).setScrollFactor(0));
+    if(!this.messageTyping&&this.messageDisplay===this.message)this.hud.add(this.add.text(291,203,'A',{fontFamily:FONT,fontSize:10,color:'#6c624d',fontStyle:'bold'}).setScrollFactor(0));
   }else{
     const kind=this.kindHere();
     const prompt=this.promptFor(kind);
