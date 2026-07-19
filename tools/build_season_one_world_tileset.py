@@ -70,10 +70,15 @@ GROUND_VALUE_CONTRACT = {
         "cardinalPixelCountMax": 0,
     },
     "primaryStonePath": {
-        "uniqueColorsMax": 2,
-        "meanLightnessMin": 0.88,
+        "uniqueColorsMin": 3,
+        "uniqueColorsMax": 3,
+        "meanLightnessMin": 0.82,
+        "meanLightnessMax": 0.88,
         "meanSaturationMax": 0.16,
-        "accentPixelCountMax": 40,
+        "accentPixelCountMin": 28,
+        "accentPixelCountMax": 56,
+        "meanNeighborContrastMin": 0.01,
+        "meanNeighborContrastMax": 0.06,
         "cardinalPixelCountMax": 0,
     },
 }
@@ -159,6 +164,7 @@ def material_metrics(image: Image.Image) -> dict:
     saturation_sum = 0.0
     lightness_sum = 0.0
     cardinal_pixels = 0
+    luma_by_color = {}
     for (red, green, blue), count in counts.items():
         hue, lightness, saturation = colorsys.rgb_to_hls(red / 255, green / 255, blue / 255)
         saturation_sum += saturation * count
@@ -166,6 +172,7 @@ def material_metrics(image: Image.Image) -> dict:
         degrees = hue * 360
         if saturation >= 0.35 and (degrees <= 15 or degrees >= 345):
             cardinal_pixels += count
+        luma_by_color[(red, green, blue)] = (red * 0.299 + green * 0.587 + blue * 0.114) / 255
     dominant = max(counts.values())
     dominant_color = counts.most_common(1)[0][0]
     accent_pixels = {
@@ -185,6 +192,20 @@ def material_metrics(image: Image.Image) -> dict:
                 if neighbor in remaining:
                     remaining.remove(neighbor)
                     stack.append(neighbor)
+    neighbor_contrast = 0.0
+    neighbor_pairs = 0
+    high_contrast_edges = 0
+    for y in range(image.height):
+        for x in range(image.width):
+            source_luma = luma_by_color[rgb_image.getpixel((x, y))]
+            for neighbor_x, neighbor_y in ((x + 1, y), (x, y + 1)):
+                if neighbor_x >= image.width or neighbor_y >= image.height:
+                    continue
+                delta = abs(source_luma - luma_by_color[rgb_image.getpixel((neighbor_x, neighbor_y))])
+                neighbor_contrast += delta
+                neighbor_pairs += 1
+                if delta >= 0.08:
+                    high_contrast_edges += 1
     return {
         "uniqueColors": len(counts),
         "dominantCoverage": round(dominant / total, 4),
@@ -193,6 +214,8 @@ def material_metrics(image: Image.Image) -> dict:
         "cardinalPixelCount": cardinal_pixels,
         "accentPixelCount": len(accent_pixels),
         "accentComponentCount": accent_components,
+        "meanNeighborContrast": round(neighbor_contrast / max(neighbor_pairs, 1), 4),
+        "highContrastEdgeDensity": round(high_contrast_edges / max(neighbor_pairs, 1), 4),
     }
 
 
@@ -665,13 +688,18 @@ def build() -> dict:
         raise SystemExit("Campus pavers violate the pale neutral-limestone contract")
     stone_path_metrics = ground_material_metrics["primaryStonePath"]
     if (
-        stone_path_metrics["uniqueColors"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["uniqueColorsMax"]
+        stone_path_metrics["uniqueColors"] < GROUND_VALUE_CONTRACT["primaryStonePath"]["uniqueColorsMin"]
+        or stone_path_metrics["uniqueColors"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["uniqueColorsMax"]
         or stone_path_metrics["meanLightness"] < GROUND_VALUE_CONTRACT["primaryStonePath"]["meanLightnessMin"]
+        or stone_path_metrics["meanLightness"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["meanLightnessMax"]
         or stone_path_metrics["meanSaturation"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["meanSaturationMax"]
+        or stone_path_metrics["accentPixelCount"] < GROUND_VALUE_CONTRACT["primaryStonePath"]["accentPixelCountMin"]
         or stone_path_metrics["accentPixelCount"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["accentPixelCountMax"]
+        or stone_path_metrics["meanNeighborContrast"] < GROUND_VALUE_CONTRACT["primaryStonePath"]["meanNeighborContrastMin"]
+        or stone_path_metrics["meanNeighborContrast"] > GROUND_VALUE_CONTRACT["primaryStonePath"]["meanNeighborContrastMax"]
         or stone_path_metrics["cardinalPixelCount"]
     ):
-        raise SystemExit("Primary stone path violates the cool high-key circulation contract")
+        raise SystemExit("Primary stone path violates the legible three-shade circulation contract")
 
     for overlay in manifest["groundOverlays"]:
         add_ground(

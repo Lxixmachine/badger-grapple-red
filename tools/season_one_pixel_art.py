@@ -50,11 +50,12 @@ PALETTE = {
     "paver": (218, 212, 198, 255),
     "paver_light": (238, 234, 222, 255),
     "paver_dark": (185, 178, 164, 255),
-    # Circulation flagstone is deliberately cooler and flatter than masonry.
-    # Generic stone remains available to rocks, stairs, and architecture.
-    "path_stone": (210, 218, 216, 255),
-    "path_stone_light": (230, 235, 233, 255),
-    "path_stone_dark": (178, 188, 186, 255),
+    # Circulation stone is high-key, but its three values must remain legible
+    # at native scale. Generic stone remains available to rocks, stairs, and
+    # architecture; this cooler ramp belongs only to walkable paths.
+    "path_stone": (198, 209, 206, 255),
+    "path_stone_light": (220, 227, 224, 255),
+    "path_stone_dark": (172, 185, 183, 255),
     "stone": (200, 194, 170, 255),
     "stone_light": (227, 219, 190, 255),
     "stone_dark": (143, 140, 127, 255),
@@ -612,71 +613,53 @@ def _pine(width: int, height: int, variant: int = 0) -> Image.Image:
 
 def _forest(width: int, height: int, kind: str) -> Image.Image:
     w, h = width * LOGICAL_CELL, height * LOGICAL_CELL
-    exact_sources = {
-        "forest_mass_core": "forest_core",
-        "forest_edge_north": "forest_edge_north_a",
-        "forest_edge_north_b": "forest_edge_north_b",
-        "forest_edge_south": "forest_edge_south_a",
-        "forest_edge_south_b": "forest_edge_south_b",
-        "forest_edge_west": "forest_edge_west_a",
-        "forest_edge_west_b": "forest_edge_west_b",
-        "forest_edge_east": "forest_edge_east_a",
-        "forest_edge_east_b": "forest_edge_east_b",
-        "forest_corner_inner_nw": "forest_corner_inner_nw",
-        "forest_corner_inner_ne": "forest_corner_inner_nw",
-        "forest_corner_outer_sw": "forest_corner_outer_sw",
-        "forest_corner_outer_se": "forest_corner_outer_sw",
-        "forest_grove_small": "forest_grove_small",
-    }
-    source_id = exact_sources.get(kind)
-    if source_id:
-        image = source_asset("forest_masses", source_id)
-        if kind.endswith("_ne") or kind.endswith("_se"):
-            image = ImageOps.mirror(image)
-        # Corner notches are gameplay ownership, not soft image boundaries.
-        # Clip generated leaf spill to the same whole-cell geometry declared by
-        # the collision masks so a visibly empty cell is always walkable and a
-        # visibly forested cell is always solid.
-        if kind == "forest_corner_inner_nw":
-            alpha = image.getchannel("A")
-            ImageDraw.Draw(alpha).rectangle((0, 0, LOGICAL_CELL * 2 - 1, LOGICAL_CELL * 2 - 1), fill=0)
-            image.putalpha(alpha)
-        elif kind == "forest_corner_inner_ne":
-            alpha = image.getchannel("A")
-            ImageDraw.Draw(alpha).rectangle((w - LOGICAL_CELL * 2, 0, w - 1, LOGICAL_CELL * 2 - 1), fill=0)
-            image.putalpha(alpha)
-        elif kind == "forest_corner_outer_sw":
-            alpha = image.getchannel("A")
-            ImageDraw.Draw(alpha).rectangle((LOGICAL_CELL * 2, 0, w - 1, LOGICAL_CELL * 3 - 1), fill=0)
-            image.putalpha(alpha)
-        elif kind == "forest_corner_outer_se":
-            alpha = image.getchannel("A")
-            ImageDraw.Draw(alpha).rectangle((0, 0, w - LOGICAL_CELL * 2 - 1, LOGICAL_CELL * 3 - 1), fill=0)
-            image.putalpha(alpha)
-        elif kind == "forest_grove_small":
-            alpha = image.getchannel("A")
-            alpha_draw = ImageDraw.Draw(alpha)
-            alpha_draw.rectangle((0, 0, LOGICAL_CELL - 1, LOGICAL_CELL - 1), fill=0)
-            alpha_draw.rectangle((w - LOGICAL_CELL, 0, w - 1, LOGICAL_CELL - 1), fill=0)
-            image.putalpha(alpha)
-        if image.size != (w, h):
-            raise ValueError(f"{kind}: forest source is {image.size}, expected {(w, h)}")
-        return image
-
     if kind in {"forest_border_west_long", "forest_border_east_long"}:
-        side = "east" if "east" in kind else "west"
-        variants = [
-            source_asset("forest_masses", f"forest_edge_{side}_a"),
-            source_asset("forest_masses", f"forest_edge_{side}_b"),
-        ]
-        image = canvas(width, height)
-        for index, y in enumerate(range(0, h, variants[0].height)):
-            segment = variants[index % len(variants)]
-            remaining = min(segment.height, h - y)
-            image.alpha_composite(segment.crop((0, 0, segment.width, remaining)), (0, y))
-        return image
+        mask_rows = ["##"] * height
+    elif kind == "forest_corner_inner_nw":
+        mask_rows = ["..###", "..###", "#####", "#####", "#####"]
+    elif kind == "forest_corner_inner_ne":
+        mask_rows = ["###..", "###..", "#####", "#####", "#####"]
+    elif kind == "forest_corner_outer_sw":
+        mask_rows = ["##....", "##....", "##....", "######", "######"]
+    elif kind == "forest_corner_outer_se":
+        mask_rows = ["....##", "....##", "....##", "######", "######"]
+    elif kind == "forest_grove_small":
+        mask_rows = [".###.", "#####", "#####", "#####"]
+    else:
+        mask_rows = ["#" * width] * height
 
-    raise ValueError(f"No exact forest source for {kind}")
+    if len(mask_rows) != height or any(len(row) != width for row in mask_rows):
+        raise ValueError(f"{kind}: forest ownership mask does not match {width}x{height}")
+
+    module_rows = {
+        "back": [source_asset("forest_modules", f"forest_tree_back_{suffix}") for suffix in "abcd"],
+        "front": [source_asset("forest_modules", f"forest_tree_front_{suffix}") for suffix in "abcd"],
+        "side": [source_asset("forest_modules", f"forest_tree_side_{suffix}") for suffix in "abcd"],
+    }
+    image = canvas(width, height)
+    last_start_row = max(0, height - 2)
+    for y in range(max(1, height - 1)):
+        role = "back" if y == 0 else "front" if y == last_start_row else "side"
+        modules = module_rows[role]
+        for x in range(width):
+            if mask_rows[y][x] != "#":
+                continue
+            module = modules[(x + y * 3 + (1 if kind.endswith("_b") else 0)) % len(modules)]
+            image.alpha_composite(module, (x * LOGICAL_CELL, y * LOGICAL_CELL))
+
+    # Forest artwork may overlap freely inside the stamp, but never paints a
+    # gameplay cell that its explicit collision/occlusion mask does not own.
+    ownership = Image.new("L", (w, h), 0)
+    ownership_draw = ImageDraw.Draw(ownership)
+    for y, row in enumerate(mask_rows):
+        for x, value in enumerate(row):
+            if value == "#":
+                ownership_draw.rectangle(
+                    (x * LOGICAL_CELL, y * LOGICAL_CELL, (x + 1) * LOGICAL_CELL - 1, (y + 1) * LOGICAL_CELL - 1),
+                    fill=255,
+                )
+    image.putalpha(ImageChops.multiply(image.getchannel("A"), ownership))
+    return image
 
 def _hedge(width: int, height: int, kind: str) -> Image.Image:
     source = source_asset("vegetation", "hedge_horizontal")

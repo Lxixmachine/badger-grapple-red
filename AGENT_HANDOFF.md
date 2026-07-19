@@ -4039,3 +4039,28 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   importer compatibility, and the complete release suite passes 171/171.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Ground And Forest Grammar Pass (v22.57)
+
+- Primary stone circulation is no longer accepted as an almost-white field.
+  It uses one cool three-shade ramp with matched cross-cell joints, and the
+  world build now enforces color count, value range, accent coverage, local
+  neighbor contrast, cardinal exclusion, and transition-seam continuity.
+- Forest boundaries no longer depend on freehand multi-cell canopy scale.
+  Twelve original ChatGPT Imagegen deciduous tree modules compile to exact
+  16x32 logical owners, then assemble deterministically into north, south,
+  east, west, core, grove, long-border, and corner stamps.
+- The forest compositor places one tree module per owned column, layers back,
+  side, and trunk-visible front roles, and clips artwork to the same whole-cell
+  masks used by collision and occlusion. Existing map layouts and masks are
+  unchanged; visibly empty cells remain walkable and forested cells remain
+  solid.
+- The generated source board, prompt history, material profile, prepared
+  assets, world atlas, Camp atlas, Map Studio catalog, and runtime all share the
+  same deterministic pipeline. Rejected Imagegen candidates were not accepted
+  by lowering coverage thresholds.
+- The fixed 480x320 capture set covers Camp Randall, Lakeshore, Field House,
+  Bascom, interiors, and battle presentation. Tony's visual verdict remains
+  required to close WP-V2/WP-V4.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

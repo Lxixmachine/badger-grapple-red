@@ -154,17 +154,28 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
   expect(state.project.groundMaterialMetrics.campusPavers.meanLightness).toBeGreaterThanOrEqual(0.86);
   expect(state.project.groundMaterialMetrics.campusPavers.meanSaturation).toBeLessThanOrEqual(0.40);
   expect(state.project.groundMaterialMetrics.primaryStonePath).toMatchObject({
-    uniqueColors: 2,
+    uniqueColors: 3,
     cardinalPixelCount: 0
   });
-  expect(state.project.groundMaterialMetrics.primaryStonePath.meanLightness).toBeGreaterThanOrEqual(0.88);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.meanLightness).toBeGreaterThanOrEqual(0.82);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.meanLightness).toBeLessThanOrEqual(0.88);
   expect(state.project.groundMaterialMetrics.primaryStonePath.meanSaturation).toBeLessThanOrEqual(0.16);
-  expect(state.project.groundMaterialMetrics.primaryStonePath.accentPixelCount).toBeLessThanOrEqual(40);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.accentPixelCount).toBeGreaterThanOrEqual(28);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.accentPixelCount).toBeLessThanOrEqual(56);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.meanNeighborContrast).toBeGreaterThanOrEqual(0.01);
+  expect(state.project.groundMaterialMetrics.primaryStonePath.meanNeighborContrast).toBeLessThanOrEqual(0.06);
   expect(state.project.groundValueContract).toMatchObject({
     grass: {meanLightnessMin: 0.78, meanSaturationMin: 0.44, meanSaturationMax: 0.49},
     mowedGrass: {meanLightnessMin: 0.74, meanSaturationMax: 0.43},
     campusPavers: {meanLightnessMin: 0.86, meanSaturationMax: 0.40},
-    primaryStonePath: {meanLightnessMin: 0.88, meanSaturationMax: 0.16}
+    primaryStonePath: {
+      uniqueColorsMin: 3,
+      meanLightnessMin: 0.82,
+      meanLightnessMax: 0.88,
+      meanSaturationMax: 0.16,
+      meanNeighborContrastMin: 0.01,
+      meanNeighborContrastMax: 0.06
+    }
   });
   expect(state.project.groundHierarchy.contract).toEqual({
     grassVariantCoverageMin: 0.04,
@@ -188,7 +199,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     version: 4,
     profileVersion: 1,
     maxColorsPerMaterial: 4,
-    assetCount: 150,
+    assetCount: 162,
     outputPartialAlphaPixelCount: 0,
     paletteViolationCount: 0
   });

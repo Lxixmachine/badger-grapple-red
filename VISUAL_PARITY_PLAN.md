@@ -143,6 +143,17 @@ Acceptance:
 > buildings or props. Validation now measures spatial neighbor contrast instead
 > of assuming quiet ground must have low saturation: FireRed grass is chromatic
 > but flat, while identity architecture carries the high-contrast edges.
+>
+> v22.57 corrects the remaining path-legibility and forest-scale failures found
+> on the fixed native comparison board. Primary stone circulation now uses a
+> measured three-shade cool ramp with visible matched joints instead of a
+> near-white two-color field; the compiler enforces value, accent coverage, and
+> local neighbor-contrast bounds in addition to transition seams. Forest walls
+> now assemble twelve original Imagegen tree modules on exact 16x32 logical
+> owners: one tree per column, layered back/front/side roles, whole-cell corner
+> clipping, and unchanged collision masks. Freehand multi-cell canopy strips no
+> longer determine runtime forest scale. Tony's WP-V4 eye verdict remains the
+> acceptance authority.
 
 > **REVISED after inspecting v22.4 on screen (D1 confirmed fixed
 > there).** With crisp pixels, the loudest remaining non-FireRed

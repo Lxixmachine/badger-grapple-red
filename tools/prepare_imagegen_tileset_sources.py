@@ -95,6 +95,25 @@ BOARDS = {
             ("forest_corner_outer_sw", (96, 80), "fit", 24),
         ],
     },
+    "forest_modules": {
+        "path": world_reference_source("forestModules"),
+        "columns": 4,
+        "rows": 3,
+        "entries": [
+            ("forest_tree_back_a", (16, 32), "fit", 16),
+            ("forest_tree_back_b", (16, 32), "fit", 16),
+            ("forest_tree_back_c", (16, 32), "fit", 16),
+            ("forest_tree_back_d", (16, 32), "fit", 16),
+            ("forest_tree_front_a", (16, 32), "fit", 16),
+            ("forest_tree_front_b", (16, 32), "fit", 16),
+            ("forest_tree_front_c", (16, 32), "fit", 16),
+            ("forest_tree_front_d", (16, 32), "fit", 16),
+            ("forest_tree_side_a", (16, 32), "fit", 16),
+            ("forest_tree_side_b", (16, 32), "fit", 16),
+            ("forest_tree_side_c", (16, 32), "fit", 16),
+            ("forest_tree_side_d", (16, 32), "fit", 16),
+        ],
+    },
     "architecture": {
         "path": world_reference_source("architecture"),
         "columns": 4,
@@ -675,14 +694,17 @@ def disciplined_paver(source: Image.Image, ramp, material: str) -> Image.Image:
         draw.line((10, 1, 10, 6), fill=seam)
         draw.line((4, 8, 4, 14), fill=seam)
     elif material == "stone":
-        # Broken flagstone joints read as one continuous surface rather than
-        # sixteen-pixel paving squares. Phase transforms vary this silhouette.
+        # Broken flagstone joints cross the cell boundary only as matched
+        # pairs, so every edge and corner variant shares one world-space
+        # rhythm. Dark joint anchors preserve the third shade at native scale.
         draw.line((0, 6, 5, 6), fill=seam)
         draw.line((9, 6, output.width - 1, 6), fill=seam)
         draw.line((4, 12, 11, 12), fill=seam)
         draw.line((6, 1, 6, 5), fill=seam)
         draw.line((9, 7, 9, 11), fill=seam)
         draw.line((3, 13, 3, 14), fill=seam)
+        for x, y in ((0, 6), (5, 6), (9, 6), (15, 6), (4, 12), (11, 12), (6, 1), (6, 5), (9, 7), (9, 11), (3, 13), (3, 14)):
+            draw.point((x, y), fill=_dark)
     else:
         # Concrete is almost flat. Two short marks suggest aggregate without
         # outlining slabs or tracing the gameplay cell.
