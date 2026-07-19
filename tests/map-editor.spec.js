@@ -333,7 +333,18 @@ test('assets place on whole cells and undo restores the prior map', async ({page
   await page.getByRole('tab', {name: 'Stamps'}).click();
   await page.getByRole('combobox', {name: 'Family'}).selectOption('blockers');
   await page.getByRole('button', {name: 'memory garden', exact: true}).click();
-  await clickCell(page, 3, 4);
+  const target = await page.evaluate(() => {
+    const map = window.__badgerMapEditorTest.project().maps.camp_randall;
+    for (let y = 0; y < map.height; y += 1) {
+      for (let x = 0; x < map.width; x += 1) {
+        const assessment = window.__badgerMapEditorTest.placementAt(x, y);
+        if (assessment?.valid) return assessment.origin;
+      }
+    }
+    return null;
+  });
+  expect(target).not.toBeNull();
+  await clickCell(page, target.x, target.y);
 
   await expect.poll(
     async () => (await editorState(page)).project.maps.camp_randall.objects.length,
@@ -341,13 +352,102 @@ test('assets place on whole cells and undo restores the prior map', async ({page
   ).toBe(26);
   let state = await editorState(page);
   const placed = state.project.maps.camp_randall.objects.find(entry => (
-    entry.assetId === 'camp_randall:memory_garden' && entry.x === 3 && entry.y === 4
+    entry.assetId === 'camp_randall:memory_garden' && entry.x === target.x && entry.y === target.y
   ));
-  expect(placed).toMatchObject({x: 3, y: 4, width: 5, height: 3, depthMode: 'row-sliced'});
+  expect(placed).toMatchObject({x: target.x, y: target.y, width: 5, height: 3, depthMode: 'row-sliced'});
   expect(placed.metatiles).toHaveLength(3);
 
   await page.getByRole('button', {name: 'Undo'}).click();
   await expect.poll(async () => (await editorState(page)).project.maps.camp_randall.objects.length).toBe(25);
+  expect(issues).toEqual([]);
+});
+
+test('grid guard previews and rejects overlapping stamp ownership', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  await page.getByRole('tab', {name: 'Stamps'}).click();
+  await page.getByRole('combobox', {name: 'Family'}).selectOption('blockers');
+  await page.getByRole('button', {name: 'memory garden', exact: true}).click();
+  const before = (await editorState(page)).project.maps.camp_randall.objects.length;
+  const canvas = page.locator('#mapCanvas');
+  const box = await canvas.boundingBox();
+  await page.mouse.move(box.x + 3 * 32 + 16, box.y + 4 * 32 + 16);
+  await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest.state().placementAssessment)).toMatchObject({valid: false});
+  await expect(page.locator('#semanticReadout')).toContainText('Blocked');
+  await clickCell(page, 3, 4);
+  expect((await editorState(page)).project.maps.camp_randall.objects).toHaveLength(before);
+  await expect(page.locator('#saveStatus')).toContainText('Placement blocked');
+
+  await page.getByRole('button', {name: 'Toggle behavior overlay'}).click();
+  await expect(page.locator('#behaviorLegend')).toBeVisible();
+  await expect(page.locator('#behaviorLegend')).toContainText('Conflict');
+  expect(issues).toEqual([]);
+});
+
+test('semantic inspector reports the runtime owner and behavior of an exact cell', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  const project = (await editorState(page)).project;
+  const doorOwner = project.maps.camp_randall.objects.find(object => object.door);
+  expect(doorOwner).toBeTruthy();
+  const doorCell = {x: doorOwner.x + doorOwner.door.x, y: doorOwner.y + doorOwner.door.y};
+  await page.getByRole('button', {name: 'Inspect', exact: true}).click();
+  await clickCell(page, doorCell.x, doorCell.y);
+  const state = await editorState(page);
+  expect(state.state.inspectedCell).toEqual(doorCell);
+  await expect(page.locator('#inspectorContent')).toContainText('warp');
+  await expect(page.locator('#inspectorContent')).toContainText(doorOwner.name);
+  await expect(page.locator('#inspectorContent')).toContainText('Yes');
+  expect(issues).toEqual([]);
+});
+
+test('grid guard protects spawn cells and rejects invalid object drags', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  const project = (await editorState(page)).project;
+  const map = project.maps.camp_randall;
+  const blockedTile = project.assets.groundTiles.find(tile => ['solid', 'water'].includes(tile.behavior));
+  expect(blockedTile).toBeTruthy();
+  const beforeTerrain = map.terrain[map.start.y][map.start.x];
+  await page.getByRole('searchbox', {name: 'Search palette'}).fill(blockedTile.name);
+  await page.getByRole('button', {name: blockedTile.name, exact: true}).click();
+  const canvas = page.locator('#mapCanvas');
+  await canvas.hover({position: {x: map.start.x * 32 + 16, y: map.start.y * 32 + 16}});
+  const spawnAssessment = await page.evaluate(() => window.__badgerMapEditorTest.state().placementAssessment);
+  expect(spawnAssessment.valid).toBe(false);
+  expect(spawnAssessment.errors.join(' ')).toContain('spawn');
+  await clickCell(page, map.start.x, map.start.y);
+  expect((await editorState(page)).project.maps.camp_randall.terrain[map.start.y][map.start.x]).toBe(beforeTerrain);
+
+  await page.getByRole('combobox', {name: 'Map'}).selectOption('team_locker_room');
+  await page.getByRole('button', {name: 'Select', exact: true}).click();
+  const lockerMap = (await editorState(page)).project.maps.team_locker_room;
+  const targetOwner = lockerMap.objects.find(entry => entry.id !== 'player_lockers' && entry.width >= 2);
+  expect(targetOwner).toBeTruthy();
+  const box = await page.locator('#mapCanvas').boundingBox();
+  await page.mouse.move(box.x + 2 * 32 + 16, box.y + 1 * 32 + 16);
+  await page.mouse.down();
+  await page.mouse.move(box.x + (targetOwner.x + 1) * 32 + 16, box.y + targetOwner.y * 32 + 16, {steps: 3});
+  await expect.poll(() => page.evaluate(() => window.__badgerMapEditorTest.state().placementAssessment)).toMatchObject({valid: false});
+  await page.mouse.up();
+  const lockers = (await editorState(page)).project.maps.team_locker_room.objects.find(entry => entry.id === 'player_lockers');
+  expect(lockers).toMatchObject({x: 1, y: 1});
+  expect(issues).toEqual([]);
+});
+
+test('validation findings focus their owning map object and cell', async ({page}) => {
+  const issues = runtimeIssues(page);
+  await openEditor(page);
+  await clickCell(page, 5, 9);
+  await page.getByRole('button', {name: 'Clear door'}).click();
+  const finding = page.locator('#validationContent [data-validation-index]').filter({hasText: 'camp_randall.team_building'}).first();
+  await expect(finding).toBeVisible();
+  await page.getByRole('combobox', {name: 'Map'}).selectOption('state_street');
+  await finding.click();
+  const state = await editorState(page);
+  expect(state.state.activeMapId).toBe('camp_randall');
+  expect(state.state.selection).toEqual({kind: 'object', id: 'team_building'});
+  expect(state.state.inspectedCell).toEqual({x: 5, y: 9});
   expect(issues).toEqual([]);
 });
 

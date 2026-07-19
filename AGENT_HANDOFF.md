@@ -4012,3 +4012,30 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   build, both visual capture audits, and all 167 sequential browser tests pass.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Map Studio Grid Guard Pass (v22.56)
+
+- `src/editor/gridAnalysis.js` is now the single cell-level behavior and
+  ownership model for Map Studio validation and editing. Ground, structures,
+  doors, actors, events, connections, spawn/exit roles, passability, and
+  reachability use the same precedence as the Season One runtime.
+- This corrected a real validation mismatch: solid ground is now blocked in
+  the editor reachability graph exactly as it is when rendered and played.
+- Every authoring path preflights its complete target footprint before it
+  mutates project state. Stamps, brushes, fills, metatiles, actors, drags,
+  inspector coordinate edits, collision changes, doors, step events, and
+  duplicates reject invalid ownership without adding an undo entry.
+- The behavior overlay now distinguishes walkable, solid, water, warp,
+  unreachable, and conflicting cells. The standalone Inspect tool pins one
+  exact cell and reports its ground, effective behavior, reachability, runtime
+  role, connection, structure owners/local coordinates, actors, and events.
+- Validation findings are focus controls: selecting one changes maps when
+  necessary, selects its owner, pins the cell, centers the workspace, and opens
+  the phone inspector. Invalid placement ghosts render the real artwork with
+  crossed magenta conflict cells and a concrete rejection reason.
+- `docs/MAP_STUDIO_GRID_GUARD_CONTRACT.md` is the standing authoring contract.
+  `npm run review:map-grid` captures the behavior overlay, rejected overlap,
+  and phone cell inspector. All 23 Map Studio tests pass, including production
+  importer compatibility, and the complete release suite passes 171/171.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

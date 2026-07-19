@@ -1,4 +1,5 @@
 import {cloneProject, createSeedProject, PROJECT_SCHEMA, TERRAIN, validateProject} from './project.js';
+import {analyzeMapGrid, assessPlacement} from './gridAnalysis.js';
 import {MapRenderer} from './renderer.js';
 
 const STORAGE_KEY = 'badger-grapple-map-studio-v4-imagegen-tileset';
@@ -16,6 +17,7 @@ const playtestButton = document.querySelector('#playtestButton');
 const cellReadout = document.querySelector('#cellReadout');
 const modeReadout = document.querySelector('#modeReadout');
 const brushReadout = document.querySelector('#brushReadout');
+const semanticReadout = document.querySelector('#semanticReadout');
 const mapStatus = document.querySelector('#mapStatus');
 const saveStatus = document.querySelector('#saveStatus');
 const zoomValue = document.querySelector('#zoomValue');
@@ -45,6 +47,7 @@ let recentAssets = [...palettePreferences.recents];
 let placingAsset = null;
 let selection = null;
 let hoverCell = null;
+let inspectedCell = null;
 let showGrid = true;
 let showCollision = false;
 let cameraPreview = false;
@@ -53,6 +56,7 @@ let gesture = null;
 let renderFrame = 0;
 let history = [draftSnapshot(project)];
 let historyIndex = 0;
+let validationFocus = [];
 
 const renderer = new MapRenderer(canvas, requestRender);
 
@@ -126,6 +130,54 @@ function activeMap() {
   return project.maps[project.activeMapId];
 }
 
+function objectPlacement(object) {
+  return {
+    kind: 'object',
+    width: object.width,
+    height: object.height,
+    collisionMask: object.collisionMask || object.defaultCollisionMask,
+    door: object.door || object.defaultDoor || null,
+    metatiles: object.metatiles || null
+  };
+}
+
+function palettePlacement(assetRef = placingAsset) {
+  if (!assetRef) return null;
+  if (assetRef.kind === 'groundStamp') {
+    const stamp = (project.assets.groundStamps || []).find(entry => entry.id === assetRef.id);
+    return stamp ? {...stamp, kind: 'groundStamp'} : null;
+  }
+  if (assetRef.kind === 'object') {
+    const asset = project.assets.objects.find(entry => entry.id === assetRef.id);
+    return asset ? objectPlacement(asset) : null;
+  }
+  if (assetRef.kind === 'actor') return {kind: 'actor'};
+  return null;
+}
+
+function placementAssessmentAt(cell, grid = null) {
+  if (!cell) return null;
+  let placement = palettePlacement();
+  const options = {analysis: grid || analyzeMapGrid(project, activeMap())};
+  if (!placement && (mode === 'terrain' || mode === 'fill')) {
+    placement = {kind: 'groundStamp', width: 1, height: 1, cells: [[selectedTerrain]]};
+  } else if (!placement && mode === 'structure' && selectedMetatile) {
+    const tile = metatileById(selectedMetatile);
+    if (tile) {
+      const owner = objectAtCell(cell);
+      placement = {
+        kind: 'object', width: 1, height: 1,
+        collisionMask: [tile.behavior === 'solid' ? '#' : '.'],
+        door: tile.behavior === 'warp' ? {x: 0, y: 0} : null,
+        metatiles: [[tile.id]]
+      };
+      options.ignoreObjectId = owner?.id || null;
+    }
+  }
+  if (!placement) return null;
+  return assessPlacement(project, activeMap(), placement, cell, options);
+}
+
 function currentCamera() {
   const map = activeMap();
   const review = map.cameraReviews?.[0];
@@ -137,19 +189,27 @@ function currentCamera() {
 }
 
 function renderState() {
+  const map = activeMap();
+  const gridAnalysis = analyzeMapGrid(project, map);
   return {
     project,
-    map: activeMap(),
+    map,
     mode,
     selection,
     hoverCell,
+    inspectedCell,
     showGrid,
     showCollision,
     cameraPreview,
     camera: currentCamera(),
     selectedTerrain,
     selectedMetatile,
-    placingAsset
+    placingAsset,
+    gridAnalysis,
+    movingEntry: gesture?.type === 'move' ? {kind: gesture.kind, entry: gesture.entry} : null,
+    placementAssessment: gesture?.type === 'move'
+      ? gesture.assessment || null
+      : placementAssessmentAt(hoverCell, gridAnalysis)
   };
 }
 
@@ -199,6 +259,7 @@ function restoreHistory(index) {
   if (!project.maps[project.activeMapId]) project.activeMapId = Object.keys(project.maps)[0];
   selection = previousSelection;
   if (selection && !selectedEntry()) selection = null;
+  inspectedCell = null;
   placingAsset = null;
   saveDraft(index < history.length - 1 ? 'Undo applied' : 'Redo applied');
   buildMapSelect();
@@ -331,6 +392,7 @@ function clamp(value, minimum, maximum) {
 
 function cursorForMode(value = mode) {
   if (value === 'pan') return 'grab';
+  if (value === 'inspect') return 'help';
   if (value === 'pick') return 'copy';
   if (value === 'erase') return 'not-allowed';
   return value === 'select' || value === 'event' ? 'default' : 'crosshair';
@@ -701,11 +763,100 @@ function selectedEntry() {
   return map.events.find(entry => entry.id === selection.id) || null;
 }
 
+function effectiveCellBehavior(cell) {
+  if (!cell) return 'outside';
+  if (cell.conflicts.some(issue => issue.severity === 'error')) return 'conflict';
+  if (cell.objectCells.some(entry => entry.door)) return 'warp';
+  if (cell.groundBehavior === 'water') return 'water';
+  if (!cell.passable) return 'solid';
+  if (!cell.reachable) return 'unreachable';
+  return 'walkable';
+}
+
+function behaviorBadge(behavior) {
+  return `<span class="behavior-badge ${escapeHtml(behavior)}">${escapeHtml(behavior)}</span>`;
+}
+
+function cellSummary(cell, assessment = null) {
+  if (!cell) return 'Outside map';
+  if (assessment && !assessment.valid) return `Blocked · ${assessment.errors[0]}`;
+  const behavior = effectiveCellBehavior(cell);
+  const owners = cell.objectCells.map(entry => entry.object.name || entry.object.id);
+  const occupants = [...owners, ...cell.actors.map(actor => actor.name || actor.id), ...cell.events.map(event => event.label || event.id)];
+  const ground = (project.assets.groundTiles || []).find(entry => entry.id === cell.terrainId)?.name || friendlyName(cell.terrainId);
+  return `${friendlyName(behavior)} · ${ground}${occupants.length ? ` · ${occupants.join(', ')}` : ''}`;
+}
+
+function updateSemanticReadout(cell = hoverCell) {
+  if (!cell) {
+    semanticReadout.textContent = 'Outside map';
+    return;
+  }
+  const grid = analyzeMapGrid(project, activeMap());
+  semanticReadout.textContent = cellSummary(grid.cellAt(cell.x, cell.y), placementAssessmentAt(cell, grid));
+}
+
+function updateCellInspector(cellPoint) {
+  const map = activeMap();
+  const grid = analyzeMapGrid(project, map);
+  const cell = grid.cellAt(cellPoint.x, cellPoint.y);
+  if (!cell) {
+    inspectedCell = null;
+    updateInspector();
+    return;
+  }
+  const behavior = effectiveCellBehavior(cell);
+  const ground = (project.assets.groundTiles || []).find(entry => entry.id === cell.terrainId);
+  const structureRows = cell.objectCells.map(entry => `
+    <div class="cell-owner">
+      <span>${escapeHtml(entry.object.name || entry.object.id)} · ${entry.localX},${entry.localY} · ${escapeHtml(entry.behavior)}</span>
+      <button data-cell-owner="${escapeHtml(entry.object.id)}">Select</button>
+    </div>`).join('');
+  const actorRows = cell.actors.map(actor => `
+    <div class="cell-owner"><span>${escapeHtml(actor.name || actor.id)} · actor</span><button data-cell-actor="${escapeHtml(actor.id)}">Select</button></div>`).join('');
+  const eventRows = cell.events.map(event => `
+    <div class="cell-owner"><span>${escapeHtml(event.label || event.id)} · event</span><button data-cell-event="${escapeHtml(event.id)}">Select</button></div>`).join('');
+  inspectorContent.innerHTML = `
+    <div class="field-group">
+      <label class="field-label"><span>Cell</span><span class="read-only-value">${cell.x}, ${cell.y}</span></label>
+      <label class="field-label"><span>Behavior</span>${behaviorBadge(behavior)}</label>
+      <label class="field-label"><span>Ground</span><span class="read-only-value">${escapeHtml(ground?.name || friendlyName(cell.terrainId))}</span></label>
+      <label class="field-label"><span>Ground ID</span><span class="read-only-value">${escapeHtml(cell.terrainId || 'none')}</span></label>
+      <label class="field-label"><span>Reachable</span><span class="read-only-value">${cell.reachable ? 'Yes' : 'No'}</span></label>
+      <label class="field-label"><span>Runtime role</span><span class="read-only-value">${cell.critical.length ? escapeHtml(cell.critical.join(', ')) : 'None'}</span></label>
+      <label class="field-label"><span>Connection</span><span class="read-only-value">${cell.connections.length ? cell.connections.map(entry => entry.to).join(', ') : 'None'}</span></label>
+    </div>
+    <div class="field-group">
+      <strong>Grid owners</strong>
+      <div class="cell-owner-list">${structureRows}${actorRows}${eventRows || ''}</div>
+      ${structureRows || actorRows || eventRows ? '' : '<span class="read-only-value">Ground only</span>'}
+    </div>
+    ${cell.conflicts.length ? `<div class="field-group"><strong>Ownership notes</strong>${cell.conflicts.map(issue => `<div class="cell-conflict">${escapeHtml(issue.message)}</div>`).join('')}</div>` : ''}
+    ${map.type === 'exterior' ? connectionsSection(map) : ''}`;
+  inspectorContent.querySelectorAll('[data-cell-owner]').forEach(button => button.addEventListener('click', () => {
+    selection = {kind: 'object', id: button.dataset.cellOwner};
+    updateInspector(); requestRender();
+  }));
+  inspectorContent.querySelectorAll('[data-cell-actor]').forEach(button => button.addEventListener('click', () => {
+    selection = {kind: 'actor', id: button.dataset.cellActor};
+    updateInspector(); requestRender();
+  }));
+  inspectorContent.querySelectorAll('[data-cell-event]').forEach(button => button.addEventListener('click', () => {
+    selection = {kind: 'event', id: button.dataset.cellEvent};
+    updateInspector(); requestRender();
+  }));
+  if (map.type === 'exterior') bindConnectionsSection(map);
+}
+
 function updateInspector() {
   const map = activeMap();
   const entry = selectedEntry();
   deleteButton.disabled = !entry;
   if (!entry) {
+    if (inspectedCell) {
+      updateCellInspector(inspectedCell);
+      return;
+    }
     inspectorContent.innerHTML = `
       <div class="field-group">
         <label class="field-label"><span>Name</span><span class="read-only-value">${escapeHtml(map.name)}</span></label>
@@ -860,6 +1011,7 @@ function updateEventInspector(eventEntry) {
 function bindInspectorFields(kind, entry) {
   inspectorContent.querySelectorAll('[data-field]').forEach(input => input.addEventListener('change', () => {
     const field = input.dataset.field;
+    const previous = entry[field];
     let value = input.type === 'checkbox' ? input.checked : input.value;
     if (input.type === 'number') value = value === '' ? null : Number(value);
     if (field === 'x' || field === 'y') {
@@ -869,6 +1021,28 @@ function bindInspectorFields(kind, entry) {
     }
     if (['condition', 'interior', 'kind', 'text'].includes(field) && value === '') value = null;
     if (field === 'once' && !value) value = null;
+    let assessment = null;
+    if (field === 'x' || field === 'y') {
+      const origin = {x: field === 'x' ? value : entry.x, y: field === 'y' ? value : entry.y};
+      const placement = kind === 'object' ? objectPlacement(entry)
+        : kind === 'actor' ? {kind: 'actor'}
+          : {kind: 'event', eventKind: entry.kind || null};
+      assessment = assessPlacement(project, activeMap(), placement, origin, {
+        ignoreObjectId: kind === 'object' ? entry.id : null,
+        ignoreActorId: kind === 'actor' ? entry.id : null,
+        ignoreEventId: kind === 'event' ? entry.id : null
+      });
+    } else if (kind === 'actor' && field === 'solid' && value) {
+      assessment = assessPlacement(project, activeMap(), {kind: 'actor'}, entry, {ignoreActorId: entry.id});
+    } else if (kind === 'event' && field === 'kind' && value === 'message') {
+      assessment = assessPlacement(project, activeMap(), {kind: 'event', eventKind: 'message'}, entry, {ignoreEventId: entry.id});
+    }
+    if (assessment && !assessment.valid) {
+      if (input.type === 'checkbox') input.checked = Boolean(previous);
+      else input.value = previous ?? '';
+      rejectPlacement(assessment);
+      return;
+    }
     entry[field] = value;
     recordHistory(`${kind} updated`);
   }));
@@ -882,7 +1056,66 @@ function updateValidation() {
     validationContent.innerHTML = '<div class="validation-ok">Grid, footprints, collision, and doors are valid.</div>';
     return;
   }
-  validationContent.innerHTML = `<div class="validation-list">${report.errors.map(message => `<div class="validation-item">${escapeHtml(message)}</div>`).join('')}${report.warnings.map(message => `<div class="validation-item warning">${escapeHtml(message)}</div>`).join('')}</div>`;
+  const messages = [
+    ...report.errors.map(message => ({message, severity: 'error'})),
+    ...report.warnings.map(message => ({message, severity: 'warning'}))
+  ];
+  validationFocus = messages.map(entry => validationLocation(entry.message));
+  validationContent.innerHTML = `<div class="validation-list">${messages.map((entry, index) => `
+    <button class="validation-item ${entry.severity === 'warning' ? 'warning' : ''}" data-validation-index="${index}">${escapeHtml(entry.message)}</button>`).join('')}</div>`;
+  validationContent.querySelectorAll('[data-validation-index]').forEach(button => button.addEventListener('click', () => {
+    focusValidationLocation(validationFocus[Number(button.dataset.validationIndex)]);
+  }));
+}
+
+function validationLocation(message) {
+  const mapId = Object.keys(project.maps).sort((a, b) => b.length - a.length)
+    .find(id => message === id || message.startsWith(`${id}:`) || message.startsWith(`${id}.`));
+  if (!mapId) return null;
+  const map = project.maps[mapId];
+  const token = message.slice(mapId.length + 1).split(':')[0];
+  const object = map.objects.find(entry => entry.id === token);
+  const actor = map.actors.find(entry => entry.id === token);
+  const event = map.events.find(entry => entry.id === token);
+  const coordinateMatch = message.match(/(?:cell|at|is)\s+(\d+),(\d+)/i);
+  let x = coordinateMatch ? Number(coordinateMatch[1]) : null;
+  let y = coordinateMatch ? Number(coordinateMatch[2]) : null;
+  if (object && x !== null && y !== null && x < object.width && y < object.height) {
+    x += object.x;
+    y += object.y;
+  }
+  if (object && (x === null || y === null)) {
+    x = object.x + Math.floor(object.width / 2);
+    y = object.y + Math.floor(object.height / 2);
+  }
+  if (actor && (x === null || y === null)) ({x, y} = actor);
+  if (event && (x === null || y === null)) ({x, y} = event);
+  return {
+    mapId,
+    selection: object ? {kind: 'object', id: object.id}
+      : actor ? {kind: 'actor', id: actor.id}
+        : event ? {kind: 'event', id: event.id} : null,
+    cell: Number.isInteger(x) && Number.isInteger(y) ? {x, y} : null
+  };
+}
+
+function focusValidationLocation(location) {
+  if (!location || !project.maps[location.mapId]) return;
+  project.activeMapId = location.mapId;
+  mapSelect.value = location.mapId;
+  selection = location.selection;
+  inspectedCell = location.cell;
+  placingAsset = null;
+  buildPalette();
+  updateAll();
+  inspectorPanel.classList.add('mobile-open');
+  requestAnimationFrame(() => {
+    if (!location.cell) return;
+    const map = activeMap();
+    const left = location.cell.x * map.cellSize * zoom - workspace.clientWidth / 2;
+    const top = location.cell.y * map.cellSize * zoom - workspace.clientHeight / 2;
+    workspace.scrollTo({left: Math.max(0, left), top: Math.max(0, top), behavior: 'smooth'});
+  });
 }
 
 function updateAll() {
@@ -908,7 +1141,16 @@ function cellFromClient(clientX, clientY) {
 }
 
 function setTerrain(cell, material) {
-  activeMap().terrain[cell.y][cell.x] = material;
+  const map = activeMap();
+  const assessment = assessPlacement(project, map, {
+    kind: 'groundStamp', width: 1, height: 1, cells: [[material]]
+  }, cell);
+  if (!assessment.valid) {
+    rejectPlacement(assessment);
+    return false;
+  }
+  map.terrain[cell.y][cell.x] = material;
+  return true;
 }
 
 function fillTerrain(cell, material) {
@@ -925,12 +1167,25 @@ function fillTerrain(cell, material) {
     const key = `${current.x},${current.y}`;
     if (visited.has(key) || map.terrain[current.y]?.[current.x] !== target) continue;
     visited.add(key);
-    map.terrain[current.y][current.x] = material;
     for (const [dx, dy] of [[0, -1], [1, 0], [0, 1], [-1, 0]]) {
       const x = current.x + dx;
       const y = current.y + dy;
       if (x >= 0 && y >= 0 && x < map.width && y < map.height) pending.push({x, y});
     }
+  }
+  for (const key of visited) {
+    const [x, y] = key.split(',').map(Number);
+    const assessment = assessPlacement(project, map, {
+      kind: 'groundStamp', width: 1, height: 1, cells: [[material]]
+    }, {x, y});
+    if (!assessment.valid) {
+      rejectPlacement(assessment);
+      return;
+    }
+  }
+  for (const key of visited) {
+    const [x, y] = key.split(',').map(Number);
+    map.terrain[y][x] = material;
   }
   recordHistory(`${visited.size} ground cells filled`);
 }
@@ -1050,6 +1305,16 @@ function paintStructureMetatile(cell, tileId) {
   const tile = metatileById(tileId);
   if (!tile || activeMap().renderModel !== 'metatile') return;
   let object = objectAtCell(cell);
+  const assessment = assessPlacement(project, activeMap(), {
+    kind: 'object', width: 1, height: 1,
+    collisionMask: [tile.behavior === 'solid' ? '#' : '.'],
+    door: tile.behavior === 'warp' ? {x: 0, y: 0} : null,
+    metatiles: [[tileId]]
+  }, cell, {ignoreObjectId: object?.id || null});
+  if (!assessment.valid) {
+    rejectPlacement(assessment);
+    return false;
+  }
   if (!object) {
     object = {
       id: uniqueId('metatile_patch', activeMap().objects),
@@ -1078,23 +1343,48 @@ function paintStructureMetatile(cell, tileId) {
   const localY = cell.y - object.y;
   applyMetatileBehavior(object, localX, localY, tileId);
   selection = {kind: 'object', id: object.id};
+  return true;
 }
 
 function toggleCollisionCell(object, localX, localY, marker = null) {
   if (localX < 0 || localY < 0 || localX >= object.width || localY >= object.height) return;
   if (object.door?.x === localX && object.door?.y === localY) return;
   const next = marker || (object.collisionMask[localY][localX] === '#' ? '.' : '#');
+  if (next === '#') {
+    const tileId = object.metatiles?.[localY]?.[localX];
+    const solidTileId = tileId ? behaviorVariant(tileId, 'solid') : null;
+    const assessment = assessPlacement(project, activeMap(), {
+      kind: 'object', width: 1, height: 1, collisionMask: ['#'], door: null,
+      metatiles: solidTileId ? [[solidTileId]] : null
+    }, {x: object.x + localX, y: object.y + localY}, {ignoreObjectId: object.id});
+    if (!assessment.valid) {
+      rejectPlacement(assessment);
+      return false;
+    }
+  }
   setMaskMarker(object, localX, localY, next);
   const tileId = object.metatiles?.[localY]?.[localX];
   if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, next === '#' ? 'solid' : 'walkable');
+  return true;
+}
+
+function rejectPlacement(assessment) {
+  saveStatus.textContent = `Placement blocked: ${assessment.errors[0]}`;
+  semanticReadout.textContent = `Blocked · ${assessment.errors[0]}`;
+  requestRender();
 }
 
 function applyGroundStamp(stampId, cell) {
   const map = activeMap();
   const stamp = (project.assets.groundStamps || []).find(entry => entry.id === stampId);
   if (!stamp || map.renderModel !== 'metatile') return;
-  const originX = clamp(cell.x, 0, map.width - stamp.width);
-  const originY = clamp(cell.y, 0, map.height - stamp.height);
+  const assessment = assessPlacement(project, map, {...stamp, kind: 'groundStamp'}, cell);
+  if (!assessment.valid) {
+    rejectPlacement(assessment);
+    return;
+  }
+  const originX = assessment.origin.x;
+  const originY = assessment.origin.y;
   for (let y = 0; y < stamp.height; y += 1) {
     for (let x = 0; x < stamp.width; x += 1) {
       const tileId = stamp.cells[y][x];
@@ -1110,13 +1400,18 @@ function addObject(assetId, cell) {
   const map = activeMap();
   const asset = project.assets.objects.find(entry => entry.id === assetId);
   if (!asset) return;
+  const assessment = assessPlacement(project, map, objectPlacement(asset), cell);
+  if (!assessment.valid) {
+    rejectPlacement(assessment);
+    return;
+  }
   const object = {
     id: uniqueId(asset.sourceId, map.objects),
     assetId: asset.id,
     sourceKind: asset.sourceKind || null,
     name: asset.name,
-    x: clamp(cell.x, 0, map.width - asset.width),
-    y: clamp(cell.y, 0, map.height - asset.height),
+    x: assessment.origin.x,
+    y: assessment.origin.y,
     width: asset.width,
     height: asset.height,
     depthMode: 'row-sliced',
@@ -1137,6 +1432,11 @@ function addActor(assetId, cell) {
   const map = activeMap();
   const asset = project.assets.actors.find(entry => entry.id === assetId);
   if (!asset) return;
+  const assessment = assessPlacement(project, map, {kind: 'actor'}, cell);
+  if (!assessment.valid) {
+    rejectPlacement(assessment);
+    return;
+  }
   const actor = {
     id: uniqueId(asset.sourceId, map.actors),
     assetId: asset.id,
@@ -1155,15 +1455,37 @@ function addActor(assetId, cell) {
   recordHistory('Actor placed');
 }
 
+function nearestValidPlacement(placement, preferred) {
+  const map = activeMap();
+  const candidates = [];
+  for (let y = 0; y < map.height; y += 1) {
+    for (let x = 0; x < map.width; x += 1) {
+      candidates.push({x, y, distance: Math.abs(x - preferred.x) + Math.abs(y - preferred.y)});
+    }
+  }
+  candidates.sort((first, second) => first.distance - second.distance || first.y - second.y || first.x - second.x);
+  for (const candidate of candidates) {
+    const assessment = assessPlacement(project, map, placement, candidate);
+    if (assessment.valid) return assessment;
+  }
+  return null;
+}
+
 function duplicateSelection() {
   const entry = selectedEntry();
   if (!entry || selection.kind === 'event') return;
   const map = activeMap();
   const collection = selection.kind === 'object' ? map.objects : map.actors;
   const copy = cloneProject(entry);
+  const placement = selection.kind === 'object' ? objectPlacement(copy) : {kind: 'actor'};
+  const assessment = nearestValidPlacement(placement, {x: entry.x + 1, y: entry.y + 1});
+  if (!assessment) {
+    saveStatus.textContent = 'Duplicate blocked: no unowned grid footprint is available';
+    return;
+  }
   copy.id = uniqueId(entry.id, collection);
-  copy.x = clamp(entry.x + 1, 0, map.width - (entry.width || 1));
-  copy.y = clamp(entry.y + 1, 0, map.height - (entry.height || 1));
+  copy.x = assessment.origin.x;
+  copy.y = assessment.origin.y;
   collection.push(copy);
   selection = {kind: selection.kind, id: copy.id};
   recordHistory('Selection duplicated');
@@ -1192,7 +1514,11 @@ function startDrag(hit, cell, pointerId) {
     entry,
     kind: hit.kind,
     offsetX: cell.x - entry.x,
-    offsetY: cell.y - entry.y
+    offsetY: cell.y - entry.y,
+    startX: entry.x,
+    startY: entry.y,
+    changed: false,
+    assessment: null
   };
   updateInspector();
   requestRender();
@@ -1237,8 +1563,29 @@ function moveGesture(cell) {
   if (gesture.type !== 'move') return;
   const extentX = gesture.kind === 'object' ? gesture.entry.width : 1;
   const extentY = gesture.kind === 'object' ? gesture.entry.height : 1;
-  gesture.entry.x = clamp(cell.x - gesture.offsetX, 0, map.width - extentX);
-  gesture.entry.y = clamp(cell.y - gesture.offsetY, 0, map.height - extentY);
+  const candidate = {
+    x: clamp(cell.x - gesture.offsetX, 0, map.width - extentX),
+    y: clamp(cell.y - gesture.offsetY, 0, map.height - extentY)
+  };
+  const placement = gesture.kind === 'object'
+    ? objectPlacement(gesture.entry)
+    : gesture.kind === 'actor'
+      ? {kind: 'actor'}
+      : {kind: 'event', eventKind: gesture.entry.kind || null};
+  const assessment = assessPlacement(project, map, placement, candidate, {
+    ignoreObjectId: gesture.kind === 'object' ? gesture.entry.id : null,
+    ignoreActorId: gesture.kind === 'actor' ? gesture.entry.id : null,
+    ignoreEventId: gesture.kind === 'event' ? gesture.entry.id : null
+  });
+  gesture.assessment = assessment;
+  if (!assessment.valid) {
+    semanticReadout.textContent = `Blocked · ${assessment.errors[0]}`;
+    requestRender();
+    return;
+  }
+  gesture.entry.x = assessment.origin.x;
+  gesture.entry.y = assessment.origin.y;
+  gesture.changed = gesture.changed || gesture.entry.x !== gesture.startX || gesture.entry.y !== gesture.startY;
   requestRender();
 }
 
@@ -1271,7 +1618,15 @@ canvas.addEventListener('pointerdown', event => {
   }
   const cell = cellFromClient(event.clientX, event.clientY);
   if (!cell) return;
+  inspectedCell = cell;
   canvas.focus();
+  if (mode === 'inspect') {
+    selection = null;
+    updateInspector();
+    inspectorPanel.classList.add('mobile-open');
+    requestRender();
+    return;
+  }
   if (mode === 'pick') {
     pickAt(cell);
     return;
@@ -1327,6 +1682,16 @@ canvas.addEventListener('pointerdown', event => {
       if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, 'walkable');
       object.door = null;
     } else {
+      const tileId = object.metatiles?.[localY]?.[localX];
+      const warpTileId = tileId ? behaviorVariant(tileId, 'warp') : null;
+      const assessment = assessPlacement(project, activeMap(), {
+        kind: 'object', width: 1, height: 1, collisionMask: ['.'], door: {x: 0, y: 0},
+        metatiles: warpTileId ? [[warpTileId]] : null
+      }, cell, {ignoreObjectId: object.id});
+      if (!assessment.valid) {
+        rejectPlacement(assessment);
+        return;
+      }
       if (object.door) {
         const previous = object.door;
         const previousId = object.metatiles?.[previous.y]?.[previous.x];
@@ -1334,7 +1699,6 @@ canvas.addEventListener('pointerdown', event => {
       }
       setMaskMarker(object, localX, localY, '.');
       object.door = {x: localX, y: localY};
-      const tileId = object.metatiles?.[localY]?.[localX];
       if (tileId) object.metatiles[localY][localX] = behaviorVariant(tileId, 'warp');
     }
     recordHistory(same ? 'Door cleared' : 'Door placed');
@@ -1379,6 +1743,7 @@ canvas.addEventListener('pointermove', event => {
   const cell = cellFromClient(event.clientX, event.clientY);
   hoverCell = cell;
   cellReadout.textContent = cell ? `Cell ${cell.x},${cell.y}` : 'Cell --,--';
+  updateSemanticReadout(cell);
   if (gesture && cell) moveGesture(cell);
   requestRender();
 });
@@ -1387,6 +1752,7 @@ canvas.addEventListener('pointerleave', () => {
   if (!gesture) {
     hoverCell = null;
     cellReadout.textContent = 'Cell --,--';
+    semanticReadout.textContent = 'Outside map';
     requestRender();
   }
 });
@@ -1396,6 +1762,14 @@ function finishGesture(event) {
   if (gesture.type === 'pan') {
     gesture = null;
     canvas.style.cursor = cursorForMode();
+    return;
+  }
+  if (gesture.type === 'move' && !gesture.changed) {
+    const blocked = gesture.assessment && !gesture.assessment.valid;
+    gesture = null;
+    if (!blocked) saveStatus.textContent = 'Selection unchanged';
+    updateSemanticReadout();
+    requestRender();
     return;
   }
   const label = gesture.type === 'paint-terrain' ? 'Terrain painted'
@@ -1434,6 +1808,7 @@ mapSelect.addEventListener('change', () => {
   project.activeMapId = mapSelect.value;
   history[historyIndex] = draftSnapshot(project);
   selection = null;
+  inspectedCell = null;
   placingAsset = null;
   workspace.scrollTo({left: 0, top: 0});
   saveDraft('Map changed');
@@ -1470,7 +1845,10 @@ document.querySelector('#gridButton').addEventListener('click', event => {
   showGrid = !showGrid; event.currentTarget.classList.toggle('active', showGrid); requestRender();
 });
 document.querySelector('#collisionButton').addEventListener('click', event => {
-  showCollision = !showCollision; event.currentTarget.classList.toggle('active', showCollision); requestRender();
+  showCollision = !showCollision;
+  event.currentTarget.classList.toggle('active', showCollision);
+  document.querySelector('#behaviorLegend').hidden = !showCollision;
+  requestRender();
 });
 document.querySelector('#cameraButton').addEventListener('click', event => {
   cameraPreview = !cameraPreview; event.currentTarget.classList.toggle('active', cameraPreview); requestRender();
@@ -1519,6 +1897,7 @@ document.querySelector('#resetButton').addEventListener('click', () => {
   history = [draftSnapshot(project)];
   historyIndex = 0;
   selection = null;
+  inspectedCell = null;
   placingAsset = null;
   localStorage.removeItem(STORAGE_KEY);
   saveDraft('Draft reset to production seed');
@@ -1538,6 +1917,7 @@ fileInput.addEventListener('change', async () => {
     history = [draftSnapshot(project)];
     historyIndex = 0;
     selection = null;
+    inspectedCell = null;
     placingAsset = null;
     saveDraft(`Imported ${file.name}`);
     buildMapSelect();
@@ -1561,7 +1941,7 @@ window.addEventListener('keydown', event => {
   if ((event.key === 'Delete' || event.key === 'Backspace') && document.activeElement === canvas) {
     event.preventDefault(); deleteSelection(); return;
   }
-  const toolKeys = {h: 'pan', v: 'select', i: 'pick', t: 'terrain', f: 'fill', x: 'erase', s: 'structure', c: 'collision', d: 'door', e: 'event'};
+  const toolKeys = {h: 'pan', g: 'inspect', v: 'select', i: 'pick', t: 'terrain', f: 'fill', x: 'erase', s: 'structure', c: 'collision', d: 'door', e: 'event'};
   if (document.activeElement === canvas && toolKeys[event.key.toLowerCase()]) setMode(toolKeys[event.key.toLowerCase()]);
 });
 
@@ -1572,18 +1952,33 @@ updateAll();
 
 window.__badgerMapEditorTest = {
   project: () => cloneProject(project),
-  state: () => ({
-    activeMapId: project.activeMapId,
-    mode,
-    selection: selection ? {...selection} : null,
-    showGrid,
-    showCollision,
-    cameraPreview,
-    zoom,
-    selectedTerrain,
-    selectedMetatile,
-    paletteQuery,
-    favoriteOnly,
-    validation: validateProject(project)
-  })
+  placementAt: (x, y) => {
+    const assessment = placementAssessmentAt({x, y});
+    return assessment ? cloneProject(assessment) : null;
+  },
+  state: () => {
+    const grid = analyzeMapGrid(project, activeMap());
+    const assessment = gesture?.type === 'move' ? gesture.assessment : placementAssessmentAt(hoverCell, grid);
+    return {
+      activeMapId: project.activeMapId,
+      mode,
+      selection: selection ? {...selection} : null,
+      inspectedCell: inspectedCell ? {...inspectedCell} : null,
+      showGrid,
+      showCollision,
+      cameraPreview,
+      zoom,
+      selectedTerrain,
+      selectedMetatile,
+      paletteQuery,
+      favoriteOnly,
+      grid: {
+        conflictCount: grid.conflicts.length,
+        reachableCount: grid.reachable.size,
+        hover: hoverCell ? cloneProject(grid.cellAt(hoverCell.x, hoverCell.y)) : null
+      },
+      placementAssessment: assessment ? cloneProject(assessment) : null,
+      validation: validateProject(project)
+    };
+  }
 };

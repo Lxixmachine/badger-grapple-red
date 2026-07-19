@@ -2,6 +2,7 @@ import layouts from '../data/seasonOneLayouts.json';
 import production from '../data/campRandallProductionBuild.json';
 import metatileBuild from '../data/campRandallMetatileBuild.json';
 import {mapPolish} from '../data/seasonOneMapPolish.js';
+import {analyzeMapGrid, inMapBounds} from './gridAnalysis.js';
 
 export const PROJECT_SCHEMA = 'badger-grapple-map-pack/v2';
 export const TERRAIN = {
@@ -882,7 +883,6 @@ export function validateProject(project) {
   if (project.schema !== PROJECT_SCHEMA) errors.push(`Unsupported schema: ${project.schema || 'missing'}`);
   const metatileLibrary = new Map((project.assets?.metatiles || []).map(tile => [tile.id, tile]));
   const groundLibrary = new Set((project.assets?.groundTiles || []).map(tile => tile.id));
-  const groundBehavior = new Map((project.assets?.groundTiles || []).map(tile => [tile.id, tile.behavior]));
   for (const [mapId, map] of Object.entries(project.maps || {})) {
     if (!Number.isInteger(map.width) || !Number.isInteger(map.height) || map.width < 1 || map.height < 1) {
       errors.push(`${mapId}: invalid map dimensions`);
@@ -1000,37 +1000,16 @@ export function validateProject(project) {
       }
     }
 
-    const inBounds = (x, y) => Number.isInteger(x) && Number.isInteger(y)
-      && x >= 0 && y >= 0 && x < map.width && y < map.height;
-    const blockedByObject = (x, y) => (map.objects || []).some(object => {
-      if (x < object.x || y < object.y || x >= object.x + object.width || y >= object.y + object.height) return false;
-      return object.collisionMask?.[y - object.y]?.[x - object.x] === '#';
-    });
-    const inWaterRoute = (x, y) => (map.waterRoutes || []).some(route => x >= route.x && y >= route.y
-      && x < route.x + route.width && y < route.y + route.height);
-    const passable = (x, y) => inBounds(x, y)
-      && (groundBehavior.get(map.terrain?.[y]?.[x]) !== 'water' || inWaterRoute(x, y))
-      && !blockedByObject(x, y);
-    const requestedStart = map.start || (map.exit
-      ? {x: map.exit.x, y: Math.max(0, map.exit.y - 1)}
-      : {x: Math.floor(map.width / 2), y: Math.max(0, map.height - 2)});
-    const reachable = new Set();
-    if (passable(requestedStart.x, requestedStart.y)) {
-      reachable.add(`${requestedStart.x},${requestedStart.y}`);
-      const queue = [[requestedStart.x, requestedStart.y]];
-      while (queue.length) {
-        const [x, y] = queue.shift();
-        for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
-          const nx = x + dx;
-          const ny = y + dy;
-          const key = `${nx},${ny}`;
-          if (reachable.has(key) || !passable(nx, ny)) continue;
-          reachable.add(key);
-          queue.push([nx, ny]);
-        }
-      }
-    } else {
+    const grid = analyzeMapGrid(project, map);
+    const inBounds = (x, y) => inMapBounds(map, x, y);
+    const passable = (x, y) => Boolean(grid.cellAt(x, y)?.passable);
+    const requestedStart = grid.requestedStart;
+    const reachable = grid.reachable;
+    if (!passable(requestedStart.x, requestedStart.y)) {
       errors.push(`${mapId}: live spawn cell ${requestedStart.x},${requestedStart.y} is blocked`);
+    }
+    for (const issue of grid.conflicts.filter(entry => entry.severity === 'error')) {
+      errors.push(`${mapId}: ${issue.message}`);
     }
     const reachableOrAdjacent = (x, y) => reachable.has(`${x},${y}`)
       || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => reachable.has(`${x + dx},${y + dy}`));

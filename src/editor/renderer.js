@@ -91,7 +91,7 @@ export class MapRenderer {
 
     if (clean) return;
     this.drawMarkers(state);
-    if (state.showCollision) this.drawCollision(map, cell, project);
+    if (state.showCollision) this.drawCollision(map, cell, state.gridAnalysis);
     if (state.showGrid) this.drawGrid(map, cell);
     this.drawSelection(state, cell);
     this.drawPlacementPreview(state, cell);
@@ -245,30 +245,41 @@ export class MapRenderer {
     }
   }
 
-  drawCollision(map, cell, project) {
+  drawCollision(map, cell, analysis) {
     const context = this.context;
-    const groundBehaviors = new Map((project.assets.groundTiles || []).map(tile => [tile.id, tile.behavior]));
-    for (let y = 0; y < map.height; y += 1) {
-      for (let x = 0; x < map.width; x += 1) {
-        const behavior = groundBehaviors.get(map.terrain[y]?.[x]);
-        if (!['solid', 'water'].includes(behavior)) continue;
-        context.fillStyle = behavior === 'water' ? 'rgba(45, 121, 190, .38)' : 'rgba(208, 43, 57, .34)';
-        context.fillRect(x * cell, y * cell, cell, cell);
-      }
-    }
-    for (const object of map.objects) {
-      for (let y = 0; y < object.height; y += 1) {
-        for (let x = 0; x < object.width; x += 1) {
-          if (object.collisionMask[y]?.[x] !== '#') continue;
-          context.fillStyle = 'rgba(208, 43, 57, .34)';
-          context.fillRect((object.x + x) * cell, (object.y + y) * cell, cell, cell);
+    if (!analysis) return;
+    for (const row of analysis.cells) {
+      for (const entry of row) {
+        const door = entry.objectCells.some(owner => owner.door);
+        const conflict = entry.conflicts.some(issue => issue.severity === 'error');
+        const solid = !entry.passable && entry.groundBehavior !== 'water';
+        const water = entry.groundBehavior === 'water';
+        const unreachable = entry.passable && !entry.reachable;
+        context.fillStyle = conflict
+          ? 'rgba(199, 48, 166, .48)'
+          : door ? 'rgba(67, 198, 112, .4)'
+            : water ? 'rgba(45, 121, 190, .38)'
+              : solid ? 'rgba(208, 43, 57, .34)'
+                : unreachable ? 'rgba(113, 72, 151, .3)'
+                  : 'rgba(67, 166, 106, .06)';
+        context.fillRect(entry.x * cell, entry.y * cell, cell, cell);
+        context.strokeStyle = conflict
+          ? '#ff75db'
+          : door ? '#9df2bb'
+            : water ? '#69bfe8'
+              : solid ? '#ec6a76'
+                : unreachable ? '#bc91e5' : 'rgba(97, 201, 134, .28)';
+        context.lineWidth = conflict || door ? 2 : 1;
+        context.strokeRect(entry.x * cell + 1, entry.y * cell + 1, cell - 2, cell - 2);
+        if (conflict) {
+          context.beginPath();
+          context.moveTo(entry.x * cell + 5, entry.y * cell + 5);
+          context.lineTo((entry.x + 1) * cell - 5, (entry.y + 1) * cell - 5);
+          context.moveTo((entry.x + 1) * cell - 5, entry.y * cell + 5);
+          context.lineTo(entry.x * cell + 5, (entry.y + 1) * cell - 5);
+          context.stroke();
         }
       }
-    }
-    for (const actor of map.actors) {
-      if (!actor.solid) continue;
-      context.fillStyle = 'rgba(208, 43, 57, .3)';
-      context.fillRect(actor.x * cell, actor.y * cell, cell, cell);
     }
   }
 
@@ -306,46 +317,70 @@ export class MapRenderer {
   }
 
   drawPlacementPreview(state, cell) {
-    const {placingAsset, hoverCell, map, project} = state;
-    if (!placingAsset || !hoverCell) return;
+    const {placingAsset, movingEntry, placementAssessment, map, project} = state;
+    if (!placementAssessment) return;
     const context = this.context;
-    const drawCell = (x, y, solid = false, door = false) => {
-      context.fillStyle = door
-        ? 'rgba(67, 198, 112, .44)'
-        : solid ? 'rgba(208, 43, 57, .34)' : 'rgba(255, 226, 124, .28)';
-      context.fillRect(x * cell + 2, y * cell + 2, cell - 4, cell - 4);
-      context.strokeStyle = door ? '#9df2bb' : solid ? '#e96876' : '#ffe27c';
+    this.drawPlacementArtwork(state, cell);
+    const drawCell = entry => {
+      const blocked = entry.blocked;
+      const door = entry.role === 'warp';
+      const solid = entry.role === 'solid';
+      const water = entry.role === 'water';
+      context.fillStyle = blocked
+        ? 'rgba(199, 48, 166, .5)'
+        : door ? 'rgba(67, 198, 112, .44)'
+          : solid ? 'rgba(208, 43, 57, .34)'
+            : water ? 'rgba(45, 121, 190, .36)' : 'rgba(255, 226, 124, .24)';
+      context.fillRect(entry.x * cell + 2, entry.y * cell + 2, cell - 4, cell - 4);
+      context.strokeStyle = blocked ? '#ff75db' : door ? '#9df2bb' : solid ? '#e96876' : water ? '#69bfe8' : '#ffe27c';
       context.lineWidth = 2;
-      context.strokeRect(x * cell + 2, y * cell + 2, cell - 4, cell - 4);
-    };
-    if (placingAsset.kind === 'groundStamp') {
-      const stamp = (project.assets.groundStamps || []).find(entry => entry.id === placingAsset.id);
-      if (!stamp) return;
-      const originX = Math.max(0, Math.min(hoverCell.x, map.width - stamp.width));
-      const originY = Math.max(0, Math.min(hoverCell.y, map.height - stamp.height));
-      stamp.cells.forEach((row, y) => row.forEach((tileId, x) => {
-        if (tileId) drawCell(originX + x, originY + y);
-      }));
-      return;
-    }
-    if (placingAsset.kind === 'object') {
-      const asset = project.assets.objects.find(entry => entry.id === placingAsset.id);
-      if (!asset) return;
-      const originX = Math.max(0, Math.min(hoverCell.x, map.width - asset.width));
-      const originY = Math.max(0, Math.min(hoverCell.y, map.height - asset.height));
-      for (let y = 0; y < asset.height; y += 1) {
-        for (let x = 0; x < asset.width; x += 1) {
-          drawCell(
-            originX + x,
-            originY + y,
-            asset.defaultCollisionMask?.[y]?.[x] === '#',
-            asset.defaultDoor?.x === x && asset.defaultDoor?.y === y
-          );
-        }
+      context.strokeRect(entry.x * cell + 2, entry.y * cell + 2, cell - 4, cell - 4);
+      if (blocked) {
+        context.beginPath();
+        context.moveTo(entry.x * cell + 6, entry.y * cell + 6);
+        context.lineTo((entry.x + 1) * cell - 6, (entry.y + 1) * cell - 6);
+        context.moveTo((entry.x + 1) * cell - 6, entry.y * cell + 6);
+        context.lineTo(entry.x * cell + 6, (entry.y + 1) * cell - 6);
+        context.stroke();
       }
-      return;
+    };
+    placementAssessment.cells.forEach(drawCell);
+  }
+
+  drawPlacementArtwork(state, cell) {
+    const {placingAsset, movingEntry, placementAssessment, map, project} = state;
+    if (!placementAssessment || movingEntry) return;
+    const context = this.context;
+    const atlas = map.metatileAtlas?.path ? this.image(map.metatileAtlas.path) : null;
+    const tileLookup = new Map((project.assets.metatiles || []).map(tile => [tile.id, tile]));
+    const groundLookup = new Map((project.assets.groundTiles || []).map(tile => [tile.id, tile]));
+    context.save();
+    context.globalAlpha = .58;
+    if (placingAsset?.kind === 'groundStamp' && atlas?.complete) {
+      const stamp = (project.assets.groundStamps || []).find(entry => entry.id === placingAsset.id);
+      stamp?.cells.forEach((row, y) => row.forEach((tileId, x) => {
+        const tile = groundLookup.get(tileId);
+        if (tileId && tile) this.drawAtlasVisual(atlas, map.metatileAtlas.columns, cell, tile.visual, (placementAssessment.origin.x + x) * cell, (placementAssessment.origin.y + y) * cell);
+      }));
+    } else if (placingAsset?.kind === 'object') {
+      const asset = project.assets.objects.find(entry => entry.id === placingAsset.id);
+      if (asset?.metatiles && atlas?.complete) {
+        asset.metatiles.forEach((row, y) => row.forEach((tileId, x) => {
+          const tile = tileLookup.get(tileId);
+          if (tile) this.drawAtlasVisual(atlas, map.metatileAtlas.columns, cell, tile.visual, (placementAssessment.origin.x + x) * cell, (placementAssessment.origin.y + y) * cell);
+        }));
+      } else if (asset?.path) {
+        const image = this.image(asset.path);
+        if (image.complete && image.naturalWidth) context.drawImage(image, placementAssessment.origin.x * cell, placementAssessment.origin.y * cell, asset.width * cell, asset.height * cell);
+      }
+    } else if (placingAsset?.kind === 'actor') {
+      const asset = project.assets.actors.find(entry => entry.id === placingAsset.id);
+      const image = asset?.path ? this.image(asset.path) : null;
+      if (asset && image?.complete && image.naturalWidth) {
+        context.drawImage(image, asset.frameWidth, 0, asset.frameWidth, asset.frameHeight, placementAssessment.origin.x * cell, (placementAssessment.origin.y - 1) * cell, asset.frameWidth, asset.frameHeight);
+      }
     }
-    drawCell(hoverCell.x, hoverCell.y, true);
+    context.restore();
   }
 
   drawCameraPreview(state, cell) {

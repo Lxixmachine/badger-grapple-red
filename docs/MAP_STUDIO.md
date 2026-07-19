@@ -65,37 +65,50 @@ connections, camera reviews, and exits use the same authoritative cells as the
 region plan. Final town-specific art can replace these blockout stamps without
 changing map geometry or behavior.
 
+Grid Guard compiles terrain, structure cells, doors, actors, events,
+connections, spawns, and exits into the same cell-level behavior model used by
+validation. Placement ghosts show the real stamp artwork and behavior footprint
+before an edit lands. Stamps, brushes, fills, collision edits, doors, inspector
+coordinates, duplicates, and drag moves reject hidden ownership conflicts
+without changing the project or undo history.
+
 ## Editing Workflow
 
 1. Choose a map. On a phone, **Pan** is selected automatically; drag the map to
    change the visible area. On desktop, **Pan** or middle-mouse drag does the
    same without editing the map.
-2. Use **Tiles** to choose a surface. Ready-made path and area assemblies appear
+2. Use **Inspect** to pin one exact cell. The inspector reports the runtime
+   behavior, reachability, ground tile, structure owner and local coordinates,
+   doors, actors, events, connections, spawn/exit role, and conflicts.
+3. Use **Tiles** to choose a surface. Ready-made path and area assemblies appear
    immediately below the surfaces; select or drag one to stamp its exact tile
    matrix. Transparent assembly cells leave the existing ground unchanged.
-3. Search by material, shape, building, or prop name. Star recurring assets;
+4. Search by material, shape, building, or prop name. Star recurring assets;
    starred and recently used entries sort first, and the star filter hides the
    rest of the catalog.
-4. Open **Individual transitions** only for one-cell edge or corner repair.
+5. Open **Individual transitions** only for one-cell edge or corner repair.
    Open **Advanced structure cells** only for exact building-cell repair. Normal
    structure work belongs under **Stamps**, where trees, props, architecture
    modules, and complete buildings retain coherent footprints.
-5. Use **Pick** to sample an existing ground or structure cell, **Fill** to
+6. Use **Pick** to sample an existing ground or structure cell, **Fill** to
    replace one connected ground region, and **Erase** to restore authored ground
    or remove a placed object. All three operate on explicit grid ownership.
-6. Use **Actors**, then tap the map or drag an actor onto it.
-7. Use **Select** to move an existing stamp. Placement always snaps to cells.
-8. Select a stamp, then use **Collision** to change the behavior variant of a
+7. Use **Actors**, then tap the map or drag an actor onto it.
+8. Use **Select** to move an existing stamp. Placement always snaps to cells.
+9. Select a stamp, then use **Collision** to change the behavior variant of a
    metatile inside its locked footprint.
-9. Use **Door** to assign one exact warp metatile. A door is automatically
+10. Use **Door** to assign one exact warp metatile. A door is automatically
    cleared from collision.
-10. Use **Events** to move an event or create one on an empty cell.
-11. Use **Camera** to position the 15x10 review window.
-12. Use **Playtest** to open the same compiled metatiles in the 32px Phaser
+11. Use **Events** to move an event or create one on an empty cell.
+12. Toggle the **C** overlay to review walkable, solid, water, door, unreachable,
+    and conflicting cells across the complete map.
+13. Use **Camera** to position the 15x10 review window.
+14. Use **Playtest** to open the same compiled metatiles in the 32px Phaser
     runtime.
-13. Keep Validation at zero errors. Warnings identify newly solid cells whose
-   visible art still needs coverage review.
-14. Export a clean review PNG and the validated JSON map pack.
+15. Keep Validation at zero errors. Select any finding to focus its map, owner,
+    and cell. Warnings identify newly solid cells whose visible art still needs
+    coverage review.
+16. Export a clean review PNG and the validated JSON map pack.
 
 The browser keeps a local draft. Atlas upgrades add missing maps and corrected
 defaults without discarding explicitly repainted terrain on existing maps.

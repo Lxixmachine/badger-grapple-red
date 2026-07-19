@@ -19,6 +19,7 @@
       </label>
       <div class="tool-segments" id="toolSegments" aria-label="Editor tool">
         <button data-tool="pan" title="Drag to move around the map (H)">Pan</button>
+        <button data-tool="inspect" title="Inspect one grid cell (G)">Inspect</button>
         <button class="active" data-tool="select" title="Select and move objects">Select</button>
         <button data-tool="pick" title="Pick the tile or asset under the cursor (I)">Pick</button>
         <button data-tool="terrain" title="Paint explicit ground metatiles">Ground</button>
@@ -34,7 +35,7 @@
         <button id="undoButton" class="icon-button" title="Undo" aria-label="Undo">&#8630;</button>
         <button id="redoButton" class="icon-button" title="Redo" aria-label="Redo">&#8631;</button>
         <button id="gridButton" class="icon-button active" title="Toggle grid" aria-label="Toggle grid">#</button>
-        <button id="collisionButton" class="icon-button" title="Toggle collision overlay" aria-label="Toggle collision overlay">C</button>
+        <button id="collisionButton" class="icon-button" title="Toggle grid behavior overlay" aria-label="Toggle behavior overlay">C</button>
         <button id="cameraButton" class="icon-button" title="Toggle camera preview" aria-label="Toggle camera preview">&#9635;</button>
         <button id="inspectorToggle" class="icon-button inspector-toggle" title="Open inspector" aria-label="Open inspector">I</button>
       </div>
@@ -77,8 +78,17 @@
         <div class="canvas-stage" id="canvasStage">
           <canvas id="mapCanvas" tabindex="0" aria-label="Editable map"></canvas>
         </div>
+        <div id="behaviorLegend" class="behavior-legend" aria-label="Grid behavior legend" hidden>
+          <span><i class="walkable"></i>Walkable</span>
+          <span><i class="solid"></i>Solid</span>
+          <span><i class="water"></i>Water</span>
+          <span><i class="warp"></i>Door</span>
+          <span><i class="unreachable"></i>Unreachable</span>
+          <span><i class="conflict"></i>Conflict</span>
+        </div>
         <div class="workspace-readout">
           <span id="cellReadout">Cell --,--</span>
+          <span id="semanticReadout">Outside map</span>
           <span id="modeReadout">Select</span>
           <span id="brushReadout">No brush</span>
         </div>
