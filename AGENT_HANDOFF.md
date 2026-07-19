@@ -4064,3 +4064,33 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   required to close WP-V2/WP-V4.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Forest Mass Grammar Pass (v22.58)
+
+- The fixed v22.57 runtime captures showed that crisp forest art was still the
+  wrong scale: each generated tree module occupied only one player cell in
+  width, producing repeated narrow posts instead of broad interlocking masses.
+- Six new original ChatGPT Imagegen modules now normalize to exact `32x48`
+  logical assets (`2x3` map cells): three canopy-led interior variants and
+  three trunk-visible front-edge variants. Prompt history and the retained
+  source board live beside the existing tileset sources.
+- The deterministic compositor places broad modules on staggered two-cell
+  bands with one-row canopy overlap, then adds front modules only along open
+  south-facing boundaries. Odd-width runs reuse their final two-cell pair so a
+  one-cell tree silhouette cannot return.
+- Forest art is still clipped to the existing explicit whole-cell ownership
+  mask after composition. No map placement, collision, door, event, or story
+  data changed in this pass.
+- Material discipline now covers 168 prepared assets. Validation binds both
+  legacy forest-module and broad forest-cluster source boards to the world
+  manifest and asserts every broad module is `32x48`, binary-alpha, and limited
+  to the declared foliage/wood ramps.
+- Tony's fixed 480x320 comparison verdict remains required to close visual
+  parity. This pass improves forest silhouette grammar; it does not claim the
+  complete world has reached FireRed quality.
+- World validation, balance simulation, map lint, production build, focused
+  grid/route checks, and all 171 sequential browser tests pass. A final source
+  rebuild reproduced all seven tracked manifests, atlases, validation boards,
+  and runtime build files byte-for-byte.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

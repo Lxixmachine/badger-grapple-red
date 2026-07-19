@@ -75,7 +75,13 @@ tracker for looks.
   grid-native Imagegen forest assemblies, A/B edge variants, honest whole-cell
   masks, sealed repeat joins, and per-material four-color discipline. Lakeshore
   and Picnic now use connected canopy compositions; actor-aware reachability
-  and both seams pass. Tony's fixed A/B verdict remains the close condition.
+  and both seams pass. The v22.57 fixed-frame audit exposed a remaining scale
+  error: those runtime modules were still only one player cell wide. v22.58
+  replaces the runtime vocabulary with six original `2x3` broad-tree modules,
+  staggered on two-cell bands with one-row canopy overlap and explicit
+  trunk-visible south edges. The compositor still clips every pixel to the
+  existing whole-cell collision/occlusion masks. Tony's fixed A/B verdict
+  remains the close condition.
 - **F-017 [OBJ-007/SIL-004/service grammar] reusable service interiors - IMPLEMENTED, AWAITING TONY REVIEW.**
   The Trainer's Room and Bucky's Locker Room previously inherited generic room
   shells and reused fixtures, so their recovery/shop roles depended on labels.

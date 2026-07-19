@@ -117,7 +117,7 @@ else{
     const discipline=prepared.materialDiscipline||{};
     const profilePath=fileURLToPath(new URL(`../${discipline.profilePath||''}`,import.meta.url));
     if(prepared.schema!=='badger-grapple-imagegen-tileset-sources/v2'||prepared.version!==4||Object.keys(prepared.assets||{}).length<115||world.sources?.preparedImagegenAssetCount!==Object.keys(prepared.assets||{}).length)errs.push('Prepared Imagegen source coverage is incomplete');
-    const sharedBoardIds={ground:'ground',vegetation:'vegetation',forestMasses:'forest_masses',architecture:'architecture',props:'props',transitions:'transitions'};
+    const sharedBoardIds={ground:'ground',vegetation:'vegetation',forestMasses:'forest_masses',forestModules:'forest_modules',forestClusters:'forest_clusters',architecture:'architecture',props:'props',transitions:'transitions'};
     for(const [referenceId,preparedId] of Object.entries(sharedBoardIds)){
       const relative=manifest.referenceSources?.[referenceId];
       const source=relative?fileURLToPath(new URL(`../${relative}`,import.meta.url)):null;
@@ -149,7 +149,7 @@ else{
   }
   for(const tile of catalog.filter(tile=>tile.id==='water'||tile.family==='shore_water'||tile.family==='water'))if(tile.behavior!=='water')errs.push(`Season One water tile ${tile.id} must block ordinary walking`);
   if(world.coverage?.contractSatisfied!==true||world.coverage?.blobSignatureCount!==47||world.coverage?.preparedImagegenAssetCount<115||world.coverage?.logicalCellSize!==16)errs.push('Season One world tileset does not satisfy the complete authored vocabulary contract');
-  if(world.coverage?.pixelDiscipline?.version!==4||world.coverage?.pixelDiscipline?.assetCount<162||world.coverage?.pixelDiscipline?.maxColorsPerMaterial!==4||world.coverage?.pixelDiscipline?.outputPartialAlphaPixelCount!==0||world.coverage?.pixelDiscipline?.paletteViolationCount!==0)errs.push('Season One world tileset material-discipline coverage is incomplete');
+  if(world.coverage?.pixelDiscipline?.version!==4||world.coverage?.pixelDiscipline?.assetCount<168||world.coverage?.pixelDiscipline?.maxColorsPerMaterial!==4||world.coverage?.pixelDiscipline?.outputPartialAlphaPixelCount!==0||world.coverage?.pixelDiscipline?.paletteViolationCount!==0)errs.push('Season One world tileset material-discipline coverage is incomplete');
   const groundMetrics=world.coverage?.groundMaterialMetrics||{};
   const groundValueContract=world.coverage?.groundValueContract||{};
   if(!groundMetrics.grass||groundMetrics.grass.uniqueColors!==2||groundMetrics.grass.dominantCoverage<0.94||groundMetrics.grass.accentPixelCount!==12||groundMetrics.grass.accentComponentCount!==4||groundMetrics.grass.meanLightness<0.78||groundMetrics.grass.meanLightness>0.82||groundMetrics.grass.meanSaturation<0.44||groundMetrics.grass.meanSaturation>0.49||groundMetrics.grass.cardinalPixelCount!==0)errs.push('Season One grass violates the high-key mint connected-motif contract');

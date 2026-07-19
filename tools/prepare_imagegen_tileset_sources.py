@@ -114,6 +114,19 @@ BOARDS = {
             ("forest_tree_side_d", (16, 32), "fit", 16),
         ],
     },
+    "forest_clusters": {
+        "path": world_reference_source("forestClusters"),
+        "columns": 3,
+        "rows": 2,
+        "entries": [
+            ("forest_cluster_back_a", (32, 48), "fit", 16),
+            ("forest_cluster_back_b", (32, 48), "fit", 16),
+            ("forest_cluster_back_c", (32, 48), "fit", 16),
+            ("forest_cluster_front_a", (32, 48), "fit", 16),
+            ("forest_cluster_front_b", (32, 48), "fit", 16),
+            ("forest_cluster_front_c", (32, 48), "fit", 16),
+        ],
+    },
     "architecture": {
         "path": world_reference_source("architecture"),
         "columns": 4,
@@ -1058,7 +1071,7 @@ def build() -> dict:
                 spec["columns"],
                 spec["rows"],
                 index,
-                trim_noise=category in {"ground", "vegetation", "forest_masses"},
+                trim_noise=category in {"ground", "vegetation", "forest_masses", "forest_clusters"},
             )
             if category == "ground":
                 normalized = normalize(panel, size, mode, colors)

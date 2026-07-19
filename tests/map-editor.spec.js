@@ -199,7 +199,7 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     version: 4,
     profileVersion: 1,
     maxColorsPerMaterial: 4,
-    assetCount: 162,
+    assetCount: 168,
     outputPartialAlphaPixelCount: 0,
     paletteViolationCount: 0
   });

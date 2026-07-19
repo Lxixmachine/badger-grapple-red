@@ -5,16 +5,17 @@
   "chromaKey": "#ff00ff",
   "materialDiscipline": {
     "profilePath": "art/tilesets/imagegen_material_profiles.json",
-    "profileSha256": "6cfb0774ffb23a75e0d7982af14eec78d1fc88ea5c4ca9e826a6f2924b30a31e",
+    "profileSha256": "b55ae171646876e9cf2b7b3a4dd01f726f63a2c5daad8cb3434390898c77d003",
     "profileVersion": 1,
     "maxColorsPerMaterial": 4,
-    "disciplinedAssetCount": 162
+    "disciplinedAssetCount": 168
   },
   "sourceBoards": {
     "ground": "0200894b42bc8b723dda8089f25807cae3b6da43d434a3382fb620c3f52bc256",
     "vegetation": "084b33eef647f09fc0e38ab8a39e3ea777c57d0ef1994711be3b2cdd61accf9a",
     "forest_masses": "a78f9e979952aea7985b474326639324aacf9408d74a4eba0799343b438559a6",
     "forest_modules": "e28ee4db3f7ecc1f6a5d9eb2878b1352fbdd084793e97ab27a88e673ca914f34",
+    "forest_clusters": "653830ebfbf9669f1dea3336bb50c034d04b56a76c68e22f237e8aab187295a8",
     "architecture": "7680e7bde57922488e8d7ca4e7ef2d659f027d24d0083d1ed7187b7e787eafb9",
     "service_buildings": "ea88b4126998c83c0265d1beb5ccea639645b518dce067c1d3598a67de806bee",
     "props": "be9a7a8cbb13c2ce3aec6faad80ef04b2dc2d60816065229b2bb677b16af6f0e",
@@ -64,6 +65,7 @@
     "vegetation": "art/imagegen/tileset_v3/season_one_vegetation_source_v3.png",
     "forest_masses": "art/imagegen/tileset_v3/season_one_forest_masses_source_v9.png",
     "forest_modules": "art/imagegen/tileset_v3/season_one_forest_tree_modules_source_v1.png",
+    "forest_clusters": "art/imagegen/tileset_v3/season_one_forest_clusters_source_v1.png",
     "architecture": "art/imagegen/tileset_v3/season_one_architecture_source_v1.png",
     "service_buildings": "art/imagegen/tileset_v3/season_one_service_buildings_source_v2.png",
     "props": "art/imagegen/tileset_v3/season_one_props_source_v1.png",
@@ -1417,6 +1419,174 @@
         },
         "outlinePixelCount": 84,
         "inputPartialAlphaPixelCount": 46,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "forest_cluster_back_a": {
+      "category": "forest_clusters",
+      "path": "art/tilesets/imagegen_v3/forest_clusters/forest_cluster_back_a.png",
+      "width": 32,
+      "height": 48,
+      "colors": 6,
+      "sha256": "7c2694b78ffb0cf61db211c0109015caa5b752934002e2f622b164a7bb8cd365",
+      "sourcePanel": 0,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 1
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 1161,
+          "wood": 182
+        },
+        "outlinePixelCount": 115,
+        "inputPartialAlphaPixelCount": 59,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "forest_cluster_back_b": {
+      "category": "forest_clusters",
+      "path": "art/tilesets/imagegen_v3/forest_clusters/forest_cluster_back_b.png",
+      "width": 32,
+      "height": 48,
+      "colors": 6,
+      "sha256": "c5b3b4c128e995ac6c923575990036baef48f8e18fa1ed667943417596ef4cea",
+      "sourcePanel": 1,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 1
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 1213,
+          "wood": 141
+        },
+        "outlinePixelCount": 119,
+        "inputPartialAlphaPixelCount": 47,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "forest_cluster_back_c": {
+      "category": "forest_clusters",
+      "path": "art/tilesets/imagegen_v3/forest_clusters/forest_cluster_back_c.png",
+      "width": 32,
+      "height": 48,
+      "colors": 6,
+      "sha256": "df0222aff9cd4860ebd9a9d260fef23f4f7162d8eaaf444df2a665ea5074e9b3",
+      "sourcePanel": 2,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 1
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 1205,
+          "wood": 165
+        },
+        "outlinePixelCount": 126,
+        "inputPartialAlphaPixelCount": 74,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "forest_cluster_front_a": {
+      "category": "forest_clusters",
+      "path": "art/tilesets/imagegen_v3/forest_clusters/forest_cluster_front_a.png",
+      "width": 32,
+      "height": 48,
+      "colors": 9,
+      "sha256": "3672ff57a5d4b70a211fd54bba80332ce87eb74bd559029c737eada50b72b644",
+      "sourcePanel": 3,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 976,
+          "wood": 273
+        },
+        "outlinePixelCount": 135,
+        "inputPartialAlphaPixelCount": 82,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "forest_cluster_front_b": {
+      "category": "forest_clusters",
+      "path": "art/tilesets/imagegen_v3/forest_clusters/forest_cluster_front_b.png",
+      "width": 32,
+      "height": 48,
+      "colors": 9,
+      "sha256": "2ad7139adffd96561e06490cb29ca6f5b0e2f8e46ea0036e2cca5ed84d995fed",
+      "sourcePanel": 4,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 953,
+          "wood": 291
+        },
+        "outlinePixelCount": 145,
+        "inputPartialAlphaPixelCount": 81,
+        "outputPartialAlphaPixelCount": 0,
+        "paletteViolationCount": 0
+      }
+    },
+    "forest_cluster_front_c": {
+      "category": "forest_clusters",
+      "path": "art/tilesets/imagegen_v3/forest_clusters/forest_cluster_front_c.png",
+      "width": 32,
+      "height": 48,
+      "colors": 9,
+      "sha256": "28f04a2735224e6926dd6ab70c069a317977f65ab3bdf3a37ec7c43ad56a7c80",
+      "sourcePanel": 5,
+      "materialDiscipline": {
+        "materials": [
+          "foliage",
+          "wood"
+        ],
+        "materialColorCounts": {
+          "foliage": 4,
+          "wood": 4
+        },
+        "maxColorsPerMaterial": 4,
+        "pixelsByMaterial": {
+          "foliage": 954,
+          "wood": 278
+        },
+        "outlinePixelCount": 138,
+        "inputPartialAlphaPixelCount": 92,
         "outputPartialAlphaPixelCount": 0,
         "paletteViolationCount": 0
       }

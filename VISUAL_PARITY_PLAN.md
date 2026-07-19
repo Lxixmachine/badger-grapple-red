@@ -154,6 +154,14 @@ Acceptance:
 > clipping, and unchanged collision masks. Freehand multi-cell canopy strips no
 > longer determine runtime forest scale. Tony's WP-V4 eye verdict remains the
 > acceptance authority.
+>
+> v22.58 corrects the scale mistake still visible in the v22.57 fixed-frame
+> audit. The one-cell-wide modules were crisp but read as repeated posts because
+> each tree was the same width as the player. Runtime forest stamps now assemble
+> six original Imagegen `2x3` broad-tree modules on staggered two-cell bands,
+> overlap canopy rows, and reserve trunk-visible variants for open south-facing
+> edges. Exact map placement and collision masks are unchanged, and final alpha
+> is clipped to those whole-cell masks. Tony's WP-V4 verdict remains required.
 
 > **REVISED after inspecting v22.4 on screen (D1 confirmed fixed
 > there).** With crisp pixels, the loudest remaining non-FireRed

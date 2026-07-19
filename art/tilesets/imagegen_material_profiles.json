@@ -27,6 +27,7 @@
   "categoryDefaults": {
     "forest_masses": ["foliage", "wood"],
     "forest_modules": ["foliage", "wood"],
+    "forest_clusters": ["foliage", "wood"],
     "ordinary_buildings": ["cardinal", "brick", "limestone", "slate", "glass", "wood", "metal", "gold", "foliage"],
     "landmarks": ["cardinal", "brick", "limestone", "slate", "glass", "wood", "metal", "gold", "foliage", "stone"],
     "service_buildings": ["cardinal", "brick", "limestone", "slate", "glass", "wood", "metal", "gold", "foliage"],

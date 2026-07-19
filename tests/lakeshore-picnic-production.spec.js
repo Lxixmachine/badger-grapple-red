@@ -199,6 +199,21 @@ test('shared route art keeps the phone-scale footprint and logical-pixel contrac
     maxColorsPerMaterial: 4,
     outputPartialAlphaPixelCount: 0
   });
+  for (const assetId of [
+    'forest_cluster_back_a', 'forest_cluster_back_b', 'forest_cluster_back_c',
+    'forest_cluster_front_a', 'forest_cluster_front_b', 'forest_cluster_front_c'
+  ]) {
+    expect(imagegenSources.assets[assetId]).toMatchObject({
+      category: 'forest_clusters',
+      width: 32,
+      height: 48,
+      materialDiscipline: {
+        materials: ['foliage', 'wood'],
+        maxColorsPerMaterial: 4,
+        outputPartialAlphaPixelCount: 0
+      }
+    });
+  }
 
   for (const mapId of ['lakeshore_path', 'picnic_point']) {
     const routeMats = project.maps[mapId].objects.filter(object => object.sourceId === 'outdoor_wrestling_mat');

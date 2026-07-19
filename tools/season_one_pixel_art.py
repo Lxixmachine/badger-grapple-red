@@ -632,20 +632,64 @@ def _forest(width: int, height: int, kind: str) -> Image.Image:
         raise ValueError(f"{kind}: forest ownership mask does not match {width}x{height}")
 
     module_rows = {
-        "back": [source_asset("forest_modules", f"forest_tree_back_{suffix}") for suffix in "abcd"],
-        "front": [source_asset("forest_modules", f"forest_tree_front_{suffix}") for suffix in "abcd"],
-        "side": [source_asset("forest_modules", f"forest_tree_side_{suffix}") for suffix in "abcd"],
+        "back": [source_asset("forest_clusters", f"forest_cluster_back_{suffix}") for suffix in "abc"],
+        "front": [source_asset("forest_clusters", f"forest_cluster_front_{suffix}") for suffix in "abc"],
     }
     image = canvas(width, height)
-    last_start_row = max(0, height - 2)
-    for y in range(max(1, height - 1)):
-        role = "back" if y == 0 else "front" if y == last_start_row else "side"
-        modules = module_rows[role]
-        for x in range(width):
-            if mask_rows[y][x] != "#":
+    variant_phase = 1 if kind.endswith("_b") else 0
+
+    def footprint_overlaps_owned(start_x: int, start_y: int) -> bool:
+        for cell_y in range(start_y, start_y + 3):
+            if not 0 <= cell_y < height:
                 continue
-            module = modules[(x + y * 3 + (1 if kind.endswith("_b") else 0)) % len(modules)]
+            for cell_x in range(start_x, start_x + 2):
+                if 0 <= cell_x < width and mask_rows[cell_y][cell_x] == "#":
+                    return True
+        return False
+
+    # Broad canopy modules overlap by one row and alternate their horizontal
+    # phase. This produces interlocking forest masses instead of one-cell tree
+    # posts while retaining the stamp's exact whole-cell ownership contract.
+    for band_index, y in enumerate(range(-1, height, 2)):
+        start_x = -1 if (band_index + variant_phase) % 2 else 0
+        for x in range(start_x, width, 2):
+            if not footprint_overlaps_owned(x, y):
+                continue
+            modules = module_rows["back"]
+            module = modules[(band_index * 2 + x // 2 + variant_phase) % len(modules)]
             image.alpha_composite(module, (x * LOGICAL_CELL, y * LOGICAL_CELL))
+
+    # Finish each open south-facing boundary with a visible trunk module. A
+    # module owns two cells horizontally and three vertically; odd runs reuse
+    # the last pair so no single-cell picket silhouette returns at the edge.
+    for boundary_y in range(height):
+        runs: list[tuple[int, int]] = []
+        run_start: int | None = None
+        for x in range(width + 1):
+            is_front = (
+                x < width
+                and mask_rows[boundary_y][x] == "#"
+                and (boundary_y == height - 1 or mask_rows[boundary_y + 1][x] != "#")
+            )
+            if is_front and run_start is None:
+                run_start = x
+            elif not is_front and run_start is not None:
+                runs.append((run_start, x))
+                run_start = None
+
+        for run_start, run_end in runs:
+            starts = list(range(run_start, run_end - 1, 2))
+            if run_end - run_start == 1:
+                starts = [max(0, min(width - 2, run_start - (run_start > 0)))]
+            elif (run_end - run_start) % 2:
+                starts.append(run_end - 2)
+            for x in dict.fromkeys(starts):
+                modules = module_rows["front"]
+                module = modules[(x + boundary_y + variant_phase) % len(modules)]
+                image.alpha_composite(
+                    module,
+                    (x * LOGICAL_CELL, (boundary_y - 2) * LOGICAL_CELL),
+                )
 
     # Forest artwork may overlap freely inside the stamp, but never paints a
     # gameplay cell that its explicit collision/occlusion mask does not own.
