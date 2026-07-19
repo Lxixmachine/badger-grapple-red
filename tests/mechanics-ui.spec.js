@@ -297,8 +297,9 @@ test('battle presentation is native resolution and preserves FireRed-style actio
     party:[legacyWrestler()],active:0,box:[],items:{},dex:{seen:{},caught:{buckshot:true}},
     flags:{introDone:true,assignment:true},stats:{},badges:[]
   },'/?test=1');
-  await page.evaluate(()=>window.__badgerTest.startBattle({enemyId:'drillpartner',enemyLevel:12,battleType:'trainer'}));
+  await page.evaluate(()=>window.__badgerTest.startBattle({team:[{id:'drillpartner',level:12,moves:['single'],ace:true}],battleType:'trainer',trainerAi:{tier:'basic',canSwitch:false}}));
   await waitForBattleCommand(page);
+  await page.evaluate(()=>{window.badgerGame.scene.getScene('BattleScene').rng=()=>.1;});
   const presentation=await page.evaluate(()=>{
     const scene=window.badgerGame.scene.getScene('BattleScene');
     return {
@@ -324,7 +325,6 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').mode)).toBe('fight');
   await page.waitForTimeout(180);
-  const started=Date.now();
   await press(page,'a');
   await expect.poll(async()=>page.evaluate(()=>window.__badgerTest.sceneState('BattleScene').battlePhase)).toBe('announce');
   await page.waitForTimeout(300);
@@ -355,7 +355,27 @@ test('battle presentation is native resolution and preserves FireRed-style actio
   ];
   expect(ordered).not.toContain(-1);
   expect(ordered).toEqual([...ordered].sort((a,b)=>a-b));
-  expect(Date.now()-started).toBeGreaterThan(4200);
+  const cadence=await page.evaluate(()=>{
+    const scene=window.badgerGame.scene.getScene('BattleScene');
+    const beats=scene.battleBeatHistory.filter(beat=>beat.turn===1);
+    const times=stage=>beats.filter(beat=>beat.stage===stage).map(beat=>beat.at);
+    return {
+      now:Math.round(scene.time.now),
+      announce:times('announce'),impact:times('impact-start'),contact:times('contact'),
+      conditionStart:times('condition-start'),conditionComplete:times('condition-complete'),
+      recovery:times('recovery')
+    };
+  });
+  for(const key of ['announce','impact','contact','conditionStart','conditionComplete','recovery'])expect(cadence[key]).toHaveLength(2);
+  for(let index=0;index<2;index++){
+    expect(cadence.impact[index]-cadence.announce[index]).toBeGreaterThanOrEqual(800);
+    expect(cadence.contact[index]).toBeGreaterThanOrEqual(cadence.impact[index]);
+    expect(cadence.conditionStart[index]-cadence.contact[index]).toBeGreaterThanOrEqual(140);
+    expect(cadence.conditionComplete[index]).toBeGreaterThan(cadence.conditionStart[index]);
+    expect(cadence.recovery[index]).toBeGreaterThan(cadence.conditionComplete[index]);
+  }
+  expect(cadence.announce[1]-cadence.recovery[0]).toBeGreaterThanOrEqual(200);
+  expect(cadence.now-cadence.announce[0]).toBeGreaterThanOrEqual(4000);
 });
 
 test('opening wrestle-off stages the challenge and both send-outs before command input',async({page})=>{

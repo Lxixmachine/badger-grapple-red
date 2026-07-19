@@ -3960,3 +3960,28 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   sequential browser suite pass; final suite count is 158/158.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Battle Venue Pass (v22.54)
+
+- Battles now resolve through eight authored venue families: Field House,
+  campus, Lakeshore, downtown, Bascom, Capitol, Kohl Center, and Nationals.
+  All 17 Season One trainer battles and the opening wrestle-off declare a
+  valid arena identity; unlisted areas fall back through explicit aliases.
+- Every arena is a native 480x238 texture rendered at scale 1 with no runtime
+  tint or resampling. The deterministic build compiles original Imagegen
+  masters to exact 2x pixel blocks and at most 48 colors per venue.
+- Battle entry now reveals the scene through the native 15x10 grid of 32px
+  cells before commands unlock. The transition dimensions, arena texture,
+  image scale, and battle-entry locking are covered by standing regressions.
+- Major opponents announce their signature technique once and add restrained
+  gold resonance to its existing move-specific choreography. This presentation
+  does not alter accuracy, damage, effects, Condition, Stamina, or turn order.
+- `docs/BATTLE_ARENA_PRESENTATION_CONTRACT.md` is the standing contract.
+  `npm run validate:battle-art` checks all venue assets and
+  `npm run review:battle-arenas` captures five representative command screens
+  plus the Bascom signature callout and impact frame.
+- Battle-art validation, world validation, balance, map lint, production build,
+  repeated cadence checks, the visual capture audit, and the complete
+  sequential browser suite pass; final suite count is 162/162.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

@@ -9,13 +9,17 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SPRITE_DIR = ROOT / "public" / "assets" / "sprites"
-ARENA_PATH = ROOT / "public" / "assets" / "ui" / "battle_arena_v3.png"
+ARENA_DIR = ROOT / "public" / "assets" / "ui"
+ARENA_KEYS = (
+    "fieldhouse", "campus", "lakeshore", "downtown",
+    "bascom", "capitol", "kohl", "nationals",
+)
 SPRITE_SIZE = (128, 128)
 ARENA_SIZE = (480, 238)
 RUNTIME_SCALE = 2
 MAX_SPRITE_COLORS = 15
-MAX_ARENA_COLORS = 32
-MAX_ARENA_FIELD_SATURATION = 0.42
+MAX_ARENA_COLORS = 48
+MAX_ARENA_FIELD_SATURATION = 0.62
 EXPECTED_ROSTER_SIZE = 26
 LEGACY_ASSETS = ("badger", "neutral", "top", "scramble", "pace")
 TRAINER_ASSETS = (
@@ -58,14 +62,14 @@ def validate_sprite(path: Path) -> None:
     assert_integer_blocks(image, path.name)
 
 
-def validate_arena() -> None:
-    arena = Image.open(ARENA_PATH).convert("RGB")
+def validate_arena(path: Path) -> None:
+    arena = Image.open(path).convert("RGB")
     if arena.size != ARENA_SIZE:
-        raise RuntimeError(f"{ARENA_PATH.name} is {arena.size}; expected {ARENA_SIZE}")
+        raise RuntimeError(f"{path.name} is {arena.size}; expected {ARENA_SIZE}")
     colors = arena.getcolors(maxcolors=MAX_ARENA_COLORS + 1)
     if colors is None:
         raise RuntimeError(
-            f"{ARENA_PATH.name} uses more than {MAX_ARENA_COLORS} colors"
+            f"{path.name} uses more than {MAX_ARENA_COLORS} colors"
         )
     field = arena.crop((0, 80, arena.width, arena.height))
     saturation = sum(
@@ -74,10 +78,10 @@ def validate_arena() -> None:
     ) / (field.width * field.height)
     if saturation > MAX_ARENA_FIELD_SATURATION:
         raise RuntimeError(
-            f"{ARENA_PATH.name} field saturation {saturation:.3f} exceeds "
+            f"{path.name} field saturation {saturation:.3f} exceeds "
             f"the quiet-backdrop ceiling {MAX_ARENA_FIELD_SATURATION:.2f}"
         )
-    assert_integer_blocks(arena, ARENA_PATH.name)
+    assert_integer_blocks(arena, path.name)
 
 
 def main() -> None:
@@ -101,11 +105,16 @@ def main() -> None:
         validate_sprite(SPRITE_DIR / f"battle_{asset}_back_v2.png")
     for asset in TRAINER_ASSETS:
         validate_sprite(SPRITE_DIR / f"battle_trainer_{asset}_v1.png")
-    validate_arena()
+    arena_paths = [ARENA_DIR / f"battle_arena_{key}_v1.png" for key in ARENA_KEYS]
+    arena_paths.append(ARENA_DIR / "battle_arena_v3.png")
+    for path in arena_paths:
+        if not path.exists():
+            raise RuntimeError(f"Missing battle arena: {path.name}")
+        validate_arena(path)
     print(
         f"Battle art contract clean: {len(fronts)} roster identities and "
         f"{len(LEGACY_ASSETS)} fallbacks plus {len(TRAINER_ASSETS)} trainers, "
-        "64px logical sprites, binary alpha, "
+        f"{len(ARENA_KEYS)} venue arenas, 64px logical sprites, binary alpha, "
         "limited palettes, exact 2x runtime pixels."
     )
 

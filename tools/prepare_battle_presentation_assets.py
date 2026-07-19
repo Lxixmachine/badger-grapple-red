@@ -7,9 +7,19 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SHEET = ROOT / "art" / "imagegen" / "wrestler_battle_sheet_v2_2026-07-14_alpha.png"
-ARENA = ROOT / "art" / "imagegen" / "battle_arena_v3_2026-07-18.png"
 SPRITES = ROOT / "public" / "assets" / "sprites"
-ARENA_OUT = ROOT / "public" / "assets" / "ui" / "battle_arena_v3.png"
+UI = ROOT / "public" / "assets" / "ui"
+
+ARENA_SOURCES = {
+    "fieldhouse": "battle_arena_fieldhouse_v1_2026-07-18.png",
+    "campus": "battle_arena_campus_v1_2026-07-18.png",
+    "lakeshore": "battle_arena_lakeshore_v1_2026-07-18.png",
+    "downtown": "battle_arena_downtown_v1_2026-07-18.png",
+    "bascom": "battle_arena_bascom_v1_2026-07-18.png",
+    "capitol": "battle_arena_capitol_v1_2026-07-18.png",
+    "kohl": "battle_arena_kohl_v1_2026-07-18.png",
+    "nationals": "battle_arena_nationals_v1_2026-07-18.png",
+}
 
 ASSETS = ("badger", "neutral", "top", "scramble", "pace")
 LOGICAL_SPRITE_SIZE = 64
@@ -20,6 +30,7 @@ OPAQUE_COLORS = 15
 ALPHA_THRESHOLD = 96
 ARENA_LOGICAL_SIZE = (240, 119)
 ARENA_SIZE = (480, 238)
+ARENA_COLORS = 48
 
 
 def keep_main_subject(image: Image.Image) -> Image.Image:
@@ -126,8 +137,28 @@ def build_sprites() -> None:
         validate_sprite(back_path)
 
 
-def build_arena() -> None:
-    arena = Image.open(ARENA).convert("RGB")
+def validate_arena(path: Path) -> None:
+    arena = Image.open(path).convert("RGB")
+    if arena.size != ARENA_SIZE:
+        raise RuntimeError(f"{path.name} is {arena.size}; expected {ARENA_SIZE}")
+    colors = arena.getcolors(maxcolors=ARENA_SIZE[0] * ARENA_SIZE[1]) or []
+    if len(colors) > ARENA_COLORS:
+        raise RuntimeError(f"{path.name} uses {len(colors)} colors; maximum is {ARENA_COLORS}")
+    pixels = arena.load()
+    for y in range(0, ARENA_SIZE[1], RUNTIME_SCALE):
+        for x in range(0, ARENA_SIZE[0], RUNTIME_SCALE):
+            block = {
+                pixels[x + dx, y + dy]
+                for dx in range(RUNTIME_SCALE)
+                for dy in range(RUNTIME_SCALE)
+            }
+            if len(block) != 1:
+                raise RuntimeError(f"{path.name} breaks the exact 2x pixel grid at {x},{y}")
+
+
+def build_arena(key: str, source_filename: str) -> Path:
+    source = ROOT / "art" / "imagegen" / source_filename
+    arena = Image.open(source).convert("RGB")
     source_ratio = arena.width / arena.height
     target_ratio = ARENA_SIZE[0] / ARENA_SIZE[1]
     if source_ratio > target_ratio:
@@ -140,21 +171,26 @@ def build_arena() -> None:
         arena = arena.crop((0, top, arena.width, top + height))
     arena = arena.resize(ARENA_LOGICAL_SIZE, Image.Resampling.LANCZOS)
     arena = arena.quantize(
-        colors=32,
+        colors=ARENA_COLORS,
         method=Image.Quantize.MEDIANCUT,
         dither=Image.Dither.NONE,
     ).convert("RGB")
     arena = arena.resize(ARENA_SIZE, Image.Resampling.NEAREST)
-    ARENA_OUT.parent.mkdir(parents=True, exist_ok=True)
-    arena.save(ARENA_OUT, optimize=True)
+    path = UI / f"battle_arena_{key}_v1.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    arena.save(path, optimize=True)
+    validate_arena(path)
+    return path
 
 
 def main() -> None:
     build_sprites()
-    build_arena()
+    arenas = [build_arena(key, source) for key, source in ARENA_SOURCES.items()]
+    fieldhouse = Image.open(UI / "battle_arena_fieldhouse_v1.png").convert("RGB")
+    fieldhouse.save(UI / "battle_arena_v3.png", optimize=True)
     print(
         f"Prepared {len(ASSETS) * 2} battle sprites at {LOGICAL_SPRITE_SIZE}px logical / "
-        f"{SPRITE_SIZE}px runtime and {ARENA_OUT.name} at {ARENA_SIZE}."
+        f"{SPRITE_SIZE}px runtime and {len(arenas)} arenas at {ARENA_SIZE}."
     )
 
 

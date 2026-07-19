@@ -103,6 +103,17 @@ export function installTestHooks(game, routeVirtualButton) {
         signatureMove: scene.signatureMove ?? null
       } : null,
       battleType: scene.type ?? null,
+      battleArena: scene.arenaKey ? {
+        key: scene.arenaKey,
+        texture: scene.arenaTextureKey ?? null,
+        source: scene.arenaImage?.texture?.getSourceImage?.()
+          ? [scene.arenaImage.texture.getSourceImage().width, scene.arenaImage.texture.getSourceImage().height]
+          : null,
+        scale: scene.arenaImage ? [scene.arenaImage.scaleX, scene.arenaImage.scaleY] : null,
+        transition: scene.transitionPattern ? {...scene.transitionPattern} : null,
+        signatureActive: Boolean(scene.signatureActive),
+        signatureHistory: (scene.signatureTechniqueHistory || []).map(event => ({...event}))
+      } : null,
       enemyIndex: scene.enemyIdx ?? null,
       battleTurn: scene.turn ?? null,
       trainerStrategy: scene.trainerAi ? {

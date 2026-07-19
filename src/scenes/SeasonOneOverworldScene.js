@@ -880,7 +880,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     this.cameras.main.flash(100, 255, 255, 255);
     this.time.delayedCall(170, () => this.cameras.main.flash(100, 255, 255, 255));
     this.time.delayedCall(360, () => this.cameras.main.fadeOut(220, 0, 0, 0));
-    this.time.delayedCall(590, () => this.scene.start('BattleScene', config));
+    this.time.delayedCall(590, () => this.scene.start('BattleScene', {...config, area: this.currentMapId}));
   }
 
   startOpeningBattle() {
@@ -888,7 +888,7 @@ export class SeasonOneOverworldScene extends Phaser.Scene {
     const rivalId = this.state.opening?.rivalPersona || counterStarterFor(this.state.party[0].id);
     this.state.opening = {...(this.state.opening || {}), playerPersona: this.state.party[0].id, rivalPersona: rivalId, battleResult: null};
     this.savePosition();
-    this.scene.start('BattleScene', openingRexBattle(rivalId));
+    this.scene.start('BattleScene', {...openingRexBattle(rivalId), area: this.currentMapId});
   }
 
   startScout() {

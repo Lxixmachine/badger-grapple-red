@@ -191,13 +191,13 @@ interact(){
 recover(){restoreParty(this.state);this.savePos("The Trainer's Room restored Condition and Stamina for your travel lineup.");}
  startScout(){const {id,lvl,rare}=rollWild(this.area);this.state.dex.seen[id]=true;this.state.stats.scouts=(this.state.stats.scouts||0)+1;this.savePos();this.fadeSceneOut(100);this.time.delayedCall(105,()=>this.scene.start('ScoutScene',{id,lvl,area:this.area,rare}));} // Gen-1 slot odds: commons wade, blue chips hide at 1.2%
  battleTransition(cb){this.sightLocked=true;const cam=this.worldCamera;this.playSfx('bump');cam.flash(110,255,255,255);this.time.delayedCall(180,()=>cam.flash(110,255,255,255));this.time.delayedCall(380,()=>this.fadeSceneOut(240));this.time.delayedCall(640,cb);} // FireRed battle entry: double flash, then wipe to black
- startBattle(id,lvl,type){if(!this.state.party.length){this.showMessage('Coach: Choose your mat persona before you wrestle.');return;}this.savePos();this.battleTransition(()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type}));}
+ startBattle(id,lvl,type){if(!this.state.party.length){this.showMessage('Coach: Choose your mat persona before you wrestle.');return;}this.savePos();this.battleTransition(()=>this.scene.start('BattleScene',{enemyId:id,enemyLevel:lvl,battleType:type,area:this.area}));}
  startOpeningBattle(){
    if(!this.state.party.length)return;
    const rivalId=this.state.opening?.rivalPersona||counterStarterFor(this.state.party[0].id);
    this.state.opening={...(this.state.opening||{}),playerPersona:this.state.party[0].id,rivalPersona:rivalId,battleResult:null};
    this.state.flags.openingBattleReady=true;this.state.message='';this.state.area=this.area;this.state.pos={...this.tilePos};saveState(this.state);
-   this.battleTransition(()=>this.scene.start('BattleScene',{team:[[rivalId,5]],battleType:'opening',trainerName:'Rex',reward:{grit:0,rep:0}}));
+   this.battleTransition(()=>this.scene.start('BattleScene',{team:[[rivalId,5]],battleType:'opening',trainerName:'Rex',reward:{grit:0,rep:0},area:this.area}));
  }
  startOpeningRecovery(){this.sightLocked=true;this.fadeSceneOut(180);this.time.delayedCall(185,()=>this.scene.start('OpeningRecoveryScene'));}
  tournamentDesk(){
@@ -210,10 +210,10 @@ recover(){restoreParty(this.state);this.savePos("The Trainer's Room restored Con
    restoreParty(this.state); // trainers get treated between tournament matches
    this.showMessage(`${round.label}: ${round.intro}`);
    this.savePos();
-   this.time.delayedCall(700,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:round.team,battleType:'tournament',trainerName:round.trainerName,reward:round.reward,tournamentRound:t.round,roundLabel:round.label,winMsg:round.win})));
+   this.time.delayedCall(700,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:round.team,battleType:'tournament',trainerName:round.trainerName,reward:round.reward,tournamentRound:t.round,roundLabel:round.label,winMsg:round.win,area:this.area})));
  }
- startGymBattle(cap){if(!cap)return;if(this.state.badges.some(badge=>canonicalBadge(badge)===canonicalBadge(cap.badge))){this.showMessage(cap.beaten||'Badge already earned.');return;}this.showMessage(cap.intro||'A captain challenges you.');this.savePos();this.time.delayedCall(650,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:cap.team,battleType:'gym',trainerName:ROSTER[cap.id]?.name,badge:cap.badge,reward:cap.reward,trainerAi:cap.trainerAi,trainerItems:cap.trainerItems})));}
- startTrainerBattle(tr,msg){if(!tr)return;if(this.state.trainersDefeated?.[tr.id]){this.showMessage(tr.beaten||`${tr.name} has already been beaten.`);return;}this.showMessage(msg||tr.line||`${tr.name} challenges you.`);this.savePos();this.time.delayedCall(550,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:tr.team,battleType:'trainer',trainerName:tr.name,reward:tr.reward,defeatKey:tr.id,trainerAi:tr.trainerAi,trainerItems:tr.trainerItems})));}
+ startGymBattle(cap){if(!cap)return;if(this.state.badges.some(badge=>canonicalBadge(badge)===canonicalBadge(cap.badge))){this.showMessage(cap.beaten||'Badge already earned.');return;}this.showMessage(cap.intro||'A captain challenges you.');this.savePos();this.time.delayedCall(650,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:cap.team,battleType:'gym',trainerName:ROSTER[cap.id]?.name,badge:cap.badge,reward:cap.reward,trainerAi:cap.trainerAi,trainerItems:cap.trainerItems,area:this.area})));
+ startTrainerBattle(tr,msg){if(!tr)return;if(this.state.trainersDefeated?.[tr.id]){this.showMessage(tr.beaten||`${tr.name} has already been beaten.`);return;}this.showMessage(msg||tr.line||`${tr.name} challenges you.`);this.savePos();this.time.delayedCall(550,()=>this.battleTransition(()=>this.scene.start('BattleScene',{team:tr.team,battleType:'trainer',trainerName:tr.name,reward:tr.reward,defeatKey:tr.id,trainerAi:tr.trainerAi,trainerItems:tr.trainerItems,area:this.area})));
  savePos(msg=null){this.state.area=this.area;this.state.pos={...this.tilePos};if(msg)this.state.message=msg;saveState(this.state);if(msg)this.showMessage(msg);}
  showMessage(msg){this.message=msg;this.messageOpen=!!msg;this.drawHud();}
  clearMessage(){this.message='';this.messageOpen=false;this.state.message='';saveState(this.state);this.drawHud();}

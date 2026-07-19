@@ -2,6 +2,7 @@ import {test,expect} from '@playwright/test';
 import {MOVES} from '../src/data/moves.js';
 import {ROSTER,makeTrainerMon} from '../src/data/roster.js';
 import {TRAINER_BATTLES,TRAINER_PORTRAITS} from '../src/data/trainerBattles.js';
+import {BATTLE_ARENA_KEYS} from '../src/data/battlePresentation.js';
 
 const majorKeys=[
   'field_house_floor:opener',
@@ -20,6 +21,7 @@ test('Season One trainers have complete authored identities and legal ace plans'
     expect(TRAINER_PORTRAITS,`${key} portrait`).toContain(config.trainerPortrait);
     expect(config.lineupLabel.length,`${key} lineup label`).toBeLessThanOrEqual(10);
     expect(config.strategy,`${key} strategy`).toBeTruthy();
+    expect(BATTLE_ARENA_KEYS,`${key} arena`).toContain(config.arenaKey);
     expect(config.team.length,`${key} team`).toBeGreaterThan(0);
     expect(config.team.length,`${key} FireRed party limit`).toBeLessThanOrEqual(6);
     const aces=config.team.filter(member=>member.ace);
