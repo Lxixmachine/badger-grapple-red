@@ -8,6 +8,7 @@ import {battleSceneEnabled,battleStyleFor,textDelayFor} from '../systems/playerS
 const Phaser = window.Phaser;
 const GAME_W=480,GAME_H=320,ARENA_H=238,BOTTOM_Y=238;
 const ENEMY_POS={x:370,y:158},PLAYER_POS={x:112,y:233};
+const CONDITION_COMPLETION_RESERVE=64;
 const COMMANDS=['FIGHT','BAG','WRESTLER','RUN'];
 const BAG_ITEMS=BAG_ORDER.map(key=>({key,name:ITEM_DEFS[key].name,desc:ITEM_DEFS[key].description,kind:ITEM_DEFS[key].kind}));
 export const KNOCKOUT_CEREMONY_TIMING=Object.freeze({
@@ -1231,7 +1232,8 @@ export class BattleScene extends Phaser.Scene{
     let nextStart=0;
     return frames.map((frame,index)=>{
       const nominal=index*(choreography.tempo.hitStagger||0),start=Math.max(nominal,nextStart);
-      nextStart=start+choreography.tempo.conditionLead+this.conditionStepDuration(frame,choreography)+choreography.tempo.interHitPause;
+      // Phaser timers and tween completions can land on different render frames.
+      nextStart=start+choreography.tempo.conditionLead+this.conditionStepDuration(frame,choreography)+choreography.tempo.interHitPause+CONDITION_COMPLETION_RESERVE;
       return start;
     });
   }

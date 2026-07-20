@@ -4118,3 +4118,16 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   close condition; this package does not claim complete FireRed parity.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Battle Impact Cadence Fix (v22.60)
+
+- GitHub Pages itself was healthy, but the required deployment workflow could
+  not reach artifact upload because the multi-hit impact regression failed in
+  CI. A later contact could be scheduled from a Condition tween's nominal end
+  while Phaser completed that tween one to three render frames later.
+- The impact scheduler now reserves four 60 Hz frames between the nominal
+  Condition completion and the configured inter-hit pause. This preserves the
+  visible drain-before-contact order under CI frame jitter without weakening
+  the regression assertion or bypassing the release gate.
+- This is a timing and deployment repair only. No map, collision, actor art, or
+  user-owned State Street composition file changed.
