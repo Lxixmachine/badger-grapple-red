@@ -4094,3 +4094,27 @@ Keep changes source-first. If assets are generated, commit the source inputs or 
   and runtime build files byte-for-byte.
 - The State Street composition drafts remain user-owned. Do not rebuild,
   stage, revert, or overwrite them while integrating this release.
+
+## Codex Overworld Cast Grammar Pass (v22.59)
+
+- The v22.58 fixed runtime audit showed that buildings and service interiors
+  were no longer the repeated mismatch. Actor sources had been generated in
+  separate sessions, so the compiler normalized incompatible anatomy into the
+  same box without making the cast stylistically coherent.
+- One original ChatGPT Imagegen cast board now locks all twelve roles to the
+  same compact 2.25-head-tall construction, restrained eye language, outline
+  weight, material shading, hand/foot scale, and baseline. The corrected board
+  preserves the approved Coach and Trainer identities plus every established
+  role costume.
+- Every role has a new complete 3x4 directional walk source: down, left,
+  right, up, each with two step frames and one idle. Versioned chroma and alpha
+  masters and the prompt lineage are retained under `art/imagegen/`.
+- The deterministic pipeline still owns the final 16x32 logical frame, 16x24
+  body, exact 2x runtime export, binary alpha, and 15-color limit. It now also
+  records and validates a common down-idle silhouette profile so equal boxes
+  cannot hide incompatible body construction again.
+- Fixed 480x320 captures cover Camp Randall, Field House Town, Bascom Hill,
+  the team room, and both service interiors. Tony's phone verdict remains the
+  close condition; this package does not claim complete FireRed parity.
+- The State Street composition drafts remain user-owned. Do not rebuild,
+  stage, revert, or overwrite them while integrating this release.

@@ -33,6 +33,14 @@ ACTOR_LOGICAL_HEIGHT = 32
 ACTOR_BODY_HEIGHT = 24
 ACTOR_RENDER_SCALE = 2
 ACTOR_MAX_OPAQUE_COLORS = 15
+ACTOR_IDLE_WIDTH_MIN = 12
+ACTOR_IDLE_WIDTH_MAX = 14
+ACTOR_IDLE_TOP_SPAN_MIN = 8
+ACTOR_IDLE_TOP_SPAN_MAX = 12
+ACTOR_IDLE_FILL_MIN = 0.60
+ACTOR_IDLE_FILL_MAX = 0.78
+ACTOR_IDLE_CENTER_MIN = 10.75
+ACTOR_IDLE_CENTER_MAX = 12.50
 
 
 def sha256(path: Path) -> str:
@@ -610,6 +618,40 @@ def actor_sheet_metrics(sheet: Image.Image) -> dict:
     }
 
 
+def actor_anatomy_profile(logical_sheet: Image.Image) -> dict:
+    frame = logical_sheet.crop((
+        ACTOR_LOGICAL_WIDTH,
+        0,
+        ACTOR_LOGICAL_WIDTH * 2,
+        ACTOR_LOGICAL_HEIGHT,
+    ))
+    alpha = frame.getchannel("A")
+    bbox = alpha.getbbox()
+    if not bbox:
+        raise SystemExit("Actor down-idle frame became empty")
+
+    pixels = alpha.load()
+    row_widths: list[int] = []
+    opaque_y: list[int] = []
+    for y in range(bbox[1], bbox[3]):
+        occupied = [x for x in range(ACTOR_LOGICAL_WIDTH) if pixels[x, y]]
+        row_widths.append(max(occupied) - min(occupied) + 1 if occupied else 0)
+        opaque_y.extend(y - bbox[1] for x in occupied)
+
+    width = bbox[2] - bbox[0]
+    height = bbox[3] - bbox[1]
+    opaque_count = len(opaque_y)
+    return {
+        "frame": "downIdle",
+        "topOffset": bbox[1],
+        "visibleWidth": width,
+        "visibleHeight": height,
+        "topSectionMaxWidth": max(row_widths[:6]),
+        "fillRatio": round(opaque_count / max(width * height, 1), 3),
+        "centerOfMassY": round(sum(opaque_y) / max(opaque_count, 1), 2),
+    }
+
+
 def build_actor_sheet(actor_id: str) -> dict:
     source = SOURCES[actor_id]
     source_frame_width = source.width // 3
@@ -637,6 +679,7 @@ def build_actor_sheet(actor_id: str) -> dict:
             )
 
     logical_sheet, palette = discipline_actor_palette(logical_sheet)
+    anatomy_profile = actor_anatomy_profile(logical_sheet)
     frame_width = ACTOR_LOGICAL_WIDTH * ACTOR_RENDER_SCALE
     frame_height = ACTOR_LOGICAL_HEIGHT * ACTOR_RENDER_SCALE
     sheet = logical_sheet.resize(
@@ -661,6 +704,7 @@ def build_actor_sheet(actor_id: str) -> dict:
         "renderScale": ACTOR_RENDER_SCALE,
         "palette": [list(color) for color in palette],
         "pixelMetrics": metrics,
+        "anatomyProfile": anatomy_profile,
         "directions": {"down": 0, "left": 1, "right": 2, "up": 3},
     }
 
@@ -776,6 +820,18 @@ def build() -> dict:
             "maxOpaqueColors": ACTOR_MAX_OPAQUE_COLORS,
             "binaryAlpha": True,
             "sharedFootBaseline": True,
+            "frontIdleSilhouette": {
+                "topOffset": ACTOR_LOGICAL_HEIGHT - ACTOR_BODY_HEIGHT,
+                "visibleHeight": ACTOR_BODY_HEIGHT,
+                "visibleWidthMin": ACTOR_IDLE_WIDTH_MIN,
+                "visibleWidthMax": ACTOR_IDLE_WIDTH_MAX,
+                "topSectionWidthMin": ACTOR_IDLE_TOP_SPAN_MIN,
+                "topSectionWidthMax": ACTOR_IDLE_TOP_SPAN_MAX,
+                "fillRatioMin": ACTOR_IDLE_FILL_MIN,
+                "fillRatioMax": ACTOR_IDLE_FILL_MAX,
+                "centerOfMassYMin": ACTOR_IDLE_CENTER_MIN,
+                "centerOfMassYMax": ACTOR_IDLE_CENTER_MAX,
+            },
         },
         "actorPixelPreview": {
             "path": actor_preview_path.relative_to(ROOT).as_posix(),

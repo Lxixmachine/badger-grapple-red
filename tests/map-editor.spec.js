@@ -104,7 +104,19 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     renderScale: 2,
     maxOpaqueColors: 15,
     binaryAlpha: true,
-    sharedFootBaseline: true
+    sharedFootBaseline: true,
+    frontIdleSilhouette: {
+      topOffset: 8,
+      visibleHeight: 24,
+      visibleWidthMin: 12,
+      visibleWidthMax: 14,
+      topSectionWidthMin: 8,
+      topSectionWidthMax: 12,
+      fillRatioMin: 0.6,
+      fillRatioMax: 0.78,
+      centerOfMassYMin: 10.75,
+      centerOfMassYMax: 12.5
+    }
   });
   for (const actor of state.project.assets.actors) {
     expect(actor).toMatchObject({
@@ -121,6 +133,15 @@ test('map studio boots with the complete Season One atlas', async ({page}) => {
     expect(actor.palette.length).toBeLessThanOrEqual(15);
     expect(actor.pixelMetrics.opaqueColorCount).toBeLessThanOrEqual(15);
     expect(actor.pixelMetrics.frameVisibleSizes).toHaveLength(12);
+    expect(actor.anatomyProfile).toMatchObject({frame: 'downIdle', topOffset: 8, visibleHeight: 24});
+    expect(actor.anatomyProfile.visibleWidth).toBeGreaterThanOrEqual(12);
+    expect(actor.anatomyProfile.visibleWidth).toBeLessThanOrEqual(14);
+    expect(actor.anatomyProfile.topSectionMaxWidth).toBeGreaterThanOrEqual(8);
+    expect(actor.anatomyProfile.topSectionMaxWidth).toBeLessThanOrEqual(12);
+    expect(actor.anatomyProfile.fillRatio).toBeGreaterThanOrEqual(0.6);
+    expect(actor.anatomyProfile.fillRatio).toBeLessThanOrEqual(0.78);
+    expect(actor.anatomyProfile.centerOfMassY).toBeGreaterThanOrEqual(10.75);
+    expect(actor.anatomyProfile.centerOfMassY).toBeLessThanOrEqual(12.5);
   }
   expect(state.project.groundSystem).toMatchObject({
     primaryMaterial: 'stone',

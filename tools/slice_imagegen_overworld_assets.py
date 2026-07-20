@@ -7,19 +7,19 @@ ART = ROOT / "art" / "imagegen"
 OUT = ROOT / "public" / "assets" / "sprites"
 
 SHEETS = {
-    "player_walk.png": ART / "overworld_player_v2_2026-07-16_alpha.png",
+    "player_walk.png": ART / "overworld_player_v3_2026-07-19_alpha.png",
     "npc_walk.png": ART / "overworld_coach_sheet_2026-07-09.png",
-    "npc_coach_walk.png": ART / "overworld_head_coach_v2_2026-07-16_alpha.png",
-    "npc_trainer_walk.png": ART / "overworld_trainer_v2_2026-07-16_alpha.png",
-    "npc_rex_walk.png": ART / "overworld_rex_v2_2026-07-16_alpha.png",
-    "npc_captain_walk.png": ART / "overworld_captain_v2_2026-07-16_alpha.png",
-    "npc_wrestler_walk.png": ART / "overworld_wrestler_v2_2026-07-16_alpha.png",
-    "npc_manager_walk.png": ART / "overworld_manager_v2_2026-07-16_alpha.png",
-    "npc_scout_walk.png": ART / "overworld_scout_v2_2026-07-16_alpha.png",
-    "npc_student_walk.png": ART / "overworld_student_v2_2026-07-16_alpha.png",
-    "npc_official_walk.png": ART / "overworld_official_v2_2026-07-16_alpha.png",
-    "npc_athlete_walk.png": ART / "overworld_athlete_v2_2026-07-16_alpha.png",
-    "npc_camper_walk.png": ART / "overworld_camper_v2_2026-07-16_alpha.png",
+    "npc_coach_walk.png": ART / "overworld_head_coach_v3_2026-07-19_alpha.png",
+    "npc_trainer_walk.png": ART / "overworld_trainer_v3_2026-07-19_alpha.png",
+    "npc_rex_walk.png": ART / "overworld_rex_v3_2026-07-19_alpha.png",
+    "npc_captain_walk.png": ART / "overworld_captain_v3_2026-07-19_alpha.png",
+    "npc_wrestler_walk.png": ART / "overworld_wrestler_v3_2026-07-19_alpha.png",
+    "npc_manager_walk.png": ART / "overworld_manager_v3_2026-07-19_alpha.png",
+    "npc_scout_walk.png": ART / "overworld_scout_v3_2026-07-19_alpha.png",
+    "npc_student_walk.png": ART / "overworld_student_v3_2026-07-19_alpha.png",
+    "npc_official_walk.png": ART / "overworld_official_v3_2026-07-19_alpha.png",
+    "npc_athlete_walk.png": ART / "overworld_athlete_v3_2026-07-19_alpha.png",
+    "npc_camper_walk.png": ART / "overworld_camper_v3_2026-07-19_alpha.png",
 }
 
 FRAME_W = 24

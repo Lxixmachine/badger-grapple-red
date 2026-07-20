@@ -15,12 +15,12 @@ ALPHA_THRESHOLD = 96
 OPAQUE_COLORS = 15
 
 SOURCES = {
-    "player": ART / "overworld_player_v2_2026-07-16_alpha.png",
-    "rex": ART / "overworld_rex_v2_2026-07-16_alpha.png",
-    "wrestler": ART / "overworld_wrestler_v2_2026-07-16_alpha.png",
-    "athlete": ART / "overworld_athlete_v2_2026-07-16_alpha.png",
-    "captain": ART / "overworld_captain_v2_2026-07-16_alpha.png",
-    "camper": ART / "overworld_camper_v2_2026-07-16_alpha.png",
+    "player": ART / "overworld_player_v3_2026-07-19_alpha.png",
+    "rex": ART / "overworld_rex_v3_2026-07-19_alpha.png",
+    "wrestler": ART / "overworld_wrestler_v3_2026-07-19_alpha.png",
+    "athlete": ART / "overworld_athlete_v3_2026-07-19_alpha.png",
+    "captain": ART / "overworld_captain_v3_2026-07-19_alpha.png",
+    "camper": ART / "overworld_camper_v3_2026-07-19_alpha.png",
 }
 POSES = {
     "player": (1, 2),  # right-facing idle, toward the opposing corner

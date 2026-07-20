@@ -836,7 +836,8 @@ export function createSeedProject() {
     logicalFrameHeight: sheet.logicalFrameHeight,
     renderScale: sheet.renderScale,
     palette: deepClone(sheet.palette),
-    pixelMetrics: deepClone(sheet.pixelMetrics)
+    pixelMetrics: deepClone(sheet.pixelMetrics),
+    anatomyProfile: deepClone(sheet.anatomyProfile)
   }));
 
   return {

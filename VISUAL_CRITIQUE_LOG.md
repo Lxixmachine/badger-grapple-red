@@ -92,6 +92,16 @@ tracker for looks.
   share the same 32px ownership grid. The standing 2-up board compares both
   480x320 captures with fixed FireRed Center/Mart references; Tony's phone
   verdict remains the close condition.
+- **F-018 [SIL-004/actor grammar] overworld cast changes anatomy between roles - IMPLEMENTED, AWAITING TONY REVIEW.**
+  The v22.58 fixed frames showed that the actor-size validator accepted a
+  shared bounding box while Player, Coach, students, staff, and route NPCs
+  still used visibly different head ratios, eye language, limb proportions,
+  and outline weights. v22.59 replaces all twelve independently generated
+  sources with one Imagegen-authored cast family and complete directional walk
+  sheets. The compiler now records and validates a common front-idle anatomy
+  profile in addition to palette, alpha, baseline, and frame-size rules. The
+  fixed town, Field House, Bascom, team-room, and service-room captures pass;
+  Tony's phone verdict remains the close condition.
 - **F-011 [TG-013/edge continuity] route water seams — OPEN.**
   Found by the world stitch: Picnic Point's north shore sits one row
   higher than Lakeshore's (water rows 0-2 vs 1-4), so Mendota steps at

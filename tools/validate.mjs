@@ -64,6 +64,8 @@ else{
   if(production.minimumBlockedCellCoverage!==productionManifest.minimumBlockedCellCoverage)errs.push('Camp production visual-coverage threshold diverges from its manifest');
   const actorContract=production.actorPixelContract||{};
   if(actorContract.logicalFrameWidth!==16||actorContract.logicalFrameHeight!==32||actorContract.bodyHeightMax!==24||actorContract.renderScale!==2||actorContract.maxOpaqueColors!==15||actorContract.binaryAlpha!==true||actorContract.sharedFootBaseline!==true)errs.push('Camp production actors must use the 16x32 logical-grid, exact-2x pixel contract');
+  const silhouetteContract=actorContract.frontIdleSilhouette||{};
+  if(silhouetteContract.topOffset!==8||silhouetteContract.visibleHeight!==24||silhouetteContract.visibleWidthMin!==12||silhouetteContract.visibleWidthMax!==14||silhouetteContract.topSectionWidthMin!==8||silhouetteContract.topSectionWidthMax!==12||silhouetteContract.fillRatioMin!==0.6||silhouetteContract.fillRatioMax!==0.78||silhouetteContract.centerOfMassYMin!==10.75||silhouetteContract.centerOfMassYMax!==12.5)errs.push('Camp production actors must preserve the shared front-idle anatomy profile');
   const actorPreview=production.actorPixelPreview||{};
   const actorPreviewPath=fileURLToPath(new URL(`../${actorPreview.path||''}`,import.meta.url));
   if(!actorPreview.path||!existsSync(actorPreviewPath)||actorPreview.sha256!==hashFile(actorPreviewPath))errs.push('Camp production actor pixel preview is missing or stale');
@@ -88,6 +90,8 @@ else{
     if(!Array.isArray(sheet.palette)||sheet.palette.length===0||sheet.palette.length>15)errs.push(`Camp production actor ${actorId} exceeds the shared GBA-style palette budget`);
     const pixel=sheet.pixelMetrics||{};
     if(pixel.opaqueColorCount>15||pixel.partialAlphaPixelCount!==0||pixel.exactRenderScaleBlockCoverage!==1||pixel.frameVisibleSizes?.length!==12)errs.push(`Camp production actor ${actorId} fails exact pixel-discipline metrics`);
+    const anatomy=sheet.anatomyProfile||{};
+    if(anatomy.frame!=='downIdle'||anatomy.topOffset!==silhouetteContract.topOffset||anatomy.visibleHeight!==silhouetteContract.visibleHeight||anatomy.visibleWidth<silhouetteContract.visibleWidthMin||anatomy.visibleWidth>silhouetteContract.visibleWidthMax||anatomy.topSectionMaxWidth<silhouetteContract.topSectionWidthMin||anatomy.topSectionMaxWidth>silhouetteContract.topSectionWidthMax||anatomy.fillRatio<silhouetteContract.fillRatioMin||anatomy.fillRatio>silhouetteContract.fillRatioMax||anatomy.centerOfMassY<silhouetteContract.centerOfMassYMin||anatomy.centerOfMassY>silhouetteContract.centerOfMassYMax)errs.push(`Camp production actor ${actorId} diverges from the shared front-idle anatomy profile`);
     for(const size of pixel.frameVisibleSizes||[]){
       if(size.width<20||size.width>32||size.height<2||size.height>48||size.width%2||size.height%2)errs.push(`Camp production actor ${actorId} has an invalid logical-frame silhouette`);
     }
